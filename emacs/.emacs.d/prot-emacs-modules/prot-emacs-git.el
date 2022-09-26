@@ -166,15 +166,7 @@
     (define-key map (kbd "C-x v R") #'prot-vc-git-reset))
   (let ((map vc-git-log-edit-mode-map))
     (define-key map (kbd "C-C C-n") #'prot-vc-git-log-edit-extract-file-name)
-    (define-key map (kbd "C-C C-i") #'prot-vc-git-log-insert-commits)
-    ;; Also done by `prot-vc-git-setup-mode', but I am putting it here
-    ;; as well for visibility.
-    (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
-    (define-key map (kbd "C-c C-a") #'prot-vc-git-log-edit-toggle-amend)
-    (define-key map (kbd "M-p") #'prot-vc-git-log-edit-previous-comment)
-    (define-key map (kbd "M-n") #'prot-vc-git-log-edit-next-comment)
-    (define-key map (kbd "M-s") #'prot-vc-git-log-edit-complete-comment)
-    (define-key map (kbd "M-r") #'prot-vc-git-log-edit-complete-comment))
+    (define-key map (kbd "C-C C-i") #'prot-vc-git-log-insert-commits))
   (let ((map log-view-mode-map))
     (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
     (define-key map (kbd "a") #'prot-vc-git-patch-apply)

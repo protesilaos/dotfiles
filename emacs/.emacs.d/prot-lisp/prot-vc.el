@@ -627,164 +627,6 @@ should be used as its override function."
         (forward-line))
       (concat "\n" (buffer-string)))))
 
-(declare-function log-edit-add-field "log-edit")
-
-(defun prot-vc--format-git-comment (branch remote files &optional commits)
-  "Add Git Log Edit comment with BRANCH, REMOTE, FILES, COMMITS."
-  (let ((log (if commits (concat "\n# Recent commits:\n#\n" commits "\n#") "")))
-    (concat
-     "\n\n# ---\n# "
-     "Files to be committed to branch " "`" branch "' tracking `" remote "':"
-     "\n#\n" files "\n#" log
-     "\n# All lines starting with `#' are ignored.")))
-
-(defun prot-vc-git-log-edit-comment (&optional no-headers)
-  "Append comment block to Git Log Edit buffer.
-With optional NO-HEADERS skip the step of inserting the special
-headers 'Amend' and 'Summary'."
-  (let* ((branch-name (process-lines "git" "branch" "--show-current"))
-         (branch (or (car branch-name) "Detached HEAD"))
-         (remotes (process-lines "git" "branch" "-r"))
-         (remote-name (if remotes
-                          (cl-remove-if-not (lambda (s)
-                                              (string-match-p "->" s))
-                                            remotes)
-                        "None"))
-         (remote (if (and remote-name (listp remote-name))
-                     (cadr (split-string (car remote-name) "->" t "[\s\t]+"))
-                   "No Remote Found"))
-         (files (mapconcat (lambda (x)
-                             (concat "#   " x))
-                           (log-edit-files)
-                           "\n"))
-         (commits (when (and prot-vc-git-log-edit-show-commits
-                             (ignore-errors (process-lines "git" "log" "-1")))
-                    (mapconcat (lambda (x)
-                                 (concat "#   " x))
-                               (process-lines
-                                "git" "log" "--pretty=format:%h  %cs  %s"
-                                (format "-n %d" prot-vc-git-log-edit-show-commit-count))
-                               "\n"))))
-    (unless no-headers
-      (save-excursion
-        (rfc822-goto-eoh)
-        (unless (re-search-backward "Amend: .*" nil t)
-          (log-edit-add-field "Amend" ""))
-        (rfc822-goto-eoh)
-        (unless (re-search-backward "Summary: .*" nil t)
-          (log-edit-add-field "Summary" ""))))
-    (goto-char (point-max))
-    (insert "\n")
-    (insert (prot-vc--format-git-comment branch remote files commits))
-    (rfc822-goto-eoh)
-    (when (looking-at "\n") (forward-char -1))))
-
-;;;###autoload
-(defun prot-vc-git-log-edit-previous-comment (arg)
-  "Cycle backwards through comment history.
-With a numeric prefix ARG, go back ARG comments."
-  (interactive "*p")
-  (let ((len (ring-length log-edit-comment-ring)))
-    (if (<= len 0)
-        (progn (message "Empty comment ring") (ding))
-      ;; Don't use `erase-buffer' because we don't want to `widen'.
-      (delete-region (point-min) (point-max))
-      (setq log-edit-comment-ring-index (log-edit-new-comment-index arg len))
-      (message "Comment %d" (1+ log-edit-comment-ring-index))
-      (insert (ring-ref log-edit-comment-ring log-edit-comment-ring-index))
-      (prot-vc-git-log-edit-comment t)
-      (save-excursion
-        (goto-char (point-min))
-        (search-forward "# ---")
-        (forward-line -1)
-        (delete-blank-lines)
-        (newline 2)))))
-
-;;;###autoload
-(defun prot-vc-git-log-edit-next-comment (arg)
-  "Cycle forwards through comment history.
-With a numeric prefix ARG, go forward ARG comments."
-  (interactive "*p")
-  (prot-vc-git-log-edit-previous-comment (- arg)))
-
-(defvar prot-vc--log-edit-comment-hist '()
-  "History of inputs for `prot-vc-git-log-edit-complete-comment'.")
-
-(defun prot-vc--log-edit-complete-prompt (comments)
-  "Select entry from COMMENTS."
-  (completing-read
-   "Select comment: "
-   comments nil t nil 'prot-vc--log-edit-comment-hist))
-
-;;;###autoload
-(defun prot-vc-git-log-edit-complete-comment ()
-  "Insert text from Log Edit history ring using completion."
-  (interactive)
-  (let* ((newline (propertize "^J" 'face 'escape-glyph))
-         (ring (ring-elements log-edit-comment-ring))
-         (completions
-          (mapcar (lambda (s)
-                    (string-replace "\n" newline s))
-                  ring))
-         (selection (prot-vc--log-edit-complete-prompt completions))
-         (comment (string-replace newline "\n" selection)))
-    (add-to-history 'prot-vc--log-edit-comment-hist comment)
-    (delete-region (point-min) (point-max))
-    (insert comment)
-    (prot-vc-git-log-edit-comment t)
-    (save-excursion
-      (goto-char (point-min))
-      (search-forward "# ---")
-      (forward-line -1)
-      (delete-blank-lines)
-      (newline 2))))
-
-(defun prot-vc-git-log-remove-comment ()
-  "Remove Git Log Edit comment, empty lines; keep final newline."
-  (let ((buffer (get-buffer "*vc-log*"))) ; REVIEW: This is fragile
-    (with-current-buffer (when (buffer-live-p buffer) buffer)
-      (save-excursion
-        (goto-char (point-min)))
-      (when (derived-mode-p 'log-edit-mode)
-        (flush-lines "^#")))))
-
-;;;###autoload
-(defun prot-vc-git-log-edit-toggle-amend ()
-  "Toggle 'Amend' header for current Log Edit buffer.
-
-Setting the header to 'yes' means that the current commit will
-edit the previous one.
-
-Unlike `vc-git-log-edit-toggle-amend', only change the state of
-the 'Amend' header, without attempting to alter the contents of
-the buffer."
-  (interactive)
-  (when (log-edit-toggle-header "Amend" "yes")))
-
-(defun prot-vc--buffer-string-omit-comment ()
-  "Remove Git comment and empty lines from buffer string."
-  (let* ((buffer (get-buffer "*vc-log*"))
-         (string (when buffer
-                   (with-current-buffer buffer
-                     (buffer-substring-no-properties (point-min) (point-max))))))
-    (when string
-      (replace-regexp-in-string "^#.*" "" string))))
-
-(defvar log-edit-comment-ring)
-(autoload 'ring-empty-p "ring")
-(autoload 'ring-ref "ring")
-(autoload 'ring-insert "ring")
-
-(defun prot-vc-git-log-edit-remember-comment (&optional comment)
-  "Store Log Edit text or optional COMMENT.
-Remove special Git comment block before storing the genuine
-commit message."
-  (let ((commit (or comment (gensym))))
-    (setq commit (prot-vc--buffer-string-omit-comment))
-    (when (or (ring-empty-p log-edit-comment-ring)
-              (not (equal commit (ring-ref log-edit-comment-ring 0))))
-      (ring-insert log-edit-comment-ring commit))))
-
 (declare-function log-edit-show-diff "log-edit")
 
 (defvar prot-vc--current-window-configuration nil
@@ -832,56 +674,7 @@ To be used as advice before `vc-start-logentry'."
             (derived-mode-p 'diff-mode))
     (add-hook 'kill-buffer-hook #'prot-vc--log-edit-restore-window-configuration 0 t)))
 
-(defvar prot-vc-git-log-edit-done-hook nil
-  "Hook that runs after `prot-vc-git-log-edit-done'.")
-
-;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
-;; to `log-edit-done-hook'?
-;;;###autoload
-(defun prot-vc-git-log-edit-done ()
-  "Remove Git Log Edit comments and commit change set.
-This is a thin wrapper around `log-edit-done', which first calls
-`prot-vc-git-log-remove-comment'."
-  (interactive)
-  (prot-vc-git-log-remove-comment)
-  (log-edit-done)
-  (run-hooks 'prot-vc-git-log-edit-done-hook))
-
-(defface prot-vc-git-log-edit-file-name
-  '((t :inherit (font-lock-function-name-face font-lock-comment-face)))
-  "Face for file names in VC Git Log Edit buffers.")
-
-(defface prot-vc-git-log-edit-local-branch-name
-  '((t :inherit (font-lock-variable-name-face font-lock-comment-face)))
-  "Face for local branch name in VC Git Log Edit buffers.")
-
-(defface prot-vc-git-log-edit-remote-branch-name
-  '((t :inherit (font-lock-constant-face font-lock-comment-face)))
-  "Face for remote branch name in VC Git Log Edit buffers.")
-
-(defconst prot-vc-git-log-edit-font-lock
-  '(("^#.*"
-     (0 'font-lock-comment-face))
-    ("^#.*`\\(.+?\\)'.*`\\(.+?\\)'"
-     (1 'prot-vc-git-log-edit-local-branch-name t)
-     (2 'prot-vc-git-log-edit-remote-branch-name t))
-    ("^#[\s\t][\s\t]+\\(.+\\)"
-     (1 'prot-vc-git-log-edit-file-name t)))
-  "Fontification rules for Log Edit buffers.")
-
-(defun prot-vc-git-log-edit-extra-keywords ()
-  "Apply `prot-vc-git-log-edit-font-lock' to Log Edit buffers."
-  (font-lock-flush (point-min) (point-max))
-  (font-lock-add-keywords nil prot-vc-git-log-edit-font-lock nil))
-
-(autoload 'vc-git-log-view-mode "vc-git")
-(autoload 'vc-git-checkin "vc-git")
-(declare-function log-edit-show-files "log-edit")
-(declare-function log-edit-kill-buffer "log-edit")
-(declare-function log-edit-done "log-edit")
-(declare-function log-edit-remember-comment "log-edit")
-(declare-function vc-git-log-edit-toggle-amend "log-edit")
-(defvar vc-git-log-edit-mode-map)
+(declare-function vc-git-expanded-log-entry "vc-git" (revision))
 
 ;;;###autoload
 (define-minor-mode prot-vc-git-setup-mode
@@ -918,46 +711,20 @@ inside the comment block."
       (progn
         ;; Log view expanded commits
         (advice-add #'vc-git-expanded-log-entry :override #'prot-vc-git-expanded-log-entry)
-        ;; Append comment block in Log edit showing branch and files.
-        ;; This means that we no longer need the files' window to pop up
-        ;; automatically
-        (add-hook 'log-edit-hook #'prot-vc-git-log-edit-comment)
-        (remove-hook 'log-edit-hook #'log-edit-show-files)
         ;; Window configuration with just the commit and the diff
         ;; (restores previous state after finalising or aborting the
         ;; commit).
         (advice-add #'vc-start-logentry :before #'prot-vc-git-pre-log-edit)
         (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-        (advice-add #'log-edit-remember-comment :around #'prot-vc-git-log-edit-remember-comment)
-        (let ((map vc-git-log-edit-mode-map))
-          (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
-          (define-key map (kbd "C-c C-e") #'prot-vc-git-log-edit-toggle-amend)
-          (define-key map (kbd "M-p") #'prot-vc-git-log-edit-previous-comment)
-          (define-key map (kbd "M-n") #'prot-vc-git-log-edit-next-comment)
-          (define-key map (kbd "M-s") #'prot-vc-git-log-edit-complete-comment)
-          (define-key map (kbd "M-r") #'prot-vc-git-log-edit-complete-comment))
         (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
         (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
-        (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
-        ;; Extra font lock rules for Log Edit comment block
-        (add-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords))
+        (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration))
     (advice-remove #'vc-git-expanded-log-entry #'prot-vc-git-expanded-log-entry)
-    (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-comment)
-    (add-hook 'log-edit-hook #'log-edit-show-files)
     (advice-remove #'vc-start-logentry #'prot-vc-git-pre-log-edit)
     (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-    (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-edit-remember-comment)
-    (let ((map vc-git-log-edit-mode-map))
-      (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
-      (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'vc-git-log-edit-toggle-amend)
-      (define-key map (kbd "M-p") #'log-edit-previous-comment)
-      (define-key map (kbd "M-n") #'log-edit-next-comment)
-      (define-key map (kbd "M-s") #'log-edit-comment-search-forward)
-      (define-key map (kbd "M-r") #'log-edit-comment-search-backward))
     (remove-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
     (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
-    (remove-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
-    (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords)))
+    (remove-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)))
 
 (provide 'prot-vc)
 ;;; prot-vc.el ends here
