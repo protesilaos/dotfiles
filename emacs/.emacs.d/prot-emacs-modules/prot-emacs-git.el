@@ -49,14 +49,6 @@
   (setq log-edit-require-final-newline t)
   (setq log-edit-setup-add-author nil)
 
-  ;; Note that `prot-vc-git-setup-mode' will run the following when
-  ;; activated:
-  ;;
-  ;;   (remove-hook 'log-edit-hook #'log-edit-show-files)
-  ;;
-  ;; If you need the window to pop back up, do it manually with C-c C-f
-  ;; which calls `log-edit-show-files'.
-
   (setq vc-find-revision-no-save t)
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
   ;; I use a different account for git commits
@@ -146,10 +138,6 @@
   (setq prot-vc-git-log-edit-show-commit-count 10)
   (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
-  (add-to-list 'log-edit-headers-alist '("Amend"))
-
-  ;; This refashions log view and log edit buffers
-  (prot-vc-git-setup-mode 1)
 
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
