@@ -101,7 +101,7 @@
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
   ;; Those are for `keycast-mode'
-  (setq keycast-mode-line-window-predicate 'moody-window-active-p) ; assumes `moody.el'
+  (setq keycast-mode-line-window-predicate #'keycast-active-frame-bottom-right-p)
   (setq keycast-separator-width 1)
   (setq keycast-mode-line-remove-tail-elements nil)
 
