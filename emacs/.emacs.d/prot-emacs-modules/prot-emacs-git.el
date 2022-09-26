@@ -106,7 +106,6 @@
     ;;   (define-key map "B" prot-vc-git-branch-map)
     ;;   (define-key prot-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
     ;;   (define-key prot-vc-git-branch-map "s" #'vc-retrieve-tag) ; switch branch/tag
-    ;;   (define-key prot-vc-git-branch-map "c" #'prot-vc-git-checkout-remote) ; "checkout" remote
     ;;   (define-key prot-vc-git-branch-map "l" #'vc-print-branch-log))
     (let ((prot-vc-git-stash-map (make-sparse-keymap)))
       (define-key map "S" prot-vc-git-stash-map)

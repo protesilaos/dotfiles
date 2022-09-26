@@ -584,20 +584,6 @@ pass the '--hard' flag instead."
       (shell-command (format "git reset %s %s --quiet --" flag commit) buf)
       (revert-buffer))))
 
-;;;###autoload
-(defun prot-vc-git-checkout-remote (remote)
-  "Checkout new local branch tracking REMOTE (git checkout -b)."
-  (interactive
-   (list (completing-read
-          "Select remote tracking branch: "
-          (mapcar #'string-trim (process-lines "git" "branch" "-r"))
-          nil t)))
-  (let* ((name (split-string remote "\\(->\\|[\/]\\)" t "[\s\t]+"))
-         (local (if (> (length name) 1)
-                    (car (reverse name)) ; Better way than car reverse?
-                  (car name))))
-    (shell-command (format "git checkout -b %s %s" local remote))))
-
 (defun prot-vc-git--prompt-remote ()
   "Helper prompt for `prot-vc-git-push'."
   (if-let ((remotes (process-lines "git" "remote"))
