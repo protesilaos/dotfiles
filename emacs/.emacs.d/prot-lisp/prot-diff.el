@@ -138,6 +138,8 @@ NOTE 2022-09-25 11:37 +0300: not tested thoroughly yet."
   (interactive "r" diff-mode)
   (when-let (((derived-mode-p 'diff-mode))
              (inhibit-read-only t))
+    (unless mark-ring                  ; needed when entering a new buffer
+      (push-mark (point) t nil))
     (cond
      ((region-active-p)
       (replace-regexp-in-region "^[+-]" " " beg end))
