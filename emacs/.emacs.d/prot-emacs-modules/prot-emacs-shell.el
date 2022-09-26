@@ -68,7 +68,7 @@
   (setq proced-filter 'user))
 
 (prot-emacs-builtin-package 'prot-proced
-  (prot-proced-extra-keywords 1))
+  (add-hook 'proced-mode-hook #'prot-proced-extra-keywords-mode))
 
 ;;; Pass interface (password-store)
 (prot-emacs-elpa-package 'password-store

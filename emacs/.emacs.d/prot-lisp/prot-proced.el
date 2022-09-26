@@ -74,17 +74,15 @@
   "Extra font-lock patterns for the `proced' menu.")
 
 ;;;###autoload
-(define-minor-mode prot-proced-extra-keywords
-  "Apply extra font-lock rules to diff buffers."
+(define-minor-mode prot-proced-extra-keywords-mode
+  "Apply extra font-lock rules to `proced' output."
   :init-value nil
   :global t
-  (if (and prot-proced-extra-keywords (derived-mode-p 'proced-mode))
+  (if prot-proced-extra-keywords-mode
       (progn
         (font-lock-flush (point-min) (point-max))
-        (font-lock-add-keywords nil prot-proced-keywords nil)
-        (add-hook 'proced-mode-hook #'prot-proced-extra-keywords))
+        (font-lock-add-keywords nil prot-proced-keywords nil))
     (font-lock-remove-keywords nil prot-proced-keywords)
-    (remove-hook 'proced-mode-hook #'prot-proced-extra-keywords)
     (font-lock-flush (point-min) (point-max))))
 
 (provide 'prot-proced)
