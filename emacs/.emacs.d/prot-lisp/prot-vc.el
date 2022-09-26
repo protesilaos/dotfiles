@@ -601,8 +601,6 @@ pass the '--hard' flag instead."
 
 (advice-add #'vc-git-push :override #'prot-vc-git-push)
 
-;;;; User Interface setup
-
 (defun prot-vc-git-expanded-log-entry (revision)
   "Expand git commit message for REVISION.
 This is a tweaked variant of `vc-git-expanded-log-entry' and
