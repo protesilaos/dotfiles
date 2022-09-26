@@ -591,6 +591,9 @@ pass the '--hard' flag instead."
       (completing-read "Select Git remote: " remotes)
     "origin"))
 
+(declare-function vc-git--pushpull "vc-git" (command prompt extra-args))
+(declare-function vc-git-push "vc-git" (prompt))
+
 ;;;###autoload
 (defun prot-vc-git-push (prompt)
   "Substitute for `vc-git-push' with the same meaning for PROMPT."
