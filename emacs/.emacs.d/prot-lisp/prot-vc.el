@@ -614,9 +614,10 @@ pass the '--hard' flag instead."
 
 ;;;; User Interface setup
 
-;; This is a tweaked variant of `vc-git-expanded-log-entry'
 (defun prot-vc-git-expanded-log-entry (revision)
-  "Expand git commit message for REVISION."
+  "Expand git commit message for REVISION.
+This is a tweaked variant of `vc-git-expanded-log-entry' and
+should be used as its override function."
   (with-temp-buffer
     (apply 'vc-git-command t nil nil (list "log" revision "--stat" "-1" "--"))
     (goto-char (point-min))
@@ -625,19 +626,6 @@ pass the '--hard' flag instead."
         (replace-match "  ")
         (forward-line))
       (concat "\n" (buffer-string)))))
-
-(defun prot-vc-git-expand-function ()
-  "Set `log-view-expanded-log-entry-function' for `vc-git'."
-  (when (eq vc-log-view-type 'short)
-    (setq-local log-view-expanded-log-entry-function
-                #'prot-vc-git-expanded-log-entry)))
-
-(defvar prot-vc-git-log-view-mode-hook nil
-  "Hook that runs after `vc-git-log-view-mode'.")
-
-(defun prot-vc-git-log-view-add-hook (&rest _)
-  "Run `prot-vc-git-log-view-mode-hook'."
-  (run-hooks 'prot-vc-git-log-view-mode-hook))
 
 (declare-function log-edit-add-field "log-edit")
 
@@ -929,8 +917,7 @@ inside the comment block."
   (if prot-vc-git-setup-mode
       (progn
         ;; Log view expanded commits
-        (advice-add #'vc-git-log-view-mode :after #'prot-vc-git-log-view-add-hook)
-        (add-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function)
+        (advice-add #'vc-git-expanded-log-entry :override #'prot-vc-git-expanded-log-entry)
         ;; Append comment block in Log edit showing branch and files.
         ;; This means that we no longer need the files' window to pop up
         ;; automatically
@@ -954,8 +941,7 @@ inside the comment block."
         (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
         ;; Extra font lock rules for Log Edit comment block
         (add-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords))
-    (advice-remove #'vc-git-log-view-mode #'prot-vc-git-log-view-add-hook)
-    (remove-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function)
+    (advice-remove #'vc-git-expanded-log-entry #'prot-vc-git-expanded-log-entry)
     (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-comment)
     (add-hook 'log-edit-hook #'log-edit-show-files)
     (advice-remove #'vc-start-logentry #'prot-vc-git-pre-log-edit)
