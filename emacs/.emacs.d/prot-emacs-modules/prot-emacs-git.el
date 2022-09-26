@@ -83,6 +83,7 @@
 
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
+    (define-key map (kbd "C-x v e") #'vc-ediff)
 
     ;; NOTE 2022-09-24: Emacs 29 repurposes 'C-x v b' to a prefix key
     ;; for branch-related commands.  I am using that now.
