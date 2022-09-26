@@ -135,14 +135,16 @@ If no region is active and the point is not on a line that starts
 with the plus or minus sign, call `diff-hunk-kill' interactively.
 
 NOTE 2022-09-25 11:37 +0300: not tested thoroughly yet."
-  (interactive "r" diff-mode)
+  (interactive nil diff-mode)
+  (unless mark-ring                  ; needed when entering a new buffer
+    (push-mark (point) t nil))
   (when-let (((derived-mode-p 'diff-mode))
-             (inhibit-read-only t))
-    (unless mark-ring                  ; needed when entering a new buffer
-      (push-mark (point) t nil))
+             (inhibit-read-only t)
+             (b (or beg (region-beginning)))
+             (e (or end (region-end))))
     (cond
      ((region-active-p)
-      (replace-regexp-in-region "^[+-]" " " beg end))
+      (replace-regexp-in-region "^[+-]" " " b e))
      ((progn (goto-char (line-beginning-position)) (looking-at "^[+-]"))
       (replace-match " "))
      (t (call-interactively #'diff-hunk-kill)))))
