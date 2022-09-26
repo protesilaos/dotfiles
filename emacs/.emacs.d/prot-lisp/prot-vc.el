@@ -36,11 +36,8 @@
 ;; what it does.
 
 
-
-;; NOTE 2022-01-05: I plan to rewrite the whole file to bring it up to
-;; my current standard (don't forget what the Commentary of every such
-;; files explains: I do all this for educational or recreational
-;; purposes).  The overall functionality will stay in place.
+;; TODO 2022-09-26: Today I removed some extras, but I plan to rewrite
+;; the entire file.  The code is not good enough as-is.
 
 
 ;;; Code:
