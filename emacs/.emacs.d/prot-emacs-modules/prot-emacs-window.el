@@ -63,6 +63,9 @@
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . 0.1))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
@@ -85,11 +88,6 @@
                                        ))
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-           (display-buffer-reuse-window display-buffer-pop-up-frame)
-           (pop-up-frame-parameters . ((width . (text-pixels . 640))
-                                       (height . (text-pixels . 360))
-                                       (tab-bar-lines . 0))))
           ((or . ((derived-mode . Man-mode)
                   (derived-mode . woman-mode)
                   "\\*\\(Man\\|woman\\).*"))
