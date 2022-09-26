@@ -578,22 +578,5 @@ pass the '--hard' flag instead."
 
 (advice-add #'vc-git-push :override #'prot-vc-git-push)
 
-(defun prot-vc-git-expanded-log-entry (revision)
-  "Expand git commit message for REVISION.
-This is a tweaked variant of `vc-git-expanded-log-entry' and
-should be used as its override function."
-  (with-temp-buffer
-    (apply 'vc-git-command t nil nil (list "log" revision "--stat" "-1" "--"))
-    (goto-char (point-min))
-    (unless (eobp)
-      (while (re-search-forward "^" nil t)
-        (replace-match "  ")
-        (forward-line))
-      (concat "\n" (buffer-string)))))
-
-(declare-function vc-git-expanded-log-entry "vc-git" (revision))
-
-(advice-add #'vc-git-expanded-log-entry :override #'prot-vc-git-expanded-log-entry)
-
 (provide 'prot-vc)
 ;;; prot-vc.el ends here
