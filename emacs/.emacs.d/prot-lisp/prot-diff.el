@@ -235,17 +235,15 @@ hook `modus-themes-after-load-theme-hook'."
   "Extra font-lock patterns for diff mode.")
 
 ;;;###autoload
-(define-minor-mode prot-diff-extra-keywords
-  "Apply extra font-lock rules to diff buffers."
+(define-minor-mode prot-diff-extra-keywords-mode
+  "Apply extra font-lock rules for diffs."
   :init-value nil
   :global t
-  (if (and prot-diff-extra-keywords (derived-mode-p 'diff-mode))
+  (if prot-diff-extra-keywords-mode
       (progn
         (font-lock-flush (point-min) (point-max))
-        (font-lock-add-keywords nil prot-diff-keywords nil)
-        (add-hook 'diff-mode-hook #'prot-diff-extra-keywords))
+        (font-lock-add-keywords nil prot-diff-keywords nil))
     (font-lock-remove-keywords nil prot-diff-keywords)
-    (remove-hook 'diff-mode-hook #'prot-diff-extra-keywords)
     (font-lock-flush (point-min) (point-max))))
 
 (provide 'prot-diff)

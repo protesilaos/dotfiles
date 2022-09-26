@@ -19,7 +19,7 @@
   (prot-diff-modus-themes-diffs)
   (add-hook 'modus-themes-after-load-theme-hook #'prot-diff-modus-themes-diffs)
 
-  (prot-diff-extra-keywords 1)
+  (add-hook 'diff-mode-hook #'prot-diff-extra-keywords-mode)
 
   (add-hook 'diff-mode-hook #'prot-diff-enable-outline-minor-mode)
 
