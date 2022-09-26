@@ -3,21 +3,6 @@
   (setq outline-minor-mode-highlight 'override) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
-  (let ((map outline-minor-mode-map))
-    ;; ;; NOTE 2021-07-25: Those two are already defined (emacs28).
-    ;; (define-key map (kbd "TAB") #'outline-cycle)
-    ;; (define-key map (kbd "<backtab>") #'outline-cycle-buffer) ; S-TAB
-
-    ;; I normally don't use those as I usually move around with my
-    ;; `logos' package.  Otherwise I use Consult's outline/imenu
-    ;; commands or `prot-search-occur-outline'.
-    (define-key map (kbd "C-c C-n") #'outline-next-visible-heading)
-    (define-key map (kbd "C-c C-p") #'outline-previous-visible-heading)
-    (define-key map (kbd "C-c C-f") #'outline-forward-same-level)
-    (define-key map (kbd "C-c C-b") #'outline-backward-same-level)
-    (define-key map (kbd "C-c C-a") #'outline-show-all)
-    (define-key map (kbd "C-c C-o") #'outline-hide-other)
-    (define-key map (kbd "C-c C-u") #'outline-up-heading))
   (define-key global-map (kbd "<f10>") #'outline-minor-mode))
 
 ;;; Denote (simple note-taking)
