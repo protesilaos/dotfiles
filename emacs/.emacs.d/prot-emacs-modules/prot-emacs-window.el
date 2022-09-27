@@ -65,7 +65,8 @@
           ;; below current window
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 0.1))
+           (window-height . 0.1)
+           (dedicated . t))
           ((derived-mode . log-view-mode)
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.3))
