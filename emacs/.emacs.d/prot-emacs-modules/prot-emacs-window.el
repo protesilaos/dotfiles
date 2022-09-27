@@ -66,6 +66,14 @@
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.1))
+          ((derived-mode . log-view-mode)
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . 0.3))
+          ((or . ((derived-mode . log-edit-mode) ; this does not work
+                  "\\*vc-log\\*"))
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . 0.2)
+           (dedicated . t))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
