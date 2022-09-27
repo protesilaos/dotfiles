@@ -48,6 +48,8 @@
   (setq log-edit-keep-buffer nil)
   (setq log-edit-require-final-newline t)
   (setq log-edit-setup-add-author nil)
+  ;; I can see the files from the Diff with C-c C-d
+  (remove-hook 'log-edit-hook #'log-edit-show-files)
 
   (setq vc-find-revision-no-save t)
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
