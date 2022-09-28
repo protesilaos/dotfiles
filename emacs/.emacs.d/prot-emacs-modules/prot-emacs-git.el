@@ -110,9 +110,6 @@
 ;; manual here: <https://protesilaos.com/emacs/agitate>.
 (require 'agitate "/home/prot/Git/Projects/agitate/agitate.el")
 
-;; See user options `agitate-log-edit-emoji-collection' and
-;; `agitate-log-edit-conventional-commits-collection'.
-
 (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
 (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
@@ -125,11 +122,14 @@
   (define-key map (kbd "C-c C-b") #'agitate-diff-refine-cycle) ; replace `diff-refine-hunk'
   (define-key map (kbd "C-c C-n") #'agitate-diff-narrow-dwim))
 (let ((map log-view-mode-map))
-  (define-key map (kbd "w") #'agitate-log-view-kill-revision))
+  (define-key map (kbd "w") #'agitate-log-view-kill-revision)
+  (define-key map (kbd "W") #'agitate-log-view-kill-revision-expanded))
 (let ((map vc-git-log-view-mode-map))
   (define-key map (kbd "c") #'agitate-vc-git-format-patch-single))
 (let ((map log-edit-mode-map))
   (define-key map (kbd "C-c C-i C-n") #'agitate-log-edit-insert-file-name)
+  ;; See user options `agitate-log-edit-emoji-collection' and
+  ;; `agitate-log-edit-conventional-commits-collection'.
   (define-key map (kbd "C-c C-i C-e") #'agitate-log-edit-emoji-commit)
   (define-key map (kbd "C-c C-i C-c") #'agitate-log-edit-conventional-commit))
 
