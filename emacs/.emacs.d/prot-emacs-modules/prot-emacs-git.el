@@ -4,32 +4,14 @@
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
   ;; The following are from Emacs 27.1
-  (setq diff-refine nil) ; I do it on demand, per `prot-diff-refine-cycle'
+  (setq diff-refine nil) ; I do it on demand, with my `agitate' package (more below)
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
-  ;; The following is further controlled by
-  ;; `prot-diff-modus-themes-diffs'
   (setq diff-font-lock-syntax 'hunk-also)
   (let ((map diff-mode-map))
     (define-key map (kbd "L") #'vc-print-root-log)
     ;; Emacs 29 can use C-x v v in diff buffers, which is great, but now I
     ;; need quick access to it...
     (define-key map (kbd "v") #'vc-next-action)))
-
-(prot-emacs-builtin-package 'prot-diff
-  (prot-diff-modus-themes-diffs)
-  (add-hook 'modus-themes-after-load-theme-hook #'prot-diff-modus-themes-diffs)
-
-  (add-hook 'diff-mode-hook #'prot-diff-extra-keywords-mode)
-
-  (add-hook 'diff-mode-hook #'prot-diff-enable-outline-minor-mode)
-
-  ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
-  ;; bind to another key---see VC section).
-  (define-key global-map (kbd "C-x v =") #'prot-diff-buffer-dwim)
-  (let ((map diff-mode-map))
-    (define-key map (kbd "C-c C-b") #'prot-diff-refine-cycle) ; replace `diff-refine-hunk'
-    (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim))
-  (define-key diff-mode-shared-map (kbd "k") #'prot-diff-hunk-kill-dwim))
 
 ;;; Version control framework (vc.el and prot-vc.el)
 (prot-emacs-builtin-package 'vc
@@ -81,47 +63,28 @@
 
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
+    (define-key map (kbd "C-x v B") #'vc-annotate) ; Blame mnemonic
     (define-key map (kbd "C-x v e") #'vc-ediff)
-
-    ;; NOTE 2022-09-24: Emacs 29 repurposes 'C-x v b' to a prefix key
-    ;; for branch-related commands.  I am using that now.
-
-    ;; (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
-
-    (define-key map (kbd "C-x v G") #'vc-log-search)    ; git log --grep
+    (define-key map (kbd "C-x v k") #'vc-delete-file) ; 'k' for kill==>delete is more common
+    (define-key map (kbd "C-x v G") #'vc-log-search)  ; git log --grep
     (define-key map (kbd "C-x v t") #'vc-create-tag)
-    (define-key map (kbd "C-x v f") #'vc-log-incoming)  ; the actual git fetch
+    (define-key map (kbd "C-x v f") #'vc-log-incoming)  ; git fetch
     (define-key map (kbd "C-x v o") #'vc-log-outgoing)
     (define-key map (kbd "C-x v F") #'vc-update)        ; "F" because "P" is push
     (define-key map (kbd "C-x v d") #'vc-diff))
   (let ((map vc-dir-mode-map))
-    ;; See note above about 'C-x v b'
-
-    ;; (define-key map (kbd "b") #'vc-retrieve-tag)
-
     (define-key map (kbd "t") #'vc-create-tag)
     (define-key map (kbd "O") #'vc-log-outgoing)
     (define-key map (kbd "o") #'vc-dir-find-file-other-window)
     (define-key map (kbd "f") #'vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
     (define-key map (kbd "F") #'vc-update)       ; symmetric with P: `vc-push'
     (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
-    (define-key map (kbd "k") #'vc-dir-clean-files)
-    (define-key map (kbd "G") #'vc-revert)
-    ;; TODO 2022-09-24: The prot-vc-git-branch-map needs to be reviewed.
-
-    ;; (let ((prot-vc-git-branch-map (make-sparse-keymap)))
-    ;;   (define-key map "B" prot-vc-git-branch-map)
-    ;;   (define-key prot-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
-    ;;   (define-key prot-vc-git-branch-map "s" #'vc-retrieve-tag) ; switch branch/tag
-    ;;   (define-key prot-vc-git-branch-map "l" #'vc-print-branch-log))
-    (let ((prot-vc-git-stash-map (make-sparse-keymap)))
-      (define-key map "S" prot-vc-git-stash-map)
-      (define-key prot-vc-git-stash-map "c" 'vc-git-stash) ; "create" named stash
-      (define-key prot-vc-git-stash-map "s" 'vc-git-stash-snapshot)))
+    (define-key map (kbd "k") #'vc-dir-delete-file)
+    (define-key map (kbd "G") #'vc-revert))
   (let ((map vc-git-stash-shared-map))
     (define-key map "a" 'vc-git-stash-apply-at-point)
     (define-key map "c" 'vc-git-stash) ; "create" named stash
-    (define-key map "D" 'vc-git-stash-delete-at-point)
+    (define-key map "k" 'vc-git-stash-delete-at-point) ; symmetry with `vc-dir-delete-file'
     (define-key map "p" 'vc-git-stash-pop-at-point)
     (define-key map "s" 'vc-git-stash-snapshot))
   (let ((map vc-annotate-mode-map))
@@ -140,35 +103,35 @@
     (define-key map (kbd "F") #'vc-update)
     (define-key map (kbd "P") #'vc-push)))
 
-(prot-emacs-builtin-package 'prot-vc
-  (setq prot-vc-log-limit 100)
-  (setq prot-vc-log-bulk-action-limit 50)
-  (setq prot-vc-git-log-edit-show-commits t)
-  (setq prot-vc-git-log-edit-show-commit-count 10)
-  (setq prot-vc-shell-output "*prot-vc-output*")
-  (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
+;;; Agitate
+;; A package of mine to complement VC and friends.  It is not yet
+;; available in any package archive.  I will update this section as
+;; soon as that is done (written on 2022-09-28 05:59 +0300).  Read the
+;; manual here: <https://protesilaos.com/emacs/agitate>.
+(require 'agitate "/home/prot/Git/Projects/agitate/agitate.el")
 
-  ;; NOTE: I override lots of the defaults
-  (let ((map global-map))
-    (define-key map (kbd "C-x v i") #'prot-vc-git-log-insert-commits)
-    (define-key map (kbd "C-x v p") #'prot-vc-project-or-dir)
-    (define-key map (kbd "C-x v SPC") #'prot-vc-custom-log)
-    (define-key map (kbd "C-x v g") #'prot-vc-git-grep)
-    (define-key map (kbd "C-x v a") #'prot-vc-git-patch-apply)
-    (define-key map (kbd "C-x v c") #'prot-vc-git-patch-create-dwim)
-    (define-key map (kbd "C-x v s") #'prot-vc-git-show)
-    (define-key map (kbd "C-x v r") #'prot-vc-git-find-revision)
-    (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file)
-    (define-key map (kbd "C-x v R") #'prot-vc-git-reset))
-  (let ((map vc-git-log-edit-mode-map))
-    (define-key map (kbd "C-C C-n") #'prot-vc-git-log-edit-extract-file-name)
-    (define-key map (kbd "C-C C-i") #'prot-vc-git-log-insert-commits))
-  (let ((map log-view-mode-map))
-    (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
-    (define-key map (kbd "a") #'prot-vc-git-patch-apply)
-    (define-key map (kbd "c") #'prot-vc-git-patch-create-dwim)
-    (define-key map (kbd "R") #'prot-vc-git-log-reset)
-    (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
+;; See user options `agitate-log-edit-emoji-collection' and
+;; `agitate-log-edit-conventional-commits-collection'.
+
+(add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
+(advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
+
+(let ((map global-map))
+  (define-key map (kbd "C-x v =") #'agitate-diff-buffer-or-file) ; replace `vc-diff'
+  (define-key map (kbd "C-x v g") #'agitate-vc-git-grep) ; replace `vc-annotate'
+  (define-key map (kbd "C-x v s") #'agitate-vc-git-show)
+  (define-key map (kbd "C-x v c") #'agitate-vc-git-format-patch-single))
+(let ((map diff-mode-map))
+  (define-key map (kbd "C-c C-b") #'agitate-diff-refine-cycle) ; replace `diff-refine-hunk'
+  (define-key map (kbd "C-c C-n") #'agitate-diff-narrow-dwim))
+(let ((map log-view-mode-map))
+  (define-key map (kbd "w") #'agitate-log-view-kill-revision))
+(let ((map vc-git-log-view-mode-map))
+  (define-key map (kbd "c") #'agitate-vc-git-format-patch-single))
+(let ((map log-edit-mode-map))
+  (define-key map (kbd "C-c C-i C-n") #'agitate-log-edit-insert-file-name)
+  (define-key map (kbd "C-c C-i C-e") #'agitate-log-edit-emoji-commit)
+  (define-key map (kbd "C-c C-i C-c") #'agitate-log-edit-conventional-commit))
 
 ;;; Interactive and powerful git front-end (Magit)
 
