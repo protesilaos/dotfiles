@@ -71,13 +71,12 @@
           repeat-exit-key (kbd "<escape>")
           repeat-keep-prefix nil
           repeat-check-key t
-          repeat-echo-function 'ignore)
+          repeat-echo-function 'ignore
+          ;; Technically, this is not in repeal.el, though it is the
+          ;; same idea.
+          set-mark-command-repeat-pop t)
 
-  ;; Technically, this is not in repeal.el, though it is the same
-  ;; idea.
-  (setopt set-mark-command-repeat-pop t)
-
-  (repeat-mode 1))
+  (add-hook 'after-init-hook #'repeat-mode))
 
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
