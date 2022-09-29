@@ -104,7 +104,7 @@
            :cursor-type (bar . 2)
            :blink-cursor-interval 0.5)
           (underscore
-           :cursor-type (hbar . 1)
+           :cursor-type (hbar . 2)
            :blink-cursor-blinks 50)
           (t ; the default values
            :cursor-type box
