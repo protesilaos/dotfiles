@@ -123,7 +123,7 @@
   (add-hook 'kill-emacs-hook #'cursory-store-latest-preset)
 
   ;; We have to use the "point" mnemonic, because C-c c is often the
-  ;; suggested binding for `org-capture'.
+  ;; suggested binding for `org-capture' and is the one I use as well.
   (define-key global-map (kbd "C-c p") #'cursory-set-preset))
 
 (provide 'prot-emacs-theme-extras)
