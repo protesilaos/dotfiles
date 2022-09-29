@@ -66,8 +66,16 @@
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
-  (setq repeat-on-final-keystroke t)
-  (setq set-mark-command-repeat-pop t)
+  (setopt repeat-on-final-keystroke t ; `setopt' is Emacs 29
+          repeat-exit-timeout 5
+          repeat-exit-key (kbd "<escape>")
+          repeat-keep-prefix nil
+          repeat-check-key t
+          repeat-echo-function 'ignore)
+
+  ;; Technically, this is not in repeal.el, though it is the same
+  ;; idea.
+  (setopt set-mark-command-repeat-pop t)
 
   (repeat-mode 1))
 
