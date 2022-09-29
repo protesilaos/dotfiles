@@ -1,9 +1,15 @@
 ;;; Read environment variables
-;; TODO 2022-07-19: Do I still need this on GNOME Wayland?
-(prot-emacs-elpa-package 'exec-path-from-shell
-  (setq exec-path-from-shell-variables
-        '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
-  (exec-path-from-shell-initialize))
+
+;; NOTE 2022-09-29: It seems I no longer need `exec-path-from-shell'.
+;; It was necessary in earlier test when I was using the --with-pgtk
+;; build of Emacs in a Sway WM session.  I am now using GNOME on
+;; Wayland and everything seems to be in order.  But I am keeping it
+;; around just in case.
+
+;; (prot-emacs-elpa-package 'exec-path-from-shell
+;;   (setq exec-path-from-shell-variables
+;;         '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
+;;   (exec-path-from-shell-initialize))
 
 ;;; Common auxiliary functions (prot-common.el)
 (prot-emacs-builtin-package 'prot-common)
