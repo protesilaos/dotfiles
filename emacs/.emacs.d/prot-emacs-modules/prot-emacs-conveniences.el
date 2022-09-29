@@ -5,33 +5,33 @@
   (define-key map "r" #'rename-uniquely))
 
 (prot-emacs-builtin-package 'dictionary
-  (setq dictionary-server "dict.org")
-  (setq dictionary-default-popup-strategy "lev") ; read doc string
-  (setq dictionary-create-buttons nil)
-  (setq dictionary-use-single-buffer t)
+  (setopt dictionary-server "dict.org"
+          dictionary-default-popup-strategy "lev" ; read doc string
+          dictionary-create-buttons nil
+          dictionary-use-single-buffer t)
   (define-key global-map (kbd "C-c d") #'dictionary-search))
 
 ;;; Mouse wheel behaviour
 (prot-emacs-builtin-package 'mouse
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
-  (setq mouse-wheel-scroll-amount
-        '(1
-          ((shift) . 5)
-          ((meta) . 0.5)
-          ((control) . text-scale)))
-  (setq mouse-drag-copy-region nil)
-  (setq make-pointer-invisible t)
-  (setq mouse-wheel-progressive-speed t)
-  (setq mouse-wheel-follow-mouse t)
+  (setopt mouse-wheel-scroll-amount
+          '(1
+            ((shift) . 5)
+            ((meta) . 0.5)
+            ((control) . text-scale))
+          mouse-drag-copy-region nil
+          make-pointer-invisible t
+          mouse-wheel-progressive-speed t
+          mouse-wheel-follow-mouse t)
   (add-hook 'after-init-hook #'mouse-wheel-mode)
   (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window))
 
 ;;; Scrolling behaviour
 ;; These four come from the C source code.
-(setq-default scroll-preserve-screen-position t)
-(setq-default scroll-conservatively 1) ; affects `scroll-step'
-(setq-default scroll-margin 0)
-(setq-default next-screen-context-lines 0)
+(setq-default scroll-preserve-screen-position t
+              scroll-conservatively 1 ; affects `scroll-step'
+              scroll-margin 0
+              next-screen-context-lines 0)
 
 ;;; Delete selection
 (prot-emacs-builtin-package 'delsel
@@ -39,26 +39,26 @@
 
 ;;; Tooltips (tooltip-mode)
 (prot-emacs-builtin-package 'tooltip
-  (setq tooltip-delay 0.5)
-  (setq tooltip-short-delay 0.5)
-  (setq x-gtk-use-system-tooltips nil)
-  (setq tooltip-frame-parameters
-        '((name . "tooltip")
-          (internal-border-width . 6)
-          (border-width . 0)
-          (no-special-glyphs . t)))
+  (setopt tooltip-delay 0.5
+          tooltip-short-delay 0.5
+          x-gtk-use-system-tooltips nil
+          tooltip-frame-parameters
+          '((name . "tooltip")
+            (internal-border-width . 6)
+            (border-width . 0)
+            (no-special-glyphs . t)))
   (add-hook 'after-init-hook #'tooltip-mode))
 
 ;;; Auto revert mode
 (prot-emacs-builtin-package 'autorevert
-  (setq auto-revert-verbose t)
+  (setopt auto-revert-verbose t)
   (add-hook 'after-init-hook #'global-auto-revert-mode))
 
 ;;; Preserve contents of system clipboard
-(setq save-interprogram-paste-before-kill t)
+(setopt save-interprogram-paste-before-kill t)
 
 ;;; Newline characters for file ending
-(setq mode-require-final-newline 'visit-save)
+(setopt mode-require-final-newline 'visit-save)
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
@@ -66,7 +66,7 @@
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
-  (setopt repeat-on-final-keystroke t ; `setopt' is Emacs 29
+  (setopt repeat-on-final-keystroke t
           repeat-exit-timeout 5
           repeat-exit-key (kbd "<escape>")
           repeat-keep-prefix nil
@@ -75,31 +75,32 @@
           ;; Technically, this is not in repeal.el, though it is the
           ;; same idea.
           set-mark-command-repeat-pop t)
-
   (add-hook 'after-init-hook #'repeat-mode))
 
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
   ;; Disable the damn thing
-  (setq custom-file (make-temp-file "emacs-custom-")))
+  (setopt custom-file (make-temp-file "emacs-custom-")))
 
 ;;; Bongo music or media manager (and prot-bongo.el)
 (prot-emacs-elpa-package 'bongo
-  (setq bongo-default-directory "~/Music/")
-  (setq bongo-prefer-library-buffers nil)
-  (setq bongo-insert-whole-directory-trees t)
-  (setq bongo-logo nil)
-  (setq bongo-display-track-icons nil)
-  (setq bongo-display-track-lengths nil)
-  (setq bongo-display-header-icons nil)
-  (setq bongo-display-playback-mode-indicator t)
-  (setq bongo-display-inline-playback-progress nil) ; t slows down the playlist buffer
-  (setq bongo-join-inserted-tracks nil)
-  (setq bongo-field-separator (propertize " · " 'face 'shadow))
-  (setq bongo-mark-played-tracks t)
-  (setq bongo-vlc-program-name "cvlc")
+  (setopt bongo-default-directory "~/Music/"
+          bongo-prefer-library-buffers nil
+          bongo-insert-whole-directory-trees t
+          bongo-logo nil
+          bongo-display-track-icons nil
+          bongo-display-track-lengths nil
+          bongo-display-header-icons nil
+          bongo-display-playback-mode-indicator t
+          bongo-display-inline-playback-progress nil ; t slows down the playlist buffer
+          bongo-join-inserted-tracks nil
+          bongo-field-separator (propertize " · " 'face 'shadow)
+          bongo-mark-played-tracks t
+          bongo-vlc-program-name "cvlc")
+
   (bongo-mode-line-indicator-mode -1)
   (bongo-header-line-mode -1)
+
   (let ((map global-map))
     (define-key map (kbd "C-c b") #'bongo)
     (define-key map (kbd "<C-XF86AudioPlay>") #'bongo-pause/resume)
@@ -140,14 +141,16 @@
     (define-key map (kbd "I") #'bongo-insert-special)))
 
 (with-eval-after-load 'bongo
+  ;; NOTE 2022-09-29: I plan to rewrite `prot-bongo.el'.  Do not copy
+  ;; those as most of them will be rewritten from scratch.
   (prot-emacs-builtin-package 'prot-bongo
-    (setq prot-bongo-enabled-backends '(mpv vlc))
-    (setq prot-bongo-playlist-section-delimiter (make-string 30 ?*))
-    (setq prot-bongo-playlist-heading-delimiter "§")
-    (setq prot-bongo-playlist-directory
-          (concat
-           (file-name-as-directory bongo-default-directory)
-           (file-name-as-directory "playlists")))
+    (setopt prot-bongo-enabled-backends '(mpv vlc)
+            prot-bongo-playlist-section-delimiter (make-string 30 ?*)
+            prot-bongo-playlist-heading-delimiter "§"
+            prot-bongo-playlist-directory
+            (concat
+             (file-name-as-directory bongo-default-directory)
+             (file-name-as-directory "playlists")))
     ;; Those set up a few extras: read each function's doc string.  Pass
     ;; an argument to undo their effects.
     (prot-bongo-enabled-backends)
@@ -187,9 +190,9 @@
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (prot-emacs-elpa-package 'tmr
-  (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
-  (setq tmr-notification-urgency 'normal)
-  (setq tmr-description-list 'tmr-description-history)
+  (setopt tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+          tmr-notification-urgency 'normal
+          tmr-description-list 'tmr-description-history)
 
   ;; You do not need these if you install the package.
   (require 'tmr-notification)

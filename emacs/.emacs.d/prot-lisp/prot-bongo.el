@@ -49,7 +49,7 @@
 (defcustom prot-bongo-enabled-backends '(mpv vlc)
   "List of enabled backends.
 See `bongo-backends' for a list of available backends."
-  :type 'list
+  :type '(repeat symbol)
   :group 'prot-bongo)
 
 (defcustom prot-bongo-playlist-section-delimiter (make-string 30 ?*)
