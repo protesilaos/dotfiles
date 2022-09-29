@@ -1,49 +1,34 @@
 ;;; Client-agnostic email settings
 (prot-emacs-builtin-package 'auth-source
-  (setq auth-sources '("~/.authinfo.gpg"))
-  (setq user-full-name "Protesilaos Stavrou")
-  (setq user-mail-address "public@protesilaos.com"))
+  (setopt auth-sources '("~/.authinfo.gpg")
+          user-full-name "Protesilaos Stavrou"
+          user-mail-address "public@protesilaos.com"))
 
 (prot-emacs-builtin-package 'mm-encode
-  (setq mm-encrypt-option nil) ; use 'guided if you need more control
-  (setq mm-sign-option nil))   ; same
+  (setopt mm-encrypt-option nil ; use 'guided if you need more control
+          mm-sign-option nil))  ; same
 
 (prot-emacs-builtin-package 'mml-sec
-  (setq mml-secure-openpgp-encrypt-to-self t)
-  (setq mml-secure-openpgp-sign-with-sender t)
-  (setq mml-secure-smime-encrypt-to-self t)
-  (setq mml-secure-smime-sign-with-sender t))
+  (setopt mml-secure-openpgp-encrypt-to-self t
+          mml-secure-openpgp-sign-with-sender t
+          mml-secure-smime-encrypt-to-self t
+          mml-secure-smime-sign-with-sender t))
 
 (prot-emacs-builtin-package 'message
-  (setq mail-user-agent 'message-user-agent)
-  (setq mail-header-separator (purecopy "*****"))
-  (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
-  (setq compose-mail-user-agent-warnings nil)
-  (setq message-mail-user-agent t)      ; use `mail-user-agent'
-  (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
-  (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
-
-  ;; Instead of using a citation format like this:
-  ;;
-  ;; On DATE, PERSON wrote:
-  ;; > MESSAGE
-  ;;
-  ;; I disable the citation line and `message-ignored-cited-headers' to
-  ;; get this template instead:
-  ;;
-  ;; > From: PERSON
-  ;; > Date: DATE
-  ;; >
-  ;; > MESSAGE
-  ;;
-  ;; (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
-  ;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
-  (setq message-citation-line-function nil)
-  (setq message-ignored-cited-headers nil) ; default is "." for all headers
-
-  (setq message-confirm-send nil)
-  (setq message-kill-buffer-on-exit t)
-  (setq message-wide-reply-confirm-recipients t)
+  (setopt mail-user-agent 'message-user-agent
+          mail-header-separator (purecopy "*****")
+          message-elide-ellipsis "\n> [... %l lines elided]\n"
+          compose-mail-user-agent-warnings nil
+          message-mail-user-agent t      ; use `mail-user-agent'
+          mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
+          message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
+          message-citation-line-function #'message-insert-formatted-citation-line
+          message-citation-line-format (concat "> From: %f\n"
+                                               "> Date: %a, %e %b %Y %T %z\n")
+          message-ignored-cited-headers "" ; default is "." for all headers
+          message-confirm-send nil
+          message-kill-buffer-on-exit t
+          message-wide-reply-confirm-recipients t)
   (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (add-hook 'message-setup-hook #'message-sort-headers))
@@ -62,150 +47,155 @@
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
         (inf (prot-common-auth-get-field "inf" :user)))
-    (setq notmuch-identities
-          (mapcar (lambda (str)
-                    (format "%s <%s>" user-full-name str))
-                  (list prv pub inf)))
-    (setq notmuch-fcc-dirs
-          `((,prv . "prv/Sent")
-            (,inf . "inf/Sent")
-            (,pub . "pub/Sent"))))
+    (setopt notmuch-identities
+            (mapcar (lambda (str)
+                      (format "%s <%s>" user-full-name str))
+                    (list prv pub inf))
+            notmuch-fcc-dirs
+            `((,prv . "prv/Sent")
+              (,inf . "inf/Sent")
+              (,pub . "pub/Sent"))))
 
 ;;;; General UI
-  (setq notmuch-show-logo nil)
-  (setq notmuch-column-control 1.0)
-  (setq notmuch-hello-auto-refresh t)
-  (setq notmuch-hello-recent-searches-max 20)
-  (setq notmuch-hello-thousands-separator "")
-  (setq notmuch-hello-sections '(notmuch-hello-insert-saved-searches))
-  (setq notmuch-show-all-tags-list t)
+  (setopt notmuch-show-logo nil
+          notmuch-column-control 1.0
+          notmuch-hello-auto-refresh t
+          notmuch-hello-recent-searches-max 20
+          notmuch-hello-thousands-separator ""
+          notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
+          notmuch-show-all-tags-list t)
 
 ;;;; Search
-  (setq notmuch-search-oldest-first nil)
-  (setq notmuch-search-result-format
-        '(("date" . "%12s  ")
-          ("count" . "%-7s  ")
-          ("authors" . "%-20s  ")
-          ("subject" . "%-80s  ")
-          ("tags" . "(%s)")))
-  (setq notmuch-tree-result-format
-        '(("date" . "%12s  ")
-          ("authors" . "%-20s  ")
-          ((("tree" . "%s")
-            ("subject" . "%s"))
-           . " %-80s  ")
-          ("tags" . "(%s)")))
-  (setq notmuch-search-line-faces
-        '(("unread" . notmuch-search-unread-face)
-          ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
-          ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
-          ;; ;; an intense style which is very distracting when I filter
-          ;; ;; my mail to include this tag.
-          ;;
-          ;; ("flag" . notmuch-search-flagged-face)
-          ;;
-          ;; Using `italic' instead is just fine.  Though I also tried
-          ;; it without any face and I was okay with it.  The upside of
-          ;; having a face is that you can identify the message even
-          ;; when the window is split and you don't see the tags.
-          ("flag" . italic)))
-  (setq notmuch-show-empty-saved-searches t)
-  (setq notmuch-saved-searches
-        `(( :name "📥 inbox"
-            :query "tag:inbox"
-            :sort-order newest-first
-            :key ,(kbd "i"))
-          ( :name "📔 unread (inbox)"
-            :query "tag:unread and tag:inbox"
-            :sort-order newest-first
-            :key ,(kbd "u"))
-          ( :name "📯 unread all"
-            :query "tag:unread not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "U"))
-          ( :name "📬 mailing lists"
-            :query "tag:list not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "m"))
-          ;; Emacs
-          ( :name "🔨 emacs-devel"
-            :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "e d"))
-          ( :name "🦄 emacs-orgmode"
-            :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "e o"))
-          ( :name "🐛 emacs-bugs"
-            :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
-            :sort-order newest-first :key ,(kbd "e b"))
-          ( :name "📚 emacs-humanities"
-            :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
-            :sort-order newest-first :key ,(kbd "e h"))
-          ;; Others
-          ( :name "📧 notmuch"
-            :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "on"))
-          ( :name "🛖 sourcehut"
-            :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "os"))))
+  (setopt notmuch-search-oldest-first nil
+          notmuch-search-result-format
+          '(("date" . "%12s  ")
+            ("count" . "%-7s  ")
+            ("authors" . "%-20s  ")
+            ("subject" . "%-80s  ")
+            ("tags" . "(%s)"))
+          notmuch-tree-result-format
+          '(("date" . "%12s  ")
+            ("authors" . "%-20s  ")
+            ((("tree" . "%s")
+              ("subject" . "%s"))
+             . " %-80s  ")
+            ("tags" . "(%s)"))
+          notmuch-search-line-faces
+          '(("unread" . notmuch-search-unread-face)
+            ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
+            ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
+            ;; ;; an intense style which is very distracting when I filter
+            ;; ;; my mail to include this tag.
+            ;;
+            ;; ("flag" . notmuch-search-flagged-face)
+            ;;
+            ;; Using `italic' instead is just fine.  Though I also tried
+            ;; it without any face and I was okay with it.  The upside of
+            ;; having a face is that you can identify the message even
+            ;; when the window is split and you don't see the tags.
+            ("flag" . italic))
+          notmuch-show-empty-saved-searches t
+          notmuch-saved-searches
+          `(( :name "📥 inbox"
+              :query "tag:inbox"
+              :sort-order newest-first
+              :key ,(kbd "i"))
+            ( :name "📔 unread (inbox)"
+              :query "tag:unread and tag:inbox"
+              :sort-order newest-first
+              :key ,(kbd "u"))
+            ( :name "📯 unread all"
+              :query "tag:unread not tag:archived"
+              :sort-order newest-first
+              :key ,(kbd "U"))
+            ( :name "📬 mailing lists"
+              :query "tag:list not tag:archived"
+              :sort-order newest-first
+              :key ,(kbd "m"))
+            ;; Emacs
+            ( :name "🔨 emacs-devel"
+              :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
+              :sort-order newest-first
+              :key ,(kbd "e d"))
+            ( :name "🦄 emacs-orgmode"
+              :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
+              :sort-order newest-first
+              :key ,(kbd "e o"))
+            ( :name "🐛 emacs-bugs"
+              :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
+              :sort-order newest-first :key ,(kbd "e b"))
+            ( :name "📚 emacs-humanities"
+              :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
+              :sort-order newest-first :key ,(kbd "e h"))
+            ;; Others
+            ( :name "📧 notmuch"
+              :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
+              :sort-order newest-first
+              :key ,(kbd "on"))
+            ( :name "🛖 sourcehut"
+              :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
+              :sort-order newest-first
+              :key ,(kbd "os"))))
 
 ;;;; Tags
-  (setq notmuch-archive-tags nil) ; I do not archive email
-  (setq notmuch-message-replied-tags '("+replied"))
-  (setq notmuch-message-forwarded-tags '("+forwarded"))
-  (setq notmuch-show-mark-read-tags '("-unread"))
-  (setq notmuch-draft-tags '("+draft"))
-  (setq notmuch-draft-folder "drafts")
-  (setq notmuch-draft-save-plaintext 'ask)
+  (setopt notmuch-archive-tags nil ; I do not archive email
+          notmuch-message-replied-tags '("+replied")
+          notmuch-message-forwarded-tags '("+forwarded")
+          notmuch-show-mark-read-tags '("-unread")
+          notmuch-draft-tags '("+draft")
+          notmuch-draft-folder "drafts"
+          notmuch-draft-save-plaintext 'ask)
+
   ;; Also see `notmuch-tagging-keys' in the `prot-notmuch' section
   ;; further below.
 
+  ;; FIXME 2022-09-29: `setopt' does not work for this one, even
+  ;; though `setq' does the right thing.  Check the definition of
+  ;; `notmuch-tag-format-type'.
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
           ("flag" (propertize tag 'face 'notmuch-tag-flagged)
-           (concat tag "🚩")))) ; the tag is still "flag"; the emoji is cosmetic
-  (setq notmuch-tag-deleted-formats
+           (concat tag "🚩"))) ; the tag is still "flag"; the emoji is cosmetic
+        notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag 'notmuch-tag-deleted)
            (concat "🚫" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-deleted)
-           (concat "🚫" tag))))
-  (setq notmuch-tag-added-formats
+           (concat "🚫" tag)))
+        notmuch-tag-added-formats
         '((".*" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "✏️" tag))))
 
 ;;;; Email composition
-  (setq notmuch-mua-compose-in 'current-window)
-  (setq notmuch-mua-hidden-headers nil) ; TODO 2021-05-12: Review hidden headers
-  (setq notmuch-address-command 'internal)
-  (setq notmuch-always-prompt-for-sender t)
-  (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
-  (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
-  (setq notmuch-mua-user-agent-function #'notmuch-mua-user-agent-full)
-  (setq notmuch-maildir-use-notmuch-insert t)
-  (setq notmuch-crypto-process-mime t)
-  (setq notmuch-crypto-get-keys-asynchronously t)
-  (setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
-        (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
-                "pi[èe]ce\s+jointe?\\|"
-                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
+  (setopt notmuch-mua-compose-in 'current-window
+          notmuch-mua-hidden-headers nil ; TODO 2021-05-12: Review hidden headers
+          notmuch-address-command 'internal
+          notmuch-always-prompt-for-sender t
+          notmuch-mua-cite-function 'message-cite-original-without-signature
+          notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never
+          notmuch-mua-user-agent-function nil
+          notmuch-maildir-use-notmuch-insert t
+          notmuch-crypto-process-mime t
+          notmuch-crypto-get-keys-asynchronously t
+          notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
+          (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
+                  "pi[èe]ce\s+jointe?\\|"
+                  "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
 ;;;; Reading messages
-  (setq notmuch-show-relative-dates t)
-  (setq notmuch-show-all-multipart/alternative-parts nil)
-  (setq notmuch-show-indent-messages-width 0)
-  (setq notmuch-show-indent-multipart nil)
-  (setq notmuch-show-part-button-default-action 'notmuch-show-view-part)
-  (setq notmuch-show-text/html-blocked-images ".") ; block everything
+  (setopt notmuch-show-relative-dates t
+          notmuch-show-all-multipart/alternative-parts nil
+          notmuch-show-indent-messages-width 0
+          notmuch-show-indent-multipart nil
+          notmuch-show-part-button-default-action 'notmuch-show-view-part
+          notmuch-show-text/html-blocked-images "." ; block everything
+          notmuch-wash-wrap-lines-length 120
+          notmuch-unthreaded-show-out nil
+          notmuch-message-headers '("To" "Cc" "Subject" "Date")
+          notmuch-message-headers-visible t)
+
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
-    (setq notmuch-wash-cqitation-lines-prefix count
-          notmuch-wash-citation-lines-suffix count))
-  (setq notmuch-wash-wrap-lines-length 120)
-  (setq notmuch-unthreaded-show-out nil)
-  (setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
-  (setq notmuch-message-headers-visible t)
+    (setopt notmuch-wash-cqitation-lines-prefix count
+            notmuch-wash-citation-lines-suffix count))
 
 ;;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
@@ -230,12 +220,12 @@
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
-  (setq notmuch-tagging-keys
-        `((,(kbd "d") prot-notmuch-mark-delete-tags "⛔ Mark for deletion")
-          (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
-          (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
-          (,(kbd "r") ("-unread") "✅ Mark as read")
-          (,(kbd "u") ("+unread") "📔 Mark as unread")))
+  (setopt notmuch-tagging-keys
+          `((,(kbd "d") prot-notmuch-mark-delete-tags "⛔ Mark for deletion")
+            (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
+            (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
+            (,(kbd "r") ("-unread") "✅ Mark as read")
+            (,(kbd "u") ("+unread") "📔 Mark as unread")))
 
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒"))) ; cosmetic emoji, tag is the same
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
@@ -273,21 +263,21 @@
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-elpa-package 'notmuch-indicator
   ;; Just the default values...
-  (setq notmuch-indicator-args '((:terms "tag:unread and tag:inbox" :label "@"))) ; also accepts a :face, read doc string
-  (setq notmuch-indicator-refresh-count (* 60 3))
-  (setq notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
+  (setopt notmuch-indicator-args '((:terms "tag:unread and tag:inbox" :label "@")) ; also accepts a :face, read doc string
+          notmuch-indicator-refresh-count (* 60 3)
+          notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
 
   (notmuch-indicator-mode 1))
 
 ;;; Sending email (SMTP)
 (prot-emacs-builtin-package 'smtpmail
-  (setq smtpmail-default-smtp-server "mail.gandi.net")
-  (setq smtpmail-smtp-server "mail.gandi.net")
-  (setq smtpmail-stream-type 'ssl)
-  (setq smtpmail-smtp-service 465)
-  (setq smtpmail-queue-mail nil))
+  (setopt smtpmail-default-smtp-server "mail.gandi.net"
+          smtpmail-smtp-server "mail.gandi.net"
+          smtpmail-stream-type 'ssl
+          smtpmail-smtp-service 465
+          smtpmail-queue-mail nil))
 
 (prot-emacs-builtin-package 'sendmail
-  (setq send-mail-function 'smtpmail-send-it))
+  (setopt send-mail-function 'smtpmail-send-it))
 
 (provide 'prot-emacs-email)
