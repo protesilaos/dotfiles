@@ -104,34 +104,33 @@
     (define-key map (kbd "P") #'vc-push)))
 
 ;;; Agitate
-;; A package of mine to complement VC and friends.  It is not yet
-;; available in any package archive.  I will update this section as
-;; soon as that is done (written on 2022-09-28 05:59 +0300).  Read the
-;; manual here: <https://protesilaos.com/emacs/agitate>.
-(require 'agitate "/home/prot/Git/Projects/agitate/agitate.el")
+;; A package of mine to complement VC and friends.  Read the manual
+;; here: <https://protesilaos.com/emacs/agitate>.
+(prot-emacs-elpa-package 'agitate
+  (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
+  (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
-(add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
-(advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
-
-(let ((map global-map))
-  (define-key map (kbd "C-x v =") #'agitate-diff-buffer-or-file) ; replace `vc-diff'
-  (define-key map (kbd "C-x v g") #'agitate-vc-git-grep) ; replace `vc-annotate'
-  (define-key map (kbd "C-x v s") #'agitate-vc-git-show)
-  (define-key map (kbd "C-x v c") #'agitate-vc-git-format-patch-single))
-(let ((map diff-mode-map))
-  (define-key map (kbd "C-c C-b") #'agitate-diff-refine-cycle) ; replace `diff-refine-hunk'
-  (define-key map (kbd "C-c C-n") #'agitate-diff-narrow-dwim))
-(let ((map log-view-mode-map))
-  (define-key map (kbd "w") #'agitate-log-view-kill-revision)
-  (define-key map (kbd "W") #'agitate-log-view-kill-revision-expanded))
-(let ((map vc-git-log-view-mode-map))
-  (define-key map (kbd "c") #'agitate-vc-git-format-patch-single))
-(let ((map log-edit-mode-map))
-  (define-key map (kbd "C-c C-i C-n") #'agitate-log-edit-insert-file-name)
-  ;; See user options `agitate-log-edit-emoji-collection' and
-  ;; `agitate-log-edit-conventional-commits-collection'.
-  (define-key map (kbd "C-c C-i C-e") #'agitate-log-edit-emoji-commit)
-  (define-key map (kbd "C-c C-i C-c") #'agitate-log-edit-conventional-commit))
+  (let ((map global-map))
+    (define-key map (kbd "C-x v =") #'agitate-diff-buffer-or-file) ; replace `vc-diff'
+    (define-key map (kbd "C-x v g") #'agitate-vc-git-grep) ; replace `vc-annotate'
+    (define-key map (kbd "C-x v s") #'agitate-vc-git-show)
+    (define-key map (kbd "C-x v w") #'agitate-vc-git-kill-commit-message)
+    (define-key map (kbd "C-x v c") #'agitate-vc-git-format-patch-single)
+    (define-key map (kbd "C-x v n") #'agitate-vc-git-format-patch-n-from-head))
+  (let ((map diff-mode-map))
+    (define-key map (kbd "C-c C-b") #'agitate-diff-refine-cycle) ; replace `diff-refine-hunk'
+    (define-key map (kbd "C-c C-n") #'agitate-diff-narrow-dwim))
+  (let ((map log-view-mode-map))
+    (define-key map (kbd "w") #'agitate-log-view-kill-revision)
+    (define-key map (kbd "W") #'agitate-log-view-kill-revision-expanded))
+  (let ((map vc-git-log-view-mode-map))
+    (define-key map (kbd "c") #'agitate-vc-git-format-patch-single))
+  (let ((map log-edit-mode-map))
+    (define-key map (kbd "C-c C-i C-n") #'agitate-log-edit-insert-file-name)
+    ;; See user options `agitate-log-edit-emoji-collection' and
+    ;; `agitate-log-edit-conventional-commits-collection'.
+    (define-key map (kbd "C-c C-i C-e") #'agitate-log-edit-emoji-commit)
+    (define-key map (kbd "C-c C-i C-c") #'agitate-log-edit-conventional-commit)))
 
 ;;; Interactive and powerful git front-end (Magit)
 
