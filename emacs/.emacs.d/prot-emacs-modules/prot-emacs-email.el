@@ -24,7 +24,8 @@
           message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
           message-citation-line-function #'message-insert-formatted-citation-line
           message-citation-line-format (concat "> From: %f\n"
-                                               "> Date: %a, %e %b %Y %T %z\n")
+                                               "> Date: %a, %e %b %Y %T %z\n"
+                                               ">")
           message-ignored-cited-headers "" ; default is "." for all headers
           message-confirm-send nil
           message-kill-buffer-on-exit t
