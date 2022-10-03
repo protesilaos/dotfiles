@@ -32,12 +32,6 @@
            (window-height . 0.16)
            (side . top)
            (slot . 2))
-          ;; left side window
-          ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
-           (display-buffer-reuse-mode-window display-buffer-in-side-window)
-           (window-width . 0.25)
-           (side . left)
-           (slot . 0))
           ;; right side window
           ("\\*keycast\\*"
            (display-buffer-in-side-window)
@@ -86,6 +80,12 @@
           ("\\*ispell-top-choices\\*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
+          ;; In a direction
+          ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
+           (display-buffer-reuse-mode-window display-buffer-in-direction)
+           (direction . left)
+           (body-function . (lambda (_win)
+                              (balance-windows-area))))
           ;; new frame
           (prot/display-buffer-shell-or-term-p ; see definition below
            (display-buffer-pop-up-frame)
