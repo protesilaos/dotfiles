@@ -127,6 +127,8 @@ use in `display-buffer-alist'."
   (add-hook 'custom-mode-hook #'visual-line-mode)
 
   (defun prot/quit-window-rebalance (&rest _)
+    ;; FIXME 2022-10-03: Or maybe use `balance-windows'?  Experience
+    ;; will tell.
     (balance-windows-area))
 
   (advice-add #'quit-window :after #'prot/quit-window-rebalance)
