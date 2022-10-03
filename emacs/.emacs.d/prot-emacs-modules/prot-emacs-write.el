@@ -70,8 +70,9 @@
     ;; `markdown-mode-map', and/or `text-mode-map'.
     (define-key map (kbd "C-c n i") #'denote-link) ; "insert" mnemonic
     (define-key map (kbd "C-c n I") #'denote-link-add-links)
-    (define-key map (kbd "C-c n l") #'denote-link-find-file) ; "list" links
     (define-key map (kbd "C-c n b") #'denote-link-backlinks)
+    (define-key map (kbd "C-c n f f") #'denote-link-find-file)
+    (define-key map (kbd "C-c n f b") #'denote-link-find-backlink)
     ;; Note that `denote-rename-file' can work from any context, not
     ;; just Dired buffers.  That is why we bind it here to the
     ;; `global-map'.
