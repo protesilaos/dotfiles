@@ -69,6 +69,11 @@
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.2)
            (dedicated . t))
+          ((derived-mode . reb-mode) ; M-x re-builder
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . 4)
+           (dedicated . t)
+           (preserve-size . t))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
