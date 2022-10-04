@@ -85,7 +85,7 @@
            (display-buffer-reuse-mode-window display-buffer-in-direction)
            (direction . left)
            (body-function . (lambda (_win)
-                              (balance-windows-area))))
+                              (balance-windows))))
           ;; new frame
           (prot/display-buffer-shell-or-term-p ; see definition below
            (display-buffer-pop-up-frame)
@@ -129,7 +129,7 @@ use in `display-buffer-alist'."
   (defun prot/quit-window-rebalance (&rest _)
     ;; FIXME 2022-10-03: Or maybe use `balance-windows'?  Experience
     ;; will tell.
-    (balance-windows-area))
+    (balance-windows))
 
   (advice-add #'quit-window :after #'prot/quit-window-rebalance)
 
