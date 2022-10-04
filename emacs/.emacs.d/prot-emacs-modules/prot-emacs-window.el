@@ -73,7 +73,7 @@
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 4)
            (dedicated . t)
-           (preserve-size . t))
+           (preserve-size . (t . t))) ; evaluate: (info "(elisp) Buffer Display Action Alists")
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
