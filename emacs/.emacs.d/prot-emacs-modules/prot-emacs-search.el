@@ -76,7 +76,11 @@
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
   (setq xref-file-name-display 'project-relative)
-  (setq xref-search-program 'grep))
+  (setq xref-search-program
+        (cond
+         ((executable-find "ugrep") 'ugrep)
+         ((or (executable-find "ripgrep") (executable-find "rg")) 'ripgrep)
+         (t 'grep))))
 
 ;;; Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
 (prot-emacs-builtin-package 'bookmark
