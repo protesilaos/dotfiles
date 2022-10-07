@@ -68,7 +68,7 @@
 (prot-emacs-builtin-package 'repeat
   (setopt repeat-on-final-keystroke t
           repeat-exit-timeout 5
-          repeat-exit-key (kbd "<escape>")
+          repeat-exit-key "<escape>"
           repeat-keep-prefix nil
           repeat-check-key t
           repeat-echo-function 'ignore
