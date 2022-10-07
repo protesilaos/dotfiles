@@ -10,45 +10,23 @@
         `(;; no window
           ("\\`\\*Async Shell Command\\*\\'"
            (display-buffer-no-window))
-          ;; top side window
-          ("\\*world-clock.*"
-           (display-buffer-in-side-window)
-           (window-height . 0.16)
-           (side . top)
-           (slot . -1))
-          ((derived-mode . flymake-diagnostics-buffer-mode)
-           (display-buffer-in-side-window)
-           (window-height . 0.16)
-           (side . top)
-           (slot . 0))
-          ((derived-mode . messages-buffer-mode)
-           (display-buffer-in-side-window)
-           (window-height . 0.16)
-           (side . top)
-           (slot . 1))
-          ((or . ((derived-mode . backtrace-mode)
-                  "\\*\\(Warnings\\|Compile-Log\\)\\*"))
-           (display-buffer-in-side-window)
-           (window-height . 0.16)
-           (side . top)
-           (slot . 2))
-          ;; right side window
-          ("\\*keycast\\*"
-           (display-buffer-in-side-window)
-           (dedicated . t)
-           (window-width . 0.25)
-           (side . right)
-           (slot . -1)
-           (window-parameters . ((no-other-window . t)
-                                 (mode-line-format . none))))
           ;; bottom side window
-          ("\\*Org Select\\*"
+          ("\\*Org Select\\*" ; the `org-capture' key selection
            (display-buffer-in-side-window)
            (dedicated . t)
            (side . bottom)
            (slot . 0)
            (window-parameters . ((mode-line-format . none))))
           ;; bottom buffer (NOT side window)
+          ((or . ((derived-mode . flymake-diagnostics-buffer-mode)
+                  (derived-mode . messages-buffer-mode)
+                  (derived-mode . backtrace-mode)
+                  "\\*\\(Warnings\\|Compile-Log\\)\\*"
+                  "\\*world-clock.*"))
+           (display-buffer-reuse-mode-window display-buffer-at-bottom)
+           (window-height . 0.3)
+           (dedicated . t)
+           (preserve-size . (t . t)))
           ("\\*Embark Actions\\*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . fit-window-to-buffer)
@@ -60,20 +38,17 @@
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.1)
-           (dedicated . t))
+           (dedicated . t)
+           (preserve-size . (t . t)))
           ((derived-mode . log-view-mode)
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 0.3))
-          ((or . ((derived-mode . log-edit-mode) ; this does not work
-                  "\\*vc-log\\*"))
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 0.2)
-           (dedicated . t))
+           (window-height . 0.3)
+           (preserve-size . (t . t)))
           ((derived-mode . reb-mode) ; M-x re-builder
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 4)
+           (window-height . 4) ; note this is literal lines, not relative
            (dedicated . t)
-           (preserve-size . (t . t))) ; evaluate: (info "(elisp) Buffer Display Action Alists")
+           (preserve-size . (t . t)))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
@@ -89,8 +64,7 @@
           ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
            (display-buffer-reuse-mode-window display-buffer-in-direction)
            (direction . left)
-           (body-function . (lambda (_win)
-                              (balance-windows))))
+           (body-function . (lambda (_win) (balance-windows))))
           ;; new frame
           (prot/display-buffer-shell-or-term-p ; see definition below
            (display-buffer-pop-up-frame)
