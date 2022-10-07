@@ -98,7 +98,7 @@ use in `display-buffer-alist'."
                  (derived-mode-p 'fundamental-mode))))))
 
   (setq window-combination-resize t)
-  (setq even-window-sizes 'height-only)
+  (setq even-window-sizes nil)
   (setq window-sides-vertical nil)
   (setq switch-to-buffer-in-dedicated-window 'pop)
 
