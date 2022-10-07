@@ -76,12 +76,17 @@
     ;; Note that `denote-rename-file' can work from any context, not
     ;; just Dired buffers.  That is why we bind it here to the
     ;; `global-map'.
+    ;;
+    ;; Also see `denote-rename-file-using-front-matter' further below.
     (define-key map (kbd "C-c n r") #'denote-rename-file))
 
   ;; Key bindings specifically for Dired.
   (let ((map dired-mode-map))
     (define-key map (kbd "C-c C-d C-i") #'denote-link-dired-marked-notes)
     (define-key map (kbd "C-c C-d C-r") #'denote-dired-rename-marked-files))
+
+  ;; Also see `denote-rename-file' further above.
+  (define-key text-mode-map (kbd "C-c n R") #'denote-rename-file-using-front-matter)
 
   (with-eval-after-load 'org-capture
     (setq denote-org-capture-specifiers "%l\n%i\n%?")
