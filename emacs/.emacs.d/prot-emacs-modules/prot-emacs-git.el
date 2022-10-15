@@ -110,6 +110,10 @@
   (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
   (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
+  (setopt agitate-log-edit-informative-show-root-log t)
+
+  (agitate-log-edit-informative-mode 1)
+
   (let ((map global-map))
     (define-key map (kbd "C-x v =") #'agitate-diff-buffer-or-file) ; replace `vc-diff'
     (define-key map (kbd "C-x v g") #'agitate-vc-git-grep) ; replace `vc-annotate'
