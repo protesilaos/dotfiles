@@ -68,16 +68,11 @@
     (define-key map (kbd "C-x v k") #'vc-delete-file) ; 'k' for kill==>delete is more common
     (define-key map (kbd "C-x v G") #'vc-log-search)  ; git log --grep
     (define-key map (kbd "C-x v t") #'vc-create-tag)
-    (define-key map (kbd "C-x v f") #'vc-log-incoming)  ; git fetch
-    (define-key map (kbd "C-x v o") #'vc-log-outgoing)
-    (define-key map (kbd "C-x v F") #'vc-update)        ; "F" because "P" is push
     (define-key map (kbd "C-x v d") #'vc-diff))
   (let ((map vc-dir-mode-map))
     (define-key map (kbd "t") #'vc-create-tag)
     (define-key map (kbd "O") #'vc-log-outgoing)
     (define-key map (kbd "o") #'vc-dir-find-file-other-window)
-    (define-key map (kbd "f") #'vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
-    (define-key map (kbd "F") #'vc-update)       ; symmetric with P: `vc-push'
     (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
     (define-key map (kbd "k") #'vc-dir-delete-file)
     (define-key map (kbd "G") #'vc-revert))
@@ -117,10 +112,11 @@
   (let ((map global-map))
     (define-key map (kbd "C-x v =") #'agitate-diff-buffer-or-file) ; replace `vc-diff'
     (define-key map (kbd "C-x v g") #'agitate-vc-git-grep) ; replace `vc-annotate'
+    (define-key map (kbd "C-x v f") #'agitate-vc-git-find-revision)
     (define-key map (kbd "C-x v s") #'agitate-vc-git-show)
     (define-key map (kbd "C-x v w") #'agitate-vc-git-kill-commit-message)
-    (define-key map (kbd "C-x v c") #'agitate-vc-git-format-patch-single)
-    (define-key map (kbd "C-x v n") #'agitate-vc-git-format-patch-n-from-head))
+    (define-key map (kbd "C-x v p p") #'agitate-vc-git-format-patch-single)
+    (define-key map (kbd "C-x v p n") #'agitate-vc-git-format-patch-n-from-head))
   (let ((map diff-mode-map))
     (define-key map (kbd "C-c C-b") #'agitate-diff-refine-cycle) ; replace `diff-refine-hunk'
     (define-key map (kbd "C-c C-n") #'agitate-diff-narrow-dwim))
