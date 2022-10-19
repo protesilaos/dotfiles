@@ -112,8 +112,7 @@
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
           (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos--page-delimiter))
           (markdown-mode . ,(format "\\(^\\#+ +\\|^[*-]\\{5\\}$\\|^\\* \\* \\*$\\|%s\\)" logos--page-delimiter))
-          (conf-toml-mode . "^\\[")
-          (t . ,(or outline-regexp logos--page-delimiter))))
+          (conf-toml-mode . "^\\[")))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
   ;; buffer-local.
