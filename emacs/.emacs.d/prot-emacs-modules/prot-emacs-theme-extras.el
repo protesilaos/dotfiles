@@ -56,7 +56,15 @@
 ;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (prot-emacs-elpa-package 'rainbow-mode
   (setq rainbow-ansi-colors nil)
-  (setq rainbow-x-colors nil))
+  (setq rainbow-x-colors nil)
+
+  (defun prot/rainbow-mode-in-themes ()
+    (when-let* ((file (buffer-file-name))
+                ((derived-mode-p 'emacs-lisp-mode))
+                ((string-match-p "-theme" file)))
+      (rainbow-mode 1)))
+
+  (add-hook 'emacs-lisp-mode-hook #'prot/rainbow-mode-in-themes))
 
 ;;; Line numbers and relevant indicators (prot-sideline.el)
 (prot-emacs-builtin-package 'prot-sideline
