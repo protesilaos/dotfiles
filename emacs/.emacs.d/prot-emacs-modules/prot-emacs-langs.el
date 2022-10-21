@@ -123,6 +123,24 @@
           flymake-mode-line-warning-counter
           flymake-mode-line-note-counter ""))
 
+  (defvar prot/flymake-mode-projects-path
+    (file-name-as-directory (expand-file-name "Projects" "~/Git/"))
+    "Path to my Git projects.")
+
+  (defun prot/flymake-mode-lexical-binding ()
+    (when lexical-binding
+      (flymake-mode 1)))
+
+  (defun prot/flymake-mode-in-my-projects ()
+    (when-let* ((file (buffer-file-name))
+                ((string-prefix-p prot/flymake-mode-projects-path
+                                  (expand-file-name file)))
+                ((not (file-directory-p file)))
+                ((file-regular-p file)))
+      (add-hook 'find-file-hook #'prot/flymake-mode-lexical-binding nil t)))
+
+  (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
+
   (let ((map flymake-mode-map))
     (define-key map (kbd "C-c ! s") #'flymake-start)
     (define-key map (kbd "C-c ! d") #'flymake-show-buffer-diagnostics) ; Emacs28
