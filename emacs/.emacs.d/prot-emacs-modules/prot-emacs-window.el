@@ -90,12 +90,8 @@ use in `display-buffer-alist'."
     (when (string-match-p "\\*.*\\(e?shell\\|v?term\\).*" (buffer-name buffer))
       (with-current-buffer buffer
         ;; REVIEW 2022-07-14: Is this robust?
-        (and (or (not (derived-mode-p 'message-mode))
-                 (not (derived-mode-p 'text-mode)))
-             (or (derived-mode-p 'eshell-mode)
-                 (derived-mode-p 'shell-mode)
-                 (derived-mode-p 'comint-mode)
-                 (derived-mode-p 'fundamental-mode))))))
+        (and (not (derived-mode-p 'message-mode 'text-mode))
+             (derived-mode-p 'eshell-mode 'shell-mode 'comint-mode 'fundamental-mode)))))
 
   (setq window-combination-resize t)
   (setq even-window-sizes nil)
@@ -106,9 +102,9 @@ use in `display-buffer-alist'."
   (add-hook 'custom-mode-hook #'visual-line-mode)
 
   (defun prot/quit-window-rebalance (&rest _)
-    "EXPERIMENTAL.
-Use this as advice after `quit-window' to `balance-windows'."
-    (balance-windows))
+    "Use this as advice after `quit-window' to `balance-windows'."
+    (when (derived-mode-p 'help-mode)
+      (balance-windows)))
 
   (advice-add #'quit-window :after #'prot/quit-window-rebalance)
 
