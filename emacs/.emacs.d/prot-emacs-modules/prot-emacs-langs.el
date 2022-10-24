@@ -90,7 +90,8 @@
   (setq flyspell-issue-welcome-flag nil)
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
-  (define-key flyspell-mode-map (kbd "C-;") nil))
+  (define-key flyspell-mode-map (kbd "C-;") nil)
+  (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
 
 (prot-emacs-builtin-package 'prot-spell
   (setq prot-spell-dictionaries
@@ -141,6 +142,7 @@
 
   (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
 
+  (define-key ctl-x-x-map "m" #'flymake-mode) ; C-x x m
   (let ((map flymake-mode-map))
     (define-key map (kbd "C-c ! s") #'flymake-start)
     (define-key map (kbd "C-c ! d") #'flymake-show-buffer-diagnostics) ; Emacs28
