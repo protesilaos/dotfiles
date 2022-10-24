@@ -35,6 +35,9 @@
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
+          ;; In a direction
+          ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
+           (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.1)
@@ -60,11 +63,11 @@
           ("\\*ispell-top-choices\\*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
-          ;; In a direction
-          ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
-           (display-buffer-reuse-mode-window display-buffer-in-direction)
-           (direction . left)
-           (body-function . (lambda (_win) (balance-windows))))
+          ;; ;; In a direction
+          ;; ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
+          ;;  (display-buffer-reuse-mode-window display-buffer-in-direction)
+          ;;  (direction . left)
+          ;;  (body-function . (lambda (_win) (balance-windows))))
           ;; new frame
           (prot/display-buffer-shell-or-term-p ; see definition below
            (display-buffer-pop-up-frame)
@@ -94,19 +97,12 @@ use in `display-buffer-alist'."
              (derived-mode-p 'eshell-mode 'shell-mode 'comint-mode 'fundamental-mode)))))
 
   (setq window-combination-resize t)
-  (setq even-window-sizes nil)
+  (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
   (setq switch-to-buffer-in-dedicated-window 'pop)
 
   (add-hook 'help-mode-hook #'visual-line-mode)
   (add-hook 'custom-mode-hook #'visual-line-mode)
-
-  (defun prot/quit-window-rebalance (&rest _)
-    "Use this as advice after `quit-window' to `balance-windows'."
-    (when (derived-mode-p 'help-mode)
-      (balance-windows)))
-
-  (advice-add #'quit-window :after #'prot/quit-window-rebalance)
 
   ;; NOTE 2022-09-17: Also see `prot-simple-swap-window-buffers'.
   (let ((map global-map))
