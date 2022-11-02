@@ -164,6 +164,7 @@ produces dates with a fixed length."
                 (org-agenda-format-date "%A %-e %B %Y")
                 (org-agenda-overriding-header "\n📌 Today's agenda\n")))
     (agenda "" ((org-agenda-start-on-weekday nil)
+                (org-agenda-start-day nil)
                 (org-agenda-start-day "+1d")
                 (org-agenda-span 3)
                 (org-deadline-warning-days 0)
