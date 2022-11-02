@@ -146,6 +146,7 @@
   (let ((map flymake-mode-map))
     (define-key map (kbd "C-c ! s") #'flymake-start)
     (define-key map (kbd "C-c ! d") #'flymake-show-buffer-diagnostics) ; Emacs28
+    (define-key map (kbd "C-c ! D") #'flymake-show-project-diagnostics) ; Emacs28
     (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
     (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
 
