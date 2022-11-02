@@ -1,3 +1,4 @@
+;;; Fontaine (font configurations)
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
 (prot-emacs-elpa-package 'fontaine
   ;; This is defined in Emacs C code: it belongs to font settings.
