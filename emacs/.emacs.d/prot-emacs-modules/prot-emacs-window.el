@@ -19,6 +19,7 @@
            (window-parameters . ((mode-line-format . none))))
           ;; bottom buffer (NOT side window)
           ((or . ((derived-mode . flymake-diagnostics-buffer-mode)
+                  (derived-mode . flymake-project-diagnostics-mode)
                   (derived-mode . messages-buffer-mode)
                   (derived-mode . backtrace-mode)
                   "\\*\\(Warnings\\|Compile-Log\\)\\*"
