@@ -126,11 +126,8 @@ Try to install the package if it is missing."
                 (list "Packages" ,prot-emacs-package-form-regexp 2)))
 
 (require 'prot-emacs-essentials)
-;; I still plan to use the `modus-themes' but am now running my new
-;; `ef-themes' for development purposes:
 ;; (require 'prot-emacs-ef-themes)
-(require 'prot-emacs-standard-themes)
-;; (require 'prot-emacs-modus-themes)
+(require 'prot-emacs-modus-themes)
 (require 'prot-emacs-theme-extras)
 (require 'prot-emacs-font)
 (require 'prot-emacs-modeline)
