@@ -36,7 +36,6 @@
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
-          ;; In a direction
           ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
            (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
@@ -64,28 +63,16 @@
           ("\\*ispell-top-choices\\*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
-          ;; ;; In a direction
-          ;; ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
-          ;;  (display-buffer-reuse-mode-window display-buffer-in-direction)
-          ;;  (direction . left)
-          ;;  (body-function . (lambda (_win) (balance-windows))))
           ;; new frame
-          (prot/display-buffer-shell-or-term-p ; see definition below
-           (display-buffer-pop-up-frame)
-           (pop-up-frame-parameters . ((width . (text-pixels . 640))
-                                       (height . (text-pixels . 360))
-                                       (tab-bar-lines . 0)
-                                       ;; ;; Emacs 29 transparency, if you want:
-                                       ;; (alpha-background . 90)
-                                       ))
-           (window-parameters . ((no-other-window . t)
-                                 (mode-line-format . none))))
           ((or . ((derived-mode . Man-mode)
                   (derived-mode . woman-mode)
                   "\\*\\(Man\\|woman\\).*"))
            (display-buffer-reuse-window display-buffer-pop-up-frame)
            (pop-up-frame-parameters . ((width . (text-pixels . 640))
-                                       (height . (text-pixels . 360)))))))
+                                       (height . (text-pixels . 360)))))
+          ;; same window
+          (prot/display-buffer-shell-or-term-p ; see definition below
+           (display-buffer-reuse-window display-buffer-same-window))))
 
   (defun prot/display-buffer-shell-or-term-p (buffer &rest _)
     "Check if BUFFER is a shell or terminal.
