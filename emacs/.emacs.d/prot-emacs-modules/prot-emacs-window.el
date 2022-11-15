@@ -151,6 +151,7 @@ use in `display-buffer-alist'."
   (setq tab-bar-show nil)
   (setq tab-bar-tab-hints nil)
   (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
+  (setq tab-bar-fixed-width-max '(120 . 20)) ; Emacs 29
 
   (tab-bar-mode -1)                     ; see `prot-tab-status-line'
 
