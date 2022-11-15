@@ -39,13 +39,21 @@
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
 
+;; ;; NOTE 2022-11-15: This does not work, presumably because it is too
+;; ;; early for `display-pixel-width' to do its job.
+;;
+;; (let* ((dimensions (if (> (display-pixel-width) 1920)
+;;                        (list 1920 1080)
+;;                      (list 1600 900)))
+;;        (h (car dimensions))
+;;        (w (cadr dimensions)))
+;;   (dolist (var '(default-frame-alist initial-frame-alist))
+;;     (add-to-list var `(width . ,(cons 'text-pixels w)))
+;;     (add-to-list var `(height . ,(cons 'text-pixels h)))))
+
 (dolist (var '(default-frame-alist initial-frame-alist))
-  (add-to-list var '(width . (text-pixels . 1920)))
-  ;; The height should be 1080, but the panel and the window's
-  ;; deocrations reduce the effective value.  If I set 1080 here, Emacs
-  ;; maximises the frame regardless of the width value, which I do not
-  ;; want.
-  (add-to-list var '(height . (text-pixels . 1080))))
+  (add-to-list var '(width . (text-pixels . 1200)))
+  (add-to-list var '(height . (text-pixels . 900))))
 
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
