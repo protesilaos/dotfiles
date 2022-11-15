@@ -15,6 +15,7 @@
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
   (setq denote-file-type 'text) ; Org is the default, set others here like I do
+  (setq denote-excluded-directories-regexp nil)
 
   ;; We allow multi-word keywords by default.  The author's personal
   ;; preference is for single-word keywords for a more disciplined
