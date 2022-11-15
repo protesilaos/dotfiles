@@ -1,3 +1,9 @@
+;;; Clojure (clojure-mode and accoutrements)
+(prot-emacs-elpa-package 'clojure-mode
+  (add-hook 'clojure-mode-hook #'subword-mode))
+
+(prot-emacs-elpa-package 'cider)
+
 ;;; Plain text (text-mode)
 (prot-emacs-builtin-package 'text-mode
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode)))
