@@ -128,7 +128,8 @@ Try to install the package if it is missing."
 (require 'prot-emacs-essentials)
 ;; I still plan to use the `modus-themes' but am now running my new
 ;; `ef-themes' for development purposes:
-(require 'prot-emacs-ef-themes)
+;; (require 'prot-emacs-ef-themes)
+(require 'prot-emacs-standard-themes)
 ;; (require 'prot-emacs-modus-themes)
 (require 'prot-emacs-theme-extras)
 (require 'prot-emacs-font)
@@ -143,6 +144,8 @@ Try to install the package if it is missing."
 (require 'prot-emacs-org)               ; org, calendar, appt
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
+(when (executable-find "notmuch")
+  (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
 (require 'prot-emacs-conveniences)
 (require 'prot-emacs-history)
