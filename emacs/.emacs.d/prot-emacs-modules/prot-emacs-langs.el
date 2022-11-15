@@ -114,6 +114,14 @@
     (define-key map (kbd "M-$") #'prot-spell-spell-dwim)
     (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
 
+;;; Dictionary
+(prot-emacs-builtin-package 'dictionary
+  (setopt dictionary-server "dict.org"
+          dictionary-default-popup-strategy "lev" ; read doc string
+          dictionary-create-buttons nil
+          dictionary-use-single-buffer t)
+  (define-key global-map (kbd "C-c d") #'dictionary-search))
+
 ;;; Flymake
 (prot-emacs-builtin-package 'flymake
   (setq flymake-fringe-indicator-position 'left-fringe)
