@@ -380,15 +380,14 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-abbrev table "cliche" "cliché")
     (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "javascript" "JavaScript")
+    (define-abbrev table "clojurescript" "ClojureScript")
+    (define-abbrev table "linkedin" "LinkedIn")
     (define-abbrev table "github" "GitHub")
     (define-abbrev table "gitlab" "GitLab")
     (define-abbrev table "sourcehut" "SourceHut")
     (define-abbrev table "libreplanet" "LibrePlanet")
     (define-abbrev table "emacsconf" "EmacsConf")
     (define-abbrev table "auctex" "AUCTeX")
-    (define-abbrev table "Emacs27" "Emacs 27")
-    (define-abbrev table "Emacs28" "Emacs 28")
-    (define-abbrev table "Emacs29" "Emacs 29")
     (define-abbrev table "asciidoc" "AsciiDoc"))
 
   (with-eval-after-load 'message
