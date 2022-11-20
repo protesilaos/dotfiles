@@ -80,4 +80,25 @@
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
   (define-key global-map (kbd "C-c F") #'fontaine-set-face-font))
 
+;;; `variable-pitch-mode' setup
+
+(define-key ctl-x-x-map (kbd "v") #'variable-pitch-mode)
+
+;; NOTE 2022-11-20: This may not cover every case, though it works
+;; fine in my workflow.  I am still undecided by EWW.
+(defun prot/enable-variable-pitch ()
+  (unless (or (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
+              (member (buffer-name) '("*Colors*" "*Faces*" "*Quick Help*")))
+    (variable-pitch-mode 1)))
+
+(defvar prot/enable-variable-pitch-in-hooks
+  '(text-mode-hook
+    help-mode-hook
+    notmuch-show-mode-hook
+    elfeed-show-mode-hook)
+  "List of hook symbols to add `prot/enable-variable-pitch' to.")
+
+(dolist (hook prot/enable-variable-pitch-in-hooks)
+  (add-hook hook #'prot/enable-variable-pitch))
+
 (provide 'prot-emacs-font)
