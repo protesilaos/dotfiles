@@ -74,14 +74,19 @@
               :query "tag:unread not tag:archived"
               :sort-order newest-first
               :key ,(kbd "U"))
-            ( :name "📦 My packages"
-              :query "(from:~protesilaos/.*@lists.sr.ht or to:~protesilaos/.*@lists.sr.ht) not tag:archived not tag:list"
-              :sort-order newest-first
-              :key ,(kbd "p"))
             ( :name "📬 mailing lists"
               :query "tag:list not tag:archived"
               :sort-order newest-first
               :key ,(kbd "m"))
+            ;; My packages
+            ( :name "📦 unread packages"
+              :query "(from:~protesilaos/.*@lists.sr.ht or to:~protesilaos/.*@lists.sr.ht) tag:unread not tag:archived not tag:list"
+              :sort-order newest-first
+              :key ,(kbd "p u"))
+            ( :name "📦 all packages"
+              :query "(from:~protesilaos/.*@lists.sr.ht or to:~protesilaos/.*@lists.sr.ht) not tag:archived not tag:list"
+              :sort-order newest-first
+              :key ,(kbd "p p"))
             ;; Emacs
             ( :name "🔨 emacs-devel"
               :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
