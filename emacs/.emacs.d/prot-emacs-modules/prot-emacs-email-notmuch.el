@@ -74,6 +74,10 @@
               :query "tag:unread not tag:archived"
               :sort-order newest-first
               :key ,(kbd "U"))
+            ( :name "📦 My packages"
+              :query "(from:~protesilaos/.*@lists.sr.ht or to:~protesilaos/.*@lists.sr.ht) not tag:archived not tag:list"
+              :sort-order newest-first
+              :key ,(kbd "p"))
             ( :name "📬 mailing lists"
               :query "tag:list not tag:archived"
               :sort-order newest-first
@@ -229,7 +233,9 @@
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-elpa-package 'notmuch-indicator
   ;; Just the default values...
-  (setopt notmuch-indicator-args '((:terms "tag:unread and tag:inbox" :label "@")) ; also accepts a :face, read doc string
+  (setopt notmuch-indicator-args
+          '((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
+            (:terms "to:~protesilaos/.*@lists.sr.ht tag:unread not tag:archived not tag:list" :label "📦"))
           notmuch-indicator-refresh-count (* 60 3)
           notmuch-indicator-hide-empty-counters t
           notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
