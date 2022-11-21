@@ -1,4 +1,6 @@
 ;;; Clojure (clojure-mode and accoutrements)
+;; NOTE 2022-11-21: for the linter (clj-kondo), refer to the Flymake
+;; section in this file.
 (prot-emacs-elpa-package 'clojure-mode
   (add-hook 'clojure-mode-hook #'subword-mode))
 
@@ -175,6 +177,10 @@
 ;;; Elisp packaging requirements
 (prot-emacs-elpa-package 'package-lint-flymake
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
+
+;;; Flymake + clj-kondo (for Clojure)
+(prot-emacs-elpa-package 'flymake-kondor
+  (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
 
 ;;; Eldoc (elisp live documentation feedback)
 (prot-emacs-builtin-package 'eldoc
