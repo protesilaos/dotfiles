@@ -70,20 +70,24 @@
       '(("elpa" . 2)
         ("nongnu" . 1)))
 
-;; I want to use my own packages from specific repositories.  All others
-;; will rely on `package-archive-priorities'.
+;; I want to use my own packages from specific repositories.  All
+;; others will rely on `package-archive-priorities'.  I do this to
+;; test that the packaged version works as intended.
 ;;
 ;; Note that the `modus-themes' are built into Emacs 28 and are synced
 ;; to GNU ELPA from emacs.git.  As I already run Emacs from source, I am
 ;; using MELPA for the `modus-themes' here: it is for testing purposes.
 (setq package-pinned-packages
-      '((cursory . "elpa-devel")
+      '((agitate . "elpa-devel")
+        (altcaps . "elpa-devel")
+        (cursory . "elpa-devel")
         (denote . "elpa-devel")
         (ef-themes . "elpa-devel")
         (fontaine . "elpa-devel")
         (lin . "elpa-devel")
         (logos . "elpa-devel")
         (modus-themes . "melpa")
+        (notmuch-indicator . "elpa-devel")
         (pulsar . "elpa-devel")
         (tmr . "elpa-devel")))
 
