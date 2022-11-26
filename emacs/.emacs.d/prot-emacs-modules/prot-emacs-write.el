@@ -6,6 +6,13 @@
   (setq outline-minor-mode-use-margins nil) ; as above
   (define-key global-map (kbd "<f10>") #'outline-minor-mode))
 
+;;; aLtCaPs
+;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
+(prot-emacs-elpa-package 'altcaps
+  ;; The available commands: `altcaps-word', `altcaps-region',
+  ;; `altcaps-dwim'.
+  (define-key global-map (kbd "C-x C-a") #'altcaps-dwim))
+
 ;;; Denote (simple note-taking)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
 (prot-emacs-elpa-package 'denote
