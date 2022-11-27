@@ -152,7 +152,7 @@
 (prot-emacs-builtin-package 'rcirc
   (setq rcirc-server-alist
         `(("irc.libera.chat"
-           :channels ("#emacs" "#org-mode" "#rcirc" "#sr.ht")
+           :channels ("#emacs" "#clojure" "#org-mode" "#rcirc" "#sr.ht")
            :port 6697 :encryption tls
            :password ,(prot-common-auth-get-field "libera" :secret))))
 
