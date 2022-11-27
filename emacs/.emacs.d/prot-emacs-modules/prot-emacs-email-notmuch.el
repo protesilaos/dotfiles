@@ -80,11 +80,19 @@
               :key ,(kbd "m"))
             ;; My packages
             ( :name "📦 unread packages"
-              :query "(from:~protesilaos/.*@lists.sr.ht or to:~protesilaos/.*@lists.sr.ht) tag:unread not tag:archived not tag:list"
+              ;; NOTE 2022-11-27: Here we do not wrap the parentheses
+              ;; in single quotes, whereas we do it for the
+              ;; `notmuch-indicator'.  The reason is that the latter
+              ;; passes the search terms directly to the executable.
+              :query ,(concat "(to:~protesilaos/*@lists.sr.ht or" " "
+                              "to:protesilaos/*noreply.github.com)" " "
+                              "tag:unread not tag:archived not tag:list")
               :sort-order newest-first
               :key ,(kbd "p u"))
             ( :name "📦 all packages"
-              :query "(from:~protesilaos/.*@lists.sr.ht or to:~protesilaos/.*@lists.sr.ht) not tag:archived not tag:list"
+              :query ,(concat "(to:~protesilaos/*@lists.sr.ht or" " "
+                              "to:protesilaos/*noreply.github.com)" " "
+                              "not tag:archived not tag:list")
               :sort-order newest-first
               :key ,(kbd "p p"))
             ;; Emacs
@@ -239,8 +247,15 @@
 (prot-emacs-elpa-package 'notmuch-indicator
   ;; Just the default values...
   (setopt notmuch-indicator-args
-          '((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
-            (:terms "to:~protesilaos/.*@lists.sr.ht tag:unread not tag:archived not tag:list" :label "📦"))
+          `((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
+            (:terms
+             ;; NOTE 2022-11-27: Check the note of the same date for
+             ;; the `notmuch-saved-searches'.  Here we include single
+             ;; quotes, whereas there we do not.
+             ,(concat "'(to:~protesilaos/*@lists.sr.ht or" " "
+                      "to:protesilaos/*noreply.github.com)'" " "
+                      "tag:unread not tag:archived not tag:list")
+             :label "📦"))
           notmuch-indicator-refresh-count (* 60 3)
           notmuch-indicator-hide-empty-counters t
           notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
