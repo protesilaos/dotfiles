@@ -1,21 +1,21 @@
 ;;; Client-agnostic email settings
 (prot-emacs-builtin-package 'auth-source
-  (setopt auth-sources '("~/.authinfo.gpg")
+  (setq auth-sources '("~/.authinfo.gpg")
           user-full-name "Protesilaos Stavrou"
           user-mail-address "public@protesilaos.com"))
 
 (prot-emacs-builtin-package 'mm-encode
-  (setopt mm-encrypt-option nil ; use 'guided if you need more control
+  (setq mm-encrypt-option nil ; use 'guided if you need more control
           mm-sign-option nil))  ; same
 
 (prot-emacs-builtin-package 'mml-sec
-  (setopt mml-secure-openpgp-encrypt-to-self t
+  (setq mml-secure-openpgp-encrypt-to-self t
           mml-secure-openpgp-sign-with-sender t
           mml-secure-smime-encrypt-to-self t
           mml-secure-smime-sign-with-sender t))
 
 (prot-emacs-builtin-package 'message
-  (setopt mail-user-agent 'message-user-agent
+  (setq mail-user-agent 'message-user-agent
           mail-header-separator (purecopy "*****")
           message-elide-ellipsis "\n> [... %l lines elided]\n"
           compose-mail-user-agent-warnings nil
@@ -39,13 +39,13 @@
 
 ;;; Sending email (SMTP)
 (prot-emacs-builtin-package 'smtpmail
-  (setopt smtpmail-default-smtp-server "mail.gandi.net"
+  (setq smtpmail-default-smtp-server "mail.gandi.net"
           smtpmail-smtp-server "mail.gandi.net"
           smtpmail-stream-type 'ssl
           smtpmail-smtp-service 465
           smtpmail-queue-mail nil))
 
 (prot-emacs-builtin-package 'sendmail
-  (setopt send-mail-function 'smtpmail-send-it))
+  (setq send-mail-function 'smtpmail-send-it))
 
 (provide 'prot-emacs-email)

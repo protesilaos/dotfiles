@@ -105,7 +105,7 @@
   (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
   (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
-  (setopt agitate-log-edit-informative-show-root-log t)
+  (setq agitate-log-edit-informative-show-root-log t)
 
   (agitate-log-edit-informative-mode 1)
 

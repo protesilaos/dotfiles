@@ -118,7 +118,7 @@
 
 ;;; Dictionary
 (prot-emacs-builtin-package 'dictionary
-  (setopt dictionary-server "dict.org"
+  (setq dictionary-server "dict.org"
           dictionary-default-popup-strategy "lev" ; read doc string
           dictionary-create-buttons nil
           dictionary-use-single-buffer t)

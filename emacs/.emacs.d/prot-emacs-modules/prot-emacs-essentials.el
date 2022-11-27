@@ -16,7 +16,7 @@
 
 ;;; Common custom functions (prot-simple.el)
 (prot-emacs-builtin-package 'prot-simple
-  (setopt prot-simple-insert-pair-alist
+  (setq prot-simple-insert-pair-alist
           '(("' Single quote"        . (39 39))     ; ' '
             ("\" Double quotes"      . (34 34))     ; " "
             ("` Elisp quote"         . (96 39))     ; ` '
@@ -112,7 +112,7 @@
 ;;; Mouse wheel behaviour
 (prot-emacs-builtin-package 'mouse
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
-  (setopt mouse-wheel-scroll-amount
+  (setq mouse-wheel-scroll-amount
           '(1
             ((shift) . 5)
             ((meta) . 0.5)
@@ -137,7 +137,7 @@
 
 ;;; Tooltips (tooltip-mode)
 (prot-emacs-builtin-package 'tooltip
-  (setopt tooltip-delay 0.5
+  (setq tooltip-delay 0.5
           tooltip-short-delay 0.5
           x-gtk-use-system-tooltips nil
           tooltip-frame-parameters
@@ -149,14 +149,14 @@
 
 ;;; Auto revert mode
 (prot-emacs-builtin-package 'autorevert
-  (setopt auto-revert-verbose t)
+  (setq auto-revert-verbose t)
   (add-hook 'after-init-hook #'global-auto-revert-mode))
 
 ;;; Preserve contents of system clipboard
-(setopt save-interprogram-paste-before-kill t)
+(setq save-interprogram-paste-before-kill t)
 
 ;;; Newline characters for file ending
-(setopt mode-require-final-newline 'visit-save)
+(setq mode-require-final-newline 'visit-save)
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
@@ -164,7 +164,7 @@
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
-  (setopt repeat-on-final-keystroke t
+  (setq repeat-on-final-keystroke t
           repeat-exit-timeout 5
           repeat-exit-key "<escape>"
           repeat-keep-prefix nil
@@ -178,12 +178,12 @@
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
   ;; Disable the damn thing
-  (setopt custom-file (make-temp-file "emacs-custom-")))
+  (setq custom-file (make-temp-file "emacs-custom-")))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (prot-emacs-elpa-package 'tmr
-  (setopt tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+  (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
           tmr-notification-urgency 'normal
           tmr-description-list 'tmr-description-history)
 

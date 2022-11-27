@@ -1,6 +1,6 @@
 ;;; Bongo music or media manager (and prot-bongo.el)
 (prot-emacs-elpa-package 'bongo
-  (setopt bongo-default-directory "~/Music/"
+  (setq bongo-default-directory "~/Music/"
           bongo-prefer-library-buffers nil
           bongo-insert-whole-directory-trees t
           bongo-logo nil
@@ -60,7 +60,7 @@
   ;; NOTE 2022-09-29: I plan to rewrite `prot-bongo.el'.  Do not copy
   ;; those as most of them will be rewritten from scratch.
   (prot-emacs-builtin-package 'prot-bongo
-    (setopt prot-bongo-enabled-backends '(mpv vlc)
+    (setq prot-bongo-enabled-backends '(mpv vlc)
             prot-bongo-playlist-section-delimiter (make-string 30 ?*)
             prot-bongo-playlist-heading-delimiter "§"
             prot-bongo-playlist-directory

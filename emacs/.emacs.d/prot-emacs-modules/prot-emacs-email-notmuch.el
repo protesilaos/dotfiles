@@ -13,7 +13,7 @@
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
         (inf (prot-common-auth-get-field "inf" :user)))
-    (setopt notmuch-identities
+    (setq notmuch-identities
             (mapcar (lambda (str)
                       (format "%s <%s>" user-full-name str))
                     (list prv pub inf))
@@ -23,7 +23,7 @@
               (,pub . "pub/Sent"))))
 
 ;;;; General UI
-  (setopt notmuch-show-logo nil
+  (setq notmuch-show-logo nil
           notmuch-column-control 1.0
           notmuch-hello-auto-refresh t
           notmuch-hello-recent-searches-max 20
@@ -32,7 +32,7 @@
           notmuch-show-all-tags-list t)
 
 ;;;; Search
-  (setopt notmuch-search-oldest-first nil
+  (setq notmuch-search-oldest-first nil
           notmuch-search-result-format
           '(("date" . "%12s  ")
             ("count" . "%-7s  ")
@@ -121,7 +121,7 @@
               :key ,(kbd "os"))))
 
 ;;;; Tags
-  (setopt notmuch-archive-tags nil ; I do not archive email
+  (setq notmuch-archive-tags nil ; I do not archive email
           notmuch-message-replied-tags '("+replied")
           notmuch-message-forwarded-tags '("+forwarded")
           notmuch-show-mark-read-tags '("-unread")
@@ -131,10 +131,6 @@
 
   ;; Also see `notmuch-tagging-keys' in the `prot-notmuch' section
   ;; further below.
-
-  ;; FIXME 2022-09-29: `setopt' does not work for this one, even
-  ;; though `setq' does the right thing.  Check the definition of
-  ;; `notmuch-tag-format-type'.
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
           ("flag" (propertize tag 'face 'notmuch-tag-flagged)
@@ -149,7 +145,7 @@
            (concat "✏️" tag))))
 
 ;;;; Email composition
-  (setopt notmuch-mua-compose-in 'current-window
+  (setq notmuch-mua-compose-in 'current-window
           notmuch-mua-hidden-headers nil ; TODO 2021-05-12: Review hidden headers
           notmuch-address-command 'internal
           notmuch-always-prompt-for-sender t
@@ -165,7 +161,7 @@
                   "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
 ;;;; Reading messages
-  (setopt notmuch-show-relative-dates t
+  (setq notmuch-show-relative-dates t
           notmuch-show-all-multipart/alternative-parts nil
           notmuch-show-indent-messages-width 0
           notmuch-show-indent-multipart nil
@@ -177,7 +173,7 @@
           notmuch-message-headers-visible t)
 
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
-    (setopt notmuch-wash-cqitation-lines-prefix count
+    (setq notmuch-wash-cqitation-lines-prefix count
             notmuch-wash-citation-lines-suffix count))
 
 ;;;; Hooks and key bindings
@@ -203,7 +199,7 @@
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
-  (setopt notmuch-tagging-keys
+  (setq notmuch-tagging-keys
           `((,(kbd "d") prot-notmuch-mark-delete-tags "⛔ Mark for deletion")
             (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
             (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
@@ -246,7 +242,7 @@
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-elpa-package 'notmuch-indicator
   ;; Just the default values...
-  (setopt notmuch-indicator-args
+  (setq notmuch-indicator-args
           `((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
             (:terms
              ;; NOTE 2022-11-27: Check the note of the same date for
