@@ -4,7 +4,12 @@
 (prot-emacs-elpa-package 'clojure-mode
   (add-hook 'clojure-mode-hook #'subword-mode))
 
-(prot-emacs-elpa-package 'cider)
+(prot-emacs-elpa-package 'cider
+  ;; NOTE 2022-11-23: This is not final.  I will iterate on it over
+  ;; time as I become more familiar with the requirements.
+  (setq cider-repl-result-prefix "=> "
+        cider-connection-message-fn nil ; cute, but no!
+        cider-repl-display-help-banner nil))
 
 ;;; Plain text (text-mode)
 (prot-emacs-builtin-package 'text-mode
