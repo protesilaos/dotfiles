@@ -9,6 +9,12 @@
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
 (prot-emacs-elpa-package 'altcaps
+  ;; Force letter casing for certain characters (for legibility).
+  (setq altcaps-force-character-casing
+        '((?i . downcase)
+          (?l . upcase)
+          (?θ . downcase)))
+
   ;; The available commands: `altcaps-word', `altcaps-region',
   ;; `altcaps-dwim'.
   (define-key global-map (kbd "C-x C-a") #'altcaps-dwim))
