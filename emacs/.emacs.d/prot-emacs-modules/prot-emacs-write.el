@@ -17,7 +17,7 @@
 
   ;; The available commands: `altcaps-word', `altcaps-region',
   ;; `altcaps-dwim'.
-  (define-key global-map (kbd "C-x C-a") #'altcaps-dwim))
+  (define-key global-map (kbd "C-~") #'altcaps-dwim)) ; the tilde is wavy, a bit like this effect
 
 ;;; Denote (simple note-taking)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
