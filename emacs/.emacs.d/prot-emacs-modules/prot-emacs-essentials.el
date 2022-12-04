@@ -19,8 +19,7 @@
   (dolist (hook '(comint-mode-hook dired-mode-hook special-mode-hook))
     (add-hook hook #'evil-emacs-state)) ; otherwise RET does not run the command (?)
 
-
-  ;; Other changes to optimise Vim
+  ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
     (define-key map (kbd "M-o") #'other-window)))
 
