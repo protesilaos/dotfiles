@@ -4,21 +4,20 @@
 ;; this way even after my injury, or I will revert to what I had.
 
 ;;; evil-mode (Vim key bindings)
-(setq evil-want-keybinding nil)        ; Must be evaluated before evil
 (prot-emacs-elpa-package 'evil
   (setopt evil-move-beyond-eol t        ; `setopt' is in Emacs 29
           evil-want-Y-yank-to-eol t
           evil-want-fine-undo t
           evil-echo-state nil
+          evil-mode-line-format 'before
+          evil-cross-lines t
           evil-default-cursor nil)
 
-  ;; I have a PR to use this with `setopt':
-  ;; <https://github.com/emacs-evil/evil/pull/1726>
-  (setq evil-mode-line-format nil)
+  (dolist (hook '(text-mode-hook prog-mode-hook))
+    (add-hook hook #'evil-local-mode))
 
-  (add-hook 'prog-mode-hook #'evil-local-mode)
-  (add-hook 'text-mode-hook #'evil-insert-state)
-  (add-hook 'comint-mode-hook #'evil-emacs-state) ; otherwise RET does not run the command (?)
+  (dolist (hook '(comint-mode-hook dired-mode-hook special-mode-hook))
+    (add-hook hook #'evil-emacs-state)) ; otherwise RET does not run the command (?)
 
 
   ;; Other changes to optimise Vim
@@ -84,15 +83,15 @@
     ;; Commands for lines
 
     ;; NOTE 2022-12-04: See comment at top about switch to `evil-mode'.
-    ;; (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
-    ;; (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
-    (define-key map (kbd "M-SPC") #'cycle-spacing)
     ;; (define-key map (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
     ;; (define-key map (kbd "M-k") #'prot-simple-kill-line-backward)
-    ;; (define-key map (kbd "C-S-n") #'prot-simple-multi-line-next)
-    ;; (define-key map (kbd "C-S-p") #'prot-simple-multi-line-prev)
-    ;; (define-key map (kbd "<C-return>") #'prot-simple-new-line-below)
-    ;; (define-key map (kbd "<C-S-return>") #'prot-simple-new-line-above)
+    (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
+    (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
+    (define-key map (kbd "M-SPC") #'cycle-spacing)
+    (define-key map (kbd "C-S-n") #'prot-simple-multi-line-next)
+    (define-key map (kbd "C-S-p") #'prot-simple-multi-line-prev)
+    (define-key map (kbd "<C-return>") #'prot-simple-new-line-below)
+    (define-key map (kbd "<C-S-return>") #'prot-simple-new-line-above)
 
     ;; Commands for text insertion or manipulation
     (define-key map (kbd "C-=") #'prot-simple-insert-date)
@@ -102,7 +101,7 @@
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
     ;; (define-key map (kbd "M-z") #'zap-up-to-char) ; NOT `zap-to-char'
     ;; (define-key map (kbd "M-Z") #'prot-simple-zap-to-char-backward)
-    ;; (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
+    (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
     (define-key map (kbd "M-u") #'upcase-dwim)
@@ -118,9 +117,9 @@
     (define-key map (kbd "C-M-t") #'prot-simple-transpose-sexps)
     (define-key map (kbd "M-t") #'prot-simple-transpose-words)
     ;; ;; Commands for marking objects
-    ;; (define-key map (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
-    ;; (define-key map (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
-    ;; (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
+    (define-key map (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
+    (define-key map (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
+    (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
     ;; Commands for paragraphs
     (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
     ;; Commands for windows and pages
@@ -198,9 +197,11 @@
 ;;; Newline characters for file ending
 (setq mode-require-final-newline 'visit-save)
 
-;;; Go to last change
-(prot-emacs-elpa-package 'goto-last-change
-  (define-key global-map (kbd "C-z") #'goto-last-change))
+;; NOTE 2022-12-04: Not relevant for `evil-mode'.  See comment above.
+
+;; ;;; Go to last change
+;; (prot-emacs-elpa-package 'goto-last-change
+;;   (define-key global-map (kbd "C-z") #'goto-last-change))
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
