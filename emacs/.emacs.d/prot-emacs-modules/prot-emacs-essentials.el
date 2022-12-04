@@ -17,6 +17,7 @@
   (setq evil-mode-line-format nil)
 
   (add-hook 'prog-mode-hook #'evil-local-mode)
+  (add-hook 'text-mode-hook #'evil-insert-state)
 
   ;; Other changes to optimise Vim
   (let ((map global-map))
