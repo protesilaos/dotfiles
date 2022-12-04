@@ -131,6 +131,7 @@ Try to install the package if it is missing."
 
 (require 'prot-emacs-essentials)
 ;; (require 'prot-emacs-ef-themes)
+;; (require 'prot-emacs-standard-themes)
 (require 'prot-emacs-modus-themes)
 (require 'prot-emacs-theme-extras)
 (require 'prot-emacs-font)
