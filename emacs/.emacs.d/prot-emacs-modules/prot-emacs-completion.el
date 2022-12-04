@@ -380,6 +380,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-abbrev table "cliche" "cliché")
     (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "javascript" "JavaScript")
+    (define-abbrev table "typescript" "TypeScript")
     (define-abbrev table "clojurescript" "ClojureScript")
     (define-abbrev table "linkedin" "LinkedIn")
     (define-abbrev table "github" "GitHub")
