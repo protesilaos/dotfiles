@@ -18,6 +18,8 @@
 
   (add-hook 'prog-mode-hook #'evil-local-mode)
   (add-hook 'text-mode-hook #'evil-insert-state)
+  (add-hook 'comint-mode-hook #'evil-emacs-state) ; otherwise RET does not run the command (?)
+
 
   ;; Other changes to optimise Vim
   (let ((map global-map))
