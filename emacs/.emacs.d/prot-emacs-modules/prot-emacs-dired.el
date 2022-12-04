@@ -83,6 +83,7 @@
   (setq wdired-create-parent-directories t))
 
 (prot-emacs-builtin-package 'image-dired
+  (setq image-dired-thumbnail-storage 'standard)
   (setq image-dired-external-viewer "xdg-open")
   (setq image-dired-thumb-size 80)
   (setq image-dired-thumb-margin 2)
