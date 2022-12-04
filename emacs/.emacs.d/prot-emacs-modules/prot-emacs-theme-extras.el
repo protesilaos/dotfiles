@@ -70,7 +70,7 @@
 (prot-emacs-builtin-package 'prot-sideline
   (require 'display-line-numbers)
   ;; Set absolute line numbers.  A value of "relative" is also useful.
-  (setq display-line-numbers-type t)
+  (setq display-line-numbers-type 'relative)
   ;; Those two variables were introduced in Emacs 27.1
   (setq display-line-numbers-major-tick 0)
   (setq display-line-numbers-minor-tick 0)
@@ -86,6 +86,8 @@
   (setq hl-line-overlay-priority -50) ; emacs28
 
   (require 'whitespace)
+
+  (add-hook 'prog-mode-hook #'prot-sideline-mode)
 
   (let ((map global-map))
     (define-key map (kbd "<f6>") #'prot-sideline-negative-space-toggle)

@@ -1,3 +1,31 @@
+;; NOTE 2022-12-04: I started using `evil-mode' because of an injury
+;; to my left hand which makes it difficult to type the control
+;; characters.  Either I will get used to Vim keys again and keep it
+;; this way even after my injury, or I will revert to what I had.
+
+;;; evil-mode (Vim key bindings)
+(setq evil-want-keybinding nil)        ; Must be evaluated before evil
+(prot-emacs-elpa-package 'evil
+  (setopt evil-move-beyond-eol t        ; `setopt' is in Emacs 29
+          evil-want-Y-yank-to-eol t
+          evil-want-fine-undo t
+          evil-echo-state nil
+          evil-default-cursor nil)
+
+  ;; I have a PR to use this with `setopt':
+  ;; <https://github.com/emacs-evil/evil/pull/1726>
+  (setq evil-mode-line-format nil)
+
+  (add-hook 'prog-mode-hook #'evil-local-mode)
+
+  ;; Other changes to optimise Vim
+  (let ((map global-map))
+    (define-key map (kbd "M-o") #'other-window)))
+
+;; TODO 2022-12-04: Check `evil-collection', although it seems
+;; overkill.
+
+
 ;;; Read environment variables
 
 ;; NOTE 2022-09-29: It seems I no longer need `exec-path-from-shell'.
@@ -17,32 +45,32 @@
 ;;; Common custom functions (prot-simple.el)
 (prot-emacs-builtin-package 'prot-simple
   (setq prot-simple-insert-pair-alist
-          '(("' Single quote"        . (39 39))     ; ' '
-            ("\" Double quotes"      . (34 34))     ; " "
-            ("` Elisp quote"         . (96 39))     ; ` '
-            ("‘ Single apostrophe"   . (8216 8217)) ; ‘ ’
-            ("“ Double apostrophes"  . (8220 8221)) ; “ ”
-            ("( Parentheses"         . (40 41))     ; ( )
-            ("{ Curly brackets"      . (123 125))   ; { }
-            ("[ Square brackets"     . (91 93))     ; [ ]
-            ("< Angled brackets"     . (60 62))     ; < >
-            ("« Εισαγωγικά Gr quote" . (171 187))   ; « »
-            ("= Equals signs"        . (61 61))     ; = =
-            ("~ Tilde"               . (126 126))   ; ~ ~
-            ("* Asterisks"           . (42 42))     ; * *
-            ("/ Forward Slash"       . (47 47))     ; / /
-            ("_ underscores"         . (95 95)))   ; _ _
-          prot-simple-date-specifier "%F"
-          prot-simple-time-specifier "%R %z"
-          delete-pair-blink-delay 0.15 ; Emacs28 -- see `prot-simple-delete-pair-dwim'
-          prot-simple-scratch-buffer-default-mode 'markdown-mode
-          help-window-select t
-          next-error-recenter '(4)) ; center of the window
+        '(("' Single quote"        . (39 39))     ; ' '
+          ("\" Double quotes"      . (34 34))     ; " "
+          ("` Elisp quote"         . (96 39))     ; ` '
+          ("‘ Single apostrophe"   . (8216 8217)) ; ‘ ’
+          ("“ Double apostrophes"  . (8220 8221)) ; “ ”
+          ("( Parentheses"         . (40 41))     ; ( )
+          ("{ Curly brackets"      . (123 125))   ; { }
+          ("[ Square brackets"     . (91 93))     ; [ ]
+          ("< Angled brackets"     . (60 62))     ; < >
+          ("« Εισαγωγικά Gr quote" . (171 187))   ; « »
+          ("= Equals signs"        . (61 61))     ; = =
+          ("~ Tilde"               . (126 126))   ; ~ ~
+          ("* Asterisks"           . (42 42))     ; * *
+          ("/ Forward Slash"       . (47 47))     ; / /
+          ("_ underscores"         . (95 95)))    ; _ _
+        prot-simple-date-specifier "%F"
+        prot-simple-time-specifier "%R %z"
+        delete-pair-blink-delay 0.15 ; Emacs28 -- see `prot-simple-delete-pair-dwim'
+        prot-simple-scratch-buffer-default-mode 'markdown-mode
+        help-window-select t
+        next-error-recenter '(4)) ; center of the window
 
   ;; General commands
   (let ((map global-map))
     (define-key map (kbd "<insert>") nil)
-    (define-key map (kbd "C-z") nil)
+    ;; (define-key map (kbd "C-z") nil)
     (define-key map (kbd "C-x C-z") nil)
     (define-key map (kbd "C-h h") nil)
     (define-key map (kbd "M-`") nil)
@@ -51,38 +79,45 @@
     (define-key map (kbd "C-h c") #'describe-char) ; overrides `describe-key-briefly'
     (define-key map (kbd "C-c s") #'prot-simple-scratch-buffer)
     ;; Commands for lines
-    (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
-    (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
+
+    ;; NOTE 2022-12-04: See comment at top about switch to `evil-mode'.
+    ;; (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
+    ;; (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
     (define-key map (kbd "M-SPC") #'cycle-spacing)
-    (define-key map (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
-    (define-key map (kbd "M-k") #'prot-simple-kill-line-backward)
-    (define-key map (kbd "C-S-n") #'prot-simple-multi-line-next)
-    (define-key map (kbd "C-S-p") #'prot-simple-multi-line-prev)
-    (define-key map (kbd "<C-return>") #'prot-simple-new-line-below)
-    (define-key map (kbd "<C-S-return>") #'prot-simple-new-line-above)
+    ;; (define-key map (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
+    ;; (define-key map (kbd "M-k") #'prot-simple-kill-line-backward)
+    ;; (define-key map (kbd "C-S-n") #'prot-simple-multi-line-next)
+    ;; (define-key map (kbd "C-S-p") #'prot-simple-multi-line-prev)
+    ;; (define-key map (kbd "<C-return>") #'prot-simple-new-line-below)
+    ;; (define-key map (kbd "<C-S-return>") #'prot-simple-new-line-above)
+
     ;; Commands for text insertion or manipulation
     (define-key map (kbd "C-=") #'prot-simple-insert-date)
     (define-key map (kbd "C-<") #'prot-simple-escape-url)
     (define-key map (kbd "C-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
-    (define-key map (kbd "M-z") #'zap-up-to-char) ; NOT `zap-to-char'
-    (define-key map (kbd "M-Z") #'prot-simple-zap-to-char-backward)
-    (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
+    ;; (define-key map (kbd "M-z") #'zap-up-to-char) ; NOT `zap-to-char'
+    ;; (define-key map (kbd "M-Z") #'prot-simple-zap-to-char-backward)
+    ;; (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
     (define-key map (kbd "M-u") #'upcase-dwim)
     ;; Commands for object transposition
+
+    ;; NOTE 2022-12-04: I forgot how to perform transposition in
+    ;; Vim...  See comment above of the same date about usage of
+    ;; `evil-mode'.  I am keeping these for the time being.
     (define-key map (kbd "C-t") #'prot-simple-transpose-chars)
     (define-key map (kbd "C-x C-t") #'prot-simple-transpose-lines)
     (define-key map (kbd "C-S-t") #'prot-simple-transpose-paragraphs)
     (define-key map (kbd "C-x M-t") #'prot-simple-transpose-sentences)
     (define-key map (kbd "C-M-t") #'prot-simple-transpose-sexps)
     (define-key map (kbd "M-t") #'prot-simple-transpose-words)
-    ;; Commands for marking objects
-    (define-key map (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
-    (define-key map (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
-    (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
+    ;; ;; Commands for marking objects
+    ;; (define-key map (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
+    ;; (define-key map (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
+    ;; (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
     ;; Commands for paragraphs
     (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
     ;; Commands for windows and pages
@@ -99,7 +134,9 @@
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
+    ;; NOTE 2022-12-04: Using `M-k' for now due to `evil-mode' switch.
+    ;; (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
+    (define-key map (kbd "M-k") #'prot-simple-kill-buffer-current)
     (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
@@ -174,6 +211,26 @@
           ;; same idea.
           set-mark-command-repeat-pop t)
   (add-hook 'after-init-hook #'repeat-mode))
+
+;;; Emoji input
+(prot-emacs-builtin-package 'emoji
+  (defun prot/emoji-insert (&optional transient)
+    "Thin wrapper for `emoji-insert' and `emoji-search'.
+When called with optional TRANSIENT as a prefix argument, use the
+transient interface (transient.el), else pick an emoji with
+minibuffer completion."
+    (interactive "P")
+    (let ((cmd (if transient 'emoji-insert 'emoji-search)))
+      (call-interactively cmd)))
+
+  ;; NOTE 2022-12-04: Vim does not use Meta characters, so I am using
+  ;; this for now.  Check the comment above for why I am using
+  ;; `evil-mode' now.
+
+  ;; The default key bindings for Emoji are behind the C-x 8 e prefix.
+  (define-key global-map (kbd "M-e") #'prot/emoji-insert)
+  ;; (define-key global-map (kbd "C-.") #'prot/emoji-insert)
+  )
 
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
