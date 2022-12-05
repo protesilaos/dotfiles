@@ -13,29 +13,29 @@
           evil-cross-lines t
           evil-default-cursor nil)
 
-  (dolist (hook '(conf-mode-hook text-mode-hook prog-mode-hook))
+;;;; evil-mode setup for individual modes
+  (dolist (hook '(conf-mode-hook special-mode-hook text-mode-hook prog-mode-hook))
     (add-hook hook #'evil-local-mode))
 
-  (dolist (hook '(comint-mode-hook dired-mode-hook special-mode-hook))
-    (add-hook hook #'evil-emacs-state)) ; otherwise RET does not run the command (?)
-
-  (defmacro prot/evil-state-for-package (package hook state)
-    "Once PACKAGE loads, add evil STATE to HOOK."
+  (defmacro prot/evil-state-for-package (package state &optional hook)
+    "Once PACKAGE loads, add evil STATE to HOOK.
+Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
     `(eval-after-load ,package
        (lambda ()
-         (add-hook ,hook ,state))))
+         (add-hook (or (intern (format "%s-mode-hook" ,package)) ,hook) ,state))))
 
   ;; NOTE 2022-12-05: Work-in-progress.
-  (prot/evil-state-for-package 'shell 'shell-mode-hook 'evil-emacs-state) ; otherwise RET does not run the command (?)
-  (prot/evil-state-for-package 'cider 'cider-mode-hook 'evil-local-mode)
-  (prot/evil-state-for-package 'cider 'cider-repl-mode-hook 'evil-emacs-state)
-  (prot/evil-state-for-package 'git-commit 'git-commit-mode-hook 'evil-emacs-state)
-  (prot/evil-state-for-package 'log-edit 'log-edit-mode-hook 'evil-emacs-state)
-  (prot/evil-state-for-package 'git-rebase 'git-rebase-mode-hook 'evil-local-mode)
-  (prot/evil-state-for-package 'ediff 'ediff-mode-hook 'evil-local-mode)
-  (prot/evil-state-for-package 'org 'org-mode-hook 'evil-emacs-state) ; otherwise TAB-folding doesn't work
-  (prot/evil-state-for-package 'org-agenda 'org-agenda-mode-hook 'evil-emacs-state)
-  (prot/evil-state-for-package 'compilation 'compilation-mode-hook 'evil-local-mode)
+  (prot/evil-state-for-package 'comint 'evil-emacs-state) ; otherwise RET does not run the command (?)
+  (prot/evil-state-for-package 'shell 'evil-emacs-state) ; otherwise RET does not run the command (?)
+  (prot/evil-state-for-package 'cider 'evil-emacs-state 'cider-repl-mode-hook) ; same as with comint
+  (prot/evil-state-for-package 'cider 'evil-local-mode)
+  (prot/evil-state-for-package 'git-commit 'evil-emacs-state)
+  (prot/evil-state-for-package 'log-edit 'evil-emacs-state)
+  (prot/evil-state-for-package 'git-rebase 'evil-local-mode)
+  (prot/evil-state-for-package 'ediff 'evil-local-mode)
+  (prot/evil-state-for-package 'org 'evil-emacs-state) ; otherwise TAB-folding doesn't work
+  (prot/evil-state-for-package 'org-agenda 'evil-emacs-state)
+  (prot/evil-state-for-package 'compilation 'evil-local-mode)
 
   ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
@@ -46,6 +46,8 @@
     (define-key map (kbd "M-o") #'other-window))
 
   (with-eval-after-load 'dired
+    (add-hook 'dired-mode-hook #'evil-local-mode)
+    (define-key dired-mode-map (kbd "K") #'dired-do-kill-lines)
     (define-key global-map (kbd "M-j") #'dired-jump)))
 
 ;;; Read environment variables
