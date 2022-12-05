@@ -91,6 +91,8 @@
         (pulsar . "elpa-devel")
         (tmr . "elpa-devel")))
 
+(setq custom-safe-themes t)
+
 (defmacro prot-emacs-builtin-package (package &rest body)
   "Set up builtin PACKAGE with rest BODY.
 PACKAGE is a quoted symbol, while BODY consists of balanced
