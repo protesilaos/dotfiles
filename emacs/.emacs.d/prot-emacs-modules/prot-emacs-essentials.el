@@ -36,6 +36,8 @@ Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
   (prot/evil-state-for-package 'org 'evil-emacs-state) ; otherwise TAB-folding doesn't work
   (prot/evil-state-for-package 'org-agenda 'evil-emacs-state)
   (prot/evil-state-for-package 'compilation 'evil-local-mode)
+  (prot/evil-state-for-package 'elfeed 'evil-local-mode 'elfeed-search-mode-hook)
+  (prot/evil-state-for-package 'elfeed 'evil-local-mode 'elfeed-show-mode-hook)
 
   ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
