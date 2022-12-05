@@ -10,6 +10,7 @@
   (setq cider-repl-result-prefix "=> "
         cider-connection-message-fn nil ; cute, but no!
         cider-repl-prompt-function #'prot/cider-repl-prompt
+        cider-use-overlays nil ; echo area is fine
         cider-repl-display-help-banner nil)
 
   (defun prot/cider-repl-prompt (namespace)
