@@ -226,18 +226,23 @@ Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
 ;; (prot-emacs-elpa-package 'goto-last-change
 ;;   (define-key global-map (kbd "C-z") #'goto-last-change))
 
-;;; Repeatable key chords (repeat-mode)
-(prot-emacs-builtin-package 'repeat
-  (setq repeat-on-final-keystroke t
-          repeat-exit-timeout 5
-          repeat-exit-key "<escape>"
-          repeat-keep-prefix nil
-          repeat-check-key t
-          repeat-echo-function 'ignore
-          ;; Technically, this is not in repeal.el, though it is the
-          ;; same idea.
-          set-mark-command-repeat-pop t)
-  (add-hook 'after-init-hook #'repeat-mode))
+;; NOTE 2022-12-05: Disabling this as I do not need it with the
+;; `evil-mode' setup given the changes I made to relevant key bindings
+;; (e.g. C-x o now is M-o so the value of repeating the final o is
+;; lost.
+
+;; ;;; Repeatable key chords (repeat-mode)
+;; (prot-emacs-builtin-package 'repeat
+;;   (setq repeat-on-final-keystroke t
+;;           repeat-exit-timeout 5
+;;           repeat-exit-key "<escape>"
+;;           repeat-keep-prefix nil
+;;           repeat-check-key t
+;;           repeat-echo-function 'ignore
+;;           ;; Technically, this is not in repeal.el, though it is the
+;;           ;; same idea.
+;;           set-mark-command-repeat-pop t)
+;;   (add-hook 'after-init-hook #'repeat-mode))
 
 ;;; Emoji input
 (prot-emacs-builtin-package 'emoji
