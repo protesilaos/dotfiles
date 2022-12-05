@@ -44,9 +44,10 @@ set $menu wofi --allow-images -S drun | xargs swaymsg exec --
 output * bg ~/Pictures/current.jpg fill
 
 ### Input configuration
+# Check xkeyboard-config(7)
 input * {
     xkb_layout "us,gr"
-    xkb_options "grp:shifts_toggle,ctrl:nocaps,grp_led:caps,compose:menu"
+    xkb_options "grp:win_space_toggle,caps:escape,grp_led:caps,compose:menu"
 }
 
 ### Key bindings
