@@ -9,7 +9,15 @@
   ;; time as I become more familiar with the requirements.
   (setq cider-repl-result-prefix "=> "
         cider-connection-message-fn nil ; cute, but no!
-        cider-repl-display-help-banner nil))
+        cider-repl-prompt-function #'prot/cider-repl-prompt
+        cider-repl-display-help-banner nil)
+
+  (defun prot/cider-repl-prompt (namespace)
+    "Return a prompt string that mentions NAMESPACE."
+    (format
+     "%s%s "
+     (cider-abbreviate-ns namespace)
+     (propertize "🦄" 'face 'cider-repl-prompt-face))))
 
 ;;; Plain text (text-mode)
 (prot-emacs-builtin-package 'text-mode
