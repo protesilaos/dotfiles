@@ -14,7 +14,7 @@
           evil-default-cursor nil)
 
 ;;;; evil-mode setup for individual modes
-  (dolist (hook '(conf-mode-hook special-mode-hook text-mode-hook prog-mode-hook))
+  (dolist (hook '(conf-mode-hook text-mode-hook prog-mode-hook))
     (add-hook hook #'evil-local-mode))
 
   (defmacro prot/evil-state-for-package (package state &optional hook)
@@ -36,8 +36,8 @@ Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
   (prot/evil-state-for-package 'org 'evil-emacs-state) ; otherwise TAB-folding doesn't work
   (prot/evil-state-for-package 'org-agenda 'evil-emacs-state)
   (prot/evil-state-for-package 'compilation 'evil-local-mode)
-  (prot/evil-state-for-package 'elfeed 'evil-local-mode 'elfeed-search-mode-hook)
-  (prot/evil-state-for-package 'elfeed 'evil-local-mode 'elfeed-show-mode-hook)
+  (prot/evil-state-for-package 'elfeed 'evil-emacs-state 'elfeed-search-mode-hook)
+  (prot/evil-state-for-package 'elfeed 'evil-emacs-state 'elfeed-show-mode-hook)
 
   ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
@@ -48,8 +48,7 @@ Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
     (define-key map (kbd "M-o") #'other-window))
 
   (with-eval-after-load 'dired
-    (add-hook 'dired-mode-hook #'evil-local-mode)
-    (define-key dired-mode-map (kbd "K") #'dired-do-kill-lines)
+    (add-hook 'dired-mode-hook #'evil-emacs-state)
     (define-key global-map (kbd "M-j") #'dired-jump)))
 
 ;;; Read environment variables
