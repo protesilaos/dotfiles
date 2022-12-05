@@ -19,13 +19,29 @@
   (dolist (hook '(comint-mode-hook dired-mode-hook special-mode-hook))
     (add-hook hook #'evil-emacs-state)) ; otherwise RET does not run the command (?)
 
+  (defmacro prot/evil-state-for-package (package hook state)
+    "Once PACKAGE loads, add evil STATE to HOOK."
+    `(eval-after-load ,package
+       (lambda ()
+         (add-hook ,hook ,state))))
+
+  ;; NOTE 2022-12-05: Work-in-progress.
+  (prot/evil-state-for-package 'shell 'shell-mode-hook 'evil-emacs-state) ; otherwise RET does not run the command (?)
+  (prot/evil-state-for-package 'git-commit 'git-commit-mode-hook 'evil-emacs-state)
+  (prot/evil-state-for-package 'log-edit 'log-edit-mode-hook 'evil-emacs-state)
+  (prot/evil-state-for-package 'git-rebase 'git-rebase-mode-hook 'evil-local-state)
+  (prot/evil-state-for-package 'ediff 'ediff-mode-hook 'evil-local-state)
+  (prot/evil-state-for-package 'org 'org-mode-hook 'evil-emacs-state) ; Otherwise TAB-folding doesn't work
+  (prot/evil-state-for-package 'org-agenda 'org-agenda-mode-hook 'evil-emacs-state)
+  (prot/evil-state-for-package 'compilation 'compilation-mode-hook 'evil-local-state)
+
   ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
+    (define-key map (kbd "M-0") #'delete-window)
+    (define-key map (kbd "M-1") #'delete-other-windows)
+    (define-key map (kbd "M-2") #'split-window-below)
+    (define-key map (kbd "M-3") #'split-window-right)
     (define-key map (kbd "M-o") #'other-window)))
-
-;; TODO 2022-12-04: Check `evil-collection', although it seems
-;; overkill.
-
 
 ;;; Read environment variables
 
