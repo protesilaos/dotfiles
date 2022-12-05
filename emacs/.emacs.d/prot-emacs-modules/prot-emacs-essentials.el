@@ -13,7 +13,7 @@
           evil-cross-lines t
           evil-default-cursor nil)
 
-  (dolist (hook '(text-mode-hook prog-mode-hook))
+  (dolist (hook '(conf-mode-hook text-mode-hook prog-mode-hook))
     (add-hook hook #'evil-local-mode))
 
   (dolist (hook '(comint-mode-hook dired-mode-hook special-mode-hook))
