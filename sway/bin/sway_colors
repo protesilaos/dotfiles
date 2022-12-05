@@ -21,9 +21,9 @@ theme="$HOME"/.config/sway/active-theme
 
 if [ "$(cat "$theme")" = light ]
 then
-    swaymsg client.focused "#d7d7d7" "#d7d7d7" "#000000" "#a60000" "#0000c0"
-    swaymsg client.unfocused "#efefef" "#efefef" "#505050" "#d7d7d7" "#d7d7d7"
+    swaymsg client.focused "#c4c4c4" "#c4c4c4" "#000000" "#a60000" "#354fcf"
+    swaymsg client.unfocused "#e0e0e0" "#e0e0e0" "#585858" "#c4c4c4" "#c4c4c4"
 else
-    swaymsg client.focused "#323232" "#323232" "#ffffff" "#ff8059" "#00bcff"
-    swaymsg client.unfocused "#1e1e1e" "#1e1e1e" "#a8a8a8" "#323232" "#323232"
+    swaymsg client.focused "#535353" "#535353" "#ffffff" "#ff5f59" "#79a8ff"
+    swaymsg client.unfocused "#303030" "#303030" "#a8a8a8" "#535353" "#535353"
 fi

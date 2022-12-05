@@ -269,9 +269,9 @@ bar {
         background #ffffff
         statusline #000000
         # Sequence is border background text
-        binding_mode #9fc6ff #9fc6ff #000000
+        binding_mode #ff8f88 #ff8f88 #000000
         focused_workspace #aaaaaa #efefef #000000
-        inactive_workspace #ffffff #ffffff #505050
+        inactive_workspace #ffffff #ffffff #989898
     }
 }
 
@@ -284,7 +284,7 @@ bindsym $mod+b bar mode toggle
 exec_always ~/bin/sway_colors
 
 ### Idle configuration
-bindsym $mod+End exec ~/bin/sway_lock
+# bindsym $mod+End exec ~/bin/sway_lock
 
 # exec swayidle -w timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 

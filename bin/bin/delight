@@ -350,28 +350,28 @@ _sway ()
         gtk_theme='Adwaita-dark'
         color_scheme='prefer-dark'
 
-        swaymsg client.focused '#323232' '#323232' '#ffffff' '#ff8059' '#00bcff'
-        swaymsg client.unfocused '#1e1e1e' '#1e1e1e' '#a8a8a8' '#323232' '#323232'
+        swaymsg client.focused '#535353' '#535353' '#ffffff' '#ff5f59' '#79a8ff'
+        swaymsg client.unfocused '#303030' '#303030' '#989898' '#535353' '#535353'
 
         swaymsg bar 0 colors background '#000000'
         swaymsg bar 0 colors foreground '#ffffff'
 
         swaymsg bar 0 colors background '#000000'
         swaymsg bar 0 colors statusline '#ffffff'
-        swaymsg bar 0 colors binding_mode '#10387c' '#10387c' '#ffffff'
-        swaymsg bar 0 colors focused_workspace '#3c3c3c' '#191a1b' '#ffffff'
-        swaymsg bar 0 colors inactive_workspace '#000000' '#000000' '#93959b'
+        swaymsg bar 0 colors binding_mode '#cd2f30' '#cd2f30' '#ffffff'
+        swaymsg bar 0 colors focused_workspace '#535353' '#303030' '#ffffff'
+        swaymsg bar 0 colors inactive_workspace '#000000' '#000000' '#989898'
     else
         style=light
         gtk_theme='Adwaita'
         color_scheme='prefer-light'
 
-        swaymsg client.focused '#d7d7d7' '#d7d7d7' '#000000' '#a60000' '#0000c0'
-        swaymsg client.unfocused '#efefef' '#efefef' '#505050' '#d7d7d7' '#d7d7d7'
+        swaymsg client.focused "#c4c4c4" "#c4c4c4" "#000000" "#a60000" "#354fcf"
+        swaymsg client.unfocused "#e0e0e0" "#e0e0e0" "#585858" "#c4c4c4" "#c4c4c4"
 
         swaymsg bar 0 colors background '#ffffff'
         swaymsg bar 0 colors statusline '#000000'
-        swaymsg bar 0 colors binding_mode '#9fc6ff' '#9fc6ff' '#000000'
+        swaymsg bar 0 colors binding_mode '#ff8f88' '#ff8f88' '#000000'
         swaymsg bar 0 colors focused_workspace '#aaaaaa' '#efefef' '#000000'
         swaymsg bar 0 colors inactive_workspace '#ffffff' '#ffffff' '#505050'
     fi
