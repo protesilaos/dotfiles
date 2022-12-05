@@ -50,12 +50,18 @@ _emacs ()
 
     pgrep -x emacs > /dev/null || return 1
 
+    local light_theme
+    local dark_theme
+
+    light_theme="modus-operandi"
+    dark_theme="modus-vivendi"
+
     # Just switch to the appropriate theme for Emacs:
     # https://git.sr.ht/~protesilaos/modus-themes
     case "$1"
     in
-        l*) emacsclient -e "(modus-themes-load-operandi)" > /dev/null ;;
-        d*) emacsclient -e "(modus-themes-load-vivendi)"  > /dev/null ;;
+        l*) emacsclient -e "(load-theme '${light_theme} :no-confirm)" > /dev/null ;;
+        d*) emacsclient -e "(load-theme '${dark_theme} :no-confirm)"  > /dev/null ;;
     esac
 }
 
@@ -75,7 +81,7 @@ _xterm ()
         light) _sed "s,vivendi,operandi," "$active_theme" ;;
         dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
     esac
-    
+
     xrdb -I "$HOME" -merge "$xresources"
 
     # Another one of my scripts for live recolouring running terminal
