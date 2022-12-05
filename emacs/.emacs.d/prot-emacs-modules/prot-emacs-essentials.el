@@ -27,15 +27,15 @@
 
   ;; NOTE 2022-12-05: Work-in-progress.
   (prot/evil-state-for-package 'shell 'shell-mode-hook 'evil-emacs-state) ; otherwise RET does not run the command (?)
-  (prot/evil-state-for-package 'cider 'cider-mode-hook 'evil-emacs-state)
+  (prot/evil-state-for-package 'cider 'cider-mode-hook 'evil-local-mode)
   (prot/evil-state-for-package 'cider 'cider-repl-mode-hook 'evil-emacs-state)
   (prot/evil-state-for-package 'git-commit 'git-commit-mode-hook 'evil-emacs-state)
   (prot/evil-state-for-package 'log-edit 'log-edit-mode-hook 'evil-emacs-state)
-  (prot/evil-state-for-package 'git-rebase 'git-rebase-mode-hook 'evil-local-state)
-  (prot/evil-state-for-package 'ediff 'ediff-mode-hook 'evil-local-state)
+  (prot/evil-state-for-package 'git-rebase 'git-rebase-mode-hook 'evil-local-mode)
+  (prot/evil-state-for-package 'ediff 'ediff-mode-hook 'evil-local-mode)
   (prot/evil-state-for-package 'org 'org-mode-hook 'evil-emacs-state) ; otherwise TAB-folding doesn't work
   (prot/evil-state-for-package 'org-agenda 'org-agenda-mode-hook 'evil-emacs-state)
-  (prot/evil-state-for-package 'compilation 'compilation-mode-hook 'evil-local-state)
+  (prot/evil-state-for-package 'compilation 'compilation-mode-hook 'evil-local-mode)
 
   ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
