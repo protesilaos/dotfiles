@@ -22,7 +22,7 @@
 Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
     `(eval-after-load ,package
        (lambda ()
-         (add-hook (or (intern (format "%s-mode-hook" ,package)) ,hook) ,state))))
+         (add-hook (or ,hook (intern (format "%s-mode-hook" ,package))) ,state))))
 
   ;; NOTE 2022-12-05: Work-in-progress.
   (prot/evil-state-for-package 'comint 'evil-emacs-state) ; otherwise RET does not run the command (?)
