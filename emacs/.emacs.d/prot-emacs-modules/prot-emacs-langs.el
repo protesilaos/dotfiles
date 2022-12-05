@@ -16,10 +16,7 @@
 
   (defun prot/cider-repl-prompt (namespace)
     "Return a prompt string that mentions NAMESPACE."
-    (format
-     "%s%s "
-     (cider-abbreviate-ns namespace)
-     (propertize "🦄" 'face 'cider-repl-prompt-face))))
+    (format "%s🦄 " (cider-abbreviate-ns namespace))))
 
 ;;; Plain text (text-mode)
 (prot-emacs-builtin-package 'text-mode
