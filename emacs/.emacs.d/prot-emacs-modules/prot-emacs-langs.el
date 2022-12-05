@@ -7,7 +7,8 @@
 (prot-emacs-elpa-package 'cider
   ;; NOTE 2022-11-23: This is not final.  I will iterate on it over
   ;; time as I become more familiar with the requirements.
-  (setq cider-repl-result-prefix "=> "
+  (setq cider-repl-result-prefix ";; => "
+        cider-eval-result-prefix ""
         cider-connection-message-fn nil ; cute, but no!
         cider-repl-prompt-function #'prot/cider-repl-prompt
         cider-use-overlays nil ; echo area is fine
