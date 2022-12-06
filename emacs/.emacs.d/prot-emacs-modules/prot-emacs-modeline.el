@@ -119,6 +119,6 @@
   (dolist (event '(mouse-event-p
                    mouse-movement-p
                    mwheel-scroll))
-    (add-to-list 'keycast-substitute-alist `(,event nil)))
+    (add-to-list 'keycast-substitute-alist `(,event nil))))
 
 (provide 'prot-emacs-modeline)
