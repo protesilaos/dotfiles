@@ -255,14 +255,9 @@ minibuffer completion."
     (let ((cmd (if transient 'emoji-insert 'emoji-search)))
       (call-interactively cmd)))
 
-  ;; NOTE 2022-12-04: Vim does not use Meta characters, so I am using
-  ;; this for now.  Check the comment above for why I am using
-  ;; `evil-mode' now.
-
   ;; The default key bindings for Emoji are behind the C-x 8 e prefix.
-  (define-key global-map (kbd "M-e") #'prot/emoji-insert)
-  ;; (define-key global-map (kbd "C-.") #'prot/emoji-insert)
-  )
+  ;; Meanwhile, F2 does something useless in my workflow.
+  (define-key global-map (kbd "<f2>") #'prot/emoji-insert))
 
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
