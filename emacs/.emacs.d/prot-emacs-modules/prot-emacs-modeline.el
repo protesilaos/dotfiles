@@ -100,10 +100,17 @@
 
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
-  ;; Those are for `keycast-mode'
-  (setq keycast-mode-line-window-predicate #'keycast-active-frame-bottom-right-p)
+  ;; Those are for `keycast-mode-line-mode'
+  (setq keycast-mode-line-window-predicate #'prot/keycast-current-window-p)
   (setq keycast-separator-width 1)
   (setq keycast-mode-line-remove-tail-elements nil)
+
+  ;; TODO 2022-12-06: Show in most recent window if in the modeline?
+  (defun prot/keycast-current-window-p ()
+    "Return non-nil if selected WINDOW modeline can show keycast."
+    (and (not (minibufferp))
+         (not (null mode-line-format))
+         (eq (selected-window) (old-selected-window))))
 
   (dolist (input '(self-insert-command
                    org-self-insert-command))
@@ -113,11 +120,5 @@
                    mouse-movement-p
                    mwheel-scroll))
     (add-to-list 'keycast-substitute-alist `(,event nil)))
-
-  ;; Those are for the `keycast-log-mode'
-  (setq keycast-log-format "%-20K%C\n")
-  (setq keycast-log-frame-alist
-        '((minibuffer . nil)))
-  (setq keycast-log-newest-first t))
 
 (provide 'prot-emacs-modeline)
