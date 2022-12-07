@@ -13,18 +13,32 @@
           evil-cross-lines t
           evil-default-cursor nil)
 
-;;;; evil-mode setup for individual modes
-  (dolist (hook '(conf-mode-hook text-mode-hook prog-mode-hook))
-    (add-hook hook #'evil-local-mode))
+;;;; Tweaks to Vim keys
+  ;; I `undo' Emacs-style, so the `redo' is reduntant.  Since C-s is
+  ;; still used by Isearch, I keep the standard Emacs key for C-r as
+  ;; well.
+  (define-key evil-normal-state-map (kbd "C-r") #'isearch-backward)
 
+;;;; `evil-mode' setup for individual modes
   (defmacro prot/evil-state-for-package (package state &optional hook)
     "Once PACKAGE loads, add evil STATE to HOOK.
-Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
+Without optional HOOK, derive the symbol as PACKAGE-mode-hook,
+else don't try such heuristics and use the symbols outright."
     `(eval-after-load ,package
        (lambda ()
-         (add-hook (or ,hook (intern (format "%s-mode-hook" ,package))) ,state))))
+         (let* ((suffix (if (string-match-p "-mode" (symbol-name ,package))
+                            "-hook"
+                          "-mode-hook"))
+                (heuristic-name (intern (format "%s%s" ,package suffix))))
+           (add-hook (or ,hook heuristic-name) ,state)))))
 
   ;; NOTE 2022-12-05: Work-in-progress.
+  ;;
+  ;; I only need to register the modes where I will be using
+  ;; `evil-mode'.  Setting the `evil-emacs-state' makes sense when
+  ;; there is a chance I will switch to Vim keys in that buffer.  If I
+  ;; will always be using Emacs keys (e.g. in Dired), then I do not
+  ;; need to set anything here.
   (prot/evil-state-for-package 'comint 'evil-emacs-state) ; otherwise RET does not run the command (?)
   (prot/evil-state-for-package 'shell 'evil-emacs-state) ; otherwise RET does not run the command (?)
   (prot/evil-state-for-package 'cider 'evil-emacs-state 'cider-repl-mode-hook) ; same as with comint
@@ -33,11 +47,14 @@ Without optional HOOK, derive the symbol as PACKAGE-mode-hook."
   (prot/evil-state-for-package 'log-edit 'evil-emacs-state)
   (prot/evil-state-for-package 'git-rebase 'evil-local-mode)
   (prot/evil-state-for-package 'ediff 'evil-local-mode)
+  (prot/evil-state-for-package 'text-mode 'evil-emacs-state)
   (prot/evil-state-for-package 'org 'evil-emacs-state) ; otherwise TAB-folding doesn't work
-  (prot/evil-state-for-package 'org-agenda 'evil-emacs-state)
-  (prot/evil-state-for-package 'compilation 'evil-local-mode)
-  (prot/evil-state-for-package 'elfeed 'evil-emacs-state 'elfeed-search-mode-hook)
   (prot/evil-state-for-package 'elfeed 'evil-emacs-state 'elfeed-show-mode-hook)
+
+  ;; In principle, all programming modes should be affected by this,
+  ;; but we will see.  Keeping it as a `dolist' just in case.
+  (dolist (hook '(conf-mode-hook prog-mode-hook))
+    (add-hook hook #'evil-local-mode))
 
   ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
