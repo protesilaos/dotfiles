@@ -10,8 +10,27 @@
           evil-want-fine-undo t
           evil-echo-state nil
           evil-mode-line-format 'before
-          evil-cross-lines t
-          evil-default-cursor nil)
+          evil-cross-lines nil
+          evil-default-cursor nil
+          evil-insert-state-modes nil
+          ;; Emacs keys in Insert state (for example C-e).  I like to
+          ;; blend the two sets of keys this way.
+          evil-disable-insert-state-bindings t)
+
+  ;; The `evil-insert-state-modes' defines the modes that should use
+  ;; the Insert state by default.  With
+  ;; `evil-disable-insert-state-bindings', I am making the Insert
+  ;; state be the same as the Emacs state.
+  ;;
+  ;; This way I can enable `evil-mode', which is global, without
+  ;; needing to set up each mode individually (I was doing that before
+  ;; with my own macro).
+  (dolist (mode '( cider-repl-mode comint-mode eshell-mode dired-mode
+                   log-edit-mode git-commit-mode git-rebase-mode
+                   org-mode shell-mode term-mode text-mode wdired-mode))
+    (add-to-list 'evil-insert-state-modes mode))
+
+  (evil-mode 1)
 
 ;;;; Tweaks to Vim keys
   ;; I `undo' Emacs-style, so the `redo' is reduntant.  Since C-s is
@@ -20,42 +39,6 @@
   (define-key evil-normal-state-map (kbd "C-r") #'isearch-backward)
 
 ;;;; `evil-mode' setup for individual modes
-  (defmacro prot/evil-state-for-package (package state &optional hook)
-    "Once PACKAGE loads, add evil STATE to HOOK.
-Without optional HOOK, derive the symbol as PACKAGE-mode-hook,
-else don't try such heuristics and use the symbols outright."
-    `(eval-after-load ,package
-       (lambda ()
-         (let* ((suffix (if (string-match-p "-mode" (symbol-name ,package))
-                            "-hook"
-                          "-mode-hook"))
-                (heuristic-name (intern (format "%s%s" ,package suffix))))
-           (add-hook (or ,hook heuristic-name) ,state)))))
-
-  ;; NOTE 2022-12-05: Work-in-progress.
-  ;;
-  ;; I only need to register the modes where I will be using
-  ;; `evil-mode'.  Setting the `evil-emacs-state' makes sense when
-  ;; there is a chance I will switch to Vim keys in that buffer.  If I
-  ;; will always be using Emacs keys (e.g. in Dired), then I do not
-  ;; need to set anything here.
-  (prot/evil-state-for-package 'comint 'evil-emacs-state) ; otherwise RET does not run the command (?)
-  (prot/evil-state-for-package 'shell 'evil-emacs-state) ; otherwise RET does not run the command (?)
-  (prot/evil-state-for-package 'cider 'evil-emacs-state 'cider-repl-mode-hook) ; same as with comint
-  (prot/evil-state-for-package 'cider 'evil-local-mode)
-  (prot/evil-state-for-package 'git-commit 'evil-emacs-state)
-  (prot/evil-state-for-package 'log-edit 'evil-emacs-state)
-  (prot/evil-state-for-package 'git-rebase 'evil-local-mode)
-  (prot/evil-state-for-package 'ediff 'evil-local-mode)
-  (prot/evil-state-for-package 'text-mode 'evil-emacs-state)
-  (prot/evil-state-for-package 'org 'evil-emacs-state) ; otherwise TAB-folding doesn't work
-  (prot/evil-state-for-package 'elfeed 'evil-emacs-state 'elfeed-show-mode-hook)
-
-  ;; In principle, all programming modes should be affected by this,
-  ;; but we will see.  Keeping it as a `dolist' just in case.
-  (dolist (hook '(conf-mode-hook prog-mode-hook))
-    (add-hook hook #'evil-local-mode))
-
   ;; Other changes to optimise for Evil (work-in-progress)
   (let ((map global-map))
     (define-key map (kbd "M-0") #'delete-window)
@@ -65,7 +48,6 @@ else don't try such heuristics and use the symbols outright."
     (define-key map (kbd "M-o") #'other-window))
 
   (with-eval-after-load 'dired
-    (add-hook 'dired-mode-hook #'evil-emacs-state)
     (define-key global-map (kbd "M-j") #'dired-jump)))
 
 ;;; Read environment variables
