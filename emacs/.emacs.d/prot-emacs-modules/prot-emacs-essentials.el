@@ -49,7 +49,7 @@ Bind to `enable-theme-functions' (Emacs 29)."
   ;; never use it in a buffer.  I do this simply because it is easier
   ;; to switch to Normal state with ESC than to type C-z.
   (dolist (mode '( cider-repl-mode comint-mode eshell-mode dired-mode
-                   log-edit-mode git-commit-mode git-rebase-mode
+                   eww-mode log-edit-mode git-commit-mode git-rebase-mode
                    org-mode shell-mode term-mode text-mode wdired-mode))
     (add-to-list 'evil-insert-state-modes mode))
 
