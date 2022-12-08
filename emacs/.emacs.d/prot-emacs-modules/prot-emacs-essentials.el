@@ -149,10 +149,6 @@ Bind to `enable-theme-functions' (Emacs 29)."
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
     (define-key map (kbd "M-u") #'upcase-dwim)
     ;; Commands for object transposition
-
-    ;; NOTE 2022-12-04: I forgot how to perform transposition in
-    ;; Vim...  See comment above of the same date about usage of
-    ;; `evil-mode'.  I am keeping these for the time being.
     (define-key map (kbd "C-t") #'prot-simple-transpose-chars)
     (define-key map (kbd "C-x C-t") #'prot-simple-transpose-lines)
     (define-key map (kbd "C-S-t") #'prot-simple-transpose-paragraphs)
