@@ -195,14 +195,14 @@ Bind to `enable-theme-functions' (Emacs 29)."
 (prot-emacs-builtin-package 'mouse
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
   (setq mouse-wheel-scroll-amount
-          '(1
-            ((shift) . 5)
-            ((meta) . 0.5)
-            ((control) . text-scale))
-          mouse-drag-copy-region nil
-          make-pointer-invisible t
-          mouse-wheel-progressive-speed t
-          mouse-wheel-follow-mouse t)
+        '(1
+          ((shift) . 5)
+          ((meta) . 0.5)
+          ((control) . text-scale))
+        mouse-drag-copy-region nil
+        make-pointer-invisible t
+        mouse-wheel-progressive-speed t
+        mouse-wheel-follow-mouse t)
   (add-hook 'after-init-hook #'mouse-wheel-mode)
   (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window))
 
@@ -220,13 +220,13 @@ Bind to `enable-theme-functions' (Emacs 29)."
 ;;; Tooltips (tooltip-mode)
 (prot-emacs-builtin-package 'tooltip
   (setq tooltip-delay 0.5
-          tooltip-short-delay 0.5
-          x-gtk-use-system-tooltips nil
-          tooltip-frame-parameters
-          '((name . "tooltip")
-            (internal-border-width . 6)
-            (border-width . 0)
-            (no-special-glyphs . t)))
+        tooltip-short-delay 0.5
+        x-gtk-use-system-tooltips nil
+        tooltip-frame-parameters
+        '((name . "tooltip")
+          (internal-border-width . 6)
+          (border-width . 0)
+          (no-special-glyphs . t)))
   (add-hook 'after-init-hook #'tooltip-mode))
 
 ;;; Auto revert mode
@@ -288,8 +288,8 @@ minibuffer completion."
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (prot-emacs-elpa-package 'tmr
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
-          tmr-notification-urgency 'normal
-          tmr-description-list 'tmr-description-history)
+        tmr-notification-urgency 'normal
+        tmr-description-list 'tmr-description-history)
 
   ;; You do not need these if you install the package.
   (require 'tmr-notification)
