@@ -5,30 +5,56 @@
 
 ;;; evil-mode (Vim key bindings)
 (prot-emacs-elpa-package 'evil
-  (setopt evil-move-beyond-eol t        ; `setopt' is in Emacs 29
-          evil-want-Y-yank-to-eol t
-          evil-want-fine-undo t
-          evil-echo-state nil
-          evil-mode-line-format 'before
-          evil-cross-lines nil
-          evil-default-cursor nil
-          evil-insert-state-modes nil
-          ;; Emacs keys in Insert state (for example C-e).  I like to
-          ;; blend the two sets of keys this way.
-          evil-disable-insert-state-bindings t)
+  (setopt ; `setopt' is in Emacs 29
+   evil-cross-lines nil
+   evil-default-cursor nil
+   ;; Emacs keys in Insert state (for example C-e).  I like to
+   ;; blend the two sets of keys this way.
+   evil-disable-insert-state-bindings t
+   evil-echo-state nil
+   evil-insert-state-modes nil
+   evil-mode-line-format 'before
+   evil-move-beyond-eol t
+   evil-move-cursor-back nil
+   evil-symbol-word-search t
+   evil-want-Y-yank-to-eol t
+   evil-want-fine-undo t
+   evil-want-minibuffer t)
+
+  (defun prot/evil-cursor-colors (theme)
+    "Change Evil cursor per state upon THEME switch.
+Bind to `enable-theme-functions' (Emacs 29)."
+    (let* ((bg (plist-get (get theme 'theme-properties) :background-mode))
+           (main (cons "#000000" "#ffffff"))
+           (red (cons "#a60000" "#ff5f59"))
+           (blue (cons "#0000b0" "#00bcff"))
+           (magenta (cons "#8f0075" "#f78fe7"))
+           (cell (if (eq bg 'dark) #'cdr #'car)))
+      (setopt evil-replace-state-cursor `((hbar . 8) ,(funcall cell red))
+              evil-insert-state-cursor `((bar . 2) ,(funcall cell blue))
+              evil-normal-state-cursor `(box ,(funcall cell main))
+              evil-emacs-state-cursor `((bar . 2) ,(funcall cell magenta)))))
+
+  (add-hook 'enable-theme-functions #'prot/evil-cursor-colors)
 
   ;; The `evil-insert-state-modes' defines the modes that should use
-  ;; the Insert state by default.  With
-  ;; `evil-disable-insert-state-bindings', I am making the Insert
-  ;; state be the same as the Emacs state.
+  ;; the Insert state.  With `evil-disable-insert-state-bindings', I
+  ;; am making the Insert state be the same as the Emacs state, so the
+  ;; latter is superfluous.
   ;;
   ;; This way I can enable `evil-mode', which is global, without
   ;; needing to set up each mode individually (I was doing that before
-  ;; with my own macro).
+  ;; with my own macro).  The following `setopt' adds all the Emacs
+  ;; state modes to Insert state and disables the former, so I should
+  ;; never use it in a buffer.  I do this simply because it is easier
+  ;; to switch to Normal state with ESC than to type C-z.
   (dolist (mode '( cider-repl-mode comint-mode eshell-mode dired-mode
                    log-edit-mode git-commit-mode git-rebase-mode
                    org-mode shell-mode term-mode text-mode wdired-mode))
     (add-to-list 'evil-insert-state-modes mode))
+
+  (setopt evil-insert-state-modes (append evil-insert-state-modes evil-emacs-state-modes)
+          evil-emacs-state-modes nil)
 
   (evil-mode 1)
 
