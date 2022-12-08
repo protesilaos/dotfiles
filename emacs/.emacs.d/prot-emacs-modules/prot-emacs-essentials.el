@@ -43,19 +43,13 @@ Bind to `enable-theme-functions' (Emacs 29)."
   ;; latter is superfluous.
   ;;
   ;; This way I can enable `evil-mode', which is global, without
-  ;; needing to set up each mode individually (I was doing that before
-  ;; with my own macro).  The following `setopt' adds all the Emacs
-  ;; state modes to Insert state and disables the former, so I should
-  ;; never use it in a buffer.  I do this simply because it is easier
-  ;; to switch to Normal state with ESC than to type C-z.
+  ;; needing to set up in each mode individually (I was doing that
+  ;; before with my own macro).
   (dolist (mode '( cider-repl-mode comint-mode eshell-mode dired-mode
-                   elfeed-search-mode elfeed-show-mode
+                   bongo-playlist-mode elfeed-search-mode elfeed-show-mode
                    eww-mode log-edit-mode git-commit-mode git-rebase-mode
                    org-mode shell-mode term-mode text-mode wdired-mode))
     (add-to-list 'evil-insert-state-modes mode))
-
-  (setopt evil-insert-state-modes (append evil-insert-state-modes evil-emacs-state-modes)
-          evil-emacs-state-modes nil)
 
   (evil-mode 1)
 
