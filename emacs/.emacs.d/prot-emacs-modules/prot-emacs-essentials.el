@@ -245,7 +245,7 @@ Bind to `enable-theme-functions' (Emacs 29)."
 ;; NOTE 2022-12-05: Disabling this as I do not need it with the
 ;; `evil-mode' setup given the changes I made to relevant key bindings
 ;; (e.g. C-x o now is M-o so the value of repeating the final o is
-;; lost.
+;; lost).
 
 ;; ;;; Repeatable key chords (repeat-mode)
 ;; (prot-emacs-builtin-package 'repeat
