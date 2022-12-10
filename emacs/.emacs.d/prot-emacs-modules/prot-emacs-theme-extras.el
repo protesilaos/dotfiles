@@ -87,8 +87,6 @@
 
   (require 'whitespace)
 
-  (add-hook 'prog-mode-hook #'prot-sideline-mode)
-
   (let ((map global-map))
     (define-key map (kbd "<f6>") #'prot-sideline-negative-space-toggle)
     (define-key map (kbd "<f7>") #'prot-sideline-mode)

@@ -1,76 +1,3 @@
-;; NOTE 2022-12-04: I started using `evil-mode' because of an injury
-;; to my left hand which makes it difficult to type the control
-;; characters.  Either I will get used to Vim keys again and keep it
-;; this way even after my injury, or I will revert to what I had.
-
-;;; evil-mode (Vim key bindings)
-(prot-emacs-elpa-package 'evil
-  (setopt ; `setopt' is in Emacs 29
-   evil-cross-lines nil
-   evil-default-cursor nil
-   ;; Emacs keys in Insert state (for example C-e).  I like to
-   ;; blend the two sets of keys this way.
-   evil-disable-insert-state-bindings t
-   evil-echo-state nil
-   evil-insert-state-modes nil
-   evil-mode-line-format 'before
-   evil-move-beyond-eol t
-   evil-move-cursor-back nil
-   evil-symbol-word-search t
-   evil-want-Y-yank-to-eol t
-   evil-want-fine-undo t
-   evil-want-minibuffer t)
-
-  (defun prot/evil-cursor-colors (theme)
-    "Change Evil cursor per state upon THEME switch.
-Bind to `enable-theme-functions' (Emacs 29)."
-    (let* ((bg (plist-get (get theme 'theme-properties) :background-mode))
-           (main (cons "#000000" "#ffffff"))
-           (red (cons "#a60000" "#ff5f59"))
-           (blue (cons "#0000b0" "#00bcff"))
-           (magenta (cons "#8f0075" "#f78fe7"))
-           (cell (if (eq bg 'dark) #'cdr #'car)))
-      (setopt evil-replace-state-cursor `((hbar . 8) ,(funcall cell red))
-              evil-insert-state-cursor `((bar . 2) ,(funcall cell blue))
-              evil-normal-state-cursor `(box ,(funcall cell main))
-              evil-emacs-state-cursor `((bar . 2) ,(funcall cell magenta)))))
-
-  (add-hook 'enable-theme-functions #'prot/evil-cursor-colors)
-
-  ;; The `evil-insert-state-modes' defines the modes that should use
-  ;; the Insert state.  With `evil-disable-insert-state-bindings', I
-  ;; am making the Insert state be the same as the Emacs state, so the
-  ;; latter is superfluous.
-  ;;
-  ;; This way I can enable `evil-mode', which is global, without
-  ;; needing to set up in each mode individually (I was doing that
-  ;; before with my own macro).
-  (dolist (mode '( cider-repl-mode comint-mode eshell-mode dired-mode
-                   bongo-playlist-mode elfeed-search-mode elfeed-show-mode
-                   eww-mode log-edit-mode git-commit-mode git-rebase-mode
-                   org-mode shell-mode term-mode text-mode wdired-mode))
-    (add-to-list 'evil-insert-state-modes mode))
-
-  (evil-mode 1)
-
-;;;; Tweaks to Vim keys
-  ;; I `undo' Emacs-style, so the `redo' is reduntant.  Since C-s is
-  ;; still used by Isearch, I keep the standard Emacs key for C-r as
-  ;; well.
-  (define-key evil-normal-state-map (kbd "C-r") #'isearch-backward)
-
-;;;; `evil-mode' setup for individual modes
-  ;; Other changes to optimise for Evil (work-in-progress)
-  (let ((map global-map))
-    (define-key map (kbd "M-0") #'delete-window)
-    (define-key map (kbd "M-1") #'delete-other-windows)
-    (define-key map (kbd "M-2") #'split-window-below)
-    (define-key map (kbd "M-3") #'split-window-right)
-    (define-key map (kbd "M-o") #'other-window))
-
-  (with-eval-after-load 'dired
-    (define-key global-map (kbd "M-j") #'dired-jump)))
-
 ;;; Read environment variables
 
 ;; NOTE 2022-09-29: It seems I no longer need `exec-path-from-shell'.
@@ -124,10 +51,8 @@ Bind to `enable-theme-functions' (Emacs 29)."
     (define-key map (kbd "C-h c") #'describe-char) ; overrides `describe-key-briefly'
     (define-key map (kbd "C-c s") #'prot-simple-scratch-buffer)
     ;; Commands for lines
-
-    ;; NOTE 2022-12-04: See comment at top about switch to `evil-mode'.
-    ;; (define-key map (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
-    ;; (define-key map (kbd "M-k") #'prot-simple-kill-line-backward)
+    (define-key map (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
+    (define-key map (kbd "M-k") #'prot-simple-kill-line-backward)
     (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
     (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
     (define-key map (kbd "M-SPC") #'cycle-spacing)
@@ -175,9 +100,7 @@ Bind to `enable-theme-functions' (Emacs 29)."
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    ;; NOTE 2022-12-04: Using `M-k' for now due to `evil-mode' switch.
-    ;; (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
-    (define-key map (kbd "M-k") #'prot-simple-kill-buffer-current)
+    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
     (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
@@ -236,29 +159,22 @@ Bind to `enable-theme-functions' (Emacs 29)."
 ;;; Newline characters for file ending
 (setq mode-require-final-newline 'visit-save)
 
-;; NOTE 2022-12-04: Not relevant for `evil-mode'.  See comment above.
+;;; Go to last change
+(prot-emacs-elpa-package 'goto-last-change
+  (define-key global-map (kbd "C-z") #'goto-last-change))
 
-;; ;;; Go to last change
-;; (prot-emacs-elpa-package 'goto-last-change
-;;   (define-key global-map (kbd "C-z") #'goto-last-change))
-
-;; NOTE 2022-12-05: Disabling this as I do not need it with the
-;; `evil-mode' setup given the changes I made to relevant key bindings
-;; (e.g. C-x o now is M-o so the value of repeating the final o is
-;; lost).
-
-;; ;;; Repeatable key chords (repeat-mode)
-;; (prot-emacs-builtin-package 'repeat
-;;   (setq repeat-on-final-keystroke t
-;;           repeat-exit-timeout 5
-;;           repeat-exit-key "<escape>"
-;;           repeat-keep-prefix nil
-;;           repeat-check-key t
-;;           repeat-echo-function 'ignore
-;;           ;; Technically, this is not in repeal.el, though it is the
-;;           ;; same idea.
-;;           set-mark-command-repeat-pop t)
-;;   (add-hook 'after-init-hook #'repeat-mode))
+;;; Repeatable key chords (repeat-mode)
+(prot-emacs-builtin-package 'repeat
+  (setq repeat-on-final-keystroke t
+          repeat-exit-timeout 5
+          repeat-exit-key "<escape>"
+          repeat-keep-prefix nil
+          repeat-check-key t
+          repeat-echo-function 'ignore
+          ;; Technically, this is not in repeal.el, though it is the
+          ;; same idea.
+          set-mark-command-repeat-pop t)
+  (add-hook 'after-init-hook #'repeat-mode))
 
 ;;; Emoji input
 (prot-emacs-builtin-package 'emoji
@@ -273,6 +189,7 @@ minibuffer completion."
 
   ;; The default key bindings for Emoji are behind the C-x 8 e prefix.
   ;; Meanwhile, F2 does something useless in my workflow.
+  ;; (define-key global-map (kbd "<f2>") #'prot/emoji-insert)
   (define-key global-map (kbd "<f2>") #'prot/emoji-insert))
 
 ;;; Make Custom UI code disposable
