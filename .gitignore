@@ -27,4 +27,5 @@
 *.sqlite
 *.uuid
 user-emacs.*
-basic-init.el
+prot-emacs-pre-custom.*
+prot-emacs-post-custom.*

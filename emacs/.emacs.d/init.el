@@ -28,6 +28,46 @@
 
 ;;; Code:
 
+(defgroup prot-emacs nil
+  "User options for my dotemacs."
+  :group 'file)
+
+;; For those who use my dotfiles and need an easy way to write their
+;; own extras on top of what I already load: search below for the files
+;; prot-emacs-pre-custom.el and prot-emacs-post-custom.el
+
+(defcustom prot-emacs-load-theme-family 'modus
+  "Set of themes to load.
+Valid values are the symbols `ef', `modus', and `standard', which
+reference the `ef-themes', `modus-themes', and `standard-themes',
+respectively.
+
+A nil value does not load any of the above (use Emacs without a
+theme).
+
+This user option must be set in the `prot-emacs-pre-custom.el'
+file.  If that file exists in the Emacs directory, it is loaded
+before all other modules of my setup."
+  :group 'prot-emacs
+  :type '(choice :tag "Set of themes to load" :value modus
+                 (const :tag "The `ef-themes' module" ef)
+                 (const :tag "The `modus-themes' module" modus)
+                 (const :tag "The `standard-themes' module" standard)
+                 (const :tag "Do not load a theme module" nil)))
+
+(defcustom prot-emacs-omit-packages nil
+  "List of package names to not load.
+This instructs the relevant macros to not `require' the given
+package.  In the case of `prot-emacs-elpa-package', the package
+will not be installed if it is not already available on the
+system.
+
+This user option must be set in the `prot-emacs-pre-custom.el'
+file.  If that file exists in the Emacs directory, it is loaded
+before all other modules of my setup."
+  :group 'prot-emacs
+  :type '(repeat symbol))
+
 ;; Some basic settings
 (setq frame-title-format '("%b"))
 (setq ring-bell-function 'ignore)
@@ -96,10 +136,13 @@
 (defmacro prot-emacs-builtin-package (package &rest body)
   "Set up builtin PACKAGE with rest BODY.
 PACKAGE is a quoted symbol, while BODY consists of balanced
-expressions."
+expressions.
+
+Ignore PACKAGE if it is a member of `prot-emacs-omit-packages'."
   (declare (indent 1))
   `(progn
-     (unless (require ,package nil 'noerror)
+     (unless (and (not (memq ,package prot-emacs-omit-packages))
+                  (require ,package nil 'noerror))
        (display-warning 'prot-emacs
                         (format "Loading `%s' failed" ,package)
                         :warning))
@@ -110,18 +153,22 @@ expressions."
 PACKAGE is a quoted symbol, while BODY consists of balanced
 expressions.
 
-Try to install the package if it is missing."
+Try to install the PACKAGE if it is missing.
+
+Ignore PACKAGE, including the step of installing it, if it is a
+member of `prot-emacs-omit-packages'."
   (declare (indent 1))
-  `(progn
-     (when (not (package-installed-p ,package))
-       (unless package-archive-contents
-         (package-refresh-contents))
-       (package-install ,package))
-     (if (require ,package nil 'noerror)
-         (progn ,@body)
-       (display-warning 'prot-emacs
-                        (format "Loading `%s' failed" ,package)
-                        :warning))))
+  `(unless (memq ,package prot-emacs-omit-packages)
+     (progn
+       (when (not (package-installed-p ,package))
+         (unless package-archive-contents
+           (package-refresh-contents))
+         (package-install ,package))
+       (if (require ,package nil 'noerror)
+           (progn ,@body)
+         (display-warning 'prot-emacs
+                          (format "Loading `%s' failed" ,package)
+                          :warning)))))
 
 (defvar prot-emacs-package-form-regexp
   "^(\\(prot-emacs-.*-package\\|require\\) +'\\([0-9a-zA-Z-]+\\)"
@@ -131,10 +178,26 @@ Try to install the package if it is missing."
   `(add-to-list 'lisp-imenu-generic-expression
                 (list "Packages" ,prot-emacs-package-form-regexp 2)))
 
+;; For those who use my dotfiles and need an easy way to write their
+;; own extras on top of what I already load.  The file must exist at
+;; ~/.emacs.d/prot-emacs-pre-custom.el
+;;
+;; The purpose of this file is for the user to define their
+;; preferences BEFORE loading any of the modules.  For example, the
+;; user option `prot-emacs-omit-packages' lets the user specify which
+;; packages not to load.  Search for all `defcustom' forms in this
+;; file for other obvious customisations.
+(when-let* ((file (locate-user-emacs-file "prot-emacs-pre-custom.el"))
+            ((file-exists-p file)))
+  (load-file file))
+
 (require 'prot-emacs-essentials)
-;; (require 'prot-emacs-ef-themes)
-;; (require 'prot-emacs-standard-themes)
-(require 'prot-emacs-modus-themes)
+
+(pcase prot-emacs-load-theme-family
+  ('ef (require 'prot-emacs-ef-themes))
+  ('modus (require 'prot-emacs-modus-themes))
+  ('stadard (require 'prot-emacs-standard-themes)))
+
 (require 'prot-emacs-theme-extras)
 (require 'prot-emacs-font)
 (require 'prot-emacs-modeline)
@@ -158,9 +221,16 @@ Try to install the package if it is missing."
       '((org-hide-leading-stars . t)
         (org-hide-macro-markers . t)))
 
-;; For those who use my dotfiles and need an easy way to write their own
-;; extras.  The file must exist at ~/.emacs.d/user-emacs.el
-(when-let* ((file (locate-user-emacs-file "user-emacs.el"))
+;; For those who use my dotfiles and need an easy way to write their
+;; own extras on top of what I already load.  The file must exist at
+;; ~/.emacs.d/user-emacs.el OR ~/.emacs.d/prot-emacs-post-custom.el
+;;
+;; The purpose of the "post customisations" is to make tweaks to what
+;; I already define, such as to change the default theme.  See above
+;; for the `prot-emacs-pre-custom.el' to make changes BEFORE loading
+;; any of my other configurations.
+(when-let* ((file (or (locate-user-emacs-file "user-emacs.el")
+                      (locate-user-emacs-file "prot-emacs-post-custom.el")))
             ((file-exists-p file)))
   (load-file file))
 
