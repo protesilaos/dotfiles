@@ -39,7 +39,7 @@
 
 ;;; Shell scripts (sh-mode)
 (prot-emacs-builtin-package 'sh-script
-  (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
+  (add-to-list 'auto-mode-alist '("\\(PKGBUILD\\|sxhkdrc.*\\)" . sh-mode)))
 
 ;;; Paragraphs and fill-mode
 (setq sentence-end-double-space t)
