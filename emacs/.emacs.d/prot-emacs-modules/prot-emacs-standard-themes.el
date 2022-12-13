@@ -1,3 +1,5 @@
+;;; The Standard themes
+
 (prot-emacs-elpa-package 'standard-themes
   (setq standard-themes-bold-constructs t
         standard-themes-italic-constructs t
@@ -36,7 +38,6 @@
     (standard-themes-load-light))
 
   (define-key global-map (kbd "<f5>") #'standard-themes-toggle))
-
 
 ;; ;; NOTE: For testing purposes
 ;; (progn
@@ -89,5 +90,5 @@
 ;;     (load-theme 'standard-light :no-confirm))
 ;;
 ;;   (define-key global-map (kbd "<f5>") #'standard-themes-toggle))
-;;
-;; (provide 'prot-emacs-standard-themes)
+
+(provide 'prot-emacs-standard-themes)
