@@ -37,7 +37,10 @@ then
 fi
 
 # Needed for obs-studio
-export QT_QPA_PLATFORM=wayland
+if [ "$DESKTOP_SESSION" = "gnome" ]
+then
+    export QT_QPA_PLATFORM=wayland
+fi
 
 # NOTE 2021-09-21: Check my systemd units.  Those are meant to work
 # around the fact that Wayland does not read environment variables from
