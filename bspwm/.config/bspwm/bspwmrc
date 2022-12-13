@@ -137,6 +137,9 @@ fi
 # Simple daemon for GTK settings
 _check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
 
+# # In case one prefers the GNOME settings daemon over xsettingsd
+# _check /usr/lib/gsd-xsettings && /usr/lib/gsd-xsettings &
+
 # Use the same cursor everywhere
 _check xsetroot && xsetroot -xcf /usr/share/icons/Adwaita/cursors/left_ptr 16
 
