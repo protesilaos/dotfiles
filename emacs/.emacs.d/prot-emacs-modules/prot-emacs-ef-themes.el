@@ -13,12 +13,10 @@
           (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
           (6 . (variable-pitch 1.3))
           (7 . (variable-pitch 1.2))
+          (agenda-date . (semilight 1.5))
+          (agenda-structure . (variable-pitch light 1.9))
           (t . (variable-pitch 1.1))))
 
-  ;; They are nil by default...
-  (setq ef-themes-mixed-fonts t
-        ef-themes-variable-pitch-ui t)
-  
   ;; The `ef-themes' provide lots of themes.  I want to pick one at
   ;; random when I start Emacs: the `ef-themes-load-random' does just
   ;; that (it can be called interactively as well).  I just check with
