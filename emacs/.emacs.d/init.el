@@ -85,6 +85,37 @@ before all other modules of my setup."
 
 (setq initial-buffer-choice t) ; always start with *scratch*
 
+;;;; General theme code
+
+(defun prot-emacs-theme-gesttings-dark-p ()
+  "Return non-nil if gsettings (GNOME) has a dark theme.
+Return nil if the DESKTOP_SESSION is either bspwm or
+herbstluftwm, per the configuration of my dotfiles.  Also check
+the `delight' shell script."
+  (let ((session (getenv "DESKTOP_SESSION")))
+    (unless (or (string= session "bspwm")
+                (string= session "herbstluftwm"))
+      (string-match-p
+       "dark"
+       (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))))
+
+(defun prot-emacs-theme-twm-dark-p ()
+  "Return non-nil if my custom setup has a dark theme.
+I place a file in ~/.config/bspwm/active-theme or
+~/.config/herbstluftwm/active-theme which contains a single word
+describing my system-wide theme.  This is part of my dotfiles.
+Check my `delight' shell script for more."
+  (when-let* ((bspwm "~/.config/bspwm/active-theme")
+              (hlwm "~/.config/herbstluftwm/active-theme")
+              (file (cond
+                     ((file-exists-p bspwm) bspwm)
+                     ((file-exists-p hlwm) hlwm))))
+    (string-match-p
+     "dark"
+     (with-temp-buffer
+       (insert-file-contents file)
+       (buffer-substring-no-properties (point-min) (point-max))))))
+
 ;;;; Packages
 
 (dolist (path '("prot-lisp" "prot-emacs-modules"))
