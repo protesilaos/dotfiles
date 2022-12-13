@@ -84,14 +84,8 @@
 ;;              (concat "/home/prot/Git/Projects/ef-themes/" (symbol-name theme) "-theme.el")))
 ;;           (ef-themes--list-enabled-themes))
 ;;
-;;   ;; The `ef-themes' provide lots of themes.  I want to pick one at
-;;   ;; random when I start Emacs: the `ef-themes-load-random' does just
-;;   ;; that (it can be called interactively as well).  I just check with
-;;   ;; GNOME to determine if the choice should be about a light or a dark
-;;   ;; theme.
-;;   (if (string-match-p
-;;        "dark"
-;;        (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
+;;   (if (or (prot-emacs-theme-twm-dark-p)
+;;           (prot-emacs-theme-gesttings-dark-p))
 ;;       (ef-themes-load-random 'dark)
 ;;     (ef-themes-load-random 'light))
 ;;
