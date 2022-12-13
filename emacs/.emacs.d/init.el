@@ -170,6 +170,31 @@ member of `prot-emacs-omit-packages'."
                           (format "Loading `%s' failed" ,package)
                           :warning)))))
 
+(defmacro prot-emacs-vc-package (package remote &rest body)
+  "Set up PACKAGE from its REMOTE source.
+REMOTE is a plist that specifies:
+
+- :url     A string pointing to the URL of the PACKAGE source.
+           This is required.
+
+- :branch  The branch to build from.  This is optional.  It
+            defaults to the REMOTE's main branch.
+
+BODY is the configuration associated with PACKAGE."
+  (declare (indent 1))
+  `(unless (memq ,package prot-emacs-omit-packages)
+     (progn
+       (when (not (package-installed-p ,package))
+         (package-vc-install
+          (cons ,package (list :url ,(plist-get remote :url)
+                               ,@(when-let ((b (plist-get remote :branch)))
+                                   (list :branch b))))))
+       (if (require ,package nil 'noerror)
+           (progn ,@body)
+         (display-warning 'prot-emacs
+                          (format "Loading `%s' failed" ,package)
+                          :warning)))))
+
 (defvar prot-emacs-package-form-regexp
   "^(\\(prot-emacs-.*-package\\|require\\) +'\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
