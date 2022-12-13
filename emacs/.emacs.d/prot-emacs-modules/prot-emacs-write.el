@@ -113,6 +113,26 @@
                    :kill-buffer t
                    :jump-to-captured t))))
 
+;;; Bibliography
+;; NOTE 2022-12-13 I am now learning to use BibTeX.  This is a
+;; work-in-progress.
+(prot-emacs-elpa-package 'citar
+  ;; See `denote' key bindings above.  The "C-c n" prefix is a
+  ;; mnemonic for "note".
+  (define-key global-map (kbd "C-c n c") #'citar-insert-citation)
+  (setopt citar-bibliography '("~/Documents/protesilaos-stavrou-bibliography.bib"))
+
+  (with-eval-after-load 'embark
+    (prot-emacs-elpa-package 'citar-embark
+      (setopt citar-at-point-function 'embark-act)
+      (citar-embark-mode 1))))
+
+;; NOTE 2022-12-13: `prot-emacs-vc-package' is a new macro, I may
+;; refine it.
+(prot-emacs-vc-package 'citar-denote
+  (:url "https://github.com/pprevos/citar-denote/")
+  (citar-denote-mode 1))
+
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
 (prot-emacs-elpa-package 'olivetti
