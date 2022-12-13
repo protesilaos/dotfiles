@@ -37,6 +37,7 @@ mod4 + e ; d ; {q,Q,c,h}
      dunstctl {close,close-all,context,history-pop}
 
 # 'dunst_toggle_notify' is a shell script of mine.  Check my dotfiles.
+# It pauses notifications.
 mod4 + e ; d ; p
      dunst_toggle_notify
 

@@ -148,7 +148,9 @@ mod4 + {shift + space,space,f}
 # the given item (such as sending the marked item to the newest
 # preselection).  Sticky stays in the focused desktop.  Private tries to
 # keep its dimensions and tiling position.
-mod4 + x ; f ; {l,m,s,p}
+#
+# The mod4 + n prefix is a mnemonic for "node" and then f is for "flags".
+mod4 + n ; f ; {l,m,s,p}
 	bspc node -g {locked,marked,sticky,private}
 
 #### Manipulate the workspace
@@ -172,39 +174,42 @@ mod4 + shift + bracket{left,right}
 #
 # Whereas bspwm_smart_move (defined above) will automatically insert
 # a receptacle in the given direction by splitting the entire viewport.
-mod4 + x ; n ; r
+#
+# The mod4 + n prefix is a mnemonic for "node" and then r is for
+# "receptacle".
+mod4 + n ; r ; r
 	bspc node -i
 
 # Insert the marked window (or focused if no marks) in the first
 # matching receptacle (or preselection if no receptacles).
-mod4 + x ; n ; i
+mod4 + n ; r ; i
 	bspwm_smart_presel
 
 # Kill/remove the first matching receptacle from the current desktop.
 # With shift, kill them all at once.
-mod4 + n ; mod4 + {_, shift + }r
+mod4 + n ; r ; {_, shift + }k
 	{ \
 	bspc node 'any.leaf.!window.local' -k, \
 	bspwm_multifaceted_operation --kill-all-receptacles \
 	}
 
 # Summon all marked windows across all desktops to the current desktop.
-mod4 + x ; n ; m
+mod4 + w ; m
 	bspwm_multifaceted_operation --summon-all-marked
 
 # Bring the windows of the given desktop to the current one.  With
 # shift, send the current window to the given one.
-mod4 + x ; n ; mod4 + {_, shift + }{0-9}
+mod4 + w ; mod4 + {_, shift + }{0-9}
 	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} {0-9}
 
 # Close {or kill} all windows in the present desktop except the focused
 # or any marked ones.
-mod4 + x ; n ; mod4 + {_,shift + }q
+mod4 + w ; mod4 + {_,shift + }q
 	bspwm_multifaceted_operation --{close,kill}-all-local-non-focused
 
 # Assign the locked flag to all windows in the current desktop.  With
 # shift, remove the locked flag from all.
-mod4 + x ; n ; {_, shift + }l
+mod4 + w ; {_, shift + }l
 	bspwm_multifaceted_operation {--lock-all-local,--unlock-all-local}
 
 
