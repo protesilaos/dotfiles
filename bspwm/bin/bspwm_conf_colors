@@ -26,13 +26,13 @@ then
            border_active="#f78fe7"
            border_focus="#00bcff"
            border_normal="#000000"
-           bg_preselect="#041529"
+           bg_preselect="#2f337f"
            ;;
        *)
            border_active="#8f0075"
            border_focus="#0000c0"
            border_normal="#ffffff"
-           bg_preselect="#ebf6fa"
+           bg_preselect="#bbc3ff"
            ;;
    esac
 
