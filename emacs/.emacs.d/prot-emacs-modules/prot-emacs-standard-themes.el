@@ -84,9 +84,8 @@
 ;;              (concat "/home/prot/Git/Projects/standard-themes/" (symbol-name theme) "-theme.el")))
 ;;           (standard-themes--list-enabled-themes))
 ;;
-;;   (if (string-match-p
-;;        "dark"
-;;        (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
+;;   (if (or (prot-emacs-theme-twm-dark-p)
+;;           (prot-emacs-theme-gesttings-dark-p))
 ;;       (load-theme 'standard-dark :no-confirm)
 ;;     (load-theme 'standard-light :no-confirm))
 ;;
