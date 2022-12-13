@@ -207,12 +207,7 @@ _bspwm_or_hlwm ()
 {
     _depcheck "$wm_executable"
 
-    if [ "$(cat "$wm_theme")" = light ]
-    then
-        style=dark
-    else
-        style=light
-    fi
+    _gtheme
 
     echo "$style" > "$wm_theme"
 
@@ -238,7 +233,7 @@ _bspwm_or_hlwm ()
     fi
 }
 
-#### Gnome
+#### Gnome and gsettings
 
 _ggtk ()
 {
@@ -274,8 +269,10 @@ _gcolor_scheme_set ()
     _gcolor_scheme 'set' "$1"
 }
 
-_gnome ()
+_gtheme ()
 {
+    _depcheck gsettings
+
     if [ "$(_ggtk_get)" = "'Adwaita'" ]
     then
         style=dark
@@ -286,7 +283,11 @@ _gnome ()
         _ggtk_set 'Adwaita'
         _gcolor_scheme_set 'prefer-light'
     fi
+}
 
+_gnome ()
+{
+    _gtheme
     _emacs "$style"
 }
 
