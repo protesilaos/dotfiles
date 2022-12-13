@@ -31,9 +31,10 @@
           (agenda-structure . (variable-pitch light 1.8))
           (t . (variable-pitch 1.1))))
 
-  (if (string-match-p
-       "dark"
-       (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
+  ;; Load a theme that is consistent with my session's theme.  Those
+  ;; functions are defined in my init.el.
+  (if (or (prot-emacs-theme-twm-dark-p)
+          (prot-emacs-theme-gesttings-dark-p))
       (standard-themes-load-dark)
     (standard-themes-load-light))
 
