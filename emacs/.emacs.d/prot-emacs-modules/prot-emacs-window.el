@@ -178,7 +178,7 @@ use in `display-buffer-alist'."
 (prot-emacs-builtin-package 'prot-sideline
   (require 'display-line-numbers)
   ;; Set absolute line numbers.  A value of "relative" is also useful.
-  (setq display-line-numbers-type 'relative)
+  (setq display-line-numbers-type t)
   ;; Those two variables were introduced in Emacs 27.1
   (setq display-line-numbers-major-tick 0)
   (setq display-line-numbers-minor-tick 0)
