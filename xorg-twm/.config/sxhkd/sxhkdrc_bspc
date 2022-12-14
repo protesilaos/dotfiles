@@ -113,6 +113,9 @@ mod4 + o
 mod4 + ctrl + {h,j,k,l}
 	bspwm_resize {west,south,north,east} 50
 
+mod4 + ctrl + {Left,Down,Up,Right}
+    bspwm_resize {west,south,north,east} 50
+
 # Preselect the direction or insert again to cancel the preselection.
 # This enters the manual tiling mode that splits the currently focused
 # window.
