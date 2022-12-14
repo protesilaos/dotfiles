@@ -41,6 +41,13 @@
 (prot-emacs-builtin-package 'sh-script
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
+;;; SXHKDRC mode (one of my many packages)
+(prot-emacs-elpa-package 'sxhkdrc-mode
+  ;; By default, it only applies to the sxhkdrc file, but I have other
+  ;; relevant entries as well.  I separate my keys into different
+  ;; modules and load only what I need.
+  (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
+
 ;;; Paragraphs and fill-mode
 (setq sentence-end-double-space t)
 (setq sentence-end-without-period nil)
