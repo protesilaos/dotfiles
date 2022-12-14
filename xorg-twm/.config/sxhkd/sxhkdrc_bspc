@@ -233,7 +233,3 @@ mod4 + c : {h,j,k,l}
 # Mode for dynamic gaps.
 mod4 + c : bracket{left,right}
 	bspc config -d focused window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
-
-# Move floating windows with the arrow keys
-mod4 + c : {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
