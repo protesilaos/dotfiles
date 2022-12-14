@@ -24,6 +24,10 @@ mod4 + {_,shift + }q
 mod4 + {h,j,k,l}
 	bspc node -f {west,south,north,east}
 
+# Same as above, with arrows
+mod4 + {Left,Down,Up,Right}
+	bspc node -f {west,south,north,east}
+
 # Swap focused window with the one in the given direction.  If there is
 # no window in that direction, a receptacle will be created.  Inputting
 # any direction again will move the focused window to the position of
@@ -43,6 +47,9 @@ mod4 + {h,j,k,l}
 #
 # bspwm_smart_move is part of my dotfiles (link in the description).
 mod4 + shift + {h,j,k,l}
+	bspwm_smart_move {west,south,north,east}
+
+mod4 + shift + {Left,Down,Up,Right}
 	bspwm_smart_move {west,south,north,east}
 
 # Dynamic desktop behaviour:  this invokes a script of mine that
