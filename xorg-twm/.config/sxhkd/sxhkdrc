@@ -14,22 +14,28 @@
 
 #### Environment
 
-# I am using the prefix `mod4 + e' as a mnemonic for "environment".
-#
-# The following commands are:
-#
-# f == Xorg tiling window manager focus mode (my script)
-# s == reload sxhkd
-# p == reload polybar (NOTE: check the panel names in its config)
-# x == reload the Xresources file
-mod4 + e ; {f,s,p,x}
-    { \
-    xtwm_focus_mode, \
-    pkill -USR1 -x sxhkd && notify-send -i key_bindings "Reloaded key bindings", \
-    pkill -x polybar && polybar "$DESKTOP_SESSION" &, \
-    xrdb -I "$HOME" -merge "$HOME"/.Xresources \
-    }
+# Xorg tiling window manager focus mode (my script)
+mod4 + e ; f
+    xtwm_focus_mode
 
+# Reload sxhkd
+mod4 + e ; s
+    pkill -USR1 -x sxhkd && notify-send -i key_bindings "Reloaded key bindings"
+
+# Reload polybar (NOTE: check the panel names in its config)
+mod4 + e ; p
+    pkill -x polybar && polybar "$DESKTOP_SESSION" &
+
+# Reload the Xresources file
+mod4 + e ; x
+    xrdb -I "$HOME" -merge "$HOME"/.Xresources
+
+# "Theme" mnemonic
+mod4 + e ; t
+    delight
+
+# Also use the F5 as it is what I have in Emacs to switch themes.  It
+# makes sense for Super+F5 to do the same for the environment.
 mod4 + F5
      delight
 
@@ -42,6 +48,9 @@ mod4 + e ; d ; p
      dunst_toggle_notify
 
 # Invoke the session management menu (log out, lock, reboot, shutdown).
+mod4 + e ; Delete
+    poweroptionsmenu
+
 ctrl + alt + Delete
      poweroptionsmenu
 
