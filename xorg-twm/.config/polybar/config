@@ -31,7 +31,7 @@ format-margin = 0
 
 modules-left = bspwm bspwm_panel_monocle
 modules-center =
-modules-right = xkeyboard alsa notmuch date
+modules-right = xkeyboard alsa date
 wm-restack = bspwm
 override-redirect = false
 
@@ -56,7 +56,7 @@ font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
 
 modules-left = ewmh
 modules-center =
-modules-right = xkeyboard alsa notmuch date
+modules-right = xkeyboard alsa date
 
 tray-position = right
 tray-padding = 5
@@ -95,7 +95,7 @@ inline-mode = false
 ;
 ; UPDATE 2021-10-06: check module/bspwm_panel_monocle and my shell
 ; script bspwm_panel_monocle.
-label-monocle = 
+label-monocle =
 label-monocle-foreground = ${colors.fgalt}
 label-locked = L
 label-locked-foreground = ${colors.yellow}
@@ -147,21 +147,21 @@ interval = 5
 label = %percentage_used%%
 label-foreground = ${colors.cyan}
 
-[module/notmuch]
-type = custom/script
-
-exec = ~/bin/polybar_notmuch_count
-
-; Conditional command that, if defined, needs to exit successfully
-; before the main exec command is invoked.
-; Default: ""
-exec-if = command -v notmuch
-
-; Seconds to sleep between updates
-; Default: 5 (0 if `tail = true`)
-interval = 120
-
-format = @<label>
+; [module/notmuch]
+; type = custom/script
+;
+; exec = ~/bin/polybar_notmuch_count
+;
+; ; Conditional command that, if defined, needs to exit successfully
+; ; before the main exec command is invoked.
+; ; Default: ""
+; exec-if = command -v notmuch
+;
+; ; Seconds to sleep between updates
+; ; Default: 5 (0 if `tail = true`)
+; interval = 120
+;
+; format = @<label>
 
 [module/date]
 type = internal/date
