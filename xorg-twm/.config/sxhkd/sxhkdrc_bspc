@@ -113,11 +113,6 @@ mod4 + o
 mod4 + ctrl + {h,j,k,l}
 	bspwm_resize {west,south,north,east} 50
 
-# Move a floating window with the arrow keys (else use Alt + Left Mouse
-# Click to drag).  I seldom use floating windows.
-mod4 + shift + {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
-
 # Preselect the direction or insert again to cancel the preselection.
 # This enters the manual tiling mode that splits the currently focused
 # window.
