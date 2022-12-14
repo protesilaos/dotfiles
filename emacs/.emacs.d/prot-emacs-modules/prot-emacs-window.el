@@ -174,4 +174,30 @@ use in `display-buffer-alist'."
     (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-bar-toggle'
     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
 
+;;; Line numbers and relevant indicators (prot-sideline.el)
+(prot-emacs-builtin-package 'prot-sideline
+  (require 'display-line-numbers)
+  ;; Set absolute line numbers.  A value of "relative" is also useful.
+  (setq display-line-numbers-type 'relative)
+  ;; Those two variables were introduced in Emacs 27.1
+  (setq display-line-numbers-major-tick 0)
+  (setq display-line-numbers-minor-tick 0)
+  ;; Use absolute numbers in narrowed buffers
+  (setq-default display-line-numbers-widen t)
+
+  (prot-emacs-elpa-package 'diff-hl
+    (setq diff-hl-draw-borders nil)
+    (setq diff-hl-side 'left))
+
+  (require 'hl-line)
+  (setq hl-line-sticky-flag nil)
+  (setq hl-line-overlay-priority -50) ; emacs28
+
+  (require 'whitespace)
+
+  (let ((map global-map))
+    (define-key map (kbd "<f6>") #'prot-sideline-negative-space-toggle)
+    (define-key map (kbd "<f7>") #'prot-sideline-mode)
+    (define-key map (kbd "C-c z") #'delete-trailing-whitespace)))
+
 (provide 'prot-emacs-window)
