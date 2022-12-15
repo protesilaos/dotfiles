@@ -8,23 +8,23 @@
 
 * {
     /* Custom colours */
-    bg-alt:         #191a1bff;
+    bg-alt:         #303030ff;
     bg-main:        #000000ff;
-    fg-alt:         #a8a8a8ff;
+    fg-alt:         #989898ff;
     fg-main:        #ffffffff;
-    red:            #ff8059ff;
+    red:            #ff5f59ff;
     green:          #44bc44ff;
     yellow:         #d0bc00ff;
     blue:           #2fafffff;
     magenta:        #feacd0ff;
     cyan:           #00d3d0ff;
-    red-bright:     #fe6060ff;
-    green-bright:   #4fe42fff;
-    yellow-bright:  #f0dd60ff;
-    blue-bright:    #4fafffff;
-    magenta-bright: #ff62d4ff;
-    cyan-bright:    #3fdfd0ff;
-    selection-bg:   #103265ff;
+    red-bright:     #ff5f5fff;
+    green-bright:   #44df44ff;
+    yellow-bright:  #efef00ff;
+    blue-bright:    #338fffff;
+    magenta-bright: #ff66ffff;
+    cyan-bright:    #00eff0ff;
+    selection-bg:   #2f447fff;
 
     /* Global properties */
     background-color: rgba (0,0,0, 0%);

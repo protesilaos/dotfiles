@@ -8,23 +8,23 @@
 
 * {
     /* Custom colours */
-    bg-alt:         #f0f0f0ff;
+    bg-alt:         #e0e0e0ff;
     bg-main:        #ffffffff;
-    fg-alt:         #505050ff;
+    fg-alt:         #595959ff;
     fg-main:        #000000ff;
     red:            #a60000ff;
-    green:          #005e00ff;
-    yellow:         #813e00ff;
+    green:          #006800ff;
+    yellow:         #6f5500ff;
     blue:           #0031a9ff;
     magenta:        #721045ff;
-    cyan:           #00538bff;
+    cyan:           #005e8bff;
     red-bright:     #b60000ff;
-    green-bright:   #006800ff;
-    yellow-bright:  #605b00ff;
-    blue-bright:    #1f1fceff;
-    magenta-bright: #a8007fff;
-    cyan-bright:    #005f88ff;
-    selection-bg:   #b0d8ffff;
+    green-bright:   #008900ff;
+    yellow-bright:  #808000ff;
+    blue-bright:    #0000ffff;
+    magenta-bright: #dd22ddff;
+    cyan-bright:    #008899ff;
+    selection-bg:   #c0deffff;
 
     /* Global properties */
     background-color: rgba (0,0,0, 0%);
