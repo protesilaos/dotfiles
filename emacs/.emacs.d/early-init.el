@@ -34,26 +34,23 @@
 
 ;;; Code:
 
-(setq frame-resize-pixelwise t)
-
-;; Do not resize the frame at this early stage.
-(setq frame-inhibit-implied-resize t)
-
-;; ;; NOTE 2022-11-15: This does not work, presumably because it is too
-;; ;; early for `display-pixel-width' to do its job.
-;;
-;; (let* ((dimensions (if (> (display-pixel-width) 1920)
-;;                        (list 1920 1080)
-;;                      (list 1600 900)))
-;;        (h (car dimensions))
-;;        (w (cadr dimensions)))
-;;   (dolist (var '(default-frame-alist initial-frame-alist))
-;;     (add-to-list var `(width . ,(cons 'text-pixels w)))
-;;     (add-to-list var `(height . ,(cons 'text-pixels h)))))
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
 (dolist (var '(default-frame-alist initial-frame-alist))
   (add-to-list var '(width . (text-pixels . 1200)))
   (add-to-list var '(height . (text-pixels . 900))))
+
+(setq frame-resize-pixelwise t
+      frame-inhibit-implied-resize t)
+
+(setq use-dialog-box t ; only for mouse events, which I seldom use
+      use-file-dialog nil
+      inhibit-splash-screen t
+      inhibit-startup-screen t
+      inhibit-startup-echo-area-message user-login-name ; read the docstring
+      inhibit-startup-buffer-menu t)
 
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
@@ -62,18 +59,6 @@
 
 ;; Allow loading from the package cache
 (setq package-quickstart t)
-
-;; Disable GUI elements
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(setq inhibit-splash-screen t)
-(setq use-dialog-box t)                 ; only for mouse events
-(setq use-file-dialog nil)
-
-(setq inhibit-startup-echo-area-message user-login-name) ; read the docstring
-(setq inhibit-startup-screen t)
-(setq inhibit-startup-buffer-menu t)
 
 (setq native-comp-async-report-warnings-errors 'silent) ; emacs28 with native compilation
 
