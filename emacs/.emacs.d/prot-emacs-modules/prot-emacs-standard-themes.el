@@ -1,5 +1,8 @@
 ;;; The Standard themes
 
+;; The themes are customisable.  Read the manual:
+;; <https://protesilaos.com/emacs/standard-themes>.
+
 (prot-emacs-elpa-package 'standard-themes
   (setq standard-themes-bold-constructs t
         standard-themes-italic-constructs t

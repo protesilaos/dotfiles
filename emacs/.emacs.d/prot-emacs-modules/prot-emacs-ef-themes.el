@@ -1,5 +1,7 @@
 ;;; The Ef (εὖ) themes
 
+;; The themes are customisable.  Read the manual:
+;; <https://protesilaos.com/emacs/ef-themes>.
 (prot-emacs-elpa-package 'ef-themes
 
   (setq ef-themes-variable-pitch-ui t
