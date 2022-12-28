@@ -114,8 +114,6 @@
                    :jump-to-captured t))))
 
 ;;; Bibliography
-;; NOTE 2022-12-13 I am now learning to use BibTeX.  This is a
-;; work-in-progress.
 (prot-emacs-elpa-package 'citar
   ;; See `denote' key bindings above.  The "C-c n" prefix is a
   ;; mnemonic for "note".
