@@ -127,10 +127,7 @@
       (setopt citar-at-point-function 'embark-act)
       (citar-embark-mode 1))))
 
-;; NOTE 2022-12-13: `prot-emacs-vc-package' is a new macro, I may
-;; refine it.
-(prot-emacs-vc-package 'citar-denote
-  (:url "https://github.com/pprevos/citar-denote/")
+(prot-emacs-elpa-package 'citar-denote
   (citar-denote-mode 1))
 
 ;;; Custom extensions for "focus mode" (logos.el)
