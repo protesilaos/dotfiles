@@ -769,5 +769,31 @@ counter-clockwise."
     (dotimes (i (- wincount 1))
       (window-swap-states (elt winlist i) (elt winlist (+ i 1))))))
 
+
+(declare-function color-rgb-to-hex "color" (red green blue &optional digits-per-component))
+(declare-function color-name-to-rgb "color" (color &optional frame))
+(declare-function modus-themes-contrast "modus-themes" (c1 c2))
+
+(defun prot-simple-accessible-colors (variant)
+  "Return list of accessible `defined-colors'.
+VARIANT is either `dark' or `light'."
+  (let ((variant-color (if (eq variant 'dark) "#000000" "#ffffff")))
+    (delq nil
+          (mapcar (lambda (c)
+                    (let* ((rgb (color-name-to-rgb c))
+                           (r (nth 0 rgb))
+                           (g (nth 1 rgb))
+                           (b (nth 2 rgb))
+                           (hex (color-rgb-to-hex r g b 2)))
+                      (when (>= (modus-themes-contrast variant-color hex) 4.5)
+                        c)))
+                  (defined-colors)))))
+
+(defun prot-simple-list-accessible-colors (variant)
+  "Return buffer with list of accessible `defined-colors'.
+VARIANT is either `dark' or `light'."
+  (interactive (list (intern (completing-read "Choose VARIANT: " '(dark light) nil t))))
+  (list-colors-display (prot-simple-accessible-colors variant)))
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here
