@@ -1,6 +1,6 @@
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2022  Protesilaos Stavrou, Abhiseck Paira
+;; Copyright (C) 2021-2023  Protesilaos Stavrou, Abhiseck Paira
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;;         Abhiseck Paira <abhiseckpaira@disroot.org>

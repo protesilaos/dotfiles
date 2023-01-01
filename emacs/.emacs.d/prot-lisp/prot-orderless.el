@@ -1,6 +1,6 @@
 ;;; prot-orderless.el --- Extensions for Orderless -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2022  Protesilaos Stavrou
+;; Copyright (C) 2020-2023  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

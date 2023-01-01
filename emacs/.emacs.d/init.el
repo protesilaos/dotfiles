@@ -1,6 +1,6 @@
 ;;; init.el --- Personal configuration file -*- lexical-binding: t -*-
 
-;; Copyright (c) 2019-2022  Protesilaos Stavrou <info@protesilaos.com>
+;; Copyright (c) 2019-2023  Protesilaos Stavrou <info@protesilaos.com>
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
