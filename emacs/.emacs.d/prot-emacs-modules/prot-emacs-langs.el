@@ -16,11 +16,27 @@
 
 ;;; JavaScript and extras
 ;; I build Emacs from source with support for tree-sitter.  Since I
-;; use Arch Linux, I also install the `aur/tree-sitter-javascript-git'
-;; package.
-(prot-emacs-builtin-package 'js)
+;; use Arch Linux, I also install the `typescript-language-server' and
+;; `aur/tree-sitter-javascript-git' packages (still not sure which
+;; ones I require).  I learnt about the language server by inspecting
+;; the value of `eglot-server-programs'.
+(prot-emacs-builtin-package 'js
+  ;; Enables word motions inside camelCase words.
+  (dolist (hook '(js-mode-hook js-ts-mode-hook js-comint-mode-hook))
+    (add-hook hook #'subword-mode)))
 
-(prot-emacs-elpa-package 'js-comint)
+(prot-emacs-elpa-package 'js-comint
+  (setopt js-comint-prompt "🦄> ")
+
+  (defun prot/js-comint-eval-keys ()
+    "Bind local keys for JavaScript evaluation."
+    (local-set-key (kbd "C-c C-z") #'js-comint-repl)
+    ;; These are analogous to what we have for Elisp
+    (local-set-key (kbd "C-x C-e") #'js-comint-send-last-sexp)
+    (local-set-key (kbd "C-C C-e") #'js-comint-send-buffer))
+
+  (dolist (hook '(js-mode-hook js-ts-mode-hook))
+    (add-hook hook #'prot/js-comint-eval-keys)))
 
 ;;; CSS (css-mode)
 (prot-emacs-builtin-package 'css-mode
