@@ -41,25 +41,6 @@
   "Extensions for org.el."
   :group 'org)
 
-;;;; Source blocks
-
-(defvar modus-themes-org-blocks)
-(defvar org-fontify-whole-block-delimiter-line)
-
-(defun prot-org--modus-themes-fontify-block-delimiters ()
-  "Match `org-fontify-whole-block-delimiter-line' to theme style.
-Run this function at the post theme load phase, such as with the
-hook `modus-themes-after-load-theme-hook'."
-  (if (eq modus-themes-org-blocks 'gray-background)
-      (setq org-fontify-whole-block-delimiter-line t)
-    (setq org-fontify-whole-block-delimiter-line nil))
-  (when (derived-mode-p 'org-mode)
-    (font-lock-flush)))
-
-(when (featurep 'modus-themes)
-  (add-hook 'modus-themes-after-load-theme-hook
-            #'prot-org--modus-themes-fontify-block-delimiters))
-
 ;;;; org-capture
 
 (declare-function prot-bongo-show "prot-bongo")
