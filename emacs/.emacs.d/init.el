@@ -252,7 +252,7 @@ BODY is the configuration associated with PACKAGE."
 (pcase prot-emacs-load-theme-family
   ('ef (require 'prot-emacs-ef-themes))
   ('modus (require 'prot-emacs-modus-themes))
-  ('stadard (require 'prot-emacs-standard-themes)))
+  ('standard (require 'prot-emacs-standard-themes)))
 
 (require 'prot-emacs-theme-extras)
 (require 'prot-emacs-font)
