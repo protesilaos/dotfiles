@@ -1,3 +1,5 @@
+;;; eglot (lsp client built into Emacs 29+)
+(prot-emacs-builtin-package 'eglot)
 
 ;;; Plain text (text-mode)
 (prot-emacs-builtin-package 'text-mode
