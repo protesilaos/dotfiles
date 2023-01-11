@@ -26,9 +26,9 @@ or contribute any fixes, if you will.
 
 ## Emacs setup
 
-I do not recommend you reproduce my Emacs setup because I do not use the
-de facto `use-package` to configure packages.  I prefer a simpler
-approach.
+I do not recommend you reproduce my Emacs setup because I do not use
+the de facto standard of `use-package` to configure packages.  I
+prefer a simpler approach.
 
 If you insist though, the files are in the `emacs` directory.  Add them
 to your home directory with:
@@ -94,6 +94,55 @@ The macro `prot-emacs-builtin-package` simply is a wrapper.  It does not
 install anything, as it is for libraries that are built into Emacs OR
 the code in my `prot-lisp` directory.
 
+The macro `prot-emacs-vc-package`, which I seldom use, is intended to
+leverage the new (Emacs 29+) capability of package.el to fetch code
+from a source.  For example, this installs the package:
+
+```elisp
+(prot-emacs-vc-package 'modus-themes
+  ;; The `:branch' can be omitted.  Putting it here for didactic
+  ;; purposes.
+  (:url "https://github.com/protesilaos/modus-themes" :branch "main")
+  ;; Your configurations here
+  (setopt modus-themes-custom-auto-reload t
+          modus-themes-to-toggle '(modus-operandi modus-vivendi)
+          modus-themes-mixed-fonts t
+          modus-themes-variable-pitch-ui nil
+          modus-themes-italic-constructs nil
+          modus-themes-bold-constructs nil
+          modus-themes-org-blocks nil
+          modus-themes-completions nil
+          modus-themes-prompts nil
+          modus-themes-region nil
+          modus-themes-headings nil))
+```
+
+There are two files that you can use to personalise your setup: (i)
+`prot-emacs-pre-custom.el` and (ii) `prot-emacs-post-custom.el`.
+
+Both files must be in the same directory as the `init.el` and
+`early-init.el`.  This typically is the `~/.emacs.d/` directory.
+
+These files serve two different purposes.
+
+1. The `prot-emacs-pre-custom.el` is useful if you want to do
+   something BEFORE loading my configurations.  For example, you may
+   want to exclude some of my packages from your setup.  So you can
+   add something like this:
+
+   ```elisp
+   ;; This goes in the file prot-emacs-pre-custom.el
+   (setq prot-emacs-omit-packages
+         ;; Names of packages here
+         '( citar citar-denote citar-embark
+            clojure-mode cider
+            flymake-kondor flymake-shellcheck flymake-proselint))
+   ```
+
+2. The `prot-emacs-post-custom.el` is loaded AFTER all my
+   customisations.  You can use this to add additional packages or
+   make further changes to existing ones.
+
 If you make changes to the dotfiles, such as by moving things around,
 run stow again with the `-R` flag:
 
@@ -143,6 +192,11 @@ to document everything: (i) how to use stow, (ii) how the directory
 strucure is designed, (iii) package names and dependencies.  In the
 meantime, **this is highly experimental and you should not use anything,
 unless you know what you are doing.**
+
+**UPDATE 2023-01-11 06:53 +0200:** I used GNOME for a while to test
+Wayland.  Overall, it is okay but I still prefer BSPWM.  If there ever
+is a Wayland compositor like it, I will consider switching to it.  I
+do not like the i3/sway approach.
 
 ### TODO for window managers
 
