@@ -31,6 +31,14 @@
 (prot-emacs-elpa-package 'yaml-mode
   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
 
+;;; JavaScript and extras
+;; I build Emacs from source with support for tree-sitter.  Since I
+;; use Arch Linux, I also install the `aur/tree-sitter-javascript-git'
+;; package.
+(prot-emacs-builtin-package 'js)
+
+(prot-emacs-elpa-package 'js-comint)
+
 ;;; CSS (css-mode)
 (prot-emacs-builtin-package 'css-mode
   (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
