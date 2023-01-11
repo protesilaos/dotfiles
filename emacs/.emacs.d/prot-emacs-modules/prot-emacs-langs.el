@@ -1,22 +1,3 @@
-;;; Clojure (clojure-mode and accoutrements)
-;; NOTE 2022-11-21: for the linter (clj-kondo), refer to the Flymake
-;; section in this file.
-(prot-emacs-elpa-package 'clojure-mode
-  (add-hook 'clojure-mode-hook #'subword-mode))
-
-(prot-emacs-elpa-package 'cider
-  ;; NOTE 2022-11-23: This is not final.  I will iterate on it over
-  ;; time as I become more familiar with the requirements.
-  (setq cider-repl-result-prefix ";; => "
-        cider-eval-result-prefix ""
-        cider-connection-message-fn nil ; cute, but no!
-        cider-repl-prompt-function #'prot/cider-repl-prompt
-        cider-use-overlays nil ; echo area is fine
-        cider-repl-display-help-banner nil)
-
-  (defun prot/cider-repl-prompt (namespace)
-    "Return a prompt string that mentions NAMESPACE."
-    (format "%s🦄 " (cider-abbreviate-ns namespace))))
 
 ;;; Plain text (text-mode)
 (prot-emacs-builtin-package 'text-mode
@@ -204,10 +185,6 @@
 ;;; Elisp packaging requirements
 (prot-emacs-elpa-package 'package-lint-flymake
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
-
-;;; Flymake + clj-kondo (for Clojure)
-(prot-emacs-elpa-package 'flymake-kondor
-  (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
 
 ;;; Eldoc (elisp live documentation feedback)
 (prot-emacs-builtin-package 'eldoc
