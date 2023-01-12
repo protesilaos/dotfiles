@@ -321,7 +321,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Template-based in-buffer completion (tempel.el)
+;; NOTE 2023-01-12: Check the `templates' file that I distribute with
+;; my Emacs files as part of my dotfiles:
+;; <https://git.sr.ht/~protesilaos/dotfiles>.
 (prot-emacs-elpa-package 'tempel
+
+  (setq tempel-path (expand-file-name "tempel-templates" user-emacs-directory))
 
   ;; Setup completion at point
   (defun contrib/tempel-setup-capf ()
