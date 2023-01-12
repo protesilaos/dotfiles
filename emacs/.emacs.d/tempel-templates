@@ -35,6 +35,7 @@ js-mode
 (elseif "if (" p ") {" n> p n "}")
 (for "for (let " (p "iterator" iterator) " = 0; " iterator " < " (s var) "; " iterator "++) {" n> p n "}")
 (function "function " (p "functionName") " (" (p "arguments") ") {" n> p n "}")
+(switch "switch (" p ") {" n "case " p ":" n p n> "break;" n "default:" n> "break;")
 
 ;; Local Variables:
 ;; mode: lisp-data
