@@ -85,7 +85,8 @@
           (project-file (styles . (basic substring partial-completion orderless)))
           (imenu (styles . (basic substring orderless)))
           (kill-ring (styles . (basic substring orderless)))
-          (consult-location (styles . (basic substring orderless)))))
+          (consult-location (styles . (basic substring orderless)))
+          (eglot (styles . (basic substring orderless)))))
 
   (setq completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t)
