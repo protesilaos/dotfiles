@@ -369,6 +369,7 @@ with the specified date."
       (delete-region beg end)
       (insert (format "<%s>" string)))))
 
+;;;###autoload
 (defun prot-simple-zap-to-char-backward (char &optional arg)
   "Backward `zap-to-char' for CHAR.
 Optional ARG is a numeric prefix to match ARGth occurance of
