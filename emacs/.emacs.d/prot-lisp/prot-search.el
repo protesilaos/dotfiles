@@ -152,7 +152,7 @@ end of the buffer.")
   "Minibuffer history of `prot-search-replace-markup'.")
 
 (defun prot-search--replace-markup-prompt ()
-  "Prompt for font set (used by `fontaine-set-fonts')."
+  "Prompt for `prot-search-replace-markup'."
   (let* ((def (nth 0 prot-search--replace-markup-history))
          (prompt (if def
                      (format "Replace markup TYPE [%s]: " def)
