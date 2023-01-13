@@ -36,6 +36,8 @@ js-mode
 (for "for (let " (p "iterator" iterator) " = 0; " iterator " < " (s var) "; " iterator "++) {" n> p n "}")
 (function "function " (p "functionName") " (" p ") {" n> p n "}")
 (switch "switch (" p ") {" n "case " p ":" n p n> "break;" n "default:" n> "break;")
+(arrow "const " (p "identifier") " = (" p ") => {" n> p n "};")
+(condensed "const " (p "identifier") " = " p " => " p ";")
 
 ;; Local Variables:
 ;; mode: lisp-data
