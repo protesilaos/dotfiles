@@ -41,7 +41,8 @@
                 "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
   (let ((map global-map))
-    (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
+    ;; ;; NOTE 2023-01-13: See my superior `prot-simple-replace-symbol'.
+    ;; (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
     (define-key map (kbd "M-s M-%") #'prot-search-replace-markup) ; see `prot-search-markup-replacements'
     (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
     (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)

@@ -186,12 +186,13 @@ boundaries, else start from point to the end of the buffer."
           (replace-match replace)))
     (user-error "`%s' is not part of `prot-search-markup-replacements'" type)))
 
-;; TODO: make this work backwardly when given a negative argument
-(defun prot-search-isearch-replace-symbol ()
-  "Run `query-replace-regexp' for the symbol at point."
-  (interactive)
-  (isearch-forward-symbol-at-point)
-  (isearch-query-replace-regexp))
+;; NOTE 2023-01-13: See my superior `prot-simple-replace-symbol'.
+;;
+;; (defun prot-search-isearch-replace-symbol ()
+;;   "Run `query-replace-regexp' for the symbol at point."
+;;   (interactive)
+;;   (isearch-forward-symbol-at-point)
+;;   (isearch-query-replace-regexp))
 
 (autoload 'goto-address-mode "goto-addr")
 

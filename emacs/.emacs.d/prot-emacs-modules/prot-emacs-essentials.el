@@ -73,6 +73,14 @@
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
     (define-key map (kbd "M-u") #'upcase-dwim)
+    ;; NOTE 2023-01-13: The `prot-simple-replace-symbol' supersedes my
+    ;; `prot-search-isearch-replace-symbol'.  I use the same key
+    ;; binding as before, which is an amalgam of M-s . and M-% (for
+    ;; `isearch-forward-symbol-at-point' and `query-replace',
+    ;; respectively).  This command performs the replacement
+    ;; buffer-wide, unless it is called with a prefix argument, in
+    ;; which case it narrows to the defun.
+    (define-key map (kbd "M-s %") #'prot-simple-replace-symbol)
     ;; Commands for object transposition
     (define-key map (kbd "C-t") #'prot-simple-transpose-chars)
     (define-key map (kbd "C-x C-t") #'prot-simple-transpose-lines)
