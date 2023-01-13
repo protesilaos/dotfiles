@@ -299,10 +299,10 @@
 
 ;;; Corfu (in-buffer completion popup)
 (prot-emacs-elpa-package 'corfu
-  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-  ;;                  shell-mode-hook eshell-mode-hook))
-  ;;   (add-hook mode #'corfu-mode))
   (global-corfu-mode 1)
+
+  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
   ;; Adapted from Corfu's manual.
