@@ -418,7 +418,7 @@ letter casins and without treating the backslash specially."
           (narrow-to-defun)
         (widen))
       (goto-char (point-min))
-      (while (re-search-forward symbol nil t)
+      (while (re-search-forward (format "\\_<%s\\_>" symbol) nil t)
         (replace-match replacement t t)))))
 
 ;;;; Commands for object transposition
