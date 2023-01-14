@@ -380,46 +380,49 @@ CHAR."
     (prefix-numeric-value current-prefix-arg)))
   (zap-to-char (- arg) char t))
 
-(defvar prot-simple--replace-symbol-history '()
-  "Minibuffer history for `prot-simple-replace-symbol'.")
+;; NOTE 2023-01-14: See my `substitute' package instead of the
+;; following: <https://git.sr.ht/~protesilaos/substitute>.
 
-(defun prot-simple--replace-symbol-prompt (symbol scope)
-  "Prompt for string while referencing SYMBOL and SCOPE.
-Substantiate the interactivity of `prot-simple-replace-symbol'."
-  (read-string
-   (format "Replace `%s' %s with: "
-           (propertize symbol 'face 'error)
-           (if scope
-               "in the current DEFUN"
-             "across the BUFFER"))
-   nil
-   'prot-simple--replace-symbol-history))
-
-;;;###autoload
-(defun prot-simple-replace-symbol (symbol replacement &optional narrow-to-defun)
-  "Replace SYMBOL with REPLACEMENT throughout the buffer.
-When called interactively, SYMBOL is the one at point and
-REPLACEMENT is a string that is provided at the minibuffer
-prompt.
-
-With optional NARROW-TO-DEFUN as a prefix argument, limit the
-operation to the current function by using `narrow-to-defun'.
-
-The REPLACEMENT is inserted as-is without adjustments to its
-letter casins and without treating the backslash specially."
-  (interactive
-   (let ((symbol (thing-at-point 'symbol)))
-     (list symbol
-           (prot-simple--replace-symbol-prompt symbol current-prefix-arg)
-           current-prefix-arg)))
-  (save-excursion
-    (save-restriction
-      (if narrow-to-defun
-          (narrow-to-defun)
-        (widen))
-      (goto-char (point-min))
-      (while (re-search-forward (format "\\_<%s\\_>" symbol) nil t)
-        (replace-match replacement t t)))))
+;; (defvar prot-simple--replace-symbol-history '()
+;;   "Minibuffer history for `prot-simple-replace-symbol'.")
+;; 
+;; (defun prot-simple--replace-symbol-prompt (symbol scope)
+;;   "Prompt for string while referencing SYMBOL and SCOPE.
+;; Substantiate the interactivity of `prot-simple-replace-symbol'."
+;;   (read-string
+;;    (format "Replace `%s' %s with: "
+;;            (propertize symbol 'face 'error)
+;;            (if scope
+;;                "in the current DEFUN"
+;;              "across the BUFFER"))
+;;    nil
+;;    'prot-simple--replace-symbol-history))
+;; 
+;; ;;;###autoload
+;; (defun prot-simple-replace-symbol (symbol replacement &optional narrow-to-defun)
+;;   "Replace SYMBOL with REPLACEMENT throughout the buffer.
+;; When called interactively, SYMBOL is the one at point and
+;; REPLACEMENT is a string that is provided at the minibuffer
+;; prompt.
+;; 
+;; With optional NARROW-TO-DEFUN as a prefix argument, limit the
+;; operation to the current function by using `narrow-to-defun'.
+;; 
+;; The REPLACEMENT is inserted as-is without adjustments to its
+;; letter casins and without treating the backslash specially."
+;;   (interactive
+;;    (let ((symbol (thing-at-point 'symbol)))
+;;      (list symbol
+;;            (prot-simple--replace-symbol-prompt symbol current-prefix-arg)
+;;            current-prefix-arg)))
+;;   (save-excursion
+;;     (save-restriction
+;;       (if narrow-to-defun
+;;           (narrow-to-defun)
+;;         (widen))
+;;       (goto-char (point-min))
+;;       (while (re-search-forward (format "\\_<%s\\_>" symbol) nil t)
+;;         (replace-match replacement t t)))))
 
 ;;;; Commands for object transposition
 

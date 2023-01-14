@@ -73,14 +73,6 @@
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
     (define-key map (kbd "M-u") #'upcase-dwim)
-    ;; NOTE 2023-01-13: The `prot-simple-replace-symbol' supersedes my
-    ;; `prot-search-isearch-replace-symbol'.  I use the same key
-    ;; binding as before, which is an amalgam of M-s . and M-% (for
-    ;; `isearch-forward-symbol-at-point' and `query-replace',
-    ;; respectively).  This command performs the replacement
-    ;; buffer-wide, unless it is called with a prefix argument, in
-    ;; which case it narrows to the defun.
-    (define-key map (kbd "M-s %") #'prot-simple-replace-symbol)
     ;; Commands for object transposition
     (define-key map (kbd "C-t") #'prot-simple-transpose-chars)
     (define-key map (kbd "C-x C-t") #'prot-simple-transpose-lines)
@@ -111,6 +103,21 @@
     (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
     (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
+
+;;; Substitute
+;; NOTE 2023-01-14: This is a new package of mine.  It still is in
+;; development.
+(prot-emacs-vc-package 'substitute
+  (:url "https://git.sr.ht/~protesilaos/substitute")
+  (setopt substitute-highlight t)
+
+  (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
+
+  (let ((map global-map))
+    (define-key map (kbd "M-# s") #'substitute-target-below-point)
+    (define-key map (kbd "M-# r") #'substitute-target-above-point)
+    (define-key map (kbd "M-# d") #'substitute-target-in-function)
+    (define-key map (kbd "M-# M-#") #'substitute-target)))
 
 ;;; Keymap for buffers (Emacs28)
 (let ((map ctl-x-x-map))

@@ -41,7 +41,9 @@
                 "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
   (let ((map global-map))
-    ;; ;; NOTE 2023-01-13: See my superior `prot-simple-replace-symbol'.
+    ;; NOTE 2023-01-14: See my `substitute' package instead of the
+    ;; following: <https://git.sr.ht/~protesilaos/substitute>.
+    ;;
     ;; (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
     (define-key map (kbd "M-s M-%") #'prot-search-replace-markup) ; see `prot-search-markup-replacements'
     (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
