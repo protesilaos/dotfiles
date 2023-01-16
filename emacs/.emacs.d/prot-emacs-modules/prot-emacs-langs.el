@@ -38,6 +38,79 @@
   (dolist (hook '(js-mode-hook js-ts-mode-hook))
     (add-hook hook #'prot/js-comint-eval-keys)))
 
+;;; HTML and related (sgml-mode and mhtml-mode)
+(prot-emacs-builtin-package 'sgml-mode
+  (require 'mhtml-mode)
+  (setq mhtml-tag-relative-indent t)
+
+  (setq html-tag-face-alist
+        '(("b" bold)
+          ("big" bold)
+          ("blink" secondary-selection)
+          ("cite" italic)
+          ("em" italic)
+          ("h1" bold)
+          ("h2" bold)
+          ("h3" bold)
+          ("h4" bold)
+          ("h5" bold)
+          ("h6" bold)
+          ("i" italic)
+          ("rev" . underline) ; What is this?  Adding `underline' to spot it and decide afterwards
+          ("s" . underline) ; Same as above
+          ("small" . default)
+          ("strong" . bold)
+          ("title" bold)
+          ("tt" . default)
+          ("u" . underline)
+          ("var" . italic)))
+
+  (defun prot/html-special-variables ()
+    "Define buffer-local values for HTML development.
+These constitute deviations from my normal preferences.  I need
+this arrangement for code I write that is not mine and thus is
+not necessarily aligned with my opinions.
+
+NOTE: I will expand this as needs arise."
+    (setq-local browse-url-browser-function 'browse-url-default-browser))
+
+  (defvar prot/html-browsers '(firefox chromium epiphany)
+    "List of browsers for use in `prot/html-select-browser'.")
+
+  (defvar prot/html--select-browser-history '()
+    "Minibuffer history of `prot/html-select-browser'.")
+
+  (defun prot/html-select-browser (browser)
+    "Pick BROWSER for local `browse-url-browser-function'.
+BROWSER is a symbol among `prot/html-browsers'.  Any other value
+falls back to `browse-url-default-browser'.
+
+Do this to change what happens when clicking on a link.  It is
+useful for testing an HTML document."
+    (require 'browse-url)
+    (interactive
+     (list (intern (completing-read "Set new default browser: "
+                                    prot/html-browsers nil t nil
+                                    'prot/html--select-browser-history))))
+    (setq-local browse-url-browser-function
+                (pcase browser
+                  ('firefox 'browse-url-firefox)
+                  ('chromium 'browse-url-chromium)
+                  ('epiphany 'browse-url-epiphany)
+                  (_ 'browse-url-default-browser))))
+
+  ;; The underlying `sgml-mode' is derived from `text-mode'.  I
+  ;; normally want `auto-fill-mode' for "text", though to me HTML and
+  ;; friends should be counted as "code".
+  (dolist (hook '(sgml-mode-hook html-mode-hook mhtml-mode-hook))
+    (add-hook hook #'turn-off-auto-fill)
+    (add-hook hook #'prot/html-special-variables))
+
+  (let ((map html-mode-map))
+    (define-key map (kbd "M-o") nil) ; send `facemenu-keymap' into oblivion; thanks!
+    (define-key map (kbd "C-c C-s") #'prot/html-select-browser)
+    (define-key map (kbd "C-c C-v") #'html-autoview-mode)))
+
 ;;; CSS (css-mode)
 (prot-emacs-builtin-package 'css-mode
   (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
