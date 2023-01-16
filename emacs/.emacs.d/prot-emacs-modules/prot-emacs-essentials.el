@@ -109,9 +109,15 @@
 ;; development.
 (prot-emacs-vc-package 'substitute
   (:url "https://git.sr.ht/~protesilaos/substitute")
-  (setopt substitute-highlight t)
+  ;; Set this to non-nil to highlight all occurences of the current
+  ;; target.
+  (setopt substitute-highlight nil)
 
-  (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
+  ;; ;; Uncomment this to produce a message after the substitution that
+  ;; ;; reports on what happened.  It is a single line, like "Substituted
+  ;; ;; `TARGET' with `SUBSTITUTE' N times across the buffer.
+  ;; ;;
+  ;; (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
 
   (let ((map global-map))
     (define-key map (kbd "M-# s") #'substitute-target-below-point)
