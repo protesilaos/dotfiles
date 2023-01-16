@@ -105,8 +105,8 @@
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
 ;;; Substitute
-;; NOTE 2023-01-14: This is a new package of mine.  It still is in
-;; development.
+;; Another package of mine... Video demo:
+;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
 (prot-emacs-vc-package 'substitute
   (:url "https://git.sr.ht/~protesilaos/substitute")
   ;; Set this to non-nil to highlight all occurences of the current
