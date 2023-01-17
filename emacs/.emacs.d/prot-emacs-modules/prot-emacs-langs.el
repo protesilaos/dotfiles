@@ -114,11 +114,18 @@ useful for testing an HTML document."
     (define-key map (kbd "C-c C-s") #'prot/html-select-browser)
     (define-key map (kbd "C-c C-v") #'html-autoview-mode)))
 
-;;; CSS (css-mode)
+;;; CSS (css-mode, scss-mode, sass-mode)
 (prot-emacs-builtin-package 'css-mode
   (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   (setq css-fontify-colors nil))
+
+;; sudo pacman -S sassc
+;; sudo pacman -S dart-sass ?
+(when (executable-find "sass")
+  ;; XXX: This is not `sass-mode'!  That package did not work for me.
+  (prot-emacs-elpa-package 'ssass-mode)
+  (add-to-list 'auto-mode-alist '("\\.sass\\'" . ssass-mode)))
 
 ;;; Shell scripts (sh-mode)
 (prot-emacs-builtin-package 'sh-script
