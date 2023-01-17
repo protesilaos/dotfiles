@@ -160,6 +160,9 @@ Check my `delight' shell script for more."
         (modus-themes . "melpa")
         (notmuch-indicator . "elpa-devel")
         (pulsar . "elpa-devel")
+        (standard-themes . "elpa-devel")
+        (substitute . "elpa-devel")
+        (sxhkdrc-mode . "elpa-devel")
         (tmr . "elpa-devel")))
 
 (setq custom-safe-themes t)
