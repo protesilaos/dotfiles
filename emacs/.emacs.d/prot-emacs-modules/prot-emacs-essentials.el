@@ -118,11 +118,13 @@
   ;; ;;
   ;; (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
 
+  ;; The mnemonic for the prefix is that M-# (or M-S-3) is close to
+  ;; M-% (or M-S-5).
   (let ((map global-map))
-    (define-key map (kbd "M-# s") #'substitute-target-below-point)
-    (define-key map (kbd "M-# r") #'substitute-target-above-point)
-    (define-key map (kbd "M-# d") #'substitute-target-in-defun)
-    (define-key map (kbd "M-# b") #'substitute-target-in-buffer)))
+    (define-key map (kbd "M-# s") #'substitute-target-below-point) ; Forward motion like isearch (C-s)
+    (define-key map (kbd "M-# r") #'substitute-target-above-point) ; Backward motion like isearch (C-r)
+    (define-key map (kbd "M-# d") #'substitute-target-in-defun)    ; "defun" mnemonic
+    (define-key map (kbd "M-# b") #'substitute-target-in-buffer))) ; "buffer" mnemonic
 
 ;;; Keymap for buffers (Emacs28)
 (let ((map ctl-x-x-map))
