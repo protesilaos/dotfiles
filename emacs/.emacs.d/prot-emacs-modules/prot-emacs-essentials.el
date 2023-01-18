@@ -107,8 +107,7 @@
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
-(prot-emacs-vc-package 'substitute
-  (:url "https://git.sr.ht/~protesilaos/substitute")
+(prot-emacs-elpa-package 'substitute
   ;; Set this to non-nil to highlight all occurences of the current
   ;; target.
   (setopt substitute-highlight nil)
