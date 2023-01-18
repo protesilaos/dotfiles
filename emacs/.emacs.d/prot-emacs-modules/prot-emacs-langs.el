@@ -73,8 +73,6 @@ not necessarily aligned with my opinions.
 
 NOTE: I will expand this as needs arise."
     (setq-local browse-url-browser-function 'browse-url-default-browser)
-    (electric-pair-local-mode 1)
-    (electric-quote-local-mode 1)
     (electric-indent-local-mode 1))
 
   (defvar prot/html-browsers '(firefox chromium epiphany)
