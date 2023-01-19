@@ -64,7 +64,9 @@
                 ((string-match-p "-theme" file)))
       (rainbow-mode 1)))
 
-  (add-hook 'emacs-lisp-mode-hook #'prot/rainbow-mode-in-themes))
+  (add-hook 'emacs-lisp-mode-hook #'prot/rainbow-mode-in-themes)
+
+  (define-key ctl-x-x-map "c" #'rainbow-mode)) ; C-x x c
 
 ;;; Fringe mode
 (prot-emacs-builtin-package 'fringe
