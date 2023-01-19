@@ -116,7 +116,22 @@ useful for testing an HTML document."
 (prot-emacs-builtin-package 'css-mode
   (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-  (setq css-fontify-colors nil))
+  (setq css-indent-offset 2)
+  (setq css-fontify-colors nil)
+
+  (defun prot/scss-to-css ()
+    "Convert current SCSS file to CSS."
+    (interactive)
+    (unless (executable-find "sassc")
+      (user-error "No `sassc' executable found; aborting"))
+    (let* ((path (buffer-file-name))
+           (name (file-name-nondirectory path))
+           (name-no-ext (file-name-base path)))
+      (if (buffer-modified-p)
+          (user-error "Save changes before converting SCSS to CSS")
+        (shell-command (format "sassc -t expanded %s %s.css" name name-no-ext)))))
+
+  (define-key scss-mode-map (kbd "C-c C-e") #'prot/scss-to-css)) ; "export" mnemonic
 
 ;; sudo pacman -S sassc
 ;; sudo pacman -S dart-sass ?
