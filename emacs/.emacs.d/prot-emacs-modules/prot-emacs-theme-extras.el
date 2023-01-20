@@ -8,11 +8,11 @@
                   logos-backward-page-dwim))
     (add-to-list 'pulsar-pulse-functions cmd))
 
-  (setq pulsar-pulse t)
-  (setq pulsar-delay 0.055)
-  (setq pulsar-iterations 10)
-  (setq pulsar-face 'pulsar-blue)
-  (setq pulsar-highlight-face 'pulsar-red)
+  (setopt pulsar-pulse t
+          pulsar-delay 0.055
+          pulsar-iterations 10
+          pulsar-face 'pulsar-magenta
+          pulsar-highlight-face 'pulsar-yellow)
 
   (pulsar-global-mode 1)
 
@@ -34,7 +34,9 @@
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
-  (setq lin-face 'hl-line)
+  ;;
+  ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
+  (setopt lin-face 'lin-blue)
   (setq lin-mode-hooks
         '(bongo-mode-hook
           dired-mode-hook
