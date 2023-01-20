@@ -1,3 +1,11 @@
+;;; Paragraphs and fill-mode
+(setq sentence-end-double-space t)
+(setq sentence-end-without-period nil)
+(setq colon-double-space nil)
+(setq use-hard-newlines nil)
+(setq adaptive-fill-mode t)
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
+
 ;;; eglot (lsp client built into Emacs 29+)
 (prot-emacs-builtin-package 'eglot)
 
@@ -13,6 +21,17 @@
 ;;; YAML (yaml-mode)
 (prot-emacs-elpa-package 'yaml-mode
   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
+
+;;; Shell scripts (sh-mode)
+(prot-emacs-builtin-package 'sh-script
+  (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
+
+;;; SXHKDRC mode (one of my many packages)
+(prot-emacs-elpa-package 'sxhkdrc-mode
+  ;; By default, it only applies to the sxhkdrc file, but I have other
+  ;; relevant entries as well.  I separate my keys into different
+  ;; modules and load only what I need.
+  (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
 
 ;;; JavaScript and extras
 ;; I build Emacs from source with support for tree-sitter.  Since I
@@ -132,25 +151,6 @@ useful for testing an HTML document."
         (shell-command (format "sassc -t expanded %s %s.css" name name-no-ext)))))
 
   (define-key scss-mode-map (kbd "C-c C-e") #'prot/scss-to-css)) ; "export" mnemonic
-
-;;; Shell scripts (sh-mode)
-(prot-emacs-builtin-package 'sh-script
-  (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
-
-;;; SXHKDRC mode (one of my many packages)
-(prot-emacs-elpa-package 'sxhkdrc-mode
-  ;; By default, it only applies to the sxhkdrc file, but I have other
-  ;; relevant entries as well.  I separate my keys into different
-  ;; modules and load only what I need.
-  (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
-
-;;; Paragraphs and fill-mode
-(setq sentence-end-double-space t)
-(setq sentence-end-without-period nil)
-(setq colon-double-space nil)
-(setq use-hard-newlines nil)
-(setq adaptive-fill-mode t)
-(add-hook 'text-mode-hook #'turn-on-auto-fill)
 
 ;;; Comments (newcomment.el and prot-comment.el)
 (prot-emacs-builtin-package 'newcomment
