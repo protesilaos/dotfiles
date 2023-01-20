@@ -175,4 +175,12 @@
 
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
 
+;;; Dictionary
+(prot-emacs-builtin-package 'dictionary
+  (setq dictionary-server "dict.org"
+          dictionary-default-popup-strategy "lev" ; read doc string
+          dictionary-create-buttons nil
+          dictionary-use-single-buffer t)
+  (define-key global-map (kbd "C-c d") #'dictionary-search))
+
 (provide 'prot-emacs-write)
