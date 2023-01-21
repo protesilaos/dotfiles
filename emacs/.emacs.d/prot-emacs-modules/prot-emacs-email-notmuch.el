@@ -80,21 +80,22 @@
               :key ,(kbd "m"))
             ;; My packages
             ( :name "📦 unread packages"
-              ;; NOTE 2022-11-27: Here we do not wrap the parentheses
-              ;; in single quotes, whereas we do it for the
-              ;; `notmuch-indicator'.  The reason is that the latter
-              ;; passes the search terms directly to the executable.
-              :query ,(concat "(to:~protesilaos/*@lists.sr.ht or" " "
-                              "to:protesilaos/*noreply.github.com)" " "
-                              "tag:unread not tag:archived not tag:list")
+              :query "tag:unread and tag:package"
               :sort-order newest-first
               :key ,(kbd "p u"))
             ( :name "📦 all packages"
-              :query ,(concat "(to:~protesilaos/*@lists.sr.ht or" " "
-                              "to:protesilaos/*noreply.github.com)" " "
-                              "not tag:archived not tag:list")
+              :query "tag:package not tag:archived"
               :sort-order newest-first
               :key ,(kbd "p p"))
+            ;; My coaching job: <https://protesilaos.com/coach/>.
+            ( :name "🌈 unread coaching"
+              :query "tag:unread and tag:coach"
+              :sort-order newest-first
+              :key ,(kbd "c u"))
+            ( :name "🌈 all coahing"
+              :query "tag:coach not tag:archived"
+              :sort-order newest-first
+              :key ,(kbd "c c"))
             ;; Emacs
             ( :name "🔨 emacs-devel"
               :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
@@ -206,8 +207,12 @@
             (,(kbd "r") ("-unread") "✅ Mark as read")
             (,(kbd "u") ("+unread") "📔 Mark as unread")))
 
-  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒"))) ; cosmetic emoji, tag is the same
-  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
+  ;; These emoji are purely cosmetic.  The tag remains the same: I
+  ;; would not like to input emoji for searching.
+  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
+  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
+  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🌈")))
+  (add-to-list 'notmuch-tag-formats '("package" (concat tag "📦")))
 
   (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
                 prot-notmuch-ask-sourcehut-control-code))
@@ -244,14 +249,8 @@
   ;; Just the default values...
   (setq notmuch-indicator-args
           `((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
-            (:terms
-             ;; NOTE 2022-11-27: Check the note of the same date for
-             ;; the `notmuch-saved-searches'.  Here we include single
-             ;; quotes, whereas there we do not.
-             ,(concat "'(to:~protesilaos/*@lists.sr.ht or" " "
-                      "to:protesilaos/*noreply.github.com)'" " "
-                      "tag:unread not tag:archived not tag:list")
-             :label "📦"))
+            (:terms "tag:unread and tag:package" :label "📦")
+            (:terms "tag:unread and tag:coach" :label "🌈"))
           notmuch-indicator-refresh-count (* 60 3)
           notmuch-indicator-hide-empty-counters t
           notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))

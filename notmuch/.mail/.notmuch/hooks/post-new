@@ -35,6 +35,18 @@ notmuch tag +inbox +unread -new -- tag:new
 # notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*" not tag:list)'
 notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*" not tag:list not tag:archived)'
 
+# This is imperfect, but add the "coach" tag to any message that
+# includes those keywords in the subject line.  The starting date is
+# the one I made the announcement:
+# <https://protesilaos.com/news/2023-01-20-emacs-linux-life-coach/>.
+# I may refine this further based on patterns I observe.
+notmuch tag +coach -- date:2023-01-20..now subject:/[Tt]utor\|[Cc]oach\|[Ll]esson/
+
+# Another "mostly okay" but not 100% correct way of identifying my
+# package-related messages.
+notmuch tag +package -- "(to:~protesilaos/*@lists.sr.ht or to:protesilaos/*noreply.github.com or to:*incoming.gitlab.com) not tag:archived not tag:list"
+
+
 # mailing lists
 ## emacs
 notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gnu.org
