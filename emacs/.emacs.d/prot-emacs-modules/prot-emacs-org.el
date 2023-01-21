@@ -37,11 +37,13 @@
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")))
+        '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")
+          (sequence "COACH(t)" "|" "COACHED(d!)")))
   (setq org-todo-keyword-faces
         '(("WAIT" . '(bold org-todo))
           ("MAYBE" . '(shadow org-todo))
-          ("CANCEL" . '(bold org-done))))
+          ("CANCEL" . '(bold org-done))
+          ("COACH" . '(bold font-lock-constant-face org-todo))))
   (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces
         '((?A . '(bold org-priority))
@@ -139,7 +141,17 @@
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
                     "%a\n%i%?")
-           :empty-lines-after 1)))
+           :empty-lines-after 1)
+          ("p" "Private lesson or service" entry
+           (file "coach.org")
+           ,(concat "* COACH %^{Title} %^g\n"
+                    "SCHEDULED: %^t\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%a\n%i%?")
+           :prepend t
+           :empty-lines 1)))
 
   (setq org-capture-templates-contexts
         '(("e" ((in-mode . "notmuch-search-mode")
