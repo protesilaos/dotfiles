@@ -41,9 +41,8 @@
            :variable-pitch-family "Iosevka Comfy Duo"
            :bold-weight extrabold)
           (presentation
-           :default-weight semilight
-           :default-height 220
-           :bold-weight extrabold)
+           :inherit code-demo
+           :default-height 220)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
