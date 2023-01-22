@@ -145,9 +145,10 @@
           ("p" "Private lesson or service" entry
            (file "coach.org")
            ,(concat "* COACH %^{Title} %^g\n"
-                    "SCHEDULED: %^t\n"
+                    "DEADLINE: %^t\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
+                    ":APPT_WARNTIME: 20\n"
                     ":END:\n\n"
                     "%a\n%i%?")
            :prepend t
