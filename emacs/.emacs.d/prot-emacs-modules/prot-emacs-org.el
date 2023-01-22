@@ -38,7 +38,7 @@
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
         '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")
-          (sequence "COACH(t)" "|" "COACHED(d!)")))
+          (sequence "COACH(k)" "|" "COACHED(K!)")))
   (setq org-todo-keyword-faces
         '(("WAIT" . '(bold org-todo))
           ("MAYBE" . '(shadow org-todo))
