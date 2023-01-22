@@ -103,7 +103,7 @@
   ;; Those are for `keycast-mode-line-mode'
   (setq keycast-mode-line-window-predicate #'prot/keycast-current-window-p)
   (setq keycast-separator-width 1)
-  (setq keycast-mode-line-remove-tail-elements nil)
+  (setq keycast-mode-line-remove-tail-elements t)
 
   ;; TODO 2022-12-06: Show in most recent window if in the modeline?
   (defun prot/keycast-current-window-p ()
