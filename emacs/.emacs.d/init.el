@@ -288,9 +288,13 @@ BODY is the configuration associated with PACKAGE."
 ;; I already define, such as to change the default theme.  See above
 ;; for the `prot-emacs-pre-custom.el' to make changes BEFORE loading
 ;; any of my other configurations.
-(when-let* ((file (or (locate-user-emacs-file "user-emacs.el")
-                      (locate-user-emacs-file "prot-emacs-post-custom.el")))
-            ((file-exists-p file)))
+(when-let* ((file-new (locate-user-emacs-file "prot-emacs-post-custom.el"))
+            (file-old (locate-user-emacs-file "user-emacs.el"))
+            (file (cond
+                   ((file-exists-p file-new)
+                    file-new)
+                   ((file-exists-p file-old)
+                    file-old))))
   (load-file file))
 
 ;; init.el ends here
