@@ -44,6 +44,7 @@
     (define-key map (kbd "<insert>") nil)
     ;; (define-key map (kbd "C-z") nil)
     (define-key map (kbd "C-x C-z") nil)
+    (define-key map (kbd "C-x C-c") nil)
     (define-key map (kbd "C-h h") nil)
     (define-key map (kbd "M-`") nil)
     (define-key map (kbd "C-h .") #'prot-simple-describe-symbol) ; overrides `display-local-help'
