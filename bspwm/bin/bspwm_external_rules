@@ -81,8 +81,19 @@ case "$window_class" in
 				echo "state=floating"
 				;;
 			*)
-				echo "state=tiled"
-				;;
+                # FIXME 2023-01-23: Those nested `case' need to be
+                # simplified.  I keep nesting them here because I am
+                # in a hurry...  This specific case covers the small
+                # floating window that is produced by Jitsi while
+                # sharing the screen.
+                case "$(xprop -id "$window_id" _NET_WM_STATE)" in
+                    *_NET_WM_STATE_STICKY*|*_NET_WM_STATE_ABOVE*)
+                        echo "state=floating"
+                        ;;
+                    *)
+				        echo "state=tiled"
+				        ;;
+                esac
 		esac
 		;;
 esac
