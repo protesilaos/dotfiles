@@ -24,8 +24,7 @@
   ;; that (it can be called interactively as well).  I just check with
   ;; my desktop environment to determine if the choice should be about
   ;; a light or a dark theme.  Those functions are in my init.el.
-  (if (or (prot-emacs-theme-twm-dark-p)
-          (prot-emacs-theme-gesttings-dark-p))
+  (if (prot-emacs-theme-environment-dark-p)
       (ef-themes-load-random 'dark)
     (ef-themes-load-random 'light))
 
@@ -86,8 +85,7 @@
 ;;              (concat "/home/prot/Git/Projects/ef-themes/" (symbol-name theme) "-theme.el")))
 ;;           (ef-themes--list-enabled-themes))
 ;;
-;;   (if (or (prot-emacs-theme-twm-dark-p)
-;;           (prot-emacs-theme-gesttings-dark-p))
+;;   (if (prot-emacs-theme-environment-dark-p)
 ;;       (ef-themes-load-random 'dark)
 ;;     (ef-themes-load-random 'light))
 ;;

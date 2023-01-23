@@ -116,6 +116,11 @@ Check my `delight' shell script for more."
        (insert-file-contents file)
        (buffer-substring-no-properties (point-min) (point-max))))))
 
+(defun prot-emacs-theme-environment-dark-p ()
+  "Return non-nil if environment theme is dark."
+  (or (prot-emacs-theme-twm-dark-p)
+      (prot-emacs-theme-gesttings-dark-p)))
+
 ;;;; Packages
 
 (dolist (path '("prot-lisp" "prot-emacs-modules"))

@@ -18,8 +18,7 @@
             (agenda-structure . (variable-pitch light 1.9))
             (t . (variable-pitch 1.1))))
 
-  (if (or (prot-emacs-theme-twm-dark-p)
-          (prot-emacs-theme-gesttings-dark-p))
+  (if (prot-emacs-theme-environment-dark-p)
       (modus-themes-load-theme 'modus-vivendi)
     (modus-themes-load-theme 'modus-operandi))
 
@@ -35,17 +34,19 @@
 ;;
 ;;   (setopt modus-themes-custom-auto-reload t
 ;;           modus-themes-to-toggle '(modus-operandi modus-vivendi)
-;;           ;; modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted)
-;;           ;; modus-themes-to-toggle '(modus-vivendi-deuteranopia modus-operandi-deuteranopia)
-;;           modus-themes-mixed-fonts nil
-;;           modus-themes-variable-pitch-ui nil
+;;           ;; modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted)
+;;           ;; modus-themes-to-toggle '(modus-operandi-deuteranopia modus-vivendi-deuteranopia)
+;;           modus-themes-mixed-fonts t
+;;           modus-themes-variable-pitch-ui t
 ;;           modus-themes-italic-constructs nil
 ;;           modus-themes-bold-constructs nil
 ;;           modus-themes-org-blocks nil
-;;           modus-themes-completions nil
-;;           modus-themes-prompts nil
+;;           modus-themes-completions '((t . (extrabold)))
+;;           modus-themes-prompts '(italic extrabold)
 ;;           modus-themes-region nil
 ;;           modus-themes-headings nil)
+;;
+;;   (setq modus-themes-common-palette-overrides nil)
 ;;
 ;;   (if (or (prot-emacs-theme-twm-dark-p)
 ;;           (prot-emacs-theme-gesttings-dark-p))

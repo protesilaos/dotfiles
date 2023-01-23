@@ -36,8 +36,7 @@
 
   ;; Load a theme that is consistent with my session's theme.  Those
   ;; functions are defined in my init.el.
-  (if (or (prot-emacs-theme-twm-dark-p)
-          (prot-emacs-theme-gesttings-dark-p))
+  (if (prot-emacs-theme-environment-dark-p)
       (standard-themes-load-dark)
     (standard-themes-load-light))
 
@@ -87,8 +86,7 @@
 ;;              (concat "/home/prot/Git/Projects/standard-themes/" (symbol-name theme) "-theme.el")))
 ;;           (standard-themes--list-enabled-themes))
 ;;
-;;   (if (or (prot-emacs-theme-twm-dark-p)
-;;           (prot-emacs-theme-gesttings-dark-p))
+;;   (if (prot-emacs-theme-environment-dark-p)
 ;;       (load-theme 'standard-dark :no-confirm)
 ;;     (load-theme 'standard-light :no-confirm))
 ;;
