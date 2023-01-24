@@ -166,9 +166,11 @@
           "Reported-by"
           "Tested-by"
           "Reviewed-by"))
-  (setq git-commit-style-convention-checks
-        '(non-empty-second-line
-          overlong-summary-line))
+  ;; NOTE 2023-01-24: I used to also include `overlong-summary-line'
+  ;; in this list, but I realised I do not need it.  My summaries are
+  ;; always in check.  When I exceed the limit, it is for a good
+  ;; reason.
+  (setq git-commit-style-convention-checks '(non-empty-second-line))
 
   (require 'magit-diff)
   (setq magit-diff-refine-hunk t)
