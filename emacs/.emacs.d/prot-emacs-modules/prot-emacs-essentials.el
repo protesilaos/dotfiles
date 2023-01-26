@@ -132,7 +132,8 @@
 (let ((map ctl-x-x-map))
   (define-key map "e" #'eval-buffer)
   (define-key map "f" #'follow-mode)  ; override `font-lock-update'
-  (define-key map "r" #'rename-uniquely))
+  (define-key map "r" #'rename-uniquely)
+  (define-key map "l" #'visual-line-mode))
 
 ;;; Mouse wheel behaviour
 (prot-emacs-builtin-package 'mouse
