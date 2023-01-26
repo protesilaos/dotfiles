@@ -14,121 +14,121 @@
         (pub (prot-common-auth-get-field "pub" :user))
         (inf (prot-common-auth-get-field "inf" :user)))
     (setq notmuch-identities
-            (mapcar (lambda (str)
-                      (format "%s <%s>" user-full-name str))
-                    (list prv pub inf))
-            notmuch-fcc-dirs
-            `((,prv . "prv/Sent")
-              (,inf . "inf/Sent")
-              (,pub . "pub/Sent"))))
+          (mapcar (lambda (str)
+                    (format "%s <%s>" user-full-name str))
+                  (list prv pub inf))
+          notmuch-fcc-dirs
+          `((,prv . "prv/Sent")
+            (,inf . "inf/Sent")
+            (,pub . "pub/Sent"))))
 
 ;;;; General UI
   (setq notmuch-show-logo nil
-          notmuch-column-control 1.0
-          notmuch-hello-auto-refresh t
-          notmuch-hello-recent-searches-max 20
-          notmuch-hello-thousands-separator ""
-          notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
-          notmuch-show-all-tags-list t)
+        notmuch-column-control 1.0
+        notmuch-hello-auto-refresh t
+        notmuch-hello-recent-searches-max 20
+        notmuch-hello-thousands-separator ""
+        notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
+        notmuch-show-all-tags-list t)
 
 ;;;; Search
   (setq notmuch-search-oldest-first nil
-          notmuch-search-result-format
-          '(("date" . "%12s  ")
-            ("count" . "%-7s  ")
-            ("authors" . "%-20s  ")
-            ("subject" . "%-80s  ")
-            ("tags" . "(%s)"))
-          notmuch-tree-result-format
-          '(("date" . "%12s  ")
-            ("authors" . "%-20s  ")
-            ((("tree" . "%s")
-              ("subject" . "%s"))
-             . " %-80s  ")
-            ("tags" . "(%s)"))
-          notmuch-search-line-faces
-          '(("unread" . notmuch-search-unread-face)
-            ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
-            ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
-            ;; ;; an intense style which is very distracting when I filter
-            ;; ;; my mail to include this tag.
-            ;;
-            ;; ("flag" . notmuch-search-flagged-face)
-            ;;
-            ;; Using `italic' instead is just fine.  Though I also tried
-            ;; it without any face and I was okay with it.  The upside of
-            ;; having a face is that you can identify the message even
-            ;; when the window is split and you don't see the tags.
-            ("flag" . italic))
-          notmuch-show-empty-saved-searches t
-          notmuch-saved-searches
-          `(( :name "📥 inbox"
-              :query "tag:inbox"
-              :sort-order newest-first
-              :key ,(kbd "i"))
-            ( :name "📔 unread (inbox)"
-              :query "tag:unread and tag:inbox"
-              :sort-order newest-first
-              :key ,(kbd "u"))
-            ( :name "📯 unread all"
-              :query "tag:unread not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "U"))
-            ( :name "📬 mailing lists"
-              :query "tag:list not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "m"))
-            ;; My packages
-            ( :name "📦 unread packages"
-              :query "tag:unread and tag:package"
-              :sort-order newest-first
-              :key ,(kbd "p u"))
-            ( :name "📦 all packages"
-              :query "tag:package not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "p p"))
-            ;; My coaching job: <https://protesilaos.com/coach/>.
-            ( :name "🌈 unread coaching"
-              :query "tag:unread and tag:coach"
-              :sort-order newest-first
-              :key ,(kbd "c u"))
-            ( :name "🌈 all coahing"
-              :query "tag:coach not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "c c"))
-            ;; Emacs
-            ( :name "🔨 emacs-devel"
-              :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "e d"))
-            ( :name "🦄 emacs-orgmode"
-              :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "e o"))
-            ( :name "🐛 emacs-bugs"
-              :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
-              :sort-order newest-first :key ,(kbd "e b"))
-            ( :name "📚 emacs-humanities"
-              :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
-              :sort-order newest-first :key ,(kbd "e h"))
-            ;; Others
-            ( :name "📧 notmuch"
-              :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "on"))
-            ( :name "🛖 sourcehut"
-              :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
-              :sort-order newest-first
-              :key ,(kbd "os"))))
+        notmuch-search-result-format
+        '(("date" . "%12s  ")
+          ("count" . "%-7s  ")
+          ("authors" . "%-20s  ")
+          ("subject" . "%-80s  ")
+          ("tags" . "(%s)"))
+        notmuch-tree-result-format
+        '(("date" . "%12s  ")
+          ("authors" . "%-20s  ")
+          ((("tree" . "%s")
+            ("subject" . "%s"))
+           . " %-80s  ")
+          ("tags" . "(%s)"))
+        notmuch-search-line-faces
+        '(("unread" . notmuch-search-unread-face)
+          ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
+          ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
+          ;; ;; an intense style which is very distracting when I filter
+          ;; ;; my mail to include this tag.
+          ;;
+          ;; ("flag" . notmuch-search-flagged-face)
+          ;;
+          ;; Using `italic' instead is just fine.  Though I also tried
+          ;; it without any face and I was okay with it.  The upside of
+          ;; having a face is that you can identify the message even
+          ;; when the window is split and you don't see the tags.
+          ("flag" . italic))
+        notmuch-show-empty-saved-searches t
+        notmuch-saved-searches
+        `(( :name "📥 inbox"
+            :query "tag:inbox"
+            :sort-order newest-first
+            :key ,(kbd "i"))
+          ( :name "📔 unread (inbox)"
+            :query "tag:unread and tag:inbox"
+            :sort-order newest-first
+            :key ,(kbd "u"))
+          ( :name "📯 unread all"
+            :query "tag:unread not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "U"))
+          ( :name "📬 mailing lists"
+            :query "tag:list not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "m"))
+          ;; My packages
+          ( :name "📦 unread packages"
+            :query "tag:unread and tag:package"
+            :sort-order newest-first
+            :key ,(kbd "p u"))
+          ( :name "📦 all packages"
+            :query "tag:package not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "p p"))
+          ;; My coaching job: <https://protesilaos.com/coach/>.
+          ( :name "🌈 unread coaching"
+            :query "tag:unread and tag:coach"
+            :sort-order newest-first
+            :key ,(kbd "c u"))
+          ( :name "🌈 all coahing"
+            :query "tag:coach not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "c c"))
+          ;; Emacs
+          ( :name "🔨 emacs-devel"
+            :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "e d"))
+          ( :name "🦄 emacs-orgmode"
+            :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "e o"))
+          ( :name "🐛 emacs-bugs"
+            :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
+            :sort-order newest-first :key ,(kbd "e b"))
+          ( :name "📚 emacs-humanities"
+            :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
+            :sort-order newest-first :key ,(kbd "e h"))
+          ;; Others
+          ( :name "📧 notmuch"
+            :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "on"))
+          ( :name "🛖 sourcehut"
+            :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "os"))))
 
 ;;;; Tags
   (setq notmuch-archive-tags nil ; I do not archive email
-          notmuch-message-replied-tags '("+replied")
-          notmuch-message-forwarded-tags '("+forwarded")
-          notmuch-show-mark-read-tags '("-unread")
-          notmuch-draft-tags '("+draft")
-          notmuch-draft-folder "drafts"
-          notmuch-draft-save-plaintext 'ask)
+        notmuch-message-replied-tags '("+replied")
+        notmuch-message-forwarded-tags '("+forwarded")
+        notmuch-show-mark-read-tags '("-unread")
+        notmuch-draft-tags '("+draft")
+        notmuch-draft-folder "drafts"
+        notmuch-draft-save-plaintext 'ask)
 
   ;; Also see `notmuch-tagging-keys' in the `prot-notmuch' section
   ;; further below.
@@ -147,35 +147,35 @@
 
 ;;;; Email composition
   (setq notmuch-mua-compose-in 'current-window
-          notmuch-mua-hidden-headers nil ; TODO 2021-05-12: Review hidden headers
-          notmuch-address-command 'internal
-          notmuch-always-prompt-for-sender t
-          notmuch-mua-cite-function 'message-cite-original-without-signature
-          notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never
-          notmuch-mua-user-agent-function nil
-          notmuch-maildir-use-notmuch-insert t
-          notmuch-crypto-process-mime t
-          notmuch-crypto-get-keys-asynchronously t
-          notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
-          (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
-                  "pi[èe]ce\s+jointe?\\|"
-                  "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
+        notmuch-mua-hidden-headers nil ; TODO 2021-05-12: Review hidden headers
+        notmuch-address-command 'internal
+        notmuch-always-prompt-for-sender t
+        notmuch-mua-cite-function 'message-cite-original-without-signature
+        notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never
+        notmuch-mua-user-agent-function nil
+        notmuch-maildir-use-notmuch-insert t
+        notmuch-crypto-process-mime t
+        notmuch-crypto-get-keys-asynchronously t
+        notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
+        (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
+                "pi[èe]ce\s+jointe?\\|"
+                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
 ;;;; Reading messages
   (setq notmuch-show-relative-dates t
-          notmuch-show-all-multipart/alternative-parts nil
-          notmuch-show-indent-messages-width 0
-          notmuch-show-indent-multipart nil
-          notmuch-show-part-button-default-action 'notmuch-show-view-part
-          notmuch-show-text/html-blocked-images "." ; block everything
-          notmuch-wash-wrap-lines-length 120
-          notmuch-unthreaded-show-out nil
-          notmuch-message-headers '("To" "Cc" "Subject" "Date")
-          notmuch-message-headers-visible t)
+        notmuch-show-all-multipart/alternative-parts nil
+        notmuch-show-indent-messages-width 0
+        notmuch-show-indent-multipart nil
+        notmuch-show-part-button-default-action 'notmuch-show-view-part
+        notmuch-show-text/html-blocked-images "." ; block everything
+        notmuch-wash-wrap-lines-length 120
+        notmuch-unthreaded-show-out nil
+        notmuch-message-headers '("To" "Cc" "Subject" "Date")
+        notmuch-message-headers-visible t)
 
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
     (setq notmuch-wash-cqitation-lines-prefix count
-            notmuch-wash-citation-lines-suffix count))
+          notmuch-wash-citation-lines-suffix count))
 
 ;;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
@@ -201,11 +201,11 @@
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
   (setq notmuch-tagging-keys
-          `((,(kbd "d") prot-notmuch-mark-delete-tags "⛔ Mark for deletion")
-            (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
-            (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
-            (,(kbd "r") ("-unread") "✅ Mark as read")
-            (,(kbd "u") ("+unread") "📔 Mark as unread")))
+        `((,(kbd "d") prot-notmuch-mark-delete-tags "⛔ Mark for deletion")
+          (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
+          (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
+          (,(kbd "r") ("-unread") "✅ Mark as read")
+          (,(kbd "u") ("+unread") "📔 Mark as unread")))
 
   ;; These emoji are purely cosmetic.  The tag remains the same: I
   ;; would not like to input emoji for searching.
@@ -248,12 +248,12 @@
 (prot-emacs-elpa-package 'notmuch-indicator
   ;; Just the default values...
   (setq notmuch-indicator-args
-          `((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
-            (:terms "tag:unread and tag:package" :label "📦")
-            (:terms "tag:unread and tag:coach" :label "🌈"))
-          notmuch-indicator-refresh-count (* 60 3)
-          notmuch-indicator-hide-empty-counters t
-          notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
+        `((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
+          (:terms "tag:unread and tag:package" :label "📦")
+          (:terms "tag:unread and tag:coach" :label "🌈"))
+        notmuch-indicator-refresh-count (* 60 3)
+        notmuch-indicator-hide-empty-counters t
+        notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
 
   (notmuch-indicator-mode 1))
 
