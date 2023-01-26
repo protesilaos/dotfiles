@@ -244,4 +244,54 @@ minibuffer completion."
     (define-key map (kbd "C-c t r") #'tmr-remove)
     (define-key map (kbd "C-c t R") #'tmr-remove-finished)))
 
+;;; Display current time
+(prot-emacs-builtin-package 'time
+  (setq display-time-format "%a %e %b, %H:%M")
+  ;;;; Covered by `display-time-format'
+  ;; (setq display-time-24hr-format t)
+  ;; (setq display-time-day-and-date t)
+  (setq display-time-interval 60)
+  (setq display-time-default-load-average nil)
+  ;; NOTE 2022-09-21: For all those, I have implemented my own solution
+  ;; that also shows the number of new items, although it depends on
+  ;; notmuch: the `notmuch-indicator' package.
+  (setq display-time-mail-directory nil)
+  (setq display-time-mail-function nil)
+  (setq display-time-use-mail-icon nil)
+  (setq display-time-mail-string nil)
+  (setq display-time-mail-face nil)
+
+;;; World clock
+  (setq zoneinfo-style-world-list
+        '(("America/Los_Angeles" "Los Angeles")
+          ("America/Chicago" "Chicago")
+          ("Brazil/Acre" "Rio Branco")
+          ("America/New_York" "New York")
+          ("Brazil/East" "Brasília")
+          ("Europe/Lisbon" "Lisbon")
+          ("Europe/Brussels" "Brussels")
+          ("Europe/Athens" "Athens")
+          ("Asia/Tehran" "Tehran")
+          ("Asia/Tbilisi" "Tbilisi")
+          ("Asia/Yekaterinburg" "Yekaterinburg")
+          ("Asia/Shanghai" "Shanghai")
+          ("Asia/Tokyo" "Tokyo")
+          ("Asia/Vladivostok" "Vladivostok")
+          ("Australia/Sydney" "Sydney")
+          ("Pacific/Auckland" "Auckland")))
+
+  ;; All of the following variables are for Emacs 28
+  (setq world-clock-list t)
+  (setq world-clock-time-format "%R %z  %A %d %B")
+  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
+  (setq world-clock-timer-enable t)
+  (setq world-clock-timer-second 60)
+
+  ;; ;; NOTE 2023-01-26: This adds it to the mode-line though I prefer
+  ;; ;; to have it only in the `tab-bar-mode'.  Check relevant configs.
+  ;;
+  ;; (add-hook 'after-init-hook #'display-time-mode)
+  )
+
+
 (provide 'prot-emacs-essentials)
