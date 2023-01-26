@@ -476,13 +476,13 @@
 
 ;;; Appt (appointment reminders which also integrate with Org agenda)
 (prot-emacs-builtin-package 'appt
-  (setq appt-display-diary nil)
-  (setq appt-disp-window-function #'appt-disp-window)
-  (setq appt-display-mode-line t)
-  (setq appt-display-interval 3)
-  (setq appt-audible nil)
-  (setq appt-warning-time-regexp "appt \\([0-9]+\\)")
-  (setq appt-message-warning-time 6)
+  (setopt appt-display-diary nil
+          appt-display-format nil
+          appt-display-mode-line t
+          appt-display-interval 3
+          appt-audible nil ; TODO 2023-01-25: t does nothing because I disable `ring-bell-function'?
+          appt-warning-time-regexp "appt \\([0-9]+\\)" ; This is for the diary
+          appt-message-warning-time 6)
 
   (run-at-time 10 nil #'appt-activate 1))
 
