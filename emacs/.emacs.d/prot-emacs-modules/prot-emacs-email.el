@@ -44,13 +44,11 @@
   ;; ;; smtpmail.el is set up to do the right thing out-of-the-box.
   ;; ;; Setting the values here seems wrong for anyone with multiple
   ;; ;; acounts from different service providers.
-  ;;
-  ;; (setq smtpmail-default-smtp-server "mail.gandi.net"
-  ;;       smtpmail-smtp-server "mail.gandi.net"
-  ;;       smtpmail-stream-type 'ssl
-  ;;       smtpmail-smtp-service 465
-  ;;       smtpmail-queue-mail nil)
-  )
+  (setq smtpmail-default-smtp-server "mail.gandi.net"
+        smtpmail-smtp-server "mail.gandi.net"
+        smtpmail-stream-type 'ssl
+        smtpmail-smtp-service 465
+        smtpmail-queue-mail nil))
 
 (prot-emacs-builtin-package 'sendmail
   (setq send-mail-function 'smtpmail-send-it))
