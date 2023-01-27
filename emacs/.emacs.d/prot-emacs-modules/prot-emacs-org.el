@@ -43,7 +43,7 @@
         '(("WAIT" . '(bold org-todo))
           ("MAYBE" . '(shadow org-todo))
           ("CANCEL" . '(bold org-done))
-          ("COACH" . '(bold font-lock-constant-face org-todo))))
+          ("COACH" . '(font-lock-keyword-face org-todo))))
   (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces
         '((?A . '(bold org-priority))
