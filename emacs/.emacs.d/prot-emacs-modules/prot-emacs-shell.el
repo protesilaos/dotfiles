@@ -52,7 +52,8 @@
 ;;; Shell (M-x shell)
 (prot-emacs-builtin-package 'shell
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
-  (setq ansi-color-for-comint-mode t))
+  (setq ansi-color-for-comint-mode t)
+  (define-key global-map (kbd "<f1>") #'shell)) ; I don't use F1 for help commands
 
 ;;; Tools for manual pages (manpages)
 (prot-emacs-builtin-package 'man
