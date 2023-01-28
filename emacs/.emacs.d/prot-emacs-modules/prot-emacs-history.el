@@ -1,6 +1,7 @@
 ;;; Emacs server and desktop
-(prot-emacs-builtin-package 'server
-  (add-hook 'after-init-hook #'server-start))
+(unless (daemonp)
+  (prot-emacs-builtin-package 'server
+    (add-hook 'after-init-hook #'server-start)))
 
 (prot-emacs-builtin-package 'desktop
   (setq desktop-auto-save-timeout 300)
