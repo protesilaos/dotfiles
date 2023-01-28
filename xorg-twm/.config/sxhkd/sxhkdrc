@@ -78,8 +78,9 @@ mod4 + backslash
 
 #### Main programs
 
+# The -a "" tries to start the daemon and connect to it
 mod4 + {_, shift +,ctrl + shift + } Return
-    {uxterm,TERM=xterm-direct uxterm -e emacsclient -nw,TERM=xterm-direct uxterm -e emacsclient -nw -e "(shell)"}
+    {emacsclient -r -a "",emacsclient -c -a "" -e "(shell)",uxterm}
 
 # Show the desired rofi views.
 mod4 + d
