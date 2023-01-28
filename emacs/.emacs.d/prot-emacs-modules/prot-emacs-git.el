@@ -25,7 +25,7 @@
     ;; need quick access to it...
     (define-key map (kbd "v") #'vc-next-action)))
 
-;;; Version control framework (vc.el and prot-vc.el)
+;;; Version control framework (vc.el, vc-git.el, and more)
 (prot-emacs-builtin-package 'vc
   ;; Those offer various types of functionality, such as blaming,
   ;; viewing logs, showing a dedicated buffer with changes to affected
@@ -51,6 +51,7 @@
   (setq add-log-mailing-address "info@protesilaos.com")
   (setq add-log-keep-changes-together t)
   (setq vc-git-diff-switches '("--patch-with-stat" "--histogram"))
+  (setq vc-git-log-switches '("--stat"))
   (setq vc-git-print-log-follow t)
   (setq vc-git-revision-complete-only-branches nil) ; Emacs 28
   (setq vc-git-root-log-format
@@ -117,7 +118,8 @@
   (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
   (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
-  (setq agitate-log-edit-informative-show-root-log t)
+  (setq agitate-log-edit-informative-show-root-log nil
+        agitate-log-edit-informative-show-files nil)
 
   (agitate-log-edit-informative-mode 1)
 
