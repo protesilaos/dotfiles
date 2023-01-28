@@ -149,3 +149,6 @@ _check xsetroot && xsetroot -xcf /usr/share/icons/Adwaita/cursors/left_ptr 16
 
 # Load my Xresources
 _check xrdb && [ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources
+
+# Start the Emacs daemon
+_check emacs && emacs --bg-daemon="main-prot-emacs" --no-site-file --no-site-lisp --no-x-resources
