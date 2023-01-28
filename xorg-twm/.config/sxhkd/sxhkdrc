@@ -80,7 +80,7 @@ mod4 + backslash
 
 # The -a "" tries to start the daemon and connect to it
 mod4 + {_, shift +,ctrl + shift + } Return
-    {emacsclient -r -a "",emacsclient -c -a "" -e "(shell)",uxterm}
+    {uxterm,emacsclient -c -w 2 -a "",emacsclient -c -w 2 -a "" -e "(shell)"}
 
 # Show the desired rofi views.
 mod4 + d
