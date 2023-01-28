@@ -91,7 +91,7 @@
   (setq elfeed-curl-max-connections 10)
   (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))
   (setq elfeed-enclosure-default-dir "~/Downloads/")
-  (setq elfeed-search-filter "@4-months-ago +unread")
+  (setq elfeed-search-filter "@2-weeks-ago +unread")
   (setq elfeed-sort-order 'descending)
   (setq elfeed-search-clipboard-type 'CLIPBOARD)
   (setq elfeed-search-title-max-width 100)
