@@ -18,8 +18,7 @@ Far :pub-remote:
 Near :pub-local:
 # Include everything
 Patterns *
-Create Both
-# Expunge Both
+Sync All
 SyncState *
 
 ##########
@@ -44,8 +43,7 @@ Far :inf-remote:
 Near :inf-local:
 # Include everything
 Patterns *
-Create Both
-# Expunge Both
+Sync All
 SyncState *
 
 ##########
@@ -70,6 +68,6 @@ Far :prv-remote:
 Near :prv-local:
 # Include everything
 Patterns *
-Create Both
-# Expunge Both
+Sync All
 SyncState *
+
