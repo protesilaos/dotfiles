@@ -67,15 +67,22 @@
   "Prompt for Org date and return it as a +1h range.
 For use in `prot-org-capture-coach'."
   (let ((date (org-read-date :with-time)))
-    (format "DEADLINE: <%s>--<%s>\n" date
+    ;; We cannot use this here, unfortunately, as the Org agenda
+    ;; interprets it both as a deadline and an event with the date
+    ;; range.
+    ;;
+    ;; (format "DEADLINE: <%s>--<%s>\n" date
+    (format "<%s>--<%s>\n" date
             (org-read-date
              :with-time nil "++1h" nil
              (org-encode-time (org-parse-time-string date))))))
 
 (defun prot-org-capture-coach ()
   "Capture template for my coaching sessions."
-  (concat "* COACH " (prot-org--capture-coach-person-prompt) " %^g\n"
-          (prot-org--capture-coach-date-prompt-range)
+  (concat "* COACH " (prot-org--capture-coach-person-prompt) (read-string "Description: ") " %^g\n"
+          ;; See comment above
+          ;; (prot-org--capture-coach-date-prompt-range)
+          "DEADLINE: %^T\n"
           ":PROPERTIES:\n"
           ":CAPTURED: %U\n"
           ":APPT_WARNTIME: 20\n"
