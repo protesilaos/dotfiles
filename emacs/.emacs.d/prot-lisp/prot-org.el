@@ -64,7 +64,8 @@
                    (prot-org--capture-coach-person-message-from)))
 
 (defun prot-org--capture-coach-date-prompt-range ()
-  "Prompt for Org date and return it as a +1h range (for use in `prot-org-capture-coach')."
+  "Prompt for Org date and return it as a +1h range.
+For use in `prot-org-capture-coach'."
   (let ((date (org-read-date :with-time)))
     (format "DEADLINE: <%s>--<%s>\n" date
             (org-read-date
