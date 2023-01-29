@@ -142,17 +142,23 @@
                     ":END:\n\n"
                     "%a\n%i%?")
            :empty-lines-after 1)
-          ("p" "Private lesson or service" entry
-           (file "coach.org")
-           ,(concat "* COACH %^{Title} %^g\n"
-                    "DEADLINE: %^t\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":APPT_WARNTIME: 20\n"
-                    ":END:\n\n"
-                    "%a\n%i%?")
-           :prepend t
-           :empty-lines 1)))
+          ;; ;; NOTE 2023-01-29: See improved version in the
+          ;; ;; prot-org.el further below.  It runs a custom function
+          ;; ;; of mine that produces a more personalised template
+          ;; ;; than what the built-in options support.
+          ;;
+          ;; ("p" "Private lesson or service" entry
+          ;;  (file "coach.org")
+          ;;  ,(concat "* COACH %^{Title} %^g\n"
+          ;;           "%(prot/org-date-prompt-range-increment)"
+          ;;           ":PROPERTIES:\n"
+          ;;           ":CAPTURED: %U\n"
+          ;;           ":APPT_WARNTIME: 20\n"
+          ;;           ":END:\n\n"
+          ;;           "%a\n%i%?")
+          ;;  :prepend t
+          ;;  :empty-lines 1)
+          ))
 
   (setq org-capture-templates-contexts
         '(("e" ((in-mode . "notmuch-search-mode")
@@ -406,6 +412,13 @@
   (let ((map ctl-x-x-map))
     (define-key map "i" #'prot-org-id-headlines)
     (define-key map "h" #'prot-org-ox-html))
+
+  (add-to-list 'org-capture-templates
+               '("p" "Private lesson or service" entry
+                 (file "coach.org")
+                 #'prot-org-capture-coach
+                 :prepend t
+                 :empty-lines 1))
 
   (add-to-list 'org-capture-templates
                '("j" "Music suggestion (jukebox)" entry

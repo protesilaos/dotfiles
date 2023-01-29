@@ -35,13 +35,51 @@
 ;;; Code:
 
 (require 'prot-common)
-(require 'org-macs)
+(require 'org)
 
 (defgroup prot-org ()
   "Extensions for org.el."
   :group 'org)
 
 ;;;; org-capture
+
+(defvar prot-org--capture-coach-person-history nil)
+
+(declare-function message-fetch-field "message" (header &optional first))
+(declare-function notmuch-show-get-header "notmuch-show")
+
+(defun prot-org--capture-coach-person-message-from ()
+  "Retun default value for `prot-org--capture-coach-person-prompt'."
+  (when-let ((from (cond
+                    ((derived-mode-p 'message-mode)
+                     (message-fetch-field "From"))
+                    ((derived-mode-p 'notmuch-show-mode)
+                     (notmuch-show-get-header :From)))))
+    (car (split-string from "<"))))
+
+(defun prot-org--capture-coach-person-prompt ()
+  "Prompt for person for use in `prot-org-capture-coach'."
+  (completing-read "Person to coach: " prot-org--capture-coach-person-history
+                   nil nil nil 'prot-org--capture-coach-person-history
+                   (prot-org--capture-coach-person-message-from)))
+
+(defun prot-org--capture-coach-date-prompt-range ()
+  "Prompt for Org date and return it as a +1h range (for use in `prot-org-capture-coach')."
+  (let ((date (org-read-date :with-time)))
+    (format "DEADLINE: <%s>--<%s>\n" date
+            (org-read-date
+             :with-time nil "++1h" nil
+             (org-encode-time (org-parse-time-string date))))))
+
+(defun prot-org-capture-coach ()
+  "Capture template for my coaching sessions."
+  (concat "* COACH " (prot-org--capture-coach-person-prompt) " %^g\n"
+          (prot-org--capture-coach-date-prompt-range)
+          ":PROPERTIES:\n"
+          ":CAPTURED: %U\n"
+          ":APPT_WARNTIME: 20\n"
+          ":END:\n\n"
+          "%a\n%i%?"))
 
 (declare-function prot-bongo-show "prot-bongo")
 
