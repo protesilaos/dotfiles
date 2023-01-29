@@ -18,4 +18,4 @@
 [diff "org"]
   xfuncname = "^(\\*+ +.*)$"
 [init]
-	defaultBranch = main
+  defaultBranch = main
