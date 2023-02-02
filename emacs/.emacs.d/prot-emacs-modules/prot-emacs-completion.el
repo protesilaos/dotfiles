@@ -7,10 +7,6 @@
   (setq orderless-matching-styles
         '( orderless-prefixes orderless-strict-leading-initialism
            orderless-flex orderless-regexp))
-  (setq orderless-style-dispatchers
-        '(prot-orderless-literal-dispatcher
-          prot-orderless-initialism-dispatcher
-          prot-orderless-flex-dispatcher))
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
@@ -18,7 +14,11 @@
     (define-key map (kbd "SPC") nil)
     (define-key map (kbd "?") nil)))
 
-(prot-emacs-builtin-package 'prot-orderless)
+(prot-emacs-builtin-package 'prot-orderless
+  (setq orderless-style-dispatchers
+        '(prot/orderless-literal
+          prot/orderless-file-ext
+          prot/orderless-beg-or-end)))
 
 ;;; Completion annotations (marginalia)
 (prot-emacs-elpa-package 'marginalia
