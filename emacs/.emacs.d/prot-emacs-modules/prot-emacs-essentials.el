@@ -112,13 +112,12 @@
 (prot-emacs-elpa-package 'substitute
   ;; Set this to non-nil to highlight all occurences of the current
   ;; target.
-  (setopt substitute-highlight nil)
+  (setopt substitute-highlight t)
 
-  ;; ;; Uncomment this to produce a message after the substitution that
-  ;; ;; reports on what happened.  It is a single line, like "Substituted
-  ;; ;; `TARGET' with `SUBSTITUTE' N times across the buffer.
-  ;; ;;
-  ;; (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
+  ;; Produce a message after the substitution that reports on what
+  ;; happened.  It is a single line, like "Substituted `TARGET' with
+  ;; `SUBSTITUTE' N times across the buffer.
+  (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
 
   ;; The mnemonic for the prefix is that M-# (or M-S-3) is close to
   ;; M-% (or M-S-5).
