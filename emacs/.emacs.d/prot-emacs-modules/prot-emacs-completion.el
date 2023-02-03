@@ -5,8 +5,7 @@
   ;; to be refined further.  Remember to check my `completion-styles'
   ;; and the `completion-category-overrides'.
   (setq orderless-matching-styles
-        '( orderless-prefixes orderless-strict-leading-initialism
-           orderless-flex orderless-regexp))
+        '(orderless-prefixes orderless-flex orderless-regexp))
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
@@ -16,9 +15,9 @@
 
 (prot-emacs-builtin-package 'prot-orderless
   (setq orderless-style-dispatchers
-        '(prot/orderless-literal
-          prot/orderless-file-ext
-          prot/orderless-beg-or-end)))
+        '(prot-orderless-literal
+          prot-orderless-file-ext
+          prot-orderless-beg-or-end)))
 
 ;;; Completion annotations (marginalia)
 (prot-emacs-elpa-package 'marginalia
