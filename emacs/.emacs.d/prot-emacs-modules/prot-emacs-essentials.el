@@ -228,10 +228,6 @@ minibuffer completion."
         tmr-notification-urgency 'normal
         tmr-description-list 'tmr-description-history)
 
-  ;; You do not need these if you install the package.
-  (require 'tmr-notification)
-  (require 'tmr-tabulated)
-
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
     (define-key map (kbd "C-c t T") #'tmr-with-description)
