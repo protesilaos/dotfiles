@@ -99,6 +99,10 @@ Check my `delight' shell script for more."
   (or (prot-emacs-theme-twm-dark-p)
       (prot-emacs-theme-gesttings-dark-p)))
 
+;; NOTE 2023-02-05: The reason the following works is because (i) the
+;; `mode-line-format' is specified again and (ii) the
+;; `prot-emacs-theme-gesttings-dark-p' will load a dark theme.
+
 ;; Avoid flash of light, if needed
 (when (prot-emacs-theme-environment-dark-p)
   (setq mode-line-format nil)
