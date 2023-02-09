@@ -99,13 +99,25 @@ Check my `delight' shell script for more."
   (or (prot-emacs-theme-twm-dark-p)
       (prot-emacs-theme-gesttings-dark-p)))
 
+(defun prot-emacs-re-enable-frame-theme (_frame)
+  "Re-enable active theme, if any, upon FRAME creation.
+Add this to `after-make-frame-functions' so that new frames do
+not retain the generic background set by the function
+`prot-emacs-avoid-initial-flash-of-light'."
+  (when-let ((theme (car custom-enabled-themes)))
+    (enable-theme theme)))
+
 ;; NOTE 2023-02-05: The reason the following works is because (i) the
 ;; `mode-line-format' is specified again and (ii) the
 ;; `prot-emacs-theme-gesttings-dark-p' will load a dark theme.
+(defun prot-emacs-avoid-initial-flash-of-light ()
+  "Avoid flash of light when starting Emacs, if needed.
+New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
+  (when (prot-emacs-theme-environment-dark-p)
+    (setq mode-line-format nil)
+    (set-face-attribute 'default nil :background "#000000")
+    (add-hook 'after-make-frame-functions #'prot-emacs-re-enable-frame-theme)))
 
-;; Avoid flash of light, if needed
-(when (prot-emacs-theme-environment-dark-p)
-  (setq mode-line-format nil)
-  (set-face-background 'default "#000000"))
+(prot-emacs-avoid-initial-flash-of-light)
 
 ;;; early-init.el ends here
