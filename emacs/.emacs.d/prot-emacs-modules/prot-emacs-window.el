@@ -110,20 +110,13 @@ use in `display-buffer-alist'."
     (define-key map ">" #'enlarge-window-horizontally)
     (define-key map "<" #'shrink-window-horizontally)))
 
-;; NOTE 2022-09-05: This is not needed anymore, as I am just using the
-;; `tab-bar-history-mode'.  Am keeping it around, just in case.
+;;; Window history (winner-mode)
+(prot-emacs-builtin-package 'winner
+  (add-hook 'after-init-hook #'winner-mode)
 
-;; ;;; Window history (winner-mode)
-;; (prot-emacs-builtin-package 'winner
-;;   (add-hook 'after-init-hook #'winner-mode)
-;;
-;;   ;; ;; NOTE 2021-07-31: Those are superseded by the commands
-;;   ;; ;; `prot-tab-winner-undo' and `prot-tab-winner-redo' in prot-tab.el
-;;   ;; ;; (search this document).
-;;   ;; (let ((map global-map))
-;;   ;;   (define-key map (kbd "C-x <right>") #'winner-redo)
-;;   ;;   (define-key map (kbd "C-x <left>") #'winner-undo))
-;;   )
+  (let ((map global-map))
+    (define-key map (kbd "C-x <right>") #'winner-redo)
+    (define-key map (kbd "C-x <left>") #'winner-undo)))
 
 ;;; Directional window motions (windmove)
 (prot-emacs-builtin-package 'windmove
@@ -140,39 +133,43 @@ use in `display-buffer-alist'."
     (define-key map (kbd "C-M-S-<down>") #'windmove-swap-states-down)
     (define-key map (kbd "C-M-S-<left>") #'windmove-swap-states-left)))
 
-;;; Tabs for window layouts (tab-bar.el and prot-tab.el)
-(prot-emacs-builtin-package 'tab-bar
-  (setq tab-bar-close-button-show nil)
-  (setq tab-bar-close-last-tab-choice nil)
-  (setq tab-bar-close-tab-select 'recent)
-  (setq tab-bar-new-tab-choice t)
-  (setq tab-bar-new-tab-to 'right)
-  (setq tab-bar-position nil)
-  (setq tab-bar-show nil)
-  (setq tab-bar-tab-hints nil)
-  (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
-  (setq tab-bar-auto-width-max '(120 . 20)) ; Emacs 29
 
-  (tab-bar-mode -1)                     ; see `prot-tab-status-line'
+;; ;; DEPRECATED 2023-02-09: I am no longer using the `tab-bar-mode'.
+;; ;; This was old code, anyway.
 
-  ;; Same concept as `winner-mode'.  See the `prot-tab-winner-undo' and
-  ;; its counterpart.
-  (tab-bar-history-mode 1))
-
-(prot-emacs-builtin-package 'prot-tab
-  (setq prot-tab-tab-select-num-threshold 3)
-  (setq tab-bar-format                    ; Emacs 28
-        '(tab-bar-format-tabs-groups
-          tab-bar-format-align-right
-          tab-bar-format-global))
-
-  (add-hook 'after-init-hook #'prot-tab-status-line)
-
-  (let ((map global-map))
-    (define-key map (kbd "C-x <right>") #'prot-tab-winner-redo)
-    (define-key map (kbd "C-x <left>") #'prot-tab-winner-undo)
-    (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-bar-toggle'
-    (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
+;; ;;; Tabs for window layouts (tab-bar.el and prot-tab.el)
+;; (prot-emacs-builtin-package 'tab-bar
+;;   (setq tab-bar-close-button-show nil)
+;;   (setq tab-bar-close-last-tab-choice nil)
+;;   (setq tab-bar-close-tab-select 'recent)
+;;   (setq tab-bar-new-tab-choice t)
+;;   (setq tab-bar-new-tab-to 'right)
+;;   (setq tab-bar-position nil)
+;;   (setq tab-bar-show nil)
+;;   (setq tab-bar-tab-hints nil)
+;;   (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
+;;   (setq tab-bar-auto-width-max '(120 . 20)) ; Emacs 29
+;; 
+;;   (tab-bar-mode -1)                     ; see `prot-tab-status-line'
+;; 
+;;   ;; Same concept as `winner-mode'.  See the `prot-tab-winner-undo' and
+;;   ;; its counterpart.
+;;   (tab-bar-history-mode 1))
+;; 
+;; (prot-emacs-builtin-package 'prot-tab
+;;   (setq prot-tab-tab-select-num-threshold 3)
+;;   (setq tab-bar-format                    ; Emacs 28
+;;         '(tab-bar-format-tabs-groups
+;;           tab-bar-format-align-right
+;;           tab-bar-format-global))
+;; 
+;;   (add-hook 'after-init-hook #'prot-tab-status-line)
+;; 
+;;   (let ((map global-map))
+;;     (define-key map (kbd "C-x <right>") #'prot-tab-winner-redo)
+;;     (define-key map (kbd "C-x <left>") #'prot-tab-winner-undo)
+;;     (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-bar-toggle'
+;;     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
 
 ;;; Line numbers and relevant indicators (prot-sideline.el)
 (prot-emacs-builtin-package 'prot-sideline

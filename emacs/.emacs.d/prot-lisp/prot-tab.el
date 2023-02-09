@@ -34,9 +34,8 @@
 
 ;;; Code:
 
-;; NOTE 2022-07-02: This is old code which is probably not up to the
-;; standard of my packages: <https://protesilaos.com/emacs>.  It does
-;; work though.
+;; DEPRECATED 2023-02-09: I am no longer using the `tab-bar-mode'.
+;; This was old code, anyway.
 
 (require 'tab-bar)
 
