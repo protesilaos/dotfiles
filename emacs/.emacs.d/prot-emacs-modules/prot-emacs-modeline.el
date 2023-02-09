@@ -16,6 +16,30 @@
                           mode-line-modes))
 
 (setq mode-line-compact nil)            ; Emacs 28
+
+(defun prot/mode-line-current-window-p ()
+  "Return non-nil if selected WINDOW modeline can show keycast."
+  (and (not (minibufferp))
+       (not (null mode-line-format))
+       (eq (selected-window) (old-selected-window))))
+
+(defun prot/mode-line-global-value ()
+  "Return value of `global-mode-string'."
+  (mapconcat
+   (lambda (sym)
+     (if (symbolp sym)
+         (symbol-value sym)
+       sym))
+   global-mode-string
+   nil))
+
+(defun prot/mode-line-global-string-no-properties ()
+  "Return `prot/mode-line-global-value' without face properties."
+  (substring-no-properties
+   (prot/mode-line-global-value)
+   0 -1))
+
+;; NOTE 2023-02-09: The `:eval' parts are HIGHLY EXPERIMENTAL.
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
@@ -31,7 +55,18 @@
                 "  "
                 (vc-mode vc-mode)
                 "  "
-                mode-line-misc-info
+                (:eval (propertize
+                        " " 'display
+                        ;; NOTE 2023-02-09: The `:align-to' is based
+                        ;; on information from the Elisp manual.  Evaluate:
+                        ;; (info "(elisp) Pixel Specification")
+                        `((space :align-to
+                                 (- (+ right-margin (0.5 . right-margin) 1)
+                                    ,(string-width (prot/mode-line-global-string-no-properties)))))))
+
+                (:eval
+                 (when (prot/mode-line-current-window-p)
+                   mode-line-misc-info))
                 mode-line-end-spaces))
 
 (add-hook 'after-init-hook #'column-number-mode)
@@ -55,17 +90,10 @@
 
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
-  ;; Those are for `keycast-mode-line-mode'
-  (setq keycast-mode-line-window-predicate #'prot/keycast-current-window-p)
   (setq keycast-separator-width 1)
   (setq keycast-mode-line-remove-tail-elements t)
-
   ;; TODO 2022-12-06: Show in most recent window if in the modeline?
-  (defun prot/keycast-current-window-p ()
-    "Return non-nil if selected WINDOW modeline can show keycast."
-    (and (not (minibufferp))
-         (not (null mode-line-format))
-         (eq (selected-window) (old-selected-window))))
+  (setq keycast-mode-line-window-predicate #'prot/mode-line-current-window-p)
 
   (dolist (input '(self-insert-command
                    org-self-insert-command))

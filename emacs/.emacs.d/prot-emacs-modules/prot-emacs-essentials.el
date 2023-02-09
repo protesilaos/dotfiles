@@ -282,11 +282,7 @@ minibuffer completion."
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60)
 
-  ;; ;; NOTE 2023-01-26: This adds it to the mode-line though I prefer
-  ;; ;; to have it only in the `tab-bar-mode'.  Check relevant configs.
-  ;;
-  ;; (add-hook 'after-init-hook #'display-time-mode)
-  )
+  (add-hook 'after-init-hook #'display-time-mode))
 
 ;;; Emacs server (allow emacsclient to connect to running session)
 ;; The "server" is functionally like the daemon, except it is run by
