@@ -133,6 +133,16 @@ use in `display-buffer-alist'."
     (define-key map (kbd "C-M-S-<down>") #'windmove-swap-states-down)
     (define-key map (kbd "C-M-S-<left>") #'windmove-swap-states-left)))
 
+;;; Frame-isolated buffers
+(prot-emacs-vc-package 'framed-buffers ; another package of mine (work-in-progress)
+  (:url "https://git.sr.ht/~protesilaos/framed-buffers")
+
+  (framed-buffers-mode 1)
+
+  (let ((map global-map))
+    (define-key map (kbd "C-x f") #'other-frame-prefix) ; override `set-fill-column'
+    ;; Also see `framed-buffers-switch-buffer-in-frame'.
+    (define-key map (kbd "C-x B") #'framed-buffers-switch-buffer)))
 
 ;; ;; DEPRECATED 2023-02-09: I am no longer using the `tab-bar-mode'.
 ;; ;; This was old code, anyway.
