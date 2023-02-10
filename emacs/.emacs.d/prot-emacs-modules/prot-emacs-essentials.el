@@ -290,13 +290,12 @@ minibuffer completion."
 ;; server is terminated.  Whereas the daemon remains active even if
 ;; all Emacs frames are closed.
 ;;
-;; As of 2023-01-28 11:55 +0200 I am experimenting with the daemon.  I
-;; am starting it with systemd:
-;;
-;;     systemctl enable --user emacs.service
-(unless (daemonp)
-  (prot-emacs-builtin-package 'server
-    (add-hook 'after-init-hook #'server-start)))
+;; I experimented with the daemon for a while.  Emacs would crash
+;; whenever I would encounter an error in some Lisp evaluation.
+;; Whereas the server works just fine when I need to connect to it via
+;; the emacsclient.
+(prot-emacs-builtin-package 'server
+  (add-hook 'after-init-hook #'server-start))
 
 ;;; Emacs desktop (save state of various variables)
 (prot-emacs-builtin-package 'desktop
