@@ -30,7 +30,7 @@ tray-padding = 5
 format-margin = 0
 
 modules-left = bspwm bspwm_panel_monocle
-modules-center =
+modules-center = title
 modules-right = xkeyboard alsa date
 wm-restack = bspwm
 override-redirect = false
@@ -55,7 +55,7 @@ font-0 = Monospace:size=8:hintstyle=hintslight;2
 font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
 
 modules-left = ewmh
-modules-center =
+modules-center = title
 modules-right = xkeyboard alsa date
 
 tray-position = right
@@ -162,6 +162,12 @@ label-foreground = ${colors.cyan}
 ; interval = 120
 ;
 ; format = @<label>
+
+[module/title]
+type = internal/xwindow
+
+label = %title%
+label-maxlen = 80
 
 [module/date]
 type = internal/date
