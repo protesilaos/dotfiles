@@ -194,7 +194,7 @@ mod4 + n ; r ; i
 # With shift, kill them all at once.
 mod4 + n ; r ; {_, shift + }k
     { \
-bspc node 'any.leaf.!window.local' -k, \
+    bspc node 'any.leaf.!window.local' -k, \
     bspwm_multifaceted_operation --kill-all-receptacles \
     }
 
