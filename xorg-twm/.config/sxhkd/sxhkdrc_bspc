@@ -122,6 +122,10 @@ mod4 + ctrl + {Left,Down,Up,Right}
 mod4 + alt + {h,j,k,l}
     bspc node --presel-dir '~{west,south,north,east}'
 
+# Same as above, with arrow keys
+mod4 + alt + {Left,Down,Up,Right}
+    bspc node --presel-dir '~{west,south,north,east}'
+
 # Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
 mod4 + alt + {1-9}
     bspc node -o 0.{1-9}
