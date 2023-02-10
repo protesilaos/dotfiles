@@ -152,8 +152,9 @@
 (prot-emacs-builtin-package 'rcirc
   (setq rcirc-server-alist
         `(("irc.libera.chat"
-           :channels ("#emacs" "#clojure" "#org-mode" "#rcirc" "#sr.ht")
-           :port 6697 :encryption tls
+           :channels ("#emacs" "#tropin" "#rcirc")
+           :port 6697
+           :encryption tls
            :password ,(prot-common-auth-get-field "libera" :secret))))
 
   (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
