@@ -39,16 +39,30 @@
   (setq org-todo-keywords
         '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")
           (sequence "COACH(k)" "|" "COACHED(K!)")))
+
+  (defface prot/org-bold-todo
+    '((t :inherit (bold org-todo)))
+    "Face for bold TODO-type Org keywords.")
+
+  (defface prot/org-bold-done
+    '((t :inherit (bold org-done)))
+    "Face for bold DONE-type Org keywords.")
+
+  (defface prot/org-bold-shadow
+    '((t :inherit (bold shadow)))
+    "Face for bold and `shadow' Org keywords.")
+
+  (defface prot/org-todo-special
+    '((t :inherit (font-lock-keyword-face org-todo)))
+    "Face for special TODO-type Org keywords.")
+
   (setq org-todo-keyword-faces
-        '(("WAIT" . '(bold org-todo))
-          ("MAYBE" . '(shadow org-todo))
-          ("CANCEL" . '(bold org-done))
-          ("COACH" . '(font-lock-keyword-face org-todo))))
+        '(("WAIT" . prot/org-bold-todo)
+          ("MAYBE" . prot/org-bold-shadow)
+          ("CANCEL" . prot/org-bold-done)
+          ("COACH" . prot/org-todo-special)))
   (setq org-use-fast-todo-selection 'expert)
-  (setq org-priority-faces
-        '((?A . '(bold org-priority))
-          (?B . org-priority)
-          (?C . '(shadow org-priority))))
+  (setq org-priority-faces nil)
   (setq org-fontify-done-headline nil)
   (setq org-fontify-todo-headline nil)
   (setq org-fontify-quote-and-verse-blocks t)
