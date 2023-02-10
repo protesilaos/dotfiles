@@ -149,22 +149,22 @@ use in `display-buffer-alist'."
 ;;   (setq tab-bar-tab-hints nil)
 ;;   (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
 ;;   (setq tab-bar-auto-width-max '(120 . 20)) ; Emacs 29
-;; 
+;;
 ;;   (tab-bar-mode -1)                     ; see `prot-tab-status-line'
-;; 
+;;
 ;;   ;; Same concept as `winner-mode'.  See the `prot-tab-winner-undo' and
 ;;   ;; its counterpart.
 ;;   (tab-bar-history-mode 1))
-;; 
+;;
 ;; (prot-emacs-builtin-package 'prot-tab
 ;;   (setq prot-tab-tab-select-num-threshold 3)
 ;;   (setq tab-bar-format                    ; Emacs 28
 ;;         '(tab-bar-format-tabs-groups
 ;;           tab-bar-format-align-right
 ;;           tab-bar-format-global))
-;; 
+;;
 ;;   (add-hook 'after-init-hook #'prot-tab-status-line)
-;; 
+;;
 ;;   (let ((map global-map))
 ;;     (define-key map (kbd "C-x <right>") #'prot-tab-winner-redo)
 ;;     (define-key map (kbd "C-x <left>") #'prot-tab-winner-undo)
