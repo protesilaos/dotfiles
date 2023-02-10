@@ -284,6 +284,15 @@ minibuffer completion."
 
   (add-hook 'after-init-hook #'display-time-mode))
 
+;;; Pass interface (password-store)
+(prot-emacs-elpa-package 'password-store
+  (setq password-store-time-before-clipboard-restore 30)
+  ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
+  ;; the password to the kill-ring.  Other options are already taken.
+  (define-key global-map (kbd "C-c k") #'password-store-copy))
+
+(prot-emacs-elpa-package 'pass)
+
 ;;; Emacs server (allow emacsclient to connect to running session)
 ;; The "server" is functionally like the daemon, except it is run by
 ;; the first Emacs frame we launch.  When we close that frame, the

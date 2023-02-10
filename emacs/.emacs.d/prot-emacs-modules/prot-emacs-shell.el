@@ -71,13 +71,4 @@
 (prot-emacs-builtin-package 'prot-proced
   (add-hook 'proced-mode-hook #'prot-proced-extra-keywords-mode))
 
-;;; Pass interface (password-store)
-(prot-emacs-elpa-package 'password-store
-  (setq password-store-time-before-clipboard-restore 30)
-  ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
-  ;; the password to the kill-ring.  Other options are already taken.
-  (define-key global-map (kbd "C-c k") #'password-store-copy))
-
-(prot-emacs-elpa-package 'pass)
-
 (provide 'prot-emacs-shell)
