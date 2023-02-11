@@ -767,7 +767,8 @@ Do not try to make a new directory or anything fancy."
 
 (defun prot-simple--buffer-major-mode-prompt ()
   "Prompt of `prot-simple-buffers-major-mode'."
-  (let ((major major-mode))
+  (let ((major major-mode)
+        (read-buffer-function nil))
     (read-buffer
      (format "Buffer for %s: " major)
      nil t
@@ -775,16 +776,16 @@ Do not try to make a new directory or anything fancy."
        (with-current-buffer (cdr pair) (derived-mode-p major))))))
 
 ;;;###autoload
-(defun prot-simple-buffers-major-mode (buffer)
+(defun prot-simple-buffers-major-mode ()
   "Select BUFFER matching the current one's major mode."
-  (interactive
-   (list (prot-simple--buffer-major-mode-prompt)))
-  (switch-to-buffer buffer))
+  (interactive)
+  (switch-to-buffer (prot-simple--buffer-major-mode-prompt)))
 
 (defun prot-simple--buffer-vc-root-prompt ()
   "Prompt of `prot-simple-buffers-vc-root'."
   (let ((root (or (vc-root-dir)
-                   (locate-dominating-file "." ".git"))))
+                  (locate-dominating-file "." ".git")))
+        (read-buffer-function nil))
     (read-buffer
      (format "Buffers in %s: " root)
      nil t
@@ -792,11 +793,10 @@ Do not try to make a new directory or anything fancy."
        (with-current-buffer (cdr pair) (string-match-p root default-directory))))))
 
 ;;;###autoload
-(defun prot-simple-buffers-vc-root (buffer)
-  "Select BUFFER matching the current one's VC root."
-  (interactive
-   (list (prot-simple--buffer-vc-root-prompt)))
-  (switch-to-buffer buffer))
+(defun prot-simple-buffers-vc-root ()
+  "Select buffer matching the current one's VC root."
+  (interactive)
+  (switch-to-buffer (prot-simple--buffer-vc-root-prompt)))
 
 ;;;###autoload
 (defun prot-simple-swap-window-buffers (counter)
