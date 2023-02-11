@@ -16,8 +16,10 @@
           (?θ . downcase)))
 
   ;; The available commands: `altcaps-word', `altcaps-region',
-  ;; `altcaps-dwim'.
-  (define-key global-map (kbd "C-~") #'altcaps-dwim)) ; the tilde is wavy, a bit like this effect
+  ;; `altcaps-dwim'.  The tilde is wavy, a bit like this effect.  The
+  ;; default command that I am overriding here is `not-modified'
+  ;; (never used it).
+  (define-key global-map (kbd "M-~") #'altcaps-dwim))
 
 ;;; Denote (simple note-taking)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
