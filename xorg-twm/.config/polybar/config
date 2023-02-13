@@ -29,8 +29,8 @@ tray-padding = 5
 
 format-margin = 0
 
-modules-left = bspwm bspwm_panel_monocle
-modules-center = title
+modules-left = bspwm bspwm_panel_monocle title
+modules-center =
 modules-right = xkeyboard alsa date
 wm-restack = bspwm
 override-redirect = false
