@@ -61,7 +61,7 @@
                         ;; on information from the Elisp manual.  Evaluate:
                         ;; (info "(elisp) Pixel Specification")
                         `((space :align-to
-                                 (- (+ right-margin (0.5 . right-margin) 1)
+                                 (- (+ right-margin 1)
                                     ,(string-width (prot/mode-line-global-string-no-properties)))))))
 
                 (:eval
