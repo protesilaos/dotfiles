@@ -90,10 +90,8 @@
 
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
-  (setq keycast-separator-width 1)
-  (setq keycast-mode-line-remove-tail-elements t)
-  ;; TODO 2022-12-06: Show in most recent window if in the modeline?
-  (setq keycast-mode-line-window-predicate #'prot/mode-line-current-window-p)
+  (setq keycast-separator-width 2)
+  (setq keycast-mode-line-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
                    org-self-insert-command))
