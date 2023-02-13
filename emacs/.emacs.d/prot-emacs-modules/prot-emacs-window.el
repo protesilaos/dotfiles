@@ -131,15 +131,15 @@ use in `display-buffer-alist'."
     (define-key map (kbd "C-M-S-<left>") #'windmove-swap-states-left)))
 
 ;;; Frame-isolated buffers
-(prot-emacs-vc-package 'framed-buffers ; another package of mine (work-in-progress)
-  (:url "https://git.sr.ht/~protesilaos/framed-buffers")
+(prot-emacs-vc-package 'beframe ; another package of mine (work-in-progress)
+  (:url "https://github.com/protesilaos/beframe")
 
-  (framed-buffers-mode 1)
+  (beframe-mode 1)
 
   (let ((map global-map))
     (define-key map (kbd "C-x f") #'other-frame-prefix) ; override `set-fill-column'
-    ;; Also see `framed-buffers-switch-buffer-in-frame'.
-    (define-key map (kbd "C-x B") #'framed-buffers-switch-buffer)))
+    ;; Also see `beframe-switch-buffer-in-frame'.
+    (define-key map (kbd "C-x B") #'beframe-switch-buffer)))
 
 ;; ;; DEPRECATED 2023-02-09: I am no longer using the `tab-bar-mode'.
 ;; ;; This was old code, anyway.
