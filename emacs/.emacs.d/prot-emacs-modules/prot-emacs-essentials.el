@@ -114,6 +114,11 @@
   ;; target.
   (setopt substitute-highlight t)
 
+  ;; Set this to t if you want to always treat the letter casing
+  ;; literally.  Otherwise each command accepts a `C-u' prefix
+  ;; argument to do this on-demand.
+  (setq substitute-fixed-letter-case nil)
+
   ;; Produce a message after the substitution that reports on what
   ;; happened.  It is a single line, like "Substituted `TARGET' with
   ;; `SUBSTITUTE' N times across the buffer.
