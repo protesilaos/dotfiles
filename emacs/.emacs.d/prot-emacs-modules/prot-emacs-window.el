@@ -63,13 +63,10 @@
           ("\\*ispell-top-choices\\*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
-          ;; new frame
           ((or . ((derived-mode . Man-mode)
                   (derived-mode . woman-mode)
                   "\\*\\(Man\\|woman\\).*"))
-           (display-buffer-reuse-window display-buffer-pop-up-frame)
-           (pop-up-frame-parameters . ((width . (text-pixels . 640))
-                                       (height . (text-pixels . 360)))))
+           (display-buffer-reuse-window display-buffer-below-selected))
           ;; same window
           (prot/display-buffer-shell-or-term-p ; see definition below
            (display-buffer-reuse-window display-buffer-same-window))))
