@@ -5,10 +5,15 @@
           '((project-find-file "Find file")
             (project-find-regexp "Find regexp")
             (project-find-dir "Find directory")
+            (project-dired "Root dired")
             (project-vc-dir "VC-Dir")
             (project-shell "Shell")
             (project-eshell "Eshell")))
-  (define-key global-map (kbd "C-x p <delete>") #'project-forget-project))
+
+  (let ((map global-map))
+    (define-key map (kbd "C-x p .") #'project-dired)
+    (define-key map (kbd "C-x p <return>") #'project-dired)
+    (define-key map (kbd "C-x p <delete>") #'project-forget-project)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
 (prot-emacs-builtin-package 'diff-mode
