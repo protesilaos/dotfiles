@@ -198,7 +198,7 @@ useful for testing an HTML document."
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
-  (setq show-paren-context-when-offscreen 'child-frame) ; Emacs 29
+  (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
   (add-hook 'after-init-hook #'show-paren-mode))
 
 ;;; Tabs, indentation, and the TAB key
