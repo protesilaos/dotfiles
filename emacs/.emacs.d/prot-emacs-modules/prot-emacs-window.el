@@ -63,11 +63,17 @@
           ("\\*ispell-top-choices\\*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
-          ((or . ((derived-mode . Man-mode)
-                  (derived-mode . woman-mode)
-                  "\\*\\(Man\\|woman\\).*"))
-           (display-buffer-reuse-window display-buffer-below-selected))
           ;; same window
+
+          ;; NOTE 2023-02-17: `man' does not fully obey the
+          ;; `display-buffer-alist'.  It works for new frames and for
+          ;; `display-buffer-below-selected', but otherwise is
+          ;; unpredictable.  See `Man-notify-method'.
+
+          ;; ((or . ((derived-mode . Man-mode)
+          ;;         (derived-mode . woman-mode)
+          ;;         "\\*\\(Man\\|woman\\).*"))
+          ;;  (display-buffer-same-window))
           (prot/display-buffer-shell-or-term-p ; see definition below
            (display-buffer-reuse-window display-buffer-same-window))))
 

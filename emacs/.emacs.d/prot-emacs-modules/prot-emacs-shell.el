@@ -57,6 +57,7 @@
 
 ;;; Tools for manual pages (manpages)
 (prot-emacs-builtin-package 'man
+  (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
   (let ((map Man-mode-map))
     (define-key map (kbd "i") #'Man-goto-section)
     (define-key map (kbd "g") #'Man-update-manpage)))
