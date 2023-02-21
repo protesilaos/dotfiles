@@ -120,4 +120,6 @@ New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
 
 (prot-emacs-avoid-initial-flash-of-light)
 
+(add-hook 'after-init-hook (lambda () (set-frame-name "home")))
+
 ;;; early-init.el ends here
