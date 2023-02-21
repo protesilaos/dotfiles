@@ -140,6 +140,8 @@ use in `display-buffer-alist'."
 (prot-emacs-vc-package 'beframe ; another package of mine (work-in-progress)
   (:url "https://github.com/protesilaos/beframe")
 
+  (setq beframe-functions-in-frames '(project-prompt-project-dir))
+
   (beframe-mode 1)
 
   (let ((map global-map))
