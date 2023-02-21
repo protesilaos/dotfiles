@@ -44,11 +44,19 @@
               '("%e"
                 mode-line-front-space
                 mode-line-mule-info
-                mode-line-client
                 mode-line-modified
                 mode-line-remote
-                mode-line-frame-identification
+                " "
                 mode-line-buffer-identification
+                ;; See my `beframe' package for how I use frames and
+                ;; why having the name of one makes sense.
+                (:eval (when-let* ((fname (frame-parameter (selected-frame) 'name))
+                                   (bname (buffer-name))
+                                   ((not (string= fname bname)))
+                                   ((prot/mode-line-current-window-p)))
+                         (format " @ %s " (propertize fname
+                                                      'face 'italic
+                                                      'help-echo "Current frame name"))))
                 "  "
                 mode-line-position
                 mode-line-modes
@@ -63,7 +71,6 @@
                         `((space :align-to
                                  (- (+ right-margin 1)
                                     ,(string-width (prot/mode-line-global-string-no-properties)))))))
-
                 (:eval
                  (when (prot/mode-line-current-window-p)
                    mode-line-misc-info))
@@ -73,7 +80,7 @@
 
 ;;; Hide modeline "lighters" (minions.el)
 (prot-emacs-elpa-package 'minions
-  (setq minions-mode-line-lighter ";")
+  (setq minions-mode-line-lighter "")
   ;; NOTE: This will be expanded whenever I find a mode that should not
   ;; be hidden
   (setq minions-prominent-modes
