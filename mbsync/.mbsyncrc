@@ -19,6 +19,7 @@ Near :pub-local:
 # Include everything
 Patterns *
 Sync All
+# Create Near
 SyncState *
 
 ##########
@@ -42,8 +43,9 @@ Channel inf
 Far :inf-remote:
 Near :inf-local:
 # Include everything
-Patterns *
+Pattern *
 Sync All
+# Create Near
 SyncState *
 
 ##########
@@ -69,5 +71,6 @@ Near :prv-local:
 # Include everything
 Patterns *
 Sync All
+# Create Near
 SyncState *
 
