@@ -85,14 +85,19 @@ describing my system-wide theme.  This is part of my dotfiles.
 Check my `delight' shell script for more."
   (when-let* ((bspwm "~/.config/bspwm/active-theme")
               (hlwm "~/.config/herbstluftwm/active-theme")
+              (session (getenv "DESKTOP_SESSION"))
               (file (cond
-                     ((file-exists-p bspwm) bspwm)
-                     ((file-exists-p hlwm) hlwm))))
-    (string-match-p
-     "dark"
-     (with-temp-buffer
-       (insert-file-contents file)
-       (buffer-substring-no-properties (point-min) (point-max))))))
+                     ((and (string= session "bspwm")
+                           (file-exists-p bspwm))
+                      bspwm)
+                     ((and (string= session "herbstluftwm")
+                           (file-exists-p hlwm))
+                      hlwm))))
+      (string-match-p
+       "dark"
+       (with-temp-buffer
+         (insert-file-contents file)
+         (buffer-substring-no-properties (point-min) (point-max))))))
 
 (defun prot-emacs-theme-environment-dark-p ()
   "Return non-nil if environment theme is dark."
