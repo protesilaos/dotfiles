@@ -1,10 +1,8 @@
 configuration {
 	modi: "run,drun,window";
 	font: "Monospace 10";
-	location: 6;
-	yoffset: 0;
-	xoffset: 0;
-	fixed-num-lines: false;
+	location: 0; /* Centre of the screen.  See the themes for width, borders, etc. */
+	fixed-num-lines: true;
 	show-icons: true;
 	terminal: "uxterm";
 /*	run-command: "{cmd}";*/

@@ -8,10 +8,10 @@
 
 window {
     background-color: @bg-main;
-    border:           2px 0 0;
-    border-color:     @fg-alt;
-    padding:          0px;
-    width:            100%;
+    border:           5px;
+    border-color:     @bg-alt;
+    padding:          10px;
+    width:            50%;
     max-height:       25%;
 }
 
