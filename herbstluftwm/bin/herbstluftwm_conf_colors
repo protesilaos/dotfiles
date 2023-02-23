@@ -30,8 +30,8 @@ then
        dark*)
            bg_main="#000000"
            fg_main="#ffffff"
-           bg_active="#0f0e39"
-           border_active="#00bcff"
+           bg_active="#79a8ff"
+           border_active="#79a8ff"
            border_normal="#000000"
            border_urgent="#ff8059"
            window_divider="#323232"
@@ -39,8 +39,8 @@ then
        *)
            bg_main="#ffffff"
            fg_main="#000000"
-           bg_active="#ebf6fa"
-           border_active="#0000c0"
+           bg_active="#3548cf"
+           border_active="#3548cf"
            border_normal="#ffffff"
            border_urgent="#a60000"
            window_divider="#d7d7d7"
@@ -62,9 +62,6 @@ then
    _hc attr theme.urgent.inner_color "$border_urgent"
 
    _hc attr theme.floating.outer_color "$border_active"
-
-   #  TODO 2021-11-08: Check what this does
-   _hc attr theme.background_color "#505050"
 
    for state in active urgent normal
    do

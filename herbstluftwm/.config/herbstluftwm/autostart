@@ -67,22 +67,24 @@ _hc set_monitors 640x1080+0+0 1920x1080+640+0
 _hc set auto_detect_panels on
 
 _hc set window_gap 2
-_hc set frame_gap 2
-_hc set frame_border_width 2
-_hc set frame_padding 2
+_hc set frame_gap 0
+_hc set frame_border_width 1
+_hc set frame_padding 0
 _hc set smart_window_surroundings on
 _hc set smart_frame_surroundings hide_gaps
 _hc set mouse_recenter_gap 0
 _hc set focus_follows_mouse on
 _hc set always_show_frame on
 _hc set frame_bg_transparent on
+_hc set frame_normal_opacity 50
+_hc set frame_active_opacity 0
 _hc set frame_transparent_width 3
 _hc set default_frame_layout vertical
 
 _hc attr theme.tiling.reset 1
 _hc attr theme.floating.reset 1
 _hc attr theme.inner_width 1
-_hc attr theme.border_width 3
+_hc attr theme.border_width 1
 _hc attr theme.active.outer_width 1
 _hc attr theme.floating.border_width 1
 _hc attr theme.floating.outer_width 1
