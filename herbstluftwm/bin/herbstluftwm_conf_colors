@@ -28,27 +28,29 @@ if [ -f "$HOME"/.config/herbstluftwm/active-theme ]
 then
    case "$(cat "$HOME"/.config/herbstluftwm/active-theme)" in
        dark*)
+           bg_main="#000000"
+           fg_main="#ffffff"
+           bg_active="#0f0e39"
            border_active="#00bcff"
            border_normal="#000000"
            border_urgent="#ff8059"
            window_divider="#323232"
-           bg_active="#0f0e39"
-           bg_normal="$border_normal"           
            ;;
        *)
+           bg_main="#ffffff"
+           fg_main="#000000"
+           bg_active="#ebf6fa"
            border_active="#0000c0"
            border_normal="#ffffff"
            border_urgent="#a60000"
            window_divider="#d7d7d7"
-           bg_active="#ebf6fa"
-           bg_normal="$border_normal"
            ;;
    esac
 
    _hc set frame_border_active_color "$border_active"
-   # _hc set frame_border_normal_color "$border_normal"
+   _hc set frame_border_normal_color "$border_normal"
    _hc set frame_border_normal_color "#00000000" # full transparency
-   _hc set frame_bg_normal_color "$bg_normal"
+   _hc set frame_bg_normal_color "$bg_main"
    _hc set frame_bg_active_color "$bg_active"
 
    _hc attr theme.active.color "$border_active"
