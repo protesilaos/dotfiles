@@ -16,6 +16,6 @@
 [diff "elisp"]
   xfuncname = "^((\\(|;;;+ ).*)$"
 [diff "org"]
-  xfuncname = "^(\\*+ +.*)$"
+  xfuncname = "^(\\*+ +.*|#\\+title:.*)$"
 [init]
   defaultBranch = main
