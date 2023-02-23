@@ -70,8 +70,8 @@ _hc set window_gap 0
 _hc set frame_gap 1
 _hc set frame_border_width 0
 _hc set frame_padding 0
-_hc set smart_window_surroundings on
-_hc set smart_frame_surroundings hide_gaps
+_hc set smart_window_surroundings off
+_hc set smart_frame_surroundings off
 _hc set mouse_recenter_gap 0
 _hc set focus_follows_mouse on
 _hc set always_show_frame on
