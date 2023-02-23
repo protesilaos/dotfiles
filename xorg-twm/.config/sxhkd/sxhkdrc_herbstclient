@@ -11,9 +11,12 @@
 
 ### Code
 
-# Close currently focused window
-mod4 + q
-    herbstclient close
+# Close currently focused window.  mod4+q closes the frame if no
+# window is present.  With shift it closes the frame of the last
+# window while it closes that.  With mod4+alt+q remove the frame and
+# merge its windows with the closest neighbouring frame.
+mod4 + {_, shift +, alt+} q
+    herbstclient {close_or_remove,close_and_remove,remove}
 
 #### Focus/swap windows/tags
 
@@ -28,8 +31,6 @@ mod4 + {_,shift +} {0-9}
 mod4 + {b,r}
     herbstclient split {bottom,right} 0.5
 
-mod4 + shift + r
-    herbstclient remove
 
 mod4 + {f,space}
     herbstclient {fullscreen toggle,set_attr clients.focus.floating toggle}
