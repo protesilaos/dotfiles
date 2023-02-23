@@ -54,8 +54,8 @@ module-margin-right = 2
 font-0 = Monospace:size=8:hintstyle=hintslight;2
 font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
 
-modules-left = ewmh
-modules-center = title
+modules-left = ewmh title
+modules-center =
 modules-right = xkeyboard alsa date
 
 tray-position = right
