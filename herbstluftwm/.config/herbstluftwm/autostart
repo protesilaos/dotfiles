@@ -77,6 +77,7 @@ _hc set focus_follows_mouse on
 _hc set always_show_frame on
 _hc set frame_bg_transparent on
 _hc set frame_transparent_width 3
+_hc set default_frame_layout vertical
 
 _hc attr theme.tiling.reset 1
 _hc attr theme.floating.reset 1
