@@ -25,12 +25,21 @@ mod4 + {_, shift +, alt+} q
 mod4 + {_, shift +, ctrl +} {h,j,k,l}
     herbstclient {focus,shift,resize} {left,down,up,right} {_,_,0.05}
 
+# Same as above but with arrow keys.
+mod4 + {_, shift +, ctrl +} {Left,Down,Up,Right}
+    herbstclient {focus,shift,resize} {left,down,up,right} {_,_,0.05}
+
+# Place a frame in the given direction.
+mod4 + alt + {h,j,k,l}
+    herbstclient split {left,bottom,top,right} 0.5
+
+# Same as above but with arrow keys.
+mod4 + alt + {Left,Down,Up,Right}
+    herbstclient split {left,bottom,top,right} 0.5
+
+
 mod4 + {_,shift +} {0-9}
     herbstclient {use_index,move_index} {0-9}
-
-mod4 + {b,r}
-    herbstclient split {bottom,right} 0.5
-
 
 mod4 + {f,space}
     herbstclient {fullscreen toggle,set_attr clients.focus.floating toggle}
