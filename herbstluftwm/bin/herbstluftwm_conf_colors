@@ -30,7 +30,7 @@ then
        dark*)
            bg_main="#000000"
            fg_main="#ffffff"
-           bg_active="#79a8ff"
+           bg_active="#79a8ffaa"
            border_active="#79a8ff"
            border_normal="#000000"
            border_urgent="#ff8059"
@@ -39,7 +39,7 @@ then
        *)
            bg_main="#ffffff"
            fg_main="#000000"
-           bg_active="#3548cf"
+           bg_active="#3548cfaa"
            border_active="#3548cf"
            border_normal="#ffffff"
            border_urgent="#a60000"
