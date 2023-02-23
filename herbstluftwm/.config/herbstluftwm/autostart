@@ -101,8 +101,9 @@ _hc rule floatplacement=smart
 # give focus to most common terminals
 #_hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
-_hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
+_hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on floatplacement=center
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+_hc rule fixedsize floating=on
 
 _hc set tree_style '╾│ ├└╼─┐'
 
