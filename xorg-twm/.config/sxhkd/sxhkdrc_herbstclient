@@ -39,6 +39,9 @@ mod4 + {f,space}
 mod1 + {_, shift +} Tab
     herbstclient cycle_all {+1,-1}
 
+mod4  + {_, shift +} r
+    herbstclient {rotate,mirror both}
+
 mod4 + m
     herbstluftwm_cycle_monitors
 
