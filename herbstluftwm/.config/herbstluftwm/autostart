@@ -83,11 +83,8 @@ _hc set always_show_frame on
 _hc set frame_bg_transparent off
 _hc set frame_normal_opacity 50
 _hc set frame_active_opacity 100
-_hc set frame_transparent_width 3
 _hc set default_frame_layout vertical
 
-_hc attr theme.tiling.reset 1
-_hc attr theme.floating.reset 1
 _hc attr theme.inner_width 1
 _hc attr theme.border_width 3
 _hc attr theme.active.outer_width 3
@@ -112,7 +109,6 @@ _hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on floatplacement=center
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 _hc rule fixedsize floating=on
 
-_hc set tree_style '╾│ ├└╼─┐'
 
 ### Autostart
 
