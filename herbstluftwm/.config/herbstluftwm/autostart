@@ -117,6 +117,10 @@ _hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on floatplacement=center
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 _hc rule fixedsize floating=on
 
+# Empty frames function as the equivalent of BSPWM's receptacles: they
+# receive the next client.  However, this only works for the focused
+# tag.
+_hc rule index=e
 
 ### Autostart
 
