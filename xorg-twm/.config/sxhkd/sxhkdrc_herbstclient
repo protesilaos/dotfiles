@@ -55,7 +55,7 @@ mod4 + m
     herbstluftwm_cycle_monitors
 
 mod4 + t
-    herbstclient cycle_layout +1 vertical horizontal
+    herbstclient cycle_layout +1 vertical horizontal max
 
 mod4 + {_,shift +} Tab
     herbstclient use_index {+,-}1 --skip-visible
