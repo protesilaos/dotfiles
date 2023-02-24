@@ -81,7 +81,7 @@ _hc set mouse_recenter_gap 0
 _hc set focus_follows_mouse on
 _hc set always_show_frame on
 _hc set frame_bg_transparent off
-_hc set frame_normal_opacity 50
+_hc set frame_normal_opacity 25
 _hc set frame_active_opacity 100
 _hc set default_frame_layout vertical
 
