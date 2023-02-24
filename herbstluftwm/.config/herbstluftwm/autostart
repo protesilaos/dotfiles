@@ -38,8 +38,13 @@ _check ()
 
 _hc emit_hook reload
 
-# Remove all existing keybindings.  We set them further below.
+# Remove all existing keybindings.  We set them further below via
+# SXHKD.  The only exception is the mouse where we want Super+Right
+# Click drag to move a floating window and Super+Left Click drag to
+# resize any window at its nearest side.
 _hc keyunbind --all
+_hc mousebind Mod4-Button1 move
+_hc mousebind Mod4-Button3 resize
 
 ### Tags and monitors
 
