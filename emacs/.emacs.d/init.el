@@ -231,7 +231,7 @@ BODY is the configuration associated with PACKAGE."
 (require 'prot-emacs-modeline)
 (require 'prot-emacs-completion)
 (require 'prot-emacs-search)
-(require 'prot-emacs-dired)             ; dired and ibuffer
+(require 'prot-emacs-dired)
 (require 'prot-emacs-window)
 (require 'prot-emacs-git)               ; git, diff, and related
 (require 'prot-emacs-shell)             ; e?shell, man, proced, pass

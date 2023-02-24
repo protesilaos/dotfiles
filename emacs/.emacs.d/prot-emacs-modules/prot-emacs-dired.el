@@ -99,36 +99,4 @@
   (setq trashed-sort-key '("Date deleted" . t))
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
-;;; Ibuffer (dired-like buffer list manager)
-(prot-emacs-builtin-package 'ibuffer
-  (setq ibuffer-expert t)
-  (setq ibuffer-display-summary nil)
-  (setq ibuffer-use-other-window nil)
-  (setq ibuffer-show-empty-filter-groups nil)
-  (setq ibuffer-movement-cycle nil)
-  (setq ibuffer-default-sorting-mode 'filename/process)
-  (setq ibuffer-use-header-line t)
-  (setq ibuffer-default-shrink-to-minimum-size nil)
-  (setq ibuffer-formats
-        '((mark modified read-only locked " "
-                (name 40 40 :left :elide)
-                " "
-                (size 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " " filename-and-process)
-          (mark " "
-                (name 16 -1)
-                " " filename)))
-  (setq ibuffer-saved-filter-groups nil)
-  (setq ibuffer-old-time 48)
-  (add-hook 'ibuffer-mode-hook #'hl-line-mode)
-  (define-key global-map (kbd "C-x C-b") #'ibuffer)
-  (let ((map ibuffer-mode-map))
-    (define-key map (kbd "* f") #'ibuffer-mark-by-file-name-regexp)
-    (define-key map (kbd "* g") #'ibuffer-mark-by-content-regexp) ; "g" is for "grep"
-    (define-key map (kbd "* n") #'ibuffer-mark-by-name-regexp)
-    (define-key map (kbd "s n") #'ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
-    (define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
-
 (provide 'prot-emacs-dired)
