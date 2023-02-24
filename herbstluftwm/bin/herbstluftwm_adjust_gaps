@@ -24,7 +24,7 @@ _hc ()
 
 frame_gap_current=$(_hc get frame_gap)
 frame_gap_increment=${1-0}
-frame_gap_new="$(($frame_gap_current + $frame_gap_increment))"
+frame_gap_new=$(($frame_gap_current + $frame_gap_increment))
 
 # Make it cyclic.
 if [ $frame_gap_new -lt 0 ]
