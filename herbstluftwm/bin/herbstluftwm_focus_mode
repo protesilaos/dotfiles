@@ -19,7 +19,7 @@
 
 command -v polybar > /dev/null || { echo "ERROR: no polybar available"; exit 1; }
 
-# We use this method instead of 'herbstclient set' because it gives us
+# We use this method instead of 'herbstclient get' because it gives us
 # the preferred value of the configuration.
 _get_value ()
 {
