@@ -151,64 +151,32 @@ run stow again with the `-R` flag:
 
 ## Window managers
 
-As of 2021-11-08, I have configurations for three window managers, in
-order from oldest to newest:
+I used to have configurations for bspwm, herbstluftwm, and swaywm.
+Since 2023-02-24 I have removed sway: Wayland is not ready for my
+purposes and I have had no issues whatsoever with Xorg.  I also tried
+GNOME for a while to get a feel for Wayaland and see how Emacs
+compiled `--with-pgtk` performs.  In short: Emacs is the same and
+Wayland is not as featureful as Xorg.
 
-+ **bspwm:** I used this for years.  In the summer of 2021 I configured
-  it again to bring it up to standard.  Some legacy issues remain
-  (specifically with the key bindings), but it is okay overall.  Use
-  this if you want something that is easy to grasp for beginners, but
-  super-powerful for those who wish to script its behaviour.
++ **bspwm:** I have been using it for years and consider it top-notch.
+  It is stable and scriptable.  Use this if you prefer automatic
+  tiling.
 
-+ **swaywm:** I used it for about two weeks at the end of September or
-  the beginning of October 2021.  I did it mostly because I was curious
-  about Wayland.  Overall, things work fine and I am happy with it.  I
-  don't use the tabbed/stacked layouts and don't mess around too much
-  with its container functionality for grouping windows.  Just give me
-  the standard tiling scheme.  If/when Emacs' `pgtk` branch is merged
-  into `master`, I might reconsider it (UPDATE 2022-04-24 08:37 +0300:
-  Emacs 29 can be built `--with-pgtk` but I still prefer bspwm and the
-  Xorg build of Emacs).  In the meantime, I stay with Xorg.  Choose Sway
-  if you want to switch to Wayland right away.
++ **herbstluftwm (hlwm):** Shares some concepts with bspwm and can
+  actually be configured in the same way.  The main differences
+  between the two are that (i) hlwm prioritises manual tiling methods
+  and (ii) can treat arbitrary rectangles of a monitor as virtual
+  monitors.  The virtual monitors feature is perfect for anyone with a
+  widescreen display.  The one I have (which is not mine, but anyway)
+  is 2560x1920, so I split it by default into a regular 1920x1080 area
+  and another "sidebar" of 640x1080.
 
-+ **herbstluftwm:** I used this WM privately some years ago when I was
-  deciding between it and bspwm.  If you check and compare all relevant
-  configurations, you will notice that herbstluftwm and bspwm are very
-  similar in how they work.  The latter has an automatic tiling scheme
-  that is smart enough to split windows depending on their direction or
-  longest side, whereas the former is strictly manual.  The main
-  difference is that herbstluftwm handles monitors and workspaces
-  ("tags") differently.  In short: a monitor can be virtual, by being
-  assigned to a portion of the effective screen area.  Opt for
-  herbstluftwm if you have an ultrawide display and want to create
-  virtual monitors out of it.  I got such a display on 2021-11-08 as
-  part of a temporary exchange with a friend and my first impressions
-  are positive.  Too bad I won't keep it for too long...
-
-Sway's configurations are self-contained.  Whereas bspwm and
-herbstluftwm have a shared basis in the `xorg-twm` stow package.  I plan
-to document everything: (i) how to use stow, (ii) how the directory
-strucure is designed, (iii) package names and dependencies.  In the
-meantime, **this is highly experimental and you should not use anything,
-unless you know what you are doing.**
-
-**UPDATE 2023-01-11 06:53 +0200:** I used GNOME for a while to test
-Wayland.  Overall, it is okay but I still prefer BSPWM.  If there ever
-is a Wayland compositor like it, I will consider switching to it.  I
-do not like the i3/sway approach.
-
-### TODO for window managers
-
-As of 2022-04-24.  In no particular order.
-
-+ A herbstluftwm script like `bspwm_resize`.
-+ Same as above for sway.
-+ Can herbstluftwm mouse drag/resize be defined in sxhkd?
-+ Use a bold weight for the focused workspace in sway's bar?  Add other
-  characters like `[1]` for the focused workspace, `2^` for unfocused
-  but occupied, and `3` for unfocused and empty? (That is how I do it
-  with polybar on bspwm/herbstluftwm.)
-+ Show keyboard layout in sway bar (English/Greek).
+Both of my tiling window managers have a shared basis in the
+`xorg-twm` stow package ("twm" stands for "tiling window manager").
+They both use the Simple X Hot Key Daemon (sxhkd) to set key bindings
+and have practically the same `polybar` panel.  Furthermore, both are
+subject to the theme-switching of my `delight` script.  In other
+words, I can use them interchangeably.
 
 ## Copying
 
