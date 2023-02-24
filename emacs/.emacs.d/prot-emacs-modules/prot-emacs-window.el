@@ -52,7 +52,7 @@
            (window-height . 4) ; note this is literal lines, not relative
            (dedicated . t)
            (preserve-size . (t . t)))
-          ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
+          ("\\*\\(Calendar\\|Bookmark Annotation\\|Buffer List\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
           ;; NOTE 2022-09-10: The following is for `ispell-word', though
