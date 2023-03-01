@@ -39,6 +39,17 @@
    (prot/mode-line-global-value)
    0 -1))
 
+(defvar prot/mode-line-frame-identification
+  '(:eval (when-let* ((fname (frame-parameter (selected-frame) 'name))
+                      (bname (buffer-name))
+                      ((not (string= fname bname)))
+                      ((prot/mode-line-current-window-p)))
+            (format " @ %s " (propertize fname
+                                         'face 'italic
+                                         'help-echo "Current frame name"))))
+  "Mode line construct for the frame name.")
+(put 'prot/mode-line-frame-identification 'risky-local-variable t)
+
 ;; NOTE 2023-02-09: The `:eval' parts are HIGHLY EXPERIMENTAL.
 (setq-default mode-line-format
               '("%e"
@@ -50,13 +61,7 @@
                 mode-line-buffer-identification
                 ;; See my `beframe' package for how I use frames and
                 ;; why having the name of one makes sense.
-                (:eval (when-let* ((fname (frame-parameter (selected-frame) 'name))
-                                   (bname (buffer-name))
-                                   ((not (string= fname bname)))
-                                   ((prot/mode-line-current-window-p)))
-                         (format " @ %s " (propertize fname
-                                                      'face 'italic
-                                                      'help-echo "Current frame name"))))
+                prot/mode-line-frame-identification
                 "  "
                 mode-line-position
                 mode-line-modes
@@ -97,6 +102,7 @@
 
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
+  (setq keycast-mode-line-insert-after 'prot/mode-line-frame-identification)
   (setq keycast-mode-line-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
