@@ -137,17 +137,15 @@ use in `display-buffer-alist'."
     (define-key map (kbd "C-M-S-<left>") #'windmove-swap-states-left)))
 
 ;;; Frame-isolated buffers
-(prot-emacs-vc-package 'beframe ; another package of mine (work-in-progress)
-  (:url "https://github.com/protesilaos/beframe")
-
+;; Another package of mine.  Read the manual:
+;; <https://protesilaos.com/emacs/beframe>.
+(prot-emacs-elpa-package 'beframe
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
 
   (beframe-mode 1)
 
   (let ((map global-map))
     (define-key map (kbd "C-x f") #'other-frame-prefix) ; override `set-fill-column'
-    ;; Also see `beframe-switch-buffer-in-frame'.
-    (define-key map (kbd "C-x B") #'beframe-switch-buffer)
     ;; Replace the generic `buffer-menu'.  With a prefix argument, this
     ;; commands prompts for a frame.  Call the `buffer-menu' via M-x if
     ;; you absolutely need the global list of buffers.
