@@ -147,7 +147,11 @@ use in `display-buffer-alist'."
   (let ((map global-map))
     (define-key map (kbd "C-x f") #'other-frame-prefix) ; override `set-fill-column'
     ;; Also see `beframe-switch-buffer-in-frame'.
-    (define-key map (kbd "C-x B") #'beframe-switch-buffer)))
+    (define-key map (kbd "C-x B") #'beframe-switch-buffer)
+    ;; Replace the generic `buffer-menu'.  With a prefix argument, this
+    ;; commands prompts for a frame.  Call the `buffer-menu' via M-x if
+    ;; you absolutely need the global list of buffers.
+    (define-key map (kbd "C-x C-b") #'beframe-buffer-menu)))
 
 ;; ;; DEPRECATED 2023-02-09: I am no longer using the `tab-bar-mode'.
 ;; ;; This was old code, anyway.
