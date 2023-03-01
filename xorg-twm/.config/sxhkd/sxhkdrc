@@ -82,9 +82,10 @@ mod4 + backslash
 mod4 + {_, shift +,ctrl + shift + } Return
     {uxterm,emacsclient -c -w 2 -a "",emacsclient -c -w 2 -a "" -e "(shell)"}
 
-# Show the desired rofi views.
-mod4 + d
-    rofi -show drun
+# Show the desired rofi views for "buffers" (windows) and desktop
+# applications.
+mod4 + {b,d}
+    rofi -show {window,drun}
 
 #### Miscellaneous tools and media keys
 
