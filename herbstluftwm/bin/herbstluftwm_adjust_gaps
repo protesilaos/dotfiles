@@ -30,7 +30,7 @@ frame_gap_new=$(($frame_gap_current + $frame_gap_increment))
 if [ $frame_gap_new -lt 0 ]
 then
     frame_gap_new=30
-elif  [ $frame_gap_new -gt 30 ]
+elif [ $frame_gap_new -gt 30 ]
 then
     frame_gap_new=0
 fi
