@@ -44,9 +44,13 @@ mod4 + {_,shift +} {0-9}
 mod4 + {f,space}
     herbstclient {fullscreen toggle,set_attr clients.focus.floating toggle}
 
-# Alt + Tab
+# Alt + Tab (cycle all windows and frames in the current tag)
 mod1 + {_, shift +} Tab
     herbstclient cycle_all {+1,-1}
+
+# Alt + Backtick (cycle all windows in the current frame)
+mod1 + {_, shift +} grave
+    herbstclient cycle {+1,-1}
 
 mod4  + {_, shift +} r
     herbstclient {rotate,mirror both}
