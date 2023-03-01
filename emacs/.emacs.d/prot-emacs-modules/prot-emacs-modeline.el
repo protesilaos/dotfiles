@@ -97,7 +97,6 @@
 
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
-  (setq keycast-separator-width 2)
   (setq keycast-mode-line-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
