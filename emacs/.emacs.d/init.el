@@ -113,26 +113,30 @@ before all other modules of my setup."
 ;; I want to use my own packages from specific repositories.  All
 ;; others will rely on `package-archive-priorities'.  I do this to
 ;; test that the packaged version works as intended.
-;;
-;; Note that the `modus-themes' are built into Emacs 28 and are synced
-;; to GNU ELPA from emacs.git.  As I already run Emacs from source, I am
-;; using MELPA for the `modus-themes' here: it is for testing purposes.
+(defvar prot-emacs-my-packages
+  '(agitate
+    altcaps
+    beframe
+    cursory
+    denote
+    ef-themes
+    fontaine
+    lin
+    logos
+    modus-themes
+    notmuch-indicator
+    pulsar
+    standard-themes
+    substitute
+    sxhkdrc-mode
+    tmr)
+  "List of symbols representing the packages I develop/maintain.")
+
 (setq package-pinned-packages
-      '((agitate . "elpa-devel")
-        (altcaps . "elpa-devel")
-        (cursory . "elpa-devel")
-        (denote . "elpa-devel")
-        (ef-themes . "elpa-devel")
-        (fontaine . "elpa-devel")
-        (lin . "elpa-devel")
-        (logos . "elpa-devel")
-        (modus-themes . "melpa")
-        (notmuch-indicator . "elpa-devel")
-        (pulsar . "elpa-devel")
-        (standard-themes . "elpa-devel")
-        (substitute . "elpa-devel")
-        (sxhkdrc-mode . "elpa-devel")
-        (tmr . "elpa-devel")))
+      `(,@(mapcar
+           (lambda (package)
+             (cons package "elpa-devel"))
+           prot-emacs-my-packages)))
 
 (setq custom-safe-themes t)
 
