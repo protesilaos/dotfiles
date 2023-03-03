@@ -92,7 +92,7 @@
             :query "tag:unread and tag:coach"
             :sort-order newest-first
             :key ,(kbd "c u"))
-          ( :name "🌈 all coahing"
+          ( :name "🌈 all coaching"
             :query "tag:coach not tag:archived"
             :sort-order newest-first
             :key ,(kbd "c c"))
