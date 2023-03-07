@@ -123,7 +123,7 @@ MODE use that major mode instead."
           (progn
             (insert text)
             (goto-char (point-min))
-            (comment-region (point-at-bol) (point-at-eol))
+            (comment-region (line-beginning-position) (line-end-position))
             (goto-char (point-max)))
         (goto-char (point-max))
         (when (prot-common-line-regexp-p 'non-empty)
@@ -241,7 +241,7 @@ This command can then be followed by the standard
   (interactive)
   (if (use-region-p)
       (delete-region (region-beginning) (region-end))
-    (delete-region (point-at-bol) (point-at-eol)))
+    (delete-region (line-beginning-position) (line-end-position)))
   (yank))
 
 ;;;###autoload
@@ -459,7 +459,7 @@ mark (region beginning) with the one at point (region end)"
 ;;;###autoload
 (defun prot-simple-transpose-chars ()
   "Always transposes the two characters before point.
-There is no 'dragging' the character forward.  This is the
+There is no dragging the character forward.  This is the
 behaviour of `transpose-chars' when point is at the end of the
 line."
   (interactive)
@@ -483,9 +483,9 @@ last/first two words)."
   (cond
    ((use-region-p)
     (transpose-words 0))
-   ((eq (point) (point-at-eol))
+   ((eq (point) (line-end-position))
     (transpose-words -1))
-   ((eq (point) (point-at-bol))
+   ((eq (point) (line-beginning-position))
     (forward-word 1)
     (transpose-words 1))
    (t
@@ -596,7 +596,7 @@ specified."
   "Like `backward-up-list' but defaults to a forward motion.
 With optional ARG, move that many times in the given
 direction (negative is forward due to this being a
-'backward'-facing command)."
+backward-facing command)."
   (interactive "P")
   (backward-up-list (or (- arg) -1)))
 
