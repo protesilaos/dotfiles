@@ -205,38 +205,33 @@ passing optional prefix ARG (\\[universal-argument])."
       (forward-line -1)
       (prot-simple-new-line-below indent))))
 
+(defun prot-simple--duplicate-buffer-substring (beg end &optional indent)
+  "Duplicate buffer substring between BEG and END positions.
+With optional INDENT, run `indent-for-tab-command' after
+inserting the substring."
+  (save-excursion
+    (goto-char end)
+    (newline)
+    (insert (buffer-substring-no-properties beg end))
+    (when indent
+      (indent-for-tab-command))))
+
 ;;;###autoload
-(defun prot-simple-copy-line-or-region (&optional arg)
-  "Kill-save the current line or active region.
-With optional ARG (\\[universal-argument]) duplicate the target
-instead.  When region is active, also apply context-aware
-indentation while duplicating."
+(defun prot-simple-copy-line-or-region (&optional duplicate)
+  "Copy the current line to the `kill-ring'.
+With optional DUPLICATE as a prefix argument, duplicate the
+current line without adding it to the `kill-ring'.
+
+When the region is active, duplicate it regardless of DUPLICATE."
   (interactive "P")
-  (unless mark-ring                  ; needed when entering a new buffer
-    (push-mark (point) t nil))
-  (let* ((rbeg (region-beginning))
-         (rend (region-end))
-         (pbol (point-at-bol))
-         (peol (point-at-eol))
-         (indent (if (eq (or rbeg rend) pbol) nil arg)))
-    (cond
-     ((use-region-p)
-      (if arg
-          (let ((text (buffer-substring rbeg rend)))
-            (when (eq (point) rbeg)
-              (exchange-point-and-mark))
-            (prot-simple-new-line-below indent)
-            (insert text))
-        (copy-region-as-kill rbeg rend)
-        (message "Current region copied")))
-     (t
-      (if arg
-          (let ((text (buffer-substring pbol peol)))
-            (goto-char (point-at-eol))
-            (newline)
-            (insert text))
-        (copy-region-as-kill pbol peol)
-        (message "Current line copied"))))))
+  (let* ((region (region-active-p))
+         (beg (if region (region-beginning) (line-beginning-position)))
+         (end (if region (region-end) (line-end-position)))
+         (message (if region "region" "line")))
+    (if (or duplicate region)
+        (prot-simple--duplicate-buffer-substring beg end region)
+      (copy-region-as-kill beg end)
+      (message "Copied current %s" message))))
 
 ;;;###autoload
 (defun prot-simple-yank-replace-line-or-region ()
