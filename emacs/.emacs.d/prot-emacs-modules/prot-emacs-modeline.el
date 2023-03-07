@@ -90,8 +90,7 @@
   ;; be hidden
   (setq minions-prominent-modes
         (list 'defining-kbd-macro
-              'flymake-mode
-              'prot-simple-monocle))
+              'flymake-mode))
   (minions-mode 1))
 
 ;;; Mode line recursion indicators
