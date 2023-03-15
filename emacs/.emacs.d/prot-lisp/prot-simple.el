@@ -708,16 +708,13 @@ END, representing the point and mark."
 
 ;;;###autoload
 (defun prot-simple-kill-buffer-current (&optional arg)
-  "Kill current buffer or abort recursion when in minibuffer.
+  "Kill current buffer.
 With optional prefix ARG (\\[universal-argument]) delete the
 buffer's window as well."
   (interactive "P")
-  (if (minibufferp)
-      (abort-recursive-edit)
-    (kill-buffer (current-buffer)))
-  (when (and arg
-             (not (one-window-p)))
-    (delete-window)))
+  (if (and arg (not (one-window-p)))
+      (kill-buffer-and-window)
+    (kill-buffer)))
 
 ;;;###autoload
 (defun prot-simple-rename-file-and-buffer (name)
