@@ -258,11 +258,6 @@
      (set (car (last cell)) (make-sparse-keymap)))
    embark-keymap-alist)
 
-  ;; FIXME 2023-03-15: Better way to not have default actions on RET?
-  ;; It adds noise to the indicator.
-  (defun prot/embark-no-default-action (_type))
-  (advice-add #'embark--default-action :override #'prot/embark-no-default-action)
-
   (let ((map embark-general-map))
     (define-key map (kbd "i") #'embark-insert)
     (define-key map (kbd "w") #'embark-copy-as-kill)
