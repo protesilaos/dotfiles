@@ -90,7 +90,8 @@ mouse-3: Toggle minor modes"
                 "  "
                 mode-line-position
                 prot/mode-line-modes
-                flymake-mode-line-format
+                (:eval (when flymake-mode
+                         flymake-mode-line-format))
                 "  "
                 (vc-mode vc-mode)
                 "  "
