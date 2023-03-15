@@ -115,13 +115,12 @@
   ;; is copied from the README of the `vertico' package.  I made some
   ;; small tweaks to propertize the segments of the prompt.
   (defun crm-indicator (args)
-    (cons (format "[%s %s] %s"
-                  (propertize "CRM" 'face 'error)
+    (cons (format "[`crm-separator': %s]  %s"
                   (propertize
                    (replace-regexp-in-string
                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
                     crm-separator)
-                   'face 'success)
+                   'face 'error)
                   (car args))
           (cdr args)))
 
