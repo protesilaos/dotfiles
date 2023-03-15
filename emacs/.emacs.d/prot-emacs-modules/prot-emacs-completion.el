@@ -186,7 +186,7 @@
           (?w "EWW" ,#'prot-eww-bookmark-jump)))
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
-  (setq consult-find-args "find . -not ( -wholename */.* -prune )")
+  (setq consult-find-args "find . -not ( -path */.git* -prune )")
   (setq consult-preview-key 'any)
 
   (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
