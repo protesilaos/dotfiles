@@ -26,7 +26,7 @@
 
 ;;; Minibuffer configurations and Vertico
 (prot-emacs-builtin-package 'minibuffer
-  (setq completion-styles '(basic orderless)) ; also see `completion-category-overrides'
+  (setq completion-styles '(emacs22 orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
 
   ;; A list of known completion categories:
@@ -82,10 +82,10 @@
         ;; style dispatcher characters.
         '((file (styles . (basic partial-completion orderless)))
           (project-file (styles . (basic substring partial-completion orderless)))
-          (imenu (styles . (basic substring orderless)))
-          (kill-ring (styles . (basic substring orderless)))
-          (consult-location (styles . (basic substring orderless)))
-          (eglot (styles . (basic substring orderless)))))
+          (imenu (styles . (emacs22 substring orderless)))
+          (kill-ring (styles . (emacs22 substring orderless)))
+          (consult-location (styles . (emacs22 substring orderless)))
+          (eglot (styles . (emacs22 substring orderless)))))
 
   (setq completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t)
