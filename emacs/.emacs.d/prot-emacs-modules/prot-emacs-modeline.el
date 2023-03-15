@@ -4,17 +4,6 @@
 (setq mode-line-defining-kbd-macro
       (propertize " Macro" 'face 'mode-line-emphasis))
 
-;; Thanks to Daniel Mendler for this!  It removes the square brackets
-;; that denote recursive edits in the modeline.  I do not need them
-;; because I am using Daniel's `recursion-indicator':
-;; <https://github.com/minad/recursion-indicator>.
-(setq-default mode-line-modes
-              (seq-filter (lambda (s)
-                            (not (and (stringp s)
-                                      (string-match-p
-                                       "^\\(%\\[\\|%\\]\\)$" s))))
-                          mode-line-modes))
-
 (setq mode-line-compact nil)            ; Emacs 28
 
 (defun prot/mode-line-current-window-p ()
@@ -97,6 +86,18 @@
 (prot-emacs-elpa-package 'recursion-indicator
   (setq recursion-indicator-general "&")
   (setq recursion-indicator-minibuffer "@")
+
+  ;; Thanks to Daniel Mendler for this!  It removes the square brackets
+  ;; that denote recursive edits in the modeline.  I do not need them
+  ;; because I am using Daniel's `recursion-indicator':
+  ;; <https://github.com/minad/recursion-indicator>.
+  (setq-default mode-line-modes
+                (seq-filter (lambda (s)
+                              (not (and (stringp s)
+                                        (string-match-p
+                                         "^\\(%\\[\\|%\\]\\)$" s))))
+                            mode-line-modes))
+
   (recursion-indicator-mode 1))
 
 ;;; Keycast mode
