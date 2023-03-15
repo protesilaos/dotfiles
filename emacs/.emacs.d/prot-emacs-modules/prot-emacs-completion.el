@@ -238,10 +238,14 @@
 (prot-emacs-elpa-package 'embark
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
-  (setq embark-quit-after-action t)     ; XXX: Read the doc string!
-  (setq embark-cycle-key nil)
+  (setq embark-quit-after-action t)
+  ;; I never cycle and want to disable the key.  Normally, a nil value
+  ;; disables a key binding but here that value is interpreted as the
+  ;; binding for `embark-act'.
+  (setq embark-cycle-key "")
   (setq embark-confirm-act-all nil)
   (setq embark-indicators '(embark-verbose-indicator embark-highlight-indicator))
+  (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
   (setq embark-verbose-indicator-buffer-sections '(bindings))
 
   (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
@@ -254,6 +258,11 @@
    (lambda (cell)
      (set (car (last cell)) (make-sparse-keymap)))
    embark-keymap-alist)
+
+  ;; FIXME 2023-03-15: Better way to not have default actions on RET?
+  ;; It adds noise to the indicator.
+  (defun prot/embark-no-default-action (_type))
+  (advice-add #'embark--default-action :override #'prot/embark-no-default-action)
 
   (let ((map embark-general-map))
     (define-key map (kbd "i") #'embark-insert)
@@ -272,7 +281,13 @@
   (let ((map embark-buffer-map))
     (set-keymap-parent map embark-general-map)
     (define-key map (kbd "k") #'kill-buffer)
-    (define-key map (kbd "r") #'embark-rename-buffer))
+    (define-key map (kbd "r") #'embark-rename-buffer)
+    (define-key map (kbd "e") #'ediff-buffers))
+
+  (let ((map embark-file-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "j") #'embark-dired-jump)
+    (define-key map (kbd "e") #'ediff-files))
 
   (let ((map embark-identifier-map))
     (set-keymap-parent map embark-general-map)
@@ -289,6 +304,11 @@
     (set-keymap-parent map embark-general-map)
     (define-key map (kbd "h") #'describe-command)
     (define-key map (kbd ".") #'embark-find-definition))
+
+  (let ((map embark-expression-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "e") #'pp-eval-expression)
+    (define-key map (kbd "m") #'pp-macroexpand-expression))
 
   (let ((map embark-function-map))
     (set-keymap-parent map embark-general-map)
