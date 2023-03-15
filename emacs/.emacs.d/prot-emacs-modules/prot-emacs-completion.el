@@ -135,7 +135,7 @@
   (setq history-length 500)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
-  (add-hook 'after-init-hook #'savehist-mode))
+  (savehist-mode 1))
 
 (prot-emacs-elpa-package 'vertico
   ;; Those are the default values, but check the user option
@@ -336,7 +336,7 @@
                           "/etc" "/usr" "/tmp"
                           "~/.emacs.d"
                           "~/Downloads" "~/Pictures"))
-  (add-hook 'after-init-hook #'recentf-mode))
+  (recentf-mode 1))
 
 (prot-emacs-builtin-package 'prot-recentf
   (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
