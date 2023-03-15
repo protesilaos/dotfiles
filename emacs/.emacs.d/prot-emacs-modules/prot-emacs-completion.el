@@ -190,7 +190,7 @@
   (setq consult-preview-key 'any)
 
   (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
-        
+
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
   (require 'consult-imenu) ; the `imenu' extension is in its own file
@@ -239,41 +239,74 @@
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
-  (setq embark-cycle-key (kbd "C-,"))   ; see the `embark-act' key
+  (setq embark-cycle-key nil)
   (setq embark-confirm-act-all nil)
-  (setq embark-indicators
-        '(embark-mixed-indicator
-          embark-highlight-indicator))
-  ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
-  ;; and then pops up the verbose buffer, so those variables matter.
-  (setq embark-verbose-indicator-excluded-actions
-        '("\\`customize-" "\\(local\\|global\\)-set-key"
-          set-variable embark-cycle embark-keymap-help embark-isearch))
-  (setq embark-verbose-indicator-buffer-sections
-        `(target "\n" shadowed-targets " " cycle "\n" bindings))
-  (setq embark-mixed-indicator-both nil)
-  (setq embark-mixed-indicator-delay 1.2)
-  ;;  NOTE 2021-07-28: This is used when `embark-indicator' is set to
-  ;;  `embark-mixed-indicator' or `embark-verbose-indicator'.  We can
-  ;;  specify the window parameters here, but I prefer to do that in my
-  ;;  `display-buffer-alist' (search this document) because it is easier
-  ;;  to keep track of all my rules in one place.
-  (setq embark-verbose-indicator-display-action nil)
+  (setq embark-indicators '(embark-verbose-indicator embark-highlight-indicator))
+  (setq embark-verbose-indicator-buffer-sections '(bindings))
 
-  (define-key global-map (kbd "C-,") #'embark-act)
-  (define-key embark-collect-mode-map (kbd "C-,") #'embark-act)
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "C-,") #'embark-act)
-    (define-key map (kbd "C->") #'embark-become))
+  (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
+    (define-key map (kbd "C-,") #'embark-act))
+
+  ;; NOTE 2023-03-15: I am working on making my Embark buffers easier
+  ;; to read.  I am removing keys I do not use.  What follows is a
+  ;; drastic measure.  I still need to test that it works as intended.
+  (seq-do
+   (lambda (cell)
+     (set (car (last cell)) (make-sparse-keymap)))
+   embark-keymap-alist)
+
+  (let ((map embark-general-map))
+    (define-key map (kbd "i") #'embark-insert)
+    (define-key map (kbd "w") #'embark-copy-as-kill)
+    (define-key map (kbd "E") #'embark-export)
+    (define-key map (kbd "S") #'embark-collect)
+    (define-key map (kbd "A") #'embark-act-all))
+
+  ;; TODO 2023-03-14: `embark-url-map' for mpv
+  (let ((map embark-url-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "b") #'browse-url)
+    (define-key map (kbd "d") #'embark-download-url)
+    (define-key map (kbd "e") #'eww))
+
+  (let ((map embark-buffer-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "k") #'kill-buffer)
+    (define-key map (kbd "r") #'embark-rename-buffer))
+
+  (let ((map embark-identifier-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "h") #'display-local-help)
+    (define-key map (kbd ".") #'xref-find-definitions)
+    (define-key map (kbd "o") #'occur))
+
+  (let ((map embark-symbol-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "h") #'describe-symbol)
+    (define-key map (kbd ".") #'embark-find-definition))
+
+  (let ((map embark-command-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "h") #'describe-command)
+    (define-key map (kbd ".") #'embark-find-definition))
+
+  (let ((map embark-function-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "h") #'describe-function)
+    (define-key map (kbd ".") #'embark-find-definition))
+
+  (let ((map embark-variable-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "h") #'describe-variable)
+    (define-key map (kbd ".") #'embark-find-definition))
+
   (let ((map embark-region-map))
+    (set-keymap-parent map embark-general-map)
     (define-key map (kbd "a") #'align-regexp)
     (define-key map (kbd "i") #'epa-import-keys-region)
-    (define-key map (kbd "r") #'repunctuate-sentences) ; overrides `rot13-region'
+    (define-key map (kbd "r") #'repunctuate-sentences)
     (define-key map (kbd "s") #'sort-lines)
-    (define-key map (kbd "u") #'untabify))
-  (let ((map embark-symbol-map))
-    (define-key map (kbd ".") #'embark-find-definition)
-    (define-key map (kbd "k") #'describe-keymap)))
+    (define-key map (kbd "u") #'untabify)))
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
