@@ -63,12 +63,11 @@
                         ;; on information from the Elisp manual.  Evaluate:
                         ;; (info "(elisp) Pixel Specification")
                         `((space :align-to
-                                 (- (+ right-margin 1)
+                                 (- (+ right-margin 3)
                                     ,(string-width (prot/mode-line-global-string-no-properties)))))))
                 (:eval
                  (when (prot/mode-line-current-window-p)
-                   mode-line-misc-info))
-                mode-line-end-spaces))
+                   mode-line-misc-info))))
 
 (add-hook 'after-init-hook #'column-number-mode)
 

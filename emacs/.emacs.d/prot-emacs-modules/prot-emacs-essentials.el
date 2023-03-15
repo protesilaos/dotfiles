@@ -245,7 +245,7 @@ minibuffer completion."
 
 ;;; Display current time
 (prot-emacs-builtin-package 'time
-  (setq display-time-format "%a %e %b, %H:%M")
+  (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
   ;; (setq display-time-day-and-date t)
@@ -261,6 +261,7 @@ minibuffer completion."
   (setq display-time-mail-face nil)
 
 ;;; World clock
+  (setq display-time-world-list t)
   (setq zoneinfo-style-world-list
         '(("America/Los_Angeles" "Los Angeles")
           ("America/Chicago" "Chicago")
