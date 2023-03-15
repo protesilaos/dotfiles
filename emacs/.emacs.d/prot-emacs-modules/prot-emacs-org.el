@@ -234,6 +234,10 @@
   (setq org-agenda-insert-diary-strategy 'date-tree)
   (setq org-agenda-insert-diary-extract-time nil)
   (setq org-agenda-include-diary nil)
+  ;; I do not want the diary, but there is no way to disable it
+  ;; altogether.  This creates a diary file in the /tmp directory.
+  (setq diary-file (make-temp-file "emacs-diary-"))
+  (setq org-agenda-diary-file 'diary-file)
 
 ;;;;; Agenda follow mode
   (setq org-agenda-start-with-follow-mode nil)
