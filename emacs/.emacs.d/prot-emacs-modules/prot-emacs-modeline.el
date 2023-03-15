@@ -1,10 +1,20 @@
 ;;; Mode line
 (setq mode-line-percent-position '(-3 "%p"))
 (setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
-(setq mode-line-defining-kbd-macro
-      (propertize " Macro" 'face 'mode-line-emphasis))
+(setq mode-line-compact nil)                             ; Emacs 28
 
-(setq mode-line-compact nil)            ; Emacs 28
+(defface prot/mode-line-intense
+  '((((class color) (min-colors 88) (background light))
+     :background "gray40" :foreground "white")
+    (((class color) (min-colors 88) (background dark))
+     :background "gray70" :foreground "black")
+    (t :inverse-video t))
+  "Face for intense mode line constructs.")
+
+(set-face-attribute 'display-time-date-and-time nil :inherit 'prot/mode-line-intense) ; Emacs 30
+
+(setq mode-line-defining-kbd-macro
+      (propertize " KMacro " 'face 'prot/mode-line-intense))
 
 (defun prot/mode-line-current-window-p ()
   "Return non-nil if selected WINDOW modeline can show keycast."
@@ -39,9 +49,35 @@
   "Mode line construct for the frame name.")
 (put 'prot/mode-line-frame-identification 'risky-local-variable t)
 
+(defvar prot/mode-line-modes
+  (let ((recursive-edit-help-echo
+         "Recursive edit, type M-C-c to get out"))
+    (list (propertize "%[" 'help-echo recursive-edit-help-echo)
+	  "("
+	  `(:propertize ("" mode-name)
+			help-echo "Major mode\n\
+mouse-1: Display major mode menu\n\
+mouse-2: Show help for major mode\n\
+mouse-3: Toggle minor modes"
+			mouse-face mode-line-highlight
+			local-map ,mode-line-major-mode-keymap)
+	  '("" mode-line-process)
+	  (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
+		      'mouse-face 'mode-line-highlight
+		      'local-map (make-mode-line-mouse-map
+				  'mouse-2 #'mode-line-widen))
+	  ")"
+	  (propertize "%]" 'help-echo recursive-edit-help-echo)
+	  " "))
+  "Mode line construct for displaying major modes.")
+(put 'prot/mode-line-modes 'risky-local-variable t)
+
 ;; NOTE 2023-02-09: The `:eval' parts are HIGHLY EXPERIMENTAL.
 (setq-default mode-line-format
               '("%e"
+                (:eval (when (and defining-kbd-macro
+                                  (prot/mode-line-current-window-p))
+                         mode-line-defining-kbd-macro))
                 mode-line-front-space
                 mode-line-mule-info
                 mode-line-modified
@@ -53,7 +89,8 @@
                 prot/mode-line-frame-identification
                 "  "
                 mode-line-position
-                mode-line-modes
+                prot/mode-line-modes
+                flymake-mode-line-format
                 "  "
                 (vc-mode vc-mode)
                 "  "
@@ -70,16 +107,6 @@
                    mode-line-misc-info))))
 
 (add-hook 'after-init-hook #'column-number-mode)
-
-;;; Hide modeline "lighters" (minions.el)
-(prot-emacs-elpa-package 'minions
-  (setq minions-mode-line-lighter "")
-  ;; NOTE: This will be expanded whenever I find a mode that should not
-  ;; be hidden
-  (setq minions-prominent-modes
-        (list 'defining-kbd-macro
-              'flymake-mode))
-  (minions-mode 1))
 
 ;;; Mode line recursion indicators
 (prot-emacs-elpa-package 'recursion-indicator
