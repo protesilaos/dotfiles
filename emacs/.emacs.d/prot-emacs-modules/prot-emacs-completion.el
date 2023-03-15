@@ -279,11 +279,6 @@
 ;; commands.
 (prot-emacs-elpa-package 'embark-consult)
 
-(prot-emacs-builtin-package 'prot-embark
-  (prot-embark-keymaps 1)
-  (prot-embark-setup-packages 1))
-
-
 ;;; Completion for recent files and directories (prot-recentf.el)
 (prot-emacs-builtin-package 'recentf
   (setq recentf-save-file (locate-user-emacs-file "recentf"))
