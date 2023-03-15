@@ -283,7 +283,12 @@
 (prot-emacs-builtin-package 'recentf
   (setq recentf-save-file (locate-user-emacs-file "recentf"))
   (setq recentf-max-saved-items 200)
-  (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
+  (setq recentf-exclude '(".gz" ".xz" ".zip" ".gpg" ".asc"
+                          "/ssh:" "/sudo:"
+                          "~/.local" "~/.config" "~/.cache"
+                          "/etc" "/usr" "/tmp"
+                          "~/.emacs.d"
+                          "~/Downloads" "~/Pictures"))
   (add-hook 'after-init-hook #'recentf-mode))
 
 (prot-emacs-builtin-package 'prot-recentf
