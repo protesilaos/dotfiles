@@ -352,6 +352,9 @@
   (require 'org-habit)
   (setq org-habit-graph-column 50)
   (setq org-habit-preceding-days 9)
+  ;; Always show the habit graph, even if there are no habits for
+  ;; today.
+  (setq org-habit-show-all-today t)
 
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
