@@ -244,7 +244,7 @@
   ;; binding for `embark-act'.
   (setq embark-cycle-key "")
   (setq embark-confirm-act-all nil)
-  (setq embark-indicators '(embark-verbose-indicator embark-highlight-indicator))
+  (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
   (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
   (setq embark-verbose-indicator-buffer-sections '(bindings))
 
