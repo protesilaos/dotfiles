@@ -43,13 +43,17 @@ _kbd_reset_and_xmodmap() {
     [ -f "$xmod" ] && xmodmap "$xmod"
 }
 
-# TODO is this the most robust way to check for systemd? Is it standard?
 _check_systemd() {
-    if [ -n "/run/systemd/system" ]; then
-        systemctl "$1"
-    else
-        sudo "$1"
-    fi
+    case "$(cat /proc/1/comm)"
+    in
+        "systemd")
+            systemctl "$1"
+            ;;
+        #  TODO 2023-03-08: Cover openrc, runit, shepherd.
+        *)
+            sudo "$1"
+            ;;
+    esac
 }
 
 # The idea with _reboot() and _poweroff() is to use the appropriate
