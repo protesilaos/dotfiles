@@ -32,12 +32,6 @@
    global-mode-string
    nil))
 
-(defun prot/mode-line-global-string-no-properties ()
-  "Return `prot/mode-line-global-value' without face properties."
-  (substring-no-properties
-   (prot/mode-line-global-value)
-   0 -1))
-
 (defvar prot/mode-line-frame-identification
   '(:eval (when-let* ((fname (frame-parameter (selected-frame) 'name))
                       (bname (buffer-name))
@@ -88,14 +82,19 @@ mouse-3: Toggle minor modes"
                 "  "
                 (vc-mode vc-mode)
                 "  "
+                ;; NOTE 2023-03-20: Right alignment works with
+                ;; monospaced fonts, but requires more work to be
+                ;; pixel-perfect with proportionately spaced fonts.
+                ;;
+                ;; The `:align-to' is based on information from the
+                ;; Elisp manual.  Evaluate: (info "(elisp) Pixel
+                ;; Specification")
                 (:eval (propertize
                         " " 'display
-                        ;; NOTE 2023-02-09: The `:align-to' is based
-                        ;; on information from the Elisp manual.  Evaluate:
-                        ;; (info "(elisp) Pixel Specification")
                         `((space :align-to
-                                 (- (+ right-margin 3)
-                                    ,(string-width (prot/mode-line-global-string-no-properties)))))))
+                                 (- (+ right right-fringe right-margin)
+                                    ,(string-width (format-mode-line mode-line-misc-info))
+                                    )))))
                 (:eval
                  (when (prot/mode-line-current-window-p)
                    mode-line-misc-info))))

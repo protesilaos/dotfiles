@@ -245,7 +245,7 @@ minibuffer completion."
 
 ;;; Display current time
 (prot-emacs-builtin-package 'time
-  (setq display-time-format " %a %e %b, %H:%M  ")
+  (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
   ;; (setq display-time-day-and-date t)
