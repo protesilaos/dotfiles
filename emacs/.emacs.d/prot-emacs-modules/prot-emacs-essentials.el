@@ -212,7 +212,7 @@ When called with optional TRANSIENT as a prefix argument, use the
 transient interface (transient.el), else pick an emoji with
 minibuffer completion."
     (interactive "P")
-    (let ((cmd (if transient 'emoji-insert 'emoji-search)))
+    (let ((cmd (if transient 'emoji-list 'emoji-search)))
       (call-interactively cmd)))
 
   ;; The default key bindings for Emoji are behind the C-x 8 e prefix.
