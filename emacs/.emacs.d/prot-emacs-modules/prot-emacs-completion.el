@@ -243,9 +243,16 @@
   ;; binding for `embark-act'.
   (setq embark-cycle-key "")
   (setq embark-confirm-act-all nil)
+  (setq embark-mixed-indicator-both nil)
+  (setq embark-mixed-indicator-delay 1.0)
   (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
   (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
   (setq embark-verbose-indicator-buffer-sections '(bindings))
+
+  ;; The minimal indicator shows cycling options, but I have no use
+  ;; for those.  I want it to be silent.
+  (defun prot/embark-no-minimal-indicator ())
+  (advice-add #'embark-minimal-indicator :override #'prot/embark-no-minimal-indicator)
 
   (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
     (define-key map (kbd "C-,") #'embark-act))
