@@ -26,7 +26,7 @@
                   (derived-mode . messages-buffer-mode)
                   (derived-mode . backtrace-mode)
                   "\\*\\(Warnings\\|Compile-Log\\)\\*"
-                  "\\*world-clock.*"))
+                  ,world-clock-buffer-name))
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.3)
            (dedicated . t)
