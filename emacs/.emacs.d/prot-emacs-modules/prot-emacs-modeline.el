@@ -50,25 +50,18 @@
 (put 'prot/mode-line-frame-identification 'risky-local-variable t)
 
 (defvar prot/mode-line-modes
-  (let ((recursive-edit-help-echo
-         "Recursive edit, type M-C-c to get out"))
+  (let ((recursive-edit-help-echo "Recursive edit, type M-C-c to get out"))
     (list (propertize "%[" 'help-echo recursive-edit-help-echo)
-	  "("
-	  `(:propertize ("" mode-name)
-			help-echo "Major mode\n\
+          `(:propertize ("" mode-name)
+                        help-echo "Major mode\n\
 mouse-1: Display major mode menu\n\
 mouse-2: Show help for major mode\n\
 mouse-3: Toggle minor modes"
-			mouse-face mode-line-highlight
-			local-map ,mode-line-major-mode-keymap)
-	  '("" mode-line-process)
-	  (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
-		      'mouse-face 'mode-line-highlight
-		      'local-map (make-mode-line-mouse-map
-				  'mouse-2 #'mode-line-widen))
-	  ")"
-	  (propertize "%]" 'help-echo recursive-edit-help-echo)
-	  " "))
+                        mouse-face mode-line-highlight
+                        local-map ,mode-line-major-mode-keymap)
+          '("" mode-line-process)
+          (propertize "%]" 'help-echo recursive-edit-help-echo)
+          " "))
   "Mode line construct for displaying major modes.")
 (put 'prot/mode-line-modes 'risky-local-variable t)
 
