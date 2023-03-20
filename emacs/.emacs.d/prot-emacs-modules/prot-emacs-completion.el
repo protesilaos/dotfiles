@@ -262,8 +262,32 @@
   ;; drastic measure.  I still need to test that it works as intended.
   (seq-do
    (lambda (cell)
-     (set (car (last cell)) (make-sparse-keymap)))
+     (let* ((keymap (cdr-safe cell))
+	    (map (if (listp keymap) (car keymap) keymap)))
+       (set map (make-sparse-keymap))))
    embark-keymap-alist)
+
+  (with-eval-after-load 'embark-org
+    (defvar prot/embark-org-keymaps
+      '(embark-org-table-cell-map
+	    embark-org-table-map
+	    embark-org-link-copy-map
+	    embark-org-link-map
+	    embark-org-src-block-map
+	    embark-org-item-map
+	    embark-org-plain-list-map
+	    embark-org-export-in-place-map)
+      "List of Embark keymaps for Org.")
+
+    ;; Reset `prot/embark-org-keymaps'.
+    (seq-do
+     (lambda (keymap)
+       (set keymap (make-sparse-keymap)))
+     prot/embark-org-keymaps)
+
+    ;; embark-org.el adds to the `embark-region-map', which I do not
+    ;; want to.
+    (define-key embark-region-map (kbd "M") #'embark-org-copy-as-markdown))
 
   (let ((map embark-general-map))
     (define-key map (kbd "i") #'embark-insert)
@@ -287,6 +311,7 @@
 
   (let ((map embark-file-map))
     (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "f") #'find-file)
     (define-key map (kbd "j") #'embark-dired-jump)
     (define-key map (kbd "e") #'ediff-files))
 
@@ -296,10 +321,7 @@
     (define-key map (kbd ".") #'xref-find-definitions)
     (define-key map (kbd "o") #'occur))
 
-  (let ((map embark-symbol-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "h") #'describe-symbol)
-    (define-key map (kbd ".") #'embark-find-definition))
+  (set-keymap-parent embark-defun-map embark-expression-map)
 
   (let ((map embark-command-map))
     (set-keymap-parent map embark-general-map)
@@ -316,6 +338,20 @@
     (define-key map (kbd "h") #'describe-function)
     (define-key map (kbd ".") #'embark-find-definition))
 
+  (let ((map embark-package-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "h") #'describe-package)
+    (define-key map (kbd "i") #'package-install)
+    (define-key map (kbd "d") #'package-delete)
+    (define-key map (kbd "r") #'package-reinstall)
+    (define-key map (kbd "u") #'embark-browse-package-url)
+    (define-key map (kbd "w") #'embark-save-package-url))
+
+  (let ((map embark-symbol-map))
+    (set-keymap-parent map embark-general-map)
+    (define-key map (kbd "h") #'describe-symbol)
+    (define-key map (kbd ".") #'embark-find-definition))
+
   (let ((map embark-variable-map))
     (set-keymap-parent map embark-general-map)
     (define-key map (kbd "h") #'describe-variable)
@@ -324,6 +360,8 @@
   (let ((map embark-region-map))
     (set-keymap-parent map embark-general-map)
     (define-key map (kbd "a") #'align-regexp)
+    (define-key map (kbd "d") #'delete-duplicate-lines)
+    (define-key map (kbd "f") #'flush-lines)
     (define-key map (kbd "i") #'epa-import-keys-region)
     (define-key map (kbd "r") #'repunctuate-sentences)
     (define-key map (kbd "s") #'sort-lines)
