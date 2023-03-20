@@ -79,6 +79,7 @@
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
     (define-key map (kbd "C-c n d") #'denote-date)
+    (define-key map (kbd "C-c n z") #'denote-signature) ; "zettelkasten" mnemonic
     (define-key map (kbd "C-c n s") #'denote-subdirectory)
     ;; If you intend to use Denote with a variety of file types, it is
     ;; easier to bind the link-related commands to the `global-map', as
