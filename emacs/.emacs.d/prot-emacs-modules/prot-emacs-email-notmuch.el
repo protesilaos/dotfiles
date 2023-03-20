@@ -66,36 +66,20 @@
             :query "tag:inbox"
             :sort-order newest-first
             :key ,(kbd "i"))
-          ( :name "📔 unread (inbox)"
+          ( :name "🗨️ unread (inbox)"
             :query "tag:unread and tag:inbox"
             :sort-order newest-first
             :key ,(kbd "u"))
-          ( :name "📯 unread all"
-            :query "tag:unread not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "U"))
-          ( :name "📬 mailing lists"
-            :query "tag:list not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "m"))
           ;; My packages
-          ( :name "📦 unread packages"
+          ( :name "🗂️ unread packages"
             :query "tag:unread and tag:package"
             :sort-order newest-first
-            :key ,(kbd "p u"))
-          ( :name "📦 all packages"
-            :query "tag:package not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "p p"))
+            :key ,(kbd "p"))
           ;; My coaching job: <https://protesilaos.com/coach/>.
-          ( :name "🌈 unread coaching"
+          ( :name "🌲 unread coaching"
             :query "tag:unread and tag:coach"
             :sort-order newest-first
-            :key ,(kbd "c u"))
-          ( :name "🌈 all coaching"
-            :query "tag:coach not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "c c"))
+            :key ,(kbd "c"))
           ;; Emacs
           ( :name "🔨 emacs-devel"
             :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
@@ -107,19 +91,7 @@
             :key ,(kbd "e o"))
           ( :name "🐛 emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
-            :sort-order newest-first :key ,(kbd "e b"))
-          ( :name "📚 emacs-humanities"
-            :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
-            :sort-order newest-first :key ,(kbd "e h"))
-          ;; Others
-          ( :name "📧 notmuch"
-            :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "on"))
-          ( :name "🛖 sourcehut"
-            :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "os"))))
+            :sort-order newest-first :key ,(kbd "e b"))))
 
 ;;;; Tags
   (setq notmuch-archive-tags nil ; I do not archive email
@@ -132,18 +104,22 @@
 
   ;; Also see `notmuch-tagging-keys' in the `prot-notmuch' section
   ;; further below.
+  ;;
+  ;; All emoji are cosmetic.  The tags are just the text.
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
           ("flag" (propertize tag 'face 'notmuch-tag-flagged)
-           (concat tag "🚩"))) ; the tag is still "flag"; the emoji is cosmetic
+           (concat tag "🚩")))
         notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag 'notmuch-tag-deleted)
-           (concat "🚫" tag))
+           (concat "👁️‍🗨️" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-deleted)
            (concat "🚫" tag)))
         notmuch-tag-added-formats
-        '((".*" (notmuch-apply-face tag 'notmuch-tag-added)
-           (concat "✏️" tag))))
+        '(("del" (notmuch-apply-face tag 'notmuch-tag-added)
+           (concat "💥" tag))
+          (".*" (notmuch-apply-face tag 'notmuch-tag-added)
+           (concat "🏷️" tag))))
 
 ;;;; Email composition
   (setq notmuch-mua-compose-in 'current-window
@@ -180,7 +156,7 @@
 ;;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
-  (remove-hook 'notmuch-search-hook 'notmuch-hl-line-mode) ; Check my `lin' package
+  (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode) ; Check my `lin' package
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
   (let ((map global-map))
@@ -201,18 +177,18 @@
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
   (setq notmuch-tagging-keys
-        `((,(kbd "d") prot-notmuch-mark-delete-tags "⛔ Mark for deletion")
+        `((,(kbd "d") prot-notmuch-mark-delete-tags "💥 Mark for deletion")
           (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
-          (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
-          (,(kbd "r") ("-unread") "✅ Mark as read")
-          (,(kbd "u") ("+unread") "📔 Mark as unread")))
+          (,(kbd "s") prot-notmuch-mark-spam-tags "🔥 Mark as spam")
+          (,(kbd "r") ("-unread") "👁️‍🗨️ Mark as read")
+          (,(kbd "u") ("+unread") "🗨️ Mark as unread")))
 
   ;; These emoji are purely cosmetic.  The tag remains the same: I
   ;; would not like to input emoji for searching.
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
-  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🌈")))
-  (add-to-list 'notmuch-tag-formats '("package" (concat tag "📦")))
+  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🌲")))
+  (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️")))
 
   (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
                 prot-notmuch-ask-sourcehut-control-code))
@@ -246,11 +222,10 @@
 
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-elpa-package 'notmuch-indicator
-  ;; Just the default values...
   (setq notmuch-indicator-args
-        `((:terms "tag:unread and tag:inbox" :label "@") ; also accepts a :face, read doc string
-          (:terms "tag:unread and tag:package" :label "📦")
-          (:terms "tag:unread and tag:coach" :label "🌈"))
+        `((:terms "tag:unread and tag:inbox" :label "📌") ; also accepts a face like `:face bold' (no quotes)
+          (:terms "tag:unread and tag:package" :label "🗂️")
+          (:terms "tag:unread and tag:coach" :label "🌲"))
         notmuch-indicator-refresh-count (* 60 3)
         notmuch-indicator-hide-empty-counters t
         notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
