@@ -5,6 +5,9 @@
   (setq uniquify-after-kill-buffer-p t))
 
 ;;; Window rules and basic tweaks (window.el)
+;; NOTE 2023-03-17: Remember that I am using development versions of
+;; Emacs.  Some of my `display-buffer-alist' contents are for Emacs
+;; 29+.
 (prot-emacs-builtin-package 'window
   (setq display-buffer-alist
         `(;; no window
