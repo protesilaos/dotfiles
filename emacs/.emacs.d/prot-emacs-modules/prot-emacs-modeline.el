@@ -11,8 +11,6 @@
     (t :inverse-video t))
   "Face for intense mode line constructs.")
 
-(set-face-attribute 'display-time-date-and-time nil :inherit 'prot/mode-line-intense) ; Emacs 30
-
 (setq mode-line-defining-kbd-macro
       (propertize " KMacro " 'face 'prot/mode-line-intense))
 
@@ -31,17 +29,6 @@
        sym))
    global-mode-string
    nil))
-
-(defvar prot/mode-line-frame-identification
-  '(:eval (when-let* ((fname (frame-parameter (selected-frame) 'name))
-                      (bname (buffer-name))
-                      ((not (string= fname bname)))
-                      ((prot/mode-line-current-window-p)))
-            (format " @ %s " (propertize fname
-                                         'face 'italic
-                                         'help-echo "Current frame name"))))
-  "Mode line construct for the frame name.")
-(put 'prot/mode-line-frame-identification 'risky-local-variable t)
 
 (defvar prot/mode-line-modes
   (let ((recursive-edit-help-echo "Recursive edit, type M-C-c to get out"))
@@ -71,9 +58,6 @@ mouse-3: Toggle minor modes"
                 mode-line-remote
                 " "
                 mode-line-buffer-identification
-                ;; See my `beframe' package for how I use frames and
-                ;; why having the name of one makes sense.
-                prot/mode-line-frame-identification
                 "  "
                 mode-line-position
                 prot/mode-line-modes
@@ -93,8 +77,7 @@ mouse-3: Toggle minor modes"
                         " " 'display
                         `((space :align-to
                                  (- (+ right right-fringe right-margin)
-                                    ,(string-width (format-mode-line mode-line-misc-info))
-                                    )))))
+                                    ,(string-width (format-mode-line mode-line-misc-info)))))))
                 (:eval
                  (when (prot/mode-line-current-window-p)
                    mode-line-misc-info))))
@@ -102,6 +85,8 @@ mouse-3: Toggle minor modes"
 (add-hook 'after-init-hook #'column-number-mode)
 
 ;;; Mode line recursion indicators
+;; FIXME 2023-03-20: Does not work with the above customisations to
+;; the mode line.
 (prot-emacs-elpa-package 'recursion-indicator
   (setq recursion-indicator-general "&")
   (setq recursion-indicator-minibuffer "@")
