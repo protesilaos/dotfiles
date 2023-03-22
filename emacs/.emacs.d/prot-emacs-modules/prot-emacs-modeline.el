@@ -1,7 +1,7 @@
 ;;; Mode line
 (setq mode-line-percent-position '(-3 "%p"))
-(setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
-(setq mode-line-compact nil)                             ; Emacs 28
+(setq mode-line-position-column-line-format '("%l,%c")) ; Emacs 28
+(setq mode-line-compact nil)                            ; Emacs 28
 
 (defface prot/mode-line-intense
   '((((class color) (min-colors 88) (background light))
@@ -14,12 +14,6 @@
 (setq mode-line-defining-kbd-macro
       (propertize " KMacro " 'face 'prot/mode-line-intense))
 
-(defun prot/mode-line-current-window-p ()
-  "Return non-nil if selected WINDOW modeline can show keycast."
-  (and (not (minibufferp))
-       (not (null mode-line-format))
-       (eq (selected-window) (old-selected-window))))
-
 (defun prot/mode-line-global-value ()
   "Return value of `global-mode-string'."
   (mapconcat
@@ -30,92 +24,83 @@
    global-mode-string
    nil))
 
+;; NOTE 2023-03-22: The `risky-local-variable' is critical, as those
+;; variables will not work without it.
 (defvar prot/mode-line-modes
-  (let ((recursive-edit-help-echo "Recursive edit, type M-C-c to get out"))
-    (list (propertize "%[" 'help-echo recursive-edit-help-echo)
-          `(:propertize ("" mode-name)
-                        help-echo "Major mode\n\
-mouse-1: Display major mode menu\n\
-mouse-2: Show help for major mode\n\
-mouse-3: Toggle minor modes"
-                        mouse-face mode-line-highlight
-                        local-map ,mode-line-major-mode-keymap)
-          '("" mode-line-process)
-          (propertize "%]" 'help-echo recursive-edit-help-echo)
-          " "))
+  (list (propertize "%[" 'face 'error)
+        `(:propertize ("" mode-name)
+                      mouse-face mode-line-highlight
+                      local-map ,mode-line-major-mode-keymap)
+        '("" mode-line-process)
+        (propertize "%]" 'face 'error)
+        " ")
   "Mode line construct for displaying major modes.")
-(put 'prot/mode-line-modes 'risky-local-variable t)
 
-;; NOTE 2023-02-09: The `:eval' parts are HIGHLY EXPERIMENTAL.
+(defvar prot/mode-line-align-right
+  '(:eval (propertize
+           " " 'display
+           `((space :align-to
+                    (- (+ right right-fringe right-margin)
+                       ,(string-width
+                          (format-mode-line mode-line-misc-info)))))))
+  "Mode line construct to align following elements to the right.
+Read Info node `(elisp) Pixel Specification'.")
+
+(defvar prot/mode-line-kbd-macro
+  '(:eval (when (and defining-kbd-macro (mode-line-window-selected-p))
+            mode-line-defining-kbd-macro))
+  "Mode line construct displaying `mode-line-defining-kbd-macro'.
+Specific to the current window's mode line.")
+
+(defvar prot/mode-line-flymake
+  '(:eval (when flymake-mode
+            flymake-mode-line-format))
+  "Mode line construct displaying `flymake-mode-line-format'.
+Specific to the current window's mode line.")
+
+(defvar prot/mode-line-misc-info
+  '(:eval
+    (when (mode-line-window-selected-p)
+      mode-line-misc-info))
+  "Mode line construct displaying `mode-line-misc-info'.
+Specific to the current window's mode line.")
+
+(dolist (construct '( prot/mode-line-modes prot/mode-line-align-right
+                      prot/mode-line-kbd-macro prot/mode-line-flymake
+                      prot/mode-line-misc-info))
+  (put construct 'risky-local-variable t))
+
 (setq-default mode-line-format
               '("%e"
-                (:eval (when (and defining-kbd-macro
-                                  (prot/mode-line-current-window-p))
-                         mode-line-defining-kbd-macro))
-                mode-line-front-space
+                prot/mode-line-kbd-macro
+                " "
                 mode-line-mule-info
                 mode-line-modified
                 mode-line-remote
                 " "
                 mode-line-buffer-identification
-                "  "
+                " "
                 mode-line-position
                 prot/mode-line-modes
-                (:eval (when flymake-mode
-                         flymake-mode-line-format))
-                "  "
+                prot/mode-line-flymake
+                " "
                 (vc-mode vc-mode)
-                "  "
-                ;; NOTE 2023-03-20: Right alignment works with
-                ;; monospaced fonts, but requires more work to be
-                ;; pixel-perfect with proportionately spaced fonts.
-                ;;
-                ;; The `:align-to' is based on information from the
-                ;; Elisp manual.  Evaluate: (info "(elisp) Pixel
-                ;; Specification")
-                (:eval (propertize
-                        " " 'display
-                        `((space :align-to
-                                 (- (+ right right-fringe right-margin)
-                                    ,(string-width (format-mode-line mode-line-misc-info)))))))
-                (:eval
-                 (when (prot/mode-line-current-window-p)
-                   mode-line-misc-info))))
+                " "
+                prot/mode-line-align-right
+                prot/mode-line-misc-info))
 
 (add-hook 'after-init-hook #'column-number-mode)
 
-;;; Mode line recursion indicators
-;; FIXME 2023-03-20: Does not work with the above customisations to
-;; the mode line.
-(prot-emacs-elpa-package 'recursion-indicator
-  (setq recursion-indicator-general "&")
-  (setq recursion-indicator-minibuffer "@")
-
-  ;; Thanks to Daniel Mendler for this!  It removes the square brackets
-  ;; that denote recursive edits in the modeline.  I do not need them
-  ;; because I am using Daniel's `recursion-indicator':
-  ;; <https://github.com/minad/recursion-indicator>.
-  (setq-default mode-line-modes
-                (seq-filter (lambda (s)
-                              (not (and (stringp s)
-                                        (string-match-p
-                                         "^\\(%\\[\\|%\\]\\)$" s))))
-                            mode-line-modes))
-
-  (recursion-indicator-mode 1))
-
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
-  (setq keycast-mode-line-insert-after 'prot/mode-line-frame-identification)
+  (setq keycast-mode-line-insert-after 'mode-line-buffer-identification)
+  (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
   (setq keycast-mode-line-remove-tail-elements nil)
 
-  (dolist (input '(self-insert-command
-                   org-self-insert-command))
+  (dolist (input '(self-insert-command org-self-insert-command))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
-  (dolist (event '(mouse-event-p
-                   mouse-movement-p
-                   mwheel-scroll))
+  (dolist (event '(mouse-event-p mouse-movement-p mwheel-scroll))
     (add-to-list 'keycast-substitute-alist `(,event nil))))
 
 (provide 'prot-emacs-modeline)
