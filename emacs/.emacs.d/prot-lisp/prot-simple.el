@@ -350,19 +350,30 @@ with the specified date."
 (autoload 'ffap-url-at-point "ffap")
 (defvar ffap-string-at-point-region)
 
+;; TODO 2023-03-22: Make `prot-simple-escape-url' operate on a region.
+(defun prot-simple--pos-url-on-line (&optional char)
+  "Return position of `prot-common-url-regexp' on line or at CHAR."
+  (save-excursion
+    (goto-char (or char (line-beginning-position)))
+    (re-search-forward prot-common-url-regexp (line-end-position) :noerror)))
+
 ;;;###autoload
-(defun prot-simple-escape-url ()
-  "Wrap URL (or email address) in angled brackets."
+(defun prot-simple-escape-url (&optional char)
+  "Escape all URLs or email addresses on the current line.
+By default, start operating from `line-beginning-position' to the
+end of the current line.  With optional CHAR as a buffer
+position, operate from CHAR to the end of the line."
   (interactive)
-  (when-let ((url (ffap-url-at-point)))
-    (let* ((reg ffap-string-at-point-region)
-           (beg (car reg))
-           (end (cadr reg))
-           (string (if (string-match-p "^mailto:" url)
-                       (substring url 7)
-                     url)))
-      (delete-region beg end)
-      (insert (format "<%s>" string)))))
+  (when-let ((regexp-end (prot-simple--pos-url-on-line char)))
+    (save-excursion
+      (goto-char regexp-end)
+      (unless (looking-at ">")
+        (insert ">")
+        (search-backward "\s")
+        (forward-char 1)
+        (insert "<")))
+    (unless (eq (point) (line-end-position))
+      (prot-simple-escape-url (1+ regexp-end)))))
 
 ;;;###autoload
 (defun prot-simple-zap-to-char-backward (char &optional arg)
