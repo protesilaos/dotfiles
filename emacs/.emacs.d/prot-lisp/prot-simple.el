@@ -347,9 +347,6 @@ with the specified date."
       (delete-region (region-beginning) (region-end)))
     (insert (format-time-string format))))
 
-(autoload 'ffap-url-at-point "ffap")
-(defvar ffap-string-at-point-region)
-
 ;; TODO 2023-03-22: Make `prot-simple-escape-url' operate on a region.
 (defun prot-simple--pos-url-on-line (&optional char)
   "Return position of `prot-common-url-regexp' on line or at CHAR."
