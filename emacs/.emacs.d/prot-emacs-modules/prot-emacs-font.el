@@ -25,7 +25,7 @@
   ;; Iosevka Comfy Motion Duo == as above, but quasi-proportional
   (setq fontaine-presets
         '((small
-           :default-family "Iosevka Comfy Wide Fixed"
+           :default-family "Iosevka Comfy Fixed"
            :default-height 80
            :variable-pitch-family "Iosevka Comfy Wide Duo")
           (regular
