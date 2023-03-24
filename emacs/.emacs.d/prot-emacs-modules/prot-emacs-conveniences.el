@@ -1,4 +1,11 @@
 ;;; Bongo music or media manager (and prot-bongo.el)
+;; FIXME 2023-03-24: Without this override, `bongo' will not load a
+;; Lucid build of Emacs.  Not sure if it has to do with something
+;; else in my config...
+(when (string-match-p "--with-x-toolkit=lucid" system-configuration-options)
+  (defun prot/bongo-no-face-height (&rest _))
+  (advice-add #'bongo-face-height :override #'prot/bongo-no-face-height))
+
 (prot-emacs-elpa-package 'bongo
   (setq bongo-default-directory "~/Music/"
           bongo-prefer-library-buffers nil
