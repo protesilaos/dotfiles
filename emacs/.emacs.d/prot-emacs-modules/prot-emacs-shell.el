@@ -69,7 +69,4 @@
   (setq proced-descend t)
   (setq proced-filter 'user))
 
-(prot-emacs-builtin-package 'prot-proced
-  (add-hook 'proced-mode-hook #'prot-proced-extra-keywords-mode))
-
 (provide 'prot-emacs-shell)
