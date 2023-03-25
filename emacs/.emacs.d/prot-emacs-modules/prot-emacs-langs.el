@@ -6,9 +6,6 @@
 (setq adaptive-fill-mode t)
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
 
-;;; eglot (lsp client built into Emacs 29+)
-(prot-emacs-builtin-package 'eglot)
-
 ;;; Plain text (text-mode)
 (prot-emacs-builtin-package 'text-mode
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode)))
@@ -32,125 +29,6 @@
   ;; relevant entries as well.  I separate my keys into different
   ;; modules and load only what I need.
   (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
-
-;;; JavaScript and extras
-;; I build Emacs from source with support for tree-sitter.  Since I
-;; use Arch Linux, I also install the `typescript-language-server' and
-;; `aur/tree-sitter-javascript-git' packages (still not sure which
-;; ones I require).  I learnt about the language server by inspecting
-;; the value of `eglot-server-programs'.
-(prot-emacs-builtin-package 'js
-  ;; Enables word motions inside camelCase words.
-  (dolist (hook '(js-mode-hook js-ts-mode-hook js-comint-mode-hook))
-    (add-hook hook #'subword-mode)))
-
-(prot-emacs-elpa-package 'js-comint
-  (setopt js-comint-prompt "🦄> ")
-
-  (defun prot/js-comint-eval-keys ()
-    "Bind local keys for JavaScript evaluation."
-    (local-set-key (kbd "C-c C-z") #'js-comint-repl)
-    ;; These are analogous to what we have for Elisp
-    (local-set-key (kbd "C-x C-e") #'js-comint-send-last-sexp)
-    (local-set-key (kbd "C-C C-e") #'js-comint-send-buffer))
-
-  (dolist (hook '(js-mode-hook js-ts-mode-hook))
-    (add-hook hook #'prot/js-comint-eval-keys)))
-
-;;; HTML and related (sgml-mode and mhtml-mode)
-(prot-emacs-builtin-package 'sgml-mode
-  (require 'mhtml-mode)
-  (setq mhtml-tag-relative-indent t)
-
-  (setq html-tag-face-alist
-        '(("b" bold)
-          ("big" bold)
-          ("blink" secondary-selection)
-          ("cite" italic)
-          ("em" italic)
-          ("h1" bold)
-          ("h2" bold)
-          ("h3" bold)
-          ("h4" bold)
-          ("h5" bold)
-          ("h6" bold)
-          ("i" italic)
-          ("rev" . underline) ; What is this?  Adding `underline' to spot it and decide afterwards
-          ("s" . underline) ; Same as above
-          ("small" . default)
-          ("strong" . bold)
-          ("title" bold)
-          ("tt" . default)
-          ("u" . underline)
-          ("var" . italic)))
-
-  (defun prot/html-special-variables ()
-    "Define buffer-local values for HTML development.
-These constitute deviations from my normal preferences.  I need
-this arrangement for code I write that is not mine and thus is
-not necessarily aligned with my opinions.
-
-NOTE: I will expand this as needs arise."
-    (setq-local browse-url-browser-function 'browse-url-default-browser)
-    (electric-indent-local-mode 1))
-
-  (defvar prot/html-browsers '(firefox chromium epiphany)
-    "List of browsers for use in `prot/html-select-browser'.")
-
-  (defvar prot/html--select-browser-history '()
-    "Minibuffer history of `prot/html-select-browser'.")
-
-  (defun prot/html-select-browser (browser)
-    "Pick BROWSER for local `browse-url-browser-function'.
-BROWSER is a symbol among `prot/html-browsers'.  Any other value
-falls back to `browse-url-default-browser'.
-
-Do this to change what happens when clicking on a link.  It is
-useful for testing an HTML document."
-    (require 'browse-url)
-    (interactive
-     (list (intern (completing-read "Set new default browser: "
-                                    prot/html-browsers nil t nil
-                                    'prot/html--select-browser-history))))
-    (setq-local browse-url-browser-function
-                (pcase browser
-                  ('firefox 'browse-url-firefox)
-                  ('chromium 'browse-url-chromium)
-                  ('epiphany 'browse-url-epiphany)
-                  (_ 'browse-url-default-browser))))
-
-  ;; The underlying `sgml-mode' is derived from `text-mode'.  I
-  ;; normally want `auto-fill-mode' for "text", though to me HTML and
-  ;; friends should be counted as "code".
-  (dolist (hook '(sgml-mode-hook html-mode-hook mhtml-mode-hook))
-    (add-hook hook #'turn-off-auto-fill)
-    (add-hook hook #'prot/html-special-variables))
-
-  (let ((map html-mode-map))
-    (define-key map (kbd "M-o") nil) ; send `facemenu-keymap' into oblivion; thanks!
-    (define-key map (kbd "C-c C-s") #'prot/html-select-browser)
-    (define-key map (kbd "C-c C-v") #'html-autoview-mode)))
-
-;;; CSS (css-mode, scss-mode)
-(prot-emacs-builtin-package 'css-mode
-  (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
-  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-  (setq css-indent-offset 2)
-  (setq css-fontify-colors nil)
-
-  (defun prot/scss-to-css ()
-    "Convert current SCSS file to CSS."
-    (interactive)
-    (unless (executable-find "sassc")
-      (user-error "No `sassc' executable found; aborting"))
-    (let* ((path (buffer-file-name))
-           (name (file-name-nondirectory path))
-           (name-no-ext (file-name-base path)))
-      (if (buffer-modified-p)
-          (user-error "Save changes before converting SCSS to CSS")
-        (shell-command (format "sassc -t expanded %s %s.css" name name-no-ext)))))
-
-  (define-key scss-mode-map (kbd "C-c C-e") #'prot/scss-to-css)) ; "export" mnemonic
 
 ;;; Comments (newcomment.el and prot-comment.el)
 (prot-emacs-builtin-package 'newcomment
@@ -276,10 +154,6 @@ useful for testing an HTML document."
 ;;; Flymake + Shellcheck
 (prot-emacs-elpa-package 'flymake-shellcheck
   (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
-
-;;; Flymake + Proselint
-(prot-emacs-elpa-package 'flymake-proselint
-  (add-hook 'text-mode-hook #'flymake-proselint-setup))
 
 ;;; Elisp packaging requirements
 (prot-emacs-elpa-package 'package-lint-flymake
