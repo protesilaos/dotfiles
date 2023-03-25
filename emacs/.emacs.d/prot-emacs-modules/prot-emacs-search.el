@@ -85,15 +85,12 @@
          ((or (executable-find "ripgrep") (executable-find "rg")) 'ripgrep)
          (t 'grep))))
 
-;;; Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
+;;; Built-in bookmarking framework (bookmark.el)
 (prot-emacs-builtin-package 'bookmark
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
   (setq bookmark-set-fringe-mark t) ; Emacs28
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
-
-(prot-emacs-builtin-package 'prot-bookmark
-  (prot-bookmark-extra-keywords 1))
 
 (provide 'prot-emacs-search)
