@@ -19,7 +19,9 @@ Near :pub-local:
 # Include everything
 Patterns *
 Sync All
-# Create Near
+# Create Both
+# Remove Both
+# Expunge Both
 SyncState *
 
 ##########
@@ -45,7 +47,9 @@ Near :inf-local:
 # Include everything
 Pattern *
 Sync All
-# Create Near
+# Create Both
+# Remove Both
+# Expunge Both
 SyncState *
 
 ##########
@@ -71,6 +75,8 @@ Near :prv-local:
 # Include everything
 Patterns *
 Sync All
-# Create Near
+# Create Both
+# Remove Both
+# Expunge Both
 SyncState *
 
