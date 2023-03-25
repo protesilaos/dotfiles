@@ -347,7 +347,6 @@ with the specified date."
       (delete-region (region-beginning) (region-end)))
     (insert (format-time-string format))))
 
-;; TODO 2023-03-22: Make `prot-simple-escape-url' operate on a region.
 (defun prot-simple--pos-url-on-line (&optional char)
   "Return position of `prot-common-url-regexp' on line or at CHAR."
   (save-excursion
@@ -355,7 +354,7 @@ with the specified date."
     (re-search-forward prot-common-url-regexp (line-end-position) :noerror)))
 
 ;;;###autoload
-(defun prot-simple-escape-url (&optional char)
+(defun prot-simple-escape-url-line (&optional char)
   "Escape all URLs or email addresses on the current line.
 By default, start operating from `line-beginning-position' to the
 end of the current line.  With optional CHAR as a buffer
@@ -369,8 +368,39 @@ position, operate from CHAR to the end of the line."
         (search-backward "\s")
         (forward-char 1)
         (insert "<")))
-    (unless (eq (point) (line-end-position))
-      (prot-simple-escape-url (1+ regexp-end)))))
+    (prot-simple-escape-url-line (1+ regexp-end))))
+
+;; Thanks to Bruno Boal for `prot-simple-escape-url-region'.  I am
+;; just renaming it for consistency with the rest of prot-simple.el.
+;; Check Bruno's Emacs config: <https://github.com/BBoal/emacs-config>.
+
+;;;###autoload
+(defun prot-simple-escape-url-region (&optional beg end)
+  "Apply `prot-simple-escape-url-line' on region lines between BEG and END."
+  (interactive
+   (if (region-active-p)
+       (list (region-beginning) (region-end))
+     (error "There is no region!")))
+  (unless (> end beg)
+    (cl-rotatef end beg))
+  (save-excursion
+    (goto-char beg)
+    (setq beg (line-beginning-position))
+    (while (<= beg end)
+      (prot-simple-escape-url-line beg)
+      (beginning-of-line 2)
+      (setq beg (point)))))
+
+;;;###autoload
+(defun prot-simple-escape-url-dwim ()
+  "Escape URL on the current line or lines implied by the active region.
+Call the commands `prot-simple-escape-url-line' and
+`prot-simple-escape-url-region' ."
+  (interactive)
+  (call-interactively
+   (if (region-active-p)
+       #'prot-simple-escape-url-region
+     #'prot-simple-escape-url-line)))
 
 ;;;###autoload
 (defun prot-simple-zap-to-char-backward (char &optional arg)

@@ -254,7 +254,7 @@ Return the exit code and output in a list."
   (concat
    "~?\\<\\([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*\\)"
    "[.@]"
-   "\\([-a-zA-Z0-9+&@#/%?=~_|!:,.;]+\\)\\>")
+   "\\([-a-zA-Z0-9+&@#/%?=~_|!:,.;]+\\)\\>/?")
   "Regular expression to match (most?) URLs or email addresses.")
 
 (autoload 'auth-source-search "auth-source")

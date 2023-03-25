@@ -65,7 +65,7 @@
 
     ;; Commands for text insertion or manipulation
     (define-key map (kbd "C-=") #'prot-simple-insert-date)
-    (define-key map (kbd "C-<") #'prot-simple-escape-url)
+    (define-key map (kbd "C-<") #'prot-simple-escape-url-dwim)
     (define-key map (kbd "C-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
