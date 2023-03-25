@@ -356,5 +356,143 @@ Also see `prot-search-occur-todo-keywords'."
      (lambda (mode) (format "*prot-search-git-%s for '%s'" mode regexp))
      t)))
 
+(defun prot-search--add-revert-function (buffer mode fn regexp)
+  "Append `revert-buffer-function' for FN with REGEXP to MODE BUFFER variables.
+See `prot-search-find-grep-buffer' (or related) for the kind of
+BUFFER this works with."
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (goto-char (point-min))
+      (when (re-search-forward (format "-*- mode: %s;" mode) (line-end-position) :no-error 1)
+        (insert
+         (format " revert-buffer-function: %S;"
+                 `(lambda (_ignore-auto _noconfirm)
+                    (,fn ,regexp))))))))
+
+(defvar prot-search--find-grep-hist '()
+  "Minibuffer history for `prot-search-find-grep-buffer' and related.")
+
+;;;###autoload
+(defun prot-search-find-grep-buffer (regexp)
+  "Combine find with grep to produce a buffer for REGEXP matches.
+Place the output in a buffer that runs `grep-mode'.  Store the
+invocation of this command with REGEXP in a buffer-local
+variable.  When the buffer is written to a file, per
+`write-file', the `revert-buffer' command (typically bound to
+`g') can be used to re-run the search.  The buffer contains
+information about the search results, including the exact command
+line flags that were used, the time the results were produced,
+and the number of matches.  All matching entries are buttonized
+and function as links to the context they reference."
+  (interactive
+   (list
+    (read-regexp "Find files matching REGEXP and show a grep buffer: " nil 'prot-search--find-grep-hist)))
+  (let ((args (concat
+               "find ."
+               " -not " (shell-quote-argument "(")
+               " -path " (shell-quote-argument "*/.git*")
+               " -prune " (shell-quote-argument ")")
+               " -type f"
+               " -exec grep -nHE --color=auto " regexp " "
+               (shell-quote-argument "{}")
+               " " (shell-quote-argument ";") " "))
+        (buffer-name (format "*prot-search-find for '%s'*" regexp)))
+    (compilation-start
+     args
+     'grep-mode
+     (lambda (_mode) buffer-name)
+     :highlight-regexp)
+    (setq-local revert-buffer-function
+                (lambda (_ignore-auto _noconfirm)
+                  (prot-search-find-grep-buffer regexp)))
+    (prot-search--add-revert-function buffer-name "grep" 'prot-search-find-grep-buffer regexp)))
+
+;;;###autoload
+(defun prot-search-find-grep-files-buffer (regexp)
+  "Combine find with grep to produce a buffer for files matching REGEXP.
+Place the output in a buffer that runs `dired-mode'.  Store the
+invocation of this command with REGEXP in a buffer-local
+variable.  When the buffer is written to a file, per
+`write-file', the `revert-buffer' command (typically bound to
+`g') can be used to re-run the search.  The buffer contains
+information about the search results, including the exact command
+line flags that were used, the time the results were produced,
+and the number of matches.  All matching entries are buttonized
+and function as links to the context they reference."
+  (interactive
+   (list
+    (read-regexp "Find files with contents matching REGEXP and show a file listing: " nil 'prot-search--find-grep-hist)))
+  (let ((args (concat
+               "find " default-directory
+               " -not " (shell-quote-argument "(")
+               " -path " (shell-quote-argument "*/.git*")
+               " -prune " (shell-quote-argument ")")
+               " -type f"
+               " -exec grep -qo --color=auto " regexp " "
+               (shell-quote-argument "{}")
+               " "
+               (shell-quote-argument ";") " "
+               "-ls"))
+        (buffer-name (format "*prot-search-find for '%s'*" regexp)))
+    (compilation-start
+     args
+     'dired-mode
+     (lambda (_mode) buffer-name)
+     :highlight-regexp)
+    (setq-local revert-buffer-function
+                (lambda (_ignore-auto _noconfirm)
+                  (prot-search-find-grep-files-buffer regexp)))
+    (prot-search--add-revert-function buffer-name "dired" 'prot-search-find-grep-files-buffer regexp)))
+
+;;;###autoload
+(defun prot-search-find-files-buffer (regexp)
+  "Use find to produce a buffer for file names matching REGEXP.
+Place the output in a buffer that runs `dired-mode'.  Store the
+invocation of this command with REGEXP in a buffer-local
+variable.  When the buffer is written to a file, per
+`write-file', the `revert-buffer' command (typically bound to
+`g') can be used to re-run the search.  The buffer contains
+information about the search results, including the exact command
+line flags that were used, the time the results were produced,
+and the number of matches.  All matching entries are buttonized
+and function as links to the context they reference."
+  (interactive
+   (list
+    (read-regexp "Find files with contents matching REGEXP and show a file listing: " nil 'prot-search--find-grep-hist)))
+  (let ((args (concat
+               "find " default-directory
+               " -not " (shell-quote-argument "(")
+               " -path " (shell-quote-argument "*/.git*")
+               " -prune " (shell-quote-argument ")")
+               " -type f"
+               " -iname '*" regexp "*'"
+               " -exec ls -AFhldvN --group-directories-first --time-style=long-iso --color=auto --hyperlink=never "
+               (shell-quote-argument "{}")
+               " "
+               (shell-quote-argument ";")))
+        (buffer-name (format "*prot-search-find for '%s'*" regexp)))
+    (compilation-start
+     args
+     'dired-mode
+     (lambda (_mode) buffer-name)
+     :highlight-regexp)
+    (setq-local revert-buffer-function
+                (lambda (_ignore-auto _noconfirm)
+                  (prot-search-find-files-buffer regexp)))
+    (prot-search--add-revert-function buffer-name "dired" 'prot-search-find-files-buffer regexp)))
+
+;; (defun prot-search-find-grep-file (regexp)
+;;   "Use find to produce list of files that include REGEXP."
+;;   (interactive
+;;    (list
+;;     (read-regexp "Find and grep for REGEXP: " nil 'prot-search--find-grep-hist)))
+;;   (let ((files (process-lines "find"
+;;                               "-type" "f"
+;;                               "-exec" "grep" "-nHE" "--color=auto" (format "'%s" regexp) " "
+;;                               "-ls" " "
+;;                               "{};")
+;;                ))
+;;     (find-file (completing-read "Find file: "files))))
+
 (provide 'prot-search)
 ;;; prot-search.el ends here
