@@ -99,14 +99,6 @@ Add this to `prot-prefix-map'."
   "<up>" #'shrink-window
   "<left>" #'shrink-window-horizontally)
 
-(dolist (cmd '(enlarge-window
-               enlarge-window-horizontally
-               shrink-window
-               shrink-window-horizontally
-               next-buffer
-               previous-buffer))
-  (put cmd 'repeat-map 'prot-prefix-repeat-map))
-
 (defvar-keymap prot-prefix-map
   :doc "Global prefix map for my custom keymaps.
 This map should be bound to a global prefix."
@@ -119,6 +111,14 @@ This map should be bound to a global prefix."
   "<right>" #'enlarge-window-horizontally
   "<up>" #'shrink-window
   "<left>" #'shrink-window-horizontally)
+
+(defun prot-prefix-register-repeat-map ()
+  "Add the `repeat-map' property to `prot-prefix-repeat-map' commands."
+  (interactive)
+  (mapc
+   (lambda (def)
+     (put (cdr def) 'repeat-map 'prot-prefix-repeat-map))
+   (cdr prot-prefix-repeat-map)))
 
 (provide 'prot-prefix)
 ;;; prot-prefix.el ends here
