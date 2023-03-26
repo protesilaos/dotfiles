@@ -36,6 +36,7 @@
 (defvar-keymap prot-prefix-file-map
   :doc "Custom keymap with file-related commands.
 Add this to `prot-prefix-map'."
+  :name "File"
   "f" #'find-file
   "F" #'find-file-other-window
   "l" #'find-library
@@ -48,6 +49,7 @@ Add this to `prot-prefix-map'."
 (defvar-keymap prot-prefix-buffer-map
   :doc "Custom keymap with buffer-related commands.
 Add this to `prot-prefix-map'."
+  :name "Buffer"
   "b" #'switch-to-buffer
   "B" #'switch-to-buffer-other-window
   "c" #'clone-indirect-buffer
@@ -64,6 +66,7 @@ Add this to `prot-prefix-map'."
 (defvar-keymap prot-prefix-search-map
   :doc "Custom keymap with various search (and replace) commands.
 Add this to `prot-prefix-map'."
+  :name "Search"
   "s" #'isearch-forward
   "S" #'isearch-forward-regexp
   "r" #'isearch-backward
@@ -74,6 +77,7 @@ Add this to `prot-prefix-map'."
 (defvar-keymap prot-prefix-kill-map
   :doc "Custom keymap with various kill/close commands.
 Add this to `prot-prefix-map'."
+  :name "Kill"
   "b" #'kill-this-buffer
   "w" #'delete-window
   "f" #'delete-frame
@@ -82,6 +86,7 @@ Add this to `prot-prefix-map'."
 (defvar-keymap prot-prefix-window-map
   :doc "Custom keymap with various window commands.
 Add this to `prot-prefix-map'."
+  :name "Windows"
   "s" #'split-window-below
   "v" #'split-window-right
   "k" #'delete-window
@@ -103,6 +108,7 @@ Add this to `prot-prefix-map'."
 (defvar-keymap prot-prefix-map
   :doc "Global prefix map for my custom keymaps.
 This map should be bound to a global prefix."
+  :name "Prot Prefix"
   "b" prot-prefix-buffer-map
   "f" prot-prefix-file-map
   "k" prot-prefix-kill-map
