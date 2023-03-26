@@ -107,6 +107,8 @@
 
 ;;; Prefix keymap (prot-prefix.el)
 (prot-emacs-builtin-package 'prot-prefix
+  ;; TODO 2023-03-26: Can `which-key-mode' be enabled just for this?
+  ;; And/or can transient.el be defined by just giving it keymaps?
   (define-key global-map (kbd "C-z") prot-prefix-map))
 
 ;;; Substitute
