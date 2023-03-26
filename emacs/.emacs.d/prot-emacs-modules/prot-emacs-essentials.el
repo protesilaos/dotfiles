@@ -107,7 +107,6 @@
 
 ;;; Prefix keymap (prot-prefix.el)
 (prot-emacs-builtin-package 'prot-prefix
-  (prot-prefix-register-repeat-map)
   (define-key global-map (kbd "C-z") prot-prefix-map))
 
 ;;; Substitute

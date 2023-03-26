@@ -98,6 +98,7 @@ Add this to `prot-prefix-map'."
 
 (defvar-keymap prot-prefix-repeat-map
   :doc "Global prefix map for repeatable keybindings."
+  :repeat t
   "n" #'next-buffer
   "p" #'previous-buffer
   "<down>" #'enlarge-window
@@ -118,14 +119,6 @@ This map should be bound to a global prefix."
   "<right>" #'enlarge-window-horizontally
   "<up>" #'shrink-window
   "<left>" #'shrink-window-horizontally)
-
-(defun prot-prefix-register-repeat-map ()
-  "Add the `repeat-map' property to `prot-prefix-repeat-map' commands."
-  (interactive)
-  (mapc
-   (lambda (def)
-     (put (cdr def) 'repeat-map 'prot-prefix-repeat-map))
-   (cdr prot-prefix-repeat-map)))
 
 (provide 'prot-prefix)
 ;;; prot-prefix.el ends here
