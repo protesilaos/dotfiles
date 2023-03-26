@@ -19,4 +19,4 @@
   ;; your current input.
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
-(provide 'prot-emacs-completion)
+(provide 'prot-emacs-completion-vertico)
