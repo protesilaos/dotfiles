@@ -55,6 +55,13 @@ before all other modules of my setup."
                  (const :tag "The `standard-themes' module" standard)
                  (const :tag "Do not load a theme module" nil)))
 
+(defcustom prot-emacs-completion-ui 'vertico
+  "Choose minibuffer completion UI between `mct' or `vertico'."
+  :group 'prot-emacs
+  :type '(choice :tag "Minibuffer user interface"
+                 (const :tag "The `mct' module" mct)
+                 (const :tag "The `vertico' module" vertico)))
+
 (defcustom prot-emacs-omit-packages nil
   "List of package names to not load.
 This instructs the relevant macros to not `require' the given
@@ -123,6 +130,7 @@ before all other modules of my setup."
     fontaine
     lin
     logos
+    mct
     modus-themes
     notmuch-indicator
     pulsar
@@ -224,16 +232,17 @@ BODY is the configuration associated with PACKAGE."
   (load-file file))
 
 (require 'prot-emacs-essentials)
-
 (pcase prot-emacs-load-theme-family
   ('ef (require 'prot-emacs-ef-themes))
   ('modus (require 'prot-emacs-modus-themes))
   ('standard (require 'prot-emacs-standard-themes)))
-
 (require 'prot-emacs-theme-extras)
 (require 'prot-emacs-font)
 (require 'prot-emacs-modeline)
-(require 'prot-emacs-completion)
+(require 'prot-emacs-completion-common)
+(pcase prot-emacs-completion-ui
+  ('mct (require 'prot-emacs-completion-mct))
+  ('vertico (require 'prot-emacs-completion-vertico)))
 (require 'prot-emacs-search)
 (require 'prot-emacs-dired)
 (require 'prot-emacs-window)
