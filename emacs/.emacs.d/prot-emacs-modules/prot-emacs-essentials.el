@@ -105,6 +105,10 @@
     (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
+;;; Prefix keymap (prot-prefix.el)
+(prot-emacs-builtin-package 'prot-prefix
+  (define-key global-map (kbd "C-z") prot-prefix-map))
+
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
@@ -189,7 +193,7 @@
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
-  (define-key global-map (kbd "C-z") #'goto-last-change))
+  (define-key prot-prefix-map (kbd "z") #'goto-last-change))
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
