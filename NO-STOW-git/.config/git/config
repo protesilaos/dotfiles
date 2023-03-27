@@ -1,7 +1,7 @@
 [user]
   name = Protesilaos Stavrou
   email = info@protesilaos.com
-  signingkey = 99BD6459CD5CA3EA
+  signingkey = C3C6BC9BBE2F62C7C586EBAA99BD6459CD5CA3EA
 [core]
   excludesfile = ~/.config/git/ignore
   attributesfile = ~/.config/git/attributes
