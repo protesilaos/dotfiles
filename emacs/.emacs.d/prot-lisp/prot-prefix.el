@@ -97,6 +97,13 @@ Add this to `prot-prefix-map'."
   "<up>" #'shrink-window
   "<left>" #'shrink-window-horizontally)
 
+(defvar-keymap prot-prefix-popup-map
+  :doc "Global prefix map for various popup commands."
+  :name "Popup"
+  "f" #'list-faces-display
+  "r" #'re-builder
+  "w" #'world-clock)
+
 (defvar-keymap prot-prefix-repeat-map
   :doc "Global prefix map for repeatable keybindings."
   :name "Repeat"
@@ -120,6 +127,7 @@ This map should be bound to a global prefix."
   "b" prot-prefix-buffer-map
   "f" prot-prefix-file-map
   "k" prot-prefix-kill-map
+  "p" prot-prefix-popup-map
   "r" prot-prefix-repeat-map
   "s" prot-prefix-search-map
   "t" prot-prefix-toggle-map
