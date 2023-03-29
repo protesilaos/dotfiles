@@ -112,6 +112,41 @@
   ;; And/or can transient.el be defined by just giving it keymaps?
   (define-key global-map (kbd "C-z") prot-prefix-map))
 
+;;; Key chord hints (which-key.el)
+(prot-emacs-elpa-package 'which-key
+  (setq which-key-max-display-columns 3)
+  (setq which-key-add-column-padding 2)
+  (setq which-key-idle-delay 1)
+  (setq which-key-idle-secondary-delay nil)
+  (setq which-key-separator " ")
+  (setq which-key-dont-use-unicode t)
+  (setq which-key-replacement-alist nil)
+
+  ;; FIXME 2023-03-29: How to get key of `prot-prefix-map' and its nested maps?
+  ;; FIXME 2023-03-29: How to get keymap name to avoid this repetition?
+  (which-key-add-key-based-replacements
+    "C-z b" '("buffer" . "Prefix for buffer commands"))
+
+  (which-key-add-key-based-replacements
+    "C-z f" '("File" . "Prefix for file commands"))
+
+  (which-key-add-key-based-replacements
+    "C-z k" '("kill" . "Prefix for kill commands"))
+
+  (which-key-add-key-based-replacements
+    "C-z r" '("Repeat" . "Prefix for repeat commands"))
+
+  (which-key-add-key-based-replacements
+    "C-z s" '("Search" . "Prefix for search commands"))
+
+  (which-key-add-key-based-replacements
+    "C-z t" '("Toggle" . "Prefix for toggle commands"))
+
+  (which-key-add-key-based-replacements
+    "C-z w" '("window" . "Prefix for window commands"))
+
+  (which-key-mode 1))
+
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
