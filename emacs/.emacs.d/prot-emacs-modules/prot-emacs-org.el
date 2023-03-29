@@ -1,7 +1,7 @@
 ;;; Org-mode (personal information manager)
 
 (prot-emacs-builtin-package 'org
-  (setq org-directory (convert-standard-filename "~/Documents/org"))
+  (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
 ;;;; general settings
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
@@ -182,7 +182,7 @@
 ;;;; agenda
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (thread-last org-directory (expand-file-name "notes.org")))
-  (setq org-agenda-files `(,org-directory "~/Documents"))
+  (setq org-agenda-files `(,org-directory ,(expand-file-name "~/Documents/")))
   (setq org-agenda-span 'week)
   (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
