@@ -87,7 +87,7 @@ Add this to `prot-prefix-map'."
 (defvar-keymap prot-prefix-window-map
   :doc "Custom keymap with various window commands.
 Add this to `prot-prefix-map'."
-  :name "Windows"
+  :name "Window"
   "s" #'split-window-below
   "v" #'split-window-right
   "k" #'delete-window
@@ -99,6 +99,7 @@ Add this to `prot-prefix-map'."
 
 (defvar-keymap prot-prefix-repeat-map
   :doc "Global prefix map for repeatable keybindings."
+  :name "Repeat"
   :repeat t
   "n" #'next-buffer
   "p" #'previous-buffer
@@ -109,6 +110,7 @@ Add this to `prot-prefix-map'."
 
 (defvar-keymap prot-prefix-toggle-map
   :doc "Global prefix map for various toggles."
+  :name "Toggle"
   "d" #'toggle-debug-on-error)
 
 (defvar-keymap prot-prefix-map
