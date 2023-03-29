@@ -72,14 +72,15 @@ export SSH_AUTH_SOCK
 #
 # Also check my `.bash_profile' for the automatic login setup.
 
-# Emacs is the default.
-session=${1:-bspwm}
+# herbstluftwm is the default.
+session=${1:-herbstluftwm}
 
 #### Sessions
 
 # Map arguments to commands.
 case $session in
     bspwm ) exec bspwm        ;;
+    hlwm  ) exec herbstluftwm ;;
     mate  ) exec mate-session ;;
     xfce  ) exec startxfce4   ;;
     *) echo "Unknown session" ;;
