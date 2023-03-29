@@ -66,7 +66,7 @@
             :query "tag:inbox"
             :sort-order newest-first
             :key ,(kbd "i"))
-          ( :name "🗨️ unread (inbox)"
+          ( :name "💬 unread (inbox)"
             :query "tag:unread and tag:inbox"
             :sort-order newest-first
             :key ,(kbd "u"))
@@ -76,7 +76,7 @@
             :sort-order newest-first
             :key ,(kbd "p"))
           ;; My coaching job: <https://protesilaos.com/coach/>.
-          ( :name "🌲 unread coaching"
+          ( :name "🌈 unread coaching"
             :query "tag:unread and tag:coach"
             :sort-order newest-first
             :key ,(kbd "c"))
@@ -187,7 +187,7 @@
   ;; would not like to input emoji for searching.
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
-  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🌲")))
+  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🌈")))
   (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️")))
 
   (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
@@ -215,9 +215,9 @@
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-elpa-package 'notmuch-indicator
   (setq notmuch-indicator-args
-        `((:terms "tag:unread and tag:inbox" :label "📌") ; also accepts a face like `:face bold' (no quotes)
+        `((:terms "tag:unread and tag:inbox" :label "💬") ; also accepts a face like `:face bold' (no quotes)
           (:terms "tag:unread and tag:package" :label "🗂️")
-          (:terms "tag:unread and tag:coach" :label "🌲"))
+          (:terms "tag:unread and tag:coach" :label "🌈"))
         notmuch-indicator-refresh-count (* 60 3)
         notmuch-indicator-hide-empty-counters t
         notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
