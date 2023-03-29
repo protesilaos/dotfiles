@@ -37,7 +37,8 @@
         delete-pair-blink-delay 0.15 ; Emacs28 -- see `prot-simple-delete-pair-dwim'
         prot-simple-scratch-buffer-default-mode 'markdown-mode
         help-window-select t
-        next-error-recenter '(4)) ; center of the window
+        next-error-recenter '(4) ; center of the window
+        find-library-include-other-files nil) ; Emacs 29
 
   ;; General commands
   (let ((map global-map))
