@@ -19,4 +19,9 @@
   ;; your current input.
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
+;;; Detailed completion annotations (marginalia.el)
+(prot-emacs-elpa-package 'marginalia
+  (setq marginalia-max-relative-age 0) ; absolute time
+  (marginalia-mode 1))
+
 (provide 'prot-emacs-completion-vertico)

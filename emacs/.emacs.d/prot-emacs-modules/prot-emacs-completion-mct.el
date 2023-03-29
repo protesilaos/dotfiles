@@ -50,4 +50,29 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   ;; Specify the sorting function.
   (setq completions-sort #'my-sort-multi-category))
 
+;;; Custom completion annotations
+;; I normally use `marginalia-mode' but this is not always good for
+;; MCT.  The reason is that the *Completions* buffer is generated at
+;; the outset with all the annotations included.  Extra annotations
+;; for stuff like M-x and C-h o make the MCT experience very sluggish.
+;; This is not the fault of `marginalia-mode'!  It simply is an
+;; inherent limitation of the *Completions*.  As such, I am defining
+;; some annotations for a few cases where I do not expect any
+;; noticeable slowdown.
+;;
+;; I will probably end up modifying the
+;; `marginalia-annotator-registry', but I need to test this first.
+
+
+(defun prot/annotation--buffer-file (buffer)
+  "Annotate BUFFER with its `buffer-file-name'."
+  (when-let ((name (buffer-file-name (get-buffer buffer))))
+    (format " %s" (abbreviate-file-name name))))
+
+(defun prot/annotation-buffer (&rest app)
+  (let ((completion-extra-properties `(:annotation-function ,#'prot/annotation--buffer-file)))
+    (apply app)))
+
+(advice-add #'read-buffer :around #'prot/annotation-buffer)
+
 (provide 'prot-emacs-completion-mct)
