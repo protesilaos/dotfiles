@@ -61,6 +61,7 @@
 (setq package-quickstart t)
 
 (setq native-comp-async-report-warnings-errors 'silent) ; emacs28 with native compilation
+(setq native-compile-prune-cache t)
 
 
 ;;;; General theme code
