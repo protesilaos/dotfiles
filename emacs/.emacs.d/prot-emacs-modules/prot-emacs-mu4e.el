@@ -40,6 +40,8 @@
 (setq mu4e-display-update-status-in-modeline t)
 (setq mu4e-view-show-images nil)
 (setq mu4e-decryption-policy 'ask)
+(setq mu4e-headers-include-related t)
+(setq mu4e-view-auto-mark-as-read t)
 
 (setq mu4e-contexts
       `(,(make-mu4e-context
@@ -50,7 +52,10 @@
                         (when msg
                           (mu4e-message-contact-field-matches
                            msg :to (prot-common-auth-get-field "prv" :user))))
-          :vars `((user-mail-address . ,(prot-common-auth-get-field "prv" :user))))
+          :vars `((user-mail-address . ,(prot-common-auth-get-field "prv" :user))
+                  ;; (mu4e-trash-folder . "/relpath/to/Trash")
+                  ;; (mu4e-sent-folder . "/relpath/to/Sent")
+                  )
         ,(make-mu4e-context
           :name "inf"
           :match-func (lambda (msg)
