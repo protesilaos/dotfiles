@@ -101,6 +101,8 @@ Specific to the current window's mode line.")
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
   (dolist (event '(mouse-event-p mouse-movement-p mwheel-scroll))
-    (add-to-list 'keycast-substitute-alist `(,event nil))))
+    (add-to-list 'keycast-substitute-alist `(,event nil)))
+
+  (define-key prot-prefix-toggle-map (kbd "k") #'keycast-mode))
 
 (provide 'prot-emacs-modeline)

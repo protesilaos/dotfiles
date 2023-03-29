@@ -106,6 +106,10 @@ Add this to `prot-prefix-map'."
   "<up>" #'shrink-window
   "<left>" #'shrink-window-horizontally)
 
+(defvar-keymap prot-prefix-toggle-map
+  :doc "Global prefix map for various toggles."
+  "d" #'toggle-debug-on-error)
+
 (defvar-keymap prot-prefix-map
   :doc "Global prefix map for my custom keymaps.
 This map should be bound to a global prefix."
@@ -114,6 +118,7 @@ This map should be bound to a global prefix."
   "f" prot-prefix-file-map
   "k" prot-prefix-kill-map
   "s" prot-prefix-search-map
+  "t" prot-prefix-toggle-map
   "w" prot-prefix-window-map
   "<down>" #'enlarge-window
   "<right>" #'enlarge-window-horizontally

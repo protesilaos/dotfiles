@@ -222,6 +222,8 @@
         notmuch-indicator-hide-empty-counters t
         notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
 
-  (notmuch-indicator-mode 1))
+  (notmuch-indicator-mode 1)
+
+  (define-key prot-prefix-toggle-map (kbd "n") #'notmuch-indicator-mode))
 
 (provide 'prot-emacs-email-notmuch)
