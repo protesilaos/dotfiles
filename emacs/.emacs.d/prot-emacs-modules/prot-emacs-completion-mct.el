@@ -15,10 +15,7 @@
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
   (setq mct-completion-blocklist '(notmuch-mua-new-mail notmuch-mua-prompt-for-sender))
-  (setq mct-completion-passlist
-        '(consult-location
-          embark-keybinding
-          imenu))
+  (setq mct-completion-passlist '(embark-keybinding))
   (setq mct-remove-shadowed-file-names t)
   (setq mct-completion-window-size (cons #'mct-frame-height-third 1))
 
@@ -62,7 +59,6 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 ;;
 ;; I will probably end up modifying the
 ;; `marginalia-annotator-registry', but I need to test this first.
-
 
 (defun prot/annotation--buffer-file (buffer)
   "Annotate BUFFER with its `buffer-file-name'."
