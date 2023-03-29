@@ -18,16 +18,17 @@
 ### Commentary:
 #
 # This script is a core part of my custom desktop session, centred
-# around GNU Emacs: <https://git.sr.ht/~protesilaos/dotfiles>.
+# around GNU Emacs and a tiling window manager:
+# <https://git.sr.ht/~protesilaos/dotfiles>.
 #
 ### Code:
 
 
 #### Shell setup
 
-# Source my bashrc.
 if [ -n "$BASH_VERSION" ]; then
     if [ -f "$HOME"/.bashrc ]; then
+# Load my bashrc.
         source "$HOME"/.bashrc
     fi
 fi
@@ -37,26 +38,33 @@ if [ -d "$HOME"/bin ]; then
     PATH=$PATH:"$HOME"/bin
 fi
 
-# This is another possible location for user-specific binaries.
 if [ -d "$HOME"/.local/bin ]; then
+# This is another possible location for user-specific executables.
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
 #### Environment essentials
 
-# Auto unlocks the GPG and SSH agents.
+# TODO 2023-03-29: Is this still needed?  Maybe the systemd service is
+# enough?  Or maybe I can have this here but disable the systemd part?
+
+# Auto unlock the GPG and SSH agents.
 eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK
 
 #### Session selection
 
-# Launch X by running:
+# Launch X with the default session by running:
 #
 #   xinit
+#
+# Or specify the session:
+#
 #   xinit xfce
 #
 # Or pass this file and the DE/WM arg to startx:
-#   startx ~/.xinitrc emacs
+#
+#   startx ~/.xinitrc xfce
 #
 # Also check my `.bash_profile' for the automatic login setup.
 
