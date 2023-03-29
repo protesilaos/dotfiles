@@ -79,7 +79,7 @@ For use in `prot-org-capture-coach'."
 
 (defun prot-org-capture-coach ()
   "Capture template for my coaching sessions."
-  (concat "* COACH " (prot-org--capture-coach-person-prompt) (read-string "Description: ") " %^g\n"
+  (concat "* COACH " (prot-org--capture-coach-person-prompt) " " (read-string "Description: ") " %^g\n"
           ;; See comment above
           ;; (prot-org--capture-coach-date-prompt-range)
           "DEADLINE: %^T\n"
