@@ -72,9 +72,6 @@ export SSH_AUTH_SOCK
 #
 # Also check my `.bash_profile' for the automatic login setup.
 
-# herbstluftwm is the default.
-session=${1:-herbstluftwm}
-
 #### Sessions
 
 # Map arguments to commands.
@@ -83,5 +80,5 @@ case $session in
     hlwm  ) exec herbstluftwm ;;
     mate  ) exec mate-session ;;
     xfce  ) exec startxfce4   ;;
-    *) echo "Unknown session" ;;
+    *     ) exec herbstluftwm ;;
 esac
