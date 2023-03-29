@@ -125,13 +125,16 @@
   ;; FIXME 2023-03-29: How to get key of `prot-prefix-map' and its nested maps?
   ;; FIXME 2023-03-29: How to get keymap name to avoid this repetition?
   (which-key-add-key-based-replacements
-    "C-z b" '("buffer" . "Prefix for buffer commands"))
+    "C-z b" '("Buffer" . "Prefix for buffer commands"))
 
   (which-key-add-key-based-replacements
     "C-z f" '("File" . "Prefix for file commands"))
 
   (which-key-add-key-based-replacements
-    "C-z k" '("kill" . "Prefix for kill commands"))
+    "C-z k" '("Kill" . "Prefix for kill commands"))
+
+  (which-key-add-key-based-replacements
+    "C-z p" '("Popup" . "Prefix for popup commands"))
 
   (which-key-add-key-based-replacements
     "C-z r" '("Repeat" . "Prefix for repeat commands"))
@@ -143,7 +146,7 @@
     "C-z t" '("Toggle" . "Prefix for toggle commands"))
 
   (which-key-add-key-based-replacements
-    "C-z w" '("window" . "Prefix for window commands"))
+    "C-z w" '("Window" . "Prefix for window commands"))
 
   (which-key-mode 1))
 
