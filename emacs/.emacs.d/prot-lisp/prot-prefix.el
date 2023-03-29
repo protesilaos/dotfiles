@@ -40,6 +40,7 @@ Add this to `prot-prefix-map'."
   "f" #'find-file
   "F" #'find-file-other-window
   "l" #'find-library
+  "m" #'man
   "r" #'recentf-open
   "s" #'save-buffer
   "w" #'write-file
