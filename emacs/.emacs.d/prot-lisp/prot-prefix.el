@@ -118,6 +118,7 @@ This map should be bound to a global prefix."
   "b" prot-prefix-buffer-map
   "f" prot-prefix-file-map
   "k" prot-prefix-kill-map
+  "r" prot-prefix-repeat-map
   "s" prot-prefix-search-map
   "t" prot-prefix-toggle-map
   "w" prot-prefix-window-map
