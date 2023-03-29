@@ -196,7 +196,8 @@
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
-  (define-key prot-prefix-map (kbd "z") #'goto-last-change))
+  (define-key prot-prefix-map (kbd "C-z") #'goto-last-change)
+  (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change))
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
