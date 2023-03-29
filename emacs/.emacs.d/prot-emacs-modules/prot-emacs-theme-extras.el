@@ -36,7 +36,7 @@
   ;; (customize-set-variable 'lin-face 'lin-green)
   ;;
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
-  (setopt lin-face 'lin-blue)
+  (setopt lin-face 'lin-cyan)
   (setq lin-mode-hooks
         '(bongo-mode-hook
           dired-mode-hook
