@@ -50,16 +50,6 @@
   (define-key dired-mode-map (kbd "I") #'dired-info))
 
 (prot-emacs-builtin-package 'prot-dired
-  (setq prot-dired-image-viewers '("feh" "sxiv"))
-  (setq prot-dired-media-players '("mpv" "vlc"))
-  (setq prot-dired-media-extensions
-        "\\.\\(mp[34]\\|ogg\\|flac\\|webm\\|mkv\\)")
-  (setq prot-dired-image-extensions
-        "\\.\\(png\\|jpe?g\\|tiff\\)")
-  (setq dired-guess-shell-alist-user ; those are the defaults for ! and & in Dired
-        `((,prot-dired-image-extensions (prot-dired-image-viewer))
-          (,prot-dired-media-extensions (prot-dired-media-player))))
-
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
   (let ((map dired-mode-map))
