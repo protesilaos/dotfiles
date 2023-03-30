@@ -91,22 +91,6 @@ _xterm ()
     repaint_terminals &
 }
 
-
-_alacritty ()
-{
-    _depcheck alacritty
-
-    active_theme="$HOME"/.config/alacritty/modus-themes-active.yml
-
-    [ -f "$active_theme" ] || { echo "No alacritty theme. Did you 'stow' your configurations?"; return 1; }
-
-    case "$(cat "$wm_theme")"
-    in
-        light) _sed "s,vivendi,operandi," "$active_theme" ;;
-        dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
-    esac
-}
-
 # TODO 2021-08-27: dunst
 
 #### BSPWM and HerbstluftWM (I configure them almost identically)
