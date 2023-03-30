@@ -118,7 +118,6 @@ _polybar ()
     active_theme="$HOME"/.config/polybar/config_colors
 
     [ -f "$active_theme" ] || { echo "No active theme"; exit 1; }
-    [ -f "$wm_theme" ] || { echo "No WM session theme"; exit 1; }
 
     case "$(cat "$wm_theme")"
     in
