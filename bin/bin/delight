@@ -209,7 +209,7 @@ _bspwm_or_hlwm ()
 {
     _depcheck "$wm_executable"
 
-    _gtheme
+    _gnome_theme
 
     echo "$style" > "$wm_theme"
 
@@ -235,61 +235,72 @@ _bspwm_or_hlwm ()
     fi
 }
 
-#### Gnome and gsettings
+#### Gsettings
 
-_ggtk ()
+_gsettings ()
 {
-    gsettings "$1" org.gnome.desktop.interface gtk-theme "${@:2}"
+    gsettings "$1" "$2" "${@:3}"
 }
 
-_gcolor_scheme ()
+# Get or set the GTK theme
+_gsettings_gtk_act ()
 {
-    gsettings "$1" org.gnome.desktop.interface color-scheme "${@:2}"
-}
-
-# Get the GTK theme
-_ggtk_get ()
-{
-    _ggtk 'get'
-}
-
-# Set the GTK theme
-_ggtk_set ()
-{
-    _ggtk 'set' "$1"
-}
-
-# Get the Color Scheme
-_gcolor_scheme_get ()
-{
-    _gcolor_scheme 'get'
+    _gsettings "$1" "$2" gtk-theme "${@:3}"
 }
 
 # Set the Color Scheme
-_gcolor_scheme_set ()
+_gsettings_color_scheme_set ()
 {
-    _gcolor_scheme 'set' "$1"
+    _gsettings 'set' 'org.gnome.desktop.interface' 'color-scheme' "$1"
 }
 
-_gtheme ()
+##### Gnome
+
+_gnome_theme ()
 {
     _depcheck gsettings
+	interface="org.gnome.desktop.interface"
 
-    if [ "$(_ggtk_get)" = "'Adwaita'" ]
+    if [ "$(_gsettings_gtk_act 'get' $interface)" = "'Adwaita'" ]
     then
         style=dark
-        _ggtk_set 'Adwaita-dark'
-        _gcolor_scheme_set 'prefer-dark'
+        _gsettings_gtk_act 'set' $interface 'Adwaita-dark'
+        _gsettings_color_scheme_set 'prefer-dark'
     else
         style=light
-        _ggtk_set 'Adwaita'
-        _gcolor_scheme_set 'prefer-light'
+        _gsettings_gtk_act 'set' $interface 'Adwaita'
+        _gsettings_color_scheme_set 'prefer-light'
     fi
 }
 
 _gnome ()
 {
-    _gtheme
+    _gnome_theme
+    _emacs "$style"
+}
+
+##### Mate
+
+_mate_theme ()
+{
+    _depcheck gsettings
+	interface="org.mate.interface"
+
+    if [ "$(_gsettings_gtk_act 'get' $interface)" = "'Adwaita'" ]
+    then
+        style=dark
+        _gsettings_gtk_act 'set' $interface 'Adwaita-dark'
+        _gsettings_color_scheme_set 'prefer-dark'
+    else
+        style=light
+        _gsettings_gtk_act 'set' $interface 'Adwaita'
+        _gsettings_color_scheme_set 'prefer-light'
+    fi
+}
+
+_mate ()
+{
+    _mate_theme
     _emacs "$style"
 }
 
@@ -342,6 +353,7 @@ in
         _bspwm_or_hlwm
         ;;
     gnome) _gnome ;;
+	mate)  _mate ;;
     xfce)  _xfce  ;;
 
 esac
