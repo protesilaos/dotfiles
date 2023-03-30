@@ -10,6 +10,10 @@
   (setq dired-make-directory-clickable t) ; Emacs 29.1
   (setq dired-free-space nil) ; Emacs 29.1
   (setq dired-mouse-drag-files t) ; Emacs 29.1
+  (setq dired-guess-shell-alist-user ; those are the suggestions for ! and & in Dired
+        '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh" "xdg-open")
+          ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv" "xdg-open")
+		  (".*" "xdg-open")))
 
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode)
