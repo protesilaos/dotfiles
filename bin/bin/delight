@@ -76,7 +76,6 @@ _xterm ()
 
     [ -f "$xresources" ] || { echo "No Xresources file"; exit 1; }
     [ -f "$active_theme" ] || { echo "No active Xresources theme"; exit 1; }
-    [ -f "$wm_theme" ] || { echo "No WM session theme"; exit 1; }
 
     case "$(cat "$wm_theme")"
     in
