@@ -118,7 +118,10 @@ Add this to `prot-prefix-map'."
 (defvar-keymap prot-prefix-toggle-map
   :doc "Global prefix map for various toggles."
   :name "Toggle"
-  "d" #'toggle-debug-on-error)
+  "d" #'toggle-debug-on-error
+  "m" #'menu-bar-mode
+  "s" #'scroll-bar-mode
+  "t" #'tool-bar-mode)
 
 (defvar-keymap prot-prefix-map
   :doc "Global prefix map for my custom keymaps.
