@@ -83,6 +83,7 @@
 (setq-default tab-always-indent 'complete)
 (setq-default tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
 (setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
 
 ;;; Flyspell and prot-spell.el (spell check)
 (prot-emacs-builtin-package 'flyspell
