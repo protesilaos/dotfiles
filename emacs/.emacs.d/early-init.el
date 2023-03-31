@@ -34,13 +34,24 @@
 
 ;;; Code:
 
+;; I do not use those graphical elements by default, but I do enable
+;; them from time-to-time for testing purposes or to demonstrate
+;; something.
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
 
 (dolist (var '(default-frame-alist initial-frame-alist))
   (add-to-list var '(width . (text-pixels . 1200)))
-  (add-to-list var '(height . (text-pixels . 900))))
+  (add-to-list var '(height . (text-pixels . 900)))
+  (add-to-list var '(scroll-bar-width  . 12)))
+
+(set-scroll-bar-mode 'right)
+
+(defun prot-emacs-no-minibuffer-scroll-bar (frame)
+  "Remove the scroll bars from minibuffer in FRAME."
+  (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
+
+(add-hook 'after-make-frame-functions #'prot-emacs-no-minibuffer-scroll-bar)
 
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t)
