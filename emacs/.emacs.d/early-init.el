@@ -45,10 +45,10 @@
   (add-to-list var '(height . (text-pixels . 900)))
   (add-to-list var '(scroll-bar-width  . 12)))
 
-(set-scroll-bar-mode 'right)
+(set-scroll-bar-mode 'left)
 
 (defun prot-emacs-no-minibuffer-scroll-bar (frame)
-  "Remove the scroll bars from minibuffer in FRAME."
+  "Remove the minibuffer scroll bars from FRAME."
   (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
 
 (add-hook 'after-make-frame-functions #'prot-emacs-no-minibuffer-scroll-bar)
