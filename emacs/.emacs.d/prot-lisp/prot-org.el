@@ -106,9 +106,9 @@ For use in `prot-org-capture-coach'."
 ;; original version was causing an error in `org-roam'.  I then figure
 ;; we were missing the `&rest':
 ;; <https://github.com/org-roam/org-roam/issues/2142#issuecomment-1100718373>.
-(defun prot-org--capture-no-delete-windows (oldfun &rest args)
+(defun prot-org--capture-no-delete-windows (&rest args)
   (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
-    (apply oldfun args)))
+    (apply args)))
 
 ;; Same source as above
 (advice-add 'org-capture-place-template :around 'prot-org--capture-no-delete-windows)
