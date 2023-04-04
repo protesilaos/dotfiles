@@ -153,15 +153,19 @@ before all other modules of my setup."
 PACKAGE is a quoted symbol, while BODY consists of balanced
 expressions.
 
-Ignore PACKAGE if it is a member of `prot-emacs-omit-packages'."
+Ignore PACKAGE if it is a member of `prot-emacs-omit-packages'.
+
+The first element of BODY can be a property list of (:delay
+number).  PACKAGE and the `cdr' of BODY and then loaded with the
+given delay as idle time, per `run-with-idle-timer'."
   (declare (indent 1))
-  `(progn
-     (unless (and (not (memq ,package prot-emacs-omit-packages))
-                  (require ,package nil 'noerror))
-       (display-warning 'prot-emacs
-                        (format "Loading `%s' failed" ,package)
-                        :warning))
-     ,@body))
+  (let ((common
+         `(unless (and (not (memq ,package prot-emacs-omit-packages))
+                       (require ,package nil 'noerror))
+            (display-warning 'prot-emacs (format "`%s' failed" ,package) :warning))))
+  (if-let ((delay (plist-get (car body) :delay)))
+      (run-with-idle-timer delay nil `(lambda () ,common ,@(cdr body)))
+    `(progn ,common ,@body))))
 
 (defmacro prot-emacs-elpa-package (package &rest body)
   "Set up PACKAGE from an Elisp archive with rest BODY.
