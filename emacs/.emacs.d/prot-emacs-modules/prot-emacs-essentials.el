@@ -327,6 +327,7 @@
 
 ;;; Shell (M-x shell)
 (prot-emacs-builtin-package 'shell
+  (:delay 5)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t)
   (setenv "PAGER" "cat") ; solves issues, such as with 'git log' and the default 'less'
@@ -334,6 +335,7 @@
 
 ;;; Tools for manual pages (manpages)
 (prot-emacs-builtin-package 'man
+  (:delay 10)
   (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
   (let ((map Man-mode-map))
     (define-key map (kbd "i") #'Man-goto-section)
@@ -341,6 +343,7 @@
 
 ;;; Proced (process monitor, similar to `top')
 (prot-emacs-builtin-package 'proced
+  (:delay 10)
   (setq proced-auto-update-flag t)
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
