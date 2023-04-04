@@ -156,7 +156,7 @@ expressions.
 Ignore PACKAGE if it is a member of `prot-emacs-omit-packages'.
 
 The first element of BODY can be a property list of (:delay
-number).  PACKAGE and the `cdr' of BODY and then loaded with the
+number).  PACKAGE and the `cdr' of BODY are then loaded with the
 given delay as idle time, per `run-with-idle-timer'."
   (declare (indent 1))
   (let ((common
