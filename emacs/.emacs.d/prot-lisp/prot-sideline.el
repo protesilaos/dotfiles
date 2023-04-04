@@ -44,17 +44,6 @@
   :init-value nil
   :global nil)
 
-(autoload 'diff-hl-mode "diff-hl")
-
-(defun prot-sideline--diff-hl-toggle ()
-  "Toggle buffer local diff indicators in the fringe."
-  (if (or (bound-and-true-p diff-hl-mode)
-          (not (bound-and-true-p prot-sideline-mode)))
-      (diff-hl-mode -1)
-    (diff-hl-mode 1)))
-
-(add-hook 'prot-sideline-mode-hook #'prot-sideline--diff-hl-toggle)
-
 (defun prot-sideline--numbers-toggle ()
   "Toggle line numbers."
   (if (or (bound-and-true-p display-line-numbers-mode)

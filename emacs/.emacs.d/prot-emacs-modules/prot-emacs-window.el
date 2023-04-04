@@ -202,10 +202,6 @@ use in `display-buffer-alist'."
   ;; Use absolute numbers in narrowed buffers
   (setq-default display-line-numbers-widen t)
 
-  (prot-emacs-elpa-package 'diff-hl
-    (setq diff-hl-draw-borders nil)
-    (setq diff-hl-side 'left))
-
   (require 'hl-line)
   (setq hl-line-sticky-flag nil)
   (setq hl-line-overlay-priority -50) ; emacs28
