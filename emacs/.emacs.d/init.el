@@ -247,9 +247,7 @@ BODY is the configuration associated with PACKAGE."
 ;; user option `prot-emacs-omit-packages' lets the user specify which
 ;; packages not to load.  Search for all `defcustom' forms in this
 ;; file for other obvious customisations.
-(when-let* ((file (locate-user-emacs-file "prot-emacs-pre-custom.el"))
-            ((file-exists-p file)))
-  (load-file file))
+(load (locate-user-emacs-file "prot-emacs-pre-custom.el") :no-error :no-message)
 
 (require 'prot-emacs-essentials)
 (pcase prot-emacs-load-theme-family
@@ -287,13 +285,6 @@ BODY is the configuration associated with PACKAGE."
 ;; I already define, such as to change the default theme.  See above
 ;; for the `prot-emacs-pre-custom.el' to make changes BEFORE loading
 ;; any of my other configurations.
-(when-let* ((file-new (locate-user-emacs-file "prot-emacs-post-custom.el"))
-            (file-old (locate-user-emacs-file "user-emacs.el"))
-            (file (cond
-                   ((file-exists-p file-new)
-                    file-new)
-                   ((file-exists-p file-old)
-                    file-old))))
-  (load-file file))
+(load (locate-user-emacs-file "prot-emacs-post-custom.el") :no-error :no-message)
 
 ;; init.el ends here
