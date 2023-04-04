@@ -103,7 +103,8 @@ Specific to the current window's mode line.")
   (dolist (event '(mouse-event-p mouse-movement-p mwheel-scroll))
     (add-to-list 'keycast-substitute-alist `(,event nil)))
 
-  ;; (define-key prot-prefix-toggle-map (kbd "k") #'keycast-mode)
-  )
+  (with-eval-after-load 'prot-prefix
+    (transient-append-suffix 'prot-prefix-toggle '(0 1 0)
+      '("k" "keycast-mode" keycast-mode))))
 
 (provide 'prot-emacs-modeline)

@@ -237,8 +237,9 @@
   (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
   (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
 
-  (transient-append-suffix 'prot-prefix '(0 -1 -1)
-    '("z" "goto-last-change" goto-last-change)))
+  (with-eval-after-load 'prot-prefix
+    (transient-append-suffix 'prot-prefix '(0 -1 -1)
+      '("z" "goto-last-change" goto-last-change))))
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat

@@ -224,7 +224,8 @@
 
   (notmuch-indicator-mode 1)
 
-  (transient-append-suffix 'prot-prefix-toggle '(0 1 0)
-    '("n" "notmuch-indicator-mode" notmuch-indicator-mode)))
+  (with-eval-after-load 'prot-prefix
+    (transient-append-suffix 'prot-prefix-toggle '(0 1 0)
+      '("n" "notmuch-indicator-mode" notmuch-indicator-mode))))
 
 (provide 'prot-emacs-email-notmuch)
