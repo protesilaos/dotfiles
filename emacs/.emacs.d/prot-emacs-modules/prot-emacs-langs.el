@@ -15,10 +15,6 @@
   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 
-;;; YAML (yaml-mode)
-(prot-emacs-elpa-package 'yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
-
 ;;; Shell scripts (sh-mode)
 (prot-emacs-builtin-package 'sh-script
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
@@ -150,10 +146,6 @@
     (define-key map (kbd "C-c ! D") #'flymake-show-project-diagnostics) ; Emacs28
     (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
     (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
-
-;;; Flymake + Shellcheck
-(prot-emacs-elpa-package 'flymake-shellcheck
-  (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
 
 ;;; Elisp packaging requirements
 (prot-emacs-elpa-package 'package-lint-flymake
