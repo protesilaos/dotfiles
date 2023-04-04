@@ -175,19 +175,35 @@ expressions.
 Try to install the PACKAGE if it is missing.
 
 Ignore PACKAGE, including the step of installing it, if it is a
-member of `prot-emacs-omit-packages'."
+member of `prot-emacs-omit-packages'.
+
+The first element of BODY can be a property list of (:delay
+number).  PACKAGE and the `cdr' of BODY are then loaded with the
+given delay as idle time, per `run-with-idle-timer'."
   (declare (indent 1))
-  `(unless (memq ,package prot-emacs-omit-packages)
-     (progn
-       (when (not (package-installed-p ,package))
-         (unless package-archive-contents
-           (package-refresh-contents))
-         (package-install ,package))
-       (if (require ,package nil 'noerror)
-           (progn ,@body)
-         (display-warning 'prot-emacs
-                          (format "Loading `%s' failed" ,package)
-                          :warning)))))
+  ;; FIXME 2023-04-04: Avoid duplication like with `prot-emacs-builtin-package'.
+  (if-let ((delay (plist-get (car body) :delay)))
+      `(run-with-idle-timer
+        ,delay nil
+        (lambda ()
+          (unless (memq ,package prot-emacs-omit-packages)
+            (progn
+              (when (not (package-installed-p ,package))
+                (unless package-archive-contents
+                  (package-refresh-contents))
+                (package-install ,package))
+              (if (require ,package nil 'noerror)
+                  (progn ,@(cdr body))
+                (display-warning 'prot-emacs (format "`%s' failed" ,package) :warning))))))
+    `(unless (memq ,package prot-emacs-omit-packages)
+       (progn
+         (when (not (package-installed-p ,package))
+           (unless package-archive-contents
+             (package-refresh-contents))
+           (package-install ,package))
+         (if (require ,package nil 'noerror)
+             (progn ,@body)
+           (display-warning 'prot-emacs (format "`%s' failed" ,package) :warning))))))
 
 (defmacro prot-emacs-vc-package (package remote &rest body)
   "Set up PACKAGE from its REMOTE source.
