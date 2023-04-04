@@ -60,6 +60,7 @@
     ("c" "clone buffer" clone-indirect-buffer)
     ("C" "clone buf other window" clone-indirect-buffer-other-window)
     ("r" "rename-buffer" rename-buffer)
+    ("R" "rename-uniquely" rename-uniquely)
     ("s" "save-buffer" save-buffer)
     ("w" "write-file" write-file)]
    ["Destroy"
@@ -117,7 +118,8 @@
     ("t" "tool-bar-mode" tool-bar-mode)
     ("v" "visual-line-mode" visual-line-mode)]
    ["Tools"
-    ("d" "toggle-debug-on-error" toggle-debug-on-error)]])
+    ("d" "toggle-debug-on-error" toggle-debug-on-error)
+    ("f" "follow-mode" follow-mode)]])
 
 (transient-define-prefix prot-prefix nil
   "Transient with common commands."
