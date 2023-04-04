@@ -62,10 +62,12 @@
 
 ;;; Test regular expressions (re-builder)
 (prot-emacs-builtin-package 're-builder
+  (:delay 5)
   (setq reb-re-syntax 'read))
 
 ;;; wgrep (writable grep)
 (prot-emacs-elpa-package 'wgrep
+  ;(:delay 5)
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
   (let ((map grep-mode-map))

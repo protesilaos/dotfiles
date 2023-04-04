@@ -1,15 +1,18 @@
 ;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
 (prot-emacs-builtin-package 'browse-url
+  (:delay 5)
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 
 (prot-emacs-builtin-package 'goto-addr
+  (:delay 5)
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
   (setq goto-address-mail-face nil)
   (setq goto-address-mail-mouse-face 'highlight))
 
 (prot-emacs-builtin-package 'shr
+  (:delay 5)
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
@@ -20,9 +23,11 @@
   (setq shr-cookie-policy nil))
 
 (prot-emacs-builtin-package 'url-cookie
+  (:delay 5)
   (setq url-cookie-untrusted-urls '(".*")))
 
 (prot-emacs-builtin-package 'eww
+  (:delay 5)
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format nil)
@@ -150,6 +155,7 @@
 
 ;;; Rcirc (IRC client)
 (prot-emacs-builtin-package 'rcirc
+  (:delay 5)
   (setq rcirc-server-alist
         `(("irc.libera.chat"
            :channels ("#emacs" "#tropin" "#rcirc")

@@ -243,15 +243,16 @@
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
+  (:delay 2)
   (setq repeat-on-final-keystroke t
-          repeat-exit-timeout 5
-          repeat-exit-key "<escape>"
-          repeat-keep-prefix nil
-          repeat-check-key t
-          repeat-echo-function 'ignore
-          ;; Technically, this is not in repeal.el, though it is the
-          ;; same idea.
-          set-mark-command-repeat-pop t)
+        repeat-exit-timeout 5
+        repeat-exit-key "<escape>"
+        repeat-keep-prefix nil
+        repeat-check-key t
+        repeat-echo-function 'ignore
+        ;; Technically, this is not in repeal.el, though it is the
+        ;; same idea.
+        set-mark-command-repeat-pop t)
   (add-hook 'after-init-hook #'repeat-mode))
 
 ;;; TMR May Ring (tmr is used to set timers)
