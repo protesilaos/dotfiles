@@ -363,14 +363,21 @@ BUFFER this works with."
   (with-current-buffer buffer
     (setq-local revert-buffer-function
                 (lambda (_ignore-auto _noconfirm)
-                  (funcall fn regexp)))
+                  (funcall fn regexp))
+                ;; FIXME 2023-04-04: The `compile-command' does not
+                ;; feel right here.  We do it because in grep-mode the
+                ;; g key runs `recompile' which falls back to the
+                ;; `compile-command'.  We want it to do the same thing
+                ;; as `revert-buffer'.
+                compile-command `(funcall ',fn ,regexp))
     (let ((inhibit-read-only t))
       (goto-char (point-min))
       (when (re-search-forward (format "-*- mode: %s;" mode) (line-end-position) :no-error 1)
         (insert
-         (format " revert-buffer-function: %S;"
+         (format " revert-buffer-function: %S; compile-command %S;"
                  `(lambda (_ignore-auto _noconfirm)
-                    (,fn ,regexp))))))))
+                    (,fn ,regexp))
+                 `(funcall ,fn ,regexp)))))))
 
 (defun prot-search--start-compilation (args mode buffer command query)
   "Run compilation with ARGS for MODE in BUFFER given COMMAND running QUERY."
@@ -405,7 +412,7 @@ and function as links to the context they reference."
        (read-regexp ,prompt nil 'prot-search--find-grep-hist)))
      (let ((args (,function query))
            (buffer-name (format "*prot-search-find for '%s'*" query)))
-       (prot-search--start-compilation args ,mode buffer-name this-command query))))
+       (prot-search--start-compilation args ,mode buffer-name ',command query))))
 
 (defun prot-search--find-grep-args (regexp)
   "Return find args to produce grep results for REGEXP."
