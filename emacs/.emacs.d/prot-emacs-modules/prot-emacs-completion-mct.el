@@ -9,8 +9,7 @@
 ;; (setq completions-header-format (propertize "%s possible completions:\n" 'face 'shadow))
 ;; (setq completions-highlight-face 'completions-highlight)
 
-(prot-emacs-vc-package 'mct
-  (:url "https://git.sr.ht/~protesilaos/mct")
+(prot-emacs-elpa-package 'mct
   (setq mct-hide-completion-mode-line t)
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
