@@ -213,7 +213,7 @@
         ;; Technically, this is not in repeal.el, though it is the
         ;; same idea.
         set-mark-command-repeat-pop t)
-  (add-hook 'after-init-hook #'repeat-mode))
+  (repeat-mode 1))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
