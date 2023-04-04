@@ -247,7 +247,6 @@ BODY is the configuration associated with PACKAGE."
 (require 'prot-emacs-dired)
 (require 'prot-emacs-window)
 (require 'prot-emacs-git)               ; git, diff, and related
-(require 'prot-emacs-shell)             ; e?shell, man, proced, pass
 (require 'prot-emacs-write)             ; denote, logos, etc.
 (require 'prot-emacs-org)               ; org, calendar, appt
 (require 'prot-emacs-langs)

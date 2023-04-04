@@ -364,5 +364,25 @@
   (setq save-place-forget-unreadable-files t)
   (save-place-mode 1))
 
+;;; Shell (M-x shell)
+(prot-emacs-builtin-package 'shell
+  (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
+  (setq ansi-color-for-comint-mode t)
+  (setenv "PAGER" "cat") ; solves issues, such as with 'git log' and the default 'less'
+  (define-key global-map (kbd "<f1>") #'shell)) ; I don't use F1 for help commands
+
+;;; Tools for manual pages (manpages)
+(prot-emacs-builtin-package 'man
+  (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
+  (let ((map Man-mode-map))
+    (define-key map (kbd "i") #'Man-goto-section)
+    (define-key map (kbd "g") #'Man-update-manpage)))
+
+;;; Proced (process monitor, similar to `top')
+(prot-emacs-builtin-package 'proced
+  (setq proced-auto-update-flag t)
+  (setq proced-auto-update-interval 5)
+  (setq proced-descend t)
+  (setq proced-filter 'user))
 
 (provide 'prot-emacs-essentials)
