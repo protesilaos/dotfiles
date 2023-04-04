@@ -298,8 +298,8 @@
 ;; whenever I would encounter an error in some Lisp evaluation.
 ;; Whereas the server works just fine when I need to connect to it via
 ;; the emacsclient.
-(prot-emacs-builtin-package 'server
-  (add-hook 'after-init-hook #'server-start))
+(prot-emacs-builtin-package 'server (:delay 2)
+  (server-start))
 
 ;;; Emacs desktop (save state of various variables)
 (prot-emacs-builtin-package 'desktop

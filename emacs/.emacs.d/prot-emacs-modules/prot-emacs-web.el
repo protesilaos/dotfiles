@@ -61,9 +61,9 @@
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
-(prot-emacs-elpa-package 'elpher)    ; NOTE 2021-07-24: work-in-progress
+(prot-emacs-elpa-package 'elpher (:delay 5))    ; NOTE 2021-07-24: work-in-progress
 
-(prot-emacs-builtin-package 'prot-eww
+(prot-emacs-builtin-package 'prot-eww (:delay 5)
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)

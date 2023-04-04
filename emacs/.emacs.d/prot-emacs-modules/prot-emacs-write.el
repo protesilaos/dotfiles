@@ -9,7 +9,7 @@
 
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
-(prot-emacs-elpa-package 'altcaps
+(prot-emacs-elpa-package 'altcaps (:delay 10)
   ;; Force letter casing for certain characters (for legibility).
   (setq altcaps-force-character-casing
         '((?i . downcase)
@@ -24,7 +24,7 @@
 
 ;;; Denote (simple note-taking)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
-(prot-emacs-elpa-package 'denote
+(prot-emacs-elpa-package 'denote (:delay 2)
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
   (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
@@ -136,12 +136,12 @@
 
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
-(prot-emacs-elpa-package 'olivetti
+(prot-emacs-elpa-package 'olivetti (:delay 5)
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
-(prot-emacs-elpa-package 'logos
+(prot-emacs-elpa-package 'logos (:delay 5)
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))

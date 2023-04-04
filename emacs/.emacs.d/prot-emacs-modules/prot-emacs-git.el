@@ -188,9 +188,9 @@
         '(("~/Git/Projects" . 1))))
 
 ;;; Smerge and Ediff
-(prot-emacs-builtin-package 'smerge-mode)
+(prot-emacs-builtin-package 'smerge-mode (:delay 10))
 
-(prot-emacs-builtin-package 'ediff
+(prot-emacs-builtin-package 'ediff (:delay 10)
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)
   (setq ediff-merge-revisions-with-ancestor t)
