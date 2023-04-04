@@ -96,6 +96,19 @@
   (setq bookmark-automatically-show-annotations t)
   (setq bookmark-set-fringe-mark t) ; Emacs28
 
-  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
+
+  (defun prot/bookmark-save-no-prompt (&rest _)
+    "Run `bookmark-save' without prompts.
+
+The intent of this function is to be added as an :after advice to
+`bookmark-set-internal'.  Concretely, this means that when
+`bookmark-set-internal' is called, this function is called right
+afterwards.  We set this up because there is no hook after
+setting a bookmark and we want to automatically save bookmarks at
+that point."
+    (funcall 'bookmark-save))
+
+  (advice-add 'bookmark-set-internal :after 'prot/bookmark-save-no-prompt))
 
 (provide 'prot-emacs-search)
