@@ -215,7 +215,7 @@
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-elpa-package 'notmuch-indicator
   (setq notmuch-indicator-args
-        `((:terms "tag:unread and tag:inbox" :label "💬") ; also accepts a face like `:face bold' (no quotes)
+        '((:terms "tag:unread and tag:inbox" :label "💬") ; also accepts a face like `:face bold' (no quotes)
           (:terms "tag:unread and tag:package" :label "🗂️")
           (:terms "tag:unread and tag:coach" :label "🌈"))
         notmuch-indicator-refresh-count (* 60 3)
