@@ -76,7 +76,7 @@
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
 
-(prot-emacs-builtin-package 'image-dired
+(prot-emacs-builtin-package 'image-dired (:delay 10)
   (setq image-dired-thumbnail-storage 'standard)
   (setq image-dired-external-viewer "xdg-open")
   (setq image-dired-thumb-size 80)
@@ -87,7 +87,7 @@
     (kbd "<return>") #'image-dired-thumbnail-display-external))
 
 ;;; dired-like mode for the trash (trashed.el)
-(prot-emacs-elpa-package 'trashed
+(prot-emacs-elpa-package 'trashed (:delay 10)
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
   (setq trashed-sort-key '("Date deleted" . t))

@@ -56,7 +56,7 @@
   (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 
 ;;; Rainbow mode for colour previewing (rainbow-mode.el)
-(prot-emacs-elpa-package 'rainbow-mode
+(prot-emacs-elpa-package 'rainbow-mode (:delay 10)
   (setq rainbow-ansi-colors nil)
   (setq rainbow-x-colors nil)
 

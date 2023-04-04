@@ -20,6 +20,7 @@
 
 ;;; Corfu (in-buffer completion popup)
 (prot-emacs-elpa-package 'corfu
+  (:delay 2)
   (global-corfu-mode 1)
 
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
@@ -38,6 +39,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;;; CAPE (extra completion-at-point backends)
 (prot-emacs-elpa-package 'cape
+  (:delay 2)
   (setq cape-dabbrev-min-length 3)
   (setq cape-symbol-wrapper
         '((org-mode ?~ ?~)

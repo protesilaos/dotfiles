@@ -82,7 +82,7 @@
 (setq-default indent-tabs-mode nil)
 
 ;;; Flyspell and prot-spell.el (spell check)
-(prot-emacs-builtin-package 'flyspell
+(prot-emacs-builtin-package 'flyspell (:delay 2)
   (setq flyspell-issue-message-flag nil)
   (setq flyspell-issue-welcome-flag nil)
   (setq ispell-program-name "aspell")
@@ -90,7 +90,7 @@
   (define-key flyspell-mode-map (kbd "C-;") nil)
   (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
 
-(prot-emacs-builtin-package 'prot-spell
+(prot-emacs-builtin-package 'prot-spell (:delay 2)
   (setq prot-spell-dictionaries
         '(("EN English" . "en")
           ("EL Ελληνικά" . "el")
