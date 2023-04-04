@@ -266,11 +266,6 @@ minibuffer completion."
   ;; (define-key global-map (kbd "<f2>") #'prot/emoji-insert)
   (define-key global-map (kbd "<f2>") #'prot/emoji-insert))
 
-;;; Make Custom UI code disposable
-(prot-emacs-builtin-package 'cus-edit
-  ;; Disable the damn thing
-  (setq custom-file (make-temp-file "emacs-custom-")))
-
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (prot-emacs-elpa-package 'tmr
