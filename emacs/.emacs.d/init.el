@@ -164,7 +164,7 @@ given delay as idle time, per `run-with-idle-timer'."
                        (require ,package nil 'noerror))
             (display-warning 'prot-emacs (format "`%s' failed" ,package) :warning))))
   (if-let ((delay (plist-get (car body) :delay)))
-      (run-with-idle-timer delay nil `(lambda () ,common ,@(cdr body)))
+      `(run-with-idle-timer ,delay nil (lambda () ,common ,@(cdr body)))
     `(progn ,common ,@body))))
 
 (defmacro prot-emacs-elpa-package (package &rest body)
