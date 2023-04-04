@@ -108,47 +108,7 @@
 
 ;;; Prefix keymap (prot-prefix.el)
 (prot-emacs-builtin-package 'prot-prefix
-  ;; TODO 2023-03-26: Can `which-key-mode' be enabled just for this?
-  ;; And/or can transient.el be defined by just giving it keymaps?
-  (define-key global-map (kbd "C-z") prot-prefix-map))
-
-;;; Key chord hints (which-key.el)
-(prot-emacs-elpa-package 'which-key
-  (setq which-key-max-display-columns 3)
-  (setq which-key-add-column-padding 2)
-  (setq which-key-idle-delay 1)
-  (setq which-key-idle-secondary-delay nil)
-  (setq which-key-separator " ")
-  (setq which-key-dont-use-unicode t)
-  (setq which-key-replacement-alist nil)
-
-  ;; FIXME 2023-03-29: How to get key of `prot-prefix-map' and its nested maps?
-  ;; FIXME 2023-03-29: How to get keymap name to avoid this repetition?
-  (which-key-add-key-based-replacements
-    "C-z b" '("Buffer" . "Prefix for buffer commands"))
-
-  (which-key-add-key-based-replacements
-    "C-z f" '("File" . "Prefix for file commands"))
-
-  (which-key-add-key-based-replacements
-    "C-z k" '("Kill" . "Prefix for kill commands"))
-
-  (which-key-add-key-based-replacements
-    "C-z p" '("Popup" . "Prefix for popup commands"))
-
-  (which-key-add-key-based-replacements
-    "C-z r" '("Repeat" . "Prefix for repeat commands"))
-
-  (which-key-add-key-based-replacements
-    "C-z s" '("Search" . "Prefix for search commands"))
-
-  (which-key-add-key-based-replacements
-    "C-z t" '("Toggle" . "Prefix for toggle commands"))
-
-  (which-key-add-key-based-replacements
-    "C-z w" '("Window" . "Prefix for window commands"))
-
-  (which-key-mode 1))
+  (define-key global-map (kbd "C-z") #'prot-prefix))
 
 ;;; Substitute
 ;; Another package of mine... Video demo:
