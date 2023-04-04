@@ -234,8 +234,11 @@
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
-  (define-key prot-prefix-map (kbd "C-z") #'goto-last-change)
-  (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change))
+  (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
+  (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
+
+  (transient-append-suffix 'prot-prefix '(0 -1 -1)
+    '("z" "goto-last-change" goto-last-change)))
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
@@ -249,22 +252,6 @@
           ;; same idea.
           set-mark-command-repeat-pop t)
   (add-hook 'after-init-hook #'repeat-mode))
-
-;;; Emoji input
-(prot-emacs-builtin-package 'emoji
-  (defun prot/emoji-insert (&optional transient)
-    "Thin wrapper for `emoji-insert' and `emoji-search'.
-When called with optional TRANSIENT as a prefix argument, use the
-transient interface (transient.el), else pick an emoji with
-minibuffer completion."
-    (interactive "P")
-    (let ((cmd (if transient 'emoji-list 'emoji-search)))
-      (call-interactively cmd)))
-
-  ;; The default key bindings for Emoji are behind the C-x 8 e prefix.
-  ;; Meanwhile, F2 does something useless in my workflow.
-  ;; (define-key global-map (kbd "<f2>") #'prot/emoji-insert)
-  (define-key global-map (kbd "<f2>") #'prot/emoji-insert))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.

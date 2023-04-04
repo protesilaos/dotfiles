@@ -59,10 +59,11 @@
     (define-key map (kbd "<down>") #'prot-search-isearch-repeat-forward)
     (define-key map (kbd "<backspace>") #'prot-search-isearch-abort-dwim)
     (define-key map (kbd "<C-return>") #'prot-search-isearch-other-end))
-  (let ((map prot-prefix-search-map))
-    (define-key map (kbd "g") #'prot-search-find-grep-buffer)
-    (define-key map (kbd "G") #'prot-search-find-grep-files-buffer)
-    (define-key map (kbd "f") #'prot-search-find-files-buffer)))
+  ;; (let ((map prot-prefix-search-map))
+  ;;   (define-key map (kbd "g") #'prot-search-find-grep-buffer)
+  ;;   (define-key map (kbd "G") #'prot-search-find-grep-files-buffer)
+  ;;   (define-key map (kbd "f") #'prot-search-find-files-buffer))
+  )
 
 ;;; Test regular expressions (re-builder)
 (prot-emacs-builtin-package 're-builder

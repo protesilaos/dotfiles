@@ -33,79 +33,71 @@
 
 ;;; Code:
 
-(defvar-keymap prot-prefix-file-map
-  :doc "Custom keymap with file-related commands.
-Add this to `prot-prefix-map'."
-  :name "File"
-  "f" #'find-file
-  "F" #'find-file-other-window
-  "l" #'find-library
-  "m" #'man
-  "r" #'recentf-open
-  "s" #'save-buffer
-  "w" #'write-file
-  "d" #'dired
-  "D" #'dired-other-window)
+(require 'transient)
 
-(defvar-keymap prot-prefix-buffer-map
-  :doc "Custom keymap with buffer-related commands.
-Add this to `prot-prefix-map'."
-  :name "Buffer"
-  "b" #'switch-to-buffer
-  "B" #'switch-to-buffer-other-window
-  "c" #'clone-indirect-buffer
-  "C" #'clone-indirect-buffer-other-window
-  "k" #'kill-current-buffer
-  "r" #'revert-buffer
-  "R" #'rename-buffer
-  "s" #'save-buffer
-  "n" #'next-buffer
-  "p" #'previous-buffer
-  "m" #'buffer-menu
-  "q" #'bury-buffer)
+(transient-define-prefix prot-prefix-file nil
+  "Transient with file commands."
+  ["File"
+   ("f" "find-file" find-file)
+   ("F" "find-file-other-window" find-file-other-window)
+   ("l" "find-library" find-library)
+   ("m" "man" man)
+   ("r" "recentf-open" recentf-open)
+   ("d" "dired" dired)
+   ("D" "dired-other-window" dired-other-window)])
 
-(defvar-keymap prot-prefix-search-map
-  :doc "Custom keymap with various search (and replace) commands.
-Add this to `prot-prefix-map'."
-  :name "Search"
-  "s" #'isearch-forward
-  "S" #'isearch-forward-regexp
-  "r" #'isearch-backward
-  "R" #'isearch-backward-regexp
-  "q" #'query-replace
-  "Q" #'query-replace-regexp)
+(transient-define-prefix prot-prefix-buffer nil
+  "Transient with buffer commands."
+  ["Buffer\n"
+   ["Switch"
+    ("b" "switch buffer" switch-to-buffer)
+    ("B" "switch buf other window" switch-to-buffer-other-window)
+    ("n" "next-buffer" next-buffer)
+    ("p" "previous-buffer" previous-buffer)
+    ("m" "buffer-menu" buffer-menu)
+    ("q" "bury-buffer" bury-buffer)]
+   ["Persist"
+    ("c" "clone buffer" clone-indirect-buffer)
+    ("C" "clone buf other window" clone-indirect-buffer-other-window)
+    ("r" "rename-buffer" rename-buffer)
+    ("s" "save-buffer" save-buffer)
+    ("w" "write-file" write-file)]
+   ["Destroy"
+    ("k" "kill-current-buffer" kill-current-buffer)
+    ("K" "kill-buffer-and-window" kill-buffer-and-window)
+    ("r" "revert-buffer" revert-buffer)]])
 
-(defvar-keymap prot-prefix-kill-map
-  :doc "Custom keymap with various kill/close commands.
-Add this to `prot-prefix-map'."
-  :name "Kill"
-  "b" #'kill-this-buffer
-  "w" #'delete-window
-  "f" #'delete-frame
-  "e" #'save-buffers-kill-emacs)
+(transient-define-prefix prot-prefix-search nil
+  "Transient with search commands."
+  ["Search and/or replace\n"
+   ["Search"
+    ("s" "isearch-forward" isearch-forward)
+    ("S" "isearch-forward-regexp" isearch-forward-regexp)
+    ("r" "isearch-backward" isearch-backward)
+    ("R" "isearch-backward-regexp" isearch-backward-regexp)
+    ("o" "occur" occur)]
+   ["Edit"
+    ("f" "flush-lines" flush-lines)
+    ("k" "keep-lines" keep-lines)
+    ("q" "query-replace" query-replace)
+    ("Q" "query-replace-regexp" query-replace-regexp)]])
 
-(defvar-keymap prot-prefix-window-map
-  :doc "Custom keymap with various window commands.
-Add this to `prot-prefix-map'."
-  :name "Window"
-  "s" #'split-window-below
-  "v" #'split-window-right
-  "k" #'delete-window
-  "b" #'balance-windows
-  "<down>" #'enlarge-window
-  "<right>" #'enlarge-window-horizontally
-  "<up>" #'shrink-window
-  "<left>" #'shrink-window-horizontally)
+(transient-define-prefix prot-prefix-window nil
+  "Transient with window commands."
+  ["Windows\n"
+   ["Management"
+    ("b" "balance-windows" balance-windows)
+    ("f" "fit-window-to-buffer" fit-window-to-buffer)
+    ("t" "tear-off-window" tear-off-window)]
+   ["Popup"
+    ("c" "calc" calc)
+    ("f" "list-faces-display" list-faces-display)
+    ("r" "re-builder" re-builder)
+    ("w" "world-clock" world-clock)]])
 
-(defvar-keymap prot-prefix-popup-map
-  :doc "Global prefix map for various popup commands."
-  :name "Popup"
-  "f" #'list-faces-display
-  "r" #'re-builder
-  "w" #'world-clock)
-
+;; This is independent of the transient, though still useful.
 (defvar-keymap prot-prefix-repeat-map
-  :doc "Global prefix map for repeatable keybindings."
+  :doc "Global prefix map for repeatable keybindings (per `repeat-mode')."
   :name "Repeat"
   :repeat t
   "n" #'next-buffer
@@ -115,30 +107,37 @@ Add this to `prot-prefix-map'."
   "<up>" #'shrink-window
   "<left>" #'shrink-window-horizontally)
 
-(defvar-keymap prot-prefix-toggle-map
-  :doc "Global prefix map for various toggles."
-  :name "Toggle"
-  "d" #'toggle-debug-on-error
-  "m" #'menu-bar-mode
-  "s" #'scroll-bar-mode
-  "t" #'tool-bar-mode)
+(transient-define-prefix prot-prefix-toggle nil
+  "Transient with minor mode toggles."
+  ["Toggle functionality\n"
+   ["Interface"
+    ("c" "context-bar-mode" context-bar-mode)
+    ("m" "menu-bar-mode" menu-bar-mode)
+    ("s" "scroll-bar-mode" scroll-bar-mode)
+    ("t" "tool-bar-mode" tool-bar-mode)
+    ("v" "visual-line-mode" visual-line-mode)]
+   ["Tools"
+    ("d" "toggle-debug-on-error" toggle-debug-on-error)]])
 
-(defvar-keymap prot-prefix-map
-  :doc "Global prefix map for my custom keymaps.
-This map should be bound to a global prefix."
-  :name "Prot Prefix"
-  "b" prot-prefix-buffer-map
-  "f" prot-prefix-file-map
-  "k" prot-prefix-kill-map
-  "p" prot-prefix-popup-map
-  "r" prot-prefix-repeat-map
-  "s" prot-prefix-search-map
-  "t" prot-prefix-toggle-map
-  "w" prot-prefix-window-map
-  "<down>" #'enlarge-window
-  "<right>" #'enlarge-window-horizontally
-  "<up>" #'shrink-window
-  "<left>" #'shrink-window-horizontally)
+(transient-define-prefix prot-prefix nil
+  "Transient with common commands."
+  ["Prot Prefix\n"
+   ["Buffers/files"
+    ("b" "Buffer" prot-prefix-buffer)
+    ("f" "File" prot-prefix-file)
+    ("s" "Search" prot-prefix-search)]
+   ["Windows"
+    ("w" "Window" prot-prefix-window)
+    ("t" "Toggle" prot-prefix-toggle)]
+   ["Resize"
+    ("<up>"    "shrink-window" shrink-window)
+    ("<down>"  "enlarge-window" enlarge-window)
+    ("<left>"  "shrink-window-horizontally" shrink-window-horizontally)
+    ("<right>" "enlarge-window-horizontally" enlarge-window-horizontally)]
+   ["Misc"
+    ("e" "emoji-search" emoji-insert)
+    ("E" "emoji-list" emoji-list)
+    ("\\" "toggle-input-method" toggle-input-method)]])
 
 (provide 'prot-prefix)
 ;;; prot-prefix.el ends here
