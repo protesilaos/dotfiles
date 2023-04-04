@@ -111,7 +111,7 @@
   "Transient with minor mode toggles."
   ["Toggle functionality\n"
    ["Interface"
-    ("c" "context-bar-mode" context-bar-mode)
+    ("c" "context-menu-mode" context-menu-mode)
     ("m" "menu-bar-mode" menu-bar-mode)
     ("s" "scroll-bar-mode" scroll-bar-mode)
     ("t" "tool-bar-mode" tool-bar-mode)
