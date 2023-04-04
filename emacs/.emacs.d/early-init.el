@@ -66,6 +66,16 @@
       inhibit-startup-echo-area-message user-login-name ; read the docstring
       inhibit-startup-buffer-menu t)
 
+;;; Backups
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backup/")))
+      backup-by-copying t
+      version-control t
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      create-lockfiles nil)
+
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
 

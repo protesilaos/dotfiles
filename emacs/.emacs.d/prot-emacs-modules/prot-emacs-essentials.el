@@ -376,14 +376,5 @@ minibuffer completion."
   (setq save-place-forget-unreadable-files t)
   (save-place-mode 1))
 
-;;; Backups
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backup/"))))
-(setq backup-by-copying t)
-(setq version-control t)
-(setq delete-old-versions t)
-(setq kept-new-versions 6)
-(setq kept-old-versions 2)
-(setq create-lockfiles nil)
 
 (provide 'prot-emacs-essentials)
