@@ -160,23 +160,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq savehist-save-minibuffer-history t)
   (savehist-mode 1))
 
-;;; Completion for recent files and directories (prot-recentf.el)
-(prot-emacs-builtin-package 'recentf
-  (setq recentf-save-file (locate-user-emacs-file "recentf"))
-  (setq recentf-max-saved-items 200)
-  (setq recentf-exclude '(".gz" ".xz" ".zip" ".gpg" ".asc"
-                          "/ssh:" "/sudo:"
-                          "~/.local" "~/.config" "~/.cache"
-                          "/etc" "/usr" "/tmp"
-                          "~/.emacs.d"
-                          "~/Downloads" "~/Pictures"))
-  (recentf-mode 1))
-
-(prot-emacs-builtin-package 'prot-recentf
-  (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
-  (let ((map global-map))
-    (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
-
 ;;; Dabbrev (dynamic word completion)
 (prot-emacs-builtin-package 'dabbrev
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
