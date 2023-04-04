@@ -48,7 +48,7 @@ This is used by `prot-notmuch-delete-mail'."
   :group 'prot-notmuch)
 
 (defcustom prot-notmuch-mark-delete-tags
-  `(,(format "+%s" prot-notmuch-delete-tag) "-inbox" "-archived" "-unread")
+  `(,(format "+%s" prot-notmuch-delete-tag) "-inbox" "-unread")
   "List of tags to mark for deletion.
 To actually delete email, refer to `prot-notmuch-delete-mail'."
   :type '(repeat string)
