@@ -159,6 +159,7 @@
 (prot-emacs-builtin-package 'transient)
 
 (prot-emacs-elpa-package 'magit
+  (:delay 2)
   (setq magit-define-global-key-bindings nil)
   (define-key global-map (kbd "C-c g") #'magit-status)
 

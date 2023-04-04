@@ -92,6 +92,7 @@
 
 ;;; Elfeed feed/RSS reader
 (prot-emacs-elpa-package 'elfeed
+  (:delay 10)
   (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
   (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))

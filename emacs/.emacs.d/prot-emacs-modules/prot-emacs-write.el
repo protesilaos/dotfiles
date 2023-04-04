@@ -118,6 +118,7 @@
 
 ;;; Bibliography
 (prot-emacs-elpa-package 'citar
+  (:delay 10)
   ;; See `denote' key bindings above.  The "C-c n" prefix is a
   ;; mnemonic for "note".
   (define-key global-map (kbd "C-c n c") #'citar-insert-citation)
@@ -129,6 +130,7 @@
       (citar-embark-mode 1))))
 
 (prot-emacs-elpa-package 'citar-denote
+  (:delay 10)
   (citar-denote-mode 1))
 
 ;;; Custom extensions for "focus mode" (logos.el)

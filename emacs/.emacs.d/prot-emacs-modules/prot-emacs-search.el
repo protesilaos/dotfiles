@@ -67,7 +67,7 @@
 
 ;;; wgrep (writable grep)
 (prot-emacs-elpa-package 'wgrep
-  ;(:delay 5)
+  (:delay 5)
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
   (let ((map grep-mode-map))
