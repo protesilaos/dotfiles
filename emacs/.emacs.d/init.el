@@ -274,7 +274,6 @@ BODY is the configuration associated with PACKAGE."
 (when (executable-find "notmuch")
   (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
-(require 'prot-emacs-conveniences)
 
 (setq safe-local-variable-values
       '((org-hide-leading-stars . t)
