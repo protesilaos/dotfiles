@@ -1,7 +1,7 @@
 ;;; Outline mode and outline-minor-mode
 (prot-emacs-builtin-package 'outline
-  (setq outline-minor-mode-highlight 'override) ; emacs28
   (:delay 5)
+  (setq outline-minor-mode-highlight nil) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (setq outline-minor-mode-use-margins nil) ; as above
