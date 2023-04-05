@@ -196,7 +196,7 @@ prompt for a subdirectory using completion.
 
 With optional ARG as a single prefix (`\\[universal-argument]')
 argument, prompt for command line flags to pass to the underlying
-'ls' program.
+ls program.
 
 With optional ARG as a double prefix argument, remove all
 inserted subdirectories."
@@ -232,7 +232,7 @@ inserted subdirectories."
 
 ;;;###autoload
 (defun prot-dired-setup-imenu ()
-  "Configure imenu for the current dired buffer.
+  "Configure imenu for the current Dired buffer.
 Add this to `dired-mode-hook'."
   (set (make-local-variable 'imenu-prev-index-position-function)
        'prot-dired--imenu-prev-index-position)
