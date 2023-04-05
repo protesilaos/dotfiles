@@ -43,18 +43,20 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 
-(dolist (var '(default-frame-alist initial-frame-alist))
-  (add-to-list var '(width . (text-pixels . 1200)))
-  (add-to-list var '(height . (text-pixels . 900)))
-  (add-to-list var '(scroll-bar-width  . 12)))
+(setq default-frame-scroll-bars 'right)
 
-(set-scroll-bar-mode 'left)
+(set-scroll-bar-mode 'right)
 
 (defun prot-emacs-no-minibuffer-scroll-bar (frame)
   "Remove the minibuffer scroll bars from FRAME."
   (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
 
 (add-hook 'after-make-frame-functions #'prot-emacs-no-minibuffer-scroll-bar)
+
+(dolist (var '(default-frame-alist initial-frame-alist))
+  (add-to-list var '(width . (text-pixels . 1200)))
+  (add-to-list var '(height . (text-pixels . 900)))
+  (add-to-list var '(scroll-bar-width  . 12)))
 
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t)
@@ -66,7 +68,6 @@
       inhibit-startup-echo-area-message user-login-name ; read the docstring
       inhibit-startup-buffer-menu t)
 
-;;; Backups
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backup/")))
       backup-by-copying t
@@ -84,9 +85,9 @@
 ;; Allow loading from the package cache
 (setq package-quickstart t)
 
-(setq native-comp-async-report-warnings-errors 'silent) ; emacs28 with native compilation
-(setq native-compile-prune-cache t) ; Emacs 29
-
+(when (native-comp-available-p)
+  (setq native-comp-async-report-warnings-errors 'silent) ; emacs28 with native compilation
+  (setq native-compile-prune-cache t)) ; Emacs 29
 
 ;;;; General theme code
 
