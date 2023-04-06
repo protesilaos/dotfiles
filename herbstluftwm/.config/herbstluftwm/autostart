@@ -106,16 +106,12 @@ _check herbstluftwm_conf_colors && herbstluftwm_conf_colors
 # TODO 2021-11-08: I have kept the defaults here.  Needs review.
 
 _hc unrule -F
-#_hc rule class=XTerm tag=3 # move all xterms to tag 3
 _hc rule focus=on # normally focus new clients
-_hc rule floatplacement=smart
-#_hc rule focus=off # normally do not focus new clients
-# give focus to most common terminals
-#_hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
+_hc rule floatplacement=none
+_hc rule fixedsize floating=on
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
 _hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on floatplacement=center
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
-_hc rule fixedsize floating=on
 
 # Empty frames function as the equivalent of BSPWM's receptacles: they
 # receive the next client.  However, this only works for the focused
