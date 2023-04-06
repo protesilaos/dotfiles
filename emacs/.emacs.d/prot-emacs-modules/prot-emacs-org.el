@@ -52,15 +52,10 @@
     '((t :inherit (bold shadow)))
     "Face for bold and `shadow' Org keywords.")
 
-  (defface prot/org-todo-special
-    '((t :inherit (font-lock-keyword-face org-todo)))
-    "Face for special TODO-type Org keywords.")
-
   (setq org-todo-keyword-faces
         '(("WAIT" . prot/org-bold-todo)
           ("MAYBE" . prot/org-bold-shadow)
-          ("CANCEL" . prot/org-bold-done)
-          ("COACH" . prot/org-todo-special)))
+          ("CANCEL" . prot/org-bold-done)))
   (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces nil)
   (setq org-fontify-done-headline nil)
