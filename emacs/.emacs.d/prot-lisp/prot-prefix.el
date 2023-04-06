@@ -123,8 +123,7 @@
 
 (transient-define-prefix prot-prefix nil
   "Transient with common commands."
-  ["Prot Prefix\n"
-   ["Buffers/files"
+  [["Buffers/files"
     ("b" "Buffer" prot-prefix-buffer)
     ("f" "File" prot-prefix-file)
     ("s" "Search" prot-prefix-search)]
