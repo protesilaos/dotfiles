@@ -55,7 +55,7 @@
                      (message-fetch-field "From"))
                     ((derived-mode-p 'notmuch-show-mode)
                      (notmuch-show-get-header :From)))))
-    (car (split-string from "<"))))
+    (string-clean-whitespace (car (split-string from "<")))))
 
 (defun prot-org--capture-coach-person-prompt ()
   "Prompt for person for use in `prot-org-capture-coach'."
@@ -87,7 +87,7 @@ For use in `prot-org-capture-coach'."
           ":CAPTURED: %U\n"
           ":APPT_WARNTIME: 20\n"
           ":END:\n\n"
-          "%a\n%i%?"))
+          "%a%?"))
 
 (declare-function prot-bongo-show "prot-bongo")
 
