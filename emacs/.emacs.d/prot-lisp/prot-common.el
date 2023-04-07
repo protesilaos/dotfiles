@@ -231,7 +231,7 @@ expression.
 
 With optional N, search in the Nth line from point."
   (save-excursion
-    (goto-char (point-at-bol))
+    (goto-char (line-beginning-position))
     (and (not (bobp))
          (or (beginning-of-line n) t)
          (save-match-data
