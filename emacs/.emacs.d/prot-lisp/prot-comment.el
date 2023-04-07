@@ -130,7 +130,7 @@ specified by `prot-comment-timestamp-format-verbose'."
          (string (format "%s %s: " keyword (format-time-string date)))
          (beg (point)))
     (cond
-     ((or (eq beg (point-at-bol))
+     ((or (eq beg (line-beginning-position))
           (prot-common-line-regexp-p 'empty))
       (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
         ;; NOTE 2021-07-24: we use this `insert' instead of
