@@ -104,6 +104,28 @@ floating points: 16.666666666666664 => 16.667."
     ;; FIXME 2021-12-21: Any way to avoid the `string-to-number'?
     (if (> n round) (string-to-number (format "%0.4f" n)) round)))
 
+;; REVIEW 2023-04-07 07:43 +0300: I just wrote the conversions from
+;; seconds.  Hopefully they are correct, but I need to double check.
+(defun prot-common-seconds-to-minutes (seconds)
+  "Convert a number representing SECONDS to MM:SS notation."
+  (let ((minutes (/ seconds 60))
+        (seconds (% seconds 60)))
+    (format "%.2d:%.2d" minutes seconds)))
+
+(defun prot-common-seconds-to-hours (seconds)
+  "Convert a number representing SECONDS to HH:MM:SS notation."
+  (let* ((hours (/ seconds 3600))
+         (minutes (/ (% seconds 3600) 60))
+         (seconds (% seconds 60)))
+    (format "%.2d:%.2d:%.2d" hours minutes seconds)))
+
+;;;###autoload
+(defun prot-common-seconds-to-minutes-or-hours (seconds)
+  "Convert SECONDS to either minutes or hours, depending on the value."
+  (if (> seconds 3600)
+      (prot-common-seconds-to-hours seconds)
+    (prot-common-seconds-to-minutes seconds)))
+
 ;;;###autoload
 (defun prot-common-rotate-list-of-symbol (symbol)
   "Rotate list value of SYMBOL by moving its car to the end.
