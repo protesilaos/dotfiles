@@ -1,5 +1,5 @@
 ;;; Dired file manager and prot-dired.el extras
-(prot-emacs-builtin-package 'dired
+(prot-emacs-package dired
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
@@ -23,7 +23,7 @@
   ;; problem as j calls `dired-goto-file', which I often use.
   (define-key dired-jump-map (kbd "j") nil))
 
-(prot-emacs-builtin-package 'dired-aux
+(prot-emacs-package dired-aux
   (setq dired-isearch-filenames 'dwim)
   ;; The following variables were introduced in Emacs 27.1
   (setq dired-create-destination-dirs 'ask)
@@ -40,12 +40,12 @@
 ;; ;; because there are other tools that offer a better interface, such
 ;; ;; as `consult-find', `consult-grep', `project-find-file',
 ;; ;; `project-find-regexp', `prot-vc-git-grep'.
-;; (prot-emacs-builtin-package 'find-dired
+;; (prot-emacs-package 'find-dired
 ;;   (setq find-ls-option
 ;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
 ;;   (setq find-name-arg "-iname"))
 
-(prot-emacs-builtin-package 'dired-x
+(prot-emacs-package dired-x
   (setq dired-clean-up-buffers-too t)
   (setq dired-clean-confirm-killing-deleted-buffers t)
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
@@ -53,7 +53,7 @@
   (setq dired-bind-info nil)
   (define-key dired-mode-map (kbd "I") #'dired-info))
 
-(prot-emacs-builtin-package 'prot-dired
+(prot-emacs-package prot-dired
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
   (let ((map dired-mode-map))
@@ -66,17 +66,19 @@
     (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-previous)
     (define-key map (kbd "M-s G") #'prot-dired-grep-marked-files))) ; M-s g is `prot-search-grep'
 
-(prot-emacs-elpa-package 'dired-subtree
+(prot-emacs-package dired-subtree
+  (:install t)
   (setq dired-subtree-use-backgrounds nil)
   (let ((map dired-mode-map))
     (define-key map (kbd "<tab>") #'dired-subtree-toggle)
     (define-key map (kbd "<backtab>") #'dired-subtree-remove))) ; S-TAB
 
-(prot-emacs-builtin-package 'wdired
+(prot-emacs-package wdired
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
 
-(prot-emacs-builtin-package 'image-dired (:delay 10)
+(prot-emacs-package image-dired
+  (:delay 10)
   (setq image-dired-thumbnail-storage 'standard)
   (setq image-dired-external-viewer "xdg-open")
   (setq image-dired-thumb-size 80)
@@ -87,7 +89,9 @@
     (kbd "<return>") #'image-dired-thumbnail-display-external))
 
 ;;; dired-like mode for the trash (trashed.el)
-(prot-emacs-elpa-package 'trashed (:delay 10)
+(prot-emacs-package trashed
+  (:install t)
+  (:delay 10)
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
   (setq trashed-sort-key '("Date deleted" . t))

@@ -1,6 +1,6 @@
 ;;; Projects (project.el)
 
-(prot-emacs-builtin-package 'project
+(prot-emacs-package project
   (setopt project-switch-commands
           '((project-find-file "Find file")
             (project-find-regexp "Find regexp")
@@ -16,7 +16,7 @@
     (define-key map (kbd "C-x p <delete>") #'project-forget-project)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
-(prot-emacs-builtin-package 'diff-mode
+(prot-emacs-package diff-mode
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
@@ -31,7 +31,7 @@
     (define-key map (kbd "v") #'vc-next-action)))
 
 ;;; Version control framework (vc.el, vc-git.el, and more)
-(prot-emacs-builtin-package 'vc
+(prot-emacs-package vc
   ;; Those offer various types of functionality, such as blaming,
   ;; viewing logs, showing a dedicated buffer with changes to affected
   ;; files.
@@ -119,7 +119,9 @@
 ;;; Agitate
 ;; A package of mine to complement VC and friends.  Read the manual
 ;; here: <https://protesilaos.com/emacs/agitate>.
-(prot-emacs-elpa-package 'agitate
+(prot-emacs-package agitate
+  (:install t)
+  (:delay 2)
   (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
   (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
@@ -156,9 +158,10 @@
 ;; There is no need to install the package, as transient.el is built
 ;; into Emacs.  By requiring it, I prevent the installation of the
 ;; package, which would be done by Magit.
-(prot-emacs-builtin-package 'transient)
+(prot-emacs-package transient)
 
-(prot-emacs-elpa-package 'magit
+(prot-emacs-package magit
+  (:install t)
   (:delay 2)
   (setq magit-define-global-key-bindings nil)
   (define-key global-map (kbd "C-c g") #'magit-status)
@@ -188,9 +191,10 @@
         '(("~/Git/Projects" . 1))))
 
 ;;; Smerge and Ediff
-(prot-emacs-builtin-package 'smerge-mode (:delay 10))
+(prot-emacs-package smerge-mode (:delay 10))
 
-(prot-emacs-builtin-package 'ediff (:delay 10)
+(prot-emacs-package ediff
+  (:delay 10)
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)
   (setq ediff-merge-revisions-with-ancestor t)

@@ -7,7 +7,7 @@
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
-(prot-emacs-builtin-package 'notmuch
+(prot-emacs-package notmuch
 
 ;;; Account settings
   (let ((prv (prot-common-auth-get-field "prv" :user))
@@ -172,7 +172,7 @@
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 ;;; My own tweaks for notmuch (prot-notmuch.el)
-(prot-emacs-builtin-package 'prot-notmuch
+(prot-emacs-package prot-notmuch
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
@@ -210,10 +210,11 @@
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
 
 ;;; Glue code for notmuch and org-link (ol-notmuch.el)
-(prot-emacs-elpa-package 'ol-notmuch)
+(prot-emacs-package ol-notmuch (:install t) (:delay 2))
 
 ;;; notmuch-indicator (another package of mine)
-(prot-emacs-elpa-package 'notmuch-indicator
+(prot-emacs-package notmuch-indicator
+  (:install t)
   (setq notmuch-indicator-args
         '((:terms "tag:unread and tag:inbox" :label "💬") ; also accepts a face like `:face bold' (no quotes)
           (:terms "tag:unread and tag:package" :label "🗂️")

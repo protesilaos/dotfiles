@@ -3,7 +3,8 @@
 ;; The themes are customisable.  Read the manual:
 ;; <https://protesilaos.com/emacs/standard-themes>.
 
-(prot-emacs-elpa-package 'standard-themes
+(prot-emacs-package standard-themes
+  (:install t)
   (setq standard-themes-bold-constructs t
         standard-themes-italic-constructs t
         standard-themes-mixed-fonts t

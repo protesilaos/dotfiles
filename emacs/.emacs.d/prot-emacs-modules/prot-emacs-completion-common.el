@@ -1,5 +1,6 @@
 ;;; Orderless completion style (and prot-orderless.el)
-(prot-emacs-elpa-package 'orderless
+(prot-emacs-package orderless
+  (:install t)
   (setq orderless-component-separator " +")
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
@@ -12,14 +13,15 @@
     (define-key map (kbd "SPC") nil)
     (define-key map (kbd "?") nil)))
 
-(prot-emacs-builtin-package 'prot-orderless
+(prot-emacs-package prot-orderless
   (setq orderless-style-dispatchers
         '(prot-orderless-literal
           prot-orderless-file-ext
           prot-orderless-beg-or-end)))
 
 ;;; Corfu (in-buffer completion popup)
-(prot-emacs-elpa-package 'corfu
+(prot-emacs-package corfu
+  (:install t)
   (:delay 2)
   (global-corfu-mode 1)
 
@@ -38,7 +40,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
 
 ;;; CAPE (extra completion-at-point backends)
-(prot-emacs-elpa-package 'cape
+(prot-emacs-package cape
+  (:install t)
   (:delay 2)
   (setq cape-dabbrev-min-length 3)
   (setq cape-symbol-wrapper
@@ -50,7 +53,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Minibuffer configurations
-(prot-emacs-builtin-package 'minibuffer
+(prot-emacs-package minibuffer
   (setq completion-styles '(emacs22 orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
 
@@ -155,7 +158,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1))
 
-(prot-emacs-builtin-package 'savehist
+(prot-emacs-package savehist
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 500)
   (setq history-delete-duplicates t)
@@ -163,7 +166,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (savehist-mode 1))
 
 ;;; Dabbrev (dynamic word completion)
-(prot-emacs-builtin-package 'dabbrev
+(prot-emacs-package dabbrev
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
   (setq dabbrev-backward-only nil)
@@ -178,7 +181,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-key map (kbd "C-x M-/") #'dabbrev-completion)))
 
 ;;; Abbreviations or Abbrevs
-(prot-emacs-builtin-package 'abbrev
+(prot-emacs-package abbrev
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
@@ -225,7 +228,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (add-hook hook #'abbrev-mode)))
 
 ;;; Enhanced minibuffer commands (consult.el)
-(prot-emacs-elpa-package 'consult
+(prot-emacs-package consult
+  (:install t)
   (setq consult-line-numbers-widen t)
   ;; (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-min-input 3)
@@ -264,7 +268,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
       (add-hook 'consult-after-jump-hook fn))))
 
 ;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
-(prot-emacs-elpa-package 'embark
+(prot-emacs-package embark
+  (:install t)
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
   (setq embark-quit-after-action t)
@@ -402,14 +407,14 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
-(prot-emacs-elpa-package 'embark-consult)
+(prot-emacs-package embark-consult)
 
 ;;; Template-based in-buffer completion (tempel.el)
 ;; NOTE 2023-01-12: Check the `templates' file that I distribute with
 ;; my Emacs files as part of my dotfiles:
 ;; <https://git.sr.ht/~protesilaos/dotfiles>.
-(prot-emacs-elpa-package 'tempel
-
+(prot-emacs-package tempel
+  (:install t)
   (setq tempel-path (expand-file-name "tempel-templates" user-emacs-directory))
 
   ;; Setup completion at point

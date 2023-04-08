@@ -92,7 +92,9 @@ Specific to the current window's mode line.")
 (add-hook 'after-init-hook #'column-number-mode)
 
 ;;; Keycast mode
-(prot-emacs-elpa-package 'keycast (:delay 10)
+(prot-emacs-package keycast
+  (:install t)
+  (:delay 10)
   (setq keycast-mode-line-insert-after 'mode-line-buffer-identification)
   (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
   (setq keycast-mode-line-remove-tail-elements nil)

@@ -2,8 +2,8 @@
 
 ;; The themes are customisable.  Read the manual:
 ;; <https://protesilaos.com/emacs/ef-themes>.
-(prot-emacs-elpa-package 'ef-themes
-
+(prot-emacs-package ef-themes
+  (:install t)
   (setq ef-themes-variable-pitch-ui t
         ef-themes-mixed-fonts t
         ef-themes-headings ; read the manual's entry of the doc string

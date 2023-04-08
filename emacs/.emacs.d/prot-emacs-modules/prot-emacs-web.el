@@ -1,17 +1,17 @@
 ;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
-(prot-emacs-builtin-package 'browse-url
+(prot-emacs-package browse-url
   (:delay 5)
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 
-(prot-emacs-builtin-package 'goto-addr
+(prot-emacs-package goto-addr
   (:delay 5)
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
   (setq goto-address-mail-face nil)
   (setq goto-address-mail-mouse-face 'highlight))
 
-(prot-emacs-builtin-package 'shr
+(prot-emacs-package shr
   (:delay 5)
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
@@ -22,11 +22,11 @@
   (setq shr-discard-aria-hidden t)
   (setq shr-cookie-policy nil))
 
-(prot-emacs-builtin-package 'url-cookie
+(prot-emacs-package url-cookie
   (:delay 5)
   (setq url-cookie-untrusted-urls '(".*")))
 
-(prot-emacs-builtin-package 'eww
+(prot-emacs-package eww
   (:delay 5)
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
@@ -61,9 +61,10 @@
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
-(prot-emacs-elpa-package 'elpher (:delay 5))    ; NOTE 2021-07-24: work-in-progress
+(prot-emacs-package elpher (:install t) (:delay 5))    ; NOTE 2021-07-24: work-in-progress
 
-(prot-emacs-builtin-package 'prot-eww (:delay 5)
+(prot-emacs-package prot-eww
+  (:delay 5)
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)
@@ -91,7 +92,8 @@
     (define-key map (kbd "Q") #'prot-eww-quit)))
 
 ;;; Elfeed feed/RSS reader
-(prot-emacs-elpa-package 'elfeed
+(prot-emacs-package elfeed
+  (:install t)
   (:delay 10)
   (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
@@ -121,7 +123,7 @@
     (define-key map (kbd "w") #'elfeed-show-yank)))
 
 (with-eval-after-load 'elfeed
-  (prot-emacs-builtin-package 'prot-elfeed
+  (prot-emacs-package 'prot-elfeed
     (setq prot-elfeed-tag-faces t)
     (prot-elfeed-fontify-tags)
     (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
@@ -131,32 +133,9 @@
       (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
     (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
 
-;;; Elfeed extensions for watching videos (elfeed-tube)
-(prot-emacs-elpa-package 'elfeed-tube
-  ;; (setq elfeed-tube-auto-save-p nil) ; default value
-  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
-  (elfeed-tube-setup)
-
-  (let ((map elfeed-show-mode-map))
-    (define-key map (kbd "F") #'elfeed-tube-fetch)
-    (define-key map [remap save-buffer] #'elfeed-tube-save))
-  (let ((map elfeed-search-mode-map))
-    (define-key map (kbd "F") #'elfeed-tube-fetch)
-    (define-key map [remap save-buffer] #'elfeed-tube-save)))
-
-(prot-emacs-elpa-package 'mpv)
-
-(prot-emacs-elpa-package 'elfeed-tube-mpv
-  (define-key elfeed-search-mode-map (kbd "v") 'elfeed-tube-mpv)
-  (let ((map elfeed-show-mode-map))
-    (define-key map (kbd "v") 'elfeed-tube-mpv)
-    (define-key map (kbd "C-c C-v") 'elfeed-tube-mpv)
-    (define-key map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
-    (define-key map (kbd "C-c C-w") 'elfeed-tube-mpv-where)))
-
 ;;; Rcirc (IRC client)
-(prot-emacs-builtin-package 'rcirc
-  (:delay 5)
+(prot-emacs-package rcirc
+  (:delay 10)
   (setq rcirc-server-alist
         `(("irc.libera.chat"
            :channels ("#emacs" "#tropin" "#rcirc")

@@ -7,27 +7,29 @@
 (add-hook 'text-mode-hook #'turn-on-auto-fill)
 
 ;;; Plain text (text-mode)
-(prot-emacs-builtin-package 'text-mode
+(prot-emacs-package text-mode
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode)))
 
 ;;; Markdown (markdown-mode)
-(prot-emacs-elpa-package 'markdown-mode
+(prot-emacs-package markdown-mode
+  (:install t)
   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 
 ;;; Shell scripts (sh-mode)
-(prot-emacs-builtin-package 'sh-script
+(prot-emacs-package sh-script
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
 ;;; SXHKDRC mode (one of my many packages)
-(prot-emacs-elpa-package 'sxhkdrc-mode
+(prot-emacs-package sxhkdrc-mode
+  (:install t)
   ;; By default, it only applies to the sxhkdrc file, but I have other
   ;; relevant entries as well.  I separate my keys into different
   ;; modules and load only what I need.
   (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
 
 ;;; Comments (newcomment.el and prot-comment.el)
-(prot-emacs-builtin-package 'newcomment
+(prot-emacs-package newcomment
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
@@ -36,7 +38,7 @@
     (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
     (define-key map (kbd "M-;") #'comment-indent)))
 
-(prot-emacs-builtin-package 'prot-comment
+(prot-emacs-package prot-comment
   (setq prot-comment-comment-keywords
         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
@@ -46,7 +48,7 @@
     (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
 
 ;;; Configure 'electric' behaviour
-(prot-emacs-builtin-package 'electric
+(prot-emacs-package electric
   (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
   (setq electric-pair-pairs
@@ -68,7 +70,7 @@
   (add-hook 'prog-mode-hook #'electric-indent-local-mode))
 
 ;;; Parentheses (show-paren-mode)
-(prot-emacs-builtin-package 'paren
+(prot-emacs-package paren
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
@@ -82,7 +84,8 @@
 (setq-default indent-tabs-mode nil)
 
 ;;; Flyspell and prot-spell.el (spell check)
-(prot-emacs-builtin-package 'flyspell (:delay 2)
+(prot-emacs-package flyspell
+  (:delay 2)
   (setq flyspell-issue-message-flag nil)
   (setq flyspell-issue-welcome-flag nil)
   (setq ispell-program-name "aspell")
@@ -90,7 +93,8 @@
   (define-key flyspell-mode-map (kbd "C-;") nil)
   (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
 
-(prot-emacs-builtin-package 'prot-spell (:delay 2)
+(prot-emacs-package prot-spell
+  (:delay 2)
   (setq prot-spell-dictionaries
         '(("EN English" . "en")
           ("EL Ελληνικά" . "el")
@@ -106,7 +110,7 @@
     (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
 
 ;;; Flymake
-(prot-emacs-builtin-package 'flymake
+(prot-emacs-package flymake
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
   (setq flymake-start-on-flymake-mode t)
@@ -148,15 +152,17 @@
     (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
 
 ;;; Elisp packaging requirements
-(prot-emacs-elpa-package 'package-lint-flymake
+(prot-emacs-package package-lint-flymake
+  (:install t)
+  (:delay 2)
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 
 ;;; Eldoc (elisp live documentation feedback)
-(prot-emacs-builtin-package 'eldoc
+(prot-emacs-package eldoc
   (global-eldoc-mode 1))
 
 ;;; Handle performance for very long lines (so-long.el)
-(prot-emacs-builtin-package 'so-long
+(prot-emacs-package so-long
   (global-so-long-mode 1))
 
 (provide 'prot-emacs-langs)

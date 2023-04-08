@@ -1,5 +1,6 @@
 ;;; Vertical completion layout
-(prot-emacs-elpa-package 'vertico
+(prot-emacs-package vertico
+  (:install t)
   ;; Those are the default values, but check the user option
   ;; `vertico-multiform-categories' for per-category tweaks.
   (setq vertico-scroll-margin 0)
@@ -20,7 +21,8 @@
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
 ;;; Detailed completion annotations (marginalia.el)
-(prot-emacs-elpa-package 'marginalia
+(prot-emacs-package marginalia
+  (:install t)
   (setq marginalia-max-relative-age 0) ; absolute time
   (marginalia-mode 1))
 

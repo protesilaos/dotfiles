@@ -148,87 +148,110 @@ before all other modules of my setup."
 
 (setq custom-safe-themes t)
 
-(defmacro prot-emacs-builtin-package (package &rest body)
-  "Set up builtin PACKAGE with rest BODY.
-PACKAGE is a quoted symbol, while BODY consists of balanced
-expressions.
+(defun prot-emacs-package-install (package &optional method)
+  "Install PACKAGE with optional METHOD.
 
-Ignore PACKAGE if it is a member of `prot-emacs-omit-packages'.
+If METHOD is nil or the `builtin' symbol, PACKAGE is not
+installed as it is considered part of Emacs.
 
-The first element of BODY can be a property list of (:delay
-number).  PACKAGE and the `cdr' of BODY are then loaded with the
-given delay as idle time, per `run-with-idle-timer'."
+If METHOD is a string, it must be a URL pointing to the version
+controlled repository of PACKAGE.  Installation is done with
+`package-vc-install'.
+
+If METHOD is a quoted list, it must have a form accepted by
+`package-vc-install' such as:
+
+\\='(denote :url \"https://git.sr.ht/~protesilaos/denote\" :branch \"main\")
+
+If METHOD is any other non-nil value, install PACKAGE using
+`package-install'."
+  (unless (or (eq method 'builtin) (null method))
+    (unless (package-installed-p package)
+      (if (or (stringp method) (listp method))
+          (package-vc-install method))
+      (unless package-archive-contents
+        (package-refresh-contents))
+      (package-install package))))
+
+(defmacro prot-emacs-package (package &rest body)
+  "Require PACKAGE with BODY configurations.
+
+PACKAGE is an unquoted symbol that is passed to `require'.  It
+thus conforms with `featurep'.
+
+BODY consists of ordinary Lisp expressions.  There are,
+nevertheless, two unquoted plists that are treated specially:
+
+1. (:install METHOD)
+2. (:delay NUMBER)
+
+These plists can be anywhere in BODY and are not part of its
+final expansion.
+
+The :install property is the argument passed to
+`prot-emacs-package-install' and has the meaning of METHOD
+described therein.
+
+The :delay property makes the evaluation of PACKAGE with the
+expanded BODY happen with `run-with-idle-timer'."
   (declare (indent 1))
-  (let ((common
-         `(unless (and (not (memq ,package prot-emacs-omit-packages))
-                       (require ,package nil 'noerror))
-            (display-warning 'prot-emacs (format "`%s' failed" ,package) :warning))))
-  (if-let ((delay (plist-get (car body) :delay)))
-      `(run-with-idle-timer ,delay nil (lambda () ,common ,@(cdr body)))
-    `(progn ,common ,@body))))
+  (unless (memq package prot-emacs-omit-packages)
+    (let (install delay)
+      (dolist (element body)
+        (when (plistp element)
+          (pcase (car element)
+            (:install (setq install (cdr element)
+                            body (delq element body)))
+            (:delay (setq delay (cadr element)
+                          body (delq element body))))))
+      (let ((common `(,(when install
+                         `(prot-emacs-package-install ',package ,@install))
+                      (require ',package)
+                      ,@body)))
+        (if delay
+            `(run-with-idle-timer ,delay nil (lambda () ,@(delq nil common)))
+          `(progn ,@(delq nil common)))))))
 
-(defmacro prot-emacs-elpa-package (package &rest body)
-  "Set up PACKAGE from an Elisp archive with rest BODY.
-PACKAGE is a quoted symbol, while BODY consists of balanced
-expressions.
+;; Samples of `prot-emacs-package' (expand them with `pp-macroexpand-last-sexp').
 
-Try to install the PACKAGE if it is missing.
-
-Ignore PACKAGE, including the step of installing it, if it is a
-member of `prot-emacs-omit-packages'.
-
-The first element of BODY can be a property list of (:delay
-number).  PACKAGE and the `cdr' of BODY are then loaded with the
-given delay as idle time, per `run-with-idle-timer'."
-  (declare (indent 1))
-  ;; FIXME 2023-04-04: Avoid duplication like with `prot-emacs-builtin-package'.
-  (if-let ((delay (plist-get (car body) :delay)))
-      `(run-with-idle-timer
-        ,delay nil
-        (lambda ()
-          (unless (memq ,package prot-emacs-omit-packages)
-            (progn
-              (when (not (package-installed-p ,package))
-                (unless package-archive-contents
-                  (package-refresh-contents))
-                (package-install ,package))
-              (if (require ,package nil 'noerror)
-                  (progn ,@(cdr body))
-                (display-warning 'prot-emacs (format "`%s' failed" ,package) :warning))))))
-    `(unless (memq ,package prot-emacs-omit-packages)
-       (progn
-         (when (not (package-installed-p ,package))
-           (unless package-archive-contents
-             (package-refresh-contents))
-           (package-install ,package))
-         (if (require ,package nil 'noerror)
-             (progn ,@body)
-           (display-warning 'prot-emacs (format "`%s' failed" ,package) :warning))))))
-
-(defmacro prot-emacs-vc-package (package remote &rest body)
-  "Set up PACKAGE from its REMOTE source.
-REMOTE is a plist that specifies:
-
-- :url     A string pointing to the URL of the PACKAGE source.
-           This is required.
-
-- :branch  The branch to build from.  This is optional.  It
-            defaults to the REMOTE's main branch.
-
-BODY is the configuration associated with PACKAGE."
-  (declare (indent 1))
-  `(unless (memq ,package prot-emacs-omit-packages)
-     (progn
-       (when (not (package-installed-p ,package))
-         (package-vc-install
-          (cons ,package (list :url ,(plist-get remote :url)
-                               ,@(when-let ((b (plist-get remote :branch)))
-                                   (list :branch b))))))
-       (if (require ,package nil 'noerror)
-           (progn ,@body)
-         (display-warning 'prot-emacs
-                          (format "Loading `%s' failed" ,package)
-                          :warning)))))
+;; (prot-emacs-package 'denote
+;;   (setq denote-directory "path/to/dir")
+;;   (define-key global-map (kbd "C-c n") #'denote)
+;;   (:install '(denote . (:url "https://git.sr.ht/~protesilaos/denote" :branch "main")))
+;;   (:delay 5)
+;;   (setq denote-file-type nil))
+;;
+;; (prot-emacs-package 'denote
+;;   (setq denote-directory "path/to/dir")
+;;   (define-key global-map (kbd "C-c n") #'denote)
+;;   (:install "https://git.sr.ht/~protesilaos/denote")
+;;   (:delay 5)
+;;   (setq denote-file-type nil))
+;;
+;; (prot-emacs-package 'denote
+;;   (:delay 5)
+;;   (setq denote-directory "path/to/dir")
+;;   (define-key global-map (kbd "C-c n") #'denote)
+;;   (:install "https://git.sr.ht/~protesilaos/denote")
+;;   (setq denote-file-type nil))
+;;
+;; (prot-emacs-package 'denote
+;;   (:install "https://git.sr.ht/~protesilaos/denote")
+;;   (:delay 5)
+;;   (setq denote-directory "path/to/dir")
+;;   (define-key global-map (kbd "C-c n") #'denote)
+;;   (setq denote-file-type nil))
+;;
+;; (prot-emacs-package 'denote
+;;   (:delay 5)
+;;   (setq denote-directory "path/to/dir")
+;;   (define-key global-map (kbd "C-c n") #'denote)
+;;   (setq denote-file-type nil))
+;;
+;; (prot-emacs-package 'denote
+;;   (setq denote-directory "path/to/dir")
+;;   (define-key global-map (kbd "C-c n") #'denote)
+;;   (setq denote-file-type nil))
 
 (defvar prot-emacs-package-form-regexp
   "^(\\(prot-emacs-.*-package\\|require\\) +'\\([0-9a-zA-Z-]+\\)"

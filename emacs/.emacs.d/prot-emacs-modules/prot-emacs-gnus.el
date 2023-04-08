@@ -3,7 +3,7 @@
 ;; `modus-themes', `standard-themes').
 
 
-(prot-emacs-builtin-package 'gnus
+(prot-emacs-package gnus
   (require 'gnus-sum)
   (require 'gnus-dired)
   (require 'gnus-topic)
@@ -170,7 +170,7 @@
     (define-key map (kbd "C-M-p") #'gnus-summary-prev-group)
     (define-key map (kbd "C-M-^") #'gnus-summary-refer-thread)))
 
-(prot-emacs-builtin-package 'nnmail
+(prot-emacs-package nnmail
   (setq nnmail-expiry-wait 30))         ; careful with this
 
 (provide 'prot-emacs-gnus)

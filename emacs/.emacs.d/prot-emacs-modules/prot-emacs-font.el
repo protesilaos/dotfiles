@@ -1,6 +1,7 @@
 ;;; Fontaine (font configurations)
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
-(prot-emacs-elpa-package 'fontaine
+(prot-emacs-package fontaine
+  (:install t)
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line nil)
 

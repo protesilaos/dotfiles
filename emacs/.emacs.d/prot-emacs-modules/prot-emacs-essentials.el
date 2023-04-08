@@ -12,10 +12,10 @@
 ;;   (exec-path-from-shell-initialize))
 
 ;;; Common auxiliary functions (prot-common.el)
-(prot-emacs-builtin-package 'prot-common)
+(prot-emacs-package prot-common)
 
 ;;; Common custom functions (prot-simple.el)
-(prot-emacs-builtin-package 'prot-simple
+(prot-emacs-package prot-simple
   (setq prot-simple-insert-pair-alist
         '(("' Single quote"        . (39 39))     ; ' '
           ("\" Double quotes"      . (34 34))     ; " "
@@ -107,13 +107,15 @@
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
 ;;; Prefix keymap (prot-prefix.el)
-(prot-emacs-builtin-package 'prot-prefix
+(prot-emacs-package prot-prefix
   (define-key global-map (kbd "C-z") #'prot-prefix))
 
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
-(prot-emacs-elpa-package 'substitute
+(prot-emacs-package substitute
+  (:install t)
+  (:delay 2)
   ;; Set this to non-nil to highlight all occurences of the current
   ;; target.
   (setopt substitute-highlight t)
@@ -144,7 +146,7 @@
   (define-key map "l" #'visual-line-mode))
 
 ;;; Mouse wheel behaviour
-(prot-emacs-builtin-package 'mouse
+(prot-emacs-package mouse
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
   (setq mouse-wheel-scroll-amount
         '(1
@@ -166,11 +168,11 @@
               next-screen-context-lines 0)
 
 ;;; Delete selection
-(prot-emacs-builtin-package 'delsel
+(prot-emacs-package delsel
   (add-hook 'after-init-hook #'delete-selection-mode))
 
 ;;; Tooltips (tooltip-mode)
-(prot-emacs-builtin-package 'tooltip
+(prot-emacs-package tooltip
   (setq tooltip-delay 0.5
         tooltip-short-delay 0.5
         x-gtk-use-system-tooltips nil
@@ -182,7 +184,7 @@
   (add-hook 'after-init-hook #'tooltip-mode))
 
 ;;; Auto revert mode
-(prot-emacs-builtin-package 'autorevert
+(prot-emacs-package autorevert
   (setq auto-revert-verbose t)
   (add-hook 'after-init-hook #'global-auto-revert-mode))
 
@@ -193,7 +195,8 @@
 (setq mode-require-final-newline 'visit-save)
 
 ;;; Go to last change
-(prot-emacs-elpa-package 'goto-last-change
+(prot-emacs-package goto-last-change
+  (:install t)
   (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
   (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
 
@@ -202,7 +205,7 @@
       '("z" "goto-last-change" goto-last-change))))
 
 ;;; Repeatable key chords (repeat-mode)
-(prot-emacs-builtin-package 'repeat
+(prot-emacs-package repeat
   (:delay 2)
   (setq repeat-on-final-keystroke t
         repeat-exit-timeout 5
@@ -217,7 +220,9 @@
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
-(prot-emacs-elpa-package 'tmr
+(prot-emacs-package tmr
+  (:install t)
+  (:delay 5)
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
         tmr-notification-urgency 'normal
         tmr-description-list 'tmr-description-history)
@@ -234,7 +239,7 @@
     (define-key map (kbd "C-c t R") #'tmr-remove-finished)))
 
 ;;; Display current time
-(prot-emacs-builtin-package 'time
+(prot-emacs-package time
   (setq display-time-format "%a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
@@ -280,13 +285,15 @@
   (add-hook 'after-init-hook #'display-time-mode))
 
 ;;; Pass interface (password-store)
-(prot-emacs-elpa-package 'password-store
+(prot-emacs-package password-store
+  (:install t)
+  (:delay 2)
   (setq password-store-time-before-clipboard-restore 30)
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
   (define-key global-map (kbd "C-c k") #'password-store-copy))
 
-(prot-emacs-elpa-package 'pass)
+(prot-emacs-package pass (:install t) (:delay 2))
 
 ;;; Emacs server (allow emacsclient to connect to running session)
 ;; The "server" is functionally like the daemon, except it is run by
@@ -298,11 +305,12 @@
 ;; whenever I would encounter an error in some Lisp evaluation.
 ;; Whereas the server works just fine when I need to connect to it via
 ;; the emacsclient.
-(prot-emacs-builtin-package 'server (:delay 2)
+(prot-emacs-package server
+  (:delay 2)
   (server-start))
 
 ;;; Emacs desktop (save state of various variables)
-(prot-emacs-builtin-package 'desktop
+(prot-emacs-package desktop
   (setq desktop-auto-save-timeout 300)
   (setq desktop-path `(,user-emacs-directory))
   (setq desktop-base-file-name "desktop")
@@ -320,13 +328,13 @@
   (desktop-save-mode 1))
 
 ;;; Record cursor position
-(prot-emacs-builtin-package 'saveplace
+(prot-emacs-package saveplace
   (setq save-place-file (locate-user-emacs-file "saveplace"))
   (setq save-place-forget-unreadable-files t)
   (save-place-mode 1))
 
 ;;; Shell (M-x shell)
-(prot-emacs-builtin-package 'shell
+(prot-emacs-package shell
   (:delay 5)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t)
@@ -334,7 +342,7 @@
   (define-key global-map (kbd "<f1>") #'shell)) ; I don't use F1 for help commands
 
 ;;; Tools for manual pages (manpages)
-(prot-emacs-builtin-package 'man
+(prot-emacs-package man
   (:delay 10)
   (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
   (let ((map Man-mode-map))
@@ -342,7 +350,7 @@
     (define-key map (kbd "g") #'Man-update-manpage)))
 
 ;;; Proced (process monitor, similar to `top')
-(prot-emacs-builtin-package 'proced
+(prot-emacs-package proced
   (:delay 10)
   (setq proced-auto-update-flag t)
   (setq proced-auto-update-interval 5)

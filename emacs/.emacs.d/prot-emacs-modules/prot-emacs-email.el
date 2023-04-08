@@ -1,20 +1,20 @@
 ;;; Client-agnostic email settings
-(prot-emacs-builtin-package 'auth-source
+(prot-emacs-package auth-source
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
         user-mail-address "public@protesilaos.com"))
 
-(prot-emacs-builtin-package 'mm-encode
+(prot-emacs-package mm-encode
   (setq mm-encrypt-option nil ; use 'guided if you need more control
         mm-sign-option nil))  ; same
 
-(prot-emacs-builtin-package 'mml-sec
+(prot-emacs-package mml-sec
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
         mml-secure-smime-sign-with-sender t))
 
-(prot-emacs-builtin-package 'message
+(prot-emacs-package message
   (setq mail-user-agent 'message-user-agent
         mail-header-separator (purecopy "*****")
         message-elide-ellipsis "\n> [... %l lines elided]\n"
@@ -34,11 +34,11 @@
 
   (add-hook 'message-setup-hook #'message-sort-headers))
 
-(prot-emacs-builtin-package 'gnus-dired ; does not require `gnus'
+(prot-emacs-package gnus-dired ; does not require `gnus'
   (add-hook 'dired-mode-hook #'gnus-dired-mode))
 
 ;;; Sending email (SMTP)
-(prot-emacs-builtin-package 'smtpmail
+(prot-emacs-package smtpmail
   ;; ;; FIXME 2023-01-26: Do I need any of this?  It seems that the
   ;; ;; contents of the `auth-sources' suffice for this case and
   ;; ;; smtpmail.el is set up to do the right thing out-of-the-box.
@@ -50,7 +50,7 @@
         smtpmail-smtp-service 465
         smtpmail-queue-mail nil))
 
-(prot-emacs-builtin-package 'sendmail
+(prot-emacs-package sendmail
   (setq send-mail-function 'smtpmail-send-it))
 
 (provide 'prot-emacs-email)

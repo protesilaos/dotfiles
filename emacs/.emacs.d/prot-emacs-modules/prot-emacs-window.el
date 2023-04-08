@@ -1,5 +1,5 @@
 ;;; Unique names for buffers
-(prot-emacs-builtin-package 'uniquify
+(prot-emacs-package uniquify
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
   (setq uniquify-after-kill-buffer-p t))
@@ -8,7 +8,7 @@
 ;; NOTE 2023-03-17: Remember that I am using development versions of
 ;; Emacs.  Some of my `display-buffer-alist' contents are for Emacs
 ;; 29+.
-(prot-emacs-builtin-package 'window
+(prot-emacs-package window
   (setq display-buffer-alist
         `(;; no window
           ("\\`\\*Async Shell Command\\*\\'"
@@ -117,15 +117,16 @@ use in `display-buffer-alist'."
     (define-key map "<" #'shrink-window-horizontally)))
 
 ;;; Window history (winner-mode)
-(prot-emacs-builtin-package 'winner
-  (add-hook 'after-init-hook #'winner-mode)
+(prot-emacs-package winner
+  (:delay 2)
+  (winner-mode 1)
 
   (let ((map global-map))
     (define-key map (kbd "C-x <right>") #'winner-redo)
     (define-key map (kbd "C-x <left>") #'winner-undo)))
 
 ;;; Directional window motions (windmove)
-(prot-emacs-builtin-package 'windmove
+(prot-emacs-package windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
   (let ((map global-map))
     ;; Those override some commands that are already available with
@@ -142,7 +143,8 @@ use in `display-buffer-alist'."
 ;;; Frame-isolated buffers
 ;; Another package of mine.  Read the manual:
 ;; <https://protesilaos.com/emacs/beframe>.
-(prot-emacs-elpa-package 'beframe
+(prot-emacs-package beframe
+  (:install t)
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
 
   (beframe-mode 1)
@@ -155,7 +157,8 @@ use in `display-buffer-alist'."
     (define-key map (kbd "C-x C-b") #'beframe-buffer-menu)))
 
 ;;; Line numbers and relevant indicators (prot-sideline.el)
-(prot-emacs-builtin-package 'prot-sideline
+(prot-emacs-package prot-sideline
+  (:delay 2)
   (require 'display-line-numbers)
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)

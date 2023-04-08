@@ -1,7 +1,7 @@
 ;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
-(prot-emacs-elpa-package 'pulsar
-
+(prot-emacs-package pulsar
+  (:install t)
   (dolist (cmd '( narrow-to-page narrow-to-defun
                   narrow-to-region widen
                   logos-forward-page-dwim
@@ -30,7 +30,8 @@
 
 ;;; Lin
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
-(prot-emacs-elpa-package 'lin
+(prot-emacs-package lin
+  (:install t)
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
@@ -56,7 +57,9 @@
   (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 
 ;;; Rainbow mode for colour previewing (rainbow-mode.el)
-(prot-emacs-elpa-package 'rainbow-mode (:delay 10)
+(prot-emacs-package rainbow-mode
+  (:install t)
+  (:delay 10)
   (setq rainbow-ansi-colors nil)
   (setq rainbow-x-colors nil)
 
@@ -71,7 +74,7 @@
   (define-key ctl-x-x-map "c" #'rainbow-mode)) ; C-x x c
 
 ;;; Fringe mode
-(prot-emacs-builtin-package 'fringe
+(prot-emacs-package fringe
   (fringe-mode nil)
   (setq-default fringes-outside-margins nil)
   (setq-default indicate-buffer-boundaries nil)
@@ -80,7 +83,8 @@
 
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
-(prot-emacs-elpa-package 'cursory
+(prot-emacs-package cursory
+  (:install t)
   (setq cursory-presets
         '((box
            :blink-cursor-interval 0.8)

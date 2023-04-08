@@ -1,5 +1,5 @@
 ;;; Outline mode and outline-minor-mode
-(prot-emacs-builtin-package 'outline
+(prot-emacs-package outline
   (:delay 5)
   (setq outline-minor-mode-highlight nil) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
@@ -9,7 +9,9 @@
 
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
-(prot-emacs-elpa-package 'altcaps (:delay 10)
+(prot-emacs-package altcaps
+  (:install t)
+  (:delay 10)
   ;; Force letter casing for certain characters (for legibility).
   (setq altcaps-force-character-casing
         '((?i . downcase)
@@ -24,7 +26,9 @@
 
 ;;; Denote (simple note-taking)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
-(prot-emacs-elpa-package 'denote (:delay 2)
+(prot-emacs-package denote
+  (:install t)
+  (:delay 2)
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
   (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
@@ -118,7 +122,8 @@
                    :jump-to-captured t))))
 
 ;;; Bibliography
-(prot-emacs-elpa-package 'citar
+(prot-emacs-package citar
+  (:install t)
   (:delay 10)
   ;; See `denote' key bindings above.  The "C-c n" prefix is a
   ;; mnemonic for "note".
@@ -130,18 +135,23 @@
       (setopt citar-at-point-function 'embark-act)
       (citar-embark-mode 1))))
 
-(prot-emacs-elpa-package 'citar-denote
+(prot-emacs-package citar-denote
+  (:install t)
   (:delay 10)
   (citar-denote-mode 1))
 
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
-(prot-emacs-elpa-package 'olivetti (:delay 5)
+(prot-emacs-package olivetti
+  (:install t)
+  (:delay 5)
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
-(prot-emacs-elpa-package 'logos (:delay 5)
+(prot-emacs-package logos
+  (:install t)
+  (:delay 5)
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
@@ -182,7 +192,7 @@
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
 
 ;;; Dictionary
-(prot-emacs-builtin-package 'dictionary
+(prot-emacs-package dictionary
   (:delay 10)
   (setq dictionary-server "dict.org"
           dictionary-default-popup-strategy "lev" ; read doc string

@@ -1,6 +1,6 @@
 ;;; Org-mode (personal information manager)
 
-(prot-emacs-builtin-package 'org
+(prot-emacs-package org
   (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
 ;;;; general settings
@@ -403,7 +403,7 @@
     (define-key map (kbd "C-c C-M-l") #'org-toggle-link-display)))
 
 ;;; Custom extensions (prot-org.el)
-(prot-emacs-builtin-package 'prot-org
+(prot-emacs-package prot-org
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
@@ -444,7 +444,9 @@
                  :immediate-finish t)))
 
 ;;; org-modern
-(prot-emacs-elpa-package 'org-modern (:delay 2)
+(prot-emacs-package org-modern
+  (:install t)
+  (:delay 2)
   (setq org-modern-label-border 1)
   (setq org-modern-variable-pitch nil)
   (setq org-modern-timestamp t)
@@ -482,7 +484,8 @@
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
 
 ;;; Calendar
-(prot-emacs-builtin-package 'calendar (:delay 2)
+(prot-emacs-package calendar
+  (:delay 2)
   (setq calendar-mark-diary-entries-flag t)
   (setq calendar-mark-holidays-flag t)
   (setq calendar-mode-line-format nil)
@@ -504,7 +507,8 @@
   (setq calendar-daylight-time-zone-name "+0300"))
 
 ;;; Appt (appointment reminders which also integrate with Org agenda)
-(prot-emacs-builtin-package 'appt (:delay 2)
+(prot-emacs-package appt
+  (:delay 2)
   (setopt appt-display-diary nil
           appt-display-format nil
           appt-display-mode-line t

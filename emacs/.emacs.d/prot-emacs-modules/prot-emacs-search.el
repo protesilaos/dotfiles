@@ -1,5 +1,5 @@
 ;;; Isearch, occur, grep, and extras (prot-search.el)
-(prot-emacs-builtin-package 'isearch
+(prot-emacs-package isearch
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
@@ -22,15 +22,16 @@
     (define-key map (kbd "C-g") #'isearch-cancel) ; instead of `isearch-abort'
     (define-key map (kbd "M-/") #'isearch-complete)))
 
-(prot-emacs-builtin-package 'replace
+(prot-emacs-package replace
+  (:delay 2)
   (setq list-matching-lines-jump-to-current-line nil)
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
-(prot-emacs-builtin-package 'grep)
+(prot-emacs-package grep (:delay 2))
 
-(prot-emacs-builtin-package 'prot-search
+(prot-emacs-package prot-search
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
@@ -61,12 +62,13 @@
     (define-key map (kbd "<C-return>") #'prot-search-isearch-other-end)))
 
 ;;; Test regular expressions (re-builder)
-(prot-emacs-builtin-package 're-builder
+(prot-emacs-package re-builder
   (:delay 5)
   (setq reb-re-syntax 'read))
 
 ;;; wgrep (writable grep)
-(prot-emacs-elpa-package 'wgrep
+(prot-emacs-package wgrep
+  (:install t)
   (:delay 5)
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
@@ -76,7 +78,8 @@
     (define-key map (kbd "C-c C-c") #'wgrep-finish-edit)))
 
 ;;; Cross-references (xref.el)
-(prot-emacs-builtin-package 'xref
+(prot-emacs-package xref
+  (:delay 5)
   ;; All those have been changed for Emacs 28
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
@@ -88,7 +91,7 @@
          (t 'grep))))
 
 ;;; Built-in bookmarking framework (bookmark.el)
-(prot-emacs-builtin-package 'bookmark
+(prot-emacs-package bookmark
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
   (setq bookmark-set-fringe-mark t) ; Emacs28
