@@ -122,6 +122,7 @@ floating points: 16.666666666666664 => 16.667."
 ;;;###autoload
 (defun prot-common-seconds-to-minutes-or-hours (seconds)
   "Convert SECONDS to either minutes or hours, depending on the value."
+  ;; FIXME 2023-04-07: The case of 3600 exactly.
   (if (> seconds 3600)
       (prot-common-seconds-to-hours seconds)
     (prot-common-seconds-to-minutes seconds)))
