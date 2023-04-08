@@ -11,8 +11,8 @@
   (setopt pulsar-pulse t
           pulsar-delay 0.055
           pulsar-iterations 10
-          pulsar-face 'pulsar-green
-          pulsar-highlight-face 'pulsar-magenta)
+          pulsar-face 'pulsar-red
+          pulsar-highlight-face 'pulsar-blue)
 
   (pulsar-global-mode 1)
 
@@ -37,7 +37,7 @@
   ;; (customize-set-variable 'lin-face 'lin-green)
   ;;
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
-  (setopt lin-face 'lin-cyan)
+  (setopt lin-face 'lin-magenta)
   (setq lin-mode-hooks
         '(bongo-mode-hook
           dired-mode-hook
