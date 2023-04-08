@@ -56,13 +56,13 @@
           (mail-other cyan-warmer)
           ;; Change dates to a set of more subtle combinations.
           (date-deadline magenta-cooler)
-          (date-scheduled green-cooler)
+          (date-scheduled magenta)
           (date-weekday fg-main)
           (date-event fg-dim)
           (date-now blue-faint)
           ;; Make tags (Org) less colorful and tables look the same as
           ;; the default foreground.
-          (prose-done green-faint)
+          (prose-done cyan-cooler)
           (prose-tag fg-dim)
           (prose-table fg-main)
           ;; Make headings less colorful (though I never use deeply
@@ -90,7 +90,11 @@
           ;; Tweak some more constructs for stylistic constistency.
           (name blue-warmer)
           (identifier magenta-faint)
-          (keybind magenta-cooler)))
+          (keybind magenta-cooler)
+          (accent-0 magenta-cooler)
+          (accent-1 cyan-cooler)
+          (accent-2 blue-warmer)
+          (accent-3 red-cooler)))
 
   ;; Make the active mode line have a pseudo 3D effect (this assumes
   ;; you are using the default mode line and not an extra package).
