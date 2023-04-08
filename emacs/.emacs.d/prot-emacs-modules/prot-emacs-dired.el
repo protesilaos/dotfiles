@@ -97,4 +97,14 @@
   (setq trashed-sort-key '("Date deleted" . t))
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
+;;; Play back media with Dired (mandoura.el)
+;; This is yet another package of mine: <https://protesilaos.com/emacs>
+(prot-emacs-package mandoura
+  (:install "https://git.sr.ht/~protesilaos/mandoura")
+  (setq mandoura-saved-playlist-directory "~/Music/playlists/")
+
+  (with-eval-after-load 'prot-prefix
+    (transient-append-suffix 'prot-prefix '(0 -1 0)
+      '("m" "mandoura-play-playlist" mandoura-play-playlist))))
+
 (provide 'prot-emacs-dired)
