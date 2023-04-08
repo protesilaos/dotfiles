@@ -254,7 +254,7 @@ expanded BODY happen with `run-with-idle-timer'."
 ;;   (setq denote-file-type nil))
 
 (defvar prot-emacs-package-form-regexp
-  "^(\\(prot-emacs-.*-package\\|require\\) +'\\([0-9a-zA-Z-]+\\)"
+  "^(\\(prot-emacs-package\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
 
 (eval-after-load 'lisp-mode
