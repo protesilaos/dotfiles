@@ -214,41 +214,41 @@ expanded BODY happen with `run-with-idle-timer'."
 
 ;; Samples of `prot-emacs-package' (expand them with `pp-macroexpand-last-sexp').
 
-;; (prot-emacs-package 'denote
+;; (prot-emacs-package denote
 ;;   (setq denote-directory "path/to/dir")
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (:install '(denote . (:url "https://git.sr.ht/~protesilaos/denote" :branch "main")))
 ;;   (:delay 5)
 ;;   (setq denote-file-type nil))
 ;;
-;; (prot-emacs-package 'denote
+;; (prot-emacs-package denote
 ;;   (setq denote-directory "path/to/dir")
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (:install "https://git.sr.ht/~protesilaos/denote")
 ;;   (:delay 5)
 ;;   (setq denote-file-type nil))
 ;;
-;; (prot-emacs-package 'denote
+;; (prot-emacs-package denote
 ;;   (:delay 5)
 ;;   (setq denote-directory "path/to/dir")
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (:install "https://git.sr.ht/~protesilaos/denote")
 ;;   (setq denote-file-type nil))
 ;;
-;; (prot-emacs-package 'denote
+;; (prot-emacs-package denote
 ;;   (:install "https://git.sr.ht/~protesilaos/denote")
 ;;   (:delay 5)
 ;;   (setq denote-directory "path/to/dir")
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (setq denote-file-type nil))
 ;;
-;; (prot-emacs-package 'denote
+;; (prot-emacs-package denote
 ;;   (:delay 5)
 ;;   (setq denote-directory "path/to/dir")
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (setq denote-file-type nil))
 ;;
-;; (prot-emacs-package 'denote
+;; (prot-emacs-package denote
 ;;   (setq denote-directory "path/to/dir")
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (setq denote-file-type nil))

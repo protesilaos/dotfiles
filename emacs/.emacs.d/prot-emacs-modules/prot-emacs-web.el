@@ -123,7 +123,7 @@
     (define-key map (kbd "w") #'elfeed-show-yank)))
 
 (with-eval-after-load 'elfeed
-  (prot-emacs-package 'prot-elfeed
+  (prot-emacs-package prot-elfeed
     (setq prot-elfeed-tag-faces t)
     (prot-elfeed-fontify-tags)
     (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)

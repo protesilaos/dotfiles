@@ -40,7 +40,7 @@
 ;; ;; because there are other tools that offer a better interface, such
 ;; ;; as `consult-find', `consult-grep', `project-find-file',
 ;; ;; `project-find-regexp', `prot-vc-git-grep'.
-;; (prot-emacs-package 'find-dired
+;; (prot-emacs-package find-dired
 ;;   (setq find-ls-option
 ;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
 ;;   (setq find-name-arg "-iname"))
