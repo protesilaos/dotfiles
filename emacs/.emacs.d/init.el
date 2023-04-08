@@ -261,6 +261,13 @@ expanded BODY happen with `run-with-idle-timer'."
   `(add-to-list 'lisp-imenu-generic-expression
                 (list "Packages" ,prot-emacs-package-form-regexp 2)))
 
+(defconst prot-emacs-font-lock-keywords
+  '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+     (1 font-lock-keyword-face)
+     (2 font-lock-constant-face nil t))))
+
+(font-lock-add-keywords 'emacs-lisp-mode prot-emacs-font-lock-keywords)
+
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
 ;; ~/.emacs.d/prot-emacs-pre-custom.el
