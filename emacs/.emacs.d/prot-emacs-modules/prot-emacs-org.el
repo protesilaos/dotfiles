@@ -12,7 +12,7 @@
   (setq org-hide-macro-markers nil)
   (setq org-hide-leading-stars nil)
   (setq org-cycle-separator-lines 0)
-  (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
+  (setq org-structure-template-alist
         '(("s" . "src")
           ("E" . "src emacs-lisp")
           ("e" . "example")
@@ -36,8 +36,12 @@
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
+  ;; ;; NOTE 2023-04-07: Leaving this here for demo purposes.
+  ;; (setq org-todo-keywords
+  ;;       '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")
+  ;;         (sequence "COACH(k)" "|" "COACHED(K!)")))
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")
+        '((sequence "TODO(t)" "|" "CANCEL(c@)" "DONE(d!)")
           (sequence "COACH(k)" "|" "COACHED(K!)")))
 
   (defface prot/org-bold-todo
