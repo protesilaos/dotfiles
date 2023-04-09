@@ -427,7 +427,7 @@
 
   ;; I bind `org-agenda' to C-c A, so this one puts me straight into my
   ;; custom block agenda.
-  (define-key global-map (kbd "C-c A") (lambda () (interactive) (org-agenda nil "a")))
+  (define-key global-map (kbd "C-c a") (lambda () (interactive) (org-agenda nil "A")))
 
   (let ((map ctl-x-x-map))
     (define-key map "i" #'prot-org-id-headlines)
