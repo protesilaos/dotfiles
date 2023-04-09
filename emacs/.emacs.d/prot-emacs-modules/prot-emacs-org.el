@@ -389,7 +389,7 @@
       (add-hook hook #'pulsar-reveal-entry)))
 
   (let ((map global-map))
-    (define-key map (kbd "C-c a") #'org-agenda)
+    (define-key map (kbd "C-c A") #'org-agenda) ; see the `prot-org' section for C-c a
     (define-key map (kbd "C-c c") #'org-capture)
     (define-key map (kbd "C-c l") #'org-store-link)
     (define-key map (kbd "C-c o") #'org-open-at-point-global))
@@ -425,9 +425,9 @@
             (org-agenda-remove-tags t))
            ("agenda.txt"))))
 
-  ;; I bind `org-agenda' to C-c a, so this one puts me straight into my
+  ;; I bind `org-agenda' to C-c A, so this one puts me straight into my
   ;; custom block agenda.
-  (define-key global-map (kbd "C-c A") (lambda () (interactive) (org-agenda nil "A")))
+  (define-key global-map (kbd "C-c A") (lambda () (interactive) (org-agenda nil "a")))
 
   (let ((map ctl-x-x-map))
     (define-key map "i" #'prot-org-id-headlines)
