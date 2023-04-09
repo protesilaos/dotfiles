@@ -122,21 +122,22 @@
     ("f" "follow-mode" follow-mode)]])
 
 (transient-define-prefix prot-prefix nil
-  "Transient with common commands."
+  "Transient with common commands.
+Commands that bring up transients have ... in their description."
   [["Buffers/files"
-    ("b" "Buffer" prot-prefix-buffer)
-    ("f" "File" prot-prefix-file)
-    ("s" "Search" prot-prefix-search)]
+    ("b" "Buffer..." prot-prefix-buffer)
+    ("f" "File..." prot-prefix-file)
+    ("s" "Search..." prot-prefix-search)]
    ["Windows"
-    ("w" "Window" prot-prefix-window)
-    ("t" "Toggle" prot-prefix-toggle)]
+    ("w" "Window..." prot-prefix-window)
+    ("t" "Toggle..." prot-prefix-toggle)]
    ["Resize"
     ("<up>"    "shrink-window" shrink-window)
     ("<down>"  "enlarge-window" enlarge-window)
     ("<left>"  "shrink-window-horizontally" shrink-window-horizontally)
     ("<right>" "enlarge-window-horizontally" enlarge-window-horizontally)]
    ["Misc"
-    ("e" "emoji-search" emoji-insert)
+    ("e" "emoji-search..." emoji-insert)
     ("E" "emoji-list" emoji-list)
     ("\\" "toggle-input-method" toggle-input-method)]])
 
