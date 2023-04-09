@@ -106,17 +106,8 @@ mod4 + shift + Print
 XF86MonBrightness{Down,Up}
     xbacklight {-dec 15,-inc 15}
 
-
-# Specifically for `bongo', my Emacs music manager.
-XF86Audio{Play,Prev,Next}
-    emacsclient -e { \
-    "(bongo-pause/resume)", \
-    "(bongo-previous)", \
-    "(bongo-next)" \
-    }
-
 # Control the [last] currently active player.
-mod4 + XF86Audio{Play,Prev,Next}
+XF86Audio{Play,Prev,Next}
     playerctl {play-pause,previous,next}
 
 # Speaker/output volume.  Requires `amixer` and dedicated keys.
