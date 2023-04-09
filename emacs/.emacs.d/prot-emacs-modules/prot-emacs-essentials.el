@@ -102,7 +102,8 @@
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
+    (define-key map (kbd "C-x k") #'prot-simple-kill-buffer-current)
+    (define-key map (kbd "C-x K") #'kill-buffer)
     (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
