@@ -109,13 +109,12 @@ before all other modules of my setup."
 (setq package-archives
       '(("elpa" . "https://elpa.gnu.org/packages/")
         ("elpa-devel" . "https://elpa.gnu.org/devel/")
-        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("melpa" . "https://melpa.org/packages/")))
 
 ;; Highest number gets priority (what is not mentioned has priority 0)
 (setq package-archive-priorities
       '(("elpa" . 2)
-        ("nongnu" . 1)))
+        ("melpa" . 1)))
 
 ;; I want to use my own packages from specific repositories.  All
 ;; others will rely on `package-archive-priorities'.  I do this to
