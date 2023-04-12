@@ -41,11 +41,13 @@
 ;; them from time-to-time for testing purposes or to demonstrate
 ;; something.
 (menu-bar-mode -1)
+(scroll-bar-mode -1)
 (tool-bar-mode -1)
 
-(setq default-frame-scroll-bars 'right)
-
-(set-scroll-bar-mode 'right)
+;; ;; NOTE 2023-04-12 10:53 +0300: I tried those for a while.  They are
+;; ;; fine for those who use scroll bars.
+;; (setq default-frame-scroll-bars 'right)
+;; (set-scroll-bar-mode 'right)
 
 (defun prot-emacs-no-minibuffer-scroll-bar (frame)
   "Remove the minibuffer scroll bars from FRAME."
