@@ -25,7 +25,7 @@
                   (derived-mode . flymake-project-diagnostics-mode)
                   (derived-mode . messages-buffer-mode)
                   (derived-mode . backtrace-mode)
-                  "\\*\\(Warnings\\|Compile-Log\\)\\*"
+                  "\\*\\(Warnings\\|Compile-Log\\|Org Links\\)\\*"
                   ,world-clock-buffer-name))
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.3)
@@ -55,7 +55,7 @@
            (window-height . 4) ; note this is literal lines, not relative
            (dedicated . t)
            (preserve-size . (t . t)))
-          ("\\*\\(Calendar\\|Bookmark Annotation\\|Buffer List\\).*"
+          ("\\*\\(Calendar\\|Bookmark Annotation\\|Buffer List\\|Occur\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
           ;; NOTE 2022-09-10: The following is for `ispell-word', though
