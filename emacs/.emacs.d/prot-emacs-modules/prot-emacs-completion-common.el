@@ -247,18 +247,18 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (require 'consult-imenu) ; the `imenu' extension is in its own file
 
-  (let ((map global-map))
-    (define-key map [remap goto-line] #'consult-goto-line)
-    (define-key map (kbd "M-K") #'consult-keep-lines) ; M-S-k is similar to M-S-5 (M-%)
-    (define-key map (kbd "M-F") #'consult-focus-lines) ; same principle
-    (define-key map (kbd "M-s M-b") #'consult-buffer)
-    (define-key map (kbd "M-s M-f") #'consult-find)
-    (define-key map (kbd "M-s M-g") #'consult-grep)
-    (define-key map (kbd "M-s M-h") #'consult-history)
-    (define-key map (kbd "M-s M-i") #'consult-imenu)
-    (define-key map (kbd "M-s M-l") #'consult-line)
-    (define-key map (kbd "M-s M-m") #'consult-mark)
-    (define-key map (kbd "M-s M-s") #'consult-outline))
+  (prot-emacs-keybind global-map
+    "M-g M-g" #'consult-goto-line
+    "M-K" #'consult-keep-lines ; M-S-k is similar to M-S-5 (M-%)
+    "M-F" #'consult-focus-lines ; same principle
+    "M-s M-b" #'consult-buffer
+    "M-s M-f" #'consult-find
+    "M-s M-g" #'consult-grep
+    "M-s M-h" #'consult-history
+    "M-s M-i" #'consult-imenu
+    "M-s M-l" #'consult-line
+    "M-s M-m" #'consult-mark
+    "M-s M-s" #'consult-outline)
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
 
   (with-eval-after-load 'pulsar
@@ -285,7 +285,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq embark-verbose-indicator-buffer-sections '(bindings))
   (setq embark-verbose-indicator-excluded-actions
         '(embark-act-all embark-collect embark-export embark-insert))
-  
+
   ;; The minimal indicator shows cycling options, but I have no use
   ;; for those.  I want it to be silent.
   (defun prot/embark-no-minimal-indicator ())
@@ -300,20 +300,20 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (seq-do
    (lambda (cell)
      (let* ((keymap (cdr-safe cell))
-	    (map (if (listp keymap) (car keymap) keymap)))
+            (map (if (listp keymap) (car keymap) keymap)))
        (set map (make-sparse-keymap))))
    embark-keymap-alist)
 
   (with-eval-after-load 'embark-org
     (defvar prot/embark-org-keymaps
       '(embark-org-table-cell-map
-	    embark-org-table-map
-	    embark-org-link-copy-map
-	    embark-org-link-map
-	    embark-org-src-block-map
-	    embark-org-item-map
-	    embark-org-plain-list-map
-	    embark-org-export-in-place-map)
+        embark-org-table-map
+        embark-org-link-copy-map
+        embark-org-link-map
+        embark-org-src-block-map
+        embark-org-item-map
+        embark-org-plain-list-map
+        embark-org-export-in-place-map)
       "List of Embark keymaps for Org.")
 
     ;; Reset `prot/embark-org-keymaps'.
@@ -325,85 +325,81 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     ;; embark-org.el adds to the `embark-region-map', which I do not
     ;; want to.
     (define-key embark-region-map (kbd "M") #'embark-org-copy-as-markdown))
-  
-  (let ((map embark-general-map))
-    (define-key map (kbd "i") #'embark-insert)
-    (define-key map (kbd "w") #'embark-copy-as-kill)
-    (define-key map (kbd "E") #'embark-export)
-    (define-key map (kbd "S") #'embark-collect)
-    (define-key map (kbd "A") #'embark-act-all)
-    (define-key map (kbd "DEL") #'delete-region))
+
+  (prot-emacs-keybind embark-general-map
+    "i" #'embark-insert
+    "w" #'embark-copy-as-kill
+    "E" #'embark-export
+    "S" #'embark-collect
+    "A" #'embark-act-all
+    "DEL" #'delete-region)
 
   ;; TODO 2023-03-14: `embark-url-map' for mpv
-  (let ((map embark-url-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "b") #'browse-url)
-    (define-key map (kbd "d") #'embark-download-url)
-    (define-key map (kbd "e") #'eww))
+  (prot-emacs-keybind embark-url-map
+    "b" #'browse-url
+    "d" #'embark-download-url
+    "e" #'eww)
 
-  (let ((map embark-buffer-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "k") #'kill-buffer)
-    (define-key map (kbd "r") #'embark-rename-buffer)
-    (define-key map (kbd "e") #'ediff-buffers))
+  (prot-emacs-keybind embark-buffer-map
+    "k" #'kill-buffer
+    "r" #'embark-rename-buffer
+    "e" #'ediff-buffers)
 
-  (let ((map embark-file-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "f") #'find-file)
-    (define-key map (kbd "j") #'embark-dired-jump)
-    (define-key map (kbd "e") #'ediff-files))
+  (prot-emacs-keybind embark-file-map
+    "f" #'find-file
+    "j" #'embark-dired-jump
+    "e" #'ediff-files)
 
-  (let ((map embark-identifier-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "h") #'display-local-help)
-    (define-key map (kbd ".") #'xref-find-definitions)
-    (define-key map (kbd "o") #'occur))
+  (prot-emacs-keybind embark-identifier-map
+    "h" #'display-local-help
+    "." #'xref-find-definitions
+    "o" #'occur)
 
+  (prot-emacs-keybind embark-command-map
+    "h" #'describe-command
+    "." #'embark-find-definition)
+
+  (prot-emacs-keybind embark-expression-map
+    "e" #'pp-eval-expression
+    "m" #'pp-macroexpand-expression)
+
+  (prot-emacs-keybind embark-function-map
+    "h" #'describe-function
+    "." #'embark-find-definition)
+
+  (prot-emacs-keybind embark-package-map
+    "h" #'describe-package
+    "i" #'package-install
+    "d" #'package-delete
+    "r" #'package-reinstall
+    "u" #'embark-browse-package-url
+    "w" #'embark-save-package-url)
+
+  (prot-emacs-keybind embark-symbol-map
+    "h" #'describe-symbol
+    "." #'embark-find-definition)
+
+  (prot-emacs-keybind embark-variable-map
+    "h" #'describe-variable
+    "." #'embark-find-definition)
+
+  (prot-emacs-keybind embark-region-map
+    "a" #'align-regexp
+    "d" #'delete-duplicate-lines
+    "f" #'flush-lines
+    "i" #'epa-import-keys-region
+    "r" #'repunctuate-sentences
+    "s" #'sort-lines
+    "u" #'untabify)
+
+  ;; FIXME 2023-04-13: Why `embark-defun-map' has `embark-expression-map' as parent?
   (set-keymap-parent embark-defun-map embark-expression-map)
 
-  (let ((map embark-command-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "h") #'describe-command)
-    (define-key map (kbd ".") #'embark-find-definition))
-
-  (let ((map embark-expression-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "e") #'pp-eval-expression)
-    (define-key map (kbd "m") #'pp-macroexpand-expression))
-
-  (let ((map embark-function-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "h") #'describe-function)
-    (define-key map (kbd ".") #'embark-find-definition))
-
-  (let ((map embark-package-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "h") #'describe-package)
-    (define-key map (kbd "i") #'package-install)
-    (define-key map (kbd "d") #'package-delete)
-    (define-key map (kbd "r") #'package-reinstall)
-    (define-key map (kbd "u") #'embark-browse-package-url)
-    (define-key map (kbd "w") #'embark-save-package-url))
-
-  (let ((map embark-symbol-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "h") #'describe-symbol)
-    (define-key map (kbd ".") #'embark-find-definition))
-
-  (let ((map embark-variable-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "h") #'describe-variable)
-    (define-key map (kbd ".") #'embark-find-definition))
-
-  (let ((map embark-region-map))
-    (set-keymap-parent map embark-general-map)
-    (define-key map (kbd "a") #'align-regexp)
-    (define-key map (kbd "d") #'delete-duplicate-lines)
-    (define-key map (kbd "f") #'flush-lines)
-    (define-key map (kbd "i") #'epa-import-keys-region)
-    (define-key map (kbd "r") #'repunctuate-sentences)
-    (define-key map (kbd "s") #'sort-lines)
-    (define-key map (kbd "u") #'untabify)))
+  (dolist (map '( embark-url-map embark-buffer-map embark-file-map
+                  embark-identifier-map embark-command-map embark-expression-map
+                  embark-function-map embark-package-map embark-symbol-map
+                  embark-variable-map embark-region-map))
+    (set-keymap-parent (symbol-value map) embark-general-map)))
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
@@ -433,12 +429,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (dolist (hook '(prog-mode-hook text-mode-hook))
     (add-hook hook 'contrib/tempel-setup-capf))
 
-  (let ((map global-map))
-    (define-key map (kbd "M-+") #'tempel-complete) ; Alternative: `tempel-expand'
-    (define-key map (kbd "M-*") #'tempel-insert))
-  (let ((map tempel-map))
-    (define-key map (kbd "RET") #'tempel-done)
-    (define-key map (kbd "C-p") #'tempel-previous)
-    (define-key map (kbd "C-n") #'tempel-next)))
+  (prot-emacs-keybind global-map
+    "M-+" #'tempel-complete ; Alternative: `tempel-expand'
+    "M-*" #'tempel-insert)
+  (prot-emacs-keybind tempel-map
+    "RET" #'tempel-done
+    "C-p" #'tempel-previous
+    "C-n" #'tempel-next))
 
 (provide 'prot-emacs-completion-common)

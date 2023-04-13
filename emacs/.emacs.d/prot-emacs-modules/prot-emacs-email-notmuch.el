@@ -159,16 +159,16 @@
   (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode) ; Check my `lin' package
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
-  (let ((map global-map))
-    (define-key map (kbd "C-c m") #'notmuch)
-    (define-key map (kbd "C-x m") #'notmuch-mua-new-mail)) ; override `compose-mail'
-  (let ((map notmuch-search-mode-map)) ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
-    (define-key map (kbd "/") #'notmuch-search-filter) ; alias for l
-    (define-key map (kbd "r") #'notmuch-search-reply-to-thread) ; easier to reply to all by default
-    (define-key map (kbd "R") #'notmuch-search-reply-to-thread-sender))
-  (let ((map notmuch-show-mode-map))
-    (define-key map (kbd "r") #'notmuch-show-reply) ; easier to reply to all by default
-    (define-key map (kbd "R") #'notmuch-show-reply-sender))
+  (prot-emacs-keybind global-map
+    "C-c m" #'notmuch
+    "C-x m" #'notmuch-mua-new-mail) ; override `compose-mail'
+  (prot-emacs-keybind notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+    "/" #'notmuch-search-filter ; alias for l
+    "r" #'notmuch-search-reply-to-thread ; easier to reply to all by default
+    "R" #'notmuch-search-reply-to-thread-sender)
+  (prot-emacs-keybind notmuch-show-mode-map
+    "r" #'notmuch-show-reply ; easier to reply to all by default
+    "R" #'notmuch-show-reply-sender)
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 ;;; My own tweaks for notmuch (prot-notmuch.el)
@@ -194,17 +194,17 @@
                 prot-notmuch-ask-sourcehut-control-code))
     (add-hook 'notmuch-mua-send-hook fn))
 
-  (let ((map notmuch-search-mode-map))
-    (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
-    (define-key map (kbd "A") #'notmuch-search-archive-thread)
-    (define-key map (kbd "D") #'prot-notmuch-search-delete-thread)
-    (define-key map (kbd "S") #'prot-notmuch-search-spam-thread)
-    (define-key map (kbd "g") #'prot-notmuch-refresh-buffer))
-  (let ((map notmuch-show-mode-map))
-    (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
-    (define-key map (kbd "A") #'notmuch-show-archive-message-then-next-or-next-thread)
-    (define-key map (kbd "D") #'prot-notmuch-show-delete-message)
-    (define-key map (kbd "S") #'prot-notmuch-show-spam-message))
+  (prot-emacs-keybind notmuch-search-mode-map
+    "a" nil ; the default is too easy to hit accidentally
+    "A" #'notmuch-search-archive-thread
+    "D" #'prot-notmuch-search-delete-thread
+    "S" #'prot-notmuch-search-spam-thread
+    "g" #'prot-notmuch-refresh-buffer)
+  (prot-emacs-keybind notmuch-show-mode-map
+    "a" nil ; the default is too easy to hit accidentally
+    "A" #'notmuch-show-archive-message-then-next-or-next-thread
+    "D" #'prot-notmuch-show-delete-message
+    "S" #'prot-notmuch-show-spam-message)
   (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
   ;; Like C-c M-h for `message-insert-headers'
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))

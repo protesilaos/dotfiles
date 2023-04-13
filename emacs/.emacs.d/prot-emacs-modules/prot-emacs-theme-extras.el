@@ -24,9 +24,9 @@
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
   ;;
   ;; (info "(elisp) Key Binding Conventions")
-  (let ((map global-map))
-    (define-key map (kbd "C-x l") #'pulsar-pulse-line) ; override `count-lines-page'
-    (define-key map (kbd "C-x L") #'pulsar-highlight-dwim))) ; or use `pulsar-highlight-line'
+  (prot-emacs-keybind global-map
+    "C-x l" #'pulsar-pulse-line ; override `count-lines-page'
+    "C-x L" #'pulsar-highlight-dwim)) ; or use `pulsar-highlight-line'
 
 ;;; Lin
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.

@@ -98,46 +98,47 @@ use in `display-buffer-alist'."
   (add-hook 'custom-mode-hook #'visual-line-mode)
 
   ;; NOTE 2022-09-17: Also see `prot-simple-swap-window-buffers'.
-  (let ((map global-map))
-    (define-key map (kbd "C-x <down>") #'next-buffer)
-    (define-key map (kbd "C-x <up>") #'previous-buffer)
-    (define-key map (kbd "C-x C-n") #'next-buffer)     ; override `set-goal-column'
-    (define-key map (kbd "C-x C-p") #'previous-buffer) ; override `mark-page'
-    (define-key map (kbd "C-x !") #'delete-other-windows-vertically)
-    (define-key map (kbd "C-x _") #'balance-windows)      ; underscore
-    (define-key map (kbd "C-x -") #'fit-window-to-buffer) ; hyphen
-    (define-key map (kbd "C-x +") #'balance-windows-area)
-    (define-key map (kbd "C-x }") #'enlarge-window)
-    (define-key map (kbd "C-x {") #'shrink-window)
-    (define-key map (kbd "C-x >") #'enlarge-window-horizontally) ; override `scroll-right'
-    (define-key map (kbd "C-x <") #'shrink-window-horizontally)) ; override `scroll-left'
-  (let ((map resize-window-repeat-map))
-    (define-key map ">" #'enlarge-window-horizontally)
-    (define-key map "<" #'shrink-window-horizontally)))
+  (prot-emacs-keybind global-map
+    "C-x <down>" #'next-buffer
+    "C-x <up>" #'previous-buffer
+    "C-x C-n" #'next-buffer     ; override `set-goal-column'
+    "C-x C-p" #'previous-buffer ; override `mark-page'
+    "C-x !" #'delete-other-windows-vertically
+    "C-x _" #'balance-windows      ; underscore
+    "C-x -" #'fit-window-to-buffer ; hyphen
+    "C-x +" #'balance-windows-area
+    "C-x }" #'enlarge-window
+    "C-x {" #'shrink-window
+    "C-x >" #'enlarge-window-horizontally ; override `scroll-right'
+    "C-x <" #'shrink-window-horizontally) ; override `scroll-left'
+  (prot-emacs-keybind resize-window-repeat-map
+    ">" #'enlarge-window-horizontally
+    "<" #'shrink-window-horizontally))
 
 ;;; Window history (winner-mode)
 (prot-emacs-package winner
   (:delay 2)
   (winner-mode 1)
 
-  (let ((map global-map))
-    (define-key map (kbd "C-x <right>") #'winner-redo)
-    (define-key map (kbd "C-x <left>") #'winner-undo)))
+  (prot-emacs-keybind global-map
+    "C-x <right>" #'winner-redo
+    "C-x <left>" #'winner-undo))
 
 ;;; Directional window motions (windmove)
 (prot-emacs-package windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
-  (let ((map global-map))
+  
+  (prot-emacs-keybind global-map
     ;; Those override some commands that are already available with
     ;; C-M-u, C-M-f, C-M-b.
-    (define-key map (kbd "C-M-<up>") #'windmove-up)
-    (define-key map (kbd "C-M-<right>") #'windmove-right)
-    (define-key map (kbd "C-M-<down>") #'windmove-down)
-    (define-key map (kbd "C-M-<left>") #'windmove-left)
-    (define-key map (kbd "C-M-S-<up>") #'windmove-swap-states-up)
-    (define-key map (kbd "C-M-S-<right>") #'windmove-swap-states-right) ; conflicts with `org-increase-number-at-point'
-    (define-key map (kbd "C-M-S-<down>") #'windmove-swap-states-down)
-    (define-key map (kbd "C-M-S-<left>") #'windmove-swap-states-left)))
+    "C-M-<up>" #'windmove-up
+    "C-M-<right>" #'windmove-right
+    "C-M-<down>" #'windmove-down
+    "C-M-<left>" #'windmove-left
+    "C-M-S-<up>" #'windmove-swap-states-up
+    "C-M-S-<right>" #'windmove-swap-states-right ; conflicts with `org-increase-number-at-point'
+    "C-M-S-<down>" #'windmove-swap-states-down
+    "C-M-S-<left>" #'windmove-swap-states-left))
 
 ;;; Frame-isolated buffers
 ;; Another package of mine.  Read the manual:
@@ -148,12 +149,12 @@ use in `display-buffer-alist'."
 
   (beframe-mode 1)
 
-  (let ((map global-map))
-    (define-key map (kbd "C-x f") #'other-frame-prefix) ; override `set-fill-column'
+  (prot-emacs-keybind global-map
+    "C-x f" #'other-frame-prefix ; override `set-fill-column'
     ;; Replace the generic `buffer-menu'.  With a prefix argument, this
     ;; commands prompts for a frame.  Call the `buffer-menu' via M-x if
     ;; you absolutely need the global list of buffers.
-    (define-key map (kbd "C-x C-b") #'beframe-buffer-menu)))
+    "C-x C-b" #'beframe-buffer-menu))
 
 ;;; Line numbers and relevant indicators (prot-sideline.el)
 (prot-emacs-package prot-sideline
@@ -173,9 +174,9 @@ use in `display-buffer-alist'."
 
   (require 'whitespace)
 
-  (let ((map global-map))
-    (define-key map (kbd "<f6>") #'prot-sideline-negative-space-toggle)
-    (define-key map (kbd "<f7>") #'prot-sideline-mode)
-    (define-key map (kbd "C-c z") #'delete-trailing-whitespace)))
+  (prot-emacs-keybind global-map
+    "<f6>" #'prot-sideline-negative-space-toggle
+    "<f7>" #'prot-sideline-mode
+    "C-c z" #'delete-trailing-whitespace))
 
 (provide 'prot-emacs-window)

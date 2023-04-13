@@ -10,9 +10,9 @@
 
   (vertico-mode 1)
 
-  (let ((map vertico-map))
-    (define-key map (kbd "M-,") #'vertico-quick-insert)
-    (define-key map (kbd "M-.") #'vertico-quick-exit))
+  (prot-emacs-keybind vertico-map
+    "M-," #'vertico-quick-insert
+    "M-." #'vertico-quick-exit)
 
   ;; This works with `file-name-shadow-mode'.  When you are in a
   ;; sub-directory and use, say, `find-file' to go to your home '~/' or

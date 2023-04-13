@@ -41,71 +41,62 @@
         find-library-include-other-files nil) ; Emacs 29
 
   ;; General commands
-  (let ((map global-map))
-    (define-key map (kbd "<insert>") nil)
-    ;; (define-key map (kbd "C-z") nil)
-    (define-key map (kbd "C-x C-z") nil)
-    (define-key map (kbd "C-x C-c") nil) ; avoid accidentally exiting Emacs
-    (define-key map (kbd "C-x C-c C-c") #'save-buffers-kill-emacs)
-    (define-key map (kbd "C-h h") nil)
-    (define-key map (kbd "M-`") nil)
-    (define-key map (kbd "C-h .") #'prot-simple-describe-symbol) ; overrides `display-local-help'
-    (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
-    (define-key map (kbd "C-h c") #'describe-char) ; overrides `describe-key-briefly'
-    (define-key map (kbd "C-c s") #'prot-simple-scratch-buffer)
+  (prot-emacs-keybind global-map
+    "<insert>" nil
+    "C-x C-z" nil
+    "C-x C-c" nil ; avoid accidentally exiting Emacs
+    "C-x C-c C-c" #'save-buffers-kill-emacs
+    "C-h h" nil
+    "M-`" nil
+    "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
+    "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
+    "C-h c" #'describe-char ; overrides `describe-key-briefly'
+    "C-c s" #'prot-simple-scratch-buffer
     ;; Commands for lines
-    (define-key map (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
-    (define-key map (kbd "M-k") #'prot-simple-kill-line-backward)
-    (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
-    (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
-    (define-key map (kbd "M-SPC") #'cycle-spacing)
-    (define-key map (kbd "C-S-n") #'prot-simple-multi-line-next)
-    (define-key map (kbd "C-S-p") #'prot-simple-multi-line-prev)
-    (define-key map (kbd "<C-return>") #'prot-simple-new-line-below)
-    (define-key map (kbd "<C-S-return>") #'prot-simple-new-line-above)
-
+    "M-o" #'delete-blank-lines   ; alias for C-x C-o
+    "M-k" #'prot-simple-kill-line-backward
+    "C-S-w" #'prot-simple-copy-line-or-region
+    "C-S-y" #'prot-simple-yank-replace-line-or-region
+    "M-SPC" #'cycle-spacing
+    "C-S-n" #'prot-simple-multi-line-next
+    "C-S-p" #'prot-simple-multi-line-prev
+    "<C-return>" #'prot-simple-new-line-below
+    "<C-S-return>" #'prot-simple-new-line-above
     ;; Commands for text insertion or manipulation
-    (define-key map (kbd "C-=") #'prot-simple-insert-date)
-    (define-key map (kbd "C-<") #'prot-simple-escape-url-dwim)
-    (define-key map (kbd "C-'") #'prot-simple-insert-pair)
-    (define-key map (kbd "M-'") #'prot-simple-insert-pair)
-    (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
-    ;; (define-key map (kbd "M-z") #'zap-up-to-char) ; NOT `zap-to-char'
-    ;; (define-key map (kbd "M-Z") #'prot-simple-zap-to-char-backward)
-    (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
-    (define-key map (kbd "M-c") #'capitalize-dwim)
-    (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
-    (define-key map (kbd "M-u") #'upcase-dwim)
+    "C-=" #'prot-simple-insert-date
+    "C-<" #'prot-simple-escape-url-dwim
+    "C-'" #'prot-simple-insert-pair
+    "M-'" #'prot-simple-insert-pair
+    "M-\\" #'prot-simple-delete-pair-dwim
+    "M-z" #'zap-up-to-char ; NOT `zap-to-char'
+    "M-Z" #'prot-simple-zap-to-char-backward
+    "<C-M-backspace>" #'backward-kill-sexp
+    "M-c" #'capitalize-dwim
+    "M-l" #'downcase-dwim        ; "lower" case
+    "M-u" #'upcase-dwim
     ;; Commands for object transposition
-    (define-key map (kbd "C-t") #'prot-simple-transpose-chars)
-    (define-key map (kbd "C-x C-t") #'prot-simple-transpose-lines)
-    (define-key map (kbd "C-S-t") #'prot-simple-transpose-paragraphs)
-    (define-key map (kbd "C-x M-t") #'prot-simple-transpose-sentences)
-    (define-key map (kbd "C-M-t") #'prot-simple-transpose-sexps)
-    (define-key map (kbd "M-t") #'prot-simple-transpose-words)
-    ;; ;; Commands for marking objects
-    (define-key map (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
-    (define-key map (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
-    (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
+    "C-t" #'prot-simple-transpose-chars
+    "C-x C-t" #'prot-simple-transpose-lines
+    "C-S-t" #'prot-simple-transpose-paragraphs
+    "C-x M-t" #'prot-simple-transpose-sentences
+    "C-M-t" #'prot-simple-transpose-sexps
+    "M-t" #'prot-simple-transpose-words
+    ;; Commands for marking objects
+    "M-@" #'prot-simple-mark-word       ; replaces `mark-word'
+    "C-M-SPC" #'prot-simple-mark-construct-dwim
+    "C-M-d" #'prot-simple-downward-list
     ;; Commands for paragraphs
-    (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
+    "M-Q" #'prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
-    (define-key map (kbd "C-x n k") #'prot-simple-delete-page-delimiters)
-    (define-key map (kbd "C-x M-r") #'prot-simple-swap-window-buffers)
-    ;; NOTE 2022-03-02: Elsewhere I provide my `logos.el' package which
-    ;; has the functionality of these three commands.
-    ;;
-    ;; (define-key map [remap narrow-to-region] #'prot-simple-narrow-dwim)
-    ;; (define-key map [remap forward-page] #'prot-simple-forward-page-dwim)
-    ;; (define-key map [remap backward-page] #'prot-simple-backward-page-dwim)
-    ;;
+    "C-x n k" #'prot-simple-delete-page-delimiters
+    "C-x M-r" #'prot-simple-swap-window-buffers
     ;; Commands for buffers
-    (define-key map (kbd "M-=") #'count-words)
-    (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key map (kbd "C-x k") #'prot-simple-kill-buffer-current)
-    (define-key map (kbd "C-x K") #'kill-buffer)
-    (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
-    (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
+    "M-=" #'count-words
+    "<C-f2>" #'prot-simple-rename-file-and-buffer
+    "C-x k" #'prot-simple-kill-buffer-current
+    "C-x K" #'kill-buffer
+    "M-s b" #'prot-simple-buffers-major-mode
+    "M-s v" #'prot-simple-buffers-vc-root))
 
 ;;; Prefix keymap (prot-prefix.el)
 (prot-emacs-package prot-prefix
@@ -133,11 +124,11 @@
 
   ;; The mnemonic for the prefix is that M-# (or M-S-3) is close to
   ;; M-% (or M-S-5).
-  (let ((map global-map))
-    (define-key map (kbd "M-# s") #'substitute-target-below-point) ; Forward motion like isearch (C-s)
-    (define-key map (kbd "M-# r") #'substitute-target-above-point) ; Backward motion like isearch (C-r)
-    (define-key map (kbd "M-# d") #'substitute-target-in-defun)    ; "defun" mnemonic
-    (define-key map (kbd "M-# b") #'substitute-target-in-buffer))) ; "buffer" mnemonic
+  (prot-emacs-keybind global-map
+    "M-# s" #'substitute-target-below-point ; Forward motion like isearch (C-s)
+    "M-# r" #'substitute-target-above-point ; Backward motion like isearch (C-r)
+    "M-# d" #'substitute-target-in-defun    ; "defun" mnemonic
+    "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 
 ;;; Keymap for buffers (Emacs28)
 (let ((map ctl-x-x-map))
@@ -228,16 +219,16 @@
         tmr-notification-urgency 'normal
         tmr-description-list 'tmr-description-history)
 
-  (let ((map global-map))
-    (define-key map (kbd "C-c t t") #'tmr)
-    (define-key map (kbd "C-c t T") #'tmr-with-description)
-    (define-key map (kbd "C-c t l") #'tmr-tabulated-view) ; "list timers" mnemonic
-    (define-key map (kbd "C-c t c") #'tmr-clone)
-    (define-key map (kbd "C-c t k") #'tmr-cancel)
-    (define-key map (kbd "C-c t s") #'tmr-reschedule)
-    (define-key map (kbd "C-c t e") #'tmr-edit-description)
-    (define-key map (kbd "C-c t r") #'tmr-remove)
-    (define-key map (kbd "C-c t R") #'tmr-remove-finished)))
+  (prot-emacs-keybind global-map
+    "C-c t t" #'tmr
+    "C-c t T" #'tmr-with-description
+    "C-c t l" #'tmr-tabulated-view ; "list timers" mnemonic
+    "C-c t c" #'tmr-clone
+    "C-c t k" #'tmr-cancel
+    "C-c t s" #'tmr-reschedule
+    "C-c t e" #'tmr-edit-description
+    "C-c t r" #'tmr-remove
+    "C-c t R" #'tmr-remove-finished))
 
 ;;; Display current time
 (prot-emacs-package time

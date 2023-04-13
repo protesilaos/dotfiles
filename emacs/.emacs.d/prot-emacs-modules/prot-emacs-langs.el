@@ -34,18 +34,18 @@
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
   (setq comment-style 'multi-line)
-  (let ((map global-map))
-    (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
-    (define-key map (kbd "M-;") #'comment-indent)))
+  (prot-emacs-keybind global-map
+    "C-:" #'comment-kill ; C-S-;
+    "M-;" #'comment-indent))
 
 (prot-emacs-package prot-comment
   (setq prot-comment-comment-keywords
         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
-  (let ((map global-map))
-    (define-key map (kbd "C-;") #'prot-comment-comment-dwim)
-    (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
+  (prot-emacs-keybind global-map
+    "C-;" #'prot-comment-comment-dwim
+    "C-x C-;" #'prot-comment-timestamp-keyword))
 
 ;;; Configure 'electric' behaviour
 (prot-emacs-package electric
@@ -107,9 +107,9 @@
   ;; `prot-spell-ispell-display-buffer'.  Then refer to the
   ;; `display-buffer-alist' for the relevant entry.
 
-  (let ((map global-map))
-    (define-key map (kbd "M-$") #'prot-spell-spell-dwim)
-    (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
+  (prot-emacs-keybind global-map
+    "M-$" #'prot-spell-spell-dwim
+    "C-M-$" #'prot-spell-change-dictionary))
 
 ;;; Flymake
 (prot-emacs-package flymake
@@ -146,12 +146,12 @@
   (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
 
   (define-key ctl-x-x-map "m" #'flymake-mode) ; C-x x m
-  (let ((map flymake-mode-map))
-    (define-key map (kbd "C-c ! s") #'flymake-start)
-    (define-key map (kbd "C-c ! d") #'flymake-show-buffer-diagnostics) ; Emacs28
-    (define-key map (kbd "C-c ! D") #'flymake-show-project-diagnostics) ; Emacs28
-    (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
-    (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
+  (prot-emacs-keybind flymake-mode-map
+    "C-c ! s" #'flymake-start
+    "C-c ! d" #'flymake-show-buffer-diagnostics ; Emacs28
+    "C-c ! D" #'flymake-show-project-diagnostics ; Emacs28
+    "C-c ! n" #'flymake-goto-next-error
+    "C-c ! p" #'flymake-goto-prev-error))
 
 ;;; Elisp packaging requirements
 (prot-emacs-package package-lint-flymake

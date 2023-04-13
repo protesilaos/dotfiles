@@ -31,10 +31,10 @@
   ;; And this is for Emacs 28
   (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))
 
-  (let ((map dired-mode-map))
-    (define-key map (kbd "C-+") #'dired-create-empty-file)
-    (define-key map (kbd "M-s f") #'nil)
-    (define-key map (kbd "C-x v v") #'dired-vc-next-action))) ; Emacs 28
+  (prot-emacs-keybind dired-mode-map
+    "C-+" #'dired-create-empty-file
+    "M-s f" #'nil
+    "C-x v v" #'dired-vc-next-action)) ; Emacs 28
 
 ;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
 ;; ;; because there are other tools that offer a better interface, such
@@ -56,22 +56,22 @@
 (prot-emacs-package prot-dired
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
-  (let ((map dired-mode-map))
-    (define-key map (kbd "i") #'prot-dired-insert-subdir) ; override `dired-maybe-insert-subdir'
-    (define-key map (kbd "/") #'prot-dired-limit-regexp)
-    (define-key map (kbd "C-c C-l") #'prot-dired-limit-regexp)
-    (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
-    (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
-    (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)
-    (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-previous)
-    (define-key map (kbd "M-s G") #'prot-dired-grep-marked-files))) ; M-s g is `prot-search-grep'
+  (prot-emacs-keybind dired-mode-map
+    "i" #'prot-dired-insert-subdir ; override `dired-maybe-insert-subdir'
+    "/" #'prot-dired-limit-regexp
+    "C-c C-l" #'prot-dired-limit-regexp
+    "M-n" #'prot-dired-subdirectory-next
+    "C-c C-n" #'prot-dired-subdirectory-next
+    "M-p" #'prot-dired-subdirectory-previous
+    "C-c C-p" #'prot-dired-subdirectory-previous
+    "M-s G" #'prot-dired-grep-marked-files)) ; M-s g is `prot-search-grep'
 
 (prot-emacs-package dired-subtree
   (:install t)
   (setq dired-subtree-use-backgrounds nil)
-  (let ((map dired-mode-map))
-    (define-key map (kbd "<tab>") #'dired-subtree-toggle)
-    (define-key map (kbd "<backtab>") #'dired-subtree-remove))) ; S-TAB
+  (prot-emacs-keybind dired-mode-map
+    "<tab>" #'dired-subtree-toggle
+    "<backtab>" #'dired-subtree-remove)) ; S-TAB
 
 (prot-emacs-package wdired
   (setq wdired-allow-to-change-permissions t)

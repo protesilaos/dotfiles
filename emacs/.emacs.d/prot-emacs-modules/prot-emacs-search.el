@@ -41,25 +41,21 @@
         (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
                 "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
-  (let ((map global-map))
-    ;; NOTE 2023-01-14: See my `substitute' package instead of the
-    ;; following: <https://git.sr.ht/~protesilaos/substitute>.
-    ;;
-    ;; (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
-    (define-key map (kbd "M-s M-%") #'prot-search-replace-markup) ; see `prot-search-markup-replacements'
-    (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
-    (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
-    (define-key map (kbd "M-s g") #'prot-search-grep)
-    (define-key map (kbd "M-s u") #'prot-search-occur-urls)
-    (define-key map (kbd "M-s t") #'prot-search-occur-todo-keywords)
-    (define-key map (kbd "M-s M-t") #'prot-search-grep-todo-keywords) ; With C-u it runs `prot-search-git-grep-todo-keywords'
-    (define-key map (kbd "M-s M-o") #'prot-search-occur-outline)
-    (define-key map (kbd "M-s M-u") #'prot-search-occur-browse-url))
-  (let ((map isearch-mode-map))
-    (define-key map (kbd "<up>") #'prot-search-isearch-repeat-backward)
-    (define-key map (kbd "<down>") #'prot-search-isearch-repeat-forward)
-    (define-key map (kbd "<backspace>") #'prot-search-isearch-abort-dwim)
-    (define-key map (kbd "<C-return>") #'prot-search-isearch-other-end)))
+  (prot-emacs-keybind global-map
+    "M-s M-%" #'prot-search-replace-markup ; see `prot-search-markup-replacements'
+    "M-s M-<" #'prot-search-isearch-beginning-of-buffer
+    "M-s M->" #'prot-search-isearch-end-of-buffer
+    "M-s g" #'prot-search-grep
+    "M-s u" #'prot-search-occur-urls
+    "M-s t" #'prot-search-occur-todo-keywords
+    "M-s M-t" #'prot-search-grep-todo-keywords ; With C-u it runs `prot-search-git-grep-todo-keywords'
+    "M-s M-o" #'prot-search-occur-outline
+    "M-s M-u" #'prot-search-occur-browse-url)
+  (prot-emacs-keybind isearch-mode-map
+    "<up>" #'prot-search-isearch-repeat-backward
+    "<down>" #'prot-search-isearch-repeat-forward
+    "<backspace>" #'prot-search-isearch-abort-dwim
+    "<C-return>" #'prot-search-isearch-other-end))
 
 ;;; Test regular expressions (re-builder)
 (prot-emacs-package re-builder
@@ -72,10 +68,10 @@
   (:delay 5)
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
-  (let ((map grep-mode-map))
-    (define-key map (kbd "e") #'wgrep-change-to-wgrep-mode)
-    (define-key map (kbd "C-x C-q") #'wgrep-change-to-wgrep-mode)
-    (define-key map (kbd "C-c C-c") #'wgrep-finish-edit)))
+  (prot-emacs-keybind grep-mode-map
+    "e" #'wgrep-change-to-wgrep-mode
+    "C-x C-q" #'wgrep-change-to-wgrep-mode
+    "C-c C-c" #'wgrep-finish-edit))
 
 ;;; Cross-references (xref.el)
 (prot-emacs-package xref

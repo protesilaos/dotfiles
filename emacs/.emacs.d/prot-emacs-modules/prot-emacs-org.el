@@ -388,23 +388,23 @@
       (add-hook hook #'pulsar-recenter-middle)
       (add-hook hook #'pulsar-reveal-entry)))
 
-  (let ((map global-map))
-    (define-key map (kbd "C-c A") #'org-agenda) ; see the `prot-org' section for C-c a
-    (define-key map (kbd "C-c c") #'org-capture)
-    (define-key map (kbd "C-c l") #'org-store-link)
-    (define-key map (kbd "C-c o") #'org-open-at-point-global))
-  (let ((map org-mode-map))
+  (prot-emacs-keybind global-map
+    "C-c A" #'org-agenda ; see the `prot-org' section for C-c a
+    "C-c c" #'org-capture
+    "C-c l" #'org-store-link
+    "C-c o" #'org-open-at-point-global)
+  (prot-emacs-keybind org-mode-map
     ;; I don't like that Org binds one zillion keys, so if I want one
     ;; for something more important, I disable it from here.
-    (define-key map (kbd "C-'") nil)
-    (define-key map (kbd "C-,") nil)
-    (define-key map (kbd "M-;") nil)
-    (define-key map (kbd "<C-return>") nil)
-    (define-key map (kbd "<C-S-return>") nil)
-    (define-key map (kbd "C-M-S-<right>") nil)
-    (define-key map (kbd "C-M-S-<left>") nil)
-    (define-key map (kbd "C-c M-l") #'org-insert-last-stored-link)
-    (define-key map (kbd "C-c C-M-l") #'org-toggle-link-display)))
+    "C-'" nil
+    "C-," nil
+    "M-;" nil
+    "<C-return>" nil
+    "<C-S-return>" nil
+    "C-M-S-<right>" nil
+    "C-M-S-<left>" nil
+    "C-c M-l" #'org-insert-last-stored-link
+    "C-c C-M-l" #'org-toggle-link-display))
 
 ;;; Custom extensions (prot-org.el)
 (prot-emacs-package prot-org
@@ -429,9 +429,9 @@
   ;; custom block agenda.
   (define-key global-map (kbd "C-c a") (lambda () (interactive) (org-agenda nil "A")))
 
-  (let ((map ctl-x-x-map))
-    (define-key map "i" #'prot-org-id-headlines)
-    (define-key map "h" #'prot-org-ox-html))
+  (prot-emacs-keybind ctl-x-x-map
+    "i" #'prot-org-id-headlines
+    "h" #'prot-org-ox-html)
 
   (add-to-list 'org-capture-templates
                '("p" "Private lesson or service" entry

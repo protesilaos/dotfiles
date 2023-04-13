@@ -74,22 +74,22 @@
 
   (define-prefix-command 'prot-eww-map)
   (define-key global-map (kbd "C-c w") 'prot-eww-map)
-  (let ((map prot-eww-map))
-    (define-key map (kbd "b") #'prot-eww-visit-bookmark)
-    (define-key map (kbd "e") #'prot-eww-browse-dwim)
-    (define-key map (kbd "s") #'prot-eww-search-engine))
-  (let ((map eww-mode-map))
-    (define-key map (kbd "B") #'prot-eww-bookmark-page)
-    (define-key map (kbd "D") #'prot-eww-download-html)
-    (define-key map (kbd "F") #'prot-eww-find-feed)
-    (define-key map (kbd "H") #'prot-eww-list-history)
-    (define-key map (kbd "b") #'prot-eww-visit-bookmark)
-    (define-key map (kbd "e") #'prot-eww-browse-dwim)
-    (define-key map (kbd "o") #'prot-eww-open-in-other-window)
-    (define-key map (kbd "E") #'prot-eww-visit-url-on-page)
-    (define-key map (kbd "J") #'prot-eww-jump-to-url-on-page)
-    (define-key map (kbd "R") #'prot-eww-readable)
-    (define-key map (kbd "Q") #'prot-eww-quit)))
+  (prot-emacs-keybind prot-eww-map
+    "b" #'prot-eww-visit-bookmark
+    "e" #'prot-eww-browse-dwim
+    "s" #'prot-eww-search-engine)
+  (prot-emacs-keybind eww-mode-map
+    "B" #'prot-eww-bookmark-page
+    "D" #'prot-eww-download-html
+    "F" #'prot-eww-find-feed
+    "H" #'prot-eww-list-history
+    "b" #'prot-eww-visit-bookmark
+    "e" #'prot-eww-browse-dwim
+    "o" #'prot-eww-open-in-other-window
+    "E" #'prot-eww-visit-url-on-page
+    "J" #'prot-eww-jump-to-url-on-page
+    "R" #'prot-eww-readable
+    "Q" #'prot-eww-quit))
 
 ;;; Elfeed feed/RSS reader
 (prot-emacs-package elfeed
@@ -115,22 +115,25 @@
             (lambda () (setq-local shr-width (current-fill-column))))
 
   (define-key global-map (kbd "C-c e") #'elfeed)
-  (let ((map elfeed-search-mode-map))
-    (define-key map (kbd "w") #'elfeed-search-yank)
-    (define-key map (kbd "g") #'elfeed-update)
-    (define-key map (kbd "G") #'elfeed-search-update--force))
-  (let ((map elfeed-show-mode-map))
-    (define-key map (kbd "w") #'elfeed-show-yank)))
+  
+  (prot-emacs-keybind elfeed-search-mode-map
+    "w" #'elfeed-search-yank
+    "g" #'elfeed-update
+    "G" #'elfeed-search-update--force)
+
+  (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank))
 
 (with-eval-after-load 'elfeed
   (prot-emacs-package prot-elfeed
     (setq prot-elfeed-tag-faces t)
     (prot-elfeed-fontify-tags)
+    
     (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
 
-    (let ((map elfeed-search-mode-map))
-      (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
-      (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
+    (prot-emacs-keybind elfeed-search-mode-map
+      "s" #'prot-elfeed-search-tag-filter
+      "+" #'prot-elfeed-toggle-tag)
+
     (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
 
 ;;; Rcirc (IRC client)
