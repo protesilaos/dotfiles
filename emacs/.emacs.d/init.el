@@ -282,9 +282,10 @@ DEFINITIONS is a sequence of string and command pairs."
                 (list "Packages" ,prot-emacs-package-form-regexp 2)))
 
 (defconst prot-emacs-font-lock-keywords
-  '(("(\\(prot-emacs-package\\|prot-emacs-keybind\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
-     (1 font-lock-keyword-face)
-     (2 font-lock-constant-face nil t))))
+  '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+     (2 font-lock-constant-face nil t))
+    ("(\\(prot-emacs-keybind\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+     (2 font-lock-variable-name-face nil t))))
 
 (font-lock-add-keywords 'emacs-lisp-mode prot-emacs-font-lock-keywords)
 
