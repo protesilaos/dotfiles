@@ -61,9 +61,8 @@
           ;; NOTE 2022-09-10: The following is for `ispell-word', though
           ;; it only works because I override `ispell-display-buffer'
           ;; with `prot-spell-ispell-display-buffer' and change the
-          ;; value of `ispell-choices-buffer'.  Check my prot-spell.el
-          ;; for the details.
-          ("\\*ispell-top-choices\\*"
+          ;; value of `ispell-choices-buffer'.
+          ("\\*ispell-top-choices\\*.*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
           ;; same window

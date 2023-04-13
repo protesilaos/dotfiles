@@ -101,6 +101,8 @@
           ("FR Français" . "fr")
           ("ES Espanõl" . "es")))
 
+  (setq ispell-choices-buffer "*ispell-top-choices*") ; see my `display-buffer-alist'
+
   ;; Also check prot-spell.el for what I am doing with
   ;; `prot-spell-ispell-display-buffer'.  Then refer to the
   ;; `display-buffer-alist' for the relevant entry.
