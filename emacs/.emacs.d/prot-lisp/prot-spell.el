@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -33,6 +33,8 @@
 ;; what it does.
 
 ;;; Code:
+
+(require 'ispell)
 
 (defgroup prot-spell ()
   "Extensions for ispell and flyspell."
@@ -69,10 +71,6 @@ Used by `prot-spell-change-dictionary'."
     (ispell-change-dictionary key)
     (message "Switched dictionary to %s" (propertize desc 'face 'bold))))
 
-(autoload 'flyspell-region "flyspell")
-(autoload 'thing-at-point "thingatpt")
-(autoload 'ispell-word "ispell")
-
 ;;;###autoload
 (defun prot-spell-spell-dwim (beg end)
   "Spellcheck between BEG END, current word, or select dictionary.
@@ -90,7 +88,7 @@ word and no active region invoke `ispell-word'.  Else call
     (call-interactively 'prot-spell-change-dictionary))))
 
 (defun prot-spell-ispell-display-buffer (buffer)
-  "Function to override `ispell-display-buffer'.
+  "Function to override `ispell-display-buffer' for BUFFER.
 Use this as `advice-add' to override the aforementioned Ispell
 function.  Then you can control the buffer's specifics via
 `display-buffer-alist' (how it ought to be!)."
