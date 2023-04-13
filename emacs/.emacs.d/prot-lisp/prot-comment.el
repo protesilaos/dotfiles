@@ -141,8 +141,8 @@ turned into a comment.
 If point is anywhere else on the line, the comment is indented
 with `comment-indent'.
 
-The comment is always formatted as 'DELIMITER KEYWORD DATE:',
-with the date format being controlled by the variable
+The comment is always formatted as DELIMITER KEYWORD DATE:, with
+the date format being controlled by the variable
 `prot-comment-timestamp-format-concise'.  DELIMITER is the value
 of `comment-start', as defined by the current major mode.
 
