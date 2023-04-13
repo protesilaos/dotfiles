@@ -86,8 +86,8 @@
   (setq xref-file-name-display 'project-relative)
   (setq xref-search-program
         (cond
-         ((executable-find "ugrep") 'ugrep)
          ((or (executable-find "ripgrep") (executable-find "rg")) 'ripgrep)
+         ((executable-find "ugrep") 'ugrep)
          (t 'grep))))
 
 ;;; Built-in bookmarking framework (bookmark.el)
