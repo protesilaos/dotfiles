@@ -98,11 +98,6 @@ before all other modules of my setup."
   (add-to-list 'load-path (locate-user-emacs-file path)))
 
 (require 'package)
-;; All variables are for Emacs 28+
-(setq package-name-column-width 40)
-(setq package-version-column-width 14)
-(setq package-status-column-width 12)
-(setq package-archive-column-width 8)
 (add-hook 'package-menu-mode-hook #'hl-line-mode)
 
 ;; Also read: <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>
