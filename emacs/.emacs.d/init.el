@@ -247,8 +247,34 @@ expanded BODY happen with `run-with-idle-timer'."
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (setq denote-file-type nil))
 
+(defmacro prot-emacs-keybind (keymap &rest definitions)
+  "Expand key binding DEFINITIONS for the given KEYMAP.
+DEFINITIONS is a sequence of string and command pairs."
+  (declare (indent 1))
+  (unless (zerop (% (length definitions) 2))
+    (error "Uneven number of key+command pairs"))
+  (let ((keys (seq-filter #'stringp definitions))
+        ;; We do accept nil as a definition: it unsets the given key.
+        (commands (seq-remove #'stringp definitions)))
+    `(when-let (((keymapp ,keymap))
+                (map ,keymap))
+       ,@(mapcar
+          (lambda (pair)
+            (unless (and (null (car pair))
+                         (null (cdr pair)))
+              `(define-key map (kbd ,(car pair)) ,(cdr pair))))
+          (cl-mapcar #'cons keys commands)))))
+
+;; Sample of `prot-emacs-keybind'
+
+;; (prot-emacs-keybind global-map
+;;   "C-z" nil
+;;   "C-x b" #'switch-to-buffer
+;;   "C-x C-c" nil
+;;   "C-x k" #'kill-buffer)
+
 (defvar prot-emacs-package-form-regexp
-  "^(\\(prot-emacs-package\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
+  "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
 
 (eval-after-load 'lisp-mode
@@ -256,7 +282,7 @@ expanded BODY happen with `run-with-idle-timer'."
                 (list "Packages" ,prot-emacs-package-form-regexp 2)))
 
 (defconst prot-emacs-font-lock-keywords
-  '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+  '(("(\\(prot-emacs-package\\|prot-emacs-keybind\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
      (1 font-lock-keyword-face)
      (2 font-lock-constant-face nil t))))
 
