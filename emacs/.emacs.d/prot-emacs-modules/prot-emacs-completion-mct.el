@@ -18,6 +18,8 @@
   (setq mct-completion-passlist '(embark-keybinding))
   (setq mct-remove-shadowed-file-names t)
   (setq mct-completion-window-size (cons #'mct-frame-height-third 1))
+  (setq mct-persist-dynamic-completion nil)
+  (setq mct-live-completion 'visible)
 
   (mct-minibuffer-mode 1)
 
