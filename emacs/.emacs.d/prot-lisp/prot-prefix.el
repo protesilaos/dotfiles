@@ -137,7 +137,7 @@ Commands that bring up transients have ... in their description."
     ("<left>"  "shrink-window-horizontally" shrink-window-horizontally)
     ("<right>" "enlarge-window-horizontally" enlarge-window-horizontally)]
    ["Misc"
-    ("e" "emoji-search..." emoji-insert)
+    ("e" "emoji-search..." emoji-search)
     ("E" "emoji-list" emoji-list)
     ("\\" "toggle-input-method" toggle-input-method)]])
 
