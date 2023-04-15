@@ -49,8 +49,7 @@
 
 (transient-define-prefix prot-prefix-buffer nil
   "Transient with buffer commands."
-  ["Buffer\n"
-   ["Switch"
+  [["Switch"
     ("b" "switch buffer" switch-to-buffer)
     ("B" "switch buf other window" switch-to-buffer-other-window)
     ("n" "next-buffer" next-buffer)
@@ -71,8 +70,7 @@
 
 (transient-define-prefix prot-prefix-search nil
   "Transient with search commands."
-  ["Search and/or replace\n"
-   ["Search"
+  [["Search"
     ("s" "isearch-forward" isearch-forward)
     ("S" "isearch-forward-regexp" isearch-forward-regexp)
     ("r" "isearch-backward" isearch-backward)
@@ -86,8 +84,7 @@
 
 (transient-define-prefix prot-prefix-window nil
   "Transient with window commands."
-  ["Windows\n"
-   ["Management"
+  [["Manage"
     ("b" "balance-windows" balance-windows)
     ("f" "fit-window-to-buffer" fit-window-to-buffer)
     ("t" "tear-off-window" tear-off-window)]
@@ -111,8 +108,7 @@
 
 (transient-define-prefix prot-prefix-toggle nil
   "Transient with minor mode toggles."
-  ["Toggle functionality\n"
-   ["Interface"
+  [["Interface"
     ("c" "context-menu-mode" context-menu-mode)
     ("m" "menu-bar-mode" menu-bar-mode)
     ("s" "scroll-bar-mode" scroll-bar-mode)
