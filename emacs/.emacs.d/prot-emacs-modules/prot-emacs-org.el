@@ -44,22 +44,12 @@
         '((sequence "TODO(t)" "|" "CANCEL(c@)" "DONE(d!)")
           (sequence "COACH(k)" "|" "COACHED(K!)")))
 
-  (defface prot/org-bold-todo
-    '((t :inherit (bold org-todo)))
-    "Face for bold TODO-type Org keywords.")
-
   (defface prot/org-bold-done
     '((t :inherit (bold org-done)))
     "Face for bold DONE-type Org keywords.")
 
-  (defface prot/org-bold-shadow
-    '((t :inherit (bold shadow)))
-    "Face for bold and `shadow' Org keywords.")
-
   (setq org-todo-keyword-faces
-        '(("WAIT" . prot/org-bold-todo)
-          ("MAYBE" . prot/org-bold-shadow)
-          ("CANCEL" . prot/org-bold-done)))
+        '(("CANCEL" . prot/org-bold-done)))
   (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces nil)
   (setq org-fontify-done-headline nil)
@@ -149,7 +139,7 @@
            :empty-lines-after 1)
           ("e" "Email note" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
-           ,(concat "* MAYBE %:subject :mail:\n"
+           ,(concat "* TODO %:subject :mail:\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
