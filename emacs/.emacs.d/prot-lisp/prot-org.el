@@ -89,15 +89,6 @@ For use in `prot-org-capture-coach'."
           ":END:\n\n"
           "%a%?"))
 
-(declare-function prot-bongo-show "prot-bongo")
-
-(defun prot-org-capture-jukebox ()
-  "Capture template for current Bongo songo." ; NOTE 2021-10-06: Brilliant typo!
-  (concat "* " (prot-bongo-show) " :jukebox:\n"
-          ":PROPERTIES:\n"
-          ":CAPTURED: %U\n"
-          ":END:\n\n"))
-
 (declare-function cl-letf "cl-lib")
 
 ;; Adapted from source: <https://stackoverflow.com/a/54251825>.

@@ -428,14 +428,7 @@
                  (file "coach.org")
                  #'prot-org-capture-coach
                  :prepend t
-                 :empty-lines 1))
-
-  (add-to-list 'org-capture-templates
-               '("j" "Music suggestion (jukebox)" entry
-                 (file+headline "tasks.org" "Music suggestions")
-                 #'prot-org-capture-jukebox
-                 :empty-lines-after 1
-                 :immediate-finish t)))
+                 :empty-lines 1)))
 
 ;;; org-modern
 (prot-emacs-package org-modern
