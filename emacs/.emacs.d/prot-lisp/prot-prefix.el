@@ -37,14 +37,15 @@
 
 (transient-define-prefix prot-prefix-file nil
   "Transient with file commands."
-  ["File"
-   ("f" "find-file" find-file)
-   ("F" "find-file-other-window" find-file-other-window)
-   ("l" "find-library" find-library)
-   ("m" "man" man)
-   ("r" "recentf-open" recentf-open)
-   ("d" "dired" dired)
-   ("D" "dired-other-window" dired-other-window)])
+  [["File or directory"
+    ("f" "find-file" find-file)
+    ("F" "find-file-other-window" find-file-other-window)]
+   ["Directory only"
+    ("d" "dired" dired)
+    ("D" "dired-other-window" dired-other-window)]
+   ["Documentation"
+    ("l" "find-library" find-library)
+    ("m" "man" man)]])
 
 (transient-define-prefix prot-prefix-buffer nil
   "Transient with buffer commands."
@@ -124,21 +125,21 @@
 (transient-define-prefix prot-prefix nil
   "Transient with common commands.
 Commands that bring up transients have ... in their description."
-  [["Buffers/files"
+  [["Buffers, files"
     ("b" "Buffer..." prot-prefix-buffer)
     ("f" "File..." prot-prefix-file)
-    ("s" "Search..." prot-prefix-search)]
-   ["Windows"
+    ("s" "Search..." prot-prefix-search)
     ("w" "Window..." prot-prefix-window)
     ("t" "Toggle..." prot-prefix-toggle)]
    ["Resize"
-    ("<up>"    "shrink-window" shrink-window)
-    ("<down>"  "enlarge-window" enlarge-window)
-    ("<left>"  "shrink-window-horizontally" shrink-window-horizontally)
-    ("<right>" "enlarge-window-horizontally" enlarge-window-horizontally)]
+    ("<up>"    "shrink" shrink-window)
+    ("<down>"  "enlarge" enlarge-window)
+    ("<left>"  "shrink horizontally" shrink-window-horizontally)
+    ("<right>" "enlarge horizontally" enlarge-window-horizontally)]
    ["Misc"
-    ("e" "emoji-search..." emoji-search)
-    ("E" "emoji-list" emoji-list)
+    ("e" "emoji-insert..." emoji-insert)
+    ("E" "emoji-search" emoji-search)
+    ("C-e" "emoji-list" emoji-list)
     ("\\" "toggle-input-method" toggle-input-method)]])
 
 (provide 'prot-prefix)
