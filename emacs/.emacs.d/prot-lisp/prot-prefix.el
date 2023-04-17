@@ -112,30 +112,34 @@
     ("c" "context-menu-mode" context-menu-mode)
     ("m" "menu-bar-mode" menu-bar-mode)
     ("s" "scroll-bar-mode" scroll-bar-mode)
-    ("t" "tool-bar-mode" tool-bar-mode)
-    ("v" "visual-line-mode" visual-line-mode)]
+    ("C-t" "tool-bar-mode" tool-bar-mode)]
    ["Tools"
     ("d" "toggle-debug-on-error" toggle-debug-on-error)
-    ("f" "follow-mode" follow-mode)]])
+    ("f" "follow-mode" follow-mode)
+    ("l" "visual-line-mode" visual-line-mode)
+    ("v" "variable-pitch-mode" variable-pitch-mode)
+    ("t" "toggle-truncate-lines" toggle-truncate-lines)
+    ("C-s" "window-toggle-side-windows" window-toggle-side-windows)]])
 
 (transient-define-prefix prot-prefix nil
   "Transient with common commands.
 Commands that bring up transients have ... in their description."
-  [["Buffers, files"
+  [["Common"
     ("b" "Buffer..." prot-prefix-buffer)
     ("f" "File..." prot-prefix-file)
     ("s" "Search..." prot-prefix-search)
     ("w" "Window..." prot-prefix-window)
     ("t" "Toggle..." prot-prefix-toggle)]
    ["Resize"
-    ("<up>"    "shrink" shrink-window)
-    ("<down>"  "enlarge" enlarge-window)
-    ("<left>"  "shrink horizontally" shrink-window-horizontally)
-    ("<right>" "enlarge horizontally" enlarge-window-horizontally)]
+    ("   <up>" "Shrink vertically" shrink-window)
+    (" <down>" "Enlarge vertically" enlarge-window)
+    (" <left>" "Shrink horizontally" shrink-window-horizontally)
+    ("<right>" "Enlarge horizontally" enlarge-window-horizontally)]
    ["Misc"
-    ("e" "emoji-insert..." emoji-insert)
-    ("E" "emoji-search" emoji-search)
-    ("C-e" "emoji-list" emoji-list)
+    ("e" "Emoji transient..." emoji-insert)
+    ("E" "Emoji search" emoji-search)
+    ("C-e" "Emoji buffer" emoji-list)
+    ("RET" "Insert unicode" insert-char)
     ("\\" "toggle-input-method" toggle-input-method)]])
 
 (provide 'prot-prefix)
