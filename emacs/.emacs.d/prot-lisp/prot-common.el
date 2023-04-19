@@ -289,5 +289,19 @@ Return the exit code and output in a list."
        (funcall (plist-get (car source) prop))
       (plist-get (flatten-list source) prop))))
 
+;;;###autoload
+(defun prot-common-parse-file-as-list (file)
+  "Return the contents of FILE as a list of strings.
+Strings are split at newline characters and are then trimmed for
+negative space.
+
+Use this function to provide a list of candidates for
+completion (per `completing-read')."
+  (split-string
+   (with-temp-buffer
+     (insert-file-contents file)
+     (buffer-substring-no-properties (point-min) (point-max)))
+   "\n" :omit-nulls "[\s\f\t\n\r\v]+"))
+
 (provide 'prot-common)
 ;;; prot-common.el ends here
