@@ -249,12 +249,13 @@
 
 ;;; World clock
   (setq display-time-world-list t)
-  (setq zoneinfo-style-world-list
+  (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
         '(("America/Los_Angeles" "Los Angeles")
           ("America/Chicago" "Chicago")
           ("Brazil/Acre" "Rio Branco")
           ("America/New_York" "New York")
           ("Brazil/East" "Brasília")
+          ("UTC" "UTC")
           ("Europe/Lisbon" "Lisbon")
           ("Europe/Brussels" "Brussels")
           ("Europe/Athens" "Athens")
