@@ -105,7 +105,7 @@
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%i%l")
+                    "%i %l")
            :empty-lines-after 1)
           ("c" "Clock in to a task" entry
            (file+headline "tasks.org" "Clocked tasks")
