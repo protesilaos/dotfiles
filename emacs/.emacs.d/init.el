@@ -88,6 +88,7 @@ before all other modules of my setup."
 (dolist (c '( narrow-to-region narrow-to-page upcase-region downcase-region))
   (put c 'disabled nil))
 
+;; And disable this
 (put 'overwrite-mode 'disabled t)
 
 (setq initial-buffer-choice t) ; always start with *scratch*
