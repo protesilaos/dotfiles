@@ -273,7 +273,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (:install t)
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
-  (setq embark-quit-after-action t)
+
+  (setq embark-quit-after-action t) ; See my custom commands below for quit/no-quit
+
   ;; I never cycle and want to disable the key.  Normally, a nil value
   ;; disables a key binding but here that value is interpreted as the
   ;; binding for `embark-act'.
@@ -292,8 +294,21 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (defun prot/embark-no-minimal-indicator ())
   (advice-add #'embark-minimal-indicator :override #'prot/embark-no-minimal-indicator)
 
+  (defun prot/embark-act-no-quit ()
+    "Call `embark-act' but do not quit after the action."
+    (interactive)
+    (let ((embark-quit-after-action nil))
+      (call-interactively #'embark-act)))
+
+  (defun prot/embark-act-quit ()
+    "Call `embark-act' and quit after the action."
+    (interactive)
+    (let ((embark-quit-after-action t))
+      (call-interactively #'embark-act)))
+
   (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "C-,") #'embark-act))
+    (define-key map (kbd "C-,") #'prot/embark-act-no-quit)
+    (define-key map (kbd "C-.") #'prot/embark-act-quit))
 
   ;; NOTE 2023-03-15: I am working on making my Embark buffers easier
   ;; to read.  I am removing keys I do not use.  What follows is a
