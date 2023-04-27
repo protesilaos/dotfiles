@@ -358,6 +358,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (prot-emacs-keybind embark-buffer-map
     "k" #'prot-simple-kill-buffer
+    "o" #'switch-to-buffer-other-window
     "r" #'embark-rename-buffer
     "e" #'ediff-buffers)
 
