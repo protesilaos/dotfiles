@@ -24,13 +24,13 @@ then
    case "$(cat "$HOME"/.config/bspwm/active-theme)" in
        dark*)
            border_active="#f78fe7"
-           border_focus="#00bcff"
+           border_focus="#79a8ff"
            border_normal="#000000"
            bg_preselect="#2f337f"
            ;;
        *)
            border_active="#8f0075"
-           border_focus="#0000c0"
+           border_focus="#3548cf"
            border_normal="#ffffff"
            bg_preselect="#bbc3ff"
            ;;
