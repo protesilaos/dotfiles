@@ -163,6 +163,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq history-length 500)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
+  (setq savehist-additional-variables '(register-alist kill-ring))
   (savehist-mode 1))
 
 ;;; Dabbrev (dynamic word completion)
