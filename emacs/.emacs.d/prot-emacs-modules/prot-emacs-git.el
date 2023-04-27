@@ -9,6 +9,7 @@
             (project-vc-dir "VC-Dir")
             (project-shell "Shell")
             (project-eshell "Eshell")))
+  (setq project-vc-extra-root-markers '(".project"))
 
   (let ((map global-map))
     (define-key map (kbd "C-x p .") #'project-dired)
