@@ -275,12 +275,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
 
-  (setq embark-quit-after-action t) ; See my custom commands below for quit/no-quit
-
-  ;; I never cycle and want to disable the key.  Normally, a nil value
-  ;; disables a key binding but here that value is interpreted as the
-  ;; binding for `embark-act'.
-  (setq embark-cycle-key "")
   (setq embark-confirm-act-all nil)
   (setq embark-mixed-indicator-both nil)
   (setq embark-mixed-indicator-delay 1.0)
@@ -289,6 +283,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq embark-verbose-indicator-buffer-sections '(bindings))
   (setq embark-verbose-indicator-excluded-actions
         '(embark-act-all embark-collect embark-export embark-insert))
+
+  ;; I never cycle and want to disable the key.  Normally, a nil value
+  ;; disables a key binding but here that value is interpreted as the
+  ;; binding for `embark-act'.  So I just add some obscure key that I
+  ;; do not have.  I absolutely do not want to cycle by accident!
+  (setq embark-cycle-key "<XF86Travel>")
 
   ;; The minimal indicator shows cycling options, but I have no use
   ;; for those.  I want it to be silent.
