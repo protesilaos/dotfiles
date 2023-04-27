@@ -175,6 +175,10 @@ mod4 + {_,shift + }r
 mod4 + bracket{left,right}
     bspwm_adjust_gaps {-,+}5
 
+# Like the above, but for border width.
+mod4 + shift + bracket{left,right}
+    bspwm_adjust_borders {-,+}5
+
 #### Advanced operations (receptacles and scripted actions)
 
 # NOTE The behaviour of preselections and receptacles is regulated by my
