@@ -17,13 +17,23 @@
   ;; support or no support for ligatures:
   ;; <https://git.sr.ht/~protesilaos/iosevka-comfy>.
   ;;
-  ;; Iosevka Comfy            == monospaced, supports ligatures
-  ;; Iosevka Comfy Fixed      == monospaced, no ligatures
-  ;; Iosevka Comfy Duo        == quasi-proportional, supports ligatures
-  ;; Iosevka Comfy Wide       == like Iosevka Comfy, but wider
-  ;; Iosevka Comfy Wide Fixed == like Iosevka Comfy Fixed, but wider
-  ;; Iosevka Comfy Motion     == monospaced, supports ligatures, fancier glyphs
-  ;; Iosevka Comfy Motion Duo == as above, but quasi-proportional
+  ;; | Family                          | Shapes | Spacing | Style      | Ligatures |
+  ;; |---------------------------------+--------+---------+------------+-----------|
+  ;; | Iosevka Comfy                   | Sans   | Compact | Monospaced | Yes       |
+  ;; | Iosevka Comfy Fixed             | Sans   | Compact | Monospaced | No        |
+  ;; | Iosevka Comfy Duo               | Sans   | Compact | Duospaced  | Yes       |
+  ;; |---------------------------------+--------+---------+------------+-----------|
+  ;; | Iosevka Comfy Motion            | Slab   | Compact | Monospaced | Yes       |
+  ;; | Iosevka Comfy Motion Fixed      | Slab   | Compact | Monospaced | No        |
+  ;; | Iosevka Comfy Motion Duo        | Slab   | Compact | Duospaced  | Yes       |
+  ;; |---------------------------------+--------+---------+------------+-----------|
+  ;; | Iosevka Comfy Wide              | Sans   | Wide    | Monospaced | Yes       |
+  ;; | Iosevka Comfy Wide Fixed        | Sans   | Wide    | Monospaced | No        |
+  ;; | Iosevka Comfy Wide Duo          | Sans   | Wide    | Duospaced  | Yes       |
+  ;; |---------------------------------+--------+---------+------------+-----------|
+  ;; | Iosevka Comfy Wide Motion       | Slab   | Wide    | Monospaced | Yes       |
+  ;; | Iosevka Comfy Wide Motion Fixed | Slab   | Wide    | Monospaced | No        |
+  ;; | Iosevka Comfy Wide Motion Duo   | Slab   | Wide    | Duospaced  | Yes       |
   (setq fontaine-presets
         '((small
            :default-family "Iosevka Comfy Wide"
