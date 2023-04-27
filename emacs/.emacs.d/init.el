@@ -168,6 +168,8 @@ If METHOD is any other non-nil value, install PACKAGE using
         (package-refresh-contents))
       (package-install package))))
 
+(defvar prot-emacs-loaded-packages nil)
+
 (defmacro prot-emacs-package (package &rest body)
   "Require PACKAGE with BODY configurations.
 
@@ -202,6 +204,7 @@ expanded BODY happen with `run-with-idle-timer'."
       (let ((common `(,(when install
                          `(prot-emacs-package-install ',package ,@install))
                       (require ',package)
+                      (add-to-list 'prot-emacs-loaded-packages ',package)
                       ,@body)))
         (if delay
             `(run-with-idle-timer ,delay nil (lambda () ,@(delq nil common)))
@@ -274,6 +277,13 @@ DEFINITIONS is a sequence of string and command pairs."
 ;;   "C-x C-c" nil
 ;;   "C-x k" #'kill-buffer)
 
+(defun prot-emacs-return-loaded-packages ()
+  "Return a list of all loaded packages.
+Here packages include both `prot-emacs-loaded-packages' and
+`package-activated-list'.  The latter only covers what is found
+in the `package-archives', whereas the former is for anything
+that is expanded with the `prot-emacs-package' macro."
+  (delete-dups (append prot-emacs-loaded-packages package-activated-list)))
 (defvar prot-emacs-package-form-regexp
   "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
