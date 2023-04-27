@@ -42,6 +42,11 @@
   (require 'add-log)
   (require 'log-view)
 
+  ;; I only use Git.  If I ever need another, I will include it here.
+  ;; This may have an effect on performance, as Emacs will not try to
+  ;; check for a bunch of backends.
+  (setq vc-handled-backends '(Git))
+
   ;; This one is for editing commit messages.
   (require 'log-edit)
   (setq log-edit-confirm 'changed)
