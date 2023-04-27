@@ -168,9 +168,12 @@ mod4 + n ; f ; {l,m,s,p}
 mod4 + {_,shift + }r
     bspc node @/ --rotate {90,-90}
 
-# Dynamic gaps.
-mod4 + shift + bracket{left,right}
-    bspc config -d focused window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
+# Adjust size of window gaps in focused desktop using my script.  This
+# script cycles through values 0 and 30, meaning that if we keep
+# increasing or decreasing past either of those limits, we move to the
+# other end: 0 5 ... 30 0 5.
+mod4 + bracket{left,right}
+    bspwm_adjust_gaps {-,+}5
 
 #### Advanced operations (receptacles and scripted actions)
 
