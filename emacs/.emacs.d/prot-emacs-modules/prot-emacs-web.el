@@ -137,30 +137,36 @@
     (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
 
 ;;; Rcirc (IRC client)
-(prot-emacs-package rcirc
-  (:delay 10)
-  (setq rcirc-server-alist
-        `(("irc.libera.chat"
-           :channels ("#emacs" "#tropin" "#rcirc")
-           :port 6697
-           :encryption tls
-           :password ,(prot-common-auth-get-field "libera" :secret))))
 
-  (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
+;; NOTE 2023-04-24: I seldom use IRC.  When I have to, I simply
+;; evaluate the following.  Otherwise I do not need to load it each
+;; time.
 
-  (setq rcirc-default-nick "protesilaos"
-        rcirc-default-user-name rcirc-default-nick
-        rcirc-default-full-name "Protesilaos Stavrou")
-
-  ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
-  ;; ;; actually need this.
-  ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
-
-  ;; NOTE 2021-11-28: Is there a canonical way to disable this?
-  (setq rcirc-timeout-seconds most-positive-fixnum)
-
-  (rcirc-track-minor-mode 1)
-
-  (define-key global-map (kbd "C-c i") #'irc))
+;; (prot-emacs-package rcirc
+;;   (:delay 10)
+;;
+;;   (setq rcirc-server-alist
+;;         `(("irc.libera.chat"
+;;            :channels ("#emacs" "#tropin" "#rcirc")
+;;            :port 6697
+;;            :encryption tls
+;;            :password ,(prot-common-auth-get-field "libera" :secret))))
+;;
+;;   (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
+;;
+;;   (setq rcirc-default-nick "protesilaos"
+;;         rcirc-default-user-name rcirc-default-nick
+;;         rcirc-default-full-name "Protesilaos Stavrou")
+;;
+;;   ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
+;;   ;; ;; actually need this.
+;;   ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
+;;
+;;   ;; NOTE 2021-11-28: Is there a canonical way to disable this?
+;;   (setq rcirc-timeout-seconds most-positive-fixnum)
+;;
+;;   (rcirc-track-minor-mode 1)
+;;
+;;   (define-key global-map (kbd "C-c i") #'irc))
 
 (provide 'prot-emacs-web)
