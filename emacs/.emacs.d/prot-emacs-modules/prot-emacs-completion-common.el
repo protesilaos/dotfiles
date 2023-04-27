@@ -364,6 +364,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (prot-emacs-keybind embark-file-map
     "f" #'find-file
     "j" #'embark-dired-jump
+    "c" #'copy-file
     "e" #'ediff-files)
 
   (prot-emacs-keybind embark-identifier-map
