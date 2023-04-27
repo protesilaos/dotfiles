@@ -47,8 +47,8 @@ _check bspwm_conf_desktops && bspwm_conf_desktops
 _bc automatic_scheme spiral
 _bc initial_polarity second_child
 _bc split_ratio 0.5
-_bc border_width 2
-_bc window_gap 2
+_bc border_width 3
+_bc window_gap 0
 _bc single_monocle true
 _bc borderless_monocle true
 _bc gapless_monocle true
