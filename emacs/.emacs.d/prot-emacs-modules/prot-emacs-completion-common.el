@@ -422,7 +422,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
-(prot-emacs-package embark-consult)
+(prot-emacs-package embark-consult (:install t))
 
 ;;; Template-based in-buffer completion (tempel.el)
 ;; NOTE 2023-01-12: Check the `templates' file that I distribute with
