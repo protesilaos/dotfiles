@@ -26,24 +26,17 @@
   ;; Iosevka Comfy Motion Duo == as above, but quasi-proportional
   (setq fontaine-presets
         '((small
-           :default-family "Iosevka Comfy Fixed"
+           :default-family "Iosevka Comfy Wide"
            :default-height 80
            :variable-pitch-family "Iosevka Comfy Wide Duo")
-          (regular
-           :default-height 100)
+          (regular) ; like this it uses all the fallback values and is named `regular'
           (large
+           :inherit regular
            :default-weight semilight
-           :default-height 140
-           :bold-weight extrabold)
-          (code-demo
-           :default-family "Iosevka Comfy Fixed"
-           :default-weight semilight
-           :default-height 170
-           :variable-pitch-family "Iosevka Comfy Duo"
+           :default-height 130
            :bold-weight extrabold)
           (presentation
-           :inherit code-demo
-           :default-height 220)
+           :default-height 200)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
@@ -57,7 +50,7 @@
            :fixed-pitch-serif-family nil ; falls back to :default-family
            :fixed-pitch-serif-weight nil ; falls back to :default-weight
            :fixed-pitch-serif-height 1.0
-           :variable-pitch-family "Iosevka Comfy Motion Duo"
+           :variable-pitch-family "Iosevka Comfy Duo"
            :variable-pitch-weight nil
            :variable-pitch-height 1.0
            :bold-family nil ; use whatever the underlying face has
