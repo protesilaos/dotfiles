@@ -286,7 +286,7 @@ Return the exit code and output in a list."
   "Find PROP in `auth-sources' for HOST entry."
   (when-let ((source (auth-source-search :host host)))
     (if (eq prop :secret)
-       (funcall (plist-get (car source) prop))
+        (funcall (plist-get (car source) prop))
       (plist-get (flatten-list source) prop))))
 
 ;;;###autoload
