@@ -79,6 +79,16 @@
       kept-old-versions 2
       create-lockfiles nil)
 
+;; Temporarily increase the garbage collection threshold.  These
+;; changes help shave off about half a second of startup time.
+(defvar prot-emacs--gc-cons-threshold gc-cons-threshold)
+
+(setq gc-cons-threshold most-positive-fixnum)
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold prot-emacs--gc-cons-threshold)))
+
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
 
