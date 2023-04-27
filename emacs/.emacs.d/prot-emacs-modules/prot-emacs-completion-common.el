@@ -258,6 +258,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     "M-s M-i" #'consult-imenu
     "M-s M-l" #'consult-line
     "M-s M-m" #'consult-mark
+    "M-s M-y" #'consult-yank-pop
     "M-s M-s" #'consult-outline)
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
 
