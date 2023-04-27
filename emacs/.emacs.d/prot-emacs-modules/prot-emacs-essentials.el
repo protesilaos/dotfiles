@@ -149,15 +149,15 @@
         make-pointer-invisible t
         mouse-wheel-progressive-speed t
         mouse-wheel-follow-mouse t)
+
+  ;; Scrolling behaviour
+  (setq-default scroll-preserve-screen-position t
+                scroll-conservatively 1 ; affects `scroll-step'
+                scroll-margin 0
+                next-screen-context-lines 0)
+
   (add-hook 'after-init-hook #'mouse-wheel-mode)
   (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window))
-
-;;; Scrolling behaviour
-;; These four come from the C source code.
-(setq-default scroll-preserve-screen-position t
-              scroll-conservatively 1 ; affects `scroll-step'
-              scroll-margin 0
-              next-screen-context-lines 0)
 
 ;;; Delete selection
 (prot-emacs-package delsel
