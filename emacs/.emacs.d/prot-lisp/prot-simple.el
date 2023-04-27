@@ -745,6 +745,14 @@ END, representing the point and mark."
 ;;;; Commands for buffers
 
 ;;;###autoload
+(defun prot-simple-kill-buffer (buffer)
+  "Kill current BUFFER.
+When called interactively, prompt for BUFFER."
+  (interactive (list (read-buffer "Select buffer: ")))
+  (let ((kill-buffer-query-functions nil))
+    (kill-buffer (or buffer (current-buffer)))))
+
+;;;###autoload
 (defun prot-simple-kill-buffer-current (&optional arg)
   "Kill current buffer.
 With optional prefix ARG (\\[universal-argument]) delete the
