@@ -49,7 +49,14 @@ export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
 
 # Default pager.  Note that the option I pass to it will quit once you
 # try to scroll past the end of the file.
-export PAGER="less --quit-at-eof"
+if [ "$TERM" = "dumb" ]
+then
+    export PAGER="cat"
+    alias less="cat"
+else
+    export PAGER="less --quit-at-eof"
+fi
+
 export MANPAGER="$PAGER"
 
 # Default editor.

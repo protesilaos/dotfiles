@@ -332,8 +332,35 @@
   (:delay 5)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t)
-  (setenv "PAGER" "cat") ; solves issues, such as with 'git log' and the default 'less'
-  (define-key global-map (kbd "<f1>") #'shell)) ; I don't use F1 for help commands
+  (setq shell-input-autoexpand 'input)
+  (setq shell-highlight-undef-enable t) ; Emacs 29.1
+  (setq shell-has-auto-cd nil) ; Emacs 29.1
+  (setq shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
+  (setq shell-kill-buffer-on-exit t) ; Emacs 29.1
+  (setq-default comint-scroll-to-bottom-on-input t)
+  (setq-default comint-scroll-to-bottom-on-output nil)
+  (setq-default comint-input-autoexpand 'input)
+  (setq comint-prompt-read-only t)
+  (setq comint-buffer-maximum-size 9999)
+  (setq comint-completion-autolist t)
+
+  ;; Check my .bashrc which handles `comint-terminfo-terminal':
+  ;;
+  ;; if [ "$TERM" = "dumb" ]
+  ;; then
+  ;;     export PAGER="cat"
+  ;;     alias less="cat"
+  ;; else
+  ;;     export PAGER="less --quit-at-eof"
+  ;; fi
+
+  (define-key global-map (kbd "<f1>") #'shell) ; I don't use F1 for help commands
+
+  (prot-emacs-keybind shell-mode-map
+    "<up>" #'comint-previous-input
+    "<down>" #'comint-next-input
+    "C-c C-k" #'comint-clear-buffer
+    "C-c C-w" #'comint-write-output))
 
 ;;; Tools for manual pages (manpages)
 (prot-emacs-package man
