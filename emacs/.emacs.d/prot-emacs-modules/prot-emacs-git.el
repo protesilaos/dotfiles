@@ -169,7 +169,6 @@
   (:install t)
   (:delay 2)
   (setq magit-define-global-key-bindings nil)
-  (define-key global-map (kbd "C-c g") #'magit-status)
 
   (require 'git-commit)
   (setq git-commit-summary-max-length 50)
@@ -193,7 +192,9 @@
 
   (require 'magit-repos)
   (setq magit-repository-directories
-        '(("~/Git/Projects" . 1))))
+        '(("~/Git/Projects" . 1)))
+
+  (define-key global-map (kbd "C-c g") #'magit-status))
 
 ;;; Smerge and Ediff
 (prot-emacs-package smerge-mode (:delay 10))
