@@ -357,7 +357,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     "e" #'eww)
 
   (prot-emacs-keybind embark-buffer-map
-    "k" #'kill-buffer
+    "k" #'prot-simple-kill-buffer
     "r" #'embark-rename-buffer
     "e" #'ediff-buffers)
 
