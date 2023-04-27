@@ -758,9 +758,10 @@ When called interactively, prompt for BUFFER."
 With optional prefix ARG (\\[universal-argument]) delete the
 buffer's window as well."
   (interactive "P")
-  (if (and arg (not (one-window-p)))
-      (kill-buffer-and-window)
-    (kill-buffer)))
+  (let ((kill-buffer-query-functions nil))
+    (if (and arg (not (one-window-p)))
+        (kill-buffer-and-window)
+      (kill-buffer))))
 
 ;;;###autoload
 (defun prot-simple-rename-file-and-buffer (name)
