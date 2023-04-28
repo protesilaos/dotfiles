@@ -162,8 +162,8 @@ If METHOD is any other non-nil value, install PACKAGE using
 `package-install'."
   (unless (or (eq method 'builtin) (null method))
     (unless (package-installed-p package)
-      (if (or (stringp method) (listp method))
-          (package-vc-install method))
+      (when (or (stringp method) (listp method))
+        (package-vc-install method))
       (unless package-archive-contents
         (package-refresh-contents))
       (package-install package))))
