@@ -1,16 +1,18 @@
 ;;; Minibuffer and Completions in Tandem
-(setq completion-show-help nil)
-(setq completion-auto-help nil)
-(setq completion-auto-select nil)
-(setq completions-detailed t)
-(setq completions-format 'one-column)
-(setq completion-show-inline-help nil)
-;; (setq completions-max-height 10)
-;; (setq completions-header-format (propertize "%s possible completions:\n" 'face 'shadow))
-;; (setq completions-highlight-face 'completions-highlight)
 
 (prot-emacs-package mct
   (:install t)
+  (:delay 1)
+  (setq completion-show-help nil)
+  (setq completion-auto-help nil)
+  (setq completion-auto-select nil)
+  (setq completions-detailed t)
+  (setq completions-format 'one-column)
+  (setq completion-show-inline-help nil)
+  ;; (setq completions-max-height 10)
+  ;; (setq completions-header-format (propertize "%s possible completions:\n" 'face 'shadow))
+  ;; (setq completions-highlight-face 'completions-highlight)
+
   (setq mct-hide-completion-mode-line t)
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
@@ -47,30 +49,30 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
       (_ (my-sort-by-history elems))))
 
   ;; Specify the sorting function.
-  (setq completions-sort #'my-sort-multi-category))
+  (setq completions-sort #'my-sort-multi-category)
 
 ;;; Custom completion annotations
-;; I normally use `marginalia-mode' but this is not always good for
-;; MCT.  The reason is that the *Completions* buffer is generated at
-;; the outset with all the annotations included.  Extra annotations
-;; for stuff like M-x and C-h o make the MCT experience very sluggish.
-;; This is not the fault of `marginalia-mode'!  It simply is an
-;; inherent limitation of the *Completions*.  As such, I am defining
-;; some annotations for a few cases where I do not expect any
-;; noticeable slowdown.
-;;
-;; I will probably end up modifying the
-;; `marginalia-annotator-registry', but I need to test this first.
+  ;; I normally use `marginalia-mode' but this is not always good for
+  ;; MCT.  The reason is that the *Completions* buffer is generated at
+  ;; the outset with all the annotations included.  Extra annotations
+  ;; for stuff like M-x and C-h o make the MCT experience very sluggish.
+  ;; This is not the fault of `marginalia-mode'!  It simply is an
+  ;; inherent limitation of the *Completions*.  As such, I am defining
+  ;; some annotations for a few cases where I do not expect any
+  ;; noticeable slowdown.
+  ;;
+  ;; I will probably end up modifying the
+  ;; `marginalia-annotator-registry', but I need to test this first.
 
-(defun prot/annotation--buffer-file (buffer)
-  "Annotate BUFFER with its `buffer-file-name'."
-  (when-let ((name (buffer-file-name (get-buffer buffer))))
-    (format " %s" (abbreviate-file-name name))))
+  (defun prot/annotation--buffer-file (buffer)
+    "Annotate BUFFER with its `buffer-file-name'."
+    (when-let ((name (buffer-file-name (get-buffer buffer))))
+      (format " %s" (abbreviate-file-name name))))
 
-(defun prot/annotation-buffer (&rest app)
-  (let ((completion-extra-properties `(:annotation-function ,#'prot/annotation--buffer-file)))
-    (apply app)))
+  (defun prot/annotation-buffer (&rest app)
+    (let ((completion-extra-properties `(:annotation-function ,#'prot/annotation--buffer-file)))
+      (apply app)))
 
-(advice-add #'read-buffer :around #'prot/annotation-buffer)
+  (advice-add #'read-buffer :around #'prot/annotation-buffer))
 
 (provide 'prot-emacs-completion-mct)

@@ -33,6 +33,7 @@
 
 ;;; Version control framework (vc.el, vc-git.el, and more)
 (prot-emacs-package vc
+  (:delay 1)
   ;; Those offer various types of functionality, such as blaming,
   ;; viewing logs, showing a dedicated buffer with changes to affected
   ;; files.
@@ -163,7 +164,7 @@
 ;; There is no need to install the package, as transient.el is built
 ;; into Emacs.  By requiring it, I prevent the installation of the
 ;; package, which would be done by Magit.
-(prot-emacs-package transient)
+(prot-emacs-package transient (:delay 1))
 
 (prot-emacs-package magit
   (:install t)

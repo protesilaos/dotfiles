@@ -1,5 +1,6 @@
 ;;; Isearch, occur, grep, and extras (prot-search.el)
 (prot-emacs-package isearch
+  (:delay 1)
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
@@ -88,6 +89,7 @@
 
 ;;; Built-in bookmarking framework (bookmark.el)
 (prot-emacs-package bookmark
+  (:delay 1)
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
   (setq bookmark-set-fringe-mark t) ; Emacs28

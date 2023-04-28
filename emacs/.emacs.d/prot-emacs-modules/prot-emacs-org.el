@@ -1,6 +1,7 @@
 ;;; Org-mode (personal information manager)
 
 (prot-emacs-package org
+  (:delay 1)
   (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
 ;;;; general settings
@@ -399,6 +400,7 @@
 
 ;;; Custom extensions (prot-org.el)
 (prot-emacs-package prot-org
+  (:delay 2)
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el

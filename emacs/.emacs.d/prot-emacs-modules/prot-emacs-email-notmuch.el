@@ -8,7 +8,7 @@
 ;; which is what we use here (they are maintained by the same people).
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-package notmuch
-
+  (:delay 2)
 ;;; Account settings
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
@@ -173,6 +173,7 @@
 
 ;;; My own tweaks for notmuch (prot-notmuch.el)
 (prot-emacs-package prot-notmuch
+  (:delay 2)
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
@@ -215,6 +216,7 @@
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-package notmuch-indicator
   (:install t)
+  (:delay 2)
   (setq notmuch-indicator-args
         '((:terms "tag:unread and tag:inbox" :label "💬") ; also accepts a face like `:face bold' (no quotes)
           (:terms "tag:unread and tag:package" :label "🗂️")

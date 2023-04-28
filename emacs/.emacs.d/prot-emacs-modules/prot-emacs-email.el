@@ -5,16 +5,19 @@
         user-mail-address "public@protesilaos.com"))
 
 (prot-emacs-package mm-encode
+  (:delay 1)
   (setq mm-encrypt-option nil ; use 'guided if you need more control
         mm-sign-option nil))  ; same
 
 (prot-emacs-package mml-sec
+  (:delay 1)
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
         mml-secure-smime-sign-with-sender t))
 
 (prot-emacs-package message
+  (:delay 1)
   (setq mail-user-agent 'message-user-agent
         mail-header-separator (purecopy "*****")
         message-elide-ellipsis "\n> [... %l lines elided]\n"
@@ -35,10 +38,12 @@
   (add-hook 'message-setup-hook #'message-sort-headers))
 
 (prot-emacs-package gnus-dired ; does not require `gnus'
+  (:delay 1)
   (add-hook 'dired-mode-hook #'gnus-dired-mode))
 
 ;;; Sending email (SMTP)
 (prot-emacs-package smtpmail
+  (:delay 1)
   ;; ;; FIXME 2023-01-26: Do I need any of this?  It seems that the
   ;; ;; contents of the `auth-sources' suffice for this case and
   ;; ;; smtpmail.el is set up to do the right thing out-of-the-box.
@@ -51,6 +56,7 @@
         smtpmail-queue-mail nil))
 
 (prot-emacs-package sendmail
+  (:delay 1)
   (setq send-mail-function 'smtpmail-send-it))
 
 (provide 'prot-emacs-email)

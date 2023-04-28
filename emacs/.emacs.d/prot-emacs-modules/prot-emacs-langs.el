@@ -13,16 +13,19 @@
 ;;; Markdown (markdown-mode)
 (prot-emacs-package markdown-mode
   (:install t)
+  (:delay 5)
   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 
 ;;; Shell scripts (sh-mode)
 (prot-emacs-package sh-script
+  (:delay 5)
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
 ;;; SXHKDRC mode (one of my many packages)
 (prot-emacs-package sxhkdrc-mode
   (:install t)
+  (:delay 5)
   ;; By default, it only applies to the sxhkdrc file, but I have other
   ;; relevant entries as well.  I separate my keys into different
   ;; modules and load only what I need.
@@ -30,6 +33,7 @@
 
 ;;; Comments (newcomment.el and prot-comment.el)
 (prot-emacs-package newcomment
+  (:delay 1)
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
@@ -39,6 +43,7 @@
     "M-;" #'comment-indent))
 
 (prot-emacs-package prot-comment
+  (:delay 1)
   (setq prot-comment-comment-keywords
         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
@@ -49,6 +54,7 @@
 
 ;;; Configure 'electric' behaviour
 (prot-emacs-package electric
+  (:delay 1)
   (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
   (setq electric-pair-pairs
@@ -71,6 +77,7 @@
 
 ;;; Parentheses (show-paren-mode)
 (prot-emacs-package paren
+  (:delay 1)
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
@@ -113,6 +120,7 @@
 
 ;;; Flymake
 (prot-emacs-package flymake
+  (:delay 1)
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
   (setq flymake-start-on-flymake-mode t)
@@ -161,10 +169,12 @@
 
 ;;; Eldoc (elisp live documentation feedback)
 (prot-emacs-package eldoc
+  (:delay 1)
   (global-eldoc-mode 1))
 
 ;;; Handle performance for very long lines (so-long.el)
 (prot-emacs-package so-long
+  (:delay 1)
   (global-so-long-mode 1))
 
 (provide 'prot-emacs-langs)
