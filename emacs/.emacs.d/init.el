@@ -284,6 +284,7 @@ Here packages include both `prot-emacs-loaded-packages' and
 in the `package-archives', whereas the former is for anything
 that is expanded with the `prot-emacs-package' macro."
   (delete-dups (append prot-emacs-loaded-packages package-activated-list)))
+
 (defvar prot-emacs-package-form-regexp
   "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
