@@ -75,14 +75,6 @@
 
   (define-key ctl-x-x-map "c" #'rainbow-mode)) ; C-x x c
 
-;;; Fringe mode
-(prot-emacs-package fringe
-  (fringe-mode nil)
-  (setq-default fringes-outside-margins nil)
-  (setq-default indicate-buffer-boundaries nil)
-  (setq-default indicate-empty-lines nil)
-  (setq-default overflow-newline-into-fringe t))
-
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
 (prot-emacs-package cursory
