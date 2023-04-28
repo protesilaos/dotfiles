@@ -282,7 +282,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
   (setq embark-verbose-indicator-buffer-sections '(bindings))
   (setq embark-verbose-indicator-excluded-actions
-        '(embark-act-all embark-collect embark-export embark-insert))
+        '(embark-cycle embark-act-all embark-collect embark-export embark-insert))
 
   ;; I never cycle and want to disable the key.  Normally, a nil value
   ;; disables a key binding but here that value is interpreted as the
