@@ -173,15 +173,6 @@
 
   (require 'git-commit)
   (setq git-commit-summary-max-length 50)
-  (setq git-commit-known-pseudo-headers
-        '("Signed-off-by"
-          "Acked-by"
-          "Modified-by"
-          "Cc"
-          "Suggested-by"
-          "Reported-by"
-          "Tested-by"
-          "Reviewed-by"))
   ;; NOTE 2023-01-24: I used to also include `overlong-summary-line'
   ;; in this list, but I realised I do not need it.  My summaries are
   ;; always in check.  When I exceed the limit, it is for a good
