@@ -190,7 +190,7 @@ The :install property is the argument passed to
 described therein.
 
 The :delay property makes the evaluation of PACKAGE with the
-expanded BODY happen with `run-with-idle-timer'."
+expanded BODY happen with `run-with-timer'."
   (declare (indent 1))
   (unless (memq package prot-emacs-omit-packages)
     (let (install delay)
@@ -207,7 +207,7 @@ expanded BODY happen with `run-with-idle-timer'."
                       (add-to-list 'prot-emacs-loaded-packages ',package)
                       ,@body)))
         (if delay
-            `(run-with-idle-timer ,delay nil (lambda () ,@(delq nil common)))
+            `(run-with-timer ,delay nil (lambda () ,@(delq nil common)))
           `(progn ,@(delq nil common)))))))
 
 ;; Samples of `prot-emacs-package' (expand them with `pp-macroexpand-last-sexp').
