@@ -169,6 +169,7 @@
   (:install t)
   (:delay 2)
   (setq magit-define-global-key-bindings nil)
+  (setq magit-section-visibility-indicator '("⮧"))
 
   (require 'git-commit)
   (setq git-commit-summary-max-length 50)
