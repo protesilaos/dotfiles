@@ -189,9 +189,7 @@
 
   (define-key global-map (kbd "C-c g") #'magit-status))
 
-;;; Smerge and Ediff
-(prot-emacs-package smerge-mode (:delay 10))
-
+;;; Ediff
 (prot-emacs-package ediff
   (:delay 10)
   (setq ediff-keep-variants nil)
