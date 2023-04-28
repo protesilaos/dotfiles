@@ -81,7 +81,7 @@ Read Info node `(elisp) Pixel Specification'.")
 Specific to the current window's mode line.")
 
 (defvar prot-modeline-flymake
-  '(:eval (when flymake-mode
+  '(:eval (when (bound-and-true-p flymake-mode)
             flymake-mode-line-format))
   "Mode line construct displaying `flymake-mode-line-format'.
 Specific to the current window's mode line.")
