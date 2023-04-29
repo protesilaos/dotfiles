@@ -454,6 +454,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (prot-emacs-keybind tempel-map
     "RET" #'tempel-done
     "C-p" #'tempel-previous
-    "C-n" #'tempel-next))
+    "C-n" #'tempel-next
+    "<tab>" #'tempel-next
+    "<backtab>" #'tempel-previous
+    "C-S-<iso-lefttab>" #'tempel-previous))
 
 (provide 'prot-emacs-completion-common)
