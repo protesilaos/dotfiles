@@ -216,7 +216,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
       "bestregards"  "Best regards,\nProtesilaos (or simply \"Prot\")"
       "allthebest"   "All the best,\nProtesilaos (or simply \"Prot\")"
       "abest"        "All the best,\nProt"
-      "bregards"     "Best regards,\nProt")))
+      "bregards"     "Best regards,\nProt"))
 
   (let ((map global-map))
     (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
