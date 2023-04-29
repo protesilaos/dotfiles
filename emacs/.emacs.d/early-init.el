@@ -58,10 +58,10 @@
 (dolist (var '(default-frame-alist initial-frame-alist))
   (add-to-list var '(width . (text-pixels . 1200)))
   (add-to-list var '(height . (text-pixels . 900)))
-  (add-to-list var '(right-divider-width . 30))
-  (add-to-list var '(internal-border-width . 12))
+  (add-to-list var '(right-divider-width . 20))
+  (add-to-list var '(internal-border-width . 20))
   (add-to-list var '(child-frame-border-width . 1))
-  (add-to-list var '(scroll-bar-width  . 12)))
+  (add-to-list var '(scroll-bar-width  . 20)))
 
 (defun prot-emacs-invisible-dividers (_theme)
   "Make window dividers for THEME invisible."
