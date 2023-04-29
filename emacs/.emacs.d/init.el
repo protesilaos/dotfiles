@@ -277,6 +277,36 @@ DEFINITIONS is a sequence of string and command pairs."
 ;;   "C-x C-c" nil
 ;;   "C-x k" #'kill-buffer)
 
+(defmacro prot-emacs-abbrev (table &rest definitions)
+  "Expand abbrev DEFINITIONS for the given TABLE.
+DEFINITIONS is a sequence of string pairs mapping the
+abbreviation to its expansion."
+  (declare (indent 1))
+  (unless (zerop (% (length definitions) 2))
+    (error "Uneven number of key+command pairs"))
+  `(when-let (((abbrev-table-p ,table))
+              (table ,table))
+     ,@(mapcar
+        (lambda (pair)
+          (unless (and (null (car pair))
+                       (null (cdr pair)))
+            `(define-abbrev table ,(car pair) ,(cdr pair))))
+        ;; FIXME 2023-04-29: There probably is a more efficient way to
+        ;; convert '(1 2 3 4) to '((1 2) (3 4)).  I feel I am missing
+        ;; something obvious.
+        (cl-mapcar
+         #'cons
+         (seq-filter
+          (lambda (element)
+            (when (cl-evenp (cl-position element definitions))
+              element))
+          definitions)
+         (seq-filter
+          (lambda (element)
+            (when (cl-oddp (cl-position element definitions))
+              element))
+          definitions)))))
+
 (defun prot-emacs-return-loaded-packages ()
   "Return a list of all loaded packages.
 Here packages include both `prot-emacs-loaded-packages' and
@@ -286,7 +316,7 @@ that is expanded with the `prot-emacs-package' macro."
   (delete-dups (append prot-emacs-loaded-packages package-activated-list)))
 
 (defvar prot-emacs-package-form-regexp
-  "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
+  "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|prot-emacs-abbrev\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
 
 (eval-after-load 'lisp-mode
@@ -296,8 +326,8 @@ that is expanded with the `prot-emacs-package' macro."
 (defconst prot-emacs-font-lock-keywords
   '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
      (2 font-lock-constant-face nil t))
-    ("(\\(prot-emacs-keybind\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
-     (2 font-lock-variable-name-face nil t))))
+    ("(\\(prot-emacs-\\(keybind\\|abbrev\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
+     (3 font-lock-variable-name-face nil t))))
 
 (font-lock-add-keywords 'emacs-lisp-mode prot-emacs-font-lock-keywords)
 
