@@ -48,22 +48,6 @@
         " ")
   "Mode line construct for displaying major modes.")
 
-(defface prot-modeline-border-active
-  '((t :inherit (variable-pitch font-lock-keyword-face) :inverse-video t))
-  "Face for active mode line border (`prot-modeline-border').")
-
-(defface prot-modeline-border-inactive
-  '((t :inherit variable-pitch))
-  "Face for inactive mode line border (`prot-modeline-border').")
-
-(defvar prot-modeline-border
-  `(:eval
-    (propertize " " 'face
-                (if (mode-line-window-selected-p)
-                    'prot-modeline-border-active
-                  'prot-modeline-border-inactive)))
-  "Mode line construct for displaying major modes.")
-
 (defvar prot-modeline-align-right
   '(:eval (propertize
            " " 'display
@@ -97,7 +81,7 @@ Specific to the current window's mode line.")
 ;; variables will not work without it.
 (dolist (construct '( prot-modeline-modes prot-modeline-align-right
                       prot-modeline-kbd-macro prot-modeline-flymake
-                      prot-modeline-misc-info prot-modeline-border))
+                      prot-modeline-misc-info))
   (put construct 'risky-local-variable t))
 
 (provide 'prot-modeline)

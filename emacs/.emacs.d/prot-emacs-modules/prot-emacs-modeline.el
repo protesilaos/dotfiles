@@ -6,7 +6,6 @@
 
   (setq-default mode-line-format
                 '("%e"
-                  prot-modeline-border
                   prot-modeline-kbd-macro
                   " "
                   mode-line-mule-info
