@@ -186,38 +186,37 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
-  (let ((table global-abbrev-table))
-    (define-abbrev table "meweb" "https://protesilaos.com")
-    (define-abbrev table "megit" "https://git.sr.ht/~protesilaos")
-    (define-abbrev table "mehub" "https://github.com/protesilaos")
-    (define-abbrev table "melab" "https://gitlab.com/protesilaos"))
+  (prot-emacs-abbrev global-abbrev-table
+    "meweb" "https://protesilaos.com"
+    "megit" "https://git.sr.ht/~protesilaos"
+    "mehub" "https://github.com/protesilaos"
+    "melab" "https://gitlab.com/protesilaos")
 
-  (let ((table text-mode-abbrev-table))
-    (define-abbrev table "asciidoc" "AsciiDoc")
-    (define-abbrev table "auctex" "AUCTeX")
-    (define-abbrev table "cliche" "cliché")
-    (define-abbrev table "clojurescript" "ClojureScript")
-    (define-abbrev table "emacsconf" "EmacsConf")
-    (define-abbrev table "github" "GitHub")
-    (define-abbrev table "gitlab" "GitLab")
-    (define-abbrev table "javascript" "JavaScript")
-    (define-abbrev table "latex" "LaTeX")
-    (define-abbrev table "libreplanet" "LibrePlanet")
-    (define-abbrev table "linkedin" "LinkedIn")
-    (define-abbrev table "paypal" "PayPal")
-    (define-abbrev table "sourcehut" "SourceHut")
-    (define-abbrev table "texmacs" "TeXmacs")
-    (define-abbrev table "typescript" "TypeScript")
-    (define-abbrev table "visavis" "vis-à-vis")
-    (define-abbrev table "youtube" "YouTube"))
+  (prot-emacs-abbrev text-mode-abbrev-table
+    "asciidoc"       "AsciiDoc"
+    "auctex"         "AUCTeX"
+    "cliche"         "cliché"
+    "clojurescript"  "ClojureScript"
+    "emacsconf"      "EmacsConf"
+    "github"         "GitHub"
+    "gitlab"         "GitLab"
+    "javascript"     "JavaScript"
+    "latex"          "LaTeX"
+    "libreplanet"    "LibrePlanet"
+    "linkedin"       "LinkedIn"
+    "paypal"         "PayPal"
+    "sourcehut"      "SourceHut"
+    "texmacs"        "TeXmacs"
+    "typescript"     "TypeScript"
+    "visavis"        "vis-à-vis"
+    "youtube"        "YouTube")
 
   (with-eval-after-load 'message
-    (let ((table message-mode-abbrev-table)
-          (name "Protesilaos (or simply \"Prot\")"))
-      (define-abbrev table "bestregards" (format "Best regards,\n%s" name))
-      (define-abbrev table "allthebest" (format "All the best,\n%s" name))
-      (define-abbrev table "abest" "All the best,\nProt")
-      (define-abbrev table "bregards" "Best regards,\nProt")))
+    (prot-emacs-abbrev message-mode-abbrev-table
+      "bestregards"  "Best regards,\nProtesilaos (or simply \"Prot\")"
+      "allthebest"   "All the best,\nProtesilaos (or simply \"Prot\")"
+      "abest"        "All the best,\nProt"
+      "bregards"     "Best regards,\nProt")))
 
   (let ((map global-map))
     (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
