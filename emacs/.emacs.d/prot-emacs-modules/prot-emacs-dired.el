@@ -110,6 +110,8 @@
   (:delay 5)
   (setq mandoura-saved-playlist-directory "~/Music/playlists/")
 
+  (define-key dired-mode-map (kbd "M-<return>") #'mandoura-play-files)
+
   (with-eval-after-load 'prot-prefix
     (transient-append-suffix 'prot-prefix '(0 -1 0)
       '("m" "mandoura-play-playlist" mandoura-play-playlist))))
