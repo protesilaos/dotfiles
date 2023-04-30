@@ -1,13 +1,14 @@
-;;; Paragraphs and fill-mode
-(setq sentence-end-double-space t)
-(setq sentence-end-without-period nil)
-(setq colon-double-space nil)
-(setq use-hard-newlines nil)
-(setq adaptive-fill-mode t)
-(add-hook 'text-mode-hook #'turn-on-auto-fill)
-
 ;;; Plain text (text-mode)
 (prot-emacs-package text-mode
+  (:delay 5)
+  (setq sentence-end-double-space t)
+  (setq sentence-end-without-period nil)
+  (setq colon-double-space nil)
+  (setq use-hard-newlines nil)
+  (setq adaptive-fill-mode t)
+
+  (add-hook 'text-mode-hook #'turn-on-auto-fill)
+
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode)))
 
 ;;; Markdown (markdown-mode)
