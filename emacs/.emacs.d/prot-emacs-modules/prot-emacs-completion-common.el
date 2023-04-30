@@ -54,7 +54,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;;; Minibuffer configurations
 (prot-emacs-package minibuffer
-  (setq completion-styles '(emacs22 orderless)) ; also see `completion-category-overrides'
+  (setq completion-styles '(emacs22 substring orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
 
   ;; A list of known completion categories:
