@@ -1,6 +1,6 @@
 ;;; Dired file manager and prot-dired.el extras
 (prot-emacs-package dired
-  (:delay 1)
+  (:delay 5)
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
@@ -25,7 +25,7 @@
   (define-key dired-jump-map (kbd "j") nil))
 
 (prot-emacs-package dired-aux
-  (:delay 1)
+  (:delay 5)
   (setq dired-isearch-filenames 'dwim)
   ;; The following variables were introduced in Emacs 27.1
   (setq dired-create-destination-dirs 'ask)
@@ -48,7 +48,7 @@
 ;;   (setq find-name-arg "-iname"))
 
 (prot-emacs-package dired-x
-  (:delay 1)
+  (:delay 5)
   (setq dired-clean-up-buffers-too t)
   (setq dired-clean-confirm-killing-deleted-buffers t)
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
@@ -57,7 +57,7 @@
   (define-key dired-mode-map (kbd "I") #'dired-info))
 
 (prot-emacs-package prot-dired
-  (:delay 1)
+  (:delay 5)
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
   (prot-emacs-keybind dired-mode-map
@@ -72,7 +72,7 @@
 
 (prot-emacs-package dired-subtree
   (:install t)
-  (:delay 1)
+  (:delay 5)
   (setq dired-subtree-use-backgrounds nil)
   (prot-emacs-keybind dired-mode-map
     "<tab>" #'dired-subtree-toggle

@@ -2,7 +2,7 @@
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-package pulsar
   (:install t)
-  (:delay 1)
+  (:delay 5)
   (dolist (cmd '( narrow-to-page narrow-to-defun
                   narrow-to-region widen
                   logos-forward-page-dwim
@@ -33,7 +33,7 @@
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
 (prot-emacs-package lin
   (:install t)
-  (:delay 1)
+  (:delay 5)
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
@@ -79,7 +79,7 @@
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
 (prot-emacs-package cursory
   (:install t)
-  (:delay 1)
+  (:delay 5)
   (setq cursory-presets
         '((box
            :blink-cursor-interval 0.8)

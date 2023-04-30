@@ -1,6 +1,7 @@
 ;;; Projects (project.el)
 
 (prot-emacs-package project
+  (:delay 5)
   (setopt project-switch-commands
           '((project-find-file "Find file")
             (project-find-regexp "Find regexp")
@@ -18,6 +19,7 @@
 
 ;;; Diff-mode (and prot-diff.el extensions)
 (prot-emacs-package diff-mode
+  (:delay 10)
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
@@ -33,7 +35,7 @@
 
 ;;; Version control framework (vc.el, vc-git.el, and more)
 (prot-emacs-package vc
-  (:delay 1)
+  (:delay 10)
   ;; Those offer various types of functionality, such as blaming,
   ;; viewing logs, showing a dedicated buffer with changes to affected
   ;; files.
@@ -128,7 +130,7 @@
 ;; here: <https://protesilaos.com/emacs/agitate>.
 (prot-emacs-package agitate
   (:install t)
-  (:delay 2)
+  (:delay 10)
   (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
   (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
@@ -164,11 +166,11 @@
 ;; There is no need to install the package, as transient.el is built
 ;; into Emacs.  By requiring it, I prevent the installation of the
 ;; package, which would be done by Magit.
-(prot-emacs-package transient (:delay 1))
+(prot-emacs-package transient (:delay 5))
 
 (prot-emacs-package magit
   (:install t)
-  (:delay 2)
+  (:delay 50)
   (setq magit-define-global-key-bindings nil)
   (setq magit-section-visibility-indicator '("⮧"))
 
@@ -191,7 +193,7 @@
 
 ;;; Ediff
 (prot-emacs-package ediff
-  (:delay 10)
+  (:delay 50)
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)
   (setq ediff-merge-revisions-with-ancestor t)

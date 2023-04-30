@@ -107,7 +107,7 @@
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
 (prot-emacs-package substitute
   (:install t)
-  (:delay 2)
+  (:delay 5)
   ;; Set this to non-nil to highlight all occurences of the current
   ;; target.
   (setopt substitute-highlight t)
@@ -198,7 +198,7 @@
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-package repeat
-  (:delay 2)
+  (:delay 5)
   (setq repeat-on-final-keystroke t
         repeat-exit-timeout 5
         repeat-exit-key "<escape>"
@@ -280,13 +280,13 @@
 ;;; Pass interface (password-store)
 (prot-emacs-package password-store
   (:install t)
-  (:delay 2)
+  (:delay 5)
   (setq password-store-time-before-clipboard-restore 30)
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
   (define-key global-map (kbd "C-c k") #'password-store-copy))
 
-(prot-emacs-package pass (:install t) (:delay 2))
+(prot-emacs-package pass (:install t) (:delay 5))
 
 ;;; Emacs server (allow emacsclient to connect to running session)
 ;; The "server" is functionally like the daemon, except it is run by
@@ -299,7 +299,7 @@
 ;; Whereas the server works just fine when I need to connect to it via
 ;; the emacsclient.
 (prot-emacs-package server
-  (:delay 2)
+  (:delay 5)
   (server-start))
 
 ;; ;;; Emacs desktop (save state of various variables)

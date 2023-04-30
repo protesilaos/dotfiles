@@ -33,7 +33,7 @@
 
 ;;; Comments (newcomment.el and prot-comment.el)
 (prot-emacs-package newcomment
-  (:delay 1)
+  (:delay 5)
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
@@ -43,7 +43,7 @@
     "M-;" #'comment-indent))
 
 (prot-emacs-package prot-comment
-  (:delay 1)
+  (:delay 5)
   (setq prot-comment-comment-keywords
         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
@@ -54,7 +54,7 @@
 
 ;;; Configure 'electric' behaviour
 (prot-emacs-package electric
-  (:delay 1)
+  (:delay 5)
   (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
   (setq electric-pair-pairs
@@ -77,7 +77,7 @@
 
 ;;; Parentheses (show-paren-mode)
 (prot-emacs-package paren
-  (:delay 1)
+  (:delay 5)
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
@@ -92,7 +92,7 @@
 
 ;;; Flyspell and prot-spell.el (spell check)
 (prot-emacs-package flyspell
-  (:delay 2)
+  (:delay 10)
   (setq flyspell-issue-message-flag nil)
   (setq flyspell-issue-welcome-flag nil)
   (setq ispell-program-name "aspell")
@@ -101,7 +101,7 @@
   (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
 
 (prot-emacs-package prot-spell
-  (:delay 2)
+  (:delay 10)
   (setq prot-spell-dictionaries
         '(("EN English" . "en")
           ("EL Ελληνικά" . "el")
@@ -120,7 +120,7 @@
 
 ;;; Flymake
 (prot-emacs-package flymake
-  (:delay 1)
+  (:delay 10)
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
   (setq flymake-start-on-flymake-mode t)
@@ -164,17 +164,17 @@
 ;;; Elisp packaging requirements
 (prot-emacs-package package-lint-flymake
   (:install t)
-  (:delay 2)
+  (:delay 10)
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 
 ;;; Eldoc (elisp live documentation feedback)
 (prot-emacs-package eldoc
-  (:delay 1)
+  (:delay 5)
   (global-eldoc-mode 1))
 
 ;;; Handle performance for very long lines (so-long.el)
 (prot-emacs-package so-long
-  (:delay 1)
+  (:delay 10)
   (global-so-long-mode 1))
 
 (provide 'prot-emacs-langs)

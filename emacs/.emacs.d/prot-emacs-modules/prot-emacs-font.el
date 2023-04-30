@@ -2,7 +2,7 @@
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
 (prot-emacs-package fontaine
   (:install t)
-  (:delay 1)
+  (:delay 5)
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line nil)
 

@@ -117,7 +117,7 @@ use in `display-buffer-alist'."
 
 ;;; Window history (winner-mode)
 (prot-emacs-package winner
-  (:delay 2)
+  (:delay 5)
   (winner-mode 1)
 
   (prot-emacs-keybind global-map
@@ -158,7 +158,7 @@ use in `display-buffer-alist'."
 
 ;;; Line numbers and relevant indicators (prot-sideline.el)
 (prot-emacs-package prot-sideline
-  (:delay 2)
+  (:delay 5)
   (require 'display-line-numbers)
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)

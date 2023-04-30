@@ -1,7 +1,7 @@
 ;;; Vertical completion layout
 (prot-emacs-package vertico
   (:install t)
-  (:delay 1)
+  (:delay 5)
   ;; Those are the default values, but check the user option
   ;; `vertico-multiform-categories' for per-category tweaks.
   (setq vertico-scroll-margin 0)
@@ -24,7 +24,7 @@
 ;;; Detailed completion annotations (marginalia.el)
 (prot-emacs-package marginalia
   (:install t)
-  (:delay 1)
+  (:delay 5)
   (setq marginalia-max-relative-age 0) ; absolute time
   (marginalia-mode 1))
 

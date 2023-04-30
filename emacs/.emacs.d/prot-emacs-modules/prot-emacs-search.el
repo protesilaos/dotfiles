@@ -1,6 +1,6 @@
 ;;; Isearch, occur, grep, and extras (prot-search.el)
 (prot-emacs-package isearch
-  (:delay 1)
+  (:delay 5)
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
@@ -24,15 +24,16 @@
     (define-key map (kbd "M-/") #'isearch-complete)))
 
 (prot-emacs-package replace
-  (:delay 2)
+  (:delay 5)
   (setq list-matching-lines-jump-to-current-line nil)
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
-(prot-emacs-package grep (:delay 2))
+(prot-emacs-package grep (:delay 5))
 
 (prot-emacs-package prot-search
+  (:delay 5)
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
@@ -89,10 +90,10 @@
 
 ;;; Built-in bookmarking framework (bookmark.el)
 (prot-emacs-package bookmark
-  (:delay 1)
+  (:delay 5)
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
-  (setq bookmark-set-fringe-mark t) ; Emacs28
+  (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
 

@@ -1,18 +1,18 @@
 ;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
 (prot-emacs-package browse-url
-  (:delay 5)
+  (:delay 10)
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 
 (prot-emacs-package goto-addr
-  (:delay 5)
+  (:delay 10)
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
   (setq goto-address-mail-face nil)
   (setq goto-address-mail-mouse-face 'highlight))
 
 (prot-emacs-package shr
-  (:delay 5)
+  (:delay 10)
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
@@ -23,11 +23,11 @@
   (setq shr-cookie-policy nil))
 
 (prot-emacs-package url-cookie
-  (:delay 5)
+  (:delay 10)
   (setq url-cookie-untrusted-urls '(".*")))
 
 (prot-emacs-package eww
-  (:delay 5)
+  (:delay 10)
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format nil)
@@ -61,10 +61,10 @@
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
-(prot-emacs-package elpher (:install t) (:delay 5))    ; NOTE 2021-07-24: work-in-progress
+(prot-emacs-package elpher (:install t) (:delay 10))    ; NOTE 2021-07-24: work-in-progress
 
 (prot-emacs-package prot-eww
-  (:delay 5)
+  (:delay 10)
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)

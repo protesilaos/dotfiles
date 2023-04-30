@@ -2,7 +2,7 @@
 
 (prot-emacs-package mct
   (:install t)
-  (:delay 1)
+  (:delay 5)
   (setq completion-show-help nil)
   (setq completion-auto-help nil)
   (setq completion-auto-select nil)

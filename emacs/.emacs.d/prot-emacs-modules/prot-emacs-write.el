@@ -1,6 +1,6 @@
 ;;; Outline mode and outline-minor-mode
 (prot-emacs-package outline
-  (:delay 5)
+  (:delay 10)
   (setq outline-minor-mode-highlight nil) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
@@ -28,7 +28,7 @@
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
 (prot-emacs-package denote
   (:install t)
-  (:delay 2)
+  (:delay 10)
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
   (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
@@ -144,14 +144,14 @@
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
 (prot-emacs-package olivetti
   (:install t)
-  (:delay 5)
+  (:delay 10)
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
 (prot-emacs-package logos
   (:install t)
-  (:delay 5)
+  (:delay 10)
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))

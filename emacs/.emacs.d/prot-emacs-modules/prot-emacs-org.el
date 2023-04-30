@@ -1,7 +1,7 @@
 ;;; Org-mode (personal information manager)
 
 (prot-emacs-package org
-  (:delay 1)
+  (:delay 5)
   (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
 ;;;; general settings
@@ -400,7 +400,7 @@
 
 ;;; Custom extensions (prot-org.el)
 (prot-emacs-package prot-org
-  (:delay 2)
+  (:delay 5)
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
@@ -436,7 +436,7 @@
 ;;; org-modern
 (prot-emacs-package org-modern
   (:install t)
-  (:delay 2)
+  (:delay 5)
   (setq org-modern-label-border 1)
   (setq org-modern-variable-pitch nil)
   (setq org-modern-timestamp t)
@@ -475,7 +475,7 @@
 
 ;;; Calendar
 (prot-emacs-package calendar
-  (:delay 2)
+  (:delay 5)
   (setq calendar-mark-diary-entries-flag t)
   (setq calendar-mark-holidays-flag t)
   (setq calendar-mode-line-format nil)
@@ -498,7 +498,7 @@
 
 ;;; Appt (appointment reminders which also integrate with Org agenda)
 (prot-emacs-package appt
-  (:delay 2)
+  (:delay 5)
   (setopt appt-display-diary nil
           appt-display-format nil
           appt-display-mode-line t
