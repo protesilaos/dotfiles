@@ -1,6 +1,7 @@
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-package orderless
   (:install t)
+  (:delay 5)
   (setq orderless-component-separator " +")
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
@@ -159,6 +160,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (minibuffer-electric-default-mode 1))
 
 (prot-emacs-package savehist
+  (:delay 5)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 500)
   (setq history-delete-duplicates t)
@@ -168,6 +170,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;;; Dabbrev (dynamic word completion)
 (prot-emacs-package dabbrev
+  (:delay 5)
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
   (setq dabbrev-backward-only nil)
@@ -183,6 +186,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;;; Abbreviations or Abbrevs
 (prot-emacs-package abbrev
+  (:delay 5)
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
@@ -230,6 +234,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-package consult
   (:install t)
+  (:delay 5)
   (setq consult-line-numbers-widen t)
   ;; (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-min-input 3)
@@ -271,6 +276,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 ;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
 (prot-emacs-package embark
   (:install t)
+  (:delay 5)
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
 
@@ -421,7 +427,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
-(prot-emacs-package embark-consult (:install t))
+(prot-emacs-package embark-consult (:install t) (:delay 5))
 
 ;;; Template-based in-buffer completion (tempel.el)
 ;; NOTE 2023-01-12: Check the `templates' file that I distribute with
@@ -429,6 +435,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 ;; <https://git.sr.ht/~protesilaos/dotfiles>.
 (prot-emacs-package tempel
   (:install t)
+  (:delay 5)
   (setq tempel-path (expand-file-name "tempel-templates" user-emacs-directory))
 
   ;; Setup completion at point
