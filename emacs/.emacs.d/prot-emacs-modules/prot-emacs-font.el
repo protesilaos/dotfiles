@@ -41,12 +41,17 @@
            :default-height 80
            :variable-pitch-family "Iosevka Comfy Wide Duo")
           (regular) ; like this it uses all the fallback values and is named `regular'
-          (large
-           :inherit regular
+          (medium
+           :default-family "Iosevka Comfy Motion"
            :default-weight semilight
            :default-height 130
-           :bold-weight extrabold)
+           :bold-weight extrabold
+           :variable-pitch-family "Iosevka Comfy Motion Duo")
+          (large
+           :inherit medium
+           :default-height 150)
           (presentation
+           :inherit medium
            :default-height 200)
           (t
            ;; I keep all properties for didactic purposes, but most can be
