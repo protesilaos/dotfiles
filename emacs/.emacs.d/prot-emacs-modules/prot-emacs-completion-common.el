@@ -229,7 +229,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
   (dolist (hook '(text-mode-hook prog-mode-hook git-commit-mode-hook))
-    (add-hook hook #'abbrev-mode)))
+    (add-hook hook #'abbrev-mode))
+
+  ;; By default, abbrev asks for confirmation on whether to use
+  ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
+  ;; do I want it.
+  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-package consult
