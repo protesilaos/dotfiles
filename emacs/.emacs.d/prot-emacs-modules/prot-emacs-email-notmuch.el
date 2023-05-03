@@ -150,7 +150,7 @@
         notmuch-message-headers-visible t)
 
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
-    (setq notmuch-wash-cqitation-lines-prefix count
+    (setq notmuch-wash-citation-lines-prefix count
           notmuch-wash-citation-lines-suffix count))
 
 ;;;; Hooks and key bindings
