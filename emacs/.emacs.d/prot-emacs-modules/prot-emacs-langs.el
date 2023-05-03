@@ -91,33 +91,45 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
-;;; Flyspell and prot-spell.el (spell check)
-(prot-emacs-package flyspell
+;;; Jinx (highly performant spell checker)
+(prot-emacs-package jinx
+  (:install t)
   (:delay 10)
-  (setq flyspell-issue-message-flag nil)
-  (setq flyspell-issue-welcome-flag nil)
-  (setq ispell-program-name "aspell")
-  (setq ispell-dictionary "en_GB")
-  (define-key flyspell-mode-map (kbd "C-;") nil)
-  (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
+  (setq jinx-languages "en_GB el_GR fr_FR es_ES")
 
-(prot-emacs-package prot-spell
-  (:delay 10)
-  (setq prot-spell-dictionaries
-        '(("EN English" . "en")
-          ("EL Ελληνικά" . "el")
-          ("FR Français" . "fr")
-          ("ES Espanõl" . "es")))
-
-  (setq ispell-choices-buffer "*ispell-top-choices*") ; see my `display-buffer-alist'
-
-  ;; Also check prot-spell.el for what I am doing with
-  ;; `prot-spell-ispell-display-buffer'.  Then refer to the
-  ;; `display-buffer-alist' for the relevant entry.
+  (global-jinx-mode 1)
 
   (prot-emacs-keybind global-map
-    "M-$" #'prot-spell-spell-dwim
-    "C-M-$" #'prot-spell-change-dictionary))
+    "M-$" #'jinx-correct
+    "C-M-$" #'jinx-languages))
+
+;;; Flyspell and prot-spell.el (spell check)
+;; (prot-emacs-package flyspell
+;;   (:delay 10)
+;;   (setq flyspell-issue-message-flag nil)
+;;   (setq flyspell-issue-welcome-flag nil)
+;;   (setq ispell-program-name "aspell")
+;;   (setq ispell-dictionary "en_GB")
+;;   (define-key flyspell-mode-map (kbd "C-;") nil)
+;;   (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
+;; 
+;; (prot-emacs-package prot-spell
+;;   (:delay 10)
+;;   (setq prot-spell-dictionaries
+;;         '(("EN English" . "en")
+;;           ("EL Ελληνικά" . "el")
+;;           ("FR Français" . "fr")
+;;           ("ES Espanõl" . "es")))
+;; 
+;;   (setq ispell-choices-buffer "*ispell-top-choices*") ; see my `display-buffer-alist'
+;; 
+;;   ;; Also check prot-spell.el for what I am doing with
+;;   ;; `prot-spell-ispell-display-buffer'.  Then refer to the
+;;   ;; `display-buffer-alist' for the relevant entry.
+;; 
+;;   (prot-emacs-keybind global-map
+;;     "M-$" #'prot-spell-spell-dwim
+;;     "C-M-$" #'prot-spell-change-dictionary))
 
 ;;; Flymake
 (prot-emacs-package flymake
