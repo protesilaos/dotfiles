@@ -108,7 +108,7 @@
 (prot-emacs-package substitute
   (:install t)
   (:delay 5)
-  ;; Set this to non-nil to highlight all occurences of the current
+  ;; Set this to non-nil to highlight all occurrences of the current
   ;; target.
   (setopt substitute-highlight t)
 
