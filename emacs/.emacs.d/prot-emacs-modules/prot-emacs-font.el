@@ -52,7 +52,7 @@
            :default-height 150)
           (presentation
            :inherit medium
-           :default-height 200)
+           :default-height 170)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
