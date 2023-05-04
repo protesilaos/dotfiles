@@ -48,6 +48,7 @@
     "C-x C-c C-c" #'save-buffers-kill-emacs
     "C-h h" nil
     "M-`" nil
+    "C-g" #'prot-simple-keyboard-quit-dwim
     "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
