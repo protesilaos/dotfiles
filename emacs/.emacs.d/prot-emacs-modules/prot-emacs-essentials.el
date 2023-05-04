@@ -374,6 +374,7 @@
 (prot-emacs-package proced
   (:delay 10)
   (setq proced-auto-update-flag t)
+  (setq proced-enable-color-flag t) ; Emacs 29
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
   (setq proced-filter 'user))
