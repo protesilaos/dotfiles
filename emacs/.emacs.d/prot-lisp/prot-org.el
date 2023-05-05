@@ -168,6 +168,7 @@ produces dates with a fixed length."
                 (org-agenda-block-separator nil)
                 (org-agenda-entry-types '(:scheduled))
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "TRAIN"))
                 (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
                 (org-agenda-format-date "")
                 (org-agenda-overriding-header "\n📚 Pending scheduled tasks")))
