@@ -292,7 +292,7 @@ CUSTOM_ID of the entry is returned."
         (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
         id)))))
 
-(declare-function org-map-entries "calendar")
+(declare-function org-map-entries "org")
 
 ;;;###autoload
 (defun prot-org-id-headlines ()
