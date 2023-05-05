@@ -51,8 +51,10 @@
            :inherit medium
            :default-height 150)
           (presentation
-           :inherit medium
-           :default-height 170)
+           :default-family "Iosevka Comfy Wide Motion"
+           :default-weight light
+           :default-height 180
+           :variable-pitch-family "Iosevka Comfy Wide Motion Duo")
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
