@@ -64,13 +64,16 @@ mod4 + t
 mod4 + {_,shift +} Tab
     herbstclient use_index {+,-}1 --skip-visible
 
-# Adjust size of frame gaps using my script.  I normally don't have
-# multiple clients in a frame and, if I do, I do not want them to have
-# gaps.  This script cycles through values 0 and 30, meaning that if
-# we keep increasing or decreasing past either of those limits, we
-# move to the other end: 0 5 ... 30 0 5.
+# Adjust size of frame gaps using my script.  This script of mine
+# cycles through values 0 and 30, meaning that if we keep increasing
+# or decreasing past either of those limits, we move to the other end:
+# 0 5 ... 30 0 5.
 mod4 + bracket{left,right}
     herbstluftwm_adjust_gaps {-,+}5
+
+# Like the above, but for border width.
+mod4 + shift + bracket{left,right}
+    herbstluftwm_adjust_borders {-,+}5
 
 # Same as above, but with continuous input mode.  Type Super+c and
 # then just the square brackets.  Hit ESC to stop.
