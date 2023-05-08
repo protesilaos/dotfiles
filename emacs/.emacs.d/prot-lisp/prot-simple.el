@@ -184,6 +184,8 @@ The DWIM behaviour of this command is as follows:
   (cond
    ((region-active-p)
     (keyboard-quit))
+   ((derived-mode-p 'completion-list-mode)
+    (delete-completion-window))
    ((> (minibuffer-depth) 0)
     (abort-recursive-edit))
    (t
