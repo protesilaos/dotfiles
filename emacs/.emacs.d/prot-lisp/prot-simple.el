@@ -179,6 +179,7 @@ The DWIM behaviour of this command is as follows:
 
 - When the region is active, disable it.
 - When a minibuffer is open, but not focused, close the minibuffer.
+- When the Completions buffer is selected, close it.
 - In every other case use the regular `keyboard-quit'."
   (interactive)
   (cond
