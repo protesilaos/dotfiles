@@ -3,16 +3,7 @@
 (prot-emacs-package mct
   (:install t)
   (:delay 5)
-  (setq completion-show-help nil)
-  (setq completion-auto-help nil)
-  (setq completion-auto-select nil)
-  (setq completions-detailed t)
   (setq completions-format 'one-column)
-  (setq completion-show-inline-help nil)
-  ;; (setq completions-max-height 10)
-  ;; (setq completions-header-format (propertize "%s possible completions:\n" 'face 'shadow))
-  ;; (setq completions-highlight-face 'completions-highlight)
-
   (setq mct-hide-completion-mode-line t)
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
