@@ -3,7 +3,9 @@
   (:install t)
   (:delay 5)
   ;; Those are the default values, but check the user option
-  ;; `vertico-multiform-categories' for per-category tweaks.
+  ;; `vertico-multiform-categories' for per-category tweaks.  That
+  ;; variable is in the file vertico-multiform.el and will work once
+  ;; `vertico-multiform-mode' is enabled.
   (setq vertico-scroll-margin 0)
   (setq vertico-count 10)
   (setq vertico-resize nil)
