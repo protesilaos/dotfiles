@@ -1,5 +1,5 @@
 ;;; Minibuffer and Completions in Tandem
-
+;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
   (:install t)
   (:delay 5)
@@ -16,8 +16,6 @@
 
   (mct-minibuffer-mode 1)
 
-  ;; From the `mct' manual: <https://protesilaos.com/emacs/mct>.
-  (defun my-sort-by-alpha-length (elems)
   (defvar prot/mct-commands-with-line-numbers
     '( consult-line consult-line-multi consult-mark
        consult-outline consult-grep consult-ripgrep)
@@ -35,29 +33,30 @@ Add this to `completion-list-mode-hook'."
       (display-line-numbers-mode)))
 
   (add-hook 'completion-list-mode-hook #'prot/mct-display-line-numbers)
+
+  (defun prot/mct-sort-by-alpha-length (elems)
     "Sort ELEMS first alphabetically, then by length."
     (sort elems (lambda (c1 c2)
                   (or (string-version-lessp c1 c2)
                       (< (length c1) (length c2))))))
 
-  (defun my-sort-by-history (elems)
+  (defun prot/mct-sort-by-history (elems)
     "Sort ELEMS by minibuffer history.
 Use `mct-sort-sort-by-alpha-length' if no history is available."
     (if-let ((hist (and (not (eq minibuffer-history-variable t))
                         (symbol-value minibuffer-history-variable))))
         (minibuffer--sort-by-position hist elems)
-      (my-sort-by-alpha-length elems)))
+      (prot/mct-sort-by-alpha-length elems)))
 
-  (defun my-sort-multi-category (elems)
+  (defun prot/mct-sort-multi-category (elems)
     "Sort ELEMS per completion category."
     (pcase (mct--completion-category)
-      ('nil elems) ; no sorting
-      ('kill-ring elems)
-      ('file (my-sort-by-alpha-length elems))
-      (_ (my-sort-by-history elems))))
+      ('kill-ring elems) ; no sorting
+      ('file (prot/mct-sort-by-alpha-length elems))
+      (_ (prot/mct-sort-by-history elems))))
 
   ;; Specify the sorting function.
-  (setq completions-sort #'my-sort-multi-category)
+  (setq completions-sort #'prot/mct-sort-multi-category)
 
 ;;; Custom completion annotations
   ;; I normally use `marginalia-mode' but this is not always good for
