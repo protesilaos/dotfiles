@@ -372,6 +372,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     "o" #'switch-to-buffer-other-window
     "e" #'ediff-buffers)
 
+  (add-to-list 'embark-post-action-hooks (list 'prot-simple-kill-buffer 'embark--restart))
+
   (prot-emacs-keybind embark-file-map
     "f" #'find-file
     "j" #'embark-dired-jump
