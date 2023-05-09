@@ -8,7 +8,7 @@
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
   (setq mct-completion-blocklist '(notmuch-mua-new-mail notmuch-mua-prompt-for-sender))
-  (setq mct-completion-passlist '(consult-location embark-keybinding imenu))
+  (setq mct-completion-passlist '(consult-buffer consult-location embark-keybinding imenu))
   (setq mct-remove-shadowed-file-names t)
   (setq mct-completion-window-size (cons #'mct-frame-height-third 1))
   (setq mct-persist-dynamic-completion nil)
