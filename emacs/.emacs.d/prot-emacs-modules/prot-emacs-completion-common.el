@@ -471,4 +471,48 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     "<backtab>" #'tempel-previous
     "C-S-<iso-lefttab>" #'tempel-previous))
 
+;;; Detailed completion annotations (marginalia.el)
+(prot-emacs-package marginalia
+  (:install t)
+  (:delay 5)
+  (setq marginalia-max-relative-age 0) ; absolute time
+  (marginalia-mode 1)
+  
+;;;; Custom completion annotations
+
+  (defun prot/marginalia-display (string)
+    "Propertize the display of STRING for completion annotation purposes."
+    (format "%s%s"
+            (propertize " " 'display `(space :align-to 40))
+            (propertize string 'face 'completions-annotations)))
+
+  (defun prot/marginalia-bookmark (bookmark)
+    "Annotate BOOKMARK with its file path."
+    (when-let* ((bm (assoc bookmark (bound-and-true-p bookmark-alist)))
+                (path (bookmark-get-filename bookmark)))
+      (prot/marginalia-display path)))
+
+  (defun prot/marginalia-buffer (buffer)
+    "Annotate BUFFER with its `buffer-file-name'."
+    (when-let ((name (buffer-file-name (get-buffer buffer))))
+      (prot/marginalia-display (abbreviate-file-name name))))
+  
+  (defun prot/marginalia-package (package)
+    "Annotate PACKAGE with its summary."
+    (when-let* ((pkg-alist (bound-and-true-p package-alist))
+                (pkg (intern-soft package))
+                (desc (or (when (package-desc-p pkg) pkg)
+                          (car (alist-get pkg pkg-alist))
+                          (if-let (built-in (assq pkg package--builtins))
+                              (package--from-builtin built-in)
+                            (car (alist-get pkg package-archive-contents))))))
+      (prot/marginalia-display (package-desc-summary desc))))
+
+  (setq marginalia-annotator-registry
+        '((bookmark prot/marginalia-bookmark)
+          (buffer prot/marginalia-buffer)
+          (face marginalia-annotate-face)
+          (imenu marginalia-annotate-imenu)
+          (package prot/marginalia-package))))
+
 (provide 'prot-emacs-completion-common)
