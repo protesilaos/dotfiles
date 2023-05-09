@@ -18,6 +18,23 @@
 
   ;; From the `mct' manual: <https://protesilaos.com/emacs/mct>.
   (defun my-sort-by-alpha-length (elems)
+  (defvar prot/mct-commands-with-line-numbers
+    '( consult-line consult-line-multi consult-mark
+       consult-outline consult-grep consult-ripgrep)
+    "List of commands that are known to show contextual line numbers.")
+
+  (defun prot/mct-display-line-numbers ()
+    "Call `display-line-numbers-mode' when it is not confusing.
+
+Check if the current command is among the list of
+`prot/mct-commands-with-line-numbers'.  The elements of that list
+are known to display their own contextual lines numbers.
+
+Add this to `completion-list-mode-hook'."
+    (unless (memq this-command prot/mct-commands-with-line-numbers)
+      (display-line-numbers-mode)))
+
+  (add-hook 'completion-list-mode-hook #'prot/mct-display-line-numbers)
     "Sort ELEMS first alphabetically, then by length."
     (sort elems (lambda (c1 c2)
                   (or (string-version-lessp c1 c2)
