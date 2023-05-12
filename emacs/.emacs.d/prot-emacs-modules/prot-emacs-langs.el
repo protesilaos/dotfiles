@@ -106,7 +106,7 @@
              "\\w*?[0-9\.'\"-]\\w*"
              "[a-z]+://\\S-+"
              "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?")))
-  
+
   (global-jinx-mode 1)
 
   (prot-emacs-keybind global-map
@@ -123,7 +123,7 @@
 ;;   (setq ispell-dictionary "en_GB")
 ;;   (define-key flyspell-mode-map (kbd "C-;") nil)
 ;;   (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
-;; 
+;;
 ;; (prot-emacs-package prot-spell
 ;;   (:delay 10)
 ;;   (setq prot-spell-dictionaries
@@ -131,13 +131,13 @@
 ;;           ("EL Ελληνικά" . "el")
 ;;           ("FR Français" . "fr")
 ;;           ("ES Espanõl" . "es")))
-;; 
+;;
 ;;   (setq ispell-choices-buffer "*ispell-top-choices*") ; see my `display-buffer-alist'
-;; 
+;;
 ;;   ;; Also check prot-spell.el for what I am doing with
 ;;   ;; `prot-spell-ispell-display-buffer'.  Then refer to the
 ;;   ;; `display-buffer-alist' for the relevant entry.
-;; 
+;;
 ;;   (prot-emacs-keybind global-map
 ;;     "M-$" #'prot-spell-spell-dwim
 ;;     "C-M-$" #'prot-spell-change-dictionary))
