@@ -95,7 +95,7 @@
 (prot-emacs-package jinx
   (:install t)
   (:delay 10)
-  (setq jinx-languages "en_GB el_GR fr_FR es_ES")
+  (setq jinx-languages "en_GB el_GR fr_FR es_ES pt_PT-preao")
   (setq jinx-include-modes '(text-mode prog-mode))
   (setq jinx-include-faces
         '((prog-mode font-lock-doc-face)
