@@ -271,6 +271,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     "M-s M-y" #'consult-yank-pop
     "M-s M-s" #'consult-outline)
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
+  (define-key minibuffer-local-map (kbd "C-s") #'consult-history)
 
   (with-eval-after-load 'pulsar
     ;; see my `pulsar' package: <https://protesilaos.com/emacs/pulsar>
