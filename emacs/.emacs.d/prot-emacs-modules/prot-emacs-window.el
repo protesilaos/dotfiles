@@ -55,7 +55,13 @@
            (window-height . 4) ; note this is literal lines, not relative
            (dedicated . t)
            (preserve-size . (t . t)))
-          ("\\*\\(Calendar\\|Bookmark Annotation\\|Buffer List\\|Occur\\).*"
+          ((or . ((derived-mode . occur-mode)
+                  (derived-mode . Buffer-menu-mode)
+                  "\\*\\(|Buffer List\\|Occur\\).*"))
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . fit-window-to-buffer)
+           (body-function . (lambda (buffer) (select-window buffer))))
+          ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
           ;; NOTE 2022-09-10: The following is for `ispell-word', though
