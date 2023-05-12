@@ -288,24 +288,10 @@ abbreviation to its expansion."
               (table ,table))
      ,@(mapcar
         (lambda (pair)
-          (unless (and (null (car pair))
-                       (null (cdr pair)))
-            `(define-abbrev table ,(car pair) ,(cdr pair))))
-        ;; FIXME 2023-04-29: There probably is a more efficient way to
-        ;; convert '(1 2 3 4) to '((1 2) (3 4)).  I feel I am missing
-        ;; something obvious.
-        (cl-mapcar
-         #'cons
-         (seq-filter
-          (lambda (element)
-            (when (cl-evenp (cl-position element definitions))
-              element))
-          definitions)
-         (seq-filter
-          (lambda (element)
-            (when (cl-oddp (cl-position element definitions))
-              element))
-          definitions)))))
+          (when-let ((abbrev (car pair))
+                     (expansion (cadr pair)))
+            `(define-abbrev table ,abbrev ,expansion)))
+        (seq-split definitions 2))))
 
 (defun prot-emacs-return-loaded-packages ()
   "Return a list of all loaded packages.
