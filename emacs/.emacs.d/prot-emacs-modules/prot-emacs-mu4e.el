@@ -55,7 +55,7 @@
           :vars `((user-mail-address . ,(prot-common-auth-get-field "prv" :user))
                   ;; (mu4e-trash-folder . "/relpath/to/Trash")
                   ;; (mu4e-sent-folder . "/relpath/to/Sent")
-                  )
+                  ))
         ,(make-mu4e-context
           :name "inf"
           :match-func (lambda (msg)
