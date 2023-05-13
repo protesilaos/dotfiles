@@ -91,7 +91,8 @@ before all other modules of my setup."
 ;; And disable this
 (put 'overwrite-mode 'disabled t)
 
-(setq initial-buffer-choice t) ; always start with *scratch*
+;; Always start with *scratch*
+(setq initial-buffer-choice t)
 
 ;;;; Packages
 
