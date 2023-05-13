@@ -206,10 +206,15 @@ expanded BODY happen with `run-with-timer'."
                          `(prot-emacs-package-install ',package ,@install))
                       (require ',package)
                       (add-to-list 'prot-emacs-loaded-packages ',package)
-                      ,@body)))
-        (if delay
-            `(run-with-timer ,delay nil (lambda () ,@(delq nil common)))
-          `(progn ,@(delq nil common)))))))
+                      ,@body
+                      (message "Prot Emacs loaded package: %s" ',package))))
+        (cond
+         ((featurep package)
+          `(progn ,@body))
+         (delay
+          `(run-with-timer ,delay nil (lambda () ,@(delq nil common))))
+         (t
+          `(progn ,@(delq nil common))))))))
 
 ;; Samples of `prot-emacs-package' (expand them with `pp-macroexpand-last-sexp').
 
