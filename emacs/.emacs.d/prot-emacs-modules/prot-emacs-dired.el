@@ -27,11 +27,10 @@
 (prot-emacs-package dired-aux
   (:delay 5)
   (setq dired-isearch-filenames 'dwim)
-  ;; The following variables were introduced in Emacs 27.1
-  (setq dired-create-destination-dirs 'ask)
-  (setq dired-vc-rename-file t)
-  ;; And this is for Emacs 28
-  (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))
+  (setq dired-create-destination-dirs 'ask) ; Emacs 27
+  (setq dired-vc-rename-file t)             ; Emacs 27
+  (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir)))) ; Emacs 28
+  (setq dired-create-destination-dirs-on-trailing-dirsep t) ; Emacs 29
 
   (prot-emacs-keybind dired-mode-map
     "C-+" #'dired-create-empty-file
