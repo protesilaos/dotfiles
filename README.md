@@ -112,6 +112,9 @@ and have practically the same `polybar` panel.  Furthermore, both are
 subject to the theme-switching of my `delight` script.  In other
 words, I can use them interchangeably.
 
+Check the `xtwm-key-binding-cheatsheet.md` file for an overview of
+their key bindings.
+
 ## Copying
 
 Unless otherwise noted, all code herein is distributed under the terms
