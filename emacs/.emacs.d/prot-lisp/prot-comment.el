@@ -138,8 +138,8 @@ there in accordance with `comment-style'.  Any existing text
 after the point will be pushed to a new line and will not be
 turned into a comment.
 
-If point is anywhere else on the line, the comment is indented
-with `comment-indent'.
+If point is anywhere else on the line and the line is not empty,
+the comment is appended to the line with `comment-indent'.
 
 The comment is always formatted as DELIMITER KEYWORD DATE:, with
 the date format being controlled by the variable
@@ -155,14 +155,16 @@ an alternative date format, as specified by
     current-prefix-arg))
   (let ((string (prot-comment--timestamp keyword verbose))
         (beg (point)))
-    (if (or (eq beg (line-beginning-position))
-            (prot-common-line-regexp-p 'empty))
-        (progn
-          (insert (prot-comment--format-comment string))
-          (indent-region beg (point))
-          (prot-comment--maybe-newline))
+    (cond
+     ((prot-common-line-regexp-p 'empty)
+      (insert (prot-comment--format-comment string)))
+     ((eq beg (line-beginning-position))
+        (insert (prot-comment--format-comment string))
+        (indent-region beg (point))
+        (prot-comment--maybe-newline))
+     (t
       (comment-indent t)
-      (insert (concat " " string)))))
+      (insert (concat " " string))))))
 
 (provide 'prot-comment)
 ;;; prot-comment.el ends here
