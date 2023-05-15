@@ -55,9 +55,6 @@ mod1 + {_, shift +} grave
 mod4  + {_, shift +} r
     herbstclient {rotate,mirror both}
 
-mod4 + m
-    herbstluftwm_cycle_monitors
-
 mod4 + t
     herbstclient cycle_layout +1 vertical horizontal max
 
@@ -74,8 +71,3 @@ mod4 + bracket{left,right}
 # Like the above, but for border width.
 mod4 + shift + bracket{left,right}
     herbstluftwm_adjust_borders {-,+}5
-
-# Same as above, but with continuous input mode.  Type Super+c and
-# then just the square brackets.  Hit ESC to stop.
-mod4 + c : bracket{left,right}
-    herbstluftwm_adjust_gaps {-,+}5
