@@ -30,7 +30,9 @@
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
-(prot-emacs-package grep (:delay 5))
+(prot-emacs-package grep
+  (:delay 5)
+  (setq grep-use-headings t)) ; Emacs 30
 
 (prot-emacs-package prot-search
   (:delay 5)
