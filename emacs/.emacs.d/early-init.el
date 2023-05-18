@@ -117,7 +117,7 @@
 
 ;;;; General theme code
 
-(defun prot-emacs-theme-gesttings-dark-p ()
+(defun prot-emacs-theme-gsettings-dark-p ()
   "Return non-nil if gsettings (GNOME) has a dark theme.
 Return nil if the DESKTOP_SESSION is either bspwm or
 herbstluftwm, per the configuration of my dotfiles.  Also check
@@ -154,7 +154,7 @@ Check my `delight' shell script for more."
 (defun prot-emacs-theme-environment-dark-p ()
   "Return non-nil if environment theme is dark."
   (or (prot-emacs-theme-twm-dark-p)
-      (prot-emacs-theme-gesttings-dark-p)))
+      (prot-emacs-theme-gsettings-dark-p)))
 
 (defun prot-emacs-re-enable-frame-theme (_frame)
   "Re-enable active theme, if any, upon FRAME creation.
@@ -166,7 +166,7 @@ not retain the generic background set by the function
 
 ;; NOTE 2023-02-05: The reason the following works is because (i) the
 ;; `mode-line-format' is specified again and (ii) the
-;; `prot-emacs-theme-gesttings-dark-p' will load a dark theme.
+;; `prot-emacs-theme-gsettings-dark-p' will load a dark theme.
 (defun prot-emacs-avoid-initial-flash-of-light ()
   "Avoid flash of light when starting Emacs, if needed.
 New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
