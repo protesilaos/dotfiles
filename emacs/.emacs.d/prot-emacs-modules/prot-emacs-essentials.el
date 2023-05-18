@@ -38,7 +38,9 @@
         prot-simple-scratch-buffer-default-mode 'markdown-mode
         help-window-select t
         next-error-recenter '(4) ; center of the window
-        find-library-include-other-files nil) ; Emacs 29
+        find-library-include-other-files nil ; Emacs 29
+        remote-file-name-inhibit-delete-by-moving-to-trash t ; Emacs 30
+        remote-file-name-inhibit-auto-save t)                ; Emacs 30
 
   ;; General commands
   (prot-emacs-keybind global-map
