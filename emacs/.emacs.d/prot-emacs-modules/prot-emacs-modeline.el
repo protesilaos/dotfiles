@@ -28,7 +28,7 @@
 ;;; Keycast mode
 (prot-emacs-package keycast
   (:install t)
-  (:delay 10)
+  (:delay 60)
   (setq keycast-mode-line-insert-after 'mode-line-buffer-identification)
   (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
   (setq keycast-mode-line-remove-tail-elements nil)
