@@ -172,7 +172,7 @@ not retain the generic background set by the function
 New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
   (when (prot-emacs-theme-environment-dark-p)
     (setq mode-line-format nil)
-    (set-face-attribute 'default nil :background "#000000")
+    (set-face-attribute 'default nil :background "#000000" :foreground "#ffffff")
     (add-hook 'after-make-frame-functions #'prot-emacs-re-enable-frame-theme)))
 
 (prot-emacs-avoid-initial-flash-of-light)
