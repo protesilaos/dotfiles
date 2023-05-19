@@ -168,6 +168,7 @@ New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
   (when (prot-emacs-theme-environment-dark-p)
     (setq mode-line-format nil)
     (set-face-attribute 'default nil :background "#000000" :foreground "#ffffff")
+    (set-face-attribute 'mode-line nil :background "#000000" :foreground "#ffffff" :box 'unspecified)
     (add-hook 'after-make-frame-functions #'prot-emacs-re-enable-frame-theme)))
 
 (prot-emacs-avoid-initial-flash-of-light)
