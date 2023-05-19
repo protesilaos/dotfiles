@@ -1,60 +1,7 @@
-;;; Orderless completion style (and prot-orderless.el)
-(prot-emacs-package orderless
-  (:install t)
-  (:delay 5)
-  (setq orderless-component-separator " +")
-  ;; Remember to check my `completion-styles' and the
-  ;; `completion-category-overrides'.
-  (setq orderless-matching-styles
-        '(orderless-prefixes orderless-flex orderless-regexp))
-
-  ;; SPC should never complete: use it for `orderless' groups.
-  ;; The `?' is a regexp construct.
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "SPC") nil)
-    (define-key map (kbd "?") nil)))
-
-(prot-emacs-package prot-orderless
-  (setq orderless-style-dispatchers
-        '(prot-orderless-literal
-          prot-orderless-file-ext
-          prot-orderless-beg-or-end)))
-
-;;; Corfu (in-buffer completion popup)
-(prot-emacs-package corfu
-  (:install t)
-  (:delay 5)
-  (global-corfu-mode 1)
-
-  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
-
-  (define-key corfu-map (kbd "<tab>") #'corfu-complete)
-
-  ;; Adapted from Corfu's manual.
-  (defun contrib/corfu-enable-always-in-minibuffer ()
-    "Enable Corfu in the minibuffer if MCT or Vertico is not active.
-Useful for prompts such as `eval-expression' and `shell-command'."
-    (unless (or (bound-and-true-p vertico--input)
-                (bound-and-true-p mct--active))
-      (corfu-mode 1)))
-
-  (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
-
-;;; CAPE (extra completion-at-point backends)
-(prot-emacs-package cape
-  (:install t)
-  (:delay 5)
-  (setq cape-dabbrev-min-length 3)
-  (setq cape-symbol-wrapper
-        '((org-mode ?~ ?~)
-          (markdown-mode ?` ?`)
-          (log-edit-mode ?' ?')
-          (message-mode ?' ?')))
-  (dolist (backend '( cape-symbol cape-keyword cape-file cape-history cape-dabbrev))
-    (add-to-list 'completion-at-point-functions backend)))
-
-;;; Minibuffer configurations
-(prot-emacs-package minibuffer
+;;; General minibuffer settings
+(prot-emacs-configure
+  (:delay 1)
+;;;; Minibuffer configurations
   (setq completion-styles '(emacs22 substring orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
 
@@ -157,20 +104,18 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
-  (minibuffer-electric-default-mode 1))
-
-(prot-emacs-package savehist
+  (minibuffer-electric-default-mode 1)
+  
+;;;; `savehist' (minibuffer and related histories)
   (:delay 5)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 500)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (setq savehist-additional-variables '(register-alist kill-ring))
-  (savehist-mode 1))
+  (savehist-mode 1)
 
-;;; Dabbrev (dynamic word completion)
-(prot-emacs-package dabbrev
-  (:delay 5)
+;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
   (setq dabbrev-backward-only nil)
@@ -180,13 +125,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
-  (let ((map global-map))
-    (define-key map (kbd "M-/") #'dabbrev-expand)
-    (define-key map (kbd "C-x M-/") #'dabbrev-completion)))
 
-;;; Abbreviations or Abbrevs
-(prot-emacs-package abbrev
-  (:delay 5)
+;;;; `abbrev' (Abbreviations, else Abbrevs)
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
@@ -222,10 +162,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
       "abest"        "All the best,\nProt"
       "bregards"     "Best regards,\nProt"))
 
-  (let ((map global-map))
-    (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
-    (define-key map (kbd "C-x a u") #'unexpand-abbrev))
-
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
   (dolist (hook '(text-mode-hook prog-mode-hook git-commit-mode-hook))
@@ -234,7 +170,68 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; By default, abbrev asks for confirmation on whether to use
   ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
   ;; do I want it.
-  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
+  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save)
+    
+  (prot-emacs-keybind global-map
+    "M-/" #'dabbrev-expand
+    "C-x M-/" #'dabbrev-completion
+    "C-x a e" #'expand-abbrev ; default, just here for visibility
+    "C-x a u" #'unexpand-abbrev))
+
+;;; Orderless completion style (and prot-orderless.el)
+(prot-emacs-package orderless
+  (:install t)
+  (:delay 5)
+  (setq orderless-component-separator " +")
+  ;; Remember to check my `completion-styles' and the
+  ;; `completion-category-overrides'.
+  (setq orderless-matching-styles
+        '(orderless-prefixes orderless-flex orderless-regexp))
+
+  ;; SPC should never complete: use it for `orderless' groups.
+  ;; The `?' is a regexp construct.
+  (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "SPC") nil)
+    (define-key map (kbd "?") nil)))
+
+(prot-emacs-package prot-orderless
+  (setq orderless-style-dispatchers
+        '(prot-orderless-literal
+          prot-orderless-file-ext
+          prot-orderless-beg-or-end)))
+
+;;; Corfu (in-buffer completion popup)
+(prot-emacs-package corfu
+  (:install t)
+  (:delay 5)
+  (global-corfu-mode 1)
+
+  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+
+  (define-key corfu-map (kbd "<tab>") #'corfu-complete)
+
+  ;; Adapted from Corfu's manual.
+  (defun contrib/corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if MCT or Vertico is not active.
+Useful for prompts such as `eval-expression' and `shell-command'."
+    (unless (or (bound-and-true-p vertico--input)
+                (bound-and-true-p mct--active))
+      (corfu-mode 1)))
+
+  (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
+
+;;; CAPE (extra completion-at-point backends)
+(prot-emacs-package cape
+  (:install t)
+  (:delay 5)
+  (setq cape-dabbrev-min-length 3)
+  (setq cape-symbol-wrapper
+        '((org-mode ?~ ?~)
+          (markdown-mode ?` ?`)
+          (log-edit-mode ?' ?')
+          (message-mode ?' ?')))
+  (dolist (backend '( cape-symbol cape-keyword cape-file cape-history cape-dabbrev))
+    (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-package consult

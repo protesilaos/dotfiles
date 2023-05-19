@@ -1,7 +1,15 @@
-;;; Projects (project.el)
-
-(prot-emacs-package project
+;;; General Git/Project/Diff configurations
+(prot-emacs-configure
   (:delay 5)
+;;;; `ediff'
+  (setq ediff-keep-variants nil)
+  (setq ediff-make-buffers-readonly-at-startup nil)
+  (setq ediff-merge-revisions-with-ancestor t)
+  (setq ediff-show-clashes-only t)
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;;;; `project'
   (setopt project-switch-commands
           '((project-find-file "Find file")
             (project-find-regexp "Find regexp")
@@ -12,30 +20,23 @@
             (project-eshell "Eshell")))
   (setq project-vc-extra-root-markers '(".project"))
 
-  (let ((map global-map))
-    (define-key map (kbd "C-x p .") #'project-dired)
-    (define-key map (kbd "C-x p <return>") #'project-dired)
-    (define-key map (kbd "C-x p <delete>") #'project-forget-project)))
+  (prot-emacs-keybind global-map
+    "C-x p ." #'project-dired
+    "C-x p <return>" #'project-dired
+    "C-x p <delete>" #'project-forget-project)
 
-;;; Diff-mode (and prot-diff.el extensions)
-(prot-emacs-package diff-mode
-  (:delay 10)
+;;;; `diff-mode'
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
   ;; The following are from Emacs 27.1
   (setq diff-refine nil) ; I do it on demand, with my `agitate' package (more below)
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
-  (setq diff-font-lock-syntax 'hunk-also)
-  (let ((map diff-mode-map))
-    (define-key map (kbd "L") #'vc-print-root-log)
-    ;; Emacs 29 can use C-x v v in diff buffers, which is great, but now I
-    ;; need quick access to it...
-    (define-key map (kbd "v") #'vc-next-action)))
+  (setq diff-font-lock-syntax 'hunk-also))
 
 ;;; Version control framework (vc.el, vc-git.el, and more)
 (prot-emacs-package vc
-  (:delay 10)
+  (:delay 5)
   ;; Those offer various types of functionality, such as blaming,
   ;; viewing logs, showing a dedicated buffer with changes to affected
   ;; files.
@@ -130,7 +131,7 @@
 ;; here: <https://protesilaos.com/emacs/agitate>.
 (prot-emacs-package agitate
   (:install t)
-  (:delay 10)
+  (:delay 5)
   (add-hook 'diff-mode-hook #'agitate-diff-enable-outline-minor-mode)
   (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
 
@@ -149,7 +150,11 @@
     "C-x v p n" #'agitate-vc-git-format-patch-n-from-head)
   (prot-emacs-keybind diff-mode-map
     "C-c C-b" #'agitate-diff-refine-cycle ; replace `diff-refine-hunk'
-    "C-c C-n" #'agitate-diff-narrow-dwim)
+    "C-c C-n" #'agitate-diff-narrow-dwim
+    "L" #'vc-print-root-log
+    ;; Emacs 29 can use C-x v v in diff buffers, which is great, but now I
+    ;; need quick access to it...
+    "v" #'vc-next-action)
   (prot-emacs-keybind log-view-mode-map
     "w" #'agitate-log-view-kill-revision
     "W" #'agitate-log-view-kill-revision-expanded)
@@ -170,7 +175,7 @@
 
 (prot-emacs-package magit
   (:install t)
-  (:delay 50)
+  (:delay 30)
   (setq magit-define-global-key-bindings nil)
   (setq magit-section-visibility-indicator '("⮧"))
 
@@ -190,34 +195,5 @@
         '(("~/Git/Projects" . 1)))
 
   (define-key global-map (kbd "C-c g") #'magit-status))
-
-;;; Ediff
-(prot-emacs-package ediff
-  (:delay 50)
-  (setq ediff-keep-variants nil)
-  (setq ediff-make-buffers-readonly-at-startup nil)
-  (setq ediff-merge-revisions-with-ancestor t)
-  (setq ediff-show-clashes-only t)
-  (setq ediff-split-window-function 'split-window-horizontally)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
-  ;; Tweak those for safer identification and removal
-  (setq ediff-combination-pattern
-        '("<<<<<<< prot-ediff-combine Variant A" A
-          ">>>>>>> prot-ediff-combine Variant B" B
-          "####### prot-ediff-combine Ancestor" Ancestor
-          "======= prot-ediff-combine End"))
-
-  ;; TODO automate process in a robust way, or at least offer a good key
-  ;; binding.
-  (defun prot/ediff-flush-combination-pattern ()
-    "Remove my custom `ediff-combination-pattern' markers.
-
-This is a quick-and-dirty way to get rid of the markers that are
-left behind by `smerge-ediff' when combining the output of two
-diffs.  While this could be automated via a hook, I am not yet
-sure this is a good approach."
-    (interactive)
-    (flush-lines ".*prot-ediff.*" (point-min) (point-max) nil)))
 
 (provide 'prot-emacs-git)

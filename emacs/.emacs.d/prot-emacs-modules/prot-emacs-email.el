@@ -1,23 +1,22 @@
 ;;; Client-agnostic email settings
-(prot-emacs-package auth-source
+(prot-emacs-configure
+  (:delay 1)
+;;;; `auth-source'
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
-        user-mail-address "public@protesilaos.com"))
+        user-mail-address "public@protesilaos.com")
 
-(prot-emacs-package mm-encode
-  (:delay 5)
+;;;; `mm-encode'
   (setq mm-encrypt-option nil ; use 'guided if you need more control
-        mm-sign-option nil))  ; same
+        mm-sign-option nil)  ; same
 
-(prot-emacs-package mml-sec
-  (:delay 5)
+;;;; `mml-sec'
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
-        mml-secure-smime-sign-with-sender t))
+        mml-secure-smime-sign-with-sender t)
 
-(prot-emacs-package message
-  (:delay 5)
+;;;; `message'
   (setq mail-user-agent 'message-user-agent
         mail-header-separator (purecopy "*****")
         message-elide-ellipsis "\n> [... %l lines elided]\n"
@@ -33,17 +32,14 @@
         message-confirm-send nil
         message-kill-buffer-on-exit t
         message-wide-reply-confirm-recipients t)
-  (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
+  ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
-  (add-hook 'message-setup-hook #'message-sort-headers))
+  (add-hook 'message-setup-hook #'message-sort-headers)
 
-(prot-emacs-package gnus-dired ; does not require `gnus'
-  (:delay 5)
-  (add-hook 'dired-mode-hook #'gnus-dired-mode))
+;;; `gnus-dired' (does not require `gnus')
+  (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode)
 
-;;; Sending email (SMTP)
-(prot-emacs-package smtpmail
-  (:delay 5)
+;;;; `smtpmail' (SMTP)
   ;; ;; FIXME 2023-01-26: Do I need any of this?  It seems that the
   ;; ;; contents of the `auth-sources' suffice for this case and
   ;; ;; smtpmail.el is set up to do the right thing out-of-the-box.
@@ -53,10 +49,9 @@
         smtpmail-smtp-server "mail.gandi.net"
         smtpmail-stream-type 'ssl
         smtpmail-smtp-service 465
-        smtpmail-queue-mail nil))
+        smtpmail-queue-mail nil)
 
-(prot-emacs-package sendmail
-  (:delay 5)
+;;;; `sendmail' (mail transfer agent)
   (setq send-mail-function 'smtpmail-send-it))
 
 (provide 'prot-emacs-email)

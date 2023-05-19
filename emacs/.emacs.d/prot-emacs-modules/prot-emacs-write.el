@@ -1,17 +1,25 @@
-;;; Outline mode and outline-minor-mode
-(prot-emacs-package outline
+;;; General configurations for prose/writing
+(prot-emacs-configure
+;;;; `outline' (`outline-mode' and `outline-minor-mode')
   (:delay 10)
   (setq outline-minor-mode-highlight nil) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (setq outline-minor-mode-use-margins nil) ; as above
-  (define-key global-map (kbd "<f10>") #'outline-minor-mode))
+  (define-key global-map (kbd "<f10>") #'outline-minor-mode)
+
+;;;; `dictionary'
+  (setq dictionary-server "dict.org"
+        dictionary-default-popup-strategy "lev" ; read doc string
+        dictionary-create-buttons nil
+        dictionary-use-single-buffer t)
+  (define-key global-map (kbd "C-c d") #'dictionary-search))
 
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
 (prot-emacs-package altcaps
   (:install t)
-  (:delay 10)
+  (:delay 60)
   ;; Force letter casing for certain characters (for legibility).
   (setq altcaps-force-character-casing
         '((?i . downcase)
@@ -171,14 +179,5 @@
       (recenter 1))) ; Use 0 for the absolute top
 
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
-
-;;; Dictionary
-(prot-emacs-package dictionary
-  (:delay 10)
-  (setq dictionary-server "dict.org"
-        dictionary-default-popup-strategy "lev" ; read doc string
-        dictionary-create-buttons nil
-        dictionary-use-single-buffer t)
-  (define-key global-map (kbd "C-c d") #'dictionary-search))
 
 (provide 'prot-emacs-write)

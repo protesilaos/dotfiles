@@ -1,18 +1,17 @@
 ;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
-(prot-emacs-package browse-url
-  (:delay 10)
+(prot-emacs-configure
+  (:delay 60)
+;;;; `browse-url'
   (setq browse-url-browser-function 'eww-browse-url)
-  (setq browse-url-secondary-browser-function 'browse-url-default-browser))
+  (setq browse-url-secondary-browser-function 'browse-url-default-browser)
 
-(prot-emacs-package goto-addr
-  (:delay 10)
+;;;; `goto-addr'
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
   (setq goto-address-mail-face nil)
-  (setq goto-address-mail-mouse-face 'highlight))
+  (setq goto-address-mail-mouse-face 'highlight)
 
-(prot-emacs-package shr
-  (:delay 10)
+;;;; `shr'
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
@@ -20,10 +19,9 @@
   (setq shr-width fill-column)          ; check `prot-eww-readable'
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
-  (setq shr-cookie-policy nil))
+  (setq shr-cookie-policy nil)
 
-(prot-emacs-package url-cookie
-  (:delay 10)
+;;;; `url-cookie'
   (setq url-cookie-untrusted-urls '(".*")))
 
 (prot-emacs-package eww

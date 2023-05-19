@@ -34,13 +34,7 @@
           ("_ underscores"         . (95 95)))    ; _ _
         prot-simple-date-specifier "%F"
         prot-simple-time-specifier "%R %z"
-        delete-pair-blink-delay 0.15 ; Emacs28 -- see `prot-simple-delete-pair-dwim'
-        prot-simple-scratch-buffer-default-mode 'markdown-mode
-        help-window-select t
-        next-error-recenter '(4) ; center of the window
-        find-library-include-other-files nil ; Emacs 29
-        remote-file-name-inhibit-delete-by-moving-to-trash t ; Emacs 30
-        remote-file-name-inhibit-auto-save t)                ; Emacs 30
+        prot-simple-scratch-buffer-default-mode 'markdown-mode)
 
   ;; General commands
   (prot-emacs-keybind global-map
@@ -155,35 +149,6 @@ that point."
     "M-# d" #'substitute-target-in-defun    ; "defun" mnemonic
     "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 
-;;; Keymap for buffers (Emacs28)
-(let ((map ctl-x-x-map))
-  (define-key map "e" #'eval-buffer)
-  (define-key map "f" #'follow-mode)  ; override `font-lock-update'
-  (define-key map "r" #'rename-uniquely)
-  (define-key map "l" #'visual-line-mode))
-
-;;; Mouse wheel behaviour
-(prot-emacs-package mouse
-  ;; In Emacs 27+, use Control + mouse wheel to scale text.
-  (setq mouse-wheel-scroll-amount
-        '(1
-          ((shift) . 5)
-          ((meta) . 0.5)
-          ((control) . text-scale))
-        mouse-drag-copy-region nil
-        make-pointer-invisible t
-        mouse-wheel-progressive-speed t
-        mouse-wheel-follow-mouse t)
-
-  ;; Scrolling behaviour
-  (setq-default scroll-preserve-screen-position t
-                scroll-conservatively 1 ; affects `scroll-step'
-                scroll-margin 0
-                next-screen-context-lines 0)
-
-  (add-hook 'after-init-hook #'mouse-wheel-mode)
-  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window))
-
 ;;; Delete selection
 (prot-emacs-package delsel
   (add-hook 'after-init-hook #'delete-selection-mode))
@@ -204,12 +169,6 @@ that point."
 (prot-emacs-package autorevert
   (setq auto-revert-verbose t)
   (add-hook 'after-init-hook #'global-auto-revert-mode))
-
-;;; Preserve contents of system clipboard
-(setq save-interprogram-paste-before-kill t)
-
-;;; Newline characters for file ending
-(setq mode-require-final-newline 'visit-save)
 
 ;;; Go to last change
 (prot-emacs-package goto-last-change
@@ -342,7 +301,7 @@ that point."
 ;;   (setq desktop-save 'ask-if-new)
 ;;   (dolist (symbol '(kill-ring log-edit-comment-ring))
 ;;     (add-to-list 'desktop-globals-to-save symbol))
-;; 
+;;
 ;;   (desktop-save-mode 1))
 
 ;; ;;; Record cursor position
@@ -387,21 +346,53 @@ that point."
     "C-c C-k" #'comint-clear-buffer
     "C-c C-w" #'comint-write-output))
 
-;;; Tools for manual pages (manpages)
-(prot-emacs-package man
-  (:delay 10)
-  (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
-  (let ((map Man-mode-map))
-    (define-key map (kbd "i") #'Man-goto-section)
-    (define-key map (kbd "g") #'Man-update-manpage)))
+;;; General settings
+(prot-emacs-configure
+  (:delay 5)
+  (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
+  (setq help-window-select t)
+  (setq next-error-recenter '(4)) ; center of the window
+  (setq find-library-include-other-files nil) ; Emacs 29
+  (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
+  (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
+  (setq save-interprogram-paste-before-kill t)
+  (setq mode-require-final-newline 'visit-save)
 
-;;; Proced (process monitor, similar to `top')
-(prot-emacs-package proced
-  (:delay 10)
+;;;; Mouse wheel behaviour
+  ;; In Emacs 27+, use Control + mouse wheel to scale text.
+  (setq mouse-wheel-scroll-amount
+        '(1
+          ((shift) . 5)
+          ((meta) . 0.5)
+          ((control) . text-scale))
+        mouse-drag-copy-region nil
+        make-pointer-invisible t
+        mouse-wheel-progressive-speed t
+        mouse-wheel-follow-mouse t)
+
+  ;; Scrolling behaviour
+  (setq-default scroll-preserve-screen-position t
+                scroll-conservatively 1 ; affects `scroll-step'
+                scroll-margin 0
+                next-screen-context-lines 0)
+
+  (add-hook 'after-init-hook #'mouse-wheel-mode)
+  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window)
+
+;;;; `man' (manpages)
+  (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
+
+;;;; `proced' (process monitor, similar to `top')
   (setq proced-auto-update-flag t)
   (setq proced-enable-color-flag t) ; Emacs 29
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
-  (setq proced-filter 'user))
+  (setq proced-filter 'user)
+
+;;;; Keymap for buffers (Emacs28)
+  (prot-emacs-keybind ctl-x-x-map
+    "f" #'follow-mode  ; override `font-lock-update'
+    "r" #'rename-uniquely
+    "l" #'visual-line-mode))
 
 (provide 'prot-emacs-essentials)

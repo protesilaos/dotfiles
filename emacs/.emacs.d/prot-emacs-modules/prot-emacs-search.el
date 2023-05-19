@@ -7,8 +7,6 @@
         isearch-regexp-lax-whitespace nil)
   (setq isearch-lazy-highlight t)
   (setq list-matching-lines-jump-to-current-line nil) ; for `occur'
-  (setq grep-use-headings t) ; Emacs 30
-  (setq reb-re-syntax 'read) ; only for `re-builder' but makes sense to keep it here
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format nil)
@@ -57,6 +55,23 @@
     "<backspace>" #'prot-search-isearch-abort-dwim
     "<C-return>" #'prot-search-isearch-other-end))
 
+(prot-emacs-configure
+  (:delay 5)
+;;; `grep' package
+  (setq grep-use-headings t) ; Emacs 30
+;;; `re-builder' package
+  (setq reb-re-syntax 'read)
+;;; `xref' package
+  ;; All those have been changed for Emacs 28
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
+  (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
+  (setq xref-file-name-display 'project-relative)
+  (setq xref-search-program
+        (cond
+         ((or (executable-find "ripgrep") (executable-find "rg")) 'ripgrep)
+         ((executable-find "ugrep") 'ugrep)
+         (t 'grep))))
+
 ;;; wgrep (writable grep)
 (prot-emacs-package wgrep
   (:install t)
@@ -67,18 +82,5 @@
     "e" #'wgrep-change-to-wgrep-mode
     "C-x C-q" #'wgrep-change-to-wgrep-mode
     "C-c C-c" #'wgrep-finish-edit))
-
-;;; Cross-references (xref.el)
-(prot-emacs-package xref
-  (:delay 5)
-  ;; All those have been changed for Emacs 28
-  (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
-  (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
-  (setq xref-file-name-display 'project-relative)
-  (setq xref-search-program
-        (cond
-         ((or (executable-find "ripgrep") (executable-find "rg")) 'ripgrep)
-         ((executable-find "ugrep") 'ugrep)
-         (t 'grep))))
 
 (provide 'prot-emacs-search)

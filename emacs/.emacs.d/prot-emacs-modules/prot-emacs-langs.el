@@ -1,6 +1,41 @@
-;;; Plain text (text-mode)
-(prot-emacs-package text-mode
+;;; General language/editing settings
+(prot-emacs-configure
   (:delay 5)
+;;;; Tabs, indentation, and the TAB key
+  (setq-default tab-always-indent 'complete
+                tab-first-completion 'word-or-paren-or-punct ; Emacs 27
+                tab-width 4
+                indent-tabs-mode nil)
+
+;;;; Configure 'electric' behaviour
+  (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+  (setq electric-pair-preserve-balance t)
+  (setq electric-pair-pairs
+        '((8216 . 8217)
+          (8220 . 8221)
+          (171 . 187)))
+  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
+  (setq electric-pair-skip-whitespace nil)
+  (setq electric-pair-skip-whitespace-chars '(9 10 32))
+  (setq electric-quote-context-sensitive t)
+  (setq electric-quote-paragraph t)
+  (setq electric-quote-string nil)
+  (setq electric-quote-replace-double t)
+  (electric-pair-mode -1)
+  (electric-quote-mode -1)
+  ;; I don't like auto indents in Org and related.  They are okay for
+  ;; programming.
+  (electric-indent-mode -1)
+  (add-hook 'prog-mode-hook #'electric-indent-local-mode)
+
+;;;; Parentheses (show-paren-mode)
+  (setq show-paren-style 'parenthesis)
+  (setq show-paren-when-point-in-periphery nil)
+  (setq show-paren-when-point-inside-paren nil)
+  (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
+  (add-hook 'after-init-hook #'show-paren-mode)
+
+;;;; Plain text (text-mode)
   (setq sentence-end-double-space t)
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
@@ -9,7 +44,16 @@
 
   (add-hook 'text-mode-hook #'turn-on-auto-fill)
 
-  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode)))
+  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
+
+;;;; Shell scripts (sh-mode)
+  (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode))
+
+;;;; Eldoc (elisp live documentation feedback)
+  (global-eldoc-mode 1)
+
+;;;; Handle performance for very long lines (so-long.el)
+  (global-so-long-mode 1))
 
 ;;; Markdown (markdown-mode)
 (prot-emacs-package markdown-mode
@@ -18,10 +62,6 @@
   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 
-;;; Shell scripts (sh-mode)
-(prot-emacs-package sh-script
-  (:delay 5)
-  (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
 ;;; SXHKDRC mode (one of my many packages)
 (prot-emacs-package sxhkdrc-mode
@@ -52,44 +92,6 @@
   (prot-emacs-keybind global-map
     "C-;" #'prot-comment-comment-dwim
     "C-x C-;" #'prot-comment-timestamp-keyword))
-
-;;; Configure 'electric' behaviour
-(prot-emacs-package electric
-  (:delay 5)
-  (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
-  (setq electric-pair-preserve-balance t)
-  (setq electric-pair-pairs
-        '((8216 . 8217)
-          (8220 . 8221)
-          (171 . 187)))
-  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
-  (setq electric-pair-skip-whitespace nil)
-  (setq electric-pair-skip-whitespace-chars '(9 10 32))
-  (setq electric-quote-context-sensitive t)
-  (setq electric-quote-paragraph t)
-  (setq electric-quote-string nil)
-  (setq electric-quote-replace-double t)
-  (electric-pair-mode -1)
-  (electric-quote-mode -1)
-  ;; I don't like auto indents in Org and related.  They are okay for
-  ;; programming.
-  (electric-indent-mode -1)
-  (add-hook 'prog-mode-hook #'electric-indent-local-mode))
-
-;;; Parentheses (show-paren-mode)
-(prot-emacs-package paren
-  (:delay 5)
-  (setq show-paren-style 'parenthesis)
-  (setq show-paren-when-point-in-periphery nil)
-  (setq show-paren-when-point-inside-paren nil)
-  (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
-  (add-hook 'after-init-hook #'show-paren-mode))
-
-;;; Tabs, indentation, and the TAB key
-(setq-default tab-always-indent 'complete)
-(setq-default tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
 
 ;;; Jinx (highly performant spell checker)
 (prot-emacs-package jinx
@@ -191,15 +193,5 @@
   (:install t)
   (:delay 10)
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
-
-;;; Eldoc (elisp live documentation feedback)
-(prot-emacs-package eldoc
-  (:delay 5)
-  (global-eldoc-mode 1))
-
-;;; Handle performance for very long lines (so-long.el)
-(prot-emacs-package so-long
-  (:delay 10)
-  (global-so-long-mode 1))
 
 (provide 'prot-emacs-langs)
