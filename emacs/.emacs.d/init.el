@@ -191,7 +191,9 @@ The :install property is the argument passed to
 described therein.
 
 The :delay property makes the evaluation of PACKAGE with the
-expanded BODY happen with `run-with-timer'."
+expanded BODY happen with `run-with-timer'.
+
+Also see `prot-emacs-configure'."
   (declare (indent 1))
   (unless (memq package prot-emacs-omit-packages)
     (let (install delay)
@@ -256,6 +258,28 @@ expanded BODY happen with `run-with-timer'."
 ;;   (setq denote-directory "path/to/dir")
 ;;   (define-key global-map (kbd "C-c n") #'denote)
 ;;   (setq denote-file-type nil))
+
+(defmacro prot-emacs-configure (&rest body)
+  "Evaluate BODY as a `progn'.
+BODY consists of ordinary Lisp expressions.  The sole exception
+is an unquoted plist of the form (:delay NUMBER) which evaluates
+BODY with NUMBER seconds of `run-with-timer'.
+
+Note that `prot-emacs-configure' does not try to autoload
+anything.  Use it only for forms that evaluate regardless.
+
+Also see `prot-emacs-package'."
+  (declare (indent 0))
+  (let (delay)
+    (dolist (element body)
+      (when (plistp element)
+        (pcase (car element)
+          (:delay (setq delay (cadr element)
+                        body (delq element body))))))
+    (if delay
+        `(run-with-timer ,delay nil (lambda () ,@body))
+      `(progn ,@body))))
+
 
 (defmacro prot-emacs-keybind (keymap &rest definitions)
   "Expand key binding DEFINITIONS for the given KEYMAP.
