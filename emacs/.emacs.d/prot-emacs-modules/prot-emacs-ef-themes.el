@@ -4,6 +4,7 @@
 ;; <https://protesilaos.com/emacs/ef-themes>.
 (prot-emacs-package ef-themes
   (:install t)
+  (:delay 1)
   (setq ef-themes-variable-pitch-ui t
         ef-themes-mixed-fonts t
         ef-themes-headings ; read the manual's entry of the doc string
@@ -57,6 +58,8 @@
 ;;   (load-theme 'ef-tritanopia-dark t t)
 ;;   (load-theme 'ef-tritanopia-light t t)
 ;;   (load-theme 'ef-winter t t)
+;;   (load-theme 'ef-symbiosis t t)
+;;   (load-theme 'ef-kassio t t)
 ;;
 ;;   (setq ef-themes-headings ; read the manual's entry or the doc string
 ;;         '((0 . (variable-pitch light 1.9))
@@ -73,7 +76,7 @@
 ;;
 ;;   ;; They are nil by default...
 ;;   (setq ef-themes-mixed-fonts t
-;;         ef-themes-variable-pitch-ui t)
+;;         ef-themes-variable-pitch-ui nil)
 ;;
 ;;   ;; Read the doc string or manual for this one.  The symbols can be
 ;;   ;; combined in any order.
