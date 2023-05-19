@@ -84,13 +84,8 @@
       inhibit-startup-echo-area-message user-login-name ; read the docstring
       inhibit-startup-buffer-menu t)
 
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backup/")))
-      backup-by-copying t
-      version-control t
-      delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
+(setq make-backup-files nil
+      backup-inhibited nil ; Not sure if needed, given `make-backup-files'
       create-lockfiles nil)
 
 ;; Temporarily increase the garbage collection threshold.  These
