@@ -1,4 +1,4 @@
-;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
+;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
 (prot-emacs-configure
   (:delay 60)
 ;;;; `browse-url'
@@ -58,8 +58,6 @@
   (define-key dired-mode-map (kbd "E") #'eww-open-file) ; to render local HTML files
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
-
-(prot-emacs-package elpher (:install t) (:delay 10))    ; NOTE 2021-07-24: work-in-progress
 
 (prot-emacs-package prot-eww
   (:delay 10)

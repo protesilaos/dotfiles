@@ -33,21 +33,14 @@
 ;; educational and recreational purposes.  I am not a programmer and I
 ;; do not recommend that you copy any of this if you are not certain of
 ;; what it does.
-;;
-;; Thanks to Abhiseck Paira for the patches (see commit log for this
-;; file, such as with C-x v l (vc-print-log)).  Some of those improved
-;; on various aspects of the EWW-specific functionality, while others
-;; provide the layer of integration with Elpher.  Abhiseck's online
-;; presence:
-;;
-;; 1. <https://social.linux.pizza/@redstarfish>
-;; 2. <gemini://redstarfish.flounder.online/>
+
+;; XXX NOTE XXX 2023-05-19: Much of this code is severely out of date.
+;; I plan to review it.  DO NOT USE!!!
 
 ;;; Code:
 
 (require 'shr)
 (require 'eww)
-(require 'elpher nil t)
 (require 'url-parse)
 (require 'prot-common)
 
@@ -63,7 +56,7 @@
 (defun prot-eww--rename-buffer ()
   "Rename EWW buffer using page title or URL.
 To be used by `eww-after-render-hook'."
-  (let ((name (if (eq "" (plist-get eww-data :title))
+  (let ((name (if (equal "" (plist-get eww-data :title))
                   (plist-get eww-data :url)
                 (plist-get eww-data :title))))
     (rename-buffer (format "*%s # eww*" name) t)))
@@ -131,7 +124,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
         start)
     (erase-buffer)
     (setq-local header-line-format
-                "Unified EWW and Elpher Browsing History (prot-eww)")
+                "EWW Browsing History (prot-eww)")
     (dolist (history prot-eww-visited-history)
       (setq start (point))
       (insert (format "%s" history) "\n")
@@ -233,24 +226,9 @@ To be used by `eww-after-render-hook'."
   (let ((url (plist-get eww-data :url)))
     (add-to-history 'prot-eww-visited-history url)))
 
-(autoload 'elpher-page-address "elpher")
-(autoload 'elpher-address-to-url "elpher")
-(defvar elpher-current-page)
-
-(defun prot-eww--record-elpher-history (arg1 &optional arg2 arg3)
-  "Store URLs visited using elpher in `prot-eww-visited-history'.
-To be used by `elpher-visited-page'.  ARG1, ARG2, ARG3 are
-unused."
-  (let* ((address (elpher-page-address elpher-current-page))
-         (url (elpher-address-to-url address)))
-    ;; elpher-address-to-url checks for special pages.
-    (when url
-      (add-to-list 'prot-eww-visited-history url))))
-
 (add-hook 'eww-after-render-hook #'prot-eww--record-history)
 (advice-add 'eww-back-url :after #'prot-eww--record-history)
 (advice-add 'eww-forward-url :after #'prot-eww--record-history)
-(advice-add 'elpher-visit-page :after #'prot-eww--record-elpher-history)
 ;; Is there a better function to add this advice?
 
 ;;;; Commands
@@ -259,13 +237,8 @@ unused."
 
 (defun prot-eww--get-current-url ()
   "Return the current-page's URL."
-  (cond ((eq major-mode 'elpher-mode)
-         (elpher-address-to-url
-          (elpher-page-address elpher-current-page)))
-        ((eq major-mode 'eww-mode)
-         (plist-get eww-data :url))
-        ;; (t (user-error "Not a eww or elpher buffer"))
-        ))
+  (when (eq major-mode 'eww-mode)
+    (plist-get eww-data :url)))
 
 ;; This is almost identical to browse-url-interactive-arg except it
 ;; calls thing-at-point-url-at-point instead of
@@ -292,8 +265,6 @@ Return URL for use in a interactive."
                           (region-beginning) (region-end))))
                    (thing-at-point-url-at-point t))))
 
-(declare-function elpher-go "elpher")
-
 ;;;###autoload
 (defun prot-eww (url &optional arg)
   "Pass URL to appropriate client.
@@ -301,11 +272,7 @@ With optional ARG, use a new buffer."
   (interactive
    (list (prot-eww--interactive-arg "URL: ")
          current-prefix-arg))
-  (let ((url-parsed (url-generic-parse-url url)))
-    (pcase (url-type url-parsed)
-      ((or "gemini" "gopher" "gophers" "finger")
-       (elpher-go url))
-      (_ (eww url arg)))))
+  (eww url arg))
 
 ;;;###autoload
 (defun prot-eww-browse-dwim (url &optional arg)
