@@ -6,6 +6,8 @@
   (setq isearch-lax-whitespace t)
   (setq isearch-regexp-lax-whitespace nil)
   (setq isearch-lazy-highlight t)
+  (setq list-matching-lines-jump-to-current-line nil) ; for `occur'
+  (setq grep-use-headings t) ; Emacs 30
   (setq reb-re-syntax 'read) ; only for `re-builder' but makes sense to keep it here
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
@@ -19,21 +21,14 @@
   (setq lazy-highlight-no-delay-length 3)
   (setq isearch-wrap-pause t)
 
-  (define-key minibuffer-local-isearch-map (kbd "M-/") #'isearch-complete-edit)
-  (let ((map isearch-mode-map))
-    (define-key map (kbd "C-g") #'isearch-cancel) ; instead of `isearch-abort'
-    (define-key map (kbd "M-/") #'isearch-complete)))
-
-(prot-emacs-package replace
-  (:delay 5)
-  (setq list-matching-lines-jump-to-current-line nil)
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
-  (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
-(prot-emacs-package grep
-  (:delay 5)
-  (setq grep-use-headings t)) ; Emacs 30
+  (define-key minibuffer-local-isearch-map (kbd "M-/") #'isearch-complete-edit)
+  (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines)
+  (prot-emacs-keybind isearch-mode-map
+    "C-g" #'isearch-cancel ; instead of `isearch-abort'
+    "M-/" #'isearch-complete))
 
 (prot-emacs-package prot-search
   (:delay 5)
