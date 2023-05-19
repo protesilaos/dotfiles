@@ -105,6 +105,28 @@
 (prot-emacs-package prot-prefix
   (define-key global-map (kbd "C-z") #'prot-prefix))
 
+;;; Built-in bookmarking framework (bookmark.el)
+(prot-emacs-package bookmark
+  (:delay 5)
+  (setq bookmark-use-annotations nil)
+  (setq bookmark-automatically-show-annotations t)
+  (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon
+
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
+
+  (defun prot/bookmark-save-no-prompt (&rest _)
+    "Run `bookmark-save' without prompts.
+
+The intent of this function is to be added as an :after advice to
+`bookmark-set-internal'.  Concretely, this means that when
+`bookmark-set-internal' is called, this function is called right
+afterwards.  We set this up because there is no hook after
+setting a bookmark and we want to automatically save bookmarks at
+that point."
+    (funcall 'bookmark-save))
+
+  (advice-add 'bookmark-set-internal :after 'prot/bookmark-save-no-prompt))
+
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
