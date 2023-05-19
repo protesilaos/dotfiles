@@ -6,6 +6,7 @@
   (setq isearch-lax-whitespace t)
   (setq isearch-regexp-lax-whitespace nil)
   (setq isearch-lazy-highlight t)
+  (setq reb-re-syntax 'read) ; only for `re-builder' but makes sense to keep it here
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format nil)
@@ -60,11 +61,6 @@
     "<down>" #'prot-search-isearch-repeat-forward
     "<backspace>" #'prot-search-isearch-abort-dwim
     "<C-return>" #'prot-search-isearch-other-end))
-
-;;; Test regular expressions (re-builder)
-(prot-emacs-package re-builder
-  (:delay 5)
-  (setq reb-re-syntax 'read))
 
 ;;; wgrep (writable grep)
 (prot-emacs-package wgrep
