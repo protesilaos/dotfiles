@@ -2,9 +2,9 @@
 (prot-emacs-package isearch
   (:delay 5)
   (setq search-highlight t)
-  (setq search-whitespace-regexp ".*?")
-  (setq isearch-lax-whitespace t)
-  (setq isearch-regexp-lax-whitespace nil)
+  (setq search-whitespace-regexp ".*?" ; one `setq' here to make it obvious they are a bundle
+        isearch-lax-whitespace t
+        isearch-regexp-lax-whitespace nil)
   (setq isearch-lazy-highlight t)
   (setq list-matching-lines-jump-to-current-line nil) ; for `occur'
   (setq grep-use-headings t) ; Emacs 30
