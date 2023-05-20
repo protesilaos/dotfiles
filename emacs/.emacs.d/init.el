@@ -209,7 +209,8 @@ Also see `prot-emacs-configure'."
                       (require ',package)
                       (add-to-list 'prot-emacs-loaded-packages ',package)
                       ,@body
-                      (message "Prot Emacs loaded package: %s" ',package))))
+                      ;; (message "Prot Emacs loaded package: %s" ',package)
+                      )))
         (cond
          ((featurep package)
           `(progn ,@body))
