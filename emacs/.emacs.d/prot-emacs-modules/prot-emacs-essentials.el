@@ -11,30 +11,37 @@
 ;;         '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
 ;;   (exec-path-from-shell-initialize))
 
-;;; Common auxiliary functions (prot-common.el)
-(prot-emacs-package prot-common)
+(prot-emacs-configure
+  (:delay 5)
+;;; General settings and common custom functions (prot-simple.el)
+  (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
+  (setq help-window-select t)
+  (setq next-error-recenter '(4)) ; center of the window
+  (setq find-library-include-other-files nil) ; Emacs 29
+  (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
+  (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
+  (setq save-interprogram-paste-before-kill t)
+  (setq mode-require-final-newline 'visit-save)
 
-;;; Common custom functions (prot-simple.el)
-(prot-emacs-package prot-simple
   (setq prot-simple-insert-pair-alist
-        '(("' Single quote"        . (39 39))     ; ' '
-          ("\" Double quotes"      . (34 34))     ; " "
-          ("` Elisp quote"         . (96 39))     ; ` '
-          ("‘ Single apostrophe"   . (8216 8217)) ; ‘ ’
-          ("“ Double apostrophes"  . (8220 8221)) ; “ ”
-          ("( Parentheses"         . (40 41))     ; ( )
-          ("{ Curly brackets"      . (123 125))   ; { }
-          ("[ Square brackets"     . (91 93))     ; [ ]
-          ("< Angled brackets"     . (60 62))     ; < >
-          ("« Εισαγωγικά Gr quote" . (171 187))   ; « »
-          ("= Equals signs"        . (61 61))     ; = =
-          ("~ Tilde"               . (126 126))   ; ~ ~
-          ("* Asterisks"           . (42 42))     ; * *
-          ("/ Forward Slash"       . (47 47))     ; / /
-          ("_ underscores"         . (95 95)))    ; _ _
-        prot-simple-date-specifier "%F"
-        prot-simple-time-specifier "%R %z"
-        prot-simple-scratch-buffer-default-mode 'markdown-mode)
+      '(("' Single quote"        . (39 39))     ; ' '
+        ("\" Double quotes"      . (34 34))     ; " "
+        ("` Elisp quote"         . (96 39))     ; ` '
+        ("‘ Single apostrophe"   . (8216 8217)) ; ‘ ’
+        ("“ Double apostrophes"  . (8220 8221)) ; “ ”
+        ("( Parentheses"         . (40 41))     ; ( )
+        ("{ Curly brackets"      . (123 125))   ; { }
+        ("[ Square brackets"     . (91 93))     ; [ ]
+        ("< Angled brackets"     . (60 62))     ; < >
+        ("« Εισαγωγικά Gr quote" . (171 187))   ; « »
+        ("= Equals signs"        . (61 61))     ; = =
+        ("~ Tilde"               . (126 126))   ; ~ ~
+        ("* Asterisks"           . (42 42))     ; * *
+        ("/ Forward Slash"       . (47 47))     ; / /
+        ("_ underscores"         . (95 95))))    ; _ _
+  (setq prot-simple-date-specifier "%F")
+  (setq prot-simple-time-specifier "%R %z")
+  (setq prot-simple-scratch-buffer-default-mode 'text-mode)
 
   ;; General commands
   (prot-emacs-keybind global-map
@@ -93,15 +100,50 @@
     "C-x k" #'prot-simple-kill-buffer-current
     "C-x K" #'kill-buffer
     "M-s b" #'prot-simple-buffers-major-mode
-    "M-s v" #'prot-simple-buffers-vc-root))
+    "M-s v" #'prot-simple-buffers-vc-root
+    ;; Prefix keymap (prot-prefix.el)
+    "C-z" #'prot-prefix)
 
-;;; Prefix keymap (prot-prefix.el)
-(prot-emacs-package prot-prefix
-  (define-key global-map (kbd "C-z") #'prot-prefix))
+  ;; Keymap for buffers (Emacs28)
+  (prot-emacs-keybind ctl-x-x-map
+    "f" #'follow-mode  ; override `font-lock-update'
+    "r" #'rename-uniquely
+    "l" #'visual-line-mode)
 
-;;; Built-in bookmarking framework (bookmark.el)
-(prot-emacs-package bookmark
-  (:delay 5)
+;;;; Mouse wheel behaviour
+  ;; In Emacs 27+, use Control + mouse wheel to scale text.
+  (setq mouse-wheel-scroll-amount
+        '(1
+          ((shift) . 5)
+          ((meta) . 0.5)
+          ((control) . text-scale))
+        mouse-drag-copy-region nil
+        make-pointer-invisible t
+        mouse-wheel-progressive-speed t
+        mouse-wheel-follow-mouse t)
+
+  ;; Scrolling behaviour
+  (setq-default scroll-preserve-screen-position t
+                scroll-conservatively 1 ; affects `scroll-step'
+                scroll-margin 0
+                next-screen-context-lines 0)
+
+  (mouse-wheel-mode 1)
+  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window)
+
+;;; Repeatable key chords (repeat-mode)
+  (setq repeat-on-final-keystroke t
+        repeat-exit-timeout 5
+        repeat-exit-key "<escape>"
+        repeat-keep-prefix nil
+        repeat-check-key t
+        repeat-echo-function 'ignore
+        ;; Technically, this is not in repeal.el, though it is the
+        ;; same idea.
+        set-mark-command-repeat-pop t)
+  (repeat-mode 1)
+
+;;;; Built-in bookmarking framework (bookmark.el)
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
   (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon
@@ -119,7 +161,95 @@ setting a bookmark and we want to automatically save bookmarks at
 that point."
     (funcall 'bookmark-save))
 
-  (advice-add 'bookmark-set-internal :after 'prot/bookmark-save-no-prompt))
+  (advice-add 'bookmark-set-internal :after 'prot/bookmark-save-no-prompt)
+
+;;;; Auto revert mode
+  (setq auto-revert-verbose t)
+  (global-auto-revert-mode 1)
+
+;;;; Delete selection
+  (delete-selection-mode 1)
+
+;;;; Tooltips (tooltip-mode)
+  (setq tooltip-delay 0.5
+        tooltip-short-delay 0.5
+        x-gtk-use-system-tooltips nil
+        tooltip-frame-parameters
+        '((name . "tooltip")
+          (internal-border-width . 6)
+          (border-width . 0)
+          (no-special-glyphs . t)))
+
+  (autoload #'tooltip-mode "tooltip")
+  (tooltip-mode 1)
+
+;;;; Display current time
+  (setq display-time-format "%a %e %b, %H:%M ")
+  ;;;; Covered by `display-time-format'
+  ;; (setq display-time-24hr-format t)
+  ;; (setq display-time-day-and-date t)
+  (setq display-time-interval 60)
+  (setq display-time-default-load-average nil)
+  ;; NOTE 2022-09-21: For all those, I have implemented my own solution
+  ;; that also shows the number of new items, although it depends on
+  ;; notmuch: the `notmuch-indicator' package.
+  (setq display-time-mail-directory nil)
+  (setq display-time-mail-function nil)
+  (setq display-time-use-mail-icon nil)
+  (setq display-time-mail-string nil)
+  (setq display-time-mail-face nil)
+
+;;;;; World clock (M-x world-clock)
+  (setq display-time-world-list t)
+  (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
+        '(("America/Los_Angeles" "Los Angeles")
+          ("America/Chicago" "Chicago")
+          ("Brazil/Acre" "Rio Branco")
+          ("America/New_York" "New York")
+          ("Brazil/East" "Brasília")
+          ("UTC" "UTC")
+          ("Europe/Lisbon" "Lisbon")
+          ("Europe/Brussels" "Brussels")
+          ("Europe/Athens" "Athens")
+          ("Asia/Tehran" "Tehran")
+          ("Asia/Tbilisi" "Tbilisi")
+          ("Asia/Yekaterinburg" "Yekaterinburg")
+          ("Asia/Shanghai" "Shanghai")
+          ("Asia/Tokyo" "Tokyo")
+          ("Asia/Vladivostok" "Vladivostok")
+          ("Australia/Sydney" "Sydney")
+          ("Pacific/Auckland" "Auckland")))
+
+  ;; All of the following variables are for Emacs 28
+  (setq world-clock-list t)
+  (setq world-clock-time-format "%R %z  %A %d %B")
+  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
+  (setq world-clock-timer-enable t)
+  (setq world-clock-timer-second 60)
+
+  (display-time-mode 1)
+
+;;;; `man' (manpages)
+  (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
+
+;;;; `proced' (process monitor, similar to `top')
+  (setq proced-auto-update-flag t)
+  (setq proced-enable-color-flag t) ; Emacs 29
+  (setq proced-auto-update-interval 5)
+  (setq proced-descend t)
+  (setq proced-filter 'user)
+  
+;;;; Emacs server (allow emacsclient to connect to running session)
+  ;; The "server" is functionally like the daemon, except it is run by
+  ;; the first Emacs frame we launch.  When we close that frame, the
+  ;; server is terminated.  Whereas the daemon remains active even if
+  ;; all Emacs frames are closed.
+  ;;
+  ;; I experimented with the daemon for a while.  Emacs would crash
+  ;; whenever I would encounter an error in some Lisp evaluation.
+  ;; Whereas the server works just fine when I need to connect to it via
+  ;; the emacsclient.
+  (server-start))
 
 ;;; Substitute
 ;; Another package of mine... Video demo:
@@ -149,50 +279,16 @@ that point."
     "M-# d" #'substitute-target-in-defun    ; "defun" mnemonic
     "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 
-;;; Delete selection
-(prot-emacs-package delsel
-  (add-hook 'after-init-hook #'delete-selection-mode))
-
-;;; Tooltips (tooltip-mode)
-(prot-emacs-package tooltip
-  (setq tooltip-delay 0.5
-        tooltip-short-delay 0.5
-        x-gtk-use-system-tooltips nil
-        tooltip-frame-parameters
-        '((name . "tooltip")
-          (internal-border-width . 6)
-          (border-width . 0)
-          (no-special-glyphs . t)))
-  (add-hook 'after-init-hook #'tooltip-mode))
-
-;;; Auto revert mode
-(prot-emacs-package autorevert
-  (setq auto-revert-verbose t)
-  (add-hook 'after-init-hook #'global-auto-revert-mode))
-
 ;;; Go to last change
 (prot-emacs-package goto-last-change
   (:install t)
+  (:delay 5)
   (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
   (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
 
   (with-eval-after-load 'prot-prefix
     (transient-append-suffix 'prot-prefix '(0 -1 -1)
       '("z" "goto-last-change" goto-last-change))))
-
-;;; Repeatable key chords (repeat-mode)
-(prot-emacs-package repeat
-  (:delay 5)
-  (setq repeat-on-final-keystroke t
-        repeat-exit-timeout 5
-        repeat-exit-key "<escape>"
-        repeat-keep-prefix nil
-        repeat-check-key t
-        repeat-echo-function 'ignore
-        ;; Technically, this is not in repeal.el, though it is the
-        ;; same idea.
-        set-mark-command-repeat-pop t)
-  (repeat-mode 1))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
@@ -214,53 +310,6 @@ that point."
     "C-c t r" #'tmr-remove
     "C-c t R" #'tmr-remove-finished))
 
-;;; Display current time
-(prot-emacs-package time
-  (setq display-time-format "%a %e %b, %H:%M ")
-  ;;;; Covered by `display-time-format'
-  ;; (setq display-time-24hr-format t)
-  ;; (setq display-time-day-and-date t)
-  (setq display-time-interval 60)
-  (setq display-time-default-load-average nil)
-  ;; NOTE 2022-09-21: For all those, I have implemented my own solution
-  ;; that also shows the number of new items, although it depends on
-  ;; notmuch: the `notmuch-indicator' package.
-  (setq display-time-mail-directory nil)
-  (setq display-time-mail-function nil)
-  (setq display-time-use-mail-icon nil)
-  (setq display-time-mail-string nil)
-  (setq display-time-mail-face nil)
-
-;;; World clock
-  (setq display-time-world-list t)
-  (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
-        '(("America/Los_Angeles" "Los Angeles")
-          ("America/Chicago" "Chicago")
-          ("Brazil/Acre" "Rio Branco")
-          ("America/New_York" "New York")
-          ("Brazil/East" "Brasília")
-          ("UTC" "UTC")
-          ("Europe/Lisbon" "Lisbon")
-          ("Europe/Brussels" "Brussels")
-          ("Europe/Athens" "Athens")
-          ("Asia/Tehran" "Tehran")
-          ("Asia/Tbilisi" "Tbilisi")
-          ("Asia/Yekaterinburg" "Yekaterinburg")
-          ("Asia/Shanghai" "Shanghai")
-          ("Asia/Tokyo" "Tokyo")
-          ("Asia/Vladivostok" "Vladivostok")
-          ("Australia/Sydney" "Sydney")
-          ("Pacific/Auckland" "Auckland")))
-
-  ;; All of the following variables are for Emacs 28
-  (setq world-clock-list t)
-  (setq world-clock-time-format "%R %z  %A %d %B")
-  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
-  (setq world-clock-timer-enable t)
-  (setq world-clock-timer-second 60)
-
-  (add-hook 'after-init-hook #'display-time-mode))
-
 ;;; Pass interface (password-store)
 (prot-emacs-package password-store
   (:install t)
@@ -272,19 +321,6 @@ that point."
 
 (prot-emacs-package pass (:install t) (:delay 5))
 
-;;; Emacs server (allow emacsclient to connect to running session)
-;; The "server" is functionally like the daemon, except it is run by
-;; the first Emacs frame we launch.  When we close that frame, the
-;; server is terminated.  Whereas the daemon remains active even if
-;; all Emacs frames are closed.
-;;
-;; I experimented with the daemon for a while.  Emacs would crash
-;; whenever I would encounter an error in some Lisp evaluation.
-;; Whereas the server works just fine when I need to connect to it via
-;; the emacsclient.
-(prot-emacs-package server
-  (:delay 5)
-  (server-start))
 
 ;; ;;; Emacs desktop (save state of various variables)
 ;; (prot-emacs-package desktop
@@ -345,54 +381,5 @@ that point."
     "<down>" #'comint-next-input
     "C-c C-k" #'comint-clear-buffer
     "C-c C-w" #'comint-write-output))
-
-;;; General settings
-(prot-emacs-configure
-  (:delay 5)
-  (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
-  (setq help-window-select t)
-  (setq next-error-recenter '(4)) ; center of the window
-  (setq find-library-include-other-files nil) ; Emacs 29
-  (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
-  (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
-  (setq save-interprogram-paste-before-kill t)
-  (setq mode-require-final-newline 'visit-save)
-
-;;;; Mouse wheel behaviour
-  ;; In Emacs 27+, use Control + mouse wheel to scale text.
-  (setq mouse-wheel-scroll-amount
-        '(1
-          ((shift) . 5)
-          ((meta) . 0.5)
-          ((control) . text-scale))
-        mouse-drag-copy-region nil
-        make-pointer-invisible t
-        mouse-wheel-progressive-speed t
-        mouse-wheel-follow-mouse t)
-
-  ;; Scrolling behaviour
-  (setq-default scroll-preserve-screen-position t
-                scroll-conservatively 1 ; affects `scroll-step'
-                scroll-margin 0
-                next-screen-context-lines 0)
-
-  (add-hook 'after-init-hook #'mouse-wheel-mode)
-  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window)
-
-;;;; `man' (manpages)
-  (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
-
-;;;; `proced' (process monitor, similar to `top')
-  (setq proced-auto-update-flag t)
-  (setq proced-enable-color-flag t) ; Emacs 29
-  (setq proced-auto-update-interval 5)
-  (setq proced-descend t)
-  (setq proced-filter 'user)
-
-;;;; Keymap for buffers (Emacs28)
-  (prot-emacs-keybind ctl-x-x-map
-    "f" #'follow-mode  ; override `font-lock-update'
-    "r" #'rename-uniquely
-    "l" #'visual-line-mode))
 
 (provide 'prot-emacs-essentials)
