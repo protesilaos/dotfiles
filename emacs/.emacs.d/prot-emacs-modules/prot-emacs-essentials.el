@@ -1,16 +1,4 @@
-;;; Read environment variables
-
-;; NOTE 2022-09-29: It seems I no longer need `exec-path-from-shell'.
-;; It was necessary in earlier test when I was using the --with-pgtk
-;; build of Emacs in a Sway WM session.  I am now using GNOME on
-;; Wayland and everything seems to be in order.  But I am keeping it
-;; around just in case.
-
-;; (prot-emacs-elpa-package 'exec-path-from-shell
-;;   (setq exec-path-from-shell-variables
-;;         '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
-;;   (exec-path-from-shell-initialize))
-
+;;; Essential configurations
 (prot-emacs-configure
   (:delay 5)
 ;;; General settings and common custom functions (prot-simple.el)
@@ -320,32 +308,6 @@ that point."
   (define-key global-map (kbd "C-c k") #'password-store-copy))
 
 (prot-emacs-package pass (:install t) (:delay 5))
-
-
-;; ;;; Emacs desktop (save state of various variables)
-;; (prot-emacs-package desktop
-;;   (setq desktop-auto-save-timeout 300)
-;;   (setq desktop-path `(,user-emacs-directory))
-;;   (setq desktop-base-file-name "desktop")
-;;   (setq desktop-files-not-to-save ".*")
-;;   (setq desktop-buffers-not-to-save ".*")
-;;   (setq desktop-globals-to-clear nil)
-;;   (setq desktop-load-locked-desktop t)
-;;   (setq desktop-missing-file-warning nil)
-;;   (setq desktop-restore-eager 0)
-;;   (setq desktop-restore-frames nil)
-;;   (setq desktop-save 'ask-if-new)
-;;   (dolist (symbol '(kill-ring log-edit-comment-ring))
-;;     (add-to-list 'desktop-globals-to-save symbol))
-;;
-;;   (desktop-save-mode 1))
-
-;; ;;; Record cursor position
-;; (prot-emacs-package saveplace
-;;   (:delay 5)
-;;   (setq save-place-file (locate-user-emacs-file "saveplace"))
-;;   (setq save-place-forget-unreadable-files t)
-;;   (save-place-mode 1))
 
 ;;; Shell (M-x shell)
 (prot-emacs-package shell
