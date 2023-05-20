@@ -1,6 +1,6 @@
 ;;; General window and buffer configurations
 (prot-emacs-configure
-  (:delay 1)
+  (:delay 5)
 ;;;; `uniquify' (unique names for buffers)
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
@@ -127,7 +127,7 @@ use in `display-buffer-alist'."
 ;; <https://protesilaos.com/emacs/beframe>.
 (prot-emacs-package beframe
   (:install t)
-  (:delay 1)
+  (:delay 5)
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
 
   (beframe-mode 1)
