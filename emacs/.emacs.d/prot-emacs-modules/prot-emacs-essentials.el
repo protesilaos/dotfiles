@@ -8,6 +8,7 @@
   ;; way.
   (require 'prot-common)
   (require 'prot-simple)
+  (require 'prot-prefix)
 
 ;;; General settings and common custom functions (prot-simple.el)
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
@@ -279,10 +280,9 @@ that point."
 (prot-emacs-package goto-last-change
   (:install t)
   (:delay 5)
-  (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
-  (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
-
   (with-eval-after-load 'prot-prefix
+    (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
+    (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
     (transient-append-suffix 'prot-prefix '(0 -1 -1)
       '("z" "goto-last-change" goto-last-change))))
 
@@ -290,7 +290,7 @@ that point."
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (prot-emacs-package tmr
   (:install t)
-  (:delay 5)
+  (:delay 15)
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
         tmr-notification-urgency 'normal
         tmr-description-list 'tmr-description-history)
@@ -309,7 +309,7 @@ that point."
 ;;; Pass interface (password-store)
 (prot-emacs-package password-store
   (:install t)
-  (:delay 5)
+  (:delay 15)
   (setq password-store-time-before-clipboard-restore 30)
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
@@ -319,7 +319,7 @@ that point."
 
 ;;; Shell (M-x shell)
 (prot-emacs-package shell
-  (:delay 5)
+  (:delay 15)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t)
   (setq shell-input-autoexpand 'input)
