@@ -1,7 +1,42 @@
-;;; Org-mode (personal information manager)
+(prot-emacs-configure
+  (:delay 10)
+;;; Calendar
+  (setq calendar-mark-diary-entries-flag nil)
+  (setq calendar-mark-holidays-flag t)
+  (setq calendar-mode-line-format nil)
+  (setq calendar-time-display-form
+        '( 24-hours ":" minutes
+           (when time-zone (format "(%s)" time-zone))))
+  (setq calendar-week-start-day 1)      ; Monday
+  (setq calendar-date-style 'iso)
+  (setq calendar-date-display-form calendar-iso-date-display-form)
+  (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-(prot-emacs-package org
-  (:delay 5)
+  ;; (require 'solar)
+  ;; (setq calendar-latitude 35.17         ; Not my actual coordinates
+  ;;       calendar-longitude 33.36)
+
+  ;; (require 'cal-dst)
+  (setq calendar-standard-time-zone-name "+0200")
+  (setq calendar-daylight-time-zone-name "+0300")
+
+;;; Appt (appointment reminders which also integrate with Org agenda)
+  (setq appt-display-diary nil
+        appt-display-format nil
+        appt-display-mode-line t
+        appt-display-interval 3
+        appt-audible nil ; TODO 2023-01-25: t does nothing because I disable `ring-bell-function'?
+        appt-warning-time-regexp "appt \\([0-9]+\\)" ; This is for the diary
+        appt-message-warning-time 6)
+
+  (with-eval-after-load 'org-agenda
+    (appt-activate 1))
+
+;;; Org-mode (personal information manager)
+  ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
+  ;; otherwise we have to use the Custom UI.  No thanks!
+  (setq org-export-backends '(html texinfo md))
+
   (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
 ;;;; general settings
@@ -172,7 +207,7 @@
 
 ;;;; agenda
 ;;;;; Basic agenda setup
-  (setq org-default-notes-file (thread-last org-directory (expand-file-name "notes.org")))
+  (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
   (setq org-agenda-files `(,org-directory))
   (setq org-agenda-span 'week)
   (setq org-agenda-start-on-weekday 1)  ; Monday
@@ -228,7 +263,7 @@
   ;; I do not want the diary, but there is no way to disable it
   ;; altogether.  This creates a diary file in the /tmp directory.
   (setq diary-file (make-temp-file "emacs-diary-"))
-  (setq org-agenda-diary-file 'diary-file)
+  (setq org-agenda-diary-file 'diary-file) ; TODO 2023-05-20: review Org diary substitute
 
 ;;;;; Agenda follow mode
   (setq org-agenda-start-with-follow-mode nil)
@@ -275,9 +310,9 @@
         (concat "Now " (make-string 70 ?-)))
   (setq org-agenda-time-grid
         '((daily today require-timed)
-          (0600 0700 0800 0900 1000 1100
-                1200 1300 1400 1500 1600
-                1700 1800 1900 2000 2100)
+          ( 0500 0600 0700 0800 0900 1000
+            1100 1200 1300 1400 1500 1600
+            1700 1800 1900 2000 2100 2200)
           " ....." "-----------------"))
   (setq org-agenda-default-appointment-duration nil)
 
@@ -340,12 +375,12 @@
   (setq org-agenda-bulk-custom-functions nil)
 
 ;;;;; Agenda habits
-  (require 'org-habit)
-  (setq org-habit-graph-column 50)
-  (setq org-habit-preceding-days 9)
-  ;; Always show the habit graph, even if there are no habits for
-  ;; today.
-  (setq org-habit-show-all-today t)
+  ;; (require 'org-habit)
+  ;; (setq org-habit-graph-column 50)
+  ;; (setq org-habit-preceding-days 9)
+  ;; ;; Always show the habit graph, even if there are no habits for
+  ;; ;; today.
+  ;; (setq org-habit-show-all-today t)
 
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
@@ -363,10 +398,8 @@
   (setq org-html-htmlize-output-type nil)
   (setq org-html-head-include-default-style nil)
   (setq org-html-head-include-scripts nil)
-  (require 'ox-texinfo)
-  (require 'ox-md)
-  ;; FIXME: how to remove everything else?
-  (setq org-export-backends '(html texinfo md))
+  ;; (require 'ox-texinfo)
+  ;; (require 'ox-md)
 
 ;;;; IDs
   (setq org-id-link-to-org-use-id
@@ -396,11 +429,10 @@
     "C-M-S-<right>" nil
     "C-M-S-<left>" nil
     "C-c M-l" #'org-insert-last-stored-link
-    "C-c C-M-l" #'org-toggle-link-display))
+    "C-c C-M-l" #'org-toggle-link-display)
 
 ;;; Custom extensions (prot-org.el)
-(prot-emacs-package prot-org
-  (:delay 5)
+  (require 'prot-org)
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
@@ -432,81 +464,5 @@
                  #'prot-org-capture-coach
                  :prepend t
                  :empty-lines 1)))
-
-;;; org-modern
-(prot-emacs-package org-modern
-  (:install t)
-  (:delay 5)
-  (setq org-modern-label-border 1)
-  (setq org-modern-variable-pitch nil)
-  (setq org-modern-timestamp t)
-  (setq org-modern-table t)
-  (setq org-modern-table-vertical 1)
-  (setq org-modern-table-horizontal 0)
-  (setq org-modern-list ; I swap the defaults for + and *
-        '((?+ . "•")
-          (?- . "–")
-          (?* . "◦")))
-  ;; I don't use those in documents anyway, and if I ever do I need to
-  ;; remember what their standard looks are.
-  (setq org-modern-internal-target nil)
-  (setq org-modern-radio-target nil)
-
-  ;; NOTE 2022-03-05: The variables that are commented out are the
-  ;; defaults.
-
-  ;; (setq org-modern-star ["◉""○""◈""◇""⁕"])
-  ;; (setq org-modern-hide-stars 'leading)
-  ;; (setq org-modern-checkbox
-  ;;       '((?X . #("▢✓" 0 2 (composition ((2)))))
-  ;;         (?- . #("▢–" 0 2 (composition ((2)))))
-  ;;         (?\s . #("▢" 0 1 (composition ((1)))))))
-  ;; (setq org-modern-horizontal-rule t)
-  ;; (setq org-modern-priority t)
-  ;; (setq org-modern-todo t)
-  ;; (setq org-modern-tag t)
-  ;; (setq org-modern-block t)
-  ;; (setq org-modern-keyword t)
-  ;; (setq org-modern-statistics t)
-  ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
-
-  (add-hook 'org-mode-hook #'org-modern-mode)
-  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
-
-;;; Calendar
-(prot-emacs-package calendar
-  (:delay 5)
-  (setq calendar-mark-diary-entries-flag t)
-  (setq calendar-mark-holidays-flag t)
-  (setq calendar-mode-line-format nil)
-  (setq calendar-time-display-form
-        '(24-hours ":" minutes
-                   (when time-zone
-                     (format "(%s)" time-zone))))
-  (setq calendar-week-start-day 1)      ; Monday
-  (setq calendar-date-style 'iso)
-  (setq calendar-date-display-form calendar-iso-date-display-form)
-  (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
-
-  (require 'solar)
-  (setq calendar-latitude 35.17         ; Not my actual coordinates
-        calendar-longitude 33.36)
-
-  (require 'cal-dst)
-  (setq calendar-standard-time-zone-name "+0200")
-  (setq calendar-daylight-time-zone-name "+0300"))
-
-;;; Appt (appointment reminders which also integrate with Org agenda)
-(prot-emacs-package appt
-  (:delay 5)
-  (setopt appt-display-diary nil
-          appt-display-format nil
-          appt-display-mode-line t
-          appt-display-interval 3
-          appt-audible nil ; TODO 2023-01-25: t does nothing because I disable `ring-bell-function'?
-          appt-warning-time-regexp "appt \\([0-9]+\\)" ; This is for the diary
-          appt-message-warning-time 6)
-
-  (run-at-time 10 nil #'appt-activate 1))
 
 (provide 'prot-emacs-org)
