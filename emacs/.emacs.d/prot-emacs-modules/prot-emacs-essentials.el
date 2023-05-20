@@ -1,6 +1,14 @@
 ;;; Essential configurations
 (prot-emacs-configure
   (:delay 5)
+
+  ;; NOTE 2023-05-20: Normally those would not have to be `require'd
+  ;; as every point of entry is autoloaded.  But Emacs does not have
+  ;; an autoloads file for them, as they are not installed the usual
+  ;; way.
+  (require 'prot-common)
+  (require 'prot-simple)
+
 ;;; General settings and common custom functions (prot-simple.el)
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
   (setq help-window-select t)
