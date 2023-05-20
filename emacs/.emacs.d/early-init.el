@@ -81,10 +81,10 @@
       use-file-dialog nil
       inhibit-splash-screen t
       inhibit-startup-screen t
+      inhibit-x-resources t
       inhibit-startup-echo-area-message user-login-name ; read the docstring
-      inhibit-startup-buffer-menu t)
-
-(setq make-backup-files nil
+      inhibit-startup-buffer-menu t
+      make-backup-files nil
       backup-inhibited nil ; Not sure if needed, given `make-backup-files'
       create-lockfiles nil)
 
