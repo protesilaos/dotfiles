@@ -159,9 +159,9 @@ an alternative date format, as specified by
      ((prot-common-line-regexp-p 'empty)
       (insert (prot-comment--format-comment string)))
      ((eq beg (line-beginning-position))
-        (insert (prot-comment--format-comment string))
-        (indent-region beg (point))
-        (prot-comment--maybe-newline))
+      (insert (prot-comment--format-comment string))
+      (indent-region beg (point))
+      (prot-comment--maybe-newline))
      (t
       (comment-indent t)
       (insert (concat " " string))))))
