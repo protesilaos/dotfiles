@@ -39,10 +39,10 @@
         '((small
            :default-family "Iosevka Comfy Wide"
            :default-height 80
-           :variable-pitch-family "Iosevka Comfy Wide Duo")
+           :variable-pitch-family "Iosevka Comfy Wide Motion Duo")
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
-           :default-family "Iosevka Comfy Motion"
+           :default-family "Iosevka Comfy"
            :default-weight semilight
            :default-height 130
            :bold-weight extrabold
@@ -51,10 +51,9 @@
            :inherit medium
            :default-height 150)
           (presentation
-           :default-family "Iosevka Comfy Wide Motion"
+           :inherit medium
            :default-weight light
-           :default-height 180
-           :variable-pitch-family "Iosevka Comfy Wide Motion Duo")
+           :default-height 180)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
