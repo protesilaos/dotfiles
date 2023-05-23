@@ -133,7 +133,10 @@ use in `display-buffer-alist'."
   (beframe-mode 1)
 
   (prot-emacs-keybind global-map
-    "C-x f" #'other-frame-prefix ; override `set-fill-column'
+    ;; Override the `set-fill-column' that I have no use for.
+    "C-x f" #'other-frame-prefix
+    ;; Bind Beframe commands to a prefix key.
+    "C-c b" beframe-prefix-map
     ;; Replace the generic `buffer-menu'.  With a prefix argument, this
     ;; commands prompts for a frame.  Call the `buffer-menu' via M-x if
     ;; you absolutely need the global list of buffers.
