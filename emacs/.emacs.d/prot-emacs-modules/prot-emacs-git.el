@@ -16,8 +16,7 @@
             (project-find-dir "Find directory")
             (project-dired "Root dired")
             (project-vc-dir "VC-Dir")
-            (project-shell "Shell")
-            (project-eshell "Eshell")))
+            (project-shell "Shell")))
   (setq project-vc-extra-root-markers '(".project"))
 
   (prot-emacs-keybind global-map
