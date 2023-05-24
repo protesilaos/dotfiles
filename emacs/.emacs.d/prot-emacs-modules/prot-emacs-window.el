@@ -7,6 +7,8 @@
   (setq uniquify-after-kill-buffer-p t)
 
 ;;;; `window', `display-buffer-alist', and related
+  (require 'prot-window)
+
 ;; NOTE 2023-03-17: Remember that I am using development versions of
 ;; Emacs.  Some of my `display-buffer-alist' contents are for Emacs
 ;; 29+.
@@ -50,6 +52,7 @@
           ((derived-mode . log-view-mode)
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.3)
+           (dedicated . t)
            (preserve-size . (t . t)))
           ((derived-mode . reb-mode) ; M-x re-builder
            (display-buffer-reuse-mode-window display-buffer-below-selected)
@@ -58,12 +61,14 @@
            (preserve-size . (t . t)))
           ((or . ((derived-mode . occur-mode)
                   (derived-mode . Buffer-menu-mode)
-                  "\\*\\(|Buffer List\\|Occur\\).*"))
+                  "\\*\\(|Buffer List\\|Occur\\).*"
+                  prot-window-shell-or-term-p))
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . fit-window-to-buffer)
-           (body-function . (lambda (buffer) (select-window buffer))))
+           (dedicated . t)
+           (body-function . prot-window-select-fit-size))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (dedicated . t)
            (window-height . fit-window-to-buffer))
           ;; NOTE 2022-09-10: The following is for `ispell-word', though
           ;; it only works because I override `ispell-display-buffer'
@@ -78,23 +83,10 @@
           ;; `display-buffer-alist'.  It works for new frames and for
           ;; `display-buffer-below-selected', but otherwise is
           ;; unpredictable.  See `Man-notify-method'.
-
-          ;; ((or . ((derived-mode . Man-mode)
-          ;;         (derived-mode . woman-mode)
-          ;;         "\\*\\(Man\\|woman\\).*"))
-          ;;  (display-buffer-same-window))
-          (prot/display-buffer-shell-or-term-p ; see definition below
-           (display-buffer-reuse-window display-buffer-same-window))))
-
-  (defun prot/display-buffer-shell-or-term-p (buffer &rest _)
-    "Check if BUFFER is a shell or terminal.
-This is a predicate function for `buffer-match-p', intended for
-use in `display-buffer-alist'."
-    (when (string-match-p "\\*.*\\(e?shell\\|v?term\\).*" (buffer-name (get-buffer buffer)))
-      (with-current-buffer buffer
-        ;; REVIEW 2022-07-14: Is this robust?
-        (and (not (derived-mode-p 'message-mode 'text-mode))
-             (derived-mode-p 'eshell-mode 'shell-mode 'comint-mode 'fundamental-mode)))))
+          ((or . ((derived-mode . Man-mode)
+                  (derived-mode . woman-mode)
+                  "\\*\\(Man\\|woman\\).*"))
+           (display-buffer-same-window))))
 
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
@@ -154,7 +146,7 @@ use in `display-buffer-alist'."
 ;;; Directional window motions (windmove)
 (prot-emacs-package windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
-  
+
   (prot-emacs-keybind global-map
     ;; Those override some commands that are already available with
     ;; C-M-u, C-M-f, C-M-b.
