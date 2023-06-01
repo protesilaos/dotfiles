@@ -42,16 +42,13 @@
   (setq denote-sort-keywords t)
   (setq denote-file-type 'text) ; Org is the default, set others here like I do
   (setq denote-excluded-directories-regexp nil)
-
-  ;; We allow multi-word keywords by default.  The author's personal
-  ;; preference is for single-word keywords for a more disciplined
-  ;; workflow.
   (setq denote-allow-multi-word-keywords nil)
-
   (setq denote-date-format nil) ; read its doc string
 
   ;; By default, we fontify backlinks in their bespoke buffer.
   (setq denote-link-fontify-backlinks t)
+
+  (denote-rename-buffer-mode 1)
 
   ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
   ;; advanced.
@@ -77,11 +74,23 @@
   ;; show in this manual.  We define it here and add it to a key binding
   ;; below.  The manual: <https://protesilaos.com/emacs/denote>.
   (defun prot/denote-journal ()
-    "Create an entry tagged 'journal', while prompting for a title."
+    "Create an entry tagged 'journal' with the date as its title.
+If a journal for the current day exists, visit it.  If multiple
+entries exist, prompt with completion for a choice between them.
+Else create a new file."
     (interactive)
-    (denote
-     (denote--title-prompt)
-     '("journal")))
+    (let* ((today (format-time-string "%A %e %B %Y"))
+           (string (denote-sluggify today))
+           (files (denote-directory-files-matching-regexp string)))
+      (cond
+       ((> (length files) 1)
+        (find-file (completing-read "Select file: " files nil :require-match)))
+       (files
+        (find-file (car files)))
+       (t
+        (denote
+         today
+         '("journal"))))))
 
   ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
