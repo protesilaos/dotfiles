@@ -802,13 +802,14 @@ Do not try to make a new directory or anything fancy."
 
 (defun prot-simple--buffer-major-mode-prompt ()
   "Prompt of `prot-simple-buffers-major-mode'."
-  (let ((major major-mode)
-        (read-buffer-function nil))
+  (let ((read-buffer-function nil))
     (read-buffer
-     (format "Buffer for %s: " major)
-     nil t
+     (format "Buffer for %s: " major-mode)
+     nil
+     :require-match
      (lambda (pair) ; pair is (name-string . buffer-object)
-       (with-current-buffer (cdr pair) (derived-mode-p major))))))
+       (with-current-buffer (cdr pair)
+         (derived-mode-p major-mode))))))
 
 ;;;###autoload
 (defun prot-simple-buffers-major-mode ()
