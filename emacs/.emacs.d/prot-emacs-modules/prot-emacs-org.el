@@ -463,6 +463,16 @@
                  (file "coach.org")
                  #'prot-org-capture-coach
                  :prepend t
+                 :empty-lines 1))
+
+  (add-to-list 'org-capture-templates
+               '("P" "Private service clocked" entry
+                 (file+headline "coach.org" "Clocked services")
+                 #'prot-org-capture-coach-clock
+                 :prepend t
+                 :clock-in t
+                 :clock-keep t
+                 :immediate-finish t
                  :empty-lines 1)))
 
 (provide 'prot-emacs-org)

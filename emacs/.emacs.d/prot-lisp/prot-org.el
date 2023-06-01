@@ -49,7 +49,7 @@
 (declare-function notmuch-show-get-header "notmuch-show")
 
 (defun prot-org--capture-coach-person-message-from ()
-  "Retun default value for `prot-org--capture-coach-person-prompt'."
+  "Return default value for `prot-org--capture-coach-person-prompt'."
   (when-let ((from (cond
                     ((derived-mode-p 'message-mode)
                      (message-fetch-field "From"))
@@ -57,11 +57,30 @@
                      (notmuch-show-get-header :From)))))
     (string-clean-whitespace (car (split-string from "<")))))
 
+(defun prot-org--capture-coach-person-message-from-and-subject ()
+  "Return default value for `prot-org--capture-coach-person-prompt'."
+  (cond
+   ((derived-mode-p 'message-mode)
+    (message-fetch-field "Subject"))
+   ((derived-mode-p 'notmuch-show-mode)
+    (notmuch-show-get-header :Subject))))
+
 (defun prot-org--capture-coach-person-prompt ()
   "Prompt for person for use in `prot-org-capture-coach'."
-  (completing-read "Person to coach: " prot-org--capture-coach-person-history
-                   nil nil nil 'prot-org--capture-coach-person-history
+  (completing-read "Person to coach: "
+                   prot-org--capture-coach-person-history
+                   nil nil nil
+                   'prot-org--capture-coach-person-history
                    (prot-org--capture-coach-person-message-from)))
+
+(defvar prot-org--capture-coach-description-history nil)
+
+(defun prot-org--capture-coach-description-prompt ()
+  "Prompt for description in `prot-org-capture-coach'."
+  (read-string "Description: "
+               nil
+               'prot-org--capture-coach-description-history
+               (prot-org--capture-coach-person-message-from-and-subject)))
 
 (defun prot-org--capture-coach-date-prompt-range ()
   "Prompt for Org date and return it as a +1h range.
@@ -78,14 +97,27 @@ For use in `prot-org-capture-coach'."
              (org-encode-time (org-parse-time-string date))))))
 
 (defun prot-org-capture-coach ()
-  "Capture template for my coaching sessions."
-  (concat "* COACH " (prot-org--capture-coach-person-prompt) " " (read-string "Description: ") " %^g\n"
+  "Contents of an Org capture template for my coaching lessons."
+  (concat "* COACH " (prot-org--capture-coach-person-prompt) " "
+          (prot-org--capture-coach-description-prompt) " :lesson:\n"
           ;; See comment above
           ;; (prot-org--capture-coach-date-prompt-range)
           "DEADLINE: %^T\n"
           ":PROPERTIES:\n"
           ":CAPTURED: %U\n"
           ":APPT_WARNTIME: 20\n"
+          ":END:\n\n"
+          "%a%?"))
+
+(defun prot-org-capture-coach-clock ()
+  "Contents of an Org capture for my clocked coaching services."
+  (concat "* COACH " (prot-org--capture-coach-person-prompt) " "
+          (prot-org--capture-coach-description-prompt) " :service:\n"
+          ;; See comment above
+          ;; (prot-org--capture-coach-date-prompt-range)
+          "DEADLINE: %T\n"
+          ":PROPERTIES:\n"
+          ":CAPTURED: %U\n"
           ":END:\n\n"
           "%a%?"))
 
