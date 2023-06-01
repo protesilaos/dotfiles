@@ -115,7 +115,6 @@ For use in `prot-org-capture-coach'."
           (prot-org--capture-coach-description-prompt) " :service:\n"
           ;; See comment above
           ;; (prot-org--capture-coach-date-prompt-range)
-          "DEADLINE: %T\n"
           ":PROPERTIES:\n"
           ":CAPTURED: %U\n"
           ":END:\n\n"
