@@ -38,7 +38,7 @@
         ("_ underscores"         . (95 95))))    ; _ _
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
-  (setq prot-simple-scratch-buffer-default-mode 'text-mode)
+  (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
 
   ;; General commands
   (prot-emacs-keybind global-map
