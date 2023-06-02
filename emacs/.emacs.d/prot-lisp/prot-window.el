@@ -53,7 +53,7 @@ number (integer or floating point) or a function.")
      ((numberp value)
       value)
      (t
-      (error "The value of `%s' is neither a number nor a function")))))
+      (error "The value of `%s' is neither a number nor a function" key)))))
 
 (defun prot-window-select-fit-size (buffer &rest _)
   "Select BUFFER window and resize it.
