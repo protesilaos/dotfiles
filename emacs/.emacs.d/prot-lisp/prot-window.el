@@ -77,5 +77,17 @@ use in `display-buffer-alist'."
       (and (not (derived-mode-p 'message-mode 'text-mode))
            (derived-mode-p 'eshell-mode 'shell-mode 'comint-mode 'fundamental-mode)))))
 
+(defmacro prot-window-with-full-frame (fn)
+  "Define function to call FN interactively with `display-buffer-full-frame' bound."
+  `(defun ,(intern (format "prot-window-%s" fn)) ()
+     ,(format "Call %s in accordance with `prot-window-with-full-frame'." fn)
+     (interactive)
+     (let ((display-buffer-alist '(((prot-window-shell-or-term-p)
+                                    (display-buffer-full-frame)))))
+       (call-interactively #',fn))))
+
+(prot-window-with-full-frame shell)
+(prot-window-with-full-frame eshell)
+
 (provide 'prot-window)
 ;;; prot-window.el ends here
