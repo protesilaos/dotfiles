@@ -34,7 +34,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'subr-x))
+  (require 'subr-x)
+  (require 'cl-lib))
 
 (defgroup prot-common ()
   "Auxiliary functions for my dotemacs."
@@ -302,6 +303,31 @@ completion (per `completing-read')."
      (insert-file-contents file)
      (buffer-substring-no-properties (point-min) (point-max)))
    "\n" :omit-nulls "[\s\f\t\n\r\v]+"))
+
+;; NOTE 2023-06-02: The `prot-common-wcag-formula' and
+;; `prot-common-contrast' are taken verbatim from my `modus-themes'
+;; and renamed to have the prefix `prot-common-' instead of
+;; `modus-themes-'.  This is all my code, of course, but I do it this
+;; way to ensure that this file is self-contained in case someone
+;; copies it.
+
+;; This is the WCAG formula: <https://www.w3.org/TR/WCAG20-TECHS/G18.html>.
+(defun prot-common-wcag-formula (hex)
+  "Get WCAG value of color value HEX.
+The value is defined in hexadecimal RGB notation, such #123456."
+  (cl-loop for k in '(0.2126 0.7152 0.0722)
+           for x in (color-name-to-rgb hex)
+           sum (* k (if (<= x 0.03928)
+                        (/ x 12.92)
+                      (expt (/ (+ x 0.055) 1.055) 2.4)))))
+
+;;;###autoload
+(defun prot-common-contrast (c1 c2)
+  "Measure WCAG contrast ratio between C1 and C2.
+C1 and C2 are color values written in hexadecimal RGB."
+  (let ((ct (/ (+ (prot-common-wcag-formula c1) 0.05)
+               (+ (prot-common-wcag-formula c2) 0.05))))
+    (max ct (/ ct))))
 
 (provide 'prot-common)
 ;;; prot-common.el ends here
