@@ -117,7 +117,8 @@ MODE use that major mode instead."
          (buf (format "*%s scratch*" major)))
     (with-current-buffer (pop-to-buffer buf)
       (funcall major)
-      (if (prot-common-empty-buffer-p)
+      (if (and (prot-common-empty-buffer-p)
+               comment-start)
           ;; We could use `save-restriction' for narrowed buffers, but
           ;; it is overkill.
           (progn
