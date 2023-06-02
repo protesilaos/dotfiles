@@ -853,9 +853,8 @@ counter-clockwise."
 
 ;;;; Commands of a general nature
 
-(declare-function color-rgb-to-hex "color" (red green blue &optional digits-per-component))
-(declare-function color-name-to-rgb "color" (color &optional frame))
-(declare-function modus-themes-contrast "modus-themes" (c1 c2))
+(autoload 'color-rgb-to-hex "color")
+(autoload 'color-name-to-rgb "color")
 
 (defun prot-simple-accessible-colors (variant)
   "Return list of accessible `defined-colors'.
@@ -868,7 +867,7 @@ VARIANT is either `dark' or `light'."
               (g (nth 1 rgb))
               (b (nth 2 rgb))
               (hex (color-rgb-to-hex r g b 2)))
-         (when (>= (modus-themes-contrast variant-color hex) 4.5)
+         (when (>= (prot-common-contrast variant-color hex) 4.5)
            c)))
      (defined-colors))))
 
