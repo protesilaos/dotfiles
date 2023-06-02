@@ -851,6 +851,7 @@ counter-clockwise."
     (dotimes (i (- wincount 1))
       (window-swap-states (elt winlist i) (elt winlist (+ i 1))))))
 
+;;;; Commands of a general nature
 
 (declare-function color-rgb-to-hex "color" (red green blue &optional digits-per-component))
 (declare-function color-name-to-rgb "color" (color &optional frame))
@@ -871,10 +872,20 @@ VARIANT is either `dark' or `light'."
                         c)))
                   (defined-colors)))))
 
+(defun prot-simple--list-accessible-colors-prompt ()
+  "Use `read-multiple-choice' to return `dark' or `light' variant."
+  (intern
+   (cadr
+    (read-multiple-choice
+     "Variant"
+     '((?d "dark" "Load a random dark theme")
+       (?l "light" "Load a random light theme"))
+     "Limit to the dark or light subset of the Ef themes collection."))))
+
 (defun prot-simple-list-accessible-colors (variant)
   "Return buffer with list of accessible `defined-colors'.
 VARIANT is either `dark' or `light'."
-  (interactive (list (intern (completing-read "Choose VARIANT: " '(dark light) nil t))))
+  (interactive (list (prot-simple--list-accessible-colors-prompt)))
   (list-colors-display (prot-simple-accessible-colors variant)))
 
 (provide 'prot-simple)
