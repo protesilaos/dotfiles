@@ -85,7 +85,7 @@ Also see `prot-simple-focus-help-buffers'."
   :type '(repeat symbol)
   :group 'prot-simple)
 
-(defcustom prot-simple-scratch-buffer-default-mode 'markdown-mode
+(defcustom prot-simple-scratch-buffer-default-mode 'text-mode
   "Default major mode for `prot-simple-scratch-buffer'."
   :type 'symbol
   :group 'prot-simple)
