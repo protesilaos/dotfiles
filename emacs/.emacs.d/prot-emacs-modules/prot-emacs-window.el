@@ -140,11 +140,15 @@
 (prot-emacs-package spacious-padding
   (:install "https://git.sr.ht/~protesilaos/spacious-padding")
   (:delay 5)
+
   (setq spacious-padding-widths
   '( :internal-border-width 25
      :right-divider-width 50
      :scroll-bar-width 8))
-  (spacious-padding-mode 1))
+
+  (spacious-padding-mode 1)
+
+  (define-key global-map (kbd "<f8>") #'spacious-padding-mode))
 
 ;;; Window history (winner-mode)
 (prot-emacs-package winner
