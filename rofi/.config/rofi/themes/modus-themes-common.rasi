@@ -11,8 +11,9 @@ window {
     border:           5px;
     border-color:     @bg-alt;
     padding:          10px;
-    width:            50%;
-    max-height:       25%;
+    width:            25%;
+    height:           15%;
+    /* max-height:       25%; */
 }
 
 mainbox {

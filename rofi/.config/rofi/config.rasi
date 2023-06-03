@@ -13,7 +13,7 @@ configuration {
 	drun-match-fields: "name,exec";
 	case-sensitive: true;
 	cycle: true;
-	sidebar-mode: true;
+	sidebar-mode: false;
 /*	eh: 1;*/
 	auto-select: false;
 	combi-modi: "window,drun";
