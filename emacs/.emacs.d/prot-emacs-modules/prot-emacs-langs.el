@@ -111,8 +111,9 @@
 
   (global-jinx-mode 1)
 
+  (define-key ctl-x-x-map "j" #'jinx-mode)) ; C-x x j
+
   (prot-emacs-keybind global-map
-    "<f8>" #'jinx-mode
     "M-$" #'jinx-correct
     "C-M-$" #'jinx-languages))
 
