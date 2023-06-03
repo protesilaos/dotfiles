@@ -134,6 +134,18 @@
     ;; you absolutely need the global list of buffers.
     "C-x C-b" #'beframe-buffer-menu))
 
+;;; Increased padding in windows/frames
+;; Yet another one of my packages:
+;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
+(prot-emacs-package spacious-padding
+  (:install "https://git.sr.ht/~protesilaos/spacious-padding")
+  (:delay 5)
+  (setq spacious-padding-widths
+  '( :internal-border-width 25
+     :right-divider-width 50
+     :scroll-bar-width 8))
+  (spacious-padding-mode 1))
+
 ;;; Window history (winner-mode)
 (prot-emacs-package winner
   (:delay 5)
