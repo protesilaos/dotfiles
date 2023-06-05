@@ -688,16 +688,15 @@ file."
     (modus-themes-exporter--export-prompt
      (mapcar #'car modus-themes-exporter-templates-alist))
     current-prefix-arg))
-  (let* ((modus-themes '(modus-operandi modus-vivendi))
-         (current-theme (modus-themes-exporter--current-theme))
+  (let* ((current-theme (modus-themes-exporter--current-theme))
          (fn (funcall (cdr (assoc template modus-themes-exporter-templates-alist))))
          (path (when file
                  (if (stringp file)
                      file
                    (expand-file-name
                     (read-file-name "Select file: " nil default-directory))))))
-    (unless (member current-theme modus-themes)
-      (error "`%s' is not a member of %s" current-theme modus-themes))
+    (unless (string-match-p "^modus-\\(operandi\\|vivendi\\).*" (symbol-name current-theme))
+      (error "`%s' is not a modus theme" current-theme))
     (cond
      ((when (and path (file-writable-p path) (file-regular-p path))
         (with-temp-buffer
