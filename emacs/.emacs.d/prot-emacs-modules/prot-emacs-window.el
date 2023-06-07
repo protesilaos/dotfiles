@@ -142,9 +142,9 @@
   (:delay 5)
 
   (setq spacious-padding-widths
-  '( :internal-border-width 25
-     :right-divider-width 50
-     :scroll-bar-width 8))
+        '( :internal-border-width 25
+           :right-divider-width 30
+           :scroll-bar-width 8))
 
   (spacious-padding-mode 1)
 
