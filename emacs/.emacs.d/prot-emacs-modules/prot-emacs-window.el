@@ -138,7 +138,7 @@
 ;; Yet another one of my packages:
 ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
 (prot-emacs-package spacious-padding
-  (:install "https://git.sr.ht/~protesilaos/spacious-padding")
+  (:install t)
   (:delay 5)
 
   (setq spacious-padding-widths
