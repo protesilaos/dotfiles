@@ -130,6 +130,7 @@ before all other modules of my setup."
     modus-themes
     notmuch-indicator
     pulsar
+    spacious-padding
     standard-themes
     substitute
     sxhkdrc-mode
