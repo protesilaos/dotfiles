@@ -39,7 +39,13 @@
   ;; (customize-set-variable 'lin-face 'lin-green)
   ;;
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
-  (setopt lin-face 'lin-cyan)
+  ;;
+  ;; I still prefer `setq' for consistency.
+  (setq lin-face
+        (if (eq prot-emacs-load-theme-family 'modus)
+            'lin-cyan
+          'hl-line))
+
   (setq lin-mode-hooks
         '(bongo-mode-hook
           dired-mode-hook
@@ -55,7 +61,9 @@
           notmuch-tree-mode-hook
           occur-mode-hook
           org-agenda-mode-hook
-          tabulated-list-mode-hook))
+          tabulated-list-mode-hook
+          vc-dir-mode-hook))
+
   (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 
 ;;; Rainbow mode for colour previewing (rainbow-mode.el)
