@@ -61,7 +61,7 @@
            (preserve-size . (t . t)))
           ((or . ((derived-mode . occur-mode)
                   (derived-mode . Buffer-menu-mode)
-                  "\\*\\(|Buffer List\\|Occur\\).*"
+                  "\\*\\(|Buffer List\\|Occur\\|ert\\).*"
                   prot-window-shell-or-term-p))
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (dedicated . t)
