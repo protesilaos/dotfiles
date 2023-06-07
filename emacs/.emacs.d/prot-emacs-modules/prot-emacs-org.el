@@ -417,6 +417,9 @@
     "C-c c" #'org-capture
     "C-c l" #'org-store-link
     "C-c o" #'org-open-at-point-global)
+
+  (require 'org)
+
   (prot-emacs-keybind org-mode-map
     ;; I don't like that Org binds one zillion keys, so if I want one
     ;; for something more important, I disable it from here.
