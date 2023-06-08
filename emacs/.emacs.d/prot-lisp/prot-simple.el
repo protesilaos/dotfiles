@@ -805,15 +805,18 @@ Do not try to make a new directory or anything fancy."
     (set-visited-file-name name t t)))
 
 (defun prot-simple--buffer-major-mode-prompt ()
-  "Prompt of `prot-simple-buffers-major-mode'."
-  (let ((read-buffer-function nil))
+  "Prompt of `prot-simple-buffers-major-mode'.
+Limit list of buffers to those matching the current
+`major-mode' or its derivatives."
+  (let ((read-buffer-function nil)
+        (current-major-mode major-mode))
     (read-buffer
      (format "Buffer for %s: " major-mode)
      nil
      :require-match
      (lambda (pair) ; pair is (name-string . buffer-object)
        (with-current-buffer (cdr pair)
-         (derived-mode-p major-mode))))))
+         (derived-mode-p current-major-mode))))))
 
 ;;;###autoload
 (defun prot-simple-buffers-major-mode ()
