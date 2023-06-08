@@ -98,11 +98,14 @@ Also see `prot-simple-focus-help-buffers'."
 
 (defun prot-simple--scratch-list-modes ()
   "List known major modes."
-  (cl-loop for sym the symbols of obarray
-           when (and (functionp sym)
-                     (or (provided-mode-derived-p sym 'text-mode)
-                         (provided-mode-derived-p sym 'prog-mode)))
-           collect sym))
+  (let (symbols)
+    (mapatoms
+     (lambda (symbol)
+       (when (and (functionp symbol)
+                  (or (provided-mode-derived-p symbol 'text-mode)
+                      (provided-mode-derived-p symbol 'prog-mode)))
+         (push symbol symbols))))
+    symbols))
 
 (defun prot-simple--scratch-buffer-setup (region &optional mode)
   "Add contents to `scratch' buffer and name it accordingly.
