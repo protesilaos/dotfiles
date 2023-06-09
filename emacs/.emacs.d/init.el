@@ -398,4 +398,4 @@ that is expanded with the `prot-emacs-package' macro."
 ;; any of my other configurations.
 (load (locate-user-emacs-file "prot-emacs-post-custom.el") :no-error :no-message)
 
-;; init.el ends here
+;;; init.el ends here
