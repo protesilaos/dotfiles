@@ -55,13 +55,13 @@ number (integer or floating point) or a function.")
      (t
       (error "The value of `%s' is neither a number nor a function" key)))))
 
-(defun prot-window-select-fit-size (buffer &rest _)
-  "Select BUFFER window and resize it.
+(defun prot-window-select-fit-size (window &rest _)
+  "Select WINDOW and resize it.
 The resize pertains to the maximum and minimum values for height
 and width, per `prot-window-window-sizes'."
-  (select-window buffer)
+  (select-window window)
   (fit-window-to-buffer
-   buffer
+   window
    (prot-window--get-window-size :max-height)
    (prot-window--get-window-size :min-height)
    (prot-window--get-window-size :max-width)
