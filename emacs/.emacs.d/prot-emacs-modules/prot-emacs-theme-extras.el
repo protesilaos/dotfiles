@@ -96,9 +96,20 @@
           (bar
            :cursor-type (bar . 2)
            :blink-cursor-interval 0.5)
+          (bar-no-other-window
+           :inherit bar
+           :cursor-in-non-selected-windows nil)
           (underscore
-           :cursor-type (hbar . 2)
+           :cursor-type (hbar . 3)
            :blink-cursor-blinks 50)
+          (underscore-thin-other-window
+           :inherit underscore
+           :cursor-in-non-selected-windows (hbar . 1))
+          (underscore-thick
+           :cursor-type (hbar . 8)
+           :blink-cursor-interval 0.4
+           :blink-cursor-blinks 50
+           :cursor-in-non-selected-windows (hbar . 3))
           (t ; the default values
            :cursor-type box
            :cursor-in-non-selected-windows hollow
