@@ -61,12 +61,12 @@
            (preserve-size . (t . t)))
           ((or . ((derived-mode . occur-mode)
                   (derived-mode . Buffer-menu-mode)
-                  "\\*\\(|Buffer List\\|Occur\\|ert\\).*"
+                  "\\*\\(|Buffer List\\|Occur\\).*"
                   prot-window-shell-or-term-p))
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (dedicated . t)
            (body-function . prot-window-select-fit-size))
-          ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
+          ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\|Embark Collect\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (dedicated . t)
            (window-height . fit-window-to-buffer))
@@ -93,8 +93,8 @@
   (setq window-sides-vertical nil)
   (setq switch-to-buffer-in-dedicated-window 'pop)
 
-  (add-hook 'help-mode-hook #'visual-line-mode)
-  (add-hook 'custom-mode-hook #'visual-line-mode)
+  (dolist (hook '(epa-info-mode-hook help-mode-hook custom-mode-hook))
+    (add-hook hook #'visual-line-mode))
 
   ;; NOTE 2022-09-17: Also see `prot-simple-swap-window-buffers'.
   (prot-emacs-keybind global-map
