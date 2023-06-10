@@ -9,8 +9,8 @@
   (setq list-matching-lines-jump-to-current-line nil) ; for `occur'
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
-  (setq lazy-count-prefix-format nil)
-  (setq lazy-count-suffix-format " (%s/%s)")
+  (setq lazy-count-prefix-format "(%s/%s) ")
+  (setq lazy-count-suffix-format nil)
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
   ;; These variables are from Emacs 28
