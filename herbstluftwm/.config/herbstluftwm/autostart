@@ -51,7 +51,11 @@ _hc mousebind Mod4-Button3 resize
 # unlock, just to be sure
 _hc unlock
 
-# NOTE that tags must be defined before the monitors.
+# NOTE that tags must be defined before the monitors, while the
+# default_frame_layout has to be set before the tags as it affects all
+# new frames.
+
+_hc set default_frame_layout max
 
 tag_names=( {0..9} )
 
@@ -83,7 +87,6 @@ _hc set always_show_frame on
 _hc set frame_bg_transparent off
 _hc set frame_normal_opacity 25
 _hc set frame_active_opacity 100
-_hc set default_frame_layout vertical
 
 _hc attr theme.inner_width 1
 _hc attr theme.border_width 3
