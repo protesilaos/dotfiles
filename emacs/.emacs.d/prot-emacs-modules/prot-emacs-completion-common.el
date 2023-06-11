@@ -413,9 +413,10 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (prot-emacs-keybind embark-region-map
     "a" #'align-regexp
-    "d" #'delete-duplicate-lines
+    "D" #'delete-duplicate-lines
     "f" #'flush-lines
     "i" #'epa-import-keys-region
+    "d" #'epa-decrypt-armor-in-region
     "r" #'repunctuate-sentences
     "s" #'sort-lines
     "u" #'untabify)
