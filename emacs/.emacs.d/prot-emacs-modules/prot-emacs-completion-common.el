@@ -345,11 +345,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (seq-do
      (lambda (keymap)
        (set keymap (make-sparse-keymap)))
-     prot/embark-org-keymaps)
-
-    ;; embark-org.el adds to the `embark-region-map', which I do not
-    ;; want to.
-    (define-key embark-region-map (kbd "M") #'embark-org-copy-as-markdown))
+     prot/embark-org-keymaps))
 
   (prot-emacs-keybind embark-general-map
     "i" #'embark-insert
