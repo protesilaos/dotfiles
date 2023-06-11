@@ -79,6 +79,14 @@ before all other modules of my setup."
 (setq frame-title-format '("%b"))
 (setq ring-bell-function 'ignore)
 (setq use-short-answers t)
+(setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
+(setq native-compile-prune-cache t) ; Emacs 29
+(setq make-backup-files nil)
+(setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
+(setq create-lockfiles nil)
+
+;; Disable the damn thing by making it disposable.
+(setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; In 'M-x find-library RET greek' we also find the greek-postfix style,
 ;; though I don't need it right now.
@@ -100,6 +108,11 @@ before all other modules of my setup."
   (add-to-list 'load-path (locate-user-emacs-file path)))
 
 (require 'package)
+
+(setq package-quickstart t)
+
+(package-initialize)
+
 (add-hook 'package-menu-mode-hook #'hl-line-mode)
 
 ;; Also read: <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>

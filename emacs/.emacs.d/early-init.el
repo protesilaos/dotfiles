@@ -24,18 +24,49 @@
 
 ;;; Commentary:
 
-;; Prior to Emacs 27, the `init.el' was supposed to handle the
-;; initialisation of the package manager, by means of calling
-;; `package-initialize'.  Starting with Emacs 27, the default
-;; behaviour is to start the package manager before loading the init
-;; file.
-;;
 ;; See my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
 
 ;;; Code:
 
-;; Disable the damn thing by making it disposable.
-(setq custom-file (make-temp-file "emacs-custom-"))
+(defvar prot-emacs-tiling-window-manager-regexp
+  "\\(?:\\(?:bsp\\|herbstluft\\)wm\\)"
+  "Regular expression to match desired tiling window managers.
+See definition of `prot-emacs-with-desktop-session'.")
+
+(defmacro prot-emacs-with-desktop-session (&rest body)
+  "Expand BODY if desktop session is not a tiling window manager.
+See `prot-emacs-tiling-window-manager-regexp' for what
+constitutes a matching tiling window manager."
+  (declare (indent 0))
+  `(when-let* ((session (getenv "DESKTOP_SESSION"))
+               ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
+     ,@body))
+
+(prot-emacs-with-desktop-session
+  ;; (when scroll-bar-mode
+  ;;   (setq default-frame-scroll-bars 'right)
+  ;;   (set-scroll-bar-mode 'right)
+  ;; 
+  ;;   (defun prot-emacs-no-minibuffer-scroll-bar (frame)
+  ;;     "Remove the minibuffer scroll bars from FRAME."
+  ;;     (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
+  ;;   
+  ;;   (add-hook 'after-make-frame-functions 'prot-emacs-no-minibuffer-scroll-bar))
+
+  (dolist (var '(default-frame-alist initial-frame-alist))
+    (add-to-list var '(width . (text-pixels . 1200)))
+    (add-to-list var '(height . (text-pixels . 900)))
+    (add-to-list var '(scroll-bar-width  . 12))))
+
+(setq frame-resize-pixelwise t
+      frame-inhibit-implied-resize t
+      use-dialog-box t ; only for mouse events, which I seldom use
+      use-file-dialog nil
+      inhibit-splash-screen t
+      inhibit-startup-screen t
+      inhibit-x-resources t
+      inhibit-startup-echo-area-message user-login-name ; read the docstring
+      inhibit-startup-buffer-menu t)
 
 ;; I do not use those graphical elements by default, but I do enable
 ;; them from time-to-time for testing purposes or to demonstrate
@@ -43,50 +74,6 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-
-;; ;; NOTE 2023-04-12 10:53 +0300: I tried those for a while.  They are
-;; ;; fine for those who use scroll bars.
-;; (setq default-frame-scroll-bars 'right)
-;; (set-scroll-bar-mode 'right)
-
-(defun prot-emacs-no-minibuffer-scroll-bar (frame)
-  "Remove the minibuffer scroll bars from FRAME."
-  (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
-
-(add-hook 'after-make-frame-functions #'prot-emacs-no-minibuffer-scroll-bar)
-
-;; (dolist (var '(default-frame-alist initial-frame-alist))
-;;   (add-to-list var '(width . (text-pixels . 1200)))
-;;   (add-to-list var '(height . (text-pixels . 900)))
-;;   (add-to-list var '(right-divider-width . 20))
-;;   (add-to-list var '(internal-border-width . 20))
-;;   (add-to-list var '(child-frame-border-width . 1))
-;;   (add-to-list var '(scroll-bar-width  . 12)))
-
-;; (defun prot-emacs-invisible-dividers (_theme)
-;;   "Make window dividers for THEME invisible."
-;;   (let ((bg (face-background 'default)))
-;;     (custom-set-faces
-;;      `(fringe ((t :background ,bg :foreground ,bg)))
-;;      `(window-divider ((t :background ,bg :foreground ,bg)))
-;;      `(window-divider-first-pixel ((t :background ,bg :foreground ,bg)))
-;;      `(window-divider-last-pixel ((t :background ,bg :foreground ,bg))))))
-;; 
-;; (add-hook 'enable-theme-functions #'prot-emacs-invisible-dividers)
-
-(setq frame-resize-pixelwise t
-      frame-inhibit-implied-resize t)
-
-(setq use-dialog-box t ; only for mouse events, which I seldom use
-      use-file-dialog nil
-      inhibit-splash-screen t
-      inhibit-startup-screen t
-      inhibit-x-resources t
-      inhibit-startup-echo-area-message user-login-name ; read the docstring
-      inhibit-startup-buffer-menu t
-      make-backup-files nil
-      backup-inhibited nil ; Not sure if needed, given `make-backup-files'
-      create-lockfiles nil)
 
 ;; Temporarily increase the garbage collection threshold.  These
 ;; changes help shave off about half a second of startup time.
@@ -98,17 +85,8 @@
           (lambda ()
             (setq gc-cons-threshold prot-emacs--gc-cons-threshold)))
 
-;; Initialise installed packages
-(setq package-enable-at-startup t)
-
-(defvar package-quickstart)
-
-;; Allow loading from the package cache
-(setq package-quickstart t)
-
-(when (native-comp-available-p)
-  (setq native-comp-async-report-warnings-errors 'silent) ; emacs28 with native compilation
-  (setq native-compile-prune-cache t)) ; Emacs 29
+;; Do not initialise installed packages at this early stage.
+(setq package-enable-at-startup nil)
 
 ;;;; General theme code
 
@@ -117,12 +95,10 @@
 Return nil if the DESKTOP_SESSION is either bspwm or
 herbstluftwm, per the configuration of my dotfiles.  Also check
 the `delight' shell script."
-  (let ((session (getenv "DESKTOP_SESSION")))
-    (unless (or (string= session "bspwm")
-                (string= session "herbstluftwm"))
-      (string-match-p
-       "dark"
-       (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))))
+  (prot-emacs-with-desktop-session
+    (string-match-p
+     "dark"
+     (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))))
 
 (defun prot-emacs-theme-twm-dark-p ()
   "Return non-nil if my custom setup has a dark theme.
