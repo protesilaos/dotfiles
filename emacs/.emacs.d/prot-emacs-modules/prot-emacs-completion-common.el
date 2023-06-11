@@ -242,7 +242,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq consult-async-min-input 3)
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
-  (setq consult-narrow-key ">")
+  (setq consult-narrow-key nil)
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
   (setq consult-find-args "find . -not ( -path */.git* -prune )")
