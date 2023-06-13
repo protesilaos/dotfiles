@@ -195,4 +195,35 @@
 
   (define-key global-map (kbd "C-c g") #'magit-status))
 
+(prot-emacs-package vundo
+  ;; Waiting for my changes to be merged:
+  ;; <https://github.com/casouri/vundo/pull/74>.
+  (:install "https://github.com/protesilaos/vundo/")
+  (:delay 30)
+  (setq vundo-glyph-alist vundo-unicode-symbols)
+
+  (define-key global-map (kbd "C-?") #'vundo) ; override `undo-redo'
+
+  (defvar prot/vundo-diff-buffer-window nil
+    "Window object of `prot/vundo-diff-buffer'.")
+
+  (defun prot/vundo-quit-diff-window ()
+    "Quit `prot/vundo-diff-buffer-window' if it is live.
+Assign this function to the `vundo-post-exit-hook'."
+    (when (and prot/vundo-diff-buffer-window
+               (window-live-p prot/vundo-diff-buffer-window))
+      (quit-window nil prot/vundo-diff-buffer-window)
+      (setq prot/vundo-diff-buffer-window nil)))
+
+  (defun prot/vundo-diff-buffer (buffer)
+    "Diff BUFFER with its underlying file, if possible.
+Assign this to `vundo-after-undo-functions'.  BUFFER is provided
+by that special hook."
+    (when (buffer-file-name buffer)
+      (with-current-buffer (window-buffer (diff-buffer-with-file buffer))
+        (setq prot/vundo-diff-buffer-window (get-buffer-window)))))
+
+  (add-hook 'vundo-after-undo-functions #'prot/vundo-diff-buffer)
+  (add-hook 'vundo-post-exit-hook #'prot/vundo-quit-diff-window))
+
 (provide 'prot-emacs-git)
