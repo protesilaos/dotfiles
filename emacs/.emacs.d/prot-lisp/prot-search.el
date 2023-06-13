@@ -295,30 +295,35 @@ Also see `prot-search-grep-todo-keywords'."
 
 ;;;; Grep
 
-(defvar prot-search--grep-hist '()
+(defvar prot-search--grep-hist nil
   "Input history of grep searches.")
+
+(defun prot-search-grep-prompt (&optional recursive)
+  "Prompt for grep pattern.
+With optional RECURSIVE, indicate that the search will be called
+recursively."
+  (read-regexp
+   (concat (if recursive
+               (propertize "Recursive" 'face 'warning)
+             "Local")
+           " grep for PATTERN: ")
+   nil 'prot-search--grep-hist))
 
 ;;;###autoload
 (defun prot-search-grep (regexp &optional recursive)
   "Run grep for REGEXP.
-
 Search in the current directory using `lgrep'.  With optional
 prefix argument (\\[universal-argument]) for RECURSIVE, run a
 search starting from the current directory with `rgrep'."
   (interactive
    (list
-    (read-from-minibuffer (concat (if current-prefix-arg
-                                      (propertize "Recursive" 'face 'warning)
-                                    "Local")
-                                  " grep for PATTERN: ")
-                          nil nil nil 'prot-search--grep-hist)
+    (prot-search-grep-prompt current-prefix-arg)
     current-prefix-arg))
   (unless grep-command
     (grep-compute-defaults))
   (if recursive
       (rgrep regexp "*" default-directory)
-    (lgrep regexp "*" default-directory)
-    (add-to-history 'prot-search--grep-hist regexp)))
+    (lgrep regexp "*" default-directory)))
 
 ;;;###autoload
 (defun prot-search-grep-todo-keywords (&optional arg)
