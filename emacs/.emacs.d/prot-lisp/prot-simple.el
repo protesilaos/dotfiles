@@ -771,6 +771,27 @@ END, representing the point and mark."
   (flush-lines (format "%s$" page-delimiter) b e)
   (setq this-command 'flush-lines)))
 
+;; NOTE 2023-06-18: The idea of narrowing to a defun in an indirect
+;; buffer is still experimental.
+(defun prot-simple-narrow--guess-defun-symbol ()
+  "Try to return symbol of current defun as a string."
+  (save-excursion
+    (beginning-of-defun)
+    (search-forward " ")
+    (thing-at-point 'symbol :no-properties)))
+
+;;;###autoload
+(defun prot-simple-narrow-to-cloned-buffer ()
+  "Narrow to defun in cloned buffer.
+Name the buffer after the defun's symbol."
+  (interactive)
+  (clone-indirect-buffer-other-window
+   (format "%s -- %s"
+           (buffer-name)
+           (prot-simple-narrow--guess-defun-symbol))
+   :display)
+  (narrow-to-defun))
+
 ;;;; Commands for buffers
 
 ;;;###autoload
