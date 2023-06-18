@@ -196,14 +196,14 @@
   (define-key global-map (kbd "C-c g") #'magit-status))
 
 (prot-emacs-package vundo
-  ;; Waiting for my changes to be merged:
-  ;; <https://github.com/casouri/vundo/pull/74>.
-  (:install "https://github.com/protesilaos/vundo/")
+  (:install t)
   (:delay 30)
   (setq vundo-glyph-alist vundo-unicode-symbols)
 
   (define-key global-map (kbd "C-?") #'vundo) ; override `undo-redo'
 
+
+  ;; Check: <https://github.com/casouri/vundo/pull/74>.
   (defvar prot/vundo-diff-buffer-window nil
     "Window object of `prot/vundo-diff-buffer'.")
 
