@@ -33,6 +33,8 @@
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
+          (outline-mode . "^\\*+ +")
+          (emacs-news-view-mode . "^\\*+ +")
           (conf-toml-mode . "^\\[")
           (markdown-mode . "^#+ +")))
   (setq prot-search-todo-keywords
