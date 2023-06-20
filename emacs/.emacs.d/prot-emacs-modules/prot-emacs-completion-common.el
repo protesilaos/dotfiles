@@ -2,7 +2,7 @@
 (prot-emacs-configure
   (:delay 1)
 ;;;; Minibuffer configurations
-  (setq completion-styles '(emacs22 substring orderless)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic substring initials orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
 
   ;; A list of known completion categories:
