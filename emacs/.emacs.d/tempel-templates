@@ -2,6 +2,10 @@ text-mode
 
 (update "Update " p ".html")
 
+org-mode
+
+(development-version "[Part of {{{development-version}}}]")
+
 emacs-lisp-mode
 
 (autoload ";;;###autoload")
