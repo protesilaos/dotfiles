@@ -81,9 +81,15 @@ constitutes a matching tiling window manager."
 
 (setq gc-cons-threshold most-positive-fixnum)
 
+;; Same idea as above for the `file-name-handler-alist'.
+(defvar prot-emacs--file-name-handler-alist file-name-handler-alist)
+
+(setq file-name-handler-alist nil)
+
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (setq gc-cons-threshold prot-emacs--gc-cons-threshold)))
+            (setq gc-cons-threshold prot-emacs--gc-cons-threshold
+                  file-name-handler-alist prot-emacs--file-name-handler-alist)))
 
 ;; Do not initialise installed packages at this early stage.
 (setq package-enable-at-startup nil)
