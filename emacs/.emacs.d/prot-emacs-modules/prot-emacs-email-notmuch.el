@@ -197,13 +197,13 @@
 
   (prot-emacs-keybind notmuch-search-mode-map
     "a" nil ; the default is too easy to hit accidentally
-    "A" #'notmuch-search-archive-thread
+    "A" nil
     "D" #'prot-notmuch-search-delete-thread
     "S" #'prot-notmuch-search-spam-thread
     "g" #'prot-notmuch-refresh-buffer)
   (prot-emacs-keybind notmuch-show-mode-map
     "a" nil ; the default is too easy to hit accidentally
-    "A" #'notmuch-show-archive-message-then-next-or-next-thread
+    "A" nil
     "D" #'prot-notmuch-show-delete-message
     "S" #'prot-notmuch-show-spam-message)
   (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
