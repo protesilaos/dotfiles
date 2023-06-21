@@ -8,6 +8,7 @@
   ;; way.
   (require 'prot-common)
   (require 'prot-simple)
+  (require 'prot-scratch)
   (require 'prot-prefix)
 
 ;;; General settings and common custom functions (prot-simple.el)
@@ -38,7 +39,8 @@
         ("_ underscores"         . (95 95))))    ; _ _
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
-  (setq prot-simple-scratch-buffer-default-mode 'text-mode)
+
+  (setq prot-scratch-default-mode 'text-mode)
 
   ;; General commands
   (prot-emacs-keybind global-map
@@ -52,7 +54,6 @@
     "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
-    "C-c s" #'prot-simple-scratch-buffer
     ;; Commands for lines
     "M-o" #'delete-blank-lines   ; alias for C-x C-o
     "M-k" #'prot-simple-kill-line-backward
@@ -98,6 +99,8 @@
     "C-x K" #'kill-buffer
     "M-s b" #'prot-simple-buffers-major-mode
     "M-s v" #'prot-simple-buffers-vc-root
+    ;; Scratch buffer for major mode of choice
+    "C-c s" #'prot-scratch-buffer
     ;; Prefix keymap (prot-prefix.el)
     "C-z" #'prot-prefix)
 

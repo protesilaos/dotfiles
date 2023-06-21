@@ -74,89 +74,10 @@ Used by `prot-simple-inset-date'."
   :type 'string
   :group 'prot-simple)
 
-(defcustom prot-simple-scratch-buffer-default-mode 'text-mode
-  "Default major mode for `prot-simple-scratch-buffer'."
-  :type 'symbol
-  :group 'prot-simple)
-
-;;; Generic setup
-
-;;;; Scratch buffers
-;; The idea is based on the `scratch.el' package by Ian Eure:
-;; <https://github.com/ieure/scratch-el>.
-
-(defun prot-simple--scratch-list-modes ()
-  "List known major modes."
-  (let (symbols)
-    (mapatoms
-     (lambda (symbol)
-       (when (and (functionp symbol)
-                  (or (provided-mode-derived-p symbol 'text-mode)
-                      (provided-mode-derived-p symbol 'prog-mode)))
-         (push symbol symbols))))
-    symbols))
-
-(defun prot-simple--scratch-buffer-setup (region &optional mode)
-  "Add contents to `scratch' buffer and name it accordingly.
-
-REGION is added to the contents to the new buffer.
-
-Use the current buffer's major mode by default.  With optional
-MODE use that major mode instead."
-  (let* ((major (or mode major-mode))
-         (string (format "Scratch buffer for: %s\n\n" major))
-         (text (concat string region))
-         (buf (format "*%s scratch*" major)))
-    (with-current-buffer (pop-to-buffer buf)
-      (funcall major)
-      (if (and (prot-common-empty-buffer-p)
-               comment-start)
-          ;; We could use `save-restriction' for narrowed buffers, but
-          ;; it is overkill.
-          (progn
-            (insert text)
-            (goto-char (point-min))
-            (comment-region (line-beginning-position) (line-end-position))
-            (goto-char (point-max)))
-        (goto-char (point-max))
-        (when (prot-common-line-regexp-p 'non-empty)
-          (insert "\n\n"))
-        (insert region)))))
-
-;;;###autoload
-(defun prot-simple-scratch-buffer (&optional arg)
-  "Produce a scratch buffer matching the current major mode.
-
-With optional ARG as a prefix argument (\\[universal-argument]),
-use `prot-simple-scratch-buffer-default-mode'.
-
-With ARG as a double prefix argument, prompt for a major mode
-with completion.  Candidates are derivatives of `text-mode' or
-`prog-mode'.
-
-If region is active, copy its contents to the new scratch
-buffer.
-
-Buffers are named as *MAJOR-MODE scratch*.  If one already exists
-for the given MAJOR-MODE, any text is appended to it."
-  (interactive "P")
-  (let* ((default-mode prot-simple-scratch-buffer-default-mode)
-         (modes (prot-simple--scratch-list-modes))
-         (region (with-current-buffer (current-buffer)
-                   (if (region-active-p)
-                       (buffer-substring-no-properties
-                        (region-beginning)
-                        (region-end))
-                     "")))
-         mode)
-    (pcase (prefix-numeric-value arg)
-      (16 (progn
-            (setq mode (intern (completing-read "Select major mode: " modes nil t)))
-            (prot-simple--scratch-buffer-setup region mode)))
-      (4 (prot-simple--scratch-buffer-setup region default-mode))
-      (_ (prot-simple--scratch-buffer-setup region)))))
-
 ;;; Commands
+
+;; NOTE 2023-06-21: The code I had for scratch buffers per major mode
+;; is now part of prot-scratch.el.
 
 ;;;; General commands
 
