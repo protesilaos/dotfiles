@@ -77,17 +77,27 @@ use in `display-buffer-alist'."
       (and (not (derived-mode-p 'message-mode 'text-mode))
            (derived-mode-p 'eshell-mode 'shell-mode 'comint-mode 'fundamental-mode)))))
 
-(defmacro prot-window-with-full-frame (fn)
-  "Define function to call FN interactively with `display-buffer-full-frame' bound."
-  `(defun ,(intern (format "prot-window-%s" fn)) ()
-     ,(format "Call %s in accordance with `prot-window-with-full-frame'." fn)
+(defmacro prot-window-with-full-frame (name &rest args)
+  "Define function to evaluate ARGS with `display-buffer-full-frame' bound.
+
+Name the function prot-window- followed by NAME.
+
+If ARGS is nil, call NAME as a function."
+  (declare (indent 1))
+  `(defun ,(intern (format "prot-window-%s" name)) ()
+     ,(format "Call `prot-window-%s' in accordance with `prot-window-with-full-frame'." name)
      (interactive)
-     (let ((display-buffer-alist '(((prot-window-shell-or-term-p)
-                                    (display-buffer-full-frame)))))
-       (call-interactively #',fn))))
+     (let ((display-buffer-alist '((".*" (display-buffer-full-frame)))))
+       ,(or `(progn ,@args)
+            `(funcall ',name)))))
 
 (prot-window-with-full-frame shell)
-(prot-window-with-full-frame eshell)
+
+(prot-window-with-full-frame coach
+  (let ((buffer (get-buffer-create "*scratch for coach*")))
+    (with-current-buffer buffer
+      (funcall initial-major-mode))
+    (display-buffer buffer)))
 
 (provide 'prot-window)
 ;;; prot-window.el ends here
