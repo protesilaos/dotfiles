@@ -54,9 +54,9 @@ constitutes a matching tiling window manager."
   ;;   (add-hook 'after-make-frame-functions 'prot-emacs-no-minibuffer-scroll-bar))
 
   (dolist (var '(default-frame-alist initial-frame-alist))
-    (add-to-list var '(width . (text-pixels . 1200)))
-    (add-to-list var '(height . (text-pixels . 900)))
-    (add-to-list var '(scroll-bar-width  . 12))))
+    (push '(width . (text-pixels . 1200)) var)
+    (push '(height . (text-pixels . 900)) var)
+    (push '(scroll-bar-width  . 12) var)))
 
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t
