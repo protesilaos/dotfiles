@@ -88,16 +88,17 @@ before all other modules of my setup."
 ;; Disable the damn thing by making it disposable.
 (setq custom-file (make-temp-file "emacs-custom-"))
 
-;; In 'M-x find-library RET greek' we also find the greek-postfix style,
-;; though I don't need it right now.
+;; There is also the greek-postfix style.  This is for inserting
+;; accents.  I am used to the standard use of a prefix.
 (setq default-input-method "greek")
 
-;; Enable those
-(dolist (c '( narrow-to-region narrow-to-page upcase-region downcase-region))
+;; Enable these
+(dolist (c '(narrow-to-region narrow-to-page upcase-region downcase-region))
   (put c 'disabled nil))
 
-;; And disable this
-(put 'overwrite-mode 'disabled t)
+;; And disable these
+(dolist (c '(eshell project-eshell overwrite-mode iconify-frame diary))
+  (put c 'disabled t))
 
 ;; Always start with *scratch*
 (setq initial-buffer-choice t)
