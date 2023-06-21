@@ -249,6 +249,7 @@ that point."
   ;; whenever I would encounter an error in some Lisp evaluation.
   ;; Whereas the server works just fine when I need to connect to it via
   ;; the emacsclient.
+  (setq server-client-instructions nil)
   (server-start))
 
 ;;; Substitute
