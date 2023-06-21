@@ -74,17 +74,6 @@ Used by `prot-simple-inset-date'."
   :type 'string
   :group 'prot-simple)
 
-(defcustom prot-simple-focusable-help-commands
-  '( describe-symbol describe-function
-     describe-variable describe-key
-     view-lossage)
-  "Commands whose buffers should be focused when displayed.
-This makes it easier to dismiss them at once.
-
-Also see `prot-simple-focus-help-buffers'."
-  :type '(repeat symbol)
-  :group 'prot-simple)
-
 (defcustom prot-simple-scratch-buffer-default-mode 'text-mode
   "Default major mode for `prot-simple-scratch-buffer'."
   :type 'symbol
