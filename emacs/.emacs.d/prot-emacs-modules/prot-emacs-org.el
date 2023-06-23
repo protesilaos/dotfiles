@@ -52,7 +52,8 @@
   (setq org-structure-template-alist
         '(("s" . "src")
           ("e" . "src emacs-lisp")
-          ("E" . "example")
+          ("E" . "src emacs-lisp :results value code")
+          ("x" . "example")
           ("q" . "quote")))
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
