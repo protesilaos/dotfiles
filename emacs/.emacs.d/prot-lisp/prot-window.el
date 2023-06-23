@@ -88,8 +88,9 @@ If ARGS is nil, call NAME as a function."
      ,(format "Call `prot-window-%s' in accordance with `prot-window-with-full-frame'." name)
      (interactive)
      (let ((display-buffer-alist '((".*" (display-buffer-full-frame)))))
-       ,(or `(progn ,@args)
-            `(funcall ',name)))))
+       ,(if args
+            `(progn ,@args)
+          `(funcall ',name)))))
 
 (prot-window-with-full-frame shell)
 
