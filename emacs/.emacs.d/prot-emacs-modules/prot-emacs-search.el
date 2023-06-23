@@ -17,7 +17,7 @@
   (setq isearch-repeat-on-direction-change t)
   (setq lazy-highlight-initial-delay 0.5)
   (setq lazy-highlight-no-delay-length 3)
-  (setq isearch-wrap-pause 'no-ding)
+  (setq isearch-wrap-pause t) ; `no-ding' makes keyboard macros never quit
 
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
