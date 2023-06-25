@@ -52,7 +52,7 @@
   (setq org-structure-template-alist
         '(("s" . "src")
           ("e" . "src emacs-lisp")
-          ("E" . "src emacs-lisp :results value code")
+          ("E" . "src emacs-lisp :results value code :lexical t")
           ("x" . "example")
           ("q" . "quote")))
   (setq org-catch-invisible-edits 'show)
