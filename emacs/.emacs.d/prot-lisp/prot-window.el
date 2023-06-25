@@ -92,8 +92,10 @@ If ARGS is nil, call NAME as a function."
             `(progn ,@args)
           `(funcall ',name)))))
 
+;;;###autoload (autoload 'prot-window-shell "prot-window")
 (prot-window-with-full-frame shell)
 
+;;;###autoload (autoload 'prot-window-coach "prot-window")
 (prot-window-with-full-frame coach
   (let ((buffer (get-buffer-create "*scratch for coach*")))
     (with-current-buffer buffer
