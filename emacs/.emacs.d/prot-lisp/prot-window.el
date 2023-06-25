@@ -100,5 +100,20 @@ If ARGS is nil, call NAME as a function."
       (funcall initial-major-mode))
     (display-buffer buffer)))
 
+;; REVIEW 2023-06-25: Does this merit a user option?  I don't think I
+;; will ever set it to the left.  It feels awkward there.
+(defun prot-window-scroll-bar-placement ()
+  "Control the placement of scroll bars."
+  (setq default-frame-scroll-bars 'right)
+  (set-scroll-bar-mode 'right))
+
+(add-hook 'scroll-bar-mode-hook #'prot-window-scroll-bar-placement)
+
+(defun prot-window-no-minibuffer-scroll-bar (frame)
+  "Remove the minibuffer scroll bars from FRAME."
+  (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
+
+(add-hook 'after-make-frame-functions 'prot-window-no-minibuffer-scroll-bar)
+
 (provide 'prot-window)
 ;;; prot-window.el ends here

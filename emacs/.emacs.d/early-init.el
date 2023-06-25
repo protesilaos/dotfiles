@@ -43,16 +43,6 @@ constitutes a matching tiling window manager."
      ,@body))
 
 (prot-emacs-with-desktop-session
-  ;; (when scroll-bar-mode
-  ;;   (setq default-frame-scroll-bars 'right)
-  ;;   (set-scroll-bar-mode 'right)
-  ;; 
-  ;;   (defun prot-emacs-no-minibuffer-scroll-bar (frame)
-  ;;     "Remove the minibuffer scroll bars from FRAME."
-  ;;     (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
-  ;;   
-  ;;   (add-hook 'after-make-frame-functions 'prot-emacs-no-minibuffer-scroll-bar))
-
   (dolist (var '(default-frame-alist initial-frame-alist))
     (push '(width . (text-pixels . 1200)) var)
     (push '(height . (text-pixels . 900)) var)
