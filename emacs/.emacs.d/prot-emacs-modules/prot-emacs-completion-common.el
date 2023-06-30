@@ -2,7 +2,7 @@
 (prot-emacs-configure
   (:delay 1)
 ;;;; Minibuffer configurations
-  (setq completion-styles '(basic substring initials orderless)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
 
   ;; A list of known completion categories:
@@ -57,13 +57,13 @@
         ;; `orderless' kicks in as soon as I input a space or one of its
         ;; style dispatcher characters.
         '((file (styles . (basic partial-completion orderless)))
+          (bookmark (styles . (basic substring)))
           (library (styles . (basic substring)))
-          (project-file (styles . (basic substring partial-completion orderless)))
+          (embark-keybinding (styles . (basic substring)))
           (imenu (styles . (basic substring orderless)))
-          (kill-ring (styles . (emacs22 orderless)))
           (consult-location (styles . (basic substring orderless)))
-          (eglot (styles . (emacs22 substring orderless)))
-          (embark-keybinding (styles . (basic substring)))))
+          (kill-ring (styles . (emacs22 orderless)))
+          (eglot (styles . (emacs22 substring orderless)))))
 
   (setq completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t)
@@ -188,7 +188,7 @@
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
   (setq orderless-matching-styles
-        '(orderless-prefixes orderless-flex orderless-regexp))
+        '(orderless-prefixes orderless-regexp))
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
