@@ -158,7 +158,7 @@
   (setq flymake-mode-line-format
         '("" flymake-mode-line-exception flymake-mode-line-counters))
   (setq flymake-mode-line-counter-format
-        '(" " flymake-mode-line-error-counter
+        '("" flymake-mode-line-error-counter
           flymake-mode-line-warning-counter
           flymake-mode-line-note-counter ""))
   (setq flymake-show-diagnostics-at-end-of-line nil) ; Emacs 30
