@@ -145,23 +145,15 @@
 
 ;;;; Built-in bookmarking framework (bookmark.el)
   (setq bookmark-use-annotations nil)
-  (setq bookmark-automatically-show-annotations t)
+  (setq bookmark-automatically-show-annotations nil)
   (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon
+  ;; Write changes to the bookmark file as soon as 1 modification is
+  ;; made (addition or deletion).  Otherwise Emacs will only save the
+  ;; bookmarks when it closes, which may never happen properly
+  ;; (e.g. power failure).
+  (setq bookmark-save-flag 1)
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
-
-  (defun prot/bookmark-save-no-prompt (&rest _)
-    "Run `bookmark-save' without prompts.
-
-The intent of this function is to be added as an :after advice to
-`bookmark-set-internal'.  Concretely, this means that when
-`bookmark-set-internal' is called, this function is called right
-afterwards.  We set this up because there is no hook after
-setting a bookmark and we want to automatically save bookmarks at
-that point."
-    (funcall 'bookmark-save))
-
-  (advice-add 'bookmark-set-internal :after 'prot/bookmark-save-no-prompt)
 
 ;;;; Auto revert mode
   (setq auto-revert-verbose t)
