@@ -42,11 +42,18 @@ constitutes a matching tiling window manager."
                ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
      ,@body))
 
+(defun prot-emacs-add-to-list (list element)
+  "Add to symbol of LIST the given ELEMENT.
+Simplified version of `add-to-list'."
+  (set list (cons element (symbol-value list))))
+
 (prot-emacs-with-desktop-session
-  (dolist (var '(default-frame-alist initial-frame-alist))
-    (push '(width . (text-pixels . 1200)) var)
-    (push '(height . (text-pixels . 900)) var)
-    (push '(scroll-bar-width  . 12) var)))
+  (mapc
+   (lambda (var)
+     (prot-emacs-add-to-list var '(width . (text-pixels . 1200)))
+     (prot-emacs-add-to-list var '(height . (text-pixels . 900)))
+     (prot-emacs-add-to-list var '(scroll-bar-width  . 12)))
+   '(default-frame-alist initial-frame-alist)))
 
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t
