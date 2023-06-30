@@ -143,7 +143,10 @@ Specific to the current window's mode line.")
                         ('conflict 'vc-conflict-state)
                         ('locked 'vc-locked-state)
                         (_ 'vc-up-to-date-state))))
-      (propertize (capitalize branch) 'face face)))
+      ;; Find any hex code of a character with: (char-to-string #xE0A0)
+      (concat " " (propertize (capitalize branch)
+                               'face face
+                               'mouse-face 'highlight))))
   "Mode line construct to return propertized VC branch.")
 
 ;; NOTE 2023-04-28: The `risky-local-variable' is critical, as those
