@@ -32,17 +32,66 @@
 ;;; Code:
 
 (defface prot-modeline-intense
-  '((t :inherit (bold highlight)))
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#0000aa" :foreground "#ffffff")
+    (((class color) (min-colors 88) (background dark))
+     :background "#77aaff" :foreground "#000000")
+    (t :inverse-video t))
   "Face for intense mode line constructs.")
 
 (setq mode-line-defining-kbd-macro
       (propertize " KMacro " 'face 'prot-modeline-intense))
 
+(defvar prot-modeline-buffer-identification
+  (propertized-buffer-identification "%b")
+  "Mode line construct for identifying the buffer being displayed.")
+
+(defvar prot-modeline--line-and-column
+  `((line-number-mode
+     (column-number-mode
+      (column-number-indicator-zero-based
+       (:propertize
+        mode-line-position-column-line-format
+        ,@mode-line-position--column-line-properties)
+       (:propertize
+        (:eval (string-replace
+                "%c" "%C" (car mode-line-position-column-line-format)))
+        ,@mode-line-position--column-line-properties))
+      (:propertize
+	   mode-line-position-line-format
+       ,@mode-line-position--column-line-properties))
+     (column-number-mode
+      (:propertize
+       mode-line-position-column-format
+       ,@mode-line-position--column-line-properties)
+      (:propertize
+       (:eval (string-replace
+               "%c" "%C" (car mode-line-position-column-format)))
+       ,@mode-line-position--column-line-properties)))
+    " "
+    (:propertize
+     ("" mode-line-percent-position)
+     mouse-face mode-line-highlight)
+    " ")
+  "Mode line construct for formatting `prot-modeline-position'.")
+
+(defvar prot-modeline-position
+  '(:eval
+    (when (mode-line-window-selected-p)
+      prot-modeline--line-and-column))
+  "Mode line construct for the buffer position.")
+
 (defvar prot-modeline-modes
   (list (propertize "%[" 'face 'error)
-        `(:propertize ("" mode-name)
-                      mouse-face mode-line-highlight
-                      local-map ,mode-line-major-mode-keymap)
+        '(:eval
+          (propertize
+           (capitalize
+            (replace-regexp-in-string
+             "-mode"
+             ""
+             (symbol-name major-mode)))
+           'mouse-face 'mode-line-highlight))
         '("" mode-line-process)
         (propertize "%]" 'face 'error)
         " ")
@@ -59,14 +108,17 @@
 Read Info node `(elisp) Pixel Specification'.")
 
 (defvar prot-modeline-kbd-macro
-  '(:eval (when (and defining-kbd-macro (mode-line-window-selected-p))
-            mode-line-defining-kbd-macro))
+  '(:eval
+    (when (and defining-kbd-macro (mode-line-window-selected-p))
+      mode-line-defining-kbd-macro))
   "Mode line construct displaying `mode-line-defining-kbd-macro'.
 Specific to the current window's mode line.")
 
 (defvar prot-modeline-flymake
-  '(:eval (when (bound-and-true-p flymake-mode)
-            flymake-mode-line-format))
+  '(:eval
+    (when (and (bound-and-true-p flymake-mode)
+               (mode-line-window-selected-p))
+      flymake-mode-line-format))
   "Mode line construct displaying `flymake-mode-line-format'.
 Specific to the current window's mode line.")
 
@@ -77,11 +129,30 @@ Specific to the current window's mode line.")
   "Mode line construct displaying `mode-line-misc-info'.
 Specific to the current window's mode line.")
 
+(defvar prot-modeline-vc-branch
+  '(:eval
+    (when-let* (((mode-line-window-selected-p))
+                (branches (vc-git-branches))
+                (branch (car branches))
+                (state (vc-state (buffer-file-name) 'Git))
+                (face (pcase state
+                        ('added 'vc-locally-added-state)
+                        ('edited 'vc-edited-state)
+                        ('removed 'vc-removed-state)
+                        ('missing 'vc-missing-state)
+                        ('conflict 'vc-conflict-state)
+                        ('locked 'vc-locked-state)
+                        (_ 'vc-up-to-date-state))))
+      (propertize (capitalize branch) 'face face)))
+  "Mode line construct to return propertized VC branch.")
+
 ;; NOTE 2023-04-28: The `risky-local-variable' is critical, as those
 ;; variables will not work without it.
 (dolist (construct '( prot-modeline-modes prot-modeline-align-right
                       prot-modeline-kbd-macro prot-modeline-flymake
-                      prot-modeline-misc-info))
+                      prot-modeline-vc-branch prot-modeline-misc-info
+                      prot-modeline-buffer-identification
+                      prot-modeline-position))
   (put construct 'risky-local-variable t))
 
 (provide 'prot-modeline)

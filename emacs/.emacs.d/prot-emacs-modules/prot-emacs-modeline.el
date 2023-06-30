@@ -12,14 +12,16 @@
                   mode-line-modified
                   mode-line-remote
                   " "
-                  mode-line-buffer-identification
-                  " "
-                  mode-line-position
+                  prot-modeline-buffer-identification
+                  "  "
                   prot-modeline-modes
+                  "  "
+                  prot-modeline-position
+                  "  "
+                  prot-modeline-vc-branch
+                  "  "
                   prot-modeline-flymake
-                  " "
-                  (vc-mode vc-mode)
-                  " "
+                  "  "
                   prot-modeline-align-right
                   prot-modeline-misc-info))
 
@@ -29,7 +31,8 @@
 (prot-emacs-package keycast
   (:install t)
   (:delay 60)
-  (setq keycast-mode-line-insert-after 'mode-line-buffer-identification)
+  (setq keycast-mode-line-format "%2s%k%c%r")
+  (setq keycast-mode-line-insert-after 'prot-modeline-buffer-identification)
   (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
   (setq keycast-mode-line-remove-tail-elements nil)
 
