@@ -7,7 +7,7 @@
   ;; variable is in the file vertico-multiform.el and will work once
   ;; `vertico-multiform-mode' is enabled.
   (setq vertico-scroll-margin 0)
-  (setq vertico-count 10)
+  (setq vertico-count 4)
   (setq vertico-resize nil)
   (setq vertico-cycle t)
 
@@ -17,10 +17,10 @@
     "M-," #'vertico-quick-insert
     "M-." #'vertico-quick-exit)
 
-  ;; This works with `file-name-shadow-mode'.  When you are in a
-  ;; sub-directory and use, say, `find-file' to go to your home '~/' or
-  ;; root '/' directory, Vertico will clear the old path to keep only
-  ;; your current input.
+  ;; This works with `file-name-shadow-mode' enabled.  When you are in
+  ;; a sub-directory and use, say, `find-file' to go to your home '~/'
+  ;; or root '/' directory, Vertico will clear the old path to keep
+  ;; only your current input.
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
 (provide 'prot-emacs-completion-vertico)
