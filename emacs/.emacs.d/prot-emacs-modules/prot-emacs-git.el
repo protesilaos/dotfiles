@@ -16,11 +16,13 @@
             (project-find-dir "Find directory")
             (project-dired "Root dired")
             (project-vc-dir "VC-Dir")
-            (project-shell "Shell")))
+            (project-shell "Shell")
+            (keyboard-quit "Quit")))
   (setq project-vc-extra-root-markers '(".project"))
 
   (prot-emacs-keybind global-map
     "C-x p ." #'project-dired
+    "C-x p C-g" #'keyboard-quit
     "C-x p <return>" #'project-dired
     "C-x p <delete>" #'project-forget-project)
 
