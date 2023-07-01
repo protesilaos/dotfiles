@@ -218,9 +218,9 @@
   (:install t)
   (:delay 5)
   (setq notmuch-indicator-args
-        '((:terms "tag:unread and tag:inbox" :label "💬") ; also accepts a face like `:face bold' (no quotes)
-          (:terms "tag:unread and tag:package" :label "🗂️")
-          (:terms "tag:unread and tag:coach" :label "🌈"))
+        '((:terms "tag:unread and tag:inbox" :label " @u " :face (variable-pitch shadow)) ; also accepts a face like `:face bold' (no quotes)
+          (:terms "tag:unread and tag:package" :label " @p " :face (variable-pitch shadow))
+          (:terms "tag:unread and tag:coach" :label " @c " :face (variable-pitch shadow)))
         notmuch-indicator-refresh-count (* 60 3)
         notmuch-indicator-hide-empty-counters t
         notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))

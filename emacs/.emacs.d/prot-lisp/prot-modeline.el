@@ -44,57 +44,30 @@
       (propertize " KMacro " 'face 'prot-modeline-intense))
 
 (defvar prot-modeline-buffer-identification
-  (propertized-buffer-identification "%b")
-  "Mode line construct for identifying the buffer being displayed.")
-
-(defvar prot-modeline--line-and-column
-  `((line-number-mode
-     (column-number-mode
-      (column-number-indicator-zero-based
-       (:propertize
-        mode-line-position-column-line-format
-        ,@mode-line-position--column-line-properties)
-       (:propertize
-        (:eval (string-replace
-                "%c" "%C" (car mode-line-position-column-line-format)))
-        ,@mode-line-position--column-line-properties))
-      (:propertize
-	   mode-line-position-line-format
-       ,@mode-line-position--column-line-properties))
-     (column-number-mode
-      (:propertize
-       mode-line-position-column-format
-       ,@mode-line-position--column-line-properties)
-      (:propertize
-       (:eval (string-replace
-               "%c" "%C" (car mode-line-position-column-format)))
-       ,@mode-line-position--column-line-properties)))
-    " "
-    (:propertize
-     ("" mode-line-percent-position)
-     mouse-face mode-line-highlight)
-    " ")
-  "Mode line construct for formatting `prot-modeline-position'.")
-
-(defvar prot-modeline-position
   '(:eval
-    (when (mode-line-window-selected-p)
-      prot-modeline--line-and-column))
-  "Mode line construct for the buffer position.")
+    (propertize "%b"
+		        'face (when (mode-line-window-selected-p) 'mode-line-buffer-id)
+		        'mouse-face 'mode-line-highlight))
+  "Mode line construct for identifying the buffer being displayed.
+Propertize the current buffer with the `mode-line-buffer-id'
+face.  Let other buffers have no face.")
 
-(defvar prot-modeline-modes
+(defvar prot-modeline-major-mode
   (list (propertize "%[" 'face 'error)
         '(:eval
-          (propertize
-           (capitalize
-            (replace-regexp-in-string
-             "-mode"
-             ""
-             (symbol-name major-mode)))
-           'mouse-face 'mode-line-highlight))
-        '("" mode-line-process)
-        (propertize "%]" 'face 'error)
-        " ")
+          (concat
+           (propertize (char-to-string #x24a8) 'face 'shadow)
+           " "
+           (propertize
+            (capitalize
+             (string-replace
+              "-mode"
+              ""
+              (symbol-name major-mode)))
+            'mouse-face 'mode-line-highlight))
+          '("" mode-line-process)
+          (propertize "%]" 'face 'error)
+          " "))
   "Mode line construct for displaying major modes.")
 
 (defvar prot-modeline-align-right
@@ -143,19 +116,20 @@ Specific to the current window's mode line.")
                         ('conflict 'vc-conflict-state)
                         ('locked 'vc-locked-state)
                         (_ 'vc-up-to-date-state))))
-      ;; Find any hex code of a character with: (char-to-string #xE0A0)
-      (concat " " (propertize (capitalize branch)
-                               'face face
-                               'mouse-face 'highlight))))
+      (concat
+       (propertize (char-to-string #xE0A0) 'face 'shadow)
+       " "
+       (propertize (capitalize branch)
+                   'face face
+                   'mouse-face 'highlight))))
   "Mode line construct to return propertized VC branch.")
 
 ;; NOTE 2023-04-28: The `risky-local-variable' is critical, as those
 ;; variables will not work without it.
-(dolist (construct '( prot-modeline-modes prot-modeline-align-right
+(dolist (construct '( prot-modeline-major-mode prot-modeline-align-right
                       prot-modeline-kbd-macro prot-modeline-flymake
                       prot-modeline-vc-branch prot-modeline-misc-info
-                      prot-modeline-buffer-identification
-                      prot-modeline-position))
+                      prot-modeline-buffer-identification))
   (put construct 'risky-local-variable t))
 
 (provide 'prot-modeline)

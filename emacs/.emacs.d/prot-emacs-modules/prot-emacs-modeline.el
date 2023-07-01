@@ -1,7 +1,5 @@
 ;;; Mode line
 (prot-emacs-package prot-modeline
-  (setq mode-line-percent-position '(-3 "%p"))
-  (setq mode-line-position-column-line-format '("%l,%c")) ; Emacs 28
   (setq mode-line-compact nil)                            ; Emacs 28
 
   (setq-default mode-line-format
@@ -14,18 +12,14 @@
                   " "
                   prot-modeline-buffer-identification
                   "  "
-                  prot-modeline-modes
-                  "  "
-                  prot-modeline-position
+                  prot-modeline-major-mode
                   "  "
                   prot-modeline-vc-branch
                   "  "
                   prot-modeline-flymake
                   "  "
                   prot-modeline-align-right
-                  prot-modeline-misc-info))
-
-  (add-hook 'after-init-hook #'column-number-mode))
+                  prot-modeline-misc-info)))
 
 ;;; Keycast mode
 (prot-emacs-package keycast
