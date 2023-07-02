@@ -43,10 +43,20 @@
 (setq mode-line-defining-kbd-macro
       (propertize " KMacro " 'face 'prot-modeline-intense))
 
+(defun prot-modeline-buffer-identification-face ()
+  "Return appropriate face or face list for `prot-modeline-buffer-identification'."
+  (cond
+   ((and (mode-line-window-selected-p) (buffer-modified-p))
+    '(italic mode-line-buffer-id))
+   ((mode-line-window-selected-p)
+    'mode-line-buffer-id)
+   ((buffer-modified-p)
+    'italic)))
+
 (defvar prot-modeline-buffer-identification
   '(:eval
     (propertize "%b"
-		        'face (when (mode-line-window-selected-p) 'mode-line-buffer-id)
+		        'face (prot-modeline-buffer-identification-face)
 		        'mouse-face 'mode-line-highlight))
   "Mode line construct for identifying the buffer being displayed.
 Propertize the current buffer with the `mode-line-buffer-id'
