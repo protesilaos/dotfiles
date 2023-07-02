@@ -195,7 +195,7 @@ respectively."
   (or (and (numberp split-width-threshold)
            (< (window-width) split-width-threshold))
       (and (numberp split-height-threshold)
-           (< (window-width) split-height-threshold))))
+           (> (window-height) split-height-threshold))))
 
 ;;;###autoload
 (defun prot-common-read-data (file)
