@@ -1,6 +1,6 @@
 ;;; Mode line
 (prot-emacs-package prot-modeline
-  (setq mode-line-compact nil)                            ; Emacs 28
+  (setq mode-line-compact nil) ; Emacs 28
 
   (setq-default mode-line-format
                 '("%e"
