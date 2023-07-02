@@ -69,11 +69,21 @@
      ((mode-line-window-selected-p)
       'mode-line-buffer-id))))
 
+(defun prot-modeline--buffer-name ()
+  "Return `buffer-name', truncating it if necessary.
+The name is truncated if the width of the window is smaller than
+`split-width-threshold'."
+  (let ((name (buffer-name)))
+    (if (< (window-width) split-width-threshold)
+        (concat (substring name 0 9) "...")
+      name)))
+
 (defun prot-modeline-buffer-name ()
   "Return buffer name, with read-only indicator if relevant."
-  (if buffer-read-only
-      (format "%s %s" (char-to-string #xE0A2) (buffer-name))
-    (buffer-name)))
+  (let ((name (prot-modeline--buffer-name)))
+    (if buffer-read-only
+        (format "%s %s" (char-to-string #xE0A2) name)
+      name)))
 
 (defvar-local prot-modeline-buffer-identification
     '(:eval
