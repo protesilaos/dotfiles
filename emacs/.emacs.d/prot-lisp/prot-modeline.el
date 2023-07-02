@@ -52,11 +52,20 @@
 Propertize the current buffer with the `mode-line-buffer-id'
 face.  Let other buffers have no face.")
 
+(defun prot-modeline-major-mode-symbol ()
+  "Return appropriate propertized mode line indicator for the major mode."
+  (let ((indicator (cond
+                    ((derived-mode-p 'text-mode) "§")
+                    ((derived-mode-p 'prog-mode) "λ")
+                    ((derived-mode-p 'comint-mode) ">_")
+                    (t "◦"))))
+    (propertize indicator 'face 'shadow)))
+
 (defvar prot-modeline-major-mode
   (list (propertize "%[" 'face 'error)
         '(:eval
           (concat
-           (propertize (char-to-string #x24a8) 'face 'shadow)
+           (prot-modeline-major-mode-symbol)
            " "
            (propertize
             (capitalize
