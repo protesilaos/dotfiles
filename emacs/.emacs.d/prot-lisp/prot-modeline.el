@@ -53,7 +53,7 @@
    ((buffer-modified-p)
     'italic)))
 
-(defvar prot-modeline-buffer-identification
+(defvar-local prot-modeline-buffer-identification
   '(:eval
     (propertize "%b"
 		        'face (prot-modeline-buffer-identification-face)
@@ -71,7 +71,7 @@ face.  Let other buffers have no face.")
                     (t "◦"))))
     (propertize indicator 'face 'shadow)))
 
-(defvar prot-modeline-major-mode
+(defvar-local prot-modeline-major-mode
   (list (propertize "%[" 'face 'error)
         '(:eval
           (concat
@@ -89,7 +89,7 @@ face.  Let other buffers have no face.")
           " ")
   "Mode line construct for displaying major modes.")
 
-(defvar prot-modeline-align-right
+(defvar-local prot-modeline-align-right
   '(:eval (propertize
            " " 'display
            `((space :align-to
@@ -99,14 +99,14 @@ face.  Let other buffers have no face.")
   "Mode line construct to align following elements to the right.
 Read Info node `(elisp) Pixel Specification'.")
 
-(defvar prot-modeline-kbd-macro
+(defvar-local prot-modeline-kbd-macro
   '(:eval
     (when (and defining-kbd-macro (mode-line-window-selected-p))
       mode-line-defining-kbd-macro))
   "Mode line construct displaying `mode-line-defining-kbd-macro'.
 Specific to the current window's mode line.")
 
-(defvar prot-modeline-flymake
+(defvar-local prot-modeline-flymake
   '(:eval
     (when (and (bound-and-true-p flymake-mode)
                (mode-line-window-selected-p))
@@ -114,7 +114,7 @@ Specific to the current window's mode line.")
   "Mode line construct displaying `flymake-mode-line-format'.
 Specific to the current window's mode line.")
 
-(defvar prot-modeline-misc-info
+(defvar-local prot-modeline-misc-info
   '(:eval
     (when (mode-line-window-selected-p)
       mode-line-misc-info))
@@ -137,7 +137,7 @@ Specific to the current window's mode line.")
      (t
        (propertize (format "+%s -%s" added deleted) 'face 'shadow)))))
 
-(defvar prot-modeline-vc-branch
+(defvar-local prot-modeline-vc-branch
   '(:eval
     (when-let* (((mode-line-window-selected-p))
                 (file (buffer-file-name))
