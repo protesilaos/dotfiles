@@ -64,10 +64,10 @@ face.  Let other buffers have no face.")
               "-mode"
               ""
               (symbol-name major-mode)))
-            'mouse-face 'mode-line-highlight))
+            'mouse-face 'mode-line-highlight)))
           '("" mode-line-process)
           (propertize "%]" 'face 'error)
-          " "))
+          " ")
   "Mode line construct for displaying major modes.")
 
 (defvar prot-modeline-align-right
