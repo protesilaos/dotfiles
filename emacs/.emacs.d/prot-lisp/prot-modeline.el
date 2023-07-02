@@ -69,10 +69,15 @@
      ((mode-line-window-selected-p)
       'mode-line-buffer-id))))
 
+(defun prot-modeline-buffer-name ()
+  "Return buffer name, with read-only indicator if relevant."
+  (if buffer-read-only
+      (format "%s %s" (char-to-string #xE0A2) (buffer-name))
+    (buffer-name)))
 
 (defvar-local prot-modeline-buffer-identification
     '(:eval
-      (propertize "%b"
+      (propertize (prot-modeline-buffer-name)
                   'face (prot-modeline-buffer-identification-face)
                   'mouse-face 'mode-line-highlight))
   "Mode line construct for identifying the buffer being displayed.
