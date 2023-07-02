@@ -58,13 +58,17 @@
 
 (defun prot-modeline-buffer-identification-face ()
   "Return appropriate face or face list for `prot-modeline-buffer-identification'."
-  (cond
-   ((and (mode-line-window-selected-p) (buffer-modified-p))
-    '(italic mode-line-buffer-id))
-   ((mode-line-window-selected-p)
-    'mode-line-buffer-id)
-   ((buffer-modified-p)
-    'italic)))
+  (let ((file (buffer-file-name)))
+    (cond
+     ((and (mode-line-window-selected-p)
+           file
+           (buffer-modified-p))
+      '(italic mode-line-buffer-id))
+     ((and file (buffer-modified-p))
+      'italic)
+     ((mode-line-window-selected-p)
+      'mode-line-buffer-id))))
+
 
 (defvar-local prot-modeline-buffer-identification
     '(:eval
