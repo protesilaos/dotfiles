@@ -111,26 +111,48 @@ Specific to the current window's mode line.")
   "Mode line construct displaying `mode-line-misc-info'.
 Specific to the current window's mode line.")
 
+(defun prot-modeline-diffstat (file)
+  "Return shortened Git diff numstat for FILE."
+  (when-let* ((output (shell-command-to-string (format "git diff --numstat %s" file)))
+              (stats (split-string output "[\s\t]" :omit-nulls "[\s\f\t\n\r\v]+"))
+              (added (nth 0 stats))
+              (deleted (nth 1 stats)))
+    (cond
+     ((and (equal added "0") (equal deleted "0"))
+      "")
+     ((and (not (equal added "0")) (equal deleted "0"))
+      (propertize (format "+%s" added) 'face 'shadow))
+     ((and (equal added "0") (not (equal deleted "0")))
+      (propertize (format "-%s" deleted) 'face 'shadow))
+     (t
+       (propertize (format "+%s -%s" added deleted) 'face 'shadow)))))
+
 (defvar prot-modeline-vc-branch
   '(:eval
     (when-let* (((mode-line-window-selected-p))
+                (file (buffer-file-name))
+                ((vc-git-registered file))
                 (branches (vc-git-branches))
                 (branch (car branches))
-                (state (vc-state (buffer-file-name) 'Git))
-                (face (pcase state
-                        ('added 'vc-locally-added-state)
-                        ('edited 'vc-edited-state)
-                        ('removed 'vc-removed-state)
-                        ('missing 'vc-missing-state)
-                        ('conflict 'vc-conflict-state)
-                        ('locked 'vc-locked-state)
-                        (_ 'vc-up-to-date-state))))
+                (state (vc-state file 'Git))
+                ;; (face (pcase state
+                ;;         ('added 'vc-locally-added-state)
+                ;;         ('edited 'vc-edited-state)
+                ;;         ('removed 'vc-removed-state)
+                ;;         ('missing 'vc-missing-state)
+                ;;         ('conflict 'vc-conflict-state)
+                ;;         ('locked 'vc-locked-state)
+                ;;         (_ 'vc-up-to-date-state)))
+                )
       (concat
        (propertize (char-to-string #xE0A0) 'face 'shadow)
        " "
        (propertize (capitalize branch)
-                   'face face
-                   'mouse-face 'highlight))))
+                   ;; 'face face
+                   'mouse-face 'highlight
+                   'help-echo (vc-git-working-revision file))
+       " "
+       (prot-modeline-diffstat file))))
   "Mode line construct to return propertized VC branch.")
 
 ;; NOTE 2023-04-28: The `risky-local-variable' is critical, as those
