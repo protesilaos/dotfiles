@@ -187,6 +187,17 @@ will continue rotating accordingly."
       (save-excursion (re-search-backward page-delimiter nil t))))
 
 ;;;###autoload
+(defun prot-common-window-small-p ()
+  "Return non-nil if window is small.
+Check if the `window-width' or `window-height' is less than
+`split-width-threshold' and `split-height-threshold',
+respectively."
+  (or (and (numberp split-width-threshold)
+           (< (window-width) split-width-threshold))
+      (and (numberp split-height-threshold)
+           (< (window-width) split-height-threshold))))
+
+;;;###autoload
 (defun prot-common-read-data (file)
   "Read Elisp data from FILE."
   (with-temp-buffer
