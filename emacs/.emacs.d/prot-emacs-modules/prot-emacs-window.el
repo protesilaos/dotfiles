@@ -92,6 +92,8 @@
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
   (setq switch-to-buffer-in-dedicated-window 'pop)
+  (setq split-height-threshold 80)
+  (setq split-width-threshold 90)
 
   (dolist (hook '(epa-info-mode-hook help-mode-hook custom-mode-hook))
     (add-hook hook #'visual-line-mode))
