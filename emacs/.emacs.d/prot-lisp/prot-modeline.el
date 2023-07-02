@@ -43,6 +43,19 @@
 (setq mode-line-defining-kbd-macro
       (propertize " KMacro " 'face 'prot-modeline-intense))
 
+(defvar-local prot-modeline-input-method
+    '(:eval
+      (when current-input-method-title
+        (propertize (format " %s" current-input-method-title)
+                    'mouse-face 'mode-line-highlight)))
+  "Mode line construct to report the multilingual environment.")
+
+(defvar-local prot-modeline-buffer-status
+    '(:eval
+      (when (file-remote-p default-directory)
+        (propertize "@" 'mouse-face 'mode-line-highlight)))
+  "Mode line construct for showing remote file name.")
+
 (defun prot-modeline-buffer-identification-face ()
   "Return appropriate face or face list for `prot-modeline-buffer-identification'."
   (cond
@@ -170,7 +183,8 @@ Specific to the current window's mode line.")
 (dolist (construct '( prot-modeline-major-mode prot-modeline-align-right
                       prot-modeline-kbd-macro prot-modeline-flymake
                       prot-modeline-vc-branch prot-modeline-misc-info
-                      prot-modeline-buffer-identification))
+                      prot-modeline-buffer-identification prot-modeline-buffer-status
+                      prot-modeline-input-method))
   (put construct 'risky-local-variable t))
 
 (provide 'prot-modeline)

@@ -5,10 +5,8 @@
   (setq-default mode-line-format
                 '("%e"
                   prot-modeline-kbd-macro
-                  " "
-                  mode-line-mule-info
-                  mode-line-modified
-                  mode-line-remote
+                  prot-modeline-input-method
+                  prot-modeline-buffer-status
                   " "
                   prot-modeline-buffer-identification
                   "  "
