@@ -104,21 +104,23 @@ face.  Let other buffers have no face.")
     (propertize indicator 'face 'shadow)))
 
 (defvar-local prot-modeline-major-mode
-    (list (propertize "%[" 'face 'error)
-          '(:eval
-            (concat
-             (prot-modeline-major-mode-symbol)
-             " "
-             (propertize
-              (capitalize
-               (string-replace
-                "-mode"
-                ""
-                (symbol-name major-mode)))
-              'mouse-face 'mode-line-highlight)))
-          '(" " mode-line-process)
-          (propertize "%]" 'face 'error)
-          " ")
+    (list
+     (propertize "%[" 'face 'error)
+     '(:eval
+       (concat
+        (prot-modeline-major-mode-symbol)
+        " "
+        (propertize
+         (capitalize
+          (string-replace
+           "-mode"
+           ""
+           (symbol-name major-mode)))
+         'mouse-face 'mode-line-highlight)))
+     '(:eval
+       (when mode-line-process
+         (concat " " mode-line-process)))
+     (propertize "%]" 'face 'error))
   "Mode line construct for displaying major modes.")
 
 (defvar-local prot-modeline-align-right
