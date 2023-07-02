@@ -97,7 +97,7 @@ face.  Let other buffers have no face.")
                 ""
                 (symbol-name major-mode)))
               'mouse-face 'mode-line-highlight)))
-          '("" mode-line-process)
+          '(" " mode-line-process)
           (propertize "%]" 'face 'error)
           " ")
   "Mode line construct for displaying major modes.")
