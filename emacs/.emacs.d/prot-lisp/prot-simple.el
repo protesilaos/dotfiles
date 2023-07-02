@@ -719,7 +719,8 @@ With optional prefix ARG (\\[universal-argument]) delete the
 buffer's window as well."
   (interactive "P")
   (let ((kill-buffer-query-functions nil))
-    (if (and arg (not (one-window-p)))
+    (if (or (prot-common-window-small-p)
+            (and arg (not (one-window-p))))
         (kill-buffer-and-window)
       (kill-buffer))))
 
