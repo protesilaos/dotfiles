@@ -124,12 +124,13 @@ face.  Let other buffers have no face.")
   "Mode line construct for displaying major modes.")
 
 (defvar-local prot-modeline-align-right
-    '(:eval (propertize
-             " " 'display
-             `((space :align-to
-                      (- (+ right right-fringe right-margin)
-                         ,(string-width
-                           (format-mode-line mode-line-misc-info)))))))
+    '(:eval
+      (propertize
+       " " 'display
+       `((space :align-to
+                (- (+ right right-fringe right-margin)
+                   ,(string-width
+                     (format-mode-line mode-line-misc-info)))))))
   "Mode line construct to align following elements to the right.
 Read Info node `(elisp) Pixel Specification'.")
 
