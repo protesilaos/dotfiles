@@ -123,14 +123,49 @@ face.  Let other buffers have no face.")
      (propertize "%]" 'face 'error))
   "Mode line construct for displaying major modes.")
 
+;; (defvar-local prot-modeline-align-right
+;;     '(:eval
+;;       (propertize
+;;        " " 'display
+;;        `((space :align-to
+;;                 (- (+ right right-fringe right-margin)
+;;                    ,(string-width
+;;                      (format-mode-line mode-line-misc-info)))))))
+;;   "Mode line construct to align following elements to the right.
+;; Read Info node `(elisp) Pixel Specification'.")
+
 (defvar-local prot-modeline-align-right
     '(:eval
       (propertize
-       " " 'display
-       `((space :align-to
-                (- (+ right right-fringe right-margin)
-                   ,(string-width
-                     (format-mode-line mode-line-misc-info)))))))
+       " "
+       'display
+       `(space
+         :align-to
+         (- right
+            ,(ceiling
+              ;; FIXME 2023-07-03: The `format-mode-line' assumes that
+              ;; I will only ever right align `mode-line-misc-info'.
+              ;; A better approach would be to have a variable that
+              ;; specifies "right side elements" and includes the
+              ;; likes of `mode-line-misc-info'.
+              (string-pixel-width (format-mode-line mode-line-misc-info))
+              ;; A column is equal to this in pixels.  We
+              ;; check for "m" is at its natural width, which
+              ;; includes the possibility of `mode-line' being
+              ;; set to a variable pitch font or inherit from
+              ;; `variable-pitch'.
+              (string-pixel-width (propertize "m" 'face 'mode-line)))
+            ,(ceiling
+              (string-pixel-width (propertize "m" 'face 'mode-line))
+              ;; Find the height of `mode-line' font, falling back to
+              ;; `default'.  Then get the "magic" number out of it.  I
+              ;; am not sure why this works, but it does with all font
+              ;; sizes I tried, using my Iosevka Comfy fonts.  The
+              ;; spacing is off by 2(?) pixels when I try FiraGO,
+              ;; though only at small point sizes...
+              (floor
+               (/ (face-attribute 'mode-line :height nil 'default) 10)
+               3.5))))))
   "Mode line construct to align following elements to the right.
 Read Info node `(elisp) Pixel Specification'.")
 
