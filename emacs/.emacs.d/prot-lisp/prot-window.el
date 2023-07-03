@@ -58,7 +58,9 @@ number (integer or floating point) or a function.")
 (defun prot-window-select-fit-size (window &rest _)
   "Select WINDOW and resize it.
 The resize pertains to the maximum and minimum values for height
-and width, per `prot-window-window-sizes'."
+and width, per `prot-window-window-sizes'.
+
+Use this as the `body-function' in a `display-buffer-alist' entry."
   (select-window window)
   (fit-window-to-buffer
    window
