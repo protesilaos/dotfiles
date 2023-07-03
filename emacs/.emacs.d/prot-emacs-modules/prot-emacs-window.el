@@ -16,6 +16,13 @@
         `(;; no window
           ("\\`\\*Async Shell Command\\*\\'"
            (display-buffer-no-window))
+          ;; left side window
+          (,world-clock-buffer-name
+           (display-buffer-in-side-window)
+           (side . left)
+           (slot . 0)
+           (dedicated . t)
+           (window-width . 0.2))
           ;; bottom side window
           ("\\*Org Select\\*" ; the `org-capture' key selection
            (display-buffer-in-side-window)
@@ -28,8 +35,7 @@
                   (derived-mode . flymake-project-diagnostics-mode)
                   (derived-mode . messages-buffer-mode)
                   (derived-mode . backtrace-mode)
-                  "\\*\\(Warnings\\|Compile-Log\\|Org Links\\)\\*"
-                  ,world-clock-buffer-name))
+                  "\\*\\(Warnings\\|Compile-Log\\|Org Links\\)\\*"))
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.3)
            (dedicated . t)
@@ -97,6 +103,8 @@
 
   (dolist (hook '(epa-info-mode-hook help-mode-hook custom-mode-hook))
     (add-hook hook #'visual-line-mode))
+
+  (add-hook 'world-clock-mode-hook #'prot-common-truncate-lines-silently)
 
   ;; NOTE 2022-09-17: Also see `prot-simple-swap-window-buffers'.
   (prot-emacs-keybind global-map
