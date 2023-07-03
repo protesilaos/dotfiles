@@ -105,13 +105,18 @@ The name is truncated if the width of the window is smaller than
         (format "%s %s" (char-to-string #xE0A2) name)
       name)))
 
+(defun prot-modeline-buffer-name-help-echo ()
+  "Return `help-echo' value for `prot-modeline-buffer-identification'."
+  (concat
+   (or (buffer-file-name)
+       (format "No underlying file.\nDirectory is: %s" default-directory))))
+
 (defvar-local prot-modeline-buffer-identification
     '(:eval
       (propertize (prot-modeline-buffer-name)
                   'face (prot-modeline-buffer-identification-face)
                   'mouse-face 'mode-line-highlight
-                  'help-echo (or (buffer-file-name)
-                                 (format "No underlying file.\nDirectory is: %s" default-directory))))
+                  'help-echo (prot-modeline-buffer-name-help-echo)))
   "Mode line construct for identifying the buffer being displayed.
 Propertize the current buffer with the `mode-line-buffer-id'
 face.  Let other buffers have no face.")
