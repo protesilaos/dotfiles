@@ -163,18 +163,18 @@
 ;;;; Delete selection
   (delete-selection-mode 1)
 
-;;;; Tooltips (tooltip-mode)
-  (setq tooltip-delay 0.5
-        tooltip-short-delay 0.5
-        x-gtk-use-system-tooltips nil
-        tooltip-frame-parameters
-        '((name . "tooltip")
-          (internal-border-width . 6)
-          (border-width . 0)
-          (no-special-glyphs . t)))
-
-  (autoload #'tooltip-mode "tooltip")
-  (tooltip-mode 1)
+;; ;;;; Tooltips (tooltip-mode)
+;;   (setq tooltip-delay 0.5
+;;         tooltip-short-delay 0.5
+;;         x-gtk-use-system-tooltips nil
+;;         tooltip-frame-parameters
+;;         '((name . "tooltip")
+;;           (internal-border-width . 6)
+;;           (border-width . 0)
+;;           (no-special-glyphs . t)))
+;;
+;;   (autoload #'tooltip-mode "tooltip")
+;;   (tooltip-mode 1)
 
 ;;;; Display current time
   (setq display-time-format " %a %e %b, %H:%M ")
