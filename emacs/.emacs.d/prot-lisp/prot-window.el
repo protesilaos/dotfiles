@@ -71,6 +71,14 @@ Use this as the `body-function' in a `display-buffer-alist' entry."
    (prot-window--get-window-size :max-width)
    (prot-window--get-window-size :max-width)))
 
+(defun prot-window--get-display-buffer-below-or-pop ()
+  "Return list of functions for `prot-window-display-buffer-below-or-pop'."
+  (list
+   #'display-buffer-reuse-mode-window
+   (if (prot-common-window-small-p)
+       #'display-buffer-below-selected
+     #'display-buffer-pop-up-window)))
+
 (defun prot-window-display-buffer-below-or-pop (&rest args)
   "Display buffer below current window or pop a new window.
 The criterion for choosing to display the buffer below the
@@ -80,13 +88,11 @@ current one is a non-nil return value for
 Apply ARGS expected by the underlying `display-buffer' functions.
 
 This as the action function in a `display-buffer-alist' entry."
-  (apply
-  ;; FIXME 2023-07-03: `display-buffer-reuse-mode-window' must be
-  ;; here.
-   (if (prot-common-window-small-p)
-       #'display-buffer-below-selected
-     #'display-buffer-pop-up-window)
-   args))
+  (let ((functions (prot-window--get-display-buffer-below-or-pop)))
+    (catch 'success
+      (dolist (fn functions)
+        (when (apply fn args)
+          (throw 'success fn))))))
 
 (defun prot-window-shell-or-term-p (buffer &rest _)
   "Check if BUFFER is a shell or terminal.
