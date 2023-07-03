@@ -130,6 +130,11 @@ face.  Let other buffers have no face.")
                     (t "◦"))))
     (propertize indicator 'face 'shadow)))
 
+(defun prot-modeline-major-mode-help-echo ()
+  "Return `help-echo' value for `prot-modeline-major-mode'."
+  (format "Symbol: `%s'.  Derived from: `%s'"
+          major-mode (get major-mode 'derived-mode-parent)))
+
 (defvar-local prot-modeline-major-mode
     (list
      (propertize "%[" 'face 'error)
@@ -143,7 +148,8 @@ face.  Let other buffers have no face.")
            "-mode"
            ""
            (symbol-name major-mode)))
-         'mouse-face 'mode-line-highlight)))
+         'mouse-face 'mode-line-highlight
+         'help-echo (prot-modeline-major-mode-help-echo))))
      '(:eval
        (when mode-line-process
          (concat " " mode-line-process)))
