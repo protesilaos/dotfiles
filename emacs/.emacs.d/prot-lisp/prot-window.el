@@ -81,6 +81,8 @@ Apply ARGS expected by the underlying `display-buffer' functions.
 
 This as the action function in a `display-buffer-alist' entry."
   (apply
+  ;; FIXME 2023-07-03: `display-buffer-reuse-mode-window' must be
+  ;; here.
    (if (prot-common-window-small-p)
        #'display-buffer-below-selected
      #'display-buffer-pop-up-window)
