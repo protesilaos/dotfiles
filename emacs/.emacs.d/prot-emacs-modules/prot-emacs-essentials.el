@@ -231,7 +231,7 @@
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
   (setq proced-filter 'user)
-  
+
 ;;;; Emacs server (allow emacsclient to connect to running session)
   ;; The "server" is functionally like the daemon, except it is run by
   ;; the first Emacs frame we launch.  When we close that frame, the
