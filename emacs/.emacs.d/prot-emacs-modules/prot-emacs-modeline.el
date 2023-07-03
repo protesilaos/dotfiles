@@ -5,6 +5,7 @@
   (setq-default mode-line-format
                 '("%e"
                   prot-modeline-kbd-macro
+                  prot-modeline-narrow
                   prot-modeline-input-method
                   prot-modeline-buffer-status
                   " "

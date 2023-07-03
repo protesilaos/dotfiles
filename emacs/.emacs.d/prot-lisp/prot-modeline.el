@@ -38,7 +38,23 @@
     (((class color) (min-colors 88) (background dark))
      :background "#77aaff" :foreground "#000000")
     (t :inverse-video t))
-  "Face for intense mode line constructs.")
+  "Face for intense mode line constructs, unlike `prot-modeline-subtle'.")
+
+(defface prot-modeline-subtle
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#4444aa" :foreground "#ffffff")
+    (((class color) (min-colors 88) (background dark))
+     :background "#aaccff" :foreground "#000000")
+    (t :inverse-video t))
+  "Face for subtle mode line constructs, unlike `prot-modeline-intense'.")
+
+(defvar-local prot-modeline-narrow
+    '(:eval
+      (when (and (buffer-narrowed-p)
+                 (not (derived-mode-p 'Info-mode 'help-mode)))
+        (propertize " Narrow " 'face 'prot-modeline-subtle)))
+  "Mode line construct to report the multilingual environment.")
 
 (setq mode-line-defining-kbd-macro
       (propertize " KMacro " 'face 'prot-modeline-intense))
@@ -258,7 +274,7 @@ than `split-width-threshold'."
                       prot-modeline-kbd-macro prot-modeline-flymake
                       prot-modeline-vc-branch prot-modeline-misc-info
                       prot-modeline-buffer-identification prot-modeline-buffer-status
-                      prot-modeline-input-method))
+                      prot-modeline-input-method prot-modeline-narrow))
   (put construct 'risky-local-variable t))
 
 (provide 'prot-modeline)
