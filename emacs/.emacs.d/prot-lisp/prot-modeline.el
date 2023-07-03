@@ -49,6 +49,13 @@
     (t :inverse-video t))
   "Face for subtle mode line constructs, unlike `prot-modeline-intense'.")
 
+(defvar-local prot-modeline-kbd-macro
+    '(:eval
+      (when (and defining-kbd-macro (mode-line-window-selected-p))
+        (propertize " KMacro " 'face 'prot-modeline-intense)))
+  "Mode line construct displaying `mode-line-defining-kbd-macro'.
+Specific to the current window's mode line.")
+
 (defvar-local prot-modeline-narrow
     '(:eval
       (when (and (buffer-narrowed-p)
@@ -138,74 +145,6 @@ face.  Let other buffers have no face.")
      (propertize "%]" 'face 'error))
   "Mode line construct for displaying major modes.")
 
-;; (defvar-local prot-modeline-align-right
-;;     '(:eval
-;;       (propertize
-;;        " " 'display
-;;        `((space :align-to
-;;                 (- (+ right right-fringe right-margin)
-;;                    ,(string-width
-;;                      (format-mode-line mode-line-misc-info)))))))
-;;   "Mode line construct to align following elements to the right.
-;; Read Info node `(elisp) Pixel Specification'.")
-
-(defvar-local prot-modeline-align-right
-    '(:eval
-      (propertize
-       " "
-       'display
-       `(space
-         :align-to
-         (- right
-            ,(ceiling
-              ;; FIXME 2023-07-03: The `format-mode-line' assumes that
-              ;; I will only ever right align `mode-line-misc-info'.
-              ;; A better approach would be to have a variable that
-              ;; specifies "right side elements" and includes the
-              ;; likes of `mode-line-misc-info'.
-              (string-pixel-width (format-mode-line mode-line-misc-info))
-              ;; A column is equal to this in pixels.  We check if "m"
-              ;; (a wide glyph in proportionately spaced fonts) is at
-              ;; its natural width.  This cover the possibility of
-              ;; `mode-line' being set to a variable pitch font or to
-              ;; inherit from `variable-pitch'.
-              (string-pixel-width (propertize "m" 'face 'mode-line)))
-            ,(ceiling
-              (string-pixel-width (propertize "m" 'face 'mode-line))
-              ;; Find the height of the `mode-line' font, falling back
-              ;; to `default'.  Then get the "magic" number out of it.
-              ;; I am not sure why this works, but it does with all
-              ;; font sizes I tried, using my Iosevka Comfy fonts.
-              ;; The spacing is off by 2(?) pixels when I try FiraGO,
-              ;; though only at small point sizes...
-              (floor
-               (/ (face-attribute 'mode-line :height nil 'default) 10)
-               3.5))))))
-  "Mode line construct to align following elements to the right.
-Read Info node `(elisp) Pixel Specification'.")
-
-(defvar-local prot-modeline-kbd-macro
-    '(:eval
-      (when (and defining-kbd-macro (mode-line-window-selected-p))
-        (propertize " KMacro " 'face 'prot-modeline-intense)))
-  "Mode line construct displaying `mode-line-defining-kbd-macro'.
-Specific to the current window's mode line.")
-
-(defvar-local prot-modeline-flymake
-    '(:eval
-      (when (and (bound-and-true-p flymake-mode)
-                 (mode-line-window-selected-p))
-        flymake-mode-line-format))
-  "Mode line construct displaying `flymake-mode-line-format'.
-Specific to the current window's mode line.")
-
-(defvar-local prot-modeline-misc-info
-    '(:eval
-      (when (mode-line-window-selected-p)
-        mode-line-misc-info))
-  "Mode line construct displaying `mode-line-misc-info'.
-Specific to the current window's mode line.")
-
 (defun prot-modeline-diffstat (file)
   "Return shortened Git diff numstat for FILE."
   (when-let* ((output (shell-command-to-string (format "git diff --numstat %s" file)))
@@ -265,13 +204,79 @@ than `split-width-threshold'."
         (prot-modeline--vc-details file branch)))
   "Mode line construct to return propertized VC branch.")
 
+(defvar-local prot-modeline-flymake
+    '(:eval
+      (when (and (bound-and-true-p flymake-mode)
+                 (mode-line-window-selected-p))
+        flymake-mode-line-format))
+  "Mode line construct displaying `flymake-mode-line-format'.
+Specific to the current window's mode line.")
+
+;; (defvar-local prot-modeline-align-right
+;;     '(:eval
+;;       (propertize
+;;        " " 'display
+;;        `((space :align-to
+;;                 (- (+ right right-fringe right-margin)
+;;                    ,(string-width
+;;                      (format-mode-line mode-line-misc-info)))))))
+;;   "Mode line construct to align following elements to the right.
+;; Read Info node `(elisp) Pixel Specification'.")
+
+(defvar-local prot-modeline-align-right
+    '(:eval
+      (propertize
+       " "
+       'display
+       `(space
+         :align-to
+         (- right
+            ,(ceiling
+              ;; FIXME 2023-07-03: The `format-mode-line' assumes that
+              ;; I will only ever right align `mode-line-misc-info'.
+              ;; A better approach would be to have a variable that
+              ;; specifies "right side elements" and includes the
+              ;; likes of `mode-line-misc-info'.
+              (string-pixel-width (format-mode-line mode-line-misc-info))
+              ;; A column is equal to this in pixels.  We check if "m"
+              ;; (a wide glyph in proportionately spaced fonts) is at
+              ;; its natural width.  This cover the possibility of
+              ;; `mode-line' being set to a variable pitch font or to
+              ;; inherit from `variable-pitch'.
+              (string-pixel-width (propertize "m" 'face 'mode-line)))
+            ,(ceiling
+              (string-pixel-width (propertize "m" 'face 'mode-line))
+              ;; Find the height of the `mode-line' font, falling back
+              ;; to `default'.  Then get the "magic" number out of it.
+              ;; I am not sure why this works, but it does with all
+              ;; font sizes I tried, using my Iosevka Comfy fonts.
+              ;; The spacing is off by 2(?) pixels when I try FiraGO,
+              ;; though only at small point sizes...
+              (floor
+               (/ (face-attribute 'mode-line :height nil 'default) 10)
+               3.5))))))
+  "Mode line construct to align following elements to the right.
+Read Info node `(elisp) Pixel Specification'.")
+
+(defvar-local prot-modeline-misc-info
+    '(:eval
+      (when (mode-line-window-selected-p)
+        mode-line-misc-info))
+  "Mode line construct displaying `mode-line-misc-info'.
+Specific to the current window's mode line.")
+
 ;; NOTE 2023-04-28: The `risky-local-variable' is critical, as those
 ;; variables will not work without it.
-(dolist (construct '( prot-modeline-major-mode prot-modeline-align-right
-                      prot-modeline-kbd-macro prot-modeline-flymake
-                      prot-modeline-vc-branch prot-modeline-misc-info
-                      prot-modeline-buffer-identification prot-modeline-buffer-status
-                      prot-modeline-input-method prot-modeline-narrow))
+(dolist (construct '(prot-modeline-kbd-macro
+                     prot-modeline-narrow
+                     prot-modeline-input-method
+                     prot-modeline-buffer-status
+                     prot-modeline-buffer-identification
+                     prot-modeline-major-mode
+                     prot-modeline-vc-branch
+                     prot-modeline-flymake
+                     prot-modeline-align-right
+                     prot-modeline-misc-info))
   (put construct 'risky-local-variable t))
 
 (provide 'prot-modeline)
