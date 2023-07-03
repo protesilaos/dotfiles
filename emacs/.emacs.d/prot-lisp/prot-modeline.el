@@ -149,19 +149,19 @@ face.  Let other buffers have no face.")
               ;; specifies "right side elements" and includes the
               ;; likes of `mode-line-misc-info'.
               (string-pixel-width (format-mode-line mode-line-misc-info))
-              ;; A column is equal to this in pixels.  We
-              ;; check for "m" is at its natural width, which
-              ;; includes the possibility of `mode-line' being
-              ;; set to a variable pitch font or inherit from
-              ;; `variable-pitch'.
+              ;; A column is equal to this in pixels.  We check if "m"
+              ;; (a wide glyph in proportionately spaced fonts) is at
+              ;; its natural width.  This cover the possibility of
+              ;; `mode-line' being set to a variable pitch font or to
+              ;; inherit from `variable-pitch'.
               (string-pixel-width (propertize "m" 'face 'mode-line)))
             ,(ceiling
               (string-pixel-width (propertize "m" 'face 'mode-line))
-              ;; Find the height of `mode-line' font, falling back to
-              ;; `default'.  Then get the "magic" number out of it.  I
-              ;; am not sure why this works, but it does with all font
-              ;; sizes I tried, using my Iosevka Comfy fonts.  The
-              ;; spacing is off by 2(?) pixels when I try FiraGO,
+              ;; Find the height of the `mode-line' font, falling back
+              ;; to `default'.  Then get the "magic" number out of it.
+              ;; I am not sure why this works, but it does with all
+              ;; font sizes I tried, using my Iosevka Comfy fonts.
+              ;; The spacing is off by 2(?) pixels when I try FiraGO,
               ;; though only at small point sizes...
               (floor
                (/ (face-attribute 'mode-line :height nil 'default) 10)
