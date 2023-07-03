@@ -207,6 +207,29 @@ Specific to the current window's mode line.")
      (t
       (propertize (format "+%s -%s" added deleted) 'face 'shadow)))))
 
+(declare-function vc-git-working-revision "vc-git" (file))
+
+(defun prot-modeline--vc-text (file branch)
+  "Prepare text for Git controlled FILE, given BRANCH."
+  (concat
+   (propertize (char-to-string #xE0A0) 'face 'shadow)
+   " "
+   (propertize (capitalize branch)
+               ;; 'face face
+               'mouse-face 'highlight
+               'help-echo (vc-git-working-revision file))
+   " "
+   (prot-modeline-diffstat file)))
+
+(defun prot-modeline--vc-details (file branch)
+  "Return Git BRANCH details for FILE, truncating it if necessary.
+The string is truncated if the width of the window is smaller
+than `split-width-threshold'."
+  (let ((text (prot-modeline--vc-text file branch)))
+    (if (< (window-width) split-width-threshold)
+        (concat (substring text 0 9) "...")
+      text)))
+
 (defvar-local prot-modeline-vc-branch
     '(:eval
       (when-let* (((mode-line-window-selected-p))
@@ -224,15 +247,7 @@ Specific to the current window's mode line.")
                   ;;         ('locked 'vc-locked-state)
                   ;;         (_ 'vc-up-to-date-state)))
                   )
-        (concat
-         (propertize (char-to-string #xE0A0) 'face 'shadow)
-         " "
-         (propertize (capitalize branch)
-                     ;; 'face face
-                     'mouse-face 'highlight
-                     'help-echo (vc-git-working-revision file))
-         " "
-         (prot-modeline-diffstat file))))
+        (prot-modeline--vc-details file branch)))
   "Mode line construct to return propertized VC branch.")
 
 ;; NOTE 2023-04-28: The `risky-local-variable' is critical, as those
