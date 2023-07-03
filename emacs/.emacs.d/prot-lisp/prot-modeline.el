@@ -89,7 +89,9 @@ The name is truncated if the width of the window is smaller than
     '(:eval
       (propertize (prot-modeline-buffer-name)
                   'face (prot-modeline-buffer-identification-face)
-                  'mouse-face 'mode-line-highlight))
+                  'mouse-face 'mode-line-highlight
+                  'help-echo (or (buffer-file-name)
+                                 (format "No underlying file.\nDirectory is: %s" default-directory))))
   "Mode line construct for identifying the buffer being displayed.
 Propertize the current buffer with the `mode-line-buffer-id'
 face.  Let other buffers have no face.")
