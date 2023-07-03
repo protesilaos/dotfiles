@@ -157,6 +157,8 @@
   (setq flymake-wrap-around nil)
   (setq flymake-mode-line-format
         '("" flymake-mode-line-exception flymake-mode-line-counters))
+  ;; NOTE 2023-07-03: `prot-modeline.el' actually defines the counters
+  ;; itself and ignores this.
   (setq flymake-mode-line-counter-format
         '("" flymake-mode-line-error-counter
           flymake-mode-line-warning-counter

@@ -215,11 +215,58 @@ than `split-width-threshold'."
         (prot-modeline--vc-details file branch)))
   "Mode line construct to return propertized VC branch.")
 
+(declare-function flymake--severity "flymake" (type))
+(declare-function flymake-diagnostic-type "flymake" (diag))
+
+;; Based on `flymake--mode-line-counter'.
+(defun prot-modeline-flymake-counter (type)
+  "Compute number of diagnostics in buffer with TYPE's severity.
+TYPE is usually keyword `:error', `:warning' or `:note'."
+  (let ((count 0))
+    (dolist (d (flymake-diagnostics))
+      (when (= (flymake--severity type)
+               (flymake--severity (flymake-diagnostic-type d)))
+        (cl-incf count)))
+    (when (cl-plusp count)
+      (number-to-string count))))
+
+(defmacro prot-modeline-flymake-type (type indicator &optional face)
+  "Return function that handles Flymake TYPE with stylistic INDICATOR and FACE."
+  `(defun ,(intern (format "prot-modeline-flymake-%s" type)) ()
+     (when-let ((count (prot-modeline-flymake-counter
+                        ,(intern (format ":%s" type)))))
+       (concat
+        (propertize ,indicator 'face 'shadow)
+        (propertize count 'face ',(or face type))))))
+
+(prot-modeline-flymake-type error "☣")
+(prot-modeline-flymake-type warning "!")
+(prot-modeline-flymake-type note "·" success)
+
+;; (defvar prot-modeline-flymake-keymap
+;;   (let ((map (make-sparse-keymap)))
+;;     (define-key map [mode-line down-mouse-1] 'flymake-show-buffer-diagnostics)
+;;     map)
+;;   "Keymap to display on Flymake indicator.")
+
 (defvar-local prot-modeline-flymake
-    '(:eval
+    `(:eval
       (when (and (bound-and-true-p flymake-mode)
                  (mode-line-window-selected-p))
-        flymake-mode-line-format))
+        (list
+         ;; FIXME 2023-07-03: Clicking on the text with this buffer
+         ;; and a single warning present, the diagnostics take up the
+         ;; entire frame.  Why?
+         ;;
+         ;; (propertize "Lint: "
+         ;;             'mouse-face 'highlight
+         ;;             'local-map prot-modeline-flymake-keymap
+         ;;             'help-echo "Click to show diagnostics")
+
+         ;; See the calls to the macro `prot-modeline-flymake-type'
+         '(:eval (prot-modeline-flymake-error))
+         '(:eval (prot-modeline-flymake-warning))
+         '(:eval (prot-modeline-flymake-note)))))
   "Mode line construct displaying `flymake-mode-line-format'.
 Specific to the current window's mode line.")
 
