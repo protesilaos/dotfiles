@@ -20,6 +20,7 @@
   (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
   (setq save-interprogram-paste-before-kill t)
   (setq mode-require-final-newline 'visit-save)
+  (setq-default truncate-partial-width-windows nil)
 
   (setq prot-simple-insert-pair-alist
       '(("' Single quote"        . (39 39))     ; ' '
