@@ -48,16 +48,9 @@
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
-          ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
-           (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.1)
-           (dedicated . t)
-           (preserve-size . (t . t)))
-          ((derived-mode . log-view-mode)
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 0.3)
            (dedicated . t)
            (preserve-size . (t . t)))
           ((derived-mode . reb-mode) ; M-x re-builder
@@ -67,12 +60,15 @@
            (preserve-size . (t . t)))
           ((or . ((derived-mode . occur-mode)
                   (derived-mode . Buffer-menu-mode)
-                  "\\*\\(|Buffer List\\|Occur\\).*"
+                  (derived-mode . log-view-mode)
+                  (derived-mode . embark-collect-mode)
+                  (derived-mode . help-mode) ; See the hooks for `visual-line-mode'
+                  "\\*\\(|Buffer List\\|Occur\\|vc-change-log\\|Embark Collect\\).*"
                   prot-window-shell-or-term-p))
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (prot-window-display-buffer-below-or-pop)
            (dedicated . t)
            (body-function . prot-window-select-fit-size))
-          ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\|Embark Collect\\).*"
+          ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (dedicated . t)
            (window-height . fit-window-to-buffer))
