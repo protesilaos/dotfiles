@@ -56,9 +56,6 @@
         (propertize " Narrow " 'face 'prot-modeline-subtle)))
   "Mode line construct to report the multilingual environment.")
 
-(setq mode-line-defining-kbd-macro
-      (propertize " KMacro " 'face 'prot-modeline-intense))
-
 (defvar-local prot-modeline-input-method
     '(:eval
       (when current-input-method-title
@@ -190,7 +187,7 @@ Read Info node `(elisp) Pixel Specification'.")
 (defvar-local prot-modeline-kbd-macro
     '(:eval
       (when (and defining-kbd-macro (mode-line-window-selected-p))
-        mode-line-defining-kbd-macro))
+        (propertize " KMacro " 'face 'prot-modeline-intense)))
   "Mode line construct displaying `mode-line-defining-kbd-macro'.
 Specific to the current window's mode line.")
 
