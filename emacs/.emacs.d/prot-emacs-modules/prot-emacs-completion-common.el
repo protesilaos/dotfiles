@@ -57,6 +57,7 @@
         ;; `orderless' kicks in as soon as I input a space or one of its
         ;; style dispatcher characters.
         '((file (styles . (basic partial-completion orderless)))
+          (project-file (styles . (orderless)))
           (bookmark (styles . (basic substring)))
           (library (styles . (basic substring)))
           (embark-keybinding (styles . (basic substring)))
