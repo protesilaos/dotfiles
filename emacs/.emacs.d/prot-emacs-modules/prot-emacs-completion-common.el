@@ -247,7 +247,10 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq consult-narrow-key nil)
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
-  (setq consult-find-args "find . -not ( -path */.git* -prune )")
+  (setq consult-find-args
+        (concat "find . -not ( "
+                "-path */.git* -prune "
+                "-or -path */.cache* -prune )"))
   (setq consult-preview-key 'any)
 
   (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
