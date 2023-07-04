@@ -51,7 +51,7 @@
 
 (defvar-local prot-modeline-kbd-macro
     '(:eval
-      (when (and defining-kbd-macro (mode-line-window-selected-p))
+      (when (and (mode-line-window-selected-p) defining-kbd-macro)
         (propertize " KMacro " 'face 'prot-modeline-intense)))
   "Mode line construct displaying `mode-line-defining-kbd-macro'.
 Specific to the current window's mode line.")
