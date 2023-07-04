@@ -30,6 +30,8 @@ emacs-lisp-mode
 (let* "(let* (" p ")" n> r> ")")
 (dotimes "(dotimes (" p ")" n> r> ")")
 (dolist "(dolist (" p ")" n> r> ")")
+(obsolete-fun "(define-obsolete-function-alias" n> p n> p n> "\"" p "\")")
+(obsolete-var "(define-obsolete-function-alias" n> p n> p n> "\"" p "\")")
 
 js-mode
 
