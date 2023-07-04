@@ -512,6 +512,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq marginalia-annotator-registry
         '((bookmark prot/marginalia-bookmark)
           (buffer prot/marginalia-buffer)
+          (command marginalia-annotate-command)
           (face marginalia-annotate-face)
           (imenu marginalia-annotate-imenu)
           (package prot/marginalia-package))))
