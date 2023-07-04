@@ -93,7 +93,7 @@ Specific to the current window's mode line.")
   "Return `buffer-name', truncating it if necessary.
 The name is truncated if the width of the window is smaller than
 `split-width-threshold'."
-  (let ((name (buffer-name)))
+  (when-let ((name (buffer-name)))
     (if (< (window-width) split-width-threshold)
         (concat (substring name 0 9) "...")
       name)))
