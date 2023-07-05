@@ -37,6 +37,12 @@ automatically.")
       (vertico-resize . t))
     "List of configurations for maximal Vertico multiform.")
 
+  ;; Sort directories before files.  From the Consult documentation.
+  (defun contrib/sort-directories-first (files)
+    (setq files (vertico-sort-history-length-alpha files))
+    (nconc (seq-filter (lambda (x) (string-suffix-p "/" x)) files)
+           (seq-remove (lambda (x) (string-suffix-p "/" x)) files)))
+
   (setq vertico-multiform-categories
         `(;; Maximal
           (embark-keybinding ,@prot-vertico-maximal)
@@ -45,7 +51,9 @@ automatically.")
           (imenu ,@prot-vertico-maximal)
           (unicode-name ,@prot-vertico-maximal)
           ;; Minimal
-          (file ,@prot-vertico-minimal (vertico-preselect . prompt))
+          (file ,@prot-vertico-minimal
+                (vertico-preselect . prompt)
+                (vertico-sort-function . contrib/sort-directories-first))
           (t ,@prot-vertico-minimal)))
 
   (vertico-multiform-mode 1)
