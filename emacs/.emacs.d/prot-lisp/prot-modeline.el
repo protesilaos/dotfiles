@@ -64,7 +64,8 @@
 (defun prot-modeline--string-truncate-p (str)
   "Return non-nil if STR should be truncated."
   (and (< (window-total-width) split-width-threshold)
-       (> (length str) prot-modeline-string-truncate-length)))
+       (> (length str) prot-modeline-string-truncate-length)
+       (not (one-window-p :no-minibuffer))))
 
 (defun prot-modeline-string-truncate (str)
   "Return truncated STR, if appropriate, else return STR."
