@@ -78,7 +78,18 @@ This is done to accommodate `prot-vertico-minimal'."
           (vertico-previous 1))
       (vertico-previous 1)))
 
+  (defun prot-vertico-private-complete ()
+    "Expand contents and show remaining candidates, if needed.
+This is done to accommodate `prot-vertico-minimal'."
+    (interactive)
+    (if (and vertico-unobtrusive-mode (> vertico--total 1))
+        (progn
+          (minibuffer-complete)
+          (vertico-multiform-vertical))
+      (vertico-insert)))
+
   (prot-emacs-keybind vertico-map
+    "TAB" #'prot-vertico-private-complete
     "DEL" #'vertico-directory-delete-char
     "M-DEL" #'vertico-directory-delete-word
     "M-," #'vertico-quick-insert
