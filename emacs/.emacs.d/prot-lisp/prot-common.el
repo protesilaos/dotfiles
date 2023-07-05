@@ -193,9 +193,9 @@ Check if the `window-width' or `window-height' is less than
 `split-width-threshold' and `split-height-threshold',
 respectively."
   (or (and (numberp split-width-threshold)
-           (< (window-width) split-width-threshold))
+           (< (window-total-width) split-width-threshold))
       (and (numberp split-height-threshold)
-           (> (window-height) split-height-threshold))))
+           (> (window-total-height) split-height-threshold))))
 
 ;;;###autoload
 (defun prot-common-read-data (file)
