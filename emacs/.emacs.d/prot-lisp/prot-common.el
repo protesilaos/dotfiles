@@ -198,6 +198,12 @@ respectively."
            (> (window-total-height) split-height-threshold))))
 
 ;;;###autoload
+(defun prot-common-three-or-more-windows-p (&optional frame)
+  "Return non-nil if three or more windows occupy FRAME.
+If FRAME is non-nil, inspect the current frame."
+  (>= (length (window-list frame :no-minibuffer)) 3))
+
+;;;###autoload
 (defun prot-common-read-data (file)
   "Read Elisp data from FILE."
   (with-temp-buffer
