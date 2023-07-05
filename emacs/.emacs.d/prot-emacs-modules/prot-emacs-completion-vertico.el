@@ -37,7 +37,7 @@ automatically.")
       (vertico-resize . t))
     "List of configurations for maximal Vertico multiform.")
 
-  ;; Sort directories before files.  From the Consult documentation.
+  ;; Sort directories before files.  From the Vertico documentation.
   (defun contrib/sort-directories-first (files)
     (setq files (vertico-sort-history-length-alpha files))
     (nconc (seq-filter (lambda (x) (string-suffix-p "/" x)) files)
