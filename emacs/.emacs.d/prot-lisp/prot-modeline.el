@@ -325,36 +325,41 @@ Specific to the current window's mode line.")
 
 (defvar-local prot-modeline-align-right
     '(:eval
-      (propertize
-       " "
-       'display
-       `(space
-         :align-to
-         (- right
-            ,(ceiling
-              ;; FIXME 2023-07-03: The `format-mode-line' assumes that
-              ;; I will only ever right align `mode-line-misc-info'.
-              ;; A better approach would be to have a variable that
-              ;; specifies "right side elements" and includes the
-              ;; likes of `mode-line-misc-info'.
-              (string-pixel-width (format-mode-line mode-line-misc-info))
-              ;; A column is equal to this in pixels.  We check if "m"
-              ;; (a wide glyph in proportionately spaced fonts) is at
-              ;; its natural width.  This cover the possibility of
-              ;; `mode-line' being set to a variable pitch font or to
-              ;; inherit from `variable-pitch'.
-              (string-pixel-width (propertize "m" 'face 'mode-line)))
-            ,(ceiling
-              (string-pixel-width (propertize "m" 'face 'mode-line))
-              ;; Find the height of the `mode-line' font, falling back
-              ;; to `default'.  Then get the "magic" number out of it.
-              ;; I am not sure why this works, but it does with all
-              ;; font sizes I tried, using my Iosevka Comfy fonts.
-              ;; The spacing is off by 2(?) pixels when I try FiraGO,
-              ;; though only at small point sizes...
-              (floor
-               (/ (face-attribute 'mode-line :height nil 'default) 10)
-               3.5))))))
+      (let* ((rest (cdr (memq 'prot-modeline-align-right mode-line-format)))
+             (rest-string (format-mode-line `("" ,@rest)))
+             ;; A column is equal to this in pixels.  We check if "m"
+             ;; (a wide glyph in proportionately spaced fonts) is at
+             ;; its natural width.  This covers the possibility of
+             ;; `mode-line' being set to a variable pitch font or to
+             ;; inherit from `variable-pitch'.
+             (m-width (string-pixel-width (propertize "m" 'face 'mode-line))))
+        (propertize
+         " "
+         'display
+         `(space
+           :align-to
+           (+
+            (- right
+               ,(ceiling (string-pixel-width rest-string) m-width)
+               ,(ceiling
+                 m-width
+                 ;; Find the height of the `mode-line' font, falling
+                 ;; back to `default'.  Then get the "magic" number
+                 ;; out of it.  I am not sure why this works, but it
+                 ;; does with all font sizes I tried, using my Iosevka
+                 ;; Comfy fonts (mono and quasi-proportional
+                 ;; variants).
+                 ;;
+                 ;; The spacing is off when I try FiraGO, with and
+                 ;; without my `notmuch-indicator'.  I suspect that is
+                 ;; due to the pixel width of the added spaces.
+                 (floor
+                  (/ (face-attribute 'mode-line :height nil 'default) 10)
+                  4)))
+            ,(if-let* ((modeline-box (face-attribute 'mode-line :box))
+                       ((not (eq (face-attribute 'mode-line :box) 'unspecified))))
+                 (floor (string-pixel-width (propertize "i" 'face 'mode-line)) 4)
+               (string-pixel-width (propertize "i" 'face 'mode-line))))))))
   "Mode line construct to align following elements to the right.
 Read Info node `(elisp) Pixel Specification'.")
 
