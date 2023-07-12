@@ -706,7 +706,7 @@ Name the buffer after the defun's symbol."
 
 ;;;###autoload
 (defun prot-simple-kill-buffer (buffer)
-  "Kill current BUFFER.
+  "Kill current BUFFER without confirmation.
 When called interactively, prompt for BUFFER."
   (interactive (list (read-buffer "Select buffer: ")))
   (let ((kill-buffer-query-functions nil))
