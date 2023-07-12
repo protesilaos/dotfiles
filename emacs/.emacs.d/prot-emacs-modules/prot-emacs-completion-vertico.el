@@ -82,13 +82,18 @@ This is done to accommodate `prot-vertico-minimal'."
     "Expand contents and show remaining candidates, if needed.
 This is done to accommodate `prot-vertico-minimal'."
     (interactive)
-    (if (and vertico-unobtrusive-mode (> vertico--total 1))
-        (progn
-          (minibuffer-complete)
-          (vertico-multiform-vertical))
-      (vertico-insert)))
+    (cond
+     ((and vertico-unobtrusive-mode (> vertico--total 1))
+      (minibuffer-complete)
+      (vertico-multiform-vertical))
+     ((and vertico-unobtrusive-mode (= vertico--total 1))
+      (minibuffer-force-complete-and-exit))
+     (t
+      (vertico-insert))))
 
   (prot-emacs-keybind vertico-map
+    "<left>" #'backward-char
+    "<right>" #'forward-char
     "TAB" #'prot-vertico-private-complete
     "DEL" #'vertico-directory-delete-char
     "M-DEL" #'vertico-directory-delete-word
