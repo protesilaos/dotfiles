@@ -76,7 +76,7 @@
             :sort-order newest-first
             :key ,(kbd "p"))
           ;; My coaching job: <https://protesilaos.com/coach/>.
-          ( :name "🌈 unread coaching"
+          ( :name "🏆 unread coaching"
             :query "tag:unread and tag:coach"
             :sort-order newest-first
             :key ,(kbd "c"))
@@ -188,7 +188,7 @@
   ;; would not like to input emoji for searching.
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
-  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🌈")))
+  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🏆")))
   (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️")))
 
   (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
