@@ -69,7 +69,7 @@ Use this as the `body-function' in a `display-buffer-alist' entry."
    (prot-window--get-window-size :max-height)
    (prot-window--get-window-size :min-height)
    (prot-window--get-window-size :max-width)
-   (prot-window--get-window-size :max-width)))
+   (prot-window--get-window-size :min-width)))
 
 (defun prot-window--get-display-buffer-below-or-pop ()
   "Return list of functions for `prot-window-display-buffer-below-or-pop'."
