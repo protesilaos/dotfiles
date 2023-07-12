@@ -445,28 +445,9 @@ line."
 
 ;;;###autoload
 (defun prot-simple-transpose-words (arg)
-  "Transpose ARG words.
-
-If region is active, swap the word at mark (region beginning)
-with the one at point (region end).
-
-Otherwise, and while inside a sentence, this behaves as the
-built-in `transpose-words', dragging forward the word behind the
-point.  The difference lies in its behaviour at the end or
-beginning of a line, where it will always transpose the word at
-point with the one behind or ahead of it (effectively the
-last/first two words)."
-  (interactive "p")
-  (cond
-   ((use-region-p)
-    (transpose-words 0))
-   ((eq (point) (line-end-position))
-    (transpose-words -1))
-   ((eq (point) (line-beginning-position))
-    (forward-word 1)
-    (transpose-words 1))
-   (t
-    (transpose-words arg))))
+  "Like `transpose-words' but treat ARG as 0 when the region is active."
+  (interactive "*p")
+  (transpose-words (if (region-active-p) 0 arg)))
 
 ;;;; Commands for marking syntactic constructs
 
