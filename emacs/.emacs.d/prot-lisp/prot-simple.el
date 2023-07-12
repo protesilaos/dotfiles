@@ -716,10 +716,13 @@ When called interactively, prompt for BUFFER."
 (defun prot-simple-kill-buffer-current (&optional arg)
   "Kill current buffer.
 With optional prefix ARG (\\[universal-argument]) delete the
-buffer's window as well."
+buffer's window as well.  Kill the window regardless of ARG if it
+satisfies `prot-common-window-small-p' and it has no previous
+buffers in its history."
   (interactive "P")
   (let ((kill-buffer-query-functions nil))
-    (if (or (prot-common-window-small-p)
+    (if (or (and (prot-common-window-small-p)
+                 (null (window-prev-buffers)))
             (and arg (not (one-window-p))))
         (kill-buffer-and-window)
       (kill-buffer))))
