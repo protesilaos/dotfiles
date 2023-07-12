@@ -96,7 +96,7 @@
   (setq switch-to-buffer-in-dedicated-window 'pop)
   (setq split-height-threshold 80)
   (setq split-width-threshold 125)
-  (setq window-min-height 10)
+  (setq window-min-height 3)
   (setq window-min-width 30)
 
   (dolist (hook '(epa-info-mode-hook help-mode-hook custom-mode-hook))
