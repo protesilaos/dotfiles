@@ -35,29 +35,135 @@
   "Custom modeline that is stylistically close to the default."
   :group 'mode-line)
 
+(defgroup prot-modeline-faces nil
+  "Faces for my custom modeline."
+  :group 'prot-modeline)
+
 (defcustom prot-modeline-string-truncate-length 9
   "String length after which truncation should be done in small windows."
   :type 'natnum)
 
 ;;;; Faces
 
-(defface prot-modeline-intense
+(defface prot-modeline-indicator-red
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
-     :background "#0000aa" :foreground "#ffffff")
+     :foreground "#880000")
     (((class color) (min-colors 88) (background dark))
-     :background "#77aaff" :foreground "#000000")
-    (t :inverse-video t))
-  "Face for intense mode line constructs, unlike `prot-modeline-subtle'.")
+     :foreground "#ff9f9f")
+    (t :foreground "red"))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
 
-(defface prot-modeline-subtle
+(defface prot-modeline-indicator-red-bg
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
-     :background "#4444aa" :foreground "#ffffff")
+     :background "#aa1111" :foreground "white")
     (((class color) (min-colors 88) (background dark))
-     :background "#aaccff" :foreground "#000000")
-    (t :inverse-video t))
-  "Face for subtle mode line constructs, unlike `prot-modeline-intense'.")
+     :background "#ff9090" :foreground "black")
+    (t :background "red" :foreground "black"))
+  "Face for modeline indicators with a background."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-green
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#005f00")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#73fa7f")
+    (t :foreground "green"))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-green-bg
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#207b20" :foreground "white")
+    (((class color) (min-colors 88) (background dark))
+     :background "#77d077" :foreground "black")
+    (t :background "green" :foreground "black"))
+  "Face for modeline indicators with a background."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-yellow
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#6f4000")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#f0c526")
+    (t :foreground "yellow"))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-yellow-bg
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#805000" :foreground "white")
+    (((class color) (min-colors 88) (background dark))
+     :background "#ffc800" :foreground "black")
+    (t :background "yellow" :foreground "black"))
+  "Face for modeline indicators with a background."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-blue
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#00228a")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#88bfff")
+    (t :foreground "blue"))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-blue-bg
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#0000aa" :foreground "white")
+    (((class color) (min-colors 88) (background dark))
+     :background "#77aaff" :foreground "black")
+    (t :background "blue" :foreground "black"))
+  "Face for modeline indicators with a background."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-magenta
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#6a1aaf")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#e0a0ff")
+    (t :foreground "magenta"))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-magenta-bg
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#6f0f9f" :foreground "white")
+    (((class color) (min-colors 88) (background dark))
+     :background "#e3a2ff" :foreground "black")
+    (t :background "magenta" :foreground "black"))
+  "Face for modeline indicators with a background."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-cyan
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#004060")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#30bbd0")
+    (t :foreground "cyan"))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-cyan-bg
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#006080" :foreground "white")
+    (((class color) (min-colors 88) (background dark))
+     :background "#40c0e0" :foreground "black")
+    (t :background "cyan" :foreground "black"))
+  "Face for modeline indicators with a background."
+  :group 'prot-modeline-faces)
 
 ;;;; Common helper functions
 
@@ -78,7 +184,7 @@
 (defvar-local prot-modeline-kbd-macro
     '(:eval
       (when (and (mode-line-window-selected-p) defining-kbd-macro)
-        (propertize " KMacro " 'face 'prot-modeline-intense)))
+        (propertize " KMacro " 'face 'prot-modeline-indicator-blue-bg)))
   "Mode line construct displaying `mode-line-defining-kbd-macro'.
 Specific to the current window's mode line.")
 
@@ -89,7 +195,7 @@ Specific to the current window's mode line.")
       (when (and (mode-line-window-selected-p)
                  (buffer-narrowed-p)
                  (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
-        (propertize " Narrow " 'face 'prot-modeline-subtle)))
+        (propertize " Narrow " 'face 'prot-modeline-indicator-cyan-bg)))
   "Mode line construct to report the multilingual environment.")
 
 ;;;; Input method
@@ -178,7 +284,7 @@ face.  Let other buffers have no face.")
 
 (defvar-local prot-modeline-major-mode
     (list
-     (propertize "%[" 'face 'error)
+     (propertize "%[" 'face 'prot-modeline-indicator-red)
      '(:eval
        (concat
         (prot-modeline-major-mode-indicator)
@@ -191,7 +297,7 @@ face.  Let other buffers have no face.")
      '(:eval
        (when mode-line-process
          (concat " " mode-line-process)))
-     (propertize "%]" 'face 'error))
+     (propertize "%]" 'face 'prot-modeline-indicator-red))
   "Mode line construct for displaying major modes.")
 
 ;;;; Git branch and diffstat
