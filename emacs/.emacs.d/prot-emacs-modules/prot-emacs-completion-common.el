@@ -308,7 +308,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (defun prot/embark-no-minimal-indicator ())
   (advice-add #'embark-minimal-indicator :override #'prot/embark-no-minimal-indicator)
 
-  ;; FIXME 2023-07-04: These stopped working.  Why?
   (defun prot/embark-act-no-quit ()
     "Call `embark-act' but do not quit after the action."
     (interactive)
