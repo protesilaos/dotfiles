@@ -174,7 +174,8 @@
        (not (one-window-p :no-minibuffer))))
 
 (defun prot-modeline-string-truncate (str)
-  "Return truncated STR, if appropriate, else return STR."
+  "Return truncated STR, if appropriate, else return STR.
+Truncation is done up to `prot-modeline-string-truncate-length'."
   (if (prot-modeline--string-truncate-p str)
       (concat (substring str 0 prot-modeline-string-truncate-length) "...")
     str))
@@ -234,8 +235,7 @@ Specific to the current window's mode line.")
 
 (defun prot-modeline--buffer-name ()
   "Return `buffer-name', truncating it if necessary.
-The name is truncated if the width of the window is smaller than
-`split-width-threshold'."
+See `prot-modeline-string-truncate'."
   (when-let ((name (buffer-name)))
     (prot-modeline-string-truncate name)))
 
@@ -429,43 +429,46 @@ Specific to the current window's mode line.")
 ;;   "Mode line construct to align following elements to the right.
 ;; Read Info node `(elisp) Pixel Specification'.")
 
+(defun prot-modeline--right-align-rest ()
+  "Return string if everything after `prot-modeline-align-right'."
+  (format-mode-line
+   `(""
+     ,@(cdr (memq 'prot-modeline-align-right mode-line-format)))))
+
+(defun prot-modeline--right-align-width ()
+  "Return pixel width of `prot-modeline--right-align-rest'."
+  (string-pixel-width (prot-modeline--right-align-rest)))
+
+(defun prot-modeline--right-align-width-no-space ()
+  "Return pixel width of `prot-modeline--right-align-rest' minus spaces."
+  (string-pixel-width
+   (replace-regexp-in-string
+    "[\s\t]"
+    ""
+    (prot-modeline--right-align-rest))))
+
+(defun prot-modeline--box-p ()
+  "Return non-nil if the `mode-line' has a box attribute."
+  (and (face-attribute 'mode-line :box)
+       (null (eq (face-attribute 'mode-line :box) 'unspecified))))
+
 (defvar-local prot-modeline-align-right
     '(:eval
-      (let* ((rest (cdr (memq 'prot-modeline-align-right mode-line-format)))
-             (rest-string (format-mode-line `("" ,@rest)))
-             ;; A column is equal to this in pixels.  We check if "m"
-             ;; (a wide glyph in proportionately spaced fonts) is at
-             ;; its natural width.  This covers the possibility of
-             ;; `mode-line' being set to a variable pitch font or to
-             ;; inherit from `variable-pitch'.
-             (m-width (string-pixel-width (propertize "m" 'face 'mode-line))))
-        (propertize
-         " "
-         'display
-         `(space
-           :align-to
-           (+
-            (- right
-               ,(ceiling (string-pixel-width rest-string) m-width)
-               ,(ceiling
-                 m-width
-                 ;; Find the height of the `mode-line' font, falling
-                 ;; back to `default'.  Then get the "magic" number
-                 ;; out of it.  I am not sure why this works, but it
-                 ;; does with all font sizes I tried, using my Iosevka
-                 ;; Comfy fonts (mono and quasi-proportional
-                 ;; variants).
-                 ;;
-                 ;; The spacing is off when I try FiraGO, with and
-                 ;; without my `notmuch-indicator'.  I suspect that is
-                 ;; due to the pixel width of the added spaces.
-                 (floor
-                  (/ (face-attribute 'mode-line :height nil 'default) 10)
-                  4)))
-            ,(if-let* ((modeline-box (face-attribute 'mode-line :box))
-                       ((not (eq (face-attribute 'mode-line :box) 'unspecified))))
-                 (floor (string-pixel-width (propertize "i" 'face 'mode-line)) 4)
-               (string-pixel-width (propertize "i" 'face 'mode-line))))))))
+      (propertize
+       " "
+       'display
+       `(space
+         :align-to
+         (- right
+            right-fringe
+            right-margin
+            ,(round
+              (prot-modeline--right-align-width-no-space)
+              (string-pixel-width (propertize "m" 'face 'mode-line)))
+            ,(round
+              (face-attribute 'mode-line :height nil 'default)
+              (string-pixel-width
+               (propertize (if (prot-modeline--box-p) "." "—") 'face 'mode-line)))))))
   "Mode line construct to align following elements to the right.
 Read Info node `(elisp) Pixel Specification'.")
 
