@@ -37,13 +37,13 @@
   ;; | Iosevka Comfy Wide Motion Duo   | Slab   | Wide    | Duospaced  | Yes       |
   (setq fontaine-presets
         '((small
-           :default-family "Iosevka Comfy"
-           :default-height 70
-           :variable-pitch-family "Iosevka Comfy Duo")
+           :default-family "Iosevka Comfy Wide"
+           :default-height 80
+           :variable-pitch-family "Iosevka Comfy Wide Duo")
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
            :default-weight semilight
-           :default-height 130
+           :default-height 115
            :bold-weight extrabold)
           (large
            :inherit medium
