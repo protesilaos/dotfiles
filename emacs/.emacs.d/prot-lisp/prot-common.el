@@ -42,6 +42,19 @@
   :group 'editing)
 
 ;;;###autoload
+(defun prot-common-completion-category ()
+  "Return completion category."
+  (when-let ((window (active-minibuffer-window)))
+    (with-current-buffer (window-buffer window)
+      (completion-metadata-get
+       (completion-metadata (buffer-substring-no-properties
+                             (minibuffer-prompt-end)
+                             (max (minibuffer-prompt-end) (point)))
+                            minibuffer-completion-table
+                            minibuffer-completion-predicate)
+       'category))))
+
+;;;###autoload
 (defun prot-common-number-even-p (n)
   "Test if N is an even number."
   (if (numberp n)
