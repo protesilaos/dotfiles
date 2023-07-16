@@ -46,7 +46,7 @@
 
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
 
-;;;; Shell scripts (sh-mode)
+;;;; Arch Linux and AUR package scripts (sh-mode)
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode))
 
 ;;;; Eldoc (elisp live documentation feedback)
