@@ -91,7 +91,7 @@
   (setq image-dired-thumb-relief 0)
   (setq image-dired-thumbs-per-row 4)
   (define-key image-dired-thumbnail-mode-map
-    (kbd "<return>") #'image-dired-thumbnail-display-external))
+              (kbd "<return>") #'image-dired-thumbnail-display-external))
 
 ;;; dired-like mode for the trash (trashed.el)
 (prot-emacs-package trashed
