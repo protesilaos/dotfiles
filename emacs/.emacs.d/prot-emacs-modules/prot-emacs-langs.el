@@ -49,6 +49,9 @@
 ;;;; Arch Linux and AUR package scripts (sh-mode)
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode))
 
+;;;; SystemD files (conf-mode)
+  (add-to-list 'auto-mode-alist '("\\.\\(service\\|timer\\)\\'" . conf-mode))
+
 ;;;; Eldoc (elisp live documentation feedback)
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
   (global-eldoc-mode 1)
