@@ -57,5 +57,8 @@ else
 
     echo "off" > "$focus_mode_status"
 
-    polybar herbstluftwm &
+    # I name my bars after the bspwm or herbstluftwm sessions, so I
+    # launch the one I need by getting the relevant environment
+    # variable.
+    polybar "$DESKTOP_SESSION" &
 fi

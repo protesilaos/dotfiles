@@ -150,7 +150,10 @@ then
     # Make sure we have no running instances
     pkill -x polybar
 
-    polybar herbstluftwm &
+    # I name my bars after the bspwm or herbstluftwm sessions, so I
+    # launch the one I need by getting the relevant environment
+    # variable.
+    polybar "$DESKTOP_SESSION" &
 fi
 
 # Run the tool that sets the wallpaper.  A program could be used that

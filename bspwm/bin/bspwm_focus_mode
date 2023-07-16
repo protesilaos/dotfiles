@@ -88,4 +88,6 @@ fi
 
 bspc config gapless_monocle "${gapless_monocle:=true}"
 
-[ -n "$panel_status" ] && polybar bspwm &
+# I name my bars after the bspwm or herbstluftwm sessions, so I launch
+# the one I need by getting the relevant environment variable.
+[ -n "$panel_status" ] && polybar "$DESKTOP_SESSION" &
