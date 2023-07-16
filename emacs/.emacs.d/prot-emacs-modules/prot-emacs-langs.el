@@ -50,6 +50,7 @@
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode))
 
 ;;;; Eldoc (elisp live documentation feedback)
+  (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
   (global-eldoc-mode 1)
 
 ;;;; Handle performance for very long lines (so-long.el)
