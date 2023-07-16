@@ -66,10 +66,10 @@ do
     _hc add "${tag_names[$i]}"
 done
 
-# Set up virtual monitors.  The monitor's resolution is 2560x1080 (and
-# what inspired me to set up HerbstluftWM).  Also check my script
-# 'herbstluftwm_cycle_monitors'.
-_hc set_monitors 640x1080+0+0 1920x1080+640+0
+# Set up virtual monitors.  On my desktop computer, the monitor's
+# resolution is 2560x1080 (and what inspired me to set up
+# HerbstluftWM).  Also check my script 'herbstluftwm_cycle_monitors'.
+[ "$HOSTNAME" = "kronos" ] && _hc set_monitors 640x1080+0+0 1920x1080+640+0
 
 ### Configuration
 
