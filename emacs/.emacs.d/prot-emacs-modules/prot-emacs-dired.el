@@ -105,17 +105,17 @@
 ;;; Automatically preview Dired file at point (dired-preview.el)
 ;; One of my packages: <https://protesilaos.com/emacs>
 (prot-emacs-package dired-preview
-  (:install "https://git.sr.ht/~protesilaos/dired-preview")
+  (:install t)
   ;; These are all set to their default values.  I keep them here for
   ;; reference.
-  (setq dired-preview-max-size (expt 2 20))
+  (setq dired-preview-max-size (* (expt 2 20) 6))
+  (setq dired-preview-delay 0.3)
   (setq dired-preview-ignored-extensions-regexp
         (concat "\\."
                 "\\(mkv\\|" "webm\\|" "mp4\\|" "mp3\\|" "ogg\\|" "m4a\\|"
                 "gz\\|" "zst\\|" "tar\\|" "xz\\|" "rar\\|" "zip\\|"
                 "iso\\|" "epub\\|" "pdf\\)"))
-  (setq dired-preview-delay 0.7)
-  (add-hook 'dired-mode-hook #'dired-preview-mode))
+  (dired-preview-global-mode))
 
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
