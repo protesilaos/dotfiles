@@ -149,8 +149,8 @@ mod4 + m
 #
 # NOTE the presence of the tilde ~.  If current state matches the given
 # state, then the argument is interpreted as the last state.
-mod4 + {shift + space,space,f}
-    bspc node -t ~{tiled,floating,fullscreen}
+mod4 + {shift + space,f}
+    bspc node -t ~{floating,fullscreen}
 
 # Set the node flags.  Locked is a node that cannot be closed with `bspc
 # node --close`.  Marked is a specific selector that allows operating on

@@ -69,26 +69,21 @@ _check bspwm_conf_colors && bspwm_conf_colors
 
 ### autostart
 
-# Specify keyboard layout.  For the key chord that performs the layout
-# switching between US QWERTY and Greek refer to my `sxhkdrc`.
+# Specify keyboard layout options.  See the setxkbmap(1) manual for
+# the command line arguments and the xkeyboard-config(7) manual for
+# the layout names and options.
 #
-# Originally found the options in this location (Debian Buster):
-# /usr/share/X11/xkb/rules/base.lst
+# NOTE 2023-07-16: The -option used to accept a comma separated list.
+# Now it requires each option to be specified separately.
 #
-# caps:hyper           Make Caps Lock an additional Hyper
-# compose:menu         Menu key behaves as Compose
-#
-# The options are required in order for Xmodmap to work properly (see
-# below).
+# NOTE 2023-07-16: The Greek layout used to be called 'el' but now is
+# 'gr'.
 if _check setxkbmap
 then
-    setxkbmap -layout 'us,el' -option 'ctrl:nocaps,compose:menu'
+    setxkbmap -layout 'us,gr' -option '' -option 'ctrl:nocaps' \
+              -option 'altwin:menu_win' -option 'caps:none' \
+              -option 'compose:ins' -option 'grp:win_space_toggle'
 fi
-
-# Parse my custom key mappings.  These make Caps behave as another Ctrl
-# key.  We need to evaluate this first otherwise it might mess up with
-# SXHKD.
-[ -f "$HOME"/.Xmodmap ] && xmodmap "$HOME"/.Xmodmap
 
 # The hotkey daemon that handles all custom key bindings.  I split the
 # key chords into separate files, based on their scope.  The ones that

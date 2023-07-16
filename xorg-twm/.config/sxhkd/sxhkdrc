@@ -57,25 +57,6 @@ ctrl + alt + Delete
 mod4 + Delete
     poweroptionsmenu
 
-#### Keyboard layout
-
-# NOTE 2021-08-27: review commentary about layout toggle.
-
-# We can set the keyboard layouts, as well as the toggle directly via
-# `setxkbmap`.  Example of what I used to run:
-#
-#   setxkbmap -layout 'us,gr' -option 'ctrl:nocaps,compose:menu'
-#
-# However, doing so means losing out on the possibility to easily find
-# out the current/active layout from a script: X knows about "us,gr" in
-# that order, not which one is currently typing.  Also, I want another
-# key binding that is not available in setxkbmap.
-#
-# The key chord is based on the Emacs function `toggle-input-method',
-# which is bound to C-\
-mod4 + backslash
-    toggle_kbd_layout
-
 #### Main programs
 
 # The -a "" tries to start the daemon and connect to it

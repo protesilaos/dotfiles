@@ -36,11 +36,10 @@ _kill_processes() {
 
 # In case something stops working, we can call this script
 # (Ctrl+Alt+Delete on my sxhkdrc) and apply the modifications again.
-_kbd_reset_and_xmodmap() {
-    xmod="$HOME"/.Xmodmap
-
-    setxkbmap -layout 'us,el' -option 'ctrl:nocaps,compose:menu'
-    [ -f "$xmod" ] && xmodmap "$xmod"
+_kbd_reset() {
+    setxkbmap -layout 'us,gr' -option '' -option 'ctrl:nocaps' \
+              -option 'altwin:menu_win' -option 'caps:none' \
+              -option 'compose:ins' -option 'grp:win_space_toggle'
 }
 
 _check_systemd() {
@@ -94,7 +93,7 @@ _dynamic_menu() {
 }
 
 # Possible actions
-actions=('Log out' 'Reboot' 'Power off' 'Xmodmap and keyboard reload')
+actions=('Log out' 'Reboot' 'Keyboard reset' 'Power off')
 
 # List actions to choose from.  Output array items on a new line.
 _list_actions() {
@@ -108,5 +107,5 @@ case "$choice" in
     L*) _kill_processes && _quit     ;;
     R*) _kill_processes && _reboot   ;;
     P*) _kill_processes && _poweroff ;;
-    X*) _kbd_reset_and_xmodmap       ;;
+    K*) _kbd_reset                   ;;
 esac
