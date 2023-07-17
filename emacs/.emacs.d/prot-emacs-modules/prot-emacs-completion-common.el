@@ -109,7 +109,6 @@
   (minibuffer-electric-default-mode 1)
   
 ;;;; `savehist' (minibuffer and related histories)
-  (:delay 5)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 500)
   (setq history-delete-duplicates t)
