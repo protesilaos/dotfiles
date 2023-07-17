@@ -42,10 +42,11 @@
 
 (defun prot-marginalia-display (string)
   "Propertize the display of STRING for completion annotation purposes."
-  (format "%s%s"
-          (propertize " " 'display `(space :align-to 40))
-          (propertize (prot-marginalia-truncate string)
-                      'face 'completions-annotations)))
+  (when string
+    (format "%s%s"
+            (propertize " " 'display `(space :align-to 40))
+            (propertize (prot-marginalia-truncate string)
+                        'face 'completions-annotations))))
 
 (defun prot-marginalia-bookmark (bookmark)
   "Annotate BOOKMARK with its file path."
