@@ -42,7 +42,7 @@
 
 (defun prot-marginalia-display (string)
   "Propertize the display of STRING for completion annotation purposes."
-  (when string
+  (when (stringp string)
     (format "%s%s"
             (propertize " " 'display `(space :align-to 40))
             (propertize (prot-marginalia-truncate string)
