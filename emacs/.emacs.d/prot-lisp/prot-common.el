@@ -42,19 +42,6 @@
   :group 'editing)
 
 ;;;###autoload
-(defun prot-common-completion-category ()
-  "Return completion category."
-  (when-let ((window (active-minibuffer-window)))
-    (with-current-buffer (window-buffer window)
-      (completion-metadata-get
-       (completion-metadata (buffer-substring-no-properties
-                             (minibuffer-prompt-end)
-                             (max (minibuffer-prompt-end) (point)))
-                            minibuffer-completion-table
-                            minibuffer-completion-predicate)
-       'category))))
-
-;;;###autoload
 (defun prot-common-number-even-p (n)
   "Test if N is an even number."
   (if (numberp n)
@@ -222,6 +209,19 @@ If FRAME is non-nil, inspect the current frame."
   (with-temp-buffer
     (insert-file-contents file)
     (read (current-buffer))))
+
+;;;###autoload
+(defun prot-common-completion-category ()
+  "Return completion category."
+  (when-let ((window (active-minibuffer-window)))
+    (with-current-buffer (window-buffer window)
+      (completion-metadata-get
+       (completion-metadata (buffer-substring-no-properties
+                             (minibuffer-prompt-end)
+                             (max (minibuffer-prompt-end) (point)))
+                            minibuffer-completion-table
+                            minibuffer-completion-predicate)
+       'category))))
 
 ;; Thanks to Omar Antolín Camarena for providing this snippet!
 ;;;###autoload
