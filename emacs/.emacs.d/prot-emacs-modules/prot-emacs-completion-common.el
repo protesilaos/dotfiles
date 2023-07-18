@@ -481,15 +481,15 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 (prot-emacs-package prot-marginalia
   (:delay 5)
   (setq marginalia-annotator-registry
-        '((bookmark prot/marginalia-bookmark)
-          (buffer prot/marginalia-buffer)
+        '((bookmark prot-marginalia-bookmark)
+          (buffer prot-marginalia-buffer)
           (command marginalia-annotate-command)
-          (function prot/marginalia-symbol)
-          (symbol prot/marginalia-symbol)
-          (variable prot/marginalia-symbol)
+          (function prot-marginalia-symbol)
+          (symbol prot-marginalia-symbol)
+          (variable prot-marginalia-symbol)
           (face marginalia-annotate-face)
           (imenu marginalia-annotate-imenu)
-          (package prot/marginalia-package)
+          (package prot-marginalia-package)
           (unicode-name marginalia-annotate-char))))
 
 (provide 'prot-emacs-completion-common)
