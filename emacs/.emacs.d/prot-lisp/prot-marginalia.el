@@ -71,20 +71,18 @@
                           (car (alist-get pkg package-archive-contents))))))
     (prot-marginalia-display (package-desc-summary desc))))
 
-(defun prot-marginalia--get-documentation (symbol)
+(defun prot-marginalia--get-symbol-doc (symbol)
   "Return documentation string according to SYMBOL type."
   (cond
    ((or (functionp symbol) (macrop symbol))
     (documentation symbol))
    (t
-    (documentation-property symbol 'variable-documentation))))
+    (get symbol 'variable-documentation))))
 
 (defun prot-marginalia--first-line-documentation (symbol)
   "Return first line of SYMBOL documentation string."
-  (car
-   (split-string
-    (prot-marginalia--get-documentation symbol)
-    "[?!.\n]")))
+  (when-let ((doc-string (prot-marginalia--get-symbol-doc symbol)))
+    (car (split-string doc-string "[?!.\n]"))))
 
 (defun prot-marginalia-symbol (symbol)
   "Annotate SYMBOL with its documentation string."
