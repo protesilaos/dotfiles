@@ -52,7 +52,7 @@ other_email=info@protesilaos.com
 
 [new]
 tags=new
-ignore=
+ignore=.uidvalidity;.mbsyncstate
 
 # Search configuration
 #
