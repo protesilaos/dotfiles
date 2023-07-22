@@ -137,6 +137,7 @@ before all other modules of my setup."
     beframe
     cursory
     denote
+    dired-preview
     ef-themes
     fontaine
     lin
