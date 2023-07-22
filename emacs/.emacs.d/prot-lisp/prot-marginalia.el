@@ -81,7 +81,9 @@
 
 (defun prot-marginalia--first-line-documentation (symbol)
   "Return first line of SYMBOL documentation string."
-  (when-let ((doc-string (prot-marginalia--get-symbol-doc symbol)))
+  (when-let ((doc-string (prot-marginalia--get-symbol-doc symbol))
+             ((stringp doc-string))
+             ((not (string-empty-p doc-string))))
     (car (split-string doc-string "[?!.\n]"))))
 
 (defun prot-marginalia-symbol (symbol)
