@@ -12,6 +12,7 @@
                   prot-modeline-buffer-identification
                   "  "
                   prot-modeline-major-mode
+                  prot-modeline-process
                   "  "
                   prot-modeline-vc-branch
                   "  "

@@ -294,11 +294,12 @@ face.  Let other buffers have no face.")
           (prot-modeline-major-mode-name))
          'mouse-face 'mode-line-highlight
          'help-echo (prot-modeline-major-mode-help-echo))))
-     '(:eval
-       (when mode-line-process
-         (concat " " mode-line-process)))
      (propertize "%]" 'face 'prot-modeline-indicator-red))
   "Mode line construct for displaying major modes.")
+
+(defvar-local prot-modeline-process
+    (list '("" mode-line-process))
+  "Mode line construct for the running process indicator.")
 
 ;;;; Git branch and diffstat
 
@@ -506,6 +507,7 @@ Specific to the current window's mode line.")
                      prot-modeline-buffer-status
                      prot-modeline-buffer-identification
                      prot-modeline-major-mode
+                     prot-modeline-process
                      prot-modeline-vc-branch
                      prot-modeline-flymake
                      prot-modeline-align-right
