@@ -8,6 +8,9 @@
   (setq outline-minor-mode-use-margins nil) ; as above
   (define-key global-map (kbd "<f10>") #'outline-minor-mode)
 
+;;;; `docview' (simple PDF viewer)
+  (setq doc-view-resolution 300) ; (doc-view-clear-cache)
+
 ;;;; `dictionary'
   (setq dictionary-server "dict.org"
         dictionary-default-popup-strategy "lev" ; read doc string
