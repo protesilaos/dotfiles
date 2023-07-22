@@ -88,7 +88,7 @@ leading and trailing hyphen."
           (prot-coach-sluggify name)))
 
 (defun prot-coach-jitsi-link (name)
-  "Produce Jitsi link for NAME person."
+  "Insert Jitsi link for NAME person."
   (interactive (list (prot-coach--name-prompt)))
   (insert (prot-coach--format-jitsi name)))
 
