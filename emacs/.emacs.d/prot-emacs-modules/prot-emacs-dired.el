@@ -114,7 +114,7 @@
         (concat "\\."
                 "\\(mkv\\|" "webm\\|" "mp4\\|" "mp3\\|" "ogg\\|" "m4a\\|"
                 "gz\\|" "zst\\|" "tar\\|" "xz\\|" "rar\\|" "zip\\|"
-                "iso\\|" "epub\\|" "pdf\\)"))
+                "iso\\|" "epub\\|" "\\)"))
   (dired-preview-global-mode))
 
 ;;; Play back media with Dired (mandoura.el)
