@@ -400,6 +400,71 @@ CHAR."
 
 ;;;; Commands for object transposition
 
+;; The "move" functions all the way to `prot-simple-move-below-dwim'
+;; are courtesy of Bruno Boal: <https://git.sr.ht/~bboal>.  With minor
+;; tweaks by me.
+(defun prot-simple--move-line (count dir)
+  "Move line or region COUNTth times in DIR direction."
+  (let* ((start (pos-bol))
+         (end (pos-eol))
+         diff-eol-point
+         diff-eol-mark)
+    (when-let (((use-region-p))
+               (pos (point))
+               (mrk (mark))
+               (line-diff-mark-point (1+ (- (line-number-at-pos mrk)
+                                            (line-number-at-pos pos)))))
+      (if (> pos mrk)
+          (setq start (pos-bol line-diff-mark-point)) ; pos-bol of where the mark is
+        (setq end (pos-eol line-diff-mark-point)))    ; pos-eol of the line where the mark is
+      (setq diff-eol-mark (1+ (- end mrk))))          ; 1+ to get the \n
+    ;; this is valid for region or a single line
+    (setq diff-eol-point (1+ (- end (point))))
+    (let* ((max (point-max))
+           (end (1+ end))
+           (end (if (> end max) max end))
+           (deactivate-mark)
+           (lines (delete-and-extract-region start end)))
+      (forward-line (* count dir))
+      ;; Handle the special case when there isn't a newline as the eob.
+      (when (and (eq (point) max)
+                 (/= (current-column) 0))
+        (insert "\n"))
+      (insert lines)
+      ;; if user provided a region
+      (when diff-eol-mark
+        (set-mark (- (point) diff-eol-mark)))
+      ;; either way go to same point location reference initial motion
+      (goto-char (- (point) diff-eol-point)))))
+
+(defun prot-simple--move-line-user-error (boundary)
+  "Return `user-error' with message accounting for BOUNDARY.
+BOUNDARY is a buffer position, expected to be `point-min' or `point-max'."
+  (when-let ((bound (line-number-at-pos boundary))
+             (scope (cond
+                     ((and (use-region-p)
+                           (or (= (line-number-at-pos (point)) bound)
+                               (= (line-number-at-pos (mark)) bound)))
+                      "region is ")
+                     ((= (line-number-at-pos (point)) bound)
+                      "")
+                     (t nil))))
+    (user-error (format "Warning: %salready in the last line!" scope))))
+
+(defun prot-simple-move-above-dwim (arg)
+  "Move line or region ARGth times up.
+If ARG is nil, do it one time."
+  (interactive "p")
+  (unless (prot-simple--move-line-user-error (point-min))
+    (prot-simple--move-line arg -1)))
+
+(defun prot-simple-move-below-dwim (arg)
+  "Move line or region ARGth times down.
+If ARG is nil, do it one time."
+  (interactive "p")
+  (unless (prot-simple--move-line-user-error (point-max))
+    (prot-simple--move-line arg 1)))
+
 (defmacro prot-simple-transpose (name scope &optional doc)
   "Macro to produce transposition functions.
 NAME is the function's symbol.  SCOPE is the text object to

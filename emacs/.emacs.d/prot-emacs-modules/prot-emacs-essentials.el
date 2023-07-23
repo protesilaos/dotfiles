@@ -78,6 +78,8 @@
     "M-l" #'downcase-dwim        ; "lower" case
     "M-u" #'upcase-dwim
     ;; Commands for object transposition
+    "C-S-p" #'prot-simple-move-above-dwim
+    "C-S-n" #'prot-simple-move-below-dwim
     "C-t" #'prot-simple-transpose-chars
     "C-x C-t" #'prot-simple-transpose-lines
     "C-S-t" #'prot-simple-transpose-paragraphs
