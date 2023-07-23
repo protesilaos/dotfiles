@@ -622,7 +622,7 @@ specified."
 With optional ARG, move that many times in the given
 direction (negative is forward due to this being a
 backward-facing command)."
-  (interactive "P")
+  (interactive "p")
   (backward-up-list (or (- arg) -1)))
 
 ;;;; Commands for paragraphs
