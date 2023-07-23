@@ -61,8 +61,8 @@
     "C-S-w" #'prot-simple-copy-line-or-region
     "C-S-y" #'prot-simple-yank-replace-line-or-region
     "M-SPC" #'cycle-spacing
-    "C-S-n" #'prot-simple-multi-line-next
-    "C-S-p" #'prot-simple-multi-line-prev
+    "C-v" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
+    "M-v" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
     "<C-return>" #'prot-simple-new-line-below
     "<C-S-return>" #'prot-simple-new-line-above
     ;; Commands for text insertion or manipulation

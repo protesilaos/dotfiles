@@ -184,16 +184,18 @@ This command can then be followed by the standard
   (yank))
 
 ;;;###autoload
-(defun prot-simple-multi-line-next ()
-  "Move point 15 lines down."
+(defun prot-simple-multi-line-below ()
+  "Move half a screen below."
   (interactive)
-  (forward-line 15))
+  (forward-line (floor (window-height) 2))
+  (setq this-command 'scroll-up-command))
 
 ;;;###autoload
-(defun prot-simple-multi-line-prev ()
-  "Move point 15 lines up."
+(defun prot-simple-multi-line-above ()
+  "Move half a screen above."
   (interactive)
-  (forward-line -15))
+  (forward-line (- (floor (window-height) 2)))
+  (setq this-command 'scroll-down-command))
 
 ;;;###autoload
 (defun prot-simple-kill-line-backward ()
