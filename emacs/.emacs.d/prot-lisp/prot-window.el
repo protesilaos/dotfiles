@@ -132,7 +132,7 @@ If ARGS is nil, call NAME as a function."
   "Return buffer name for `shell' buffers."
   (if-let ((buffers (prot-window--collect-shell-buffers))
            (buffers-length (length buffers))
-           ((> buffers-length 1)))
+           ((>= buffers-length 1)))
       (format "*shell*<%s>" (1+ buffers-length))
     "*shell*"))
 
