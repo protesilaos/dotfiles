@@ -147,7 +147,8 @@ If ARGS is nil, call NAME as a function."
   (let ((buffer (get-buffer-create "*scratch for coach*")))
     (with-current-buffer buffer
       (funcall initial-major-mode))
-    (display-buffer buffer)))
+    (display-buffer buffer)
+    (set-frame-name "Coach")))
 
 ;; REVIEW 2023-06-25: Does this merit a user option?  I don't think I
 ;; will ever set it to the left.  It feels awkward there.
