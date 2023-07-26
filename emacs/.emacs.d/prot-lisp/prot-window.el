@@ -105,22 +105,22 @@ use in `display-buffer-alist'."
       (and (not (derived-mode-p 'message-mode 'text-mode))
            (derived-mode-p 'eshell-mode 'shell-mode 'comint-mode 'fundamental-mode)))))
 
-(defmacro prot-window-with-full-frame (name &rest args)
-  "Define function to evaluate ARGS with `display-buffer-full-frame' bound.
-
-Name the function prot-window- followed by NAME.
-
-If ARGS is nil, call NAME as a function."
+(defmacro prot-window-define-full-frame (name &rest args)
+  "Define command to call ARGS in new frame with `display-buffer-full-frame' bound.
+Name the function prot-window- followed by NAME.  If ARGS is nil,
+call NAME as a function."
   (declare (indent 1))
   `(defun ,(intern (format "prot-window-%s" name)) ()
-     ,(format "Call `prot-window-%s' in accordance with `prot-window-with-full-frame'." name)
+     ,(format "Call `prot-window-%s' in accordance with `prot-window-define-full-frame'." name)
      (interactive)
      (let ((display-buffer-alist '((".*" (display-buffer-full-frame)))))
-       ,(if args
-            `(progn ,@args)
-          `(funcall ',name)))))
+       (with-selected-frame (make-frame)
+         ,(if args
+              `(progn ,@args)
+            `(funcall ',name))
+         (modify-frame-parameters nil '((buffer-list . nil)))))))
 
-(defun prot-window--collect-shell-buffers ()
+(defun prot-window--get-shell-buffers ()
   "Return list of `shell' buffers."
   (seq-filter
    (lambda (buffer)
@@ -130,20 +130,20 @@ If ARGS is nil, call NAME as a function."
 
 (defun prot-window--get-new-shell-buffer ()
   "Return buffer name for `shell' buffers."
-  (if-let ((buffers (prot-window--collect-shell-buffers))
+  (if-let ((buffers (prot-window--get-shell-buffers))
            (buffers-length (length buffers))
            ((>= buffers-length 1)))
       (format "*shell*<%s>" (1+ buffers-length))
     "*shell*"))
 
 ;;;###autoload (autoload 'prot-window-shell "prot-window")
-(prot-window-with-full-frame shell
+(prot-window-define-full-frame shell
   (let ((name (prot-window--get-new-shell-buffer)))
     (shell name)
     (set-frame-name name)))
 
 ;;;###autoload (autoload 'prot-window-coach "prot-window")
-(prot-window-with-full-frame coach
+(prot-window-define-full-frame coach
   (let ((buffer (get-buffer-create "*scratch for coach*")))
     (with-current-buffer buffer
       (funcall initial-major-mode))

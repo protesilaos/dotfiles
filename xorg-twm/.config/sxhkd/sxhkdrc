@@ -61,7 +61,7 @@ mod4 + Delete
 
 # The -a "" tries to start the daemon and connect to it
 mod4 + {_, shift +,ctrl + shift + } Return
-    {uxterm,emacsclient -c -w 2 -a "" -e "(prot-window-coach)",emacsclient -c -w 2 -a "" -e "(prot-window-shell)"}
+    {uxterm,emacsclient -w 2 -a "" -e "(prot-window-coach)",emacsclient -w 2 -a "" -e "(prot-window-shell)"}
 
 # Show the desired rofi views for "buffers" (windows) and desktop
 # applications.
