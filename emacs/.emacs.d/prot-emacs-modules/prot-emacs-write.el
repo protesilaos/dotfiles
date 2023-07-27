@@ -31,7 +31,7 @@
 
   ;; The available commands: `altcaps-word', `altcaps-region',
   ;; `altcaps-dwim'.
-  (define-key global-map (kbd "M-S-c") #'altcaps-dwim))
+  (define-key global-map (kbd "C-x C-a") #'altcaps-dwim))
 
 ;;; Denote (simple note-taking)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
