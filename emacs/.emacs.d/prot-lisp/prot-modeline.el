@@ -401,19 +401,6 @@ TYPE is usually keyword `:error', `:warning' or `:note'."
     (when (cl-plusp count)
       (number-to-string count))))
 
-(defmacro prot-modeline-flymake-type (type indicator &optional face)
-  "Return function that handles Flymake TYPE with stylistic INDICATOR and FACE."
-  `(defun ,(intern (format "prot-modeline-flymake-%s" type)) ()
-     (when-let ((count (prot-modeline-flymake-counter
-                        ,(intern (format ":%s" type)))))
-       (concat
-        (propertize ,indicator 'face 'shadow)
-        (propertize count 'face ',(or face type))))))
-
-(prot-modeline-flymake-type error "☣")
-(prot-modeline-flymake-type warning "!")
-(prot-modeline-flymake-type note "·" success)
-
 (defvar prot-modeline-flymake-map
   (let ((map (make-sparse-keymap)))
     (define-key map [mode-line down-mouse-1] 'flymake-show-buffer-diagnostics)
@@ -421,20 +408,31 @@ TYPE is usually keyword `:error', `:warning' or `:note'."
     map)
   "Keymap to display on Flymake indicator.")
 
+(defmacro prot-modeline-flymake-type (type indicator &optional face)
+  "Return function that handles Flymake TYPE with stylistic INDICATOR and FACE."
+  `(defun ,(intern (format "prot-modeline-flymake-%s" type)) ()
+     (when-let ((count (prot-modeline-flymake-counter
+                        ,(intern (format ":%s" type)))))
+       (concat
+        (propertize ,indicator 'face 'shadow)
+        (propertize count
+                    'face ',(or face type)
+                     'mouse-face 'mode-line-highlight
+                     ;; FIXME 2023-07-03: Clicking on the text with
+                     ;; this buffer and a single warning present, the
+                     ;; diagnostics take up the entire frame.  Why?
+                     'local-map prot-modeline-flymake-map
+                     'help-echo "mouse-1: buffer diagnostics\nmouse-3: project diagnostics")))))
+
+(prot-modeline-flymake-type error "☣")
+(prot-modeline-flymake-type warning "!")
+(prot-modeline-flymake-type note "·" success)
+
 (defvar-local prot-modeline-flymake
     `(:eval
       (when (and (bound-and-true-p flymake-mode)
                  (mode-line-window-selected-p))
         (list
-         ;; FIXME 2023-07-03: Clicking on the text with this buffer
-         ;; and a single warning present, the diagnostics take up the
-         ;; entire frame.  Why?
-
-         (propertize "Lint: "
-                     'mouse-face 'mode-line-highlight
-                     'local-map prot-modeline-flymake-map
-                     'help-echo "mouse-1: buffer diagnostics\nmouse-3: project diagnostics")
-
          ;; See the calls to the macro `prot-modeline-flymake-type'
          '(:eval (prot-modeline-flymake-error))
          '(:eval (prot-modeline-flymake-warning))
