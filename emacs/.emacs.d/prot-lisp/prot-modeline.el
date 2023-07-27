@@ -303,21 +303,34 @@ face.  Let other buffers have no face.")
 
 ;;;; Git branch and diffstat
 
-(defun prot-modeline-diffstat (file)
-  "Return shortened Git diff numstat for FILE."
-  (when-let* ((output (shell-command-to-string (format "git diff --numstat %s" file)))
-              (stats (split-string output "[\s\t]" :omit-nulls "[\s\f\t\n\r\v]+"))
-              (added (nth 0 stats))
-              (deleted (nth 1 stats)))
-    (cond
-     ((and (equal added "0") (equal deleted "0"))
-      "")
-     ((and (not (equal added "0")) (equal deleted "0"))
-      (propertize (format "+%s" added) 'face 'shadow))
-     ((and (equal added "0") (not (equal deleted "0")))
-      (propertize (format "-%s" deleted) 'face 'shadow))
-     (t
-      (propertize (format "+%s -%s" added deleted) 'face 'shadow)))))
+(declare-function vc-git--symbolic-ref "vc-git" (file))
+
+(defun prot-modeline--vc-branch-name (file backend)
+  "Return capitalized VC branch name for FILE with BACKEND."
+  (when-let ((rev (vc-working-revision file backend))
+             (branch (or (vc-git--symbolic-ref file)
+                         (substring rev 0 7))))
+    (capitalize branch)))
+
+;; NOTE 2023-07-27: This is a good idea, but it hardcodes Git, whereas
+;; I want a generic VC method.  Granted, I only use Git but I still
+;; want it to work as a VC extension.
+
+;; (defun prot-modeline-diffstat (file)
+;;   "Return shortened Git diff numstat for FILE."
+;;   (when-let* ((output (shell-command-to-string (format "git diff --numstat %s" file)))
+;;               (stats (split-string output "[\s\t]" :omit-nulls "[\s\f\t\n\r\v]+"))
+;;               (added (nth 0 stats))
+;;               (deleted (nth 1 stats)))
+;;     (cond
+;;      ((and (equal added "0") (equal deleted "0"))
+;;       "")
+;;      ((and (not (equal added "0")) (equal deleted "0"))
+;;       (propertize (format "+%s" added) 'face 'shadow))
+;;      ((and (equal added "0") (not (equal deleted "0")))
+;;       (propertize (format "-%s" deleted) 'face 'shadow))
+;;      (t
+;;       (propertize (format "+%s -%s" added deleted) 'face 'shadow)))))
 
 (declare-function vc-git-working-revision "vc-git" (file))
 
@@ -327,36 +340,47 @@ With optional FACE, use it to propertize the BRANCH."
   (concat
    (propertize (char-to-string #xE0A0) 'face 'shadow)
    " "
-   (propertize (capitalize branch)
+   (propertize branch
                'face face
-               'mouse-face 'highlight
-               'help-echo (vc-git-working-revision file))
-   " "
-   (prot-modeline-diffstat file)))
+               'mouse-face 'mode-line-highlight
+               'help-echo (vc-working-revision file))
+   ;; " "
+   ;; (prot-modeline-diffstat file)
+   ))
 
 (defun prot-modeline--vc-details (file branch &optional face)
   "Return Git BRANCH details for FILE, truncating it if necessary.
 The string is truncated if the width of the window is smaller
 than `split-width-threshold'."
-  (let ((text (prot-modeline--vc-text file branch face)))
-    (prot-modeline-string-truncate text)))
+  (prot-modeline-string-truncate
+   (prot-modeline--vc-text file branch face)))
+
+(defvar prot-modeline--vc-faces
+  '((added . vc-locally-added-state)
+    (edited . vc-edited-state)
+    (removed . vc-removed-state)
+    (missing . vc-missing-state)
+    (conflict . vc-conflict-state)
+    (locked . vc-locked-state)
+    (up-to-date . vc-up-to-date-state))
+  "VC state faces.")
+
+(defun prot-modeline--vc-get-face (key)
+  "Get face from KEY in `prot-modeline--vc-faces'."
+   (alist-get key prot-modeline--vc-faces 'up-to-date))
+
+(defun prot-modeline--vc-face (file backend)
+  "Return VC state face for FILE with BACKEND."
+  (prot-modeline--vc-get-face (vc-state file backend)))
 
 (defvar-local prot-modeline-vc-branch
     '(:eval
       (when-let* (((mode-line-window-selected-p))
                   (file (buffer-file-name))
-                  ((vc-git-registered file))
-                  (branches (vc-git-branches))
-                  (branch (car branches))
-                  (state (vc-state file 'Git))
-                  (face (pcase state
-                          ('added 'vc-locally-added-state)
-                          ('edited 'vc-edited-state)
-                          ('removed 'vc-removed-state)
-                          ('missing 'vc-missing-state)
-                          ('conflict 'vc-conflict-state)
-                          ('locked 'vc-locked-state)
-                          (_ 'vc-up-to-date-state))))
+                  (backend (vc-backend file))
+                  ;; ((vc-git-registered file))
+                  (branch (prot-modeline--vc-branch-name file backend))
+                  (face (prot-modeline--vc-face file backend)))
         (prot-modeline--vc-details file branch face)))
   "Mode line construct to return propertized VC branch.")
 
