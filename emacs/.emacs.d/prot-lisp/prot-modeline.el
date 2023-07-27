@@ -390,11 +390,12 @@ TYPE is usually keyword `:error', `:warning' or `:note'."
 (prot-modeline-flymake-type warning "!")
 (prot-modeline-flymake-type note "·" success)
 
-;; (defvar prot-modeline-flymake-keymap
-;;   (let ((map (make-sparse-keymap)))
-;;     (define-key map [mode-line down-mouse-1] 'flymake-show-buffer-diagnostics)
-;;     map)
-;;   "Keymap to display on Flymake indicator.")
+(defvar prot-modeline-flymake-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [mode-line down-mouse-1] 'flymake-show-buffer-diagnostics)
+    (define-key map [mode-line down-mouse-3] 'flymake-show-project-diagnostics)
+    map)
+  "Keymap to display on Flymake indicator.")
 
 (defvar-local prot-modeline-flymake
     `(:eval
@@ -404,11 +405,11 @@ TYPE is usually keyword `:error', `:warning' or `:note'."
          ;; FIXME 2023-07-03: Clicking on the text with this buffer
          ;; and a single warning present, the diagnostics take up the
          ;; entire frame.  Why?
-         ;;
-         ;; (propertize "Lint: "
-         ;;             'mouse-face 'highlight
-         ;;             'local-map prot-modeline-flymake-keymap
-         ;;             'help-echo "Click to show diagnostics")
+
+         (propertize "Lint: "
+                     'mouse-face 'mode-line-highlight
+                     'local-map prot-modeline-flymake-map
+                     'help-echo "mouse-1: buffer diagnostics\nmouse-3: project diagnostics")
 
          ;; See the calls to the macro `prot-modeline-flymake-type'
          '(:eval (prot-modeline-flymake-error))
