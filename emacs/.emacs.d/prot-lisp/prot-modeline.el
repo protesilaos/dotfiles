@@ -150,7 +150,7 @@
     (((class color) (min-colors 88) (background light))
      :foreground "#004060")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#30bbd0")
+     :foreground "#30b7cc")
     (t :foreground "cyan"))
   "Face for modeline indicators (e.g. see my `notmuch-indicator')."
   :group 'prot-modeline-faces)
