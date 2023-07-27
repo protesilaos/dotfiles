@@ -19,7 +19,9 @@
                   prot-modeline-flymake
                   "  "
                   prot-modeline-align-right
-                  prot-modeline-misc-info)))
+                  prot-modeline-misc-info))
+
+  (prot-modeline-subtle-mode 1))
 
 ;;; Keycast mode
 (prot-emacs-package keycast
