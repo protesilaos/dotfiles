@@ -335,6 +335,18 @@ face.  Let other buffers have no face.")
 
 (declare-function vc-git-working-revision "vc-git" (file))
 
+(defvar prot-modeline-vc-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [mode-line down-mouse-1] 'vc-diff)
+    (define-key map [mode-line down-mouse-3] 'vc-root-diff)
+    map)
+  "Keymap to display on VC indicator.")
+
+(defun prot-modeline--vc-help-echo (file)
+  "Return `help-echo' message for FILE tracked by VC."
+  (format "Revision: %s\nmouse-1: `vc-diff'\nmouse-3: `vc-root-diff'"
+          (vc-working-revision file)))
+
 (defun prot-modeline--vc-text (file branch &optional face)
   "Prepare text for Git controlled FILE, given BRANCH.
 With optional FACE, use it to propertize the BRANCH."
@@ -344,7 +356,8 @@ With optional FACE, use it to propertize the BRANCH."
    (propertize branch
                'face face
                'mouse-face 'mode-line-highlight
-               'help-echo (vc-working-revision file))
+               'help-echo (prot-modeline--vc-help-echo file)
+               'local-map prot-modeline-vc-map)
    ;; " "
    ;; (prot-modeline-diffstat file)
    ))
