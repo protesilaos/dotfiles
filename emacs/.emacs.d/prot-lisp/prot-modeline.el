@@ -279,8 +279,9 @@ face.  Let other buffers have no face.")
 
 (defun prot-modeline-major-mode-help-echo ()
   "Return `help-echo' value for `prot-modeline-major-mode'."
-  (format "Symbol: `%s'.  Derived from: `%s'"
-          major-mode (get major-mode 'derived-mode-parent)))
+  (if-let ((parent (get major-mode 'derived-mode-parent)))
+      (format "Symbol: `%s'.  Derived from: `%s'" major-mode parent)
+    (format "Symbol: `%s'." major-mode)))
 
 (defvar-local prot-modeline-major-mode
     (list
