@@ -231,8 +231,23 @@ Useful for prompts such as `eval-expression' and `shell-command'."
           (markdown-mode ?` ?`)
           (log-edit-mode ?' ?')
           (message-mode ?' ?')))
-  (dolist (backend '( cape-symbol cape-keyword cape-file cape-history cape-dabbrev))
-    (add-to-list 'completion-at-point-functions backend)))
+
+  ;; NOTE 2023-07-29: This is experimental.  I want to check if
+  ;; `cape-super-capf' works as intended.
+  (defun prot/cape-add-backends ()
+    "Prepend cape backends to `completion-at-point-functions'.
+Add this to a hook, such as `prog-mode-hook'."
+    (setq-local completion-at-point-functions
+                (cons (cape-super-capf
+                       #'cape-symbol
+                       #'cape-keyword
+                       #'cape-file
+                       #'cape-history
+                       #'cape-dabbrev)
+                      completion-at-point-functions)))
+
+  (add-to-list 'text-mode-hook #'prot/cape-add-backends)
+  (add-to-list 'prog-mode-hook #'prot/cape-add-backends))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-package consult
