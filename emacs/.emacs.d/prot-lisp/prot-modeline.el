@@ -215,7 +215,9 @@ Specific to the current window's mode line.")
 (defvar-local prot-modeline-buffer-status
     '(:eval
       (when (file-remote-p default-directory)
-        (propertize "@" 'mouse-face 'mode-line-highlight)))
+        (propertize " @ "
+                    'face 'prot-modeline-indicator-red-bg
+                    'mouse-face 'mode-line-highlight)))
   "Mode line construct for showing remote file name.")
 
 ;;;; Buffer name and modified status
