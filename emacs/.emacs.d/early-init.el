@@ -83,13 +83,23 @@ Simplified version of `add-to-list'."
 
 (setq file-name-handler-alist nil)
 
+;; Same idea as above for the `vc-handled-backends'.
+(defvar prot-emacs--vc-handled-backends vc-handled-backends)
+
+(setq vc-handled-backends nil)
+
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold prot-emacs--gc-cons-threshold
-                  file-name-handler-alist prot-emacs--file-name-handler-alist)))
+                  file-name-handler-alist prot-emacs--file-name-handler-alist
+                  vc-handled-backends prot-emacs--vc-handled-backends)))
 
-;; Do not initialise installed packages at this early stage.
-(setq package-enable-at-startup nil)
+;; Initialise installed packages at this early stage, by using the
+;; available cache.  I had tried a setup with this set to nil in the
+;; early-init.el, but (i) it ended up being slower and (ii) various
+;; package commands, like `describe-package', did not have an index of
+;; packages to work with, requiring a `package-refresh-contents'.
+(setq package-enable-at-startup t)
 
 ;;;; General theme code
 
