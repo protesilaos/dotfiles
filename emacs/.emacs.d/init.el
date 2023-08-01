@@ -110,22 +110,23 @@ before all other modules of my setup."
 
 (require 'package)
 
-(setq package-vc-register-as-project nil) ; Emacs 30
-
-(package-initialize)
+(with-eval-after-load 'project-vc
+  (setq package-vc-register-as-project nil)) ; Emacs 30
 
 (add-hook 'package-menu-mode-hook #'hl-line-mode)
 
 ;; Also read: <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>
 (setq package-archives
-      '(("elpa" . "https://elpa.gnu.org/packages/")
-        ("elpa-devel" . "https://elpa.gnu.org/devel/")
+      '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+        ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("melpa" . "https://melpa.org/packages/")))
 
 ;; Highest number gets priority (what is not mentioned has priority 0)
 (setq package-archive-priorities
-      '(("elpa" . 2)
-        ("melpa" . 1)))
+      '(("gnu-elpa" . 3)
+        ("melpa" . 2)
+        ("nongnu" . 1)))
 
 ;; I want to use my own packages from specific repositories.  All
 ;; others will rely on `package-archive-priorities'.  I do this to
@@ -155,7 +156,7 @@ before all other modules of my setup."
 (setq package-pinned-packages
       `(,@(mapcar
            (lambda (package)
-             (cons package "elpa-devel"))
+             (cons package "gnu-elpa-devel"))
            prot-emacs-my-packages)))
 
 (setq custom-safe-themes t)
