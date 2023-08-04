@@ -97,7 +97,9 @@
     "C-x v k" #'vc-delete-file ; 'k' for kill==>delete is more common
     "C-x v G" #'vc-log-search  ; git log --grep
     "C-x v t" #'vc-create-tag
-    "C-x v d" #'vc-diff)
+    "C-x v d" #'vc-diff
+    "C-x v ." #'vc-dir-root ; `vc-dir-root' is from Emacs 28
+    "C-x v <return>" #'vc-dir-root)
   (prot-emacs-keybind vc-dir-mode-map
     "t" #'vc-create-tag
     "O" #'vc-log-outgoing
