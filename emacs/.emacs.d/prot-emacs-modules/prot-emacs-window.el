@@ -63,8 +63,6 @@
            (prot-window-display-buffer-below-or-pop)
            (dedicated . t)
            (body-function . prot-window-select-fit-size))
-          ((derived-mode . embark-collect-mode)
-           (prot-window-display-buffer-below-or-pop))
           ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (dedicated . t)
