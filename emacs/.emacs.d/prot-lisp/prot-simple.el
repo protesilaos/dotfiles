@@ -354,6 +354,24 @@ CHAR."
     (prefix-numeric-value current-prefix-arg)))
   (zap-to-char (- arg) char t))
 
+(defvar prot-simple-flush-and-diff-history nil
+  "Minibuffer history for `prot-simple-flush-and-diff'.")
+
+;;;###autoload
+(defun prot-simple-flush-and-diff (regexp beg end)
+  "Call `flush-lines' for REGEXP and produce diff if file is modified.
+When region is active, operate between the region boundaries
+demarcated by BEG and END."
+  (interactive
+   (let ((regionp (region-active-p)))
+     (list
+      (read-regexp "Flush lines using REGEXP: " nil 'prot-simple-flush-and-diff-history)
+      (and regionp (region-beginning))
+      (and regionp (region-end)))))
+  (flush-lines regexp (or beg (point-min)) (or end (point-max)) :no-message)
+  (when (and (buffer-modified-p) buffer-file-name)
+    (diff-buffer-with-file (current-buffer))))
+
 ;; NOTE 2023-01-14: See my `substitute' package instead of the
 ;; following: <https://git.sr.ht/~protesilaos/substitute>.
 
