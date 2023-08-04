@@ -520,7 +520,7 @@ Specific to the current window's mode line.")
                 ((and (not variable-pitch-p) box-p)
                  (* magic-number 0.25))
                 ((and variable-pitch-p (not box-p))
-                 (* magic-number -0.05))
+                 0)
                 ;; No box, no variable pitch, but I am keeping it as
                 ;; the fallback for the time being.
                 (t (* magic-number -0.1))))))))
