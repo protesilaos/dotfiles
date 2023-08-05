@@ -19,9 +19,9 @@
 
 # Values come from my Modus themes for GNU Emacs:
 # <https://protesilaos.com/modus-themes>.
-if [ -f "$HOME"/.config/bspwm/active-theme ]
+if [ -f "$HOME"/.config/prot-xtwm-active-theme ]
 then
-   case "$(cat "$HOME"/.config/bspwm/active-theme)" in
+   case "$(cat "$HOME"/.config/prot-xtwm-active-theme)" in
        dark*)
            border_active="#f78fe7"
            border_focus="#79a8ff"

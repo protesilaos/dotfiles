@@ -65,25 +65,24 @@ GNOME for a while to get a feel for Wayaland and see how Emacs
 compiled `--with-pgtk` performs.  In short: Emacs is the same and
 Wayland is not as featureful as Xorg.
 
+My two tiling window managers are bspwm and herbstluftwm.  They are
+both configured to be almost the same: they share settings for the
+wallpaper, system panel, theme, keyboard layout, and display
+compositor.  All settings are in the `xorg-twm` directory ("twm"
+stands for "tiling window manager").  What differentiates the two
+window managers is their individual features.
+
 + **bspwm:** I have been using it for years and consider it top-notch.
   It is stable and scriptable.  Use this if you prefer automatic
   tiling.
 
-+ **herbstluftwm (hlwm):** Shares some concepts with bspwm and can
-  actually be configured in the same way.  The main differences
-  between the two are that (i) hlwm prioritises manual tiling methods
-  and (ii) can treat arbitrary rectangles of a monitor as virtual
-  monitors.  The virtual monitors feature is perfect for anyone with a
-  widescreen display.  The one I have (which is not mine, but anyway)
-  is 2560x1920, so I split it by default into a regular 1920x1080 area
-  and another "sidebar" of 640x1080.
-
-Both of my tiling window managers have a shared basis in the
-`xorg-twm` stow package ("twm" stands for "tiling window manager").
-They both use the Simple X Hot Key Daemon (sxhkd) to set key bindings
-and have practically the same `polybar` panel.  Furthermore, both are
-subject to the theme-switching of my `delight` script.  In other
-words, I can use them interchangeably.
++ **herbstluftwm (hlwm):** Shares many concepts with bspwm, though
+  herbstluftwm prioritises manual tiling methods and can treat
+  arbitrary rectangles of a monitor as virtual monitors.  The virtual
+  monitors feature is perfect for anyone with a widescreen display.
+  The one I have (which is not mine, but anyway) is 2560x1080, so I
+  split it by default into a regular 1920x1080 area and another
+  "sidebar" of 640x1080.
 
 Check the `xtwm-key-binding-cheatsheet.md` file for an overview of
 their key bindings.

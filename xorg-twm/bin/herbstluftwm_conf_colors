@@ -24,9 +24,9 @@ _hc ()
 
 # Values come from my Modus themes for GNU Emacs:
 # <https://protesilaos.com/modus-themes>.
-if [ -f "$HOME"/.config/herbstluftwm/active-theme ]
+if [ -f "$HOME"/.config/prot-xtwm-active-theme ]
 then
-   case "$(cat "$HOME"/.config/herbstluftwm/active-theme)" in
+   case "$(cat "$HOME"/.config/prot-xtwm-active-theme)" in
        dark*)
            bg_main="#000000"
            bg_dim="#1e1e1e"

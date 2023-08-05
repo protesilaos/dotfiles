@@ -193,6 +193,9 @@ _bspwm_or_hlwm ()
 
     _gnome_theme
 
+    wm_theme_file="$HOME"/.config/prot-xtwm-active-theme
+    focus_mode_status="$HOME"/.config/prot-xtwm-focus-mode
+
 	echo "$style" > "$wm_theme_file"
     wm_theme="$style"
 
@@ -209,7 +212,7 @@ _bspwm_or_hlwm ()
     _feh &
     _rofi &
 
-    if [ "$(sed 1q "$focus_mode_status")" = off ]
+    if [ -f $focus_mode_status ] && [ "$(sed 1q "$focus_mode_status")" = off ]
     then
         _polybar launch
     else
@@ -321,18 +324,12 @@ case "$DESKTOP_SESSION"
 in
     bspwm)
         wm_executable=bspwm
-		wm_theme_file="$HOME"/.config/bspwm/active-theme
-        wm_theme=$(cat $wm_theme_file)
-        focus_mode_status="$HOME"/.config/bspwm/bspwm_focus_mode_status
         conf_colors=bspwm_conf_colors
 
         _bspwm_or_hlwm
         ;;
     herbstluftwm)
         wm_executable=herbstluftwm
-		wm_theme_file="$HOME"/.config/herbstluftwm/active-theme
-        wm_theme=$(cat $wm_theme_file)
-        focus_mode_status="$HOME"/.config/herbstluftwm/herbstluftwm_focus_mode_status
         conf_colors=herbstluftwm_conf_colors
 
         _bspwm_or_hlwm

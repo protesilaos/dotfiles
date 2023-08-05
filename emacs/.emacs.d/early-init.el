@@ -115,20 +115,11 @@ the `delight' shell script."
 
 (defun prot-emacs-theme-twm-dark-p ()
   "Return non-nil if my custom setup has a dark theme.
-I place a file in ~/.config/bspwm/active-theme or
-~/.config/herbstluftwm/active-theme which contains a single word
-describing my system-wide theme.  This is part of my dotfiles.
-Check my `delight' shell script for more."
-  (when-let* ((bspwm "~/.config/bspwm/active-theme")
-              (hlwm "~/.config/herbstluftwm/active-theme")
-              (session (getenv "DESKTOP_SESSION"))
-              (file (cond
-                     ((and (string= session "bspwm")
-                           (file-exists-p bspwm))
-                      bspwm)
-                     ((and (string= session "herbstluftwm")
-                           (file-exists-p hlwm))
-                      hlwm))))
+I place a file in ~/.config/prot-xtwm-active-theme which contains
+a single word describing my system-wide theme.  This is part of
+my dotfiles.  Check my `delight' shell script for more."
+  (when-let ((file "~/.config/prot-xtwm-active-theme")
+             ((file-exists-p file)))
       (string-match-p
        "dark"
        (with-temp-buffer

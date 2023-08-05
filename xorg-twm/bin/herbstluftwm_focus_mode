@@ -34,7 +34,7 @@ smart_frame_surroundings="$(_get_value smart_frame_surroundings)"
 frame_border_width="$(_get_value frame_border_width)"
 
 # This is used by the 'delight' script.
-focus_mode_status="$HOME"/.config/herbstluftwm/herbstluftwm_focus_mode_status
+focus_mode_status="$HOME"/.config/prot-xtwm-focus-mode
 
 _hc ()
 {

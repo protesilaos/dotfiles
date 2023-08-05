@@ -23,6 +23,8 @@
 # (collectively referred to as "Xorg Tiling Window Managers").  I
 # configure those window managers to be similar.
 #
+# In all cases where a file is called, I assume it exists.
+#
 # Part of my dotfiles: <https://git.sr.ht/~protesilaos/dotfiles>.
 
 ### Code:
