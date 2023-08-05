@@ -44,37 +44,10 @@ assign key bindings, etc.) are in the directory `prot-emacs-modules`.
 
 The modules are loaded from the `init.el`.  Each module defines the
 packages to install/load.  **My setup auto-installs packages**.  This
-will happen the first time you start up Emacs.  If a package is not
-found in the archives it likely means that you need to refresh the
-package listing: `M-x package-refresh-contents`.  This is done
-automatically at startup, if necessary, but is needed for any new
-packages you may define.  Then retry installing the package.
+will happen the first time you start up Emacs.
 
-There are two files that you can use to personalise your setup: (i)
-`prot-emacs-pre-custom.el` and (ii) `prot-emacs-post-custom.el`.
-
-Both files must be in the same directory as the `init.el` and
-`early-init.el`.  This typically is the `~/.emacs.d/` directory.
-
-These files serve two different purposes.
-
-1. The `prot-emacs-pre-custom.el` is useful if you want to do
-   something BEFORE loading my configurations.  For example, you may
-   want to exclude some of my packages from your setup.  So you can
-   add something like this:
-
-   ```elisp
-   ;; This goes in the file prot-emacs-pre-custom.el
-   (setq prot-emacs-omit-packages
-         ;; Names of packages here
-         '( citar citar-denote citar-embark
-            clojure-mode cider
-            flymake-kondor flymake-shellcheck flymake-proselint))
-   ```
-
-2. The `prot-emacs-post-custom.el` is loaded AFTER all my
-   customisations.  You can use this to add additional packages or
-   make further changes to existing ones.
+Read the file `prot-emacs.org` for further information on the anatomy
+of my Emacs setup.
 
 If you make changes to the dotfiles, such as by moving things around,
 run stow again with the `-R` flag:
