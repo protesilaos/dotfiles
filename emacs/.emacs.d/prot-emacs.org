@@ -4,9 +4,14 @@
 #+language: en
 #+options:  ':t toc:nil author:t email:t num:t
 #+startup:  content indent
+#+macro:    latest-export-date (eval (format-time-string "%F %T %z"))
 
-This page is a work-in-progress.  I started it on 2023-05-24 as a
-successor to my old Emacs literate configuration file.
+This page is the successor to my old Emacs literate configuration
+file.  I no longer use Org to maintain my Emacs setup.  Instead,
+everything is done directly with Emacs Lisp.  The purpose of this
+document is to describe my setup and list the contents of all the
+relevant files I am loading.  *Last revised and exported on
+{{{latest-export-date}}}.*
 
 #+toc: headlines 8 insert TOC here, with eight headline levels
 
@@ -15,9 +20,10 @@ successor to my old Emacs literate configuration file.
 :CUSTOM_ID: h:23952262-063e-4c3b-a8af-4fd67d91c2d5
 :END:
 
-Herein you will find documentation about my  files for
-Emacs.  *This is not a literate configuration*: it is ordinary Emacs
-Lisp code that I am writing about in a separate file.
+Herein you will find documentation about my files for Emacs. *This is
+not a literate configuration*: it is ordinary Emacs Lisp code. I am
+writing about it in this separate file to explain how my setup is
+organised.
 
 + Website: <https://protesilaos.com/emacs/dotemacs>
 + Git repo on SourceHut: <https://git.sr.ht/~protesilaos/dotfiles>
@@ -26,22 +32,59 @@ Lisp code that I am writing about in a separate file.
     + GitLab: <https://gitlab.com/protesilaos/dotfiles>
 + Mailing list: <https://lists.sr.ht/~protesilaos/dotfiles>
 + Backronym: Do Observe, Transpose, Examine, or Mirror All
-  Configurations, Stranger
+  Configurations, Stranger (dotemacs); Dotfiles Operate Transparently
+  For the Included Linux and Emacs Setups (dotfiles).
+
+* Details of my Emacs build
+:PROPERTIES:
+:CUSTOM_ID: h:64c1c9f5-1218-4ff3-8e35-41e56c74f038
+:END:
+
+I track the trunk of emacs.git, as I am the maintainer of several
+Emacs packages and a contributor to Emacs core.  Users of Arch Linux
+can refer to this =PKGBUILD= I maintain for my purposes:
+
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/emacs-arch-linux-pkgbuild>
+  - Mirrors
+    + GitHub: <https://github.com/protesilaos/emacs-arch-linux-pkgbuild>
+    + GitLab: <https://gitlab.com/protesilaos/emacs-arch-linux-pkgbuild>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronym for "PKGBUILD ... of Emacs": Package Knowhow Germane to
+  Building Unapologetically Individuated Local Design ... of Emacs.
 
 * Anatomy of my Emacs configuration
 :PROPERTIES:
 :CUSTOM_ID: h:103d6f5a-bdb1-4b49-946a-708a83c79a7d
 :END:
 
+** Overview of my Emacs configuration
+:PROPERTIES:
+:CUSTOM_ID: h:9fe6c0b6-7978-42f5-a099-268f6c51fddf
+:END:
+
+- =early-init.el= :: Optimisations for starting up Emacs and setting
+  the basics.
+- =init.el= :: Defines foundational blocks of my system and loads the
+  individual configuration modules.
+- =prot-emacs-modules= directory :: Includes all my configuration
+  modules.  These simply tweak packages and are not meant to define
+  extra functionality.
+- =prot-lisp= directory :: Custom packages
+
+** The anatomy of my Emacs in detail
+:PROPERTIES:
+:CUSTOM_ID: h:06bc66da-6e6d-4abc-81a0-52599a7ee3d8
+:END:
+
 I have built my setup from scratch and am observing best practices
 with regard to how Emacs expects things to run.  I do not use the
 Emacs daemon, as I have encountered instabilities with it.  Instead, I
-run a single instance, that I launch at startup, and then configure it
-to act as the server.  This means that I can still connect to the
-running session via ~emacsclient~, which is useful when I want to
-evaluate Elisp code from outside of Emacs (e.g. with the ~delight~
-shell script that switches the entire "environment" theme of my tiling
-window manager---see my dotfiles for the technicalities).
+run a single instance of Emacs and then configure it to act as the
+server.  This means that I can still connect to the running session
+via ~emacsclient~, which is useful when I want to evaluate Elisp code
+from outside of Emacs (e.g. with the ~delight~ shell script that
+switches the entire "environment" theme of my tiling window
+manager---see my dotfiles for the technicalities).
 
 With those granted, here is an overview of how files are organised and
 what they do:
@@ -53,10 +96,6 @@ what they do:
 
   + Set up the parameters of the initial and all future frames.
 
-  + Make the ~custom-file~ disposable because I consider persistent
-    configurations outside my hand-written code to be highly
-    problematic.
-
   + Optimise the early initialisation phase to speed up startup time.
 
   + Define functions that test whether my environment is using a light
@@ -67,28 +106,37 @@ what they do:
     when I launch Emacs.
 
 - The =init.el= file :: This is the main configuration file that Emacs
-  uses.  Mine defines some user options that are intended for the
-  =prot-emacs-pre-custom.el= file (more below) and then goes on to
+  uses.  Mine defines some user options that are intended for use in
+  the =prot-emacs-pre-custom.el= file (more below) and then goes on to
   handle the substantive parts of my configuration.  Concretely:
 
-  + Registers my =prot-lisp/= and =prot-emacs-modules/= in the Emacs
-    ~load-path~.  Read further below for what these are.
+  + Make the ~custom-file~ disposable because I consider persistent
+    configurations outside my hand-written code to be highly
+    problematic.
 
-  + Arranges my package archives and ensures that the packages I
+  + Register my =prot-lisp/= and =prot-emacs-modules/= in the Emacs
+    ~load-path~.  Read further below for what these directories
+    contain.
+
+  + Load all the modules of my setup in the appropriate order.
+
+  + Arrange my package archives and ensures that the packages I
     develop are drawn from the =elpa-devel= archive.  Read here for
-    all my packages: <https://protesilaos.com/emacs>.
+    all my packages: <https://protesilaos.com/emacs>.  I install my
+    packages from =elpa-devel= just to be sure that their installation
+    works properly.
 
-  + Defines the Lisp Macros that are used throughout my setup, such as
+  + Define the Lisp Macros that are used throughout my setup, such as
     ~prot-emacs-package~ and ~prot-emacs-keybind~.  Why not
     ~use-package~, especially now that it is built into Emacs?
     Because (i) I do not like many aspects of its behaviour, such as
     key bindings "magically" delaying the load of a package, and (ii)
-    I have no use for most of its functionality.
-
-  + Loads all the modules of my setup in the appropriate order.
+    I have no use for most of its functionality.  Writing my own Lisp
+    macros helps me practice my coding skills and get exactly what I
+    want.
 
 - The =prot-emacs-modules= directory :: This is where I store all the
-  individual components of my Emacs setup.  The directory resides as a
+  individual components of my Emacs setup.  The directory is a
   subdirectory of =~/.emacs.d/=.  All files are prefixed with
   =prot-emacs-=, followed by a word that broadly describes their scope
   of application, such as ~prot-emacs-font~, ~prot-emacs-window~...
@@ -100,6 +148,9 @@ what they do:
   the file name minus its file type extension: ~prot-emacs-font~ is
   the feature provided by =prot-emacs-font.el=.
 
+  Modules are intended only for configuration purposes.  They do not
+  define any major variables/functions.
+
 - The =prot-lisp= directory :: As with the aforementioned modules,
   this directory is a subdirectory of =~/.emacs.d/=.  This is where I
   keep all my custom code that individual modules can use.  The
@@ -108,10 +159,10 @@ what they do:
   experiments.  Each file is written in accordance with the
   conventions on Emacs packaging, even though they are only intended
   for use in my setup and are not polished to the level of my actual
-  public-facing packages (meaning the one listed here:
+  public-facing packages (meaning the ones listed here:
   <https://protesilaos.com/emacs>).
 
-- The =prot-emacs-pre-custom= file :: It is evaluated before the
+- The =prot-emacs-pre-custom= file :: It is evaluated /before/ the
   modules are loaded.  It is intended for users of my configuration
   who want to:
 
@@ -130,4 +181,33 @@ what they do:
 
 - The =prot-emacs.org= file :: The source of what you are currently
   reading.  It is not pertinent to the configuration of Emacs.  All it
-  does is to document the rest of my code.
+  does is document the rest of my code.
+
+* Contents of all files in my setup
+:PROPERTIES:
+:CUSTOM_ID: h:42cbed76-6039-410f-bca8-22aecb63121a
+:END:
+
+The following sections produce the contents of all the files that form
+part of my Emacs setup.  ⚠️ This is a work-in-progress: not all files
+are included herein, though the plan is to add everything.
+
+** early-init.el
+:PROPERTIES:
+:CUSTOM_ID: h:7b7b5898-09f7-4128-8af0-4041f67cb729
+:END:
+
+As explained earlier, this is the first file that my Emacs reads at
+startup ([[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][Anatomy of my Emacs configuration]]).
+
+#+include: early-init.el src emacs-lisp
+
+** init.el
+:PROPERTIES:
+:CUSTOM_ID: h:dae63bd9-93a8-41c4-af1b-d0f39ba50974
+:END:
+
+This is where I define the Lisp macros used in my setup and load all
+the invidiual modules.
+
+#+include: init.el src emacs-lisp
