@@ -32,7 +32,7 @@
   ;; `altcaps-dwim'.
   (define-key global-map (kbd "C-x C-a") #'altcaps-dwim))
 
-;;; Denote (simple note-taking)
+;;; Denote (simple note-taking and file-naming)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
 (prot-emacs-package denote
   (:install t)
