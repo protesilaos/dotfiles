@@ -86,10 +86,6 @@ label-empty-foreground = ${colors.fg-dim}
 type = internal/bspwm
 
 inline-mode = false
-;label-tiled = 
-;label-fullscreen = 
-;label-floating = 
-;label-pseudotiled = P
 
 ; FIXME 2021-09-25: hide when bspc config single_monocle true.
 ;
