@@ -115,7 +115,10 @@
                 "\\(mkv\\|" "webm\\|" "mp4\\|" "mp3\\|" "ogg\\|" "m4a\\|"
                 "gz\\|" "zst\\|" "tar\\|" "xz\\|" "rar\\|" "zip\\|"
                 "iso\\|" "epub\\|" "\\)"))
-  (dired-preview-global-mode))
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (when (string-match-p "Pictures" default-directory)
+                (dired-preview-mode 1)))))
 
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
