@@ -25,8 +25,7 @@
   (:delay 60)
   ;; Force letter casing for certain characters (for legibility).
   (setq altcaps-force-character-casing
-        '((?i . downcase)
-          (?l . upcase)
+        '(;; Greek theta
           (?θ . downcase)))
 
   ;; The available commands: `altcaps-word', `altcaps-region',
