@@ -458,22 +458,6 @@ Add this to a hook, such as `prog-mode-hook'."
   (:delay 5)
   (setq tempel-path (expand-file-name "tempel-templates" user-emacs-directory))
 
-  ;; Setup completion at point
-  (defun contrib/tempel-setup-capf ()
-    ;; Add the Tempel Capf to `completion-at-point-functions'.
-    ;; `tempel-expand' only triggers on exact matches. Alternatively use
-    ;; `tempel-complete' if you want to see all matches, but then you
-    ;; should also configure `tempel-trigger-prefix', such that Tempel
-    ;; does not trigger too often when you don't expect it. NOTE: We add
-    ;; `tempel-expand' *before* the main programming mode Capf, such
-    ;; that it will be tried first.
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
-
-  (dolist (hook '(prog-mode-hook text-mode-hook))
-    (add-hook hook 'contrib/tempel-setup-capf))
-
   (prot-emacs-keybind global-map
     "M-+" #'tempel-complete ; Alternative: `tempel-expand'
     "M-*" #'tempel-insert)
