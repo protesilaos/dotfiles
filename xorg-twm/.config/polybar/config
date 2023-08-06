@@ -12,8 +12,8 @@ bottom = true
 radius = 0
 fixed-center = false
 
-background = ${colors.bgmain}
-foreground = ${colors.fgmain}
+background = ${colors.bg-main}
+foreground = ${colors.fg-main}
 
 padding-left = 0
 padding-right = 1
@@ -42,8 +42,8 @@ bottom = true
 radius = 0
 fixed-center = false
 
-background = ${colors.bgmain}
-foreground = ${colors.fgmain}
+background = ${colors.bg-main}
+foreground = ${colors.fg-main}
 
 padding-left = 0
 padding-right = 1
@@ -73,14 +73,14 @@ label-active = "[%name%]"
 label-active-font = 2b
 
 label-occupied = " %name%^ "
-label-occupied-foreground = ${colors.fgalt}
+label-occupied-foreground = ${colors.fg-dim}
 
 label-urgent = " %name%! "
 label-urgent-font = 2
 label-urgent-foreground = ${colors.red}
 
 label-empty = ""
-label-empty-foreground = ${colors.fgalt}
+label-empty-foreground = ${colors.fg-dim}
 
 [module/bspwm]
 type = internal/bspwm
@@ -96,7 +96,7 @@ inline-mode = false
 ; UPDATE 2021-10-06: check module/bspwm_panel_monocle and my shell
 ; script bspwm_panel_monocle.
 label-monocle =
-label-monocle-foreground = ${colors.fgalt}
+label-monocle-foreground = ${colors.fg-dim}
 label-locked = L
 label-locked-foreground = ${colors.yellow}
 label-sticky = S
@@ -110,14 +110,14 @@ label-focused = "[%name%]"
 label-focused-font = 2
 
 label-occupied = " %name%^ "
-label-occupied-foreground = ${colors.fgalt}
+label-occupied-foreground = ${colors.fg-dim}
 
 label-urgent = " %name%! "
 label-urgent-font = 2
 label-urgent-foreground = ${colors.red}
 
 label-empty = " %name% "
-label-empty-foreground = ${colors.fgalt}
+label-empty-foreground = ${colors.fg-dim}
 
 format = <label-state> <label-mode>
 
