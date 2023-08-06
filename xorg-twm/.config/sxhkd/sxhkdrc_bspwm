@@ -162,6 +162,13 @@ mod4 + {shift + space,f}
 mod4 + n ; f ; {l,m,s,p}
     bspc node -g {locked,marked,sticky,private}
 
+# I want to treat a node specially by making it private and locked.  I
+# mostly use this for my initial Emacs frame as well as the browser
+# window when I am in a coaching session.  The mnemonic for the "e" is
+# "Escalate".
+mod4 + n ; f ; e
+    bspc node -g locked && bspc node -g private
+
 #### Manipulate the workspace
 
 # Rotate all windows {counter-}clockwise by 90 degrees.
