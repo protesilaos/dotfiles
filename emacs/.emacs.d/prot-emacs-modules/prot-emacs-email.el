@@ -1,22 +1,22 @@
 ;;; Client-agnostic email settings
 (prot-emacs-configure
   (:delay 1)
-;;;; `auth-source'
+;;;; File with authentication credentials (`auth-source')
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
         user-mail-address "public@protesilaos.com")
 
-;;;; `mm-encode'
+;;;; Encoding settings (`mm-encode')
   (setq mm-encrypt-option nil ; use 'guided if you need more control
         mm-sign-option nil)  ; same
 
-;;;; `mml-sec'
+;;;; Encryption settings (`mml-sec')
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
         mml-secure-smime-sign-with-sender t)
 
-;;;; `message'
+;;;; Message composition (`message')
   (setq mail-user-agent 'message-user-agent
         mail-header-separator (purecopy "*****")
         message-elide-ellipsis "\n> [... %l lines elided]\n"
@@ -36,7 +36,7 @@
 
   (add-hook 'message-setup-hook #'message-sort-headers)
 
-;;; `gnus-dired' (does not require `gnus')
+;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
   (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode)
 
 ;;;; `smtpmail' (SMTP)
