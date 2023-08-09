@@ -635,9 +635,9 @@ specified."
 ;;;; Commands for code navigation (work in progress)
 
 ;;;###autoload
-(defun prot-simple-downward-list (&optional arg)
+(defun prot-simple-downward-list (arg)
   "Like `backward-up-list' but defaults to a forward motion.
-With optional ARG, move that many times in the given
+With numeric prefix ARG, move that many times in the given
 direction (negative is forward due to this being a
 backward-facing command)."
   (interactive "p")
