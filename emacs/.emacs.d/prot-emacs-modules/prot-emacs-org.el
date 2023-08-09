@@ -406,7 +406,7 @@
   ;; See my `pulsar' package, defined elsewhere in this setup.
   (with-eval-after-load 'pulsar
     (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
-      (add-hook hook #'pulsar-recenter-middle)
+      (add-hook hook #'pulsar-recenter-center)
       (add-hook hook #'pulsar-reveal-entry)))
 
   (prot-emacs-keybind global-map
