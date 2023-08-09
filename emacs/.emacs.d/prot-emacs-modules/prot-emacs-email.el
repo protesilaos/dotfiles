@@ -39,19 +39,13 @@
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
   (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode)
 
-;;;; `smtpmail' (SMTP)
-  ;; ;; FIXME 2023-01-26: Do I need any of this?  It seems that the
-  ;; ;; contents of the `auth-sources' suffice for this case and
-  ;; ;; smtpmail.el is set up to do the right thing out-of-the-box.
-  ;; ;; Setting the values here seems wrong for anyone with multiple
-  ;; ;; acounts from different service providers.
-  (setq smtpmail-default-smtp-server "mail.gandi.net"
-        smtpmail-smtp-server "mail.gandi.net"
-        smtpmail-stream-type 'ssl
-        smtpmail-smtp-service 465
-        smtpmail-queue-mail nil)
-
 ;;;; `sendmail' (mail transfer agent)
-  (setq send-mail-function 'smtpmail-send-it))
+  (setq send-mail-function 'sendmail-send-it
+        ;; ;; NOTE 2023-08-08: We do not need this if we have the Arch
+        ;; ;; Linux `msmtp-mta' package installed: it replaces the
+        ;; ;; generic sendmail executable with msmtp.
+        ;;
+        ;; sendmail-program (executable-find "msmtp")
+        message-sendmail-envelope-from 'header))
 
 (provide 'prot-emacs-email)
