@@ -113,7 +113,9 @@
     "r" #'rename-uniquely
     "l" #'visual-line-mode)
 
-;;;; Mouse wheel behaviour
+;;;; Mouse and mouse wheel behaviour
+  (setq mouse-autoselect-window t) ; complements the auto-selection of my tiling window manager
+
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
   (setq mouse-wheel-scroll-amount
         '(1
