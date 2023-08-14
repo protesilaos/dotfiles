@@ -667,10 +667,10 @@ paragraph.  The idea is to produce the opposite effect of both
 Also check `prot-simple-narrow-dwim'."
   (interactive)
   (let* ((bounds (prot-common-window-bounds))
-         (window-area (- (cadr bounds) (car bounds)))
+         (window-area (- (cdr bounds) (car bounds)))
          (buffer-area (- (point-max) (point-min))))
     (if (/= buffer-area window-area)
-        (narrow-to-region (car bounds) (cadr bounds))
+        (narrow-to-region (car bounds) (cdr bounds))
       (user-error "Buffer fits in the window; won't narrow"))))
 
 ;;;###autoload

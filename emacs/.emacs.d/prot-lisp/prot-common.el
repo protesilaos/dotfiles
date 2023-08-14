@@ -177,8 +177,8 @@ will continue rotating accordingly."
 
 ;;;###autoload
 (defun prot-common-window-bounds ()
-  "Determine start and end points in the window."
-  (list (window-start) (window-end)))
+  "Return start and end points in the window as a cons cell."
+  (cons (window-start) (window-end)))
 
 ;;;###autoload
 (defun prot-common-page-p ()
