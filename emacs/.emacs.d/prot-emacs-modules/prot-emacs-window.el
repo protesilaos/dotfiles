@@ -196,6 +196,20 @@
 
   (require 'whitespace)
 
+  ;; NOTE 2023-08-14: This is experimental.  I am not sure I like it.
+  (setq whitespace-style
+        '(face
+          tabs
+          spaces
+          tab-mark
+          space-mark
+          trailing
+          missing-newline-at-eof
+          space-after-tab::tab
+          space-after-tab::space
+          space-before-tab::tab
+          space-before-tab::space))
+
   (prot-emacs-keybind global-map
     "<f6>" #'prot-sideline-negative-space-toggle
     "<f7>" #'prot-sideline-mode
