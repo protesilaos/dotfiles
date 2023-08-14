@@ -20,6 +20,32 @@
             (keyboard-quit "Quit")))
   (setq project-vc-extra-root-markers '(".project"))
 
+  (defun prot/project--get-key (key cmd)
+    "Return key binding for KEY, falling back to what CMD is bound to."
+    (if key
+        (vector key)
+      (where-is-internal cmd (list project-prefix-map) t)))
+
+  (defun prot/project--keymap-prompt ()
+    "Return `project-switch-commands' and their fontified key bindings.
+Use a newline character to separate each pair of key and command.
+
+Based on `project--keymap-prompt' and meant to be used as an
+:override advice for it."
+    (mapconcat
+     (pcase-lambda (`(,cmd ,label ,key))
+       (let ((key (prot/project--get-key key cmd)))
+         (format
+          "%s	%s"
+          (propertize (key-description key) 'face 'help-key-binding)
+          label)))
+     project-switch-commands
+     "\n"))
+
+  (advice-add #'project--keymap-prompt :override #'prot/project--keymap-prompt)
+
+  (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
+
   (prot-emacs-keybind global-map
     "C-x p ." #'project-dired
     "C-x p C-g" #'keyboard-quit

@@ -170,6 +170,14 @@ will continue rotating accordingly."
   (let ((inhibit-message t))
     (toggle-truncate-lines t)))
 
+;; NOTE 2023-08-12: I tried the `clear-message-function', but it did
+;; not work.  What I need is very simple and this gets the job done.
+;;;###autoload
+(defun prot-common-clear-minibuffer-message (&rest _)
+  "Print an empty message to clear the echo area.
+Use this as advice :after a noisy function."
+  (message ""))
+
 ;;;###autoload
 (defun prot-common-disable-hl-line ()
   "Disable Hl-Line-Mode (for hooks)."
