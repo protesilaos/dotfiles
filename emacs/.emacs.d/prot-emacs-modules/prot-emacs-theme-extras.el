@@ -21,6 +21,8 @@
   ;; a specific colour: `pulsar-pulse-line-red' is one of them.
   (add-hook 'next-error-hook #'pulsar-pulse-line-red)
 
+  (add-hook 'minibuffer-setup-hook 'pulsar-pulse-line-blue)
+
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
   ;;
