@@ -207,6 +207,7 @@
   (:delay 5)
   (global-corfu-mode 1)
 
+  (setq corfu-popupinfo-delay '(1.25 . 0.5))
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
@@ -220,34 +221,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
       (corfu-mode 1)))
 
   (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
-
-;;; CAPE (extra completion-at-point backends)
-(prot-emacs-package cape
-  (:install t)
-  (:delay 5)
-  (setq cape-dabbrev-min-length 3)
-  (setq cape-symbol-wrapper
-        '((org-mode ?~ ?~)
-          (markdown-mode ?` ?`)
-          (log-edit-mode ?' ?')
-          (message-mode ?' ?')))
-
-  ;; NOTE 2023-07-29: This is experimental.  I want to check if
-  ;; `cape-super-capf' works as intended.
-  (defun prot/cape-add-backends ()
-    "Prepend cape backends to `completion-at-point-functions'.
-Add this to a hook, such as `prog-mode-hook'."
-    (setq-local completion-at-point-functions
-                (cons (cape-super-capf
-                       #'cape-symbol
-                       #'cape-keyword
-                       #'cape-file
-                       #'cape-history
-                       #'cape-dabbrev)
-                      completion-at-point-functions)))
-
-  (add-to-list 'text-mode-hook #'prot/cape-add-backends)
-  (add-to-list 'prog-mode-hook #'prot/cape-add-backends))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-package consult
