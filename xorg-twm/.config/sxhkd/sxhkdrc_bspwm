@@ -82,6 +82,9 @@ mod4 + shift + {Left,Down,Up,Right}
 mod4 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
     ;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
 
+# mod4 + {_,shift + }{1-9}
+#     bspc {desktop -f,node -d} {1-9}
+
 ## Use this for "send+follow" instead of just "send"
 # mod4 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
 #   ;bspwm_dynamic_desktops {--df,--nsf,--nmf,--da} {0-9}
