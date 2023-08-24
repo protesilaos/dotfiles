@@ -74,6 +74,12 @@ Used by `prot-simple-inset-date'."
   :type 'string
   :group 'prot-simple)
 
+(defvar-keymap prot-simple-global-repeat-map
+  :doc "Repeatable prot-simple commands, per `repeat-mode'."
+  :repeat t
+  "+" #'prot-simple-number-increment
+  "-" #'prot-simple-number-decrement)
+
 ;;; Commands
 
 ;; NOTE 2023-06-21: The code I had for scratch buffers per major mode
@@ -113,6 +119,49 @@ The DWIM behaviour of this command is as follows:
   "Run `describe-symbol' for the `symbol-at-point'."
   (interactive)
   (describe-symbol (symbol-at-point)))
+
+(autoload 'number-at-point "thingatpt")
+
+(defun prot-simple--number-operate (number amount operation)
+  "Perform OPERATION on NUMBER given AMOUNT and return the result.
+OPERATION is the keyword `:increment' or `:decrement' to perform
+`1+' or `1-', respectively."
+  (when (and (numberp number) (numberp amount))
+    (let ((fn (pcase operation
+                (:increment #'+)
+                (:decrement #'-)
+                (_ (user-error "Unknown operation `%s' for number `%s'" operation number)))))
+      (funcall fn number amount))))
+
+(defun prot-simple--number-replace (number amount operation)
+  "Perform OPERATION on NUMBER at point by AMOUNT."
+  (when-let ((bounds (bounds-of-thing-at-point 'number))
+             (replacement (prot-simple--number-operate number amount operation)))
+    (delete-region (car bounds) (cdr bounds))
+    (save-excursion
+      (insert (number-to-string replacement)))))
+
+;;;###autoload
+(defun prot-simple-number-increment (number amount)
+  "Increment NUMBER by AMOUNT.
+When called interactively, NUMBER is the one at point, while
+AMOUNT is either 1 or that of a number prefix argument."
+  (interactive
+   (list
+    (number-at-point)
+    (prefix-numeric-value current-prefix-arg)))
+  (prot-simple--number-replace number amount :increment))
+
+;;;###autoload
+(defun prot-simple-number-decrement (number amount)
+  "Decrement NUMBER by AMOUNT.
+When called interactively, NUMBER is the one at point, while
+AMOUNT is either 1 or that of a number prefix argument."
+  (interactive
+   (list
+    (number-at-point)
+    (prefix-numeric-value current-prefix-arg)))
+  (prot-simple--number-replace number amount :decrement))
 
 ;;;; Commands for lines
 

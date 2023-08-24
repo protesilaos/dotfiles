@@ -55,6 +55,8 @@
     "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
+    "C-c +" #'prot-simple-number-increment
+    "C-c -" #'prot-simple-number-decrement
     ;; Commands for lines
     "M-o" #'delete-blank-lines   ; alias for C-x C-o
     "M-k" #'prot-simple-kill-line-backward
