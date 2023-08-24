@@ -286,13 +286,18 @@ man ()
 }
 
 # Enter directory and list contents
+_ls()
+{
+    ls --color=auto -AGFhlv --group-directories-first --time-style=long-iso
+}
+
 cd ()
 {
     if [ -n "$1" ]
     then
-        builtin cd "$@" && ls -pvA --color=auto --group-directories-first
+        builtin cd "$@" && _ls
     else
-        builtin cd ~ && ls -pvA --color=auto --group-directories-first
+        builtin cd ~ && _ls
     fi
 }
 
