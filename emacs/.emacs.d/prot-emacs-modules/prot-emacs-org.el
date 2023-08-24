@@ -474,4 +474,8 @@
                  :immediate-finish t
                  :empty-lines 1)))
 
+(prot-emacs-package prot-coach
+  (:delay 10)
+  (define-key global-map (kbd "C-c j") #'prot-coach-jitsi-link))
+
 (provide 'prot-emacs-org)
