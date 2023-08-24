@@ -52,7 +52,7 @@
   "Return default value for `prot-org--capture-coach-person-prompt'."
   (when-let ((from (cond
                     ((derived-mode-p 'message-mode)
-                     (message-fetch-field "From"))
+                     (message-fetch-field "To"))
                     ((derived-mode-p 'notmuch-show-mode)
                      (notmuch-show-get-header :From)))))
     (string-clean-whitespace (car (split-string from "<")))))
