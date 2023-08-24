@@ -47,13 +47,20 @@ fi
 # something like ~/.profile.
 export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
 
-# Default pager.  Note that the option I pass to it will quit once you
-# try to scroll past the end of the file.
-if [ "$TERM" = "dumb" ]
+# Default pager.  The check for the terminal is useful for Emacs with
+# M-x shell (which is how I usually interact with bash these days).
+#
+# The COLORTERM is documented in (info "(emacs) General Variables").
+# I found the reference to `dumb-emacs-ansi' in (info "(emacs)
+# Connection Variables").
+if [ "$TERM" = "dumb" ] && [ "$INSIDE_EMACS" ]
 then
     export PAGER="cat"
     alias less="cat"
+    export TERM=dumb-emacs-ansi
+    export COLORTERM=1
 else
+    # Quit once you try to scroll past the end of the file.
     export PAGER="less --quit-at-eof"
 fi
 

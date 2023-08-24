@@ -329,6 +329,26 @@
 ;;; Shell (M-x shell)
 (prot-emacs-package shell
   (:delay 15)
+
+  ;; Check my .bashrc which handles `comint-terminfo-terminal':
+  ;;
+  ;; # Default pager.  The check for the terminal is useful for Emacs with
+  ;; # M-x shell (which is how I usually interact with bash these days).
+  ;; #
+  ;; # The COLORTERM is documented in (info "(emacs) General Variables").
+  ;; # I found the reference to `dumb-emacs-ansi' in (info "(emacs)
+  ;; # Connection Variables").
+  ;; if [ "$TERM" = "dumb" ] && [ "$INSIDE_EMACS" ]
+  ;; then
+  ;;     export PAGER="cat"
+  ;;     alias less="cat"
+  ;;     export TERM=dumb-emacs-ansi
+  ;;     export COLORTERM=1
+  ;; else
+  ;;     # Quit once you try to scroll past the end of the file.
+  ;;     export PAGER="less --quit-at-eof"
+  ;; fi
+
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t)
   (setq shell-input-autoexpand 'input)
@@ -336,22 +356,20 @@
   (setq shell-has-auto-cd nil) ; Emacs 29.1
   (setq shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
   (setq shell-kill-buffer-on-exit t) ; Emacs 29.1
+  (setq shell-completion-fignore '("~" "#" "%"))
   (setq-default comint-scroll-to-bottom-on-input t)
   (setq-default comint-scroll-to-bottom-on-output nil)
   (setq-default comint-input-autoexpand 'input)
   (setq comint-prompt-read-only t)
   (setq comint-buffer-maximum-size 9999)
   (setq comint-completion-autolist t)
+  (setq comint-input-ignoredups t)
+  (setq tramp-default-remote-shell "/bin/bash")
 
-  ;; Check my .bashrc which handles `comint-terminfo-terminal':
-  ;;
-  ;; if [ "$TERM" = "dumb" ]
-  ;; then
-  ;;     export PAGER="cat"
-  ;;     alias less="cat"
-  ;; else
-  ;;     export PAGER="less --quit-at-eof"
-  ;; fi
+  ;; Support for OS-specific escape sequences such as what `ls
+  ;; --hyperlink' uses.  I normally don't use those, but I am checking
+  ;; this to see if there are any obvious advantages/disadvantages.
+  (add-hook 'comint-output-filter-functions 'comint-osc-process-output)
 
   (define-key global-map (kbd "<f1>") #'shell) ; I don't use F1 for help commands
 
@@ -360,5 +378,9 @@
     "<down>" #'comint-next-input
     "C-c C-k" #'comint-clear-buffer
     "C-c C-w" #'comint-write-output))
+
+(prot-emacs-package prot-shell
+  (:delay 15)
+  (add-hook 'shell-mode-hook #'prot-shell-mode))
 
 (provide 'prot-emacs-essentials)
