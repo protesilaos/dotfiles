@@ -226,6 +226,11 @@
 
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
+  ;; Sort by input history (no need to modify `corfu-sort-function').
+  (with-eval-after-load 'savehist
+    (corfu-history-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history))
+
   ;; Adapted from Corfu's manual.
   (defun contrib/corfu-enable-always-in-minibuffer ()
     "Enable Corfu in the minibuffer if MCT or Vertico is not active.
