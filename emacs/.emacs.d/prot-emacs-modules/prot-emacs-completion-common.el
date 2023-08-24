@@ -104,6 +104,18 @@
 
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
+  ;; Settings for the default completion UI.  These do not come into
+  ;; effect unless `prot-emacs-completion-ui' is nil.
+  (setq completion-show-help nil)
+  (setq completion-auto-help t)
+  (setq completion-auto-select nil)
+  (setq completions-detailed t)
+  (setq completion-show-inline-help nil)
+  (setq completions-max-height 6)
+  (setq completions-header-format
+        (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
+  (setq completions-highlight-face 'completions-highlight)
+
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
