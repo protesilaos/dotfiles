@@ -59,9 +59,9 @@ mod4 + Delete
 
 #### Main programs
 
-# The -a "" tries to start the daemon and connect to it
+# The -a "" tries to start the daemon and connect to it, if it is missing.
 mod4 + {_, shift +,ctrl + shift + } Return
-    {uxterm,emacsclient -w 2 -a "" -e "(prot-window-coach)",emacsclient -w 2 -a "" -e "(prot-window-shell)"}
+    {uxterm,emacsclient -w 2 -a "" -e "(prot-window-shell)",emacsclient -w 2 -a "" -e "(prot-window-coach)"}
 
 # Show the desired rofi views for "buffers" (windows) and desktop
 # applications.
