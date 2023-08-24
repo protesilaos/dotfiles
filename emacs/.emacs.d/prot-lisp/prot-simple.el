@@ -123,7 +123,7 @@ Move the point to the absolute beginning.  Adapt indentation by
 passing optional prefix ARG (\\[universal-argument]).  Also see
 `prot-simple-new-line-above'."
   (interactive "P")
-  (end-of-line)
+  (goto-char (line-end-position))
   (if arg
       (newline-and-indent)
     (newline)))
@@ -136,9 +136,10 @@ passing optional prefix ARG (\\[universal-argument])."
   (interactive "P")
   (let ((indent (or arg nil)))
     (if (or (bobp)
-            (line-number-at-pos (point-min)))
+            (eq (point) (point-min))
+            (eq (line-number-at-pos (point-min)) 1))
         (progn
-          (beginning-of-line)
+          (goto-char (line-beginning-position))
           (newline)
           (forward-line -1))
       (forward-line -1)
