@@ -18,7 +18,7 @@
             (project-vc-dir "VC-Dir")
             (project-shell "Shell")
             (keyboard-quit "Quit")))
-  (setq project-vc-extra-root-markers '(".project"))
+  (setq project-vc-extra-root-markers '(".project")) ; Emacs 29
 
   (defun prot/project--get-key (key cmd)
     "Return key binding for KEY, falling back to what CMD is bound to."
