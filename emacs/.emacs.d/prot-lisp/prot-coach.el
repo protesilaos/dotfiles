@@ -35,14 +35,29 @@
 
 ;;;; Jitsi link
 
+(declare-function message-fetch-field "message" (header &optional first))
+(declare-function notmuch-show-get-header "notmuch-show")
+
 (defvar prot-coach--name-prompt-history nil
-  "Minibuffer history of `prot-coach--name-prompt'.")
+  "Minibuffer history of `prot-coach-name-prompt'.")
 
-(defun prot-coach--name-prompt ()
+(defun prot-coach--name-prompt-default ()
+  "Return default value for `prot-coach-name-prompt'."
+  (when-let ((from (cond
+                    ((derived-mode-p 'message-mode)
+                     (message-fetch-field "To"))
+                    ((derived-mode-p 'notmuch-show-mode)
+                     (notmuch-show-get-header :From)))))
+    (string-clean-whitespace (car (split-string from "<")))))
+
+(defun prot-coach-name-prompt ()
   "Prompt for student name."
-  (read-string "Name of student: " nil 'prot-coach--name-prompt-history))
+  (let ((def (prot-coach--name-prompt-default)))
+    (read-string
+     (format-prompt "Name of student" def)
+     nil 'prot-coach--name-prompt-history def)))
 
-(defun prot-coach--return-identifier ()
+(defun prot-coach-get-identifier ()
   "Return identifier as YYYYmmddTHHMMSS.
 This is the Denote identifier I use practically everywhere:
 https://protesilaos.com/emacs/denote."
@@ -84,12 +99,13 @@ leading and trailing hyphen."
 (defun prot-coach--format-jitsi (name)
   "Format a Jitsi link with a unique identifier that includes NAME."
   (format "https://meet.jit.si/%s--%s"
-          (prot-coach--return-identifier)
+          (prot-coach-get-identifier)
           (prot-coach-sluggify name)))
 
+;;;###autoload
 (defun prot-coach-jitsi-link (name)
   "Insert Jitsi link for NAME person."
-  (interactive (list (prot-coach--name-prompt)))
+  (interactive (list (prot-coach-name-prompt)))
   (insert (prot-coach--format-jitsi name)))
 
 ;;;; Time tables
@@ -152,7 +168,7 @@ Omit entries with a CANCEL state."
                    ;; NOTE 2023-03-29: This assumes the file paths are
                    ;; absolute and end with a directory delimiter.
                    (member dir org-agenda-files)))
-              (name (prot-coach--name-prompt)))
+              (name (prot-coach-name-prompt)))
     (let (sessions)
       (org-map-entries
        (lambda ()
