@@ -159,6 +159,11 @@ before all other modules of my setup."
              (cons package "gnu-elpa-devel"))
            prot-emacs-my-packages)))
 
+;; NOTE 2023-08-21: I build Emacs from source, so I always get the
+;; latest version of built-in packages.  However, this is a good
+;; solution to set to non-nil if I ever switch to a stable release.
+(setq package-install-upgrade-built-in nil)
+
 (setq custom-safe-themes t)
 
 (defun prot-emacs-package-install (package &optional method)
