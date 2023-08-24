@@ -138,6 +138,8 @@
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
+  (setq dabbrev-ignored-buffer-modes
+        '(archive-mode image-mode docview-mode pdf-view-mode))
 
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
