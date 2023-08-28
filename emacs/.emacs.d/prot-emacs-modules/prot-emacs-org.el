@@ -9,7 +9,6 @@
            (when time-zone (format "(%s)" time-zone))))
   (setq calendar-week-start-day 1)      ; Monday
   (setq calendar-date-style 'iso)
-  (setq calendar-date-display-form calendar-iso-date-display-form)
   (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
   ;; (require 'solar)
