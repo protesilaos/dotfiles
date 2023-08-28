@@ -198,6 +198,20 @@
   (setq display-time-mail-string nil)
   (setq display-time-mail-face nil)
 
+  ;; I don't need the load average and the mail indicator, so let this
+  ;; be simple:
+  (setq display-time-string-forms
+        '((if (and (not display-time-format) display-time-day-and-date)
+	          (format-time-string "%a %b %e " now)
+            "")
+          (propertize
+           (format-time-string (or display-time-format
+			                       (if display-time-24hr-format "%H:%M" "%-I:%M%p"))
+			                   now)
+           'face 'display-time-date-and-time
+           'help-echo (format-time-string "%a %b %e, %Y" now))
+          " "))
+
 ;;;;; World clock (M-x world-clock)
   (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
