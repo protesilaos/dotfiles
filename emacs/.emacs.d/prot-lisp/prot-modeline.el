@@ -560,12 +560,14 @@ Specific to the current window's mode line.")
   (let ((subtle (face-foreground 'shadow)))
     (custom-set-faces
      `(mode-line ((t :background unspecified :box unspecified :overline ,subtle)))
+     `(mode-line-active ((t :inherit mode-line :box unspecified)))
      `(mode-line-inactive ((t :background unspecified :foreground ,subtle :box unspecified :overline ,subtle))))))
 
 (defun prot-modeline-unset-faces ()
   "Make window dividers for THEME invisible."
   (custom-set-faces
    `(mode-line (( )))
+   `(mode-line-active (( )))
    `(mode-line-inactive (( )))))
 
 (defun prot-modeline--enable-mode ()
