@@ -212,6 +212,8 @@
            'help-echo (format-time-string "%a %b %e, %Y" now))
           " "))
 
+  (display-time-mode 1)
+
 ;;;;; World clock (M-x world-clock)
   (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
@@ -245,8 +247,6 @@
   (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60)
-
-  (display-time-mode 1)
 
 ;;;; `man' (manpages)
   (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
