@@ -85,60 +85,66 @@
     "C-;" #'prot-comment-comment-dwim
     "C-x C-;" #'prot-comment-timestamp-keyword))
 
+;; FIXME 2023-08-28: The laptop I use now that I do not have
+;; electricity/Internet at home does not build the Jinx C module.  I
+;; am not sure what is happening.  Commenting out for the time being,
+;; as I need to have Emacs up and running.
+
 ;;; Jinx (highly performant spell checker)
-(if (executable-find "enchant-2")
-  (prot-emacs-package jinx
-    (:install t)
-    (:delay 10)
-    (setq jinx-languages "en_GB el_GR fr_FR es_ES pt_PT-preao")
-    (setq jinx-include-modes '(text-mode prog-mode))
-    (setq jinx-include-faces
-          '((prog-mode font-lock-doc-face)
-            (conf-mode font-lock-comment-face)))
-    (setq jinx-exclude-regexps
-          '((t "[A-Z]+\\>"
-               "\\<[[:upper:]][[:lower:]]+\\>"
-               "\\w*?[0-9\.'\"-]\\w*"
-               "[a-z]+://\\S-+"
-               "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?")))
-
-    (global-jinx-mode 1)
-
-    (define-key ctl-x-x-map "j" #'jinx-mode) ; C-x x j
-
-    (prot-emacs-keybind global-map
-      "M-$" #'jinx-correct
-      "C-M-$" #'jinx-languages))
-  ;; I would use an `error' but I do not want it to interrupt startup.
-  (message "libenchant is not available"))
+;; (if (executable-find "enchant-2")
+;;   (prot-emacs-package jinx
+;;     (:install t)
+;;     (:delay 10)
+;;     (setq jinx-languages "en_GB el_GR fr_FR es_ES pt_PT-preao")
+;;     (setq jinx-include-modes '(text-mode prog-mode))
+;;     (setq jinx-include-faces
+;;           '((prog-mode font-lock-doc-face)
+;;             (conf-mode font-lock-comment-face)))
+;;     (setq jinx-exclude-regexps
+;;           '((t "[A-Z]+\\>"
+;;                "\\<[[:upper:]][[:lower:]]+\\>"
+;;                "\\w*?[0-9\.'\"-]\\w*"
+;;                "[a-z]+://\\S-+"
+;;                "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?")))
+;;
+;;     (global-jinx-mode 1)
+;;
+;;     (define-key ctl-x-x-map "j" #'jinx-mode) ; C-x x j
+;;
+;;     (prot-emacs-keybind global-map
+;;       "M-$" #'jinx-correct
+;;       "C-M-$" #'jinx-languages))
+;;   ;; I would use an `error' but I do not want it to interrupt startup.
+;;   (message "libenchant is not available"))
 
 ;;; Flyspell and prot-spell.el (spell check)
-;; (prot-emacs-package flyspell
-;;   (:delay 10)
-;;   (setq flyspell-issue-message-flag nil)
-;;   (setq flyspell-issue-welcome-flag nil)
-;;   (setq ispell-program-name "aspell")
-;;   (setq ispell-dictionary "en_GB")
-;;   (define-key flyspell-mode-map (kbd "C-;") nil)
-;;   (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
-;;
-;; (prot-emacs-package prot-spell
-;;   (:delay 10)
-;;   (setq prot-spell-dictionaries
-;;         '(("EN English" . "en")
-;;           ("EL Ελληνικά" . "el")
-;;           ("FR Français" . "fr")
-;;           ("ES Espanõl" . "es")))
-;;
-;;   (setq ispell-choices-buffer "*ispell-top-choices*") ; see my `display-buffer-alist'
-;;
-;;   ;; Also check prot-spell.el for what I am doing with
-;;   ;; `prot-spell-ispell-display-buffer'.  Then refer to the
-;;   ;; `display-buffer-alist' for the relevant entry.
-;;
-;;   (prot-emacs-keybind global-map
-;;     "M-$" #'prot-spell-spell-dwim
-;;     "C-M-$" #'prot-spell-change-dictionary))
+;; See FIXME for `jinx'.
+(prot-emacs-package flyspell
+  (:delay 10)
+  (setq flyspell-issue-message-flag nil)
+  (setq flyspell-issue-welcome-flag nil)
+  (setq ispell-program-name "aspell")
+  (setq ispell-dictionary "en_GB")
+  (define-key flyspell-mode-map (kbd "C-;") nil)
+  (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
+
+(prot-emacs-package prot-spell
+  (:delay 10)
+  (setq prot-spell-dictionaries
+        '(("EN English" . "en")
+          ("EL Ελληνικά" . "el")
+          ("FR Français" . "fr")
+          ("ES Espanõl" . "es")))
+
+  (setq ispell-choices-buffer "*ispell-top-choices*") ; see my `display-buffer-alist'
+
+  ;; Also check prot-spell.el for what I am doing with
+  ;; `prot-spell-ispell-display-buffer'.  Then refer to the
+  ;; `display-buffer-alist' for the relevant entry.
+
+  (prot-emacs-keybind global-map
+    "M-$" #'prot-spell-spell-dwim
+    "C-M-$" #'prot-spell-change-dictionary))
 
 ;;; Flymake
 (prot-emacs-package flymake
