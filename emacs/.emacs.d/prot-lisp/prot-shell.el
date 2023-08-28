@@ -104,7 +104,7 @@ Only account for the history Emacs knows about, ignoring
 (with-eval-after-load 'savehist
   (add-to-list 'savehist-additional-variables 'prot-shell-cd-directories))
 
-(defun prot-shell--track-cd (&rest _)
+(defun prot-shell-track-cd (&rest _)
   "Track shell input of cd commands.
 Push `shell-last-dir' to `prot-shell-cd-directories'."
   (when-let ((input (prot-shell--last-input))
@@ -282,15 +282,9 @@ Add a bookmark handler for shell buffer and activate the
   :global nil
   (if prot-shell-mode
       (progn
-        ;; We want the local value to be an expanded variant of the
-        ;; global `comint-output-filter-functions', instead of a
-        ;; replacement of it.  Perhaps there is another way of doing
-        ;; this?
-        (dolist (fn comint-output-filter-functions)
-          (add-hook 'comint-output-filter-functions fn nil :local))
-        (add-hook 'comint-output-filter-functions #'prot-shell--track-cd nil :local)
+        (add-hook 'comint-output-filter-functions #'prot-shell-track-cd nil :local)
         (setq-local bookmark-make-record-function #'prot-shell-bookmark-make-record))
-    (remove-hook 'comint-output-filter-functions #'prot-shell--track-cd :local)
+    (remove-hook 'comint-output-filter-functions #'prot-shell-track-cd :local)
     (setq-local bookmark-make-record-function nil)))
 
 (provide 'prot-shell)
