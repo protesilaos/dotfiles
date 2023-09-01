@@ -38,13 +38,20 @@
 
 ;;;; Helper functions
 
-(defun prot-shell--insert (&rest args)
+(defun prot-shell--beginning-of-prompt-p ()
+  "Return non-nil if point is at the beginning of a shell prompt."
+  (if comint-use-prompt-regexp
+      (looking-back comint-prompt-regexp (line-beginning-position))
+    (eq (point) (comint-line-beginning-position))))
+
+(defun prot-shell--insert-and-send (&rest args)
   "Insert and execute ARGS in the last shell prompt.
 ARGS is a list of strings."
-  (goto-char (point-max))
-  (comint-previous-prompt 0)
-  (insert (mapconcat #'identity args " "))
-  (comint-send-input))
+  (if (prot-shell--beginning-of-prompt-p)
+      (progn
+        (insert (mapconcat #'identity args " "))
+        (comint-send-input))
+    (user-error "Not at the beginning of prompt; won't insert: %s" args)))
 
 (defun prot-shell--last-input ()
   "Return last input as a string."
@@ -76,7 +83,8 @@ in the `comint-input-ring' (see `prot-shell--build-input-history').")
     (completing-read
      (format-prompt "Insert input from history" default)
      history nil :require-match nil
-     'prot-shell--input-history-completion-history)))
+     'prot-shell--input-history-completion-history
+     default)))
 
 ;;;###autoload
 (defun prot-shell-input-from-history ()
@@ -85,7 +93,7 @@ Only account for the history Emacs knows about, ignoring
 `comint-input-ring-file-name' (e.g. ~/.bash_history)."
   (declare (interactive-only t))
   (interactive)
-  (insert
+  (prot-shell--insert-and-send
    (prot-shell--input-history-prompt)))
 
 ;;;; Directory navigation
@@ -129,7 +137,7 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
   "Switch to `prot-shell-cd-directories' using minibuffer completion."
   (declare (interactive-only t))
   (interactive)
-  (prot-shell--insert
+  (prot-shell--insert-and-send
    (prot-shell--cd-prompt)))
 
 ;;;;; VC root directory
@@ -144,7 +152,7 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
   "Change into the `vc-root-dir'."
   (interactive)
   (if-let ((root (prot-shell--get-vc-root-dir)))
-      (prot-shell--insert "cd" root)
+      (prot-shell--insert-and-send "cd" root)
     (user-error "Cannot find the VC root of `%s'" default-directory)))
 
 ;;;; Bookmark support
@@ -180,7 +188,7 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
 
 (put 'prot-shell-bookmark-jump 'bookmark-handler-type "Shell")
 
-;;;; General commands
+;;;; Convert YouTube links to Invidious
 
 (defvar prot-shell-invidious-domains
   '("invidious.io.lol"
