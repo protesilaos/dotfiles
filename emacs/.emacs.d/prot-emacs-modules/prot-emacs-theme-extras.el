@@ -12,7 +12,7 @@
   (setopt pulsar-pulse t
           pulsar-delay 0.055
           pulsar-iterations 10
-          pulsar-face 'pulsar-magenta
+          pulsar-face 'pulsar-blue
           pulsar-highlight-face 'pulsar-yellow)
 
   (pulsar-global-mode 1)
@@ -21,7 +21,7 @@
   ;; a specific colour: `pulsar-pulse-line-red' is one of them.
   (add-hook 'next-error-hook #'pulsar-pulse-line-red)
 
-  (add-hook 'minibuffer-setup-hook 'pulsar-pulse-line-blue)
+  (add-hook 'minibuffer-setup-hook #'pulsar-pulse-line-red)
 
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
