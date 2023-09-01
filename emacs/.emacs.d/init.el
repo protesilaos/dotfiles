@@ -317,9 +317,11 @@ DEFINITIONS is a sequence of string and command pairs."
                 (map ,keymap))
        ,@(mapcar
           (lambda (pair)
-            (unless (and (null (car pair))
-                         (null (cdr pair)))
-              `(define-key map (kbd ,(car pair)) ,(cdr pair))))
+            (let* ((key (car pair))
+                   (command (cdr pair))
+                   (command-symbol (if command `(function ,command) command)))
+              (unless (and (null key) (null command))
+                `(define-key map (kbd ,key) ,command-symbol))))
           (cl-mapcar #'cons keys commands)))))
 
 ;; Sample of `prot-emacs-keybind'

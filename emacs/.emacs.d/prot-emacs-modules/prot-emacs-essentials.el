@@ -48,72 +48,73 @@
     "<insert>" nil
     "C-x C-z" nil
     "C-x C-c" nil ; avoid accidentally exiting Emacs
-    "C-x C-c C-c" #'save-buffers-kill-emacs
+    "C-x C-c C-c" save-buffers-kill-emacs
     "C-h h" nil
     "M-`" nil
-    "C-g" #'prot-simple-keyboard-quit-dwim
-    "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
-    "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
-    "C-h c" #'describe-char ; overrides `describe-key-briefly'
-    "C-c +" #'prot-simple-number-increment
-    "C-c -" #'prot-simple-number-decrement
+    "C-g" prot-simple-keyboard-quit-dwim
+    "C-h ." prot-simple-describe-symbol ; overrides `display-local-help'
+    "C-h F" describe-face ; overrides `Info-goto-emacs-command-node'
+    "C-h K" describe-keymap ; overrides `Info-goto-emacs-key-command-node'
+    "C-h c" describe-char ; overrides `describe-key-briefly'
+    "C-c +" prot-simple-number-increment
+    "C-c -" prot-simple-number-decrement
     ;; Commands for lines
-    "M-o" #'delete-blank-lines   ; alias for C-x C-o
-    "M-k" #'prot-simple-kill-line-backward
-    "C-S-w" #'prot-simple-copy-line-or-region
-    "C-S-y" #'prot-simple-yank-replace-line-or-region
-    "M-SPC" #'cycle-spacing
-    "C-v" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
-    "M-v" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
-    "<C-return>" #'prot-simple-new-line-below
-    "<C-S-return>" #'prot-simple-new-line-above
+    "M-o" delete-blank-lines   ; alias for C-x C-o
+    "M-k" prot-simple-kill-line-backward
+    "C-S-w" prot-simple-copy-line-or-region
+    "C-S-y" prot-simple-yank-replace-line-or-region
+    "M-SPC" cycle-spacing
+    "C-v" prot-simple-multi-line-below ; overrides `scroll-up-command'
+    "M-v" prot-simple-multi-line-above ; overrides `scroll-down-command'
+    "<C-return>" prot-simple-new-line-below
+    "<C-S-return>" prot-simple-new-line-above
     ;; Commands for text insertion or manipulation
-    "C-=" #'prot-simple-insert-date
-    "C-<" #'prot-simple-escape-url-dwim
-    "C-'" #'prot-simple-insert-pair
-    "M-'" #'prot-simple-insert-pair
-    "M-\\" #'prot-simple-delete-pair-dwim
-    "M-z" #'zap-up-to-char ; NOT `zap-to-char'
-    "M-Z" #'prot-simple-zap-to-char-backward
-    "<C-M-backspace>" #'backward-kill-sexp
-    "M-c" #'capitalize-dwim
-    "M-l" #'downcase-dwim        ; "lower" case
-    "M-u" #'upcase-dwim
+    "C-=" prot-simple-insert-date
+    "C-<" prot-simple-escape-url-dwim
+    "C-'" prot-simple-insert-pair
+    "M-'" prot-simple-insert-pair
+    "M-\\" prot-simple-delete-pair-dwim
+    "M-z" zap-up-to-char ; NOT `zap-to-char'
+    "M-Z" prot-simple-zap-to-char-backward
+    "<C-M-backspace>" backward-kill-sexp
+    "M-c" capitalize-dwim
+    "M-l" downcase-dwim        ; "lower" case
+    "M-u" upcase-dwim
     ;; Commands for object transposition
-    "C-S-p" #'prot-simple-move-above-dwim
-    "C-S-n" #'prot-simple-move-below-dwim
-    "C-t" #'prot-simple-transpose-chars
-    "C-x C-t" #'prot-simple-transpose-lines
-    "C-S-t" #'prot-simple-transpose-paragraphs
-    "C-x M-t" #'prot-simple-transpose-sentences
-    "C-M-t" #'prot-simple-transpose-sexps
-    "M-t" #'prot-simple-transpose-words
+    "C-S-p" prot-simple-move-above-dwim
+    "C-S-n" prot-simple-move-below-dwim
+    "C-t" prot-simple-transpose-chars
+    "C-x C-t" prot-simple-transpose-lines
+    "C-S-t" prot-simple-transpose-paragraphs
+    "C-x M-t" prot-simple-transpose-sentences
+    "C-M-t" prot-simple-transpose-sexps
+    "M-t" prot-simple-transpose-words
     ;; Commands for marking objects
-    "M-@" #'prot-simple-mark-word       ; replaces `mark-word'
-    "C-M-SPC" #'prot-simple-mark-construct-dwim
-    "C-M-d" #'prot-simple-downward-list
+    "M-@" prot-simple-mark-word       ; replaces `mark-word'
+    "C-M-SPC" prot-simple-mark-construct-dwim
+    "C-M-d" prot-simple-downward-list
     ;; Commands for paragraphs
-    "M-Q" #'prot-simple-unfill-region-or-paragraph
+    "M-Q" prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
-    "C-x n k" #'prot-simple-delete-page-delimiters
-    "C-x M-r" #'prot-simple-swap-window-buffers
+    "C-x n k" prot-simple-delete-page-delimiters
+    "C-x M-r" prot-simple-swap-window-buffers
     ;; Commands for buffers
-    "M-=" #'count-words
-    "<C-f2>" #'prot-simple-rename-file-and-buffer
-    "C-x k" #'prot-simple-kill-buffer-current
-    "C-x K" #'kill-buffer
-    "M-s b" #'prot-simple-buffers-major-mode
-    "M-s v" #'prot-simple-buffers-vc-root
+    "M-=" count-words
+    "<C-f2>" prot-simple-rename-file-and-buffer
+    "C-x k" prot-simple-kill-buffer-current
+    "C-x K" kill-buffer
+    "M-s b" prot-simple-buffers-major-mode
+    "M-s v" prot-simple-buffers-vc-root
     ;; Scratch buffer for major mode of choice
-    "C-c s" #'prot-scratch-buffer
+    "C-c s" prot-scratch-buffer
     ;; Prefix keymap (prot-prefix.el)
-    "C-z" #'prot-prefix)
+    "C-z" prot-prefix)
 
   ;; Keymap for buffers (Emacs28)
   (prot-emacs-keybind ctl-x-x-map
-    "f" #'follow-mode  ; override `font-lock-update'
-    "r" #'rename-uniquely
-    "l" #'visual-line-mode)
+    "f" follow-mode  ; override `font-lock-update'
+    "r" rename-uniquely
+    "l" visual-line-mode)
 
 ;;;; Mouse and mouse wheel behaviour
   (setq mouse-autoselect-window t) ; complements the auto-selection of my tiling window manager
@@ -294,10 +295,10 @@
   ;; The mnemonic for the prefix is that M-# (or M-S-3) is close to
   ;; M-% (or M-S-5).
   (prot-emacs-keybind global-map
-    "M-# s" #'substitute-target-below-point ; Forward motion like isearch (C-s)
-    "M-# r" #'substitute-target-above-point ; Backward motion like isearch (C-r)
-    "M-# d" #'substitute-target-in-defun    ; "defun" mnemonic
-    "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
+    "M-# s" substitute-target-below-point ; Forward motion like isearch (C-s)
+    "M-# r" substitute-target-above-point ; Backward motion like isearch (C-r)
+    "M-# d" substitute-target-in-defun    ; "defun" mnemonic
+    "M-# b" substitute-target-in-buffer)) ; "buffer" mnemonic
 
 ;;; Go to last change
 (prot-emacs-package goto-last-change
@@ -319,15 +320,15 @@
         tmr-description-list 'tmr-description-history)
 
   (prot-emacs-keybind global-map
-    "C-c t t" #'tmr
-    "C-c t T" #'tmr-with-description
-    "C-c t l" #'tmr-tabulated-view ; "list timers" mnemonic
-    "C-c t c" #'tmr-clone
-    "C-c t k" #'tmr-cancel
-    "C-c t s" #'tmr-reschedule
-    "C-c t e" #'tmr-edit-description
-    "C-c t r" #'tmr-remove
-    "C-c t R" #'tmr-remove-finished))
+    "C-c t t" tmr
+    "C-c t T" tmr-with-description
+    "C-c t l" tmr-tabulated-view ; "list timers" mnemonic
+    "C-c t c" tmr-clone
+    "C-c t k" tmr-cancel
+    "C-c t s" tmr-reschedule
+    "C-c t e" tmr-edit-description
+    "C-c t r" tmr-remove
+    "C-c t R" tmr-remove-finished))
 
 ;;; Pass interface (password-store)
 (prot-emacs-package password-store
@@ -390,8 +391,8 @@
   (prot-emacs-keybind shell-mode-map
     "<up>" #'comint-previous-input
     "<down>" #'comint-next-input
-    "C-c C-k" #'comint-clear-buffer
-    "C-c C-w" #'comint-write-output))
+    "C-c C-k" comint-clear-buffer
+    "C-c C-w" comint-write-output))
 
 (prot-emacs-package prot-shell
   (:delay 15)

@@ -72,8 +72,8 @@
   (setq comment-multi-line t)
   (setq comment-style 'multi-line)
   (prot-emacs-keybind global-map
-    "C-:" #'comment-kill ; C-S-;
-    "M-;" #'comment-indent))
+    "C-:" comment-kill ; C-S-;
+    "M-;" comment-indent))
 
 (prot-emacs-package prot-comment
   (:delay 5)
@@ -82,8 +82,8 @@
   (setq prot-comment-timestamp-format-concise "%F")
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
   (prot-emacs-keybind global-map
-    "C-;" #'prot-comment-comment-dwim
-    "C-x C-;" #'prot-comment-timestamp-keyword))
+    "C-;" prot-comment-comment-dwim
+    "C-x C-;" prot-comment-timestamp-keyword))
 
 ;; FIXME 2023-08-28: The laptop I use now that I do not have
 ;; electricity/Internet at home does not build the Jinx C module.  I
@@ -112,8 +112,8 @@
 ;;     (define-key ctl-x-x-map "j" #'jinx-mode) ; C-x x j
 ;;
 ;;     (prot-emacs-keybind global-map
-;;       "M-$" #'jinx-correct
-;;       "C-M-$" #'jinx-languages))
+;;       "M-$" jinx-correct
+;;       "C-M-$" jinx-languages))
 ;;   ;; I would use an `error' but I do not want it to interrupt startup.
 ;;   (message "libenchant is not available"))
 
@@ -126,7 +126,7 @@
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
   (define-key flyspell-mode-map (kbd "C-;") nil)
-  (define-key ctl-x-x-map "s" #'flyspell-mode)) ; C-x x s
+  (define-key ctl-x-x-map "s" flyspell-mode)) ; C-x x s
 
 (prot-emacs-package prot-spell
   (:delay 10)
@@ -143,8 +143,8 @@
   ;; `display-buffer-alist' for the relevant entry.
 
   (prot-emacs-keybind global-map
-    "M-$" #'prot-spell-spell-dwim
-    "C-M-$" #'prot-spell-change-dictionary))
+    "M-$" prot-spell-spell-dwim
+    "C-M-$" prot-spell-change-dictionary))
 
 ;;; Flymake
 (prot-emacs-package flymake
@@ -186,11 +186,11 @@
 
   (define-key ctl-x-x-map "m" #'flymake-mode) ; C-x x m
   (prot-emacs-keybind flymake-mode-map
-    "C-c ! s" #'flymake-start
-    "C-c ! d" #'flymake-show-buffer-diagnostics ; Emacs28
-    "C-c ! D" #'flymake-show-project-diagnostics ; Emacs28
-    "C-c ! n" #'flymake-goto-next-error
-    "C-c ! p" #'flymake-goto-prev-error))
+    "C-c ! s" flymake-start
+    "C-c ! d" flymake-show-buffer-diagnostics ; Emacs28
+    "C-c ! D" flymake-show-project-diagnostics ; Emacs28
+    "C-c ! n" flymake-goto-next-error
+    "C-c ! p" flymake-goto-prev-error))
 
 ;;; Elisp packaging requirements
 (prot-emacs-package package-lint-flymake

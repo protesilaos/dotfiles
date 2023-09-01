@@ -33,9 +33,9 @@
   (setq dired-create-destination-dirs-on-trailing-dirsep t) ; Emacs 29
 
   (prot-emacs-keybind dired-mode-map
-    "C-+" #'dired-create-empty-file
-    "M-s f" #'nil
-    "C-x v v" #'dired-vc-next-action)) ; Emacs 28
+    "C-+" dired-create-empty-file
+    "M-s f" nil
+    "C-x v v" dired-vc-next-action)) ; Emacs 28
 
 ;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
 ;; ;; because there are other tools that offer a better interface, such
@@ -60,22 +60,22 @@
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
   (prot-emacs-keybind dired-mode-map
-    "i" #'prot-dired-insert-subdir ; override `dired-maybe-insert-subdir'
-    "/" #'prot-dired-limit-regexp
-    "C-c C-l" #'prot-dired-limit-regexp
-    "M-n" #'prot-dired-subdirectory-next
-    "C-c C-n" #'prot-dired-subdirectory-next
-    "M-p" #'prot-dired-subdirectory-previous
-    "C-c C-p" #'prot-dired-subdirectory-previous
-    "M-s G" #'prot-dired-grep-marked-files)) ; M-s g is `prot-search-grep'
+    "i" prot-dired-insert-subdir ; override `dired-maybe-insert-subdir'
+    "/" prot-dired-limit-regexp
+    "C-c C-l" prot-dired-limit-regexp
+    "M-n" prot-dired-subdirectory-next
+    "C-c C-n" prot-dired-subdirectory-next
+    "M-p" prot-dired-subdirectory-previous
+    "C-c C-p" prot-dired-subdirectory-previous
+    "M-s G" prot-dired-grep-marked-files)) ; M-s g is `prot-search-grep'
 
 (prot-emacs-package dired-subtree
   (:install t)
   (:delay 5)
   (setq dired-subtree-use-backgrounds nil)
   (prot-emacs-keybind dired-mode-map
-    "<tab>" #'dired-subtree-toggle
-    "<backtab>" #'dired-subtree-remove)) ; S-TAB
+    "<tab>" dired-subtree-toggle
+    "<backtab>" dired-subtree-remove)) ; S-TAB
 
 (prot-emacs-package wdired
   (:delay 5)
