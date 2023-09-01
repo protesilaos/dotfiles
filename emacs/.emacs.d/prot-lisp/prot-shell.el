@@ -98,12 +98,6 @@ Only account for the history Emacs knows about, ignoring
 
 ;;;; Directory navigation
 
-;;;###autoload
-(defun prot-shell-up-directory ()
-  "Call `cd ..'."
-  (interactive)
-  (prot-shell--insert "cd .."))
-
 ;;;;; Directory tracking
 
 (defvar prot-shell-cd-directories nil
