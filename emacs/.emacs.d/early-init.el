@@ -124,7 +124,7 @@ my dotfiles.  Check my `delight' shell script for more."
        "dark"
        (with-temp-buffer
          (insert-file-contents file)
-         (buffer-substring-no-properties (point-min) (point-max))))))
+         (buffer-string)))))
 
 (defun prot-emacs-theme-environment-dark-p ()
   "Return non-nil if environment theme is dark."
