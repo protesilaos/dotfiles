@@ -29,6 +29,11 @@ then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
+if [ -d "/var/lib/flatpak/exports/bin" ]
+then
+    PATH=$PATH:"/var/lib/flatpak/exports/bin"
+fi
+
 # May be needed for Jekyll…
 if [ -d "$HOME"/.local/share/gems ]
 then
