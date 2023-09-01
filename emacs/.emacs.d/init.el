@@ -411,7 +411,7 @@ that is expanded with the `prot-emacs-package' macro."
 
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
-;; ~/.emacs.d/user-emacs.el OR ~/.emacs.d/prot-emacs-post-custom.el
+;; ~/.emacs.d/prot-emacs-post-custom.el
 ;;
 ;; The purpose of the "post customisations" is to make tweaks to what
 ;; I already define, such as to change the default theme.  See above
