@@ -263,12 +263,40 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
 ;;
 ;; (add-hook 'comint-input-filter-functions #'prot-shell--intercept-input)
 
+;;;; General commands
+
+(defun prot-shell--input-or-motion (input-fn motion-fn arg)
+  "Call INPUT-FN or MOTION-FN with ARG depending on where point is.
+If `prot-shell--beginning-of-prompt-p' returns non-nil call
+INPUT-FN, else MOTION-FN."
+  (funcall-interactively
+   (if (prot-shell--beginning-of-prompt-p)
+       input-fn
+     motion-fn)
+   arg))
+
+;;;###autoload
+(defun prot-shell-up-dwim (arg)
+  "Return previous ARGth history input or go ARGth lines up.
+If point is at the beginning of a shell prompt, return previous
+input, otherwise perform buffer motion."
+  (interactive "^p")
+  (prot-shell--input-or-motion 'comint-previous-input 'previous-line arg))
+
+;;;###autoload
+(defun prot-shell-down-dwim (arg)
+  "Return next ARGth history input or or go ARGth lines down.
+If point is at the beginning of a shell prompt, return previous
+input, otherwise perform buffer motion."
+  (interactive "^p")
+  (prot-shell--input-or-motion 'comint-next-input 'next-line arg))
+
 ;;;; Minor mode setup
 
 (defvar-keymap prot-shell-mode-map
   :doc "Key map for `prot-shell-mode'."
-  "M-^" #'prot-shell-up-directory
-  "C-c C-u" #'prot-shell-up-directory
+  "<up>" #'prot-shell-up-dwim
+  "<down>" #'prot-shell-down-dwim
   "C-c C-d" #'prot-shell-cd
   "C-c C-i" #'prot-shell-invidious
   "C-c C-j" #'prot-shell-input-from-history

@@ -389,8 +389,6 @@
   (define-key global-map (kbd "<f1>") #'shell) ; I don't use F1 for help commands
 
   (prot-emacs-keybind shell-mode-map
-    "<up>" #'comint-previous-input
-    "<down>" #'comint-next-input
     "C-c C-k" comint-clear-buffer
     "C-c C-w" comint-write-output))
 
