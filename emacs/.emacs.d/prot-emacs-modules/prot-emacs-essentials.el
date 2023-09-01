@@ -71,6 +71,7 @@
     ;; Commands for text insertion or manipulation
     "C-=" prot-simple-insert-date
     "C-<" prot-simple-escape-url-dwim
+    "C->" prot-simple-insert-line-prefix-dwim
     "C-'" prot-simple-insert-pair
     "M-'" prot-simple-insert-pair
     "M-\\" prot-simple-delete-pair-dwim
