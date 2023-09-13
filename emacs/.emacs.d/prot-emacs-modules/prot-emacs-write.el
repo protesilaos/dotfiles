@@ -156,9 +156,9 @@ Else create a new file."
   (:delay 10)
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
-        `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
-          (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos--page-delimiter))
-          (markdown-mode . ,(format "\\(^\\#+ +\\|^[*-]\\{5\\}$\\|^\\* \\* \\*$\\|%s\\)" logos--page-delimiter))
+        `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
+          (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter))
+          (markdown-mode . ,(format "\\(^\\#+ +\\|^[*-]\\{5\\}$\\|^\\* \\* \\*$\\|%s\\)" logos-page-delimiter))
           (conf-toml-mode . "^\\[")))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
@@ -173,7 +173,7 @@ Else create a new file."
 
   ;; I don't need to do `with-eval-after-load' for the `modus-themes' as
   ;; I always load them before other relevant potentially packages.
-  (add-hook 'modus-themes-after-load-theme-hook #'logos-update-fringe-in-buffers)
+  (add-hook 'modus-themes-post-load-theme-hook #'logos-update-fringe-in-buffers)
 
   (prot-emacs-keybind global-map
     "C-x n n" logos-narrow-dwim
