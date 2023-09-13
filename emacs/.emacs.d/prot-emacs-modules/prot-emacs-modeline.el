@@ -16,6 +16,10 @@
                   "  "
                   prot-modeline-vc-branch
                   "  "
+                  prot-modeline-breadcrumb
+                  "  "
+                  prot-modeline-eglot
+                  "  "
                   prot-modeline-flymake
                   "  "
                   prot-modeline-align-right
