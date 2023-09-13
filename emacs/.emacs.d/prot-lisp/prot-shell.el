@@ -69,7 +69,7 @@ ARGS is a list of strings."
       ;; We have to build up a list ourselves from the ring vector.
       (dotimes (index (ring-length comint-input-ring))
         (push (ring-ref comint-input-ring index) history))
-      history)))
+      (delete-dups history))))
 
 (defvar prot-shell--input-history-completion-history nil
   "Minibuffer history of `prot-shell--input-history-prompt'.
