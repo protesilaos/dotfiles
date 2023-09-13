@@ -140,7 +140,20 @@ call NAME as a function."
 (prot-window-define-full-frame shell
   (let ((name (prot-window--get-new-shell-buffer)))
     (shell name)
-    (set-frame-name name)))
+    (set-frame-name name)
+    (when-let ((buffer (get-buffer name)))
+      (with-current-buffer buffer
+        (add-hook
+         'delete-frame-functions
+         (lambda (_)
+           ;; FIXME 2023-09-09: Works for multiple frames (per
+           ;; `make-frame-command'), but not if the buffer is in two
+           ;; windows in the same frame.
+           (unless (> (safe-length (get-buffer-window-list buffer nil t)) 1)
+             (let ((kill-buffer-query-functions nil))
+               (kill-buffer buffer))))
+         nil
+         :local)))))
 
 ;;;###autoload (autoload 'prot-window-coach "prot-window")
 (prot-window-define-full-frame coach
