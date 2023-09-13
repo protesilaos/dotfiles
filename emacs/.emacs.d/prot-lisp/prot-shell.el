@@ -162,7 +162,7 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
 (declare-function bookmark-prop-get "bookmark" (bookmark prop))
 
 (defun prot-shell-bookmark-name ()
-  "Return nane of bookmark based on currect directory."
+  "Return name of bookmark based on currect directory."
   (format "prot-shell-%s"
           (file-name-nondirectory
            (directory-file-name
