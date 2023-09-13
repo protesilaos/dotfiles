@@ -49,7 +49,7 @@ _bc border_width 3
 _bc window_gap 0
 _bc single_monocle true
 _bc borderless_monocle true
-_bc gapless_monocle true
+_bc gapless_monocle false
 _bc focus_follows_pointer true
 _bc pointer_follows_monitor true
 _bc pointer_modifier mod4
