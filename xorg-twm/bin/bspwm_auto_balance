@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# bspwm_auto_balance --- Automatically balance the root BSPWM node
+#
+# Copyright (c) 2023  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.	If not, see <https://www.gnu.org/licenses/>.
+
+_left-or-right ()
+{
+    [ "$(bspc query -N -n $1)" ] && [ ! "$(bspc query -N -n @north)" ] && [ ! "$(bspc query -N -n @south)" ]
+}
+
+_top-or-bottom ()
+{
+    [ "$(bspc query -N -n $1)" ] && [ ! "$(bspc query -N -n @east)" ] && [ ! "$(bspc query -N -n @west)" ]
+}
+
+while IFS= read -r line
+do
+    # Balance only when splitting side-by-side.
+    if _left-or-right @east || _left-or-right @west
+    then
+        bspc node @/ --balance
+    elif _top-or-bottom @north || _top-or-bottom @south
+    then
+        bspc node @north --balance || bspc node @south --balance
+    fi
+done < <(bspc subscribe node_add node_remove)

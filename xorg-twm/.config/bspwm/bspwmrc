@@ -61,6 +61,8 @@ _check bspwm_external_rules && \
     _bc external_rules_command \
         "$(command -v bspwm_external_rules)"
 
+_check bspwm_auto_balance && bspwm_auto_balance &
+
 #### Colours
 _check bspwm_conf_colors && bspwm_conf_colors
 
