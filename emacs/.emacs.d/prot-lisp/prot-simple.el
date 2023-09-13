@@ -506,7 +506,7 @@ candidates, though accept arbitrary input."
 (defun prot-simple-line-prefix-infer-or-prompt ()
   "Infer string for line prefix or prompt for one."
   (or (prot-simple--line-prefix-infer-string)
-     (prot-simple--line-prefix-prompt)))
+      (prot-simple--line-prefix-prompt)))
 
 ;;;###autoload
 (defun prot-simple-insert-line-prefix-dwim (string)
@@ -542,7 +542,7 @@ line in the region."
 
 ;; (defvar prot-simple--replace-symbol-history '()
 ;;   "Minibuffer history for `prot-simple-replace-symbol'.")
-;; 
+;;
 ;; (defun prot-simple--replace-symbol-prompt (symbol scope)
 ;;   "Prompt for string while referencing SYMBOL and SCOPE.
 ;; Substantiate the interactivity of `prot-simple-replace-symbol'."
@@ -554,17 +554,17 @@ line in the region."
 ;;              "across the BUFFER"))
 ;;    nil
 ;;    'prot-simple--replace-symbol-history))
-;; 
+;;
 ;; ;;;###autoload
 ;; (defun prot-simple-replace-symbol (symbol replacement &optional narrow-to-defun)
 ;;   "Replace SYMBOL with REPLACEMENT throughout the buffer.
 ;; When called interactively, SYMBOL is the one at point and
 ;; REPLACEMENT is a string that is provided at the minibuffer
 ;; prompt.
-;; 
+;;
 ;; With optional NARROW-TO-DEFUN as a prefix argument, limit the
 ;; operation to the current function by using `narrow-to-defun'.
-;; 
+;;
 ;; The REPLACEMENT is inserted as-is without adjustments to its
 ;; letter casins and without treating the backslash specially."
 ;;   (interactive
@@ -908,9 +908,9 @@ END, representing the point and mark."
               e end)
       (setq b (point-min)
             e (point-max)))
-  (widen)
-  (flush-lines (format "%s$" page-delimiter) b e)
-  (setq this-command 'flush-lines)))
+    (widen)
+    (flush-lines (format "%s$" page-delimiter) b e)
+    (setq this-command 'flush-lines)))
 
 ;; NOTE 2023-06-18: The idea of narrowing to a defun in an indirect
 ;; buffer is still experimental.
