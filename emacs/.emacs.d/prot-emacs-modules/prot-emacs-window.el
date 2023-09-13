@@ -20,7 +20,7 @@
            (display-buffer-no-window)
            (allow-no-window . t))
           ;; bottom side window
-          ("\\*Org Select\\*" ; the `org-capture' key selection
+          ("\\*Org \\(Select\\|Note\\)\\*" ; the `org-capture' key selection and `org-add-log-note'
            (display-buffer-in-side-window)
            (dedicated . t)
            (side . bottom)
