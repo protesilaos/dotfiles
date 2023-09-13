@@ -265,15 +265,17 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
 
 ;;;; General commands
 
-(defun prot-shell--input-or-motion (input-fn motion-fn arg)
-  "Call INPUT-FN or MOTION-FN with ARG depending on where point is.
+(defun prot-shell--history-or-motion (history-fn motion-fn arg)
+  "Call HISTORY-FN or MOTION-FN with ARG depending on where point is.
 If `prot-shell--beginning-of-prompt-p' returns non-nil call
-INPUT-FN, else MOTION-FN."
-  (funcall-interactively
-   (if (prot-shell--beginning-of-prompt-p)
-       input-fn
-     motion-fn)
-   arg))
+HISTORY-FN, else MOTION-FN."
+  (let ((fn (if (or (prot-shell--beginning-of-prompt-p)
+                    (eq last-command 'comint-next-input)
+                    (eq last-command 'comint-previous-input))
+                history-fn
+              motion-fn)))
+    (funcall-interactively fn arg)
+    (setq this-command fn)))
 
 ;;;###autoload
 (defun prot-shell-up-dwim (arg)
@@ -281,7 +283,7 @@ INPUT-FN, else MOTION-FN."
 If point is at the beginning of a shell prompt, return previous
 input, otherwise perform buffer motion."
   (interactive "^p")
-  (prot-shell--input-or-motion 'comint-previous-input 'previous-line arg))
+  (prot-shell--history-or-motion 'comint-previous-input 'previous-line arg))
 
 ;;;###autoload
 (defun prot-shell-down-dwim (arg)
@@ -289,7 +291,7 @@ input, otherwise perform buffer motion."
 If point is at the beginning of a shell prompt, return previous
 input, otherwise perform buffer motion."
   (interactive "^p")
-  (prot-shell--input-or-motion 'comint-next-input 'next-line arg))
+  (prot-shell--history-or-motion 'comint-next-input 'next-line arg))
 
 ;;;; Minor mode setup
 
