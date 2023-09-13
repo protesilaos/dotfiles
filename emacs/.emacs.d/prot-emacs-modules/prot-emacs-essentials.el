@@ -22,22 +22,6 @@
   (setq mode-require-final-newline 'visit-save)
   (setq-default truncate-partial-width-windows nil)
 
-  (setq prot-simple-insert-pair-alist
-      '(("' Single quote"        . (39 39))     ; ' '
-        ("\" Double quotes"      . (34 34))     ; " "
-        ("` Elisp quote"         . (96 39))     ; ` '
-        ("‘ Single apostrophe"   . (8216 8217)) ; ‘ ’
-        ("“ Double apostrophes"  . (8220 8221)) ; “ ”
-        ("( Parentheses"         . (40 41))     ; ( )
-        ("{ Curly brackets"      . (123 125))   ; { }
-        ("[ Square brackets"     . (91 93))     ; [ ]
-        ("< Angled brackets"     . (60 62))     ; < >
-        ("« Εισαγωγικά Gr quote" . (171 187))   ; « »
-        ("= Equals signs"        . (61 61))     ; = =
-        ("~ Tilde"               . (126 126))   ; ~ ~
-        ("* Asterisks"           . (42 42))     ; * *
-        ("/ Forward Slash"       . (47 47))     ; / /
-        ("_ underscores"         . (95 95))))    ; _ _
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
 

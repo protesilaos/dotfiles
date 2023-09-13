@@ -41,27 +41,6 @@
   "Generic utilities for my dotemacs."
   :group 'editing)
 
-;; Got those numbers from `string-to-char'
-(defcustom prot-simple-insert-pair-alist
-  '(("' Single quote"        . (39 39))     ; ' '
-    ("\" Double quotes"      . (34 34))     ; " "
-    ("` Elisp quote"         . (96 39))     ; ` '
-    ("‘ Single apostrophe"   . (8216 8217)) ; ‘ ’
-    ("“ Double apostrophes"  . (8220 8221)) ; “ ”
-    ("( Parentheses"         . (40 41))     ; ( )
-    ("{ Curly brackets"      . (123 125))   ; { }
-    ("[ Square brackets"     . (91 93))     ; [ ]
-    ("< Angled brackets"     . (60 62))     ; < >
-    ("« Εισαγωγικά Gr quote" . (171 187))   ; « »
-    ("= Equals signs"        . (61 61))     ; = =
-    ("~ Tilde"               . (126 126))   ; ~ ~
-    ("* Asterisks"           . (42 42))     ; * *
-    ("/ Forward Slash"       . (47 47))     ; / /
-    ("_ underscores"         . (95 95)))    ; _ _
-  "Alist of pairs for use with `prot-simple-insert-pair-completion'."
-  :type 'alist
-  :group 'prot-simple)
-
 (defcustom prot-simple-date-specifier "%F"
   "Date specifier for `format-time-string'.
 Used by `prot-simple-inset-date'."
@@ -255,61 +234,108 @@ This command can then be followed by the standard
 
 ;;;; Commands for text insertion or manipulation
 
-(defvar prot-simple--character-hist '()
-  "History of inputs for `prot-simple-insert-pair-completion'.")
+(make-obsolete 'prot-simple-insert-pair-alist nil "2023-09-10")
 
-(defun prot-simple--character-prompt (chars)
-  "Helper of `prot-simple-insert-pair-completion' to read CHARS."
-  (let ((def (car prot-simple--character-hist)))
-    (completing-read
-     (format "Select character [%s]: " def)
-     chars nil t nil 'prot-simple--character-hist def)))
+(defcustom prot-simple-insert-pair-pairs
+  '((?'  :description "Single quotes"           :pair (?' . ?'))
+    (?\" :description "Double quotes"           :pair (?\" . ?\"))
+    (?‘  :description "Single curly quotes"     :pair (?‘ . ?’))
+    (?“  :description "Double curly quotes"     :pair (?“ . ?”))
+    (?\> :description "Natural language quotes" :pair prot-simple-insert-pair-natural-language-quotes)
+    (?\( :description "Parentheses"             :pair (?\( . ?\)))
+    (?{  :description "Curly brackets"          :pair (?{ . ?}))
+    (?\[ :description "Square brackets"         :pair (?\[ . ?\]))
+    (?\< :description "Angled brackets"         :pair (?\< . ?\>))
+    (?@  :description "At signs"                :pair (?@ . ?@))
+    (?=  :description "Equals signs"            :pair (?= . ?=))
+    (?+  :description "Plus signs"              :pair (?+ . ?+))
+    (?`  :description "Backticks"               :pair prot-simple-insert-pair-backticks)
+    (?~  :description "Tildes"                  :pair (?~ . ?~))
+    (?*  :description "Asterisks"               :pair (?* . ?*))
+    (?/  :description "Forward slashes"         :pair (?/ . ?/))
+    (?_  :description "Underscores"             :pair (?_ . ?_)))
+  "Alist of pairs for use with `prot-simple-insert-pair'.
+Each element in the list is a list whose `car' is a character and
+the `cdr' is a plist with a `:description' and `:pair' keys.  The
+`:description' is a string used to describe the character/pair in
+interactive use, while `:pair' is a cons cell referencing the
+opening and closing characters.
 
-(define-obsolete-function-alias
-  'prot-simple-insert-pair-completion
-  'prot-simple-insert-pair "2021-07-30")
+The value of `:pair' can also be the unquoted symbol of a
+function.  The function is called with no arguments and must
+return a cons cell of two characters.  Examples of such functions
+are `prot-simple-insert-pair-natural-language-quotes' and
+`prot-simple-insert-pair-backticks'"
+  :type '(alist
+          :key-type character
+          :value-type (plist :options (((const :tag "Pair description" :description) string)
+                                       ((const :tag "Characters" :pair)
+                                        (choice (cons character character) function)))))
+  :group 'prot-simple)
+
+(defun prot-simple-insert-pair-backticks ()
+  "Return pair of backticks for `prot-simple-insert-pair-pairs'.
+When the major mode is derived from `lisp-mode', return a pair of
+backtick and single quote, else two backticks."
+  (if (derived-mode-p 'lisp-mode 'lisp-data-mode)
+      (cons ?` ?')
+    (cons ?` ?`)))
+
+(defun prot-simple-insert-pair-natural-language-quotes ()
+  "Return pair of quotes for `prot-simple-insert-pair-pairs', per natural language."
+  ;; There are more here: <https://en.wikipedia.org/wiki/Quotation_mark>.
+  ;; I cover the languages I might type in.
+  (cond
+   ((and current-input-method
+         (string-match-p "\\(greek\\|french\\|spanish\\)" current-input-method))
+    (cons ?« ?»))
+   (t (cons ?\" ?\"))))
+
+(defun prot-simple--insert-pair-prompt ()
+  "Prompt for initial character among `prot-simple-insert-pair-pairs'."
+  (car
+   (read-multiple-choice
+    "Select pair: "
+    (mapcar
+     (lambda (properties)
+       (list
+        (car properties)
+        (plist-get (cdr properties) :description)))
+     prot-simple-insert-pair-pairs))))
+
+(defun prot-simple--insert-pair-bounds ()
+  "Return boundaries of symbol at point or active region."
+  (if (region-active-p)
+      (cons (region-beginning) (region-end))
+    (bounds-of-thing-at-point 'symbol)))
+
+(defun prot-simple--insert-pair-characters (character)
+  "Return pair corresponding to CHARACTER in `prot-simple-insert-pair-pairs'."
+  (plist-get (alist-get character prot-simple-insert-pair-pairs) :pair))
 
 ;;;###autoload
 (defun prot-simple-insert-pair (pair &optional count)
-  "Insert PAIR from `prot-simple-insert-pair-alist'.
-Operate on the symbol at point.  If the region is active, use it
-instead.
+  "Insert PAIR among `prot-simple-insert-pair-pairs' around object at point.
+The object at point is either a symbol or the boundaries of the
+active region.
 
-With optional COUNT (either as a natural number from Lisp or a
-universal prefix argument (\\[universal-argument]) when used
-interactively) prompt for the number of delimiters to insert."
+With optional COUNT as a numeric value, do the aforementioned
+COUNTth times.  Without a COUNT, the operation is performed once."
   (interactive
    (list
-    (prot-simple--character-prompt prot-simple-insert-pair-alist)
-    current-prefix-arg))
-  (let* ((data prot-simple-insert-pair-alist)
-         (left (cadr (assoc pair data)))
-         (right (caddr (assoc pair data)))
-         (n (cond
-             ((and count (natnump count))
-              count)
-             (count
-              (read-number "How many delimiters?" 2))
-             (1)))
-         (beg)
-         (end))
-    (cond
-     ((region-active-p)
-      (setq beg (region-beginning)
-            end (region-end)))
-     ((when (thing-at-point 'symbol)
-        (let ((bounds (bounds-of-thing-at-point 'symbol)))
-          (setq beg (car bounds)
-                end (cdr bounds)))))
-     (t (setq beg (point)
-              end (point))))
-    (save-excursion
-      (goto-char end)
-      (dotimes (_ n)
-        (insert right))
-      (goto-char beg)
-      (dotimes (_ n)
-        (insert left)))))
+    (prot-simple--insert-pair-characters (prot-simple--insert-pair-prompt))
+    (prefix-numeric-value current-prefix-arg)))
+  (let* ((bounds (prot-simple--insert-pair-bounds))
+         (beg (car bounds))
+         (end (1+ (cdr bounds))) ; 1+ because we want the character after it
+         (characters (if (functionp pair) (funcall pair) pair)))
+    (dotimes (_ (or count 1))
+      (save-excursion
+        (goto-char beg)
+        (insert (car characters))
+        (goto-char end)
+        (setq end (1+ end))
+        (insert (cdr characters))))))
 
 ;;;###autoload
 (defun prot-simple-delete-pair-dwim ()
