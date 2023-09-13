@@ -529,12 +529,9 @@ line in the region."
       (progn
         (goto-char beg)
         (push-mark (point))
-        (while (< (line-number-at-pos (point)) end)
+        (while (<= (line-number-at-pos (point)) end)
           (prot-simple--line-prefix-toggle string)
-          (forward-line 1))
-        ;; (when (listp buffer-undo-list)
-        ;;   (push (point) buffer-undo-list))
-        )
+          (forward-line 1)))
     (prot-simple--line-prefix-toggle string)))
 
 ;; NOTE 2023-01-14: See my `substitute' package instead of the
