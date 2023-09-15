@@ -22,6 +22,11 @@
   (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
   (add-hook 'after-init-hook #'show-paren-mode)
 
+;;;; Emacs Lisp (emacs-lisp-mode)
+  (prot-emacs-keybind emacs-lisp-mode-map
+    "C-x e" edebug-defun ; override `kmacro-end-and-call-macro'
+    "C-x E" edebug-remove-instrumentation)
+
 ;;;; Plain text (text-mode)
   (setq sentence-end-double-space t)
   (setq sentence-end-without-period nil)
