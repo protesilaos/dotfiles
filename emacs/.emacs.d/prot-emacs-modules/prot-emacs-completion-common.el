@@ -324,7 +324,10 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     "Call `embark-act' and quit after the action."
     (interactive)
     (let ((embark-quit-after-action t))
-      (call-interactively #'embark-act)))
+      (call-interactively #'embark-act))
+    (when (and (> (minibuffer-depth) 0)
+               (derived-mode-p 'completion-list-mode))
+      (abort-recursive-edit)))
 
   (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
     (define-key map (kbd "C-,") #'prot/embark-act-no-quit)
