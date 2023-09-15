@@ -366,6 +366,11 @@
   (setq comint-input-ignoredups t)
   (setq tramp-default-remote-shell "/bin/bash")
 
+  (setq shell-font-lock-keywords
+        '(("[ \t]\\([+-][^ \t\n]+\\)" 1 font-lock-builtin-face)
+          ("^[^ \t\n]+:.*" . font-lock-string-face)
+          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
+
   ;; Support for OS-specific escape sequences such as what `ls
   ;; --hyperlink' uses.  I normally don't use those, but I am checking
   ;; this to see if there are any obvious advantages/disadvantages.
