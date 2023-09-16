@@ -26,6 +26,12 @@
            (side . bottom)
            (slot . 0)
            (window-parameters . ((mode-line-format . none))))
+          ("\\*Capture\\*"
+           (display-buffer-in-side-window)
+           (dedicated . t)
+           (side . bottom)
+           (slot . 0)
+           (window-parameters . ((mode-line-format . none))))
           ;; bottom buffer (NOT side window)
           ((or . ((derived-mode . flymake-diagnostics-buffer-mode)
                   (derived-mode . flymake-project-diagnostics-mode)
