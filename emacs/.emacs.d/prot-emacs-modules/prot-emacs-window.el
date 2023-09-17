@@ -26,12 +26,6 @@
            (side . bottom)
            (slot . 0)
            (window-parameters . ((mode-line-format . none))))
-          ("\\*Capture\\*"
-           (display-buffer-in-side-window)
-           (dedicated . t)
-           (side . bottom)
-           (slot . 0)
-           (window-parameters . ((mode-line-format . none))))
           ;; bottom buffer (NOT side window)
           ((or . ((derived-mode . flymake-diagnostics-buffer-mode)
                   (derived-mode . flymake-project-diagnostics-mode)
@@ -49,6 +43,8 @@
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
+          ("\\(\\*Capture\\*\\|CAPTURE-.*\\)"
+           (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 0.1)
