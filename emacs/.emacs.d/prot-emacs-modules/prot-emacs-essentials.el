@@ -386,4 +386,26 @@
   (:delay 15)
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 
+;;;; Battery display (laptop)
+(prot-emacs-package battery
+  (:delay 60)
+  (setq battery-mode-line-format
+        (cond
+         ((eq battery-status-function #'battery-linux-proc-acpi)
+	      "⏻%b%p%%,%d°C ")
+	     (battery-status-function
+	      "⏻%b%p%% ")))
+
+  ;; This does nothing on the desktop.  From what I can tell, there is
+  ;; no need to load it conditionally, such as by testing for the return
+  ;; value of the `system-name' function.
+  (display-battery-mode 1)
+
+  ;; When not in a tiling Window manager, I want the Emacs frame to be
+  ;; maximised because the laptop's display is much smaller than my
+  ;; desktop's.
+  (prot-emacs-with-desktop-session
+    (add-hook 'after-make-frame-functions #'toggle-frame-maximized)
+    (toggle-frame-maximized)))
+
 (provide 'prot-emacs-essentials)
