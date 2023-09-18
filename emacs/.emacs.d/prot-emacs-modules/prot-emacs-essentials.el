@@ -386,26 +386,35 @@
   (:delay 15)
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 
-;;;; Battery display (laptop)
-(prot-emacs-package battery
-  (:delay 60)
-  (setq battery-mode-line-format
-        (cond
-         ((eq battery-status-function #'battery-linux-proc-acpi)
-	      "⏻%b%p%%,%d°C ")
-	     (battery-status-function
-	      "⏻%b%p%% ")))
-
-  ;; This does nothing on the desktop.  From what I can tell, there is
-  ;; no need to load it conditionally, such as by testing for the return
-  ;; value of the `system-name' function.
-  (display-battery-mode 1)
-
+;;;; Laptop settings
+(unless (directory-empty-p "/sys/class/power_supply/")
   ;; When not in a tiling Window manager, I want the Emacs frame to be
   ;; maximised because the laptop's display is much smaller than my
   ;; desktop's.
   (prot-emacs-with-desktop-session
     (add-hook 'after-make-frame-functions #'toggle-frame-maximized)
-    (toggle-frame-maximized)))
+    (toggle-frame-maximized))
+
+  (prot-emacs-configure
+    (:delay 10)
+;;; Show battery status on the mode line (battery.el
+    (require 'battery)
+    (setq battery-mode-line-format
+          (cond
+           ((eq battery-status-function #'battery-linux-proc-acpi)
+	        "⏻%b%p%%,%d°C ")
+	       (battery-status-function
+	        "⏻%b%p%% ")))
+
+    (display-battery-mode 1)
+
+;;; Configure suitable fonts for the laptop
+    (with-eval-after-load 'fontaine
+      (add-to-list 'fontaine-presets
+                   '(laptop-regular
+                     :default-family "Iosevka Comfy"
+                     :default-height 80
+                     :variable-pitch-family "Iosevka Comfy Duo"))
+      (fontaine-set-preset 'laptop-regular))))
 
 (provide 'prot-emacs-essentials)
