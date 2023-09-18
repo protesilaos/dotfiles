@@ -34,28 +34,7 @@ Add this to `completion-list-mode-hook'."
 
   (add-hook 'completion-list-mode-hook #'prot/mct-display-line-numbers)
 
-  (defun prot/mct-sort-by-alpha-length (elems)
-    "Sort ELEMS first alphabetically, then by length."
-    (sort elems (lambda (c1 c2)
-                  (or (string-version-lessp c1 c2)
-                      (< (length c1) (length c2))))))
-
-  (defun prot/mct-sort-by-history (elems)
-    "Sort ELEMS by minibuffer history.
-Use `mct-sort-sort-by-alpha-length' if no history is available."
-    (if-let ((hist (and (not (eq minibuffer-history-variable t))
-                        (symbol-value minibuffer-history-variable))))
-        (minibuffer--sort-by-position hist elems)
-      (prot/mct-sort-by-alpha-length elems)))
-
-  (defun prot/mct-sort-multi-category (elems)
-    "Sort ELEMS per completion category."
-    (pcase (mct--completion-category)
-      ('kill-ring elems) ; no sorting
-      ('file (prot/mct-sort-by-alpha-length elems))
-      (_ (prot/mct-sort-by-history elems))))
-
   ;; Specify the sorting function.
-  (setq completions-sort #'prot/mct-sort-multi-category))
+  (setq completions-sort #'mct-sort-multi-category))
 
 (provide 'prot-emacs-completion-mct)
