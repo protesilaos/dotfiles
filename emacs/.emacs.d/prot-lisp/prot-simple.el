@@ -805,6 +805,8 @@ backward-facing command)."
   (interactive "p")
   (backward-up-list (or (- arg) -1)))
 
+(make-obsolete 'prot-simple-downward-list 'up-list "2023-09-20")
+
 ;;;; Commands for paragraphs
 
 ;;;###autoload

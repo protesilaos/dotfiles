@@ -77,7 +77,6 @@
     ;; Commands for marking objects
     "M-@" prot-simple-mark-word       ; replaces `mark-word'
     "C-M-SPC" prot-simple-mark-construct-dwim
-    "C-M-d" prot-simple-downward-list
     ;; Commands for paragraphs
     "M-Q" prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
@@ -94,6 +93,9 @@
     "C-c s" prot-scratch-buffer
     ;; Prefix keymap (prot-prefix.el)
     "C-z" prot-prefix)
+
+  (prot-emacs-keybind prog-mode-map
+    "C-M-d" up-list) ; confusing name for what looks like "down" to me
 
   ;; Keymap for buffers (Emacs28)
   (prot-emacs-keybind ctl-x-x-map
