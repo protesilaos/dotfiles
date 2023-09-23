@@ -35,6 +35,11 @@ Add this to `completion-list-mode-hook'."
   (add-hook 'completion-list-mode-hook #'prot/mct-display-line-numbers)
 
   ;; Specify the sorting function.
-  (setq completions-sort #'mct-sort-multi-category))
+  (setq completions-sort #'mct-sort-multi-category)
+
+  (prot-emacs-keybind completion-in-region-mode-map
+    "C-n" minibuffer-next-completion
+    "C-p" minibuffer-previous-completion
+    "RET" minibuffer-choose-completion))
 
 (provide 'prot-emacs-completion-mct)
