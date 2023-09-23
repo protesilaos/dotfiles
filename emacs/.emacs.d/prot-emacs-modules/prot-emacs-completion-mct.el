@@ -14,7 +14,7 @@
   (setq mct-persist-dynamic-completion nil)
   (setq mct-live-completion 'visible)
 
-  (mct-minibuffer-mode 1)
+  (mct-mode 1)
 
   (defvar prot/mct-commands-with-line-numbers
     '( consult-line consult-line-multi consult-mark
