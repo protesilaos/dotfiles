@@ -16,7 +16,7 @@
         modus-themes-bold-constructs nil
         modus-themes-org-blocks nil
         modus-themes-completions '((t . (extrabold)))
-        modus-themes-prompts nil
+        modus-themes-prompts '(extrabold)
         modus-themes-headings
         '((agenda-structure . (variable-pitch light 2.2))
           (agenda-date . (variable-pitch regular 1.3))
@@ -24,28 +24,33 @@
 
   ;; (setq modus-themes-common-palette-overrides nil)
 
+  ;; To list the palette's colours, use `modus-themes-list-colors',
+  ;; `modus-themes-list-colors-current'.  With a prefix argument
+  ;; (`C-u'), they show only the semantic colour mappings, meaning
+  ;; those which reference a named colour from the palette, but which
+  ;; do not define a new colour themselves.
   (setq modus-themes-common-palette-overrides
-        `((fringe unspecified)
-          ;; (bg-mode-line-active bg-lavender)
-          ;; (border-mode-line-active unspecified)
-          ;; (border-mode-line-inactive unspecified)
+        `((cursor cyan-intense)
+          (bg-region bg-ochre)
+          (fg-region unspecified)
+          (bg-paren-match bg-blue-intense)
+          (bg-mode-line-active bg-lavender)
+          (border-mode-line-active magenta-cooler)
+          (border-mode-line-inactive border)
+          (bg-hl-line bg-dim)
           (bg-line-number-active bg-hl-line)
           (bg-line-number-inactive unspecified)
           (fg-line-number-active fg-main)
+          (bg-prompt bg-blue-nuanced)
+          (fg-prompt blue-warmer)
           ;; ,@modus-themes-preset-overrides-warmer
           ))
-
-  ;; ;; Make the active mode line have a pseudo 3D effect (this assumes
-  ;; ;; you are using the default mode line and not an extra package).
-  ;; (custom-set-faces
-  ;;  '(mode-line ((t :box (:style released-button)))))
 
   (if (prot-emacs-theme-environment-dark-p)
       (modus-themes-load-theme (cadr modus-themes-to-toggle))
     (modus-themes-load-theme (car modus-themes-to-toggle)))
 
-  ;; Also check `modus-themes-select'.  To list the palette's colours,
-  ;; use `modus-themes-list-colors', `modus-themes-list-colors-current'.
+  ;; Also check `modus-themes-select'.
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 
 ;; ;; NOTE: For testing purposes
