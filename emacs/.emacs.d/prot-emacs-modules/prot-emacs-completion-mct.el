@@ -4,7 +4,7 @@
   (:install t)
   (:delay 5)
   (setq completions-format 'one-column)
-  (setq mct-hide-completion-mode-line t)
+  (setq mct-hide-completion-mode-line nil)
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
   (setq mct-completion-blocklist '(notmuch-mua-new-mail notmuch-mua-prompt-for-sender))
