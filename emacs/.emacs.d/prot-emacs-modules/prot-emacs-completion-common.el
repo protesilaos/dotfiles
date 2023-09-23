@@ -105,7 +105,8 @@
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
   ;; Settings for the default completion UI.  These do not come into
-  ;; effect unless `prot-emacs-completion-ui' is nil.
+  ;; effect unless `prot-emacs-completion-ui' is nil or when not using
+  ;; any package for in-buffer completion.
   (setq completion-show-help nil)
   (setq completion-auto-help t)
   (setq completion-auto-select nil)
