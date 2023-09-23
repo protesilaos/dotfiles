@@ -49,6 +49,10 @@
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
   (global-eldoc-mode 1)
 
+;;;; Eglot (built-in client for the language server protocol)
+  (setq eglot-sync-connect nil)
+  (setq eglot-autoshutdown t)
+
 ;;;; Handle performance for very long lines (so-long.el)
   (global-so-long-mode 1))
 
