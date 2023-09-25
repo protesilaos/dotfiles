@@ -37,9 +37,36 @@ Add this to `completion-list-mode-hook'."
   ;; Specify the sorting function.
   (setq completions-sort #'mct-sort-multi-category)
 
+  (defun prot/mct-next-line-or-completion (n)
+    "Select next completion or move to next line N times.
+Select the next completion if `completion-in-region-mode' is
+active and the Completions window is on display."
+    (interactive "p")
+    (if (and completion-in-region-mode (mct--get-completion-window))
+        (minibuffer-next-completion n)
+      (next-line n)))
+
+  (defun prot/mct-previous-line-or-completion (n)
+    "Select previous completion or move to previous line N times.
+Select the previous completion if `completion-in-region-mode' is
+active and the Completions window is on display."
+    (interactive "p")
+    (if (and completion-in-region-mode (mct--get-completion-window))
+        (minibuffer-previous-completion n)
+      (previous-line n)))
+
+  (defun prot/mct-return-or-choose-completion (n)
+    "Choose current completion or create N newlines.
+Choose the current completion if `completion-in-region-mode' is
+active and the Completions window is on display."
+    (interactive "p")
+    (if (and completion-in-region-mode (mct--get-completion-window))
+        (minibuffer-choose-completion)
+      (newline n :interactive)))
+
   (prot-emacs-keybind completion-in-region-mode-map
-    "C-n" minibuffer-next-completion
-    "C-p" minibuffer-previous-completion
-    "RET" minibuffer-choose-completion))
+    "C-n" prot/mct-next-line-or-completion
+    "C-p" prot/mct-previous-line-or-completion
+    "RET" prot/mct-return-or-choose-completion))
 
 (provide 'prot-emacs-completion-mct)
