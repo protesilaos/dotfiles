@@ -21,6 +21,7 @@
   (setq save-interprogram-paste-before-kill t)
   (setq mode-require-final-newline 'visit-save)
   (setq-default truncate-partial-width-windows nil)
+  (setq eval-expression-print-length nil)
   (setq kill-do-not-save-duplicates t)
 
   (setq prot-simple-date-specifier "%F")
