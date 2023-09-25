@@ -33,9 +33,9 @@ _check() {
 	command -v "$1" > /dev/null
 }
 
-# Determine XrandR settings.  Whether an external display is connected
-# to the laptop or not.
-_check bspwm_conf_xrandr && bspwm_conf_xrandr
+# # Determine XrandR settings.  Whether an external display is connected
+# # to the laptop or not.
+# _check bspwm_conf_xrandr && bspwm_conf_xrandr
 
 # Define desktop[s] [per monitor].  Contingent on the above.  Also note
 # that this leverages my `bspwm_dynamic_desktops'.
