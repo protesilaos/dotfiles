@@ -172,34 +172,18 @@ passing optional prefix ARG (\\[universal-argument])."
           (forward-line -1))
       (forward-line -1)
       (prot-simple-new-line-below indent))))
-
-(defun prot-simple--duplicate-buffer-substring (beg end &optional indent)
-  "Duplicate buffer substring between BEG and END positions.
-With optional INDENT, run `indent-for-tab-command' after
-inserting the substring."
-  (save-excursion
-    (goto-char end)
-    (newline)
-    (insert (buffer-substring-no-properties beg end))
-    (when indent
-      (indent-for-tab-command))))
+          (dotimes (_ n) (insert "\n"))
+          (forward-line (- n)))
+      (forward-line (- n))
+      (prot-simple-new-line-below n))))
 
 ;;;###autoload
-(defun prot-simple-copy-line-or-region (&optional duplicate)
-  "Copy the current line to the `kill-ring'.
-With optional DUPLICATE as a prefix argument, duplicate the
-current line without adding it to the `kill-ring'.
+(defun prot-simple-copy-line ()
+  "Copy the current line to the `kill-ring'."
+  (interactive)
+  (copy-region-as-kill (line-beginning-position) (line-end-position)))
 
-When the region is active, duplicate it regardless of DUPLICATE."
-  (interactive "P")
-  (let* ((region (region-active-p))
-         (beg (if region (region-beginning) (line-beginning-position)))
-         (end (if region (region-end) (line-end-position)))
-         (message (if region "region" "line")))
-    (if (or duplicate region)
-        (prot-simple--duplicate-buffer-substring beg end region)
-      (copy-region-as-kill beg end)
-      (message "Copied current %s" message))))
+(make-obsolete 'prot-simple-copy-line-or-region 'prot-simple-copy-line "2023-09-26")
 
 ;;;###autoload
 (defun prot-simple-yank-replace-line-or-region ()
