@@ -112,10 +112,10 @@ Else create a new file."
     ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
     ;; `markdown-mode-map', and/or `text-mode-map'.
     "C-c n i" denote-link ; "insert" mnemonic
-    "C-c n I" denote-link-add-links
-    "C-c n b" denote-link-backlinks
-    "C-c n f f" denote-link-find-file
-    "C-c n f b" denote-link-find-backlink
+    "C-c n I" denote-add-links
+    "C-c n b" denote-backlinks
+    "C-c n f f" denote-find-link
+    "C-c n f b" denote-find-backlink
     ;; Note that `denote-rename-file' can work from any context, not
     ;; just Dired buffers.  That is why we bind it here to the
     ;; `global-map'.
