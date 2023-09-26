@@ -145,33 +145,26 @@ AMOUNT is either 1 or that of a number prefix argument."
 ;;;; Commands for lines
 
 ;;;###autoload
-(defun prot-simple-new-line-below (&optional arg)
-  "Create an empty line below the current one.
-Move the point to the absolute beginning.  Adapt indentation by
-passing optional prefix ARG (\\[universal-argument]).  Also see
-`prot-simple-new-line-above'."
-  (interactive "P")
+(defun prot-simple-new-line-below (n)
+  "Create N empty lines below the current one.
+When called interactively without a prefix numeric argument, N is
+1."
+  (interactive "p")
   (goto-char (line-end-position))
-  (if arg
-      (newline-and-indent)
-    (newline)))
+  (dotimes (_ n) (insert "\n")))
 
 ;;;###autoload
-(defun prot-simple-new-line-above (&optional arg)
-  "Create an empty line above the current one.
-Move the point to the absolute beginning.  Adapt indentation by
-passing optional prefix ARG (\\[universal-argument])."
-  (interactive "P")
-  (let ((indent (or arg nil)))
+(defun prot-simple-new-line-above (n)
+  "Create N empty lines above the current one.
+When called interactively without a prefix numeric argument, N is
+1."
+  (interactive "p")
+  (let ((point-min (point-min)))
     (if (or (bobp)
-            (eq (point) (point-min))
-            (eq (line-number-at-pos (point-min)) 1))
+            (eq (point) point-min)
+            (eq (line-number-at-pos point-min) 1))
         (progn
           (goto-char (line-beginning-position))
-          (newline)
-          (forward-line -1))
-      (forward-line -1)
-      (prot-simple-new-line-below indent))))
           (dotimes (_ n) (insert "\n"))
           (forward-line (- n)))
       (forward-line (- n))
