@@ -93,7 +93,7 @@
   (setq prot-comment-timestamp-format-concise "%F")
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
   (prot-emacs-keybind global-map
-    "C-;" prot-comment-comment-dwim
+    "C-;" prot-comment
     "C-x C-;" prot-comment-timestamp-keyword))
 
 ;; FIXME 2023-08-28: The laptop I use now that I do not have
