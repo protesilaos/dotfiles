@@ -468,42 +468,30 @@ If ARG is nil, do it one time."
   (unless (prot-simple--move-line-user-error (point-max))
     (prot-simple--move-line arg 1)))
 
-;; FIXME 2023-09-28: This is old code and needs to be simplified.
-
-(defmacro prot-simple-transpose (name scope &optional doc)
-  "Macro to produce transposition functions.
-NAME is the function's symbol.  SCOPE is the text object to
-operate on.  Optional DOC is the function's docstring.
-
+(defmacro prot-simple-define-transpose (scope)
+  "Define transposition command for SCOPE.
+SCOPE is the text object to operate on.  The command's name is
+prot-simple-transpose-SCOPE."
+  `(defun ,(intern (format "prot-simple-transpose-%s" scope)) (arg)
+     ,(format "Transpose %s.
 Transposition over an active region will swap the object at
-mark (region beginning) with the one at point (region end)"
-  `(defun ,name (arg)
-     ,doc
+the region beginning with the one at the region end." scope)
      (interactive "p")
-     (let ((x (format "%s-%s" "transpose" ,scope)))
+     (let ((fn (intern (format "%s-%s" "transpose" ,scope))))
        (if (use-region-p)
-           (funcall (intern x) 0)
-         (funcall (intern x) arg)))))
+           (funcall fn 0)
+         (funcall fn arg)))))
 
-(prot-simple-transpose
- prot-simple-transpose-lines
- "lines"
- "Transpose lines or swap over active region.")
-
-(prot-simple-transpose
- prot-simple-transpose-paragraphs
- "paragraphs"
- "Transpose paragraphs or swap over active region.")
-
-(prot-simple-transpose
- prot-simple-transpose-sentences
- "sentences"
- "Transpose sentences or swap over active region.")
-
-(prot-simple-transpose
- prot-simple-transpose-sexps
- "sexps"
- "Transpose balanced expressions or swap over active region.")
+;;;###autoload (autoload 'prot-simple-transpose-lines "prot-simple")
+;;;###autoload (autoload 'prot-simple-transpose-paragraphs "prot-simple")
+;;;###autoload (autoload 'prot-simple-transpose-sentences "prot-simple")
+;;;###autoload (autoload 'prot-simple-transpose-sexps "prot-simple")
+;;;###autoload (autoload 'prot-simple-transpose-words "prot-simple")
+(prot-simple-define-transpose "lines")
+(prot-simple-define-transpose "paragraphs")
+(prot-simple-define-transpose "sentences")
+(prot-simple-define-transpose "sexps")
+(prot-simple-define-transpose "words")
 
 ;;;###autoload
 (defun prot-simple-transpose-chars ()
@@ -514,12 +502,6 @@ line."
   (interactive)
   (transpose-chars -1)
   (forward-char))
-
-;;;###autoload
-(defun prot-simple-transpose-words (arg)
-  "Like `transpose-words' but treat ARG as 0 when the region is active."
-  (interactive "*p")
-  (transpose-words (if (region-active-p) 0 arg)))
 
 ;;;; Commands for marking syntactic constructs
 
