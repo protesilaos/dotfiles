@@ -311,16 +311,13 @@
   (:install t)
   (:delay 5)
   (defun prot/expreg-expand (n)
-    "Expand to N syntactic units, defaulting to 1.
-If point is on a symbol, expand to it directly."
+    "Expand to N syntactic units, defaulting to 1."
     (interactive "p")
-    (dotimes (_ (if (thing-at-point 'symbol) 2 n))
+    (dotimes (_ n)
       (expreg-expand)))
 
-  ;; There is also an `expreg-contract' command, though I have no use
-  ;; for it.
+  ;; There is also an `expreg-contract' command, though I have no use for it.
   (prot-emacs-keybind global-map
-    "M-@" expreg-expand ; overrides `mark-word'
     "C-M-SPC" prot/expreg-expand) ; overrides `mark-sexp'
 
 ;;; Go to last change
