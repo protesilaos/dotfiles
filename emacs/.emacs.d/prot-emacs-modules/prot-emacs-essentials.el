@@ -318,7 +318,7 @@
 
   ;; There is also an `expreg-contract' command, though I have no use for it.
   (prot-emacs-keybind global-map
-    "C-M-SPC" prot/expreg-expand) ; overrides `mark-sexp'
+    "C-M-SPC" prot/expreg-expand)) ; overrides `mark-sexp'
 
 ;;; Go to last change
 (prot-emacs-package goto-last-change
