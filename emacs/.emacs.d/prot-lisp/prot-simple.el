@@ -328,7 +328,7 @@ With optional STRING use it directly.  Else format the regexp by
 concatenating `prot-simple-line-prefix-strings'."
   (if string
       (format "^%s " string)
-    (format "^[%s] " (mapconcat #'identity prot-simple-line-prefix-strings))))
+    (format "^[%s] " (apply #'concat prot-simple-line-prefix-strings))))
 
 (defun prot-simple--line-prefix-p (&optional string)
   "Return non-nil if line beginning has an appropriate string prefix.
