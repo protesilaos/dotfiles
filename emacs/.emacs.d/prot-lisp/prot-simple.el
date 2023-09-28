@@ -230,16 +230,17 @@ with the specified date."
 
 (defun prot-simple--pos-url-on-line (char)
   "Return position of `prot-common-url-regexp' at CHAR."
-  (save-excursion
-    (goto-char char)
-    (re-search-forward prot-common-url-regexp (line-end-position) :noerror)))
+  (when (integer-or-marker-p char)
+    (save-excursion
+      (goto-char char)
+      (re-search-forward prot-common-url-regexp (line-end-position) :noerror))))
 
 ;;;###autoload
-(defun prot-simple-escape-url-line (&optional char)
+(defun prot-simple-escape-url-line (char)
   "Escape all URLs or email addresses on the current line.
-By default, start operating from `line-beginning-position' to the
-end of the current line.  With optional CHAR as a buffer
-position, operate from CHAR to the end of the line."
+When called from Lisp CHAR is a buffer position to operate from
+until the end of the line.  In interactive use, CHAR corresponds
+to `line-beginning-position'."
   (interactive
    (list
     (if current-prefix-arg
@@ -258,8 +259,7 @@ position, operate from CHAR to the end of the line."
     (prot-simple-escape-url-line (1+ regexp-end)))
   (goto-char (line-end-position)))
 
-;; Thanks to Bruno Boal for `prot-simple-escape-url-region'.  I am
-;; just renaming it for consistency with the rest of prot-simple.el.
+;; Thanks to Bruno Boal for the original `prot-simple-escape-url-region'.
 ;; Check Bruno's Emacs config: <https://github.com/BBoal/emacs-config>.
 
 ;;;###autoload
@@ -285,10 +285,9 @@ position, operate from CHAR to the end of the line."
 Call the commands `prot-simple-escape-url-line' and
 `prot-simple-escape-url-region' ."
   (interactive)
-  (call-interactively
-   (if (region-active-p)
-       #'prot-simple-escape-url-region
-     #'prot-simple-escape-url-line)))
+  (if (region-active-p)
+      (prot-simple-escape-url-region (region-beginning) (region-end))
+    (prot-simple-escape-url-line (line-beginning-position))))
 
 ;;;###autoload
 (defun prot-simple-zap-to-char-backward (char &optional arg)
