@@ -861,7 +861,7 @@ counter-clockwise."
 (defun prot-simple-accessible-colors (variant)
   "Return list of accessible `defined-colors'.
 VARIANT is either `dark' or `light'."
-  (let ((variant-color (if (eq variant 'dark) "#000000" "#ffffff")))
+  (let ((variant-color (if (eq variant 'black) "#000000" "#ffffff")))
     (seq-filter
      (lambda (c)
        (let* ((rgb (color-name-to-rgb c))
@@ -874,15 +874,16 @@ VARIANT is either `dark' or `light'."
      (defined-colors))))
 
 (defun prot-simple--list-accessible-colors-prompt ()
-  "Use `read-multiple-choice' to return `dark' or `light' variant."
+  "Use `read-multiple-choice' to return white or black background."
   (intern
    (cadr
     (read-multiple-choice
      "Variant"
-     '((?d "dark" "Load a random dark theme")
-       (?l "light" "Load a random light theme"))
-     "Limit to the dark or light subset of the Ef themes collection."))))
+     '((?b "black" "Black background")
+       (?w "white" "White background"))
+     "Choose between white or black background."))))
 
+;;;###autoload
 (defun prot-simple-list-accessible-colors (variant)
   "Return buffer with list of accessible `defined-colors'.
 VARIANT is either `dark' or `light'."
