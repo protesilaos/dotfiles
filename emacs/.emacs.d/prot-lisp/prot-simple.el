@@ -315,6 +315,8 @@ demarcated by BEG and END."
   (when (and (buffer-modified-p) buffer-file-name)
     (diff-buffer-with-file (current-buffer))))
 
+;; FIXME 2023-09-28: The line prefix is problematic.  I plan to rewrite it.
+
 (defcustom prot-simple-line-prefix-strings '(">" "+" "-")
   "List of strings used as line prefixes.
 The command which serves as the point of entry is
