@@ -341,10 +341,10 @@ with the specified date."
       (delete-region (region-beginning) (region-end)))
     (insert (format-time-string format))))
 
-(defun prot-simple--pos-url-on-line (&optional char)
-  "Return position of `prot-common-url-regexp' on line or at CHAR."
+(defun prot-simple--pos-url-on-line (char)
+  "Return position of `prot-common-url-regexp' at CHAR."
   (save-excursion
-    (goto-char (or char (line-beginning-position)))
+    (goto-char char)
     (re-search-forward prot-common-url-regexp (line-end-position) :noerror)))
 
 ;;;###autoload
@@ -353,16 +353,23 @@ with the specified date."
 By default, start operating from `line-beginning-position' to the
 end of the current line.  With optional CHAR as a buffer
 position, operate from CHAR to the end of the line."
-  (interactive)
+  (interactive
+   (list
+    (if current-prefix-arg
+        (re-search-forward
+         prot-common-url-regexp
+         (line-end-position) :no-error
+         (prefix-numeric-value current-prefix-arg))
+      (line-beginning-position))))
   (when-let ((regexp-end (prot-simple--pos-url-on-line char)))
-    (save-excursion
-      (goto-char regexp-end)
-      (unless (looking-at ">")
-        (insert ">")
-        (search-backward "\s")
-        (forward-char 1)
-        (insert "<")))
-    (prot-simple-escape-url-line (1+ regexp-end))))
+    (goto-char regexp-end)
+    (unless (looking-at ">")
+      (insert ">")
+      (search-backward "\s")
+      (forward-char 1)
+      (insert "<"))
+    (prot-simple-escape-url-line (1+ regexp-end)))
+  (goto-char (line-end-position)))
 
 ;; Thanks to Bruno Boal for `prot-simple-escape-url-region'.  I am
 ;; just renaming it for consistency with the rest of prot-simple.el.
@@ -375,15 +382,15 @@ position, operate from CHAR to the end of the line."
    (if (region-active-p)
        (list (region-beginning) (region-end))
      (error "There is no region!")))
-  (unless (> end beg)
-    (cl-rotatef end beg))
-  (save-excursion
-    (goto-char beg)
-    (setq beg (line-beginning-position))
-    (while (<= beg end)
-      (prot-simple-escape-url-line beg)
-      (beginning-of-line 2)
-      (setq beg (point)))))
+  (let ((beg (min beg end))
+        (end (max beg end)))
+    (save-excursion
+      (goto-char beg)
+      (setq beg (line-beginning-position))
+      (while (<= beg end)
+        (prot-simple-escape-url-line beg)
+        (beginning-of-line 2)
+        (setq beg (point))))))
 
 ;;;###autoload
 (defun prot-simple-escape-url-dwim ()
