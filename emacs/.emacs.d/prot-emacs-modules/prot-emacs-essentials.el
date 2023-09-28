@@ -92,9 +92,6 @@
     "C-x M-t" prot-simple-transpose-sentences
     "C-M-t" prot-simple-transpose-sexps
     "M-t" prot-simple-transpose-words
-    ;; Commands for marking objects
-    "M-@" prot-simple-mark-word       ; replaces `mark-word'
-    "C-M-SPC" prot-simple-mark-construct-dwim
     ;; Commands for paragraphs
     "M-Q" prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
@@ -308,6 +305,23 @@
     "M-# r" substitute-target-above-point ; Backward motion like isearch (C-r)
     "M-# d" substitute-target-in-defun    ; "defun" mnemonic
     "M-# b" substitute-target-in-buffer)) ; "buffer" mnemonic
+
+;;; Mark syntactic constructs efficiently (expreg)
+(prot-emacs-package expreg
+  (:install t)
+  (:delay 5)
+  (defun prot/expreg-expand (n)
+    "Expand to N syntactic units, defaulting to 1.
+If point is on a symbol, expand to it directly."
+    (interactive "p")
+    (dotimes (_ (if (thing-at-point 'symbol) 2 n))
+      (expreg-expand)))
+
+  ;; There is also an `expreg-contract' command, though I have no use
+  ;; for it.
+  (prot-emacs-keybind global-map
+    "M-@" expreg-expand ; overrides `mark-word'
+    "C-M-SPC" prot/expreg-expand) ; overrides `mark-sexp'
 
 ;;; Go to last change
 (prot-emacs-package goto-last-change
