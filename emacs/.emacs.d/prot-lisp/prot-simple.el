@@ -407,6 +407,8 @@ line in the region."
 
 ;;;; Commands for object transposition
 
+;; FIXME 2023-09-28: This is old code and needs to be simplified.
+
 ;; The "move" functions all the way to `prot-simple-move-below-dwim'
 ;; are courtesy of Bruno Boal: <https://git.sr.ht/~bboal>.  With minor
 ;; tweaks by me.
@@ -524,6 +526,8 @@ line."
   (transpose-words (if (region-active-p) 0 arg)))
 
 ;;;; Commands for marking syntactic constructs
+
+;; FIXME 2023-09-28: This is old code and needs to be simplified.
 
 (defmacro prot-simple-mark (name object &optional docstring)
   "Produce function for marking small syntactic constructs.
