@@ -80,11 +80,7 @@
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
   (setq comment-style 'multi-line)
-  (setq-default comment-column 0)
-
-  (prot-emacs-keybind global-map
-    "C-:" comment-kill ; C-S-;
-    "M-;" comment-indent))
+  (setq-default comment-column 0))
 
 (prot-emacs-package prot-comment
   (:delay 5)
