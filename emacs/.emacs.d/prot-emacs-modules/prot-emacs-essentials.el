@@ -12,7 +12,7 @@
   (require 'prot-prefix)
   (require 'prot-comment)
 
-;;; General settings and common custom functions (prot-simple.el)
+;;;; General settings and common custom functions (prot-simple.el)
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
   (setq help-window-select t)
   (setq next-error-recenter '(4)) ; center of the window
@@ -146,7 +146,7 @@
   (mouse-wheel-mode 1)
   (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window)
 
-;;; Repeatable key chords (repeat-mode)
+;;;; Repeatable key chords (repeat-mode)
   (setq repeat-on-final-keystroke t
         repeat-exit-timeout 5
         repeat-exit-key "<escape>"
@@ -222,7 +222,7 @@
 
   (display-time-mode 1)
 
-;;;;; World clock (M-x world-clock)
+;;;; World clock (M-x world-clock)
   (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
         '(("America/Los_Angeles" "Los Angeles")
@@ -409,7 +409,7 @@
   (:delay 15)
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 
-;;;; Laptop settings
+;;; Laptop settings
 (unless (directory-empty-p "/sys/class/power_supply/")
   ;; When not in a tiling Window manager, I want the Emacs frame to be
   ;; maximised because the laptop's display is much smaller than my
@@ -420,7 +420,7 @@
 
   (prot-emacs-configure
     (:delay 10)
-;;; Show battery status on the mode line (battery.el
+;;;; Show battery status on the mode line (battery.el
     (require 'battery)
     (setq battery-mode-line-format
           (cond
@@ -431,7 +431,7 @@
 
     (display-battery-mode 1)
 
-;;; Configure suitable fonts for the laptop
+;;;; Configure suitable fonts for the laptop
     (with-eval-after-load 'fontaine
       (add-to-list 'fontaine-presets
                    '(laptop-regular
