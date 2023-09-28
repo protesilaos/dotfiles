@@ -73,25 +73,6 @@
   ;; modules and load only what I need.
   (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
 
-;;; Comments (newcomment.el and prot-comment.el)
-(prot-emacs-package newcomment
-  (:delay 5)
-  (setq comment-empty-lines t)
-  (setq comment-fill-column nil)
-  (setq comment-multi-line t)
-  (setq comment-style 'multi-line)
-  (setq-default comment-column 0))
-
-(prot-emacs-package prot-comment
-  (:delay 5)
-  (setq prot-comment-comment-keywords
-        '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
-  (setq prot-comment-timestamp-format-concise "%F")
-  (setq prot-comment-timestamp-format-verbose "%F %T %z")
-  (prot-emacs-keybind global-map
-    "C-;" prot-comment
-    "C-x C-;" prot-comment-timestamp-keyword))
-
 ;; FIXME 2023-08-28: The laptop I use now that I do not have
 ;; electricity/Internet at home does not build the Jinx C module.  I
 ;; am not sure what is happening.  Commenting out for the time being,

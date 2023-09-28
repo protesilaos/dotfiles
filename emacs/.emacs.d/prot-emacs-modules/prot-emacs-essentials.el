@@ -10,6 +10,7 @@
   (require 'prot-simple)
   (require 'prot-scratch)
   (require 'prot-prefix)
+  (require 'prot-comment)
 
 ;;; General settings and common custom functions (prot-simple.el)
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
@@ -30,6 +31,17 @@
   (setq prot-simple-time-specifier "%R %z")
 
   (setq prot-scratch-default-mode 'text-mode)
+
+;;;; Comments (prot-comment.el)
+  (setq comment-empty-lines t)
+  (setq comment-fill-column nil)
+  (setq comment-multi-line t)
+  (setq comment-style 'multi-line)
+  (setq-default comment-column 0)
+
+  (setq prot-comment-comment-keywords '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
+  (setq prot-comment-timestamp-format-concise "%F")
+  (setq prot-comment-timestamp-format-verbose "%F %T %z")
 
   ;; General commands
   (prot-emacs-keybind global-map
@@ -97,7 +109,10 @@
     ;; Scratch buffer for major mode of choice
     "C-c s" prot-scratch-buffer
     ;; Prefix keymap (prot-prefix.el)
-    "C-z" prot-prefix)
+    "C-z" prot-prefix
+    ;; Comments
+    "C-;" prot-comment
+    "C-x C-;" prot-comment-timestamp-keyword)
 
   (prot-emacs-keybind prog-mode-map
     "C-M-d" up-list) ; confusing name for what looks like "down" to me
