@@ -34,6 +34,7 @@
 
 ;;; Code:
 
+(require 'newcomment)
 (require 'prot-common)
 
 (defgroup prot-comment ()
