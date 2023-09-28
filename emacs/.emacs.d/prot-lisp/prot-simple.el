@@ -61,9 +61,6 @@ Used by `prot-simple-inset-date'."
 
 ;;; Commands
 
-;; NOTE 2023-06-21: The code I had for scratch buffers per major mode
-;; is now part of prot-scratch.el.
-
 ;;;; General commands
 
 ;;;###autoload
