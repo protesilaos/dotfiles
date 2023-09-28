@@ -403,8 +403,6 @@ line in the region."
 
 ;;;; Commands for object transposition
 
-;; FIXME 2023-09-28: This is old code and needs to be simplified.
-
 ;; The "move" functions all the way to `prot-simple-move-below-dwim'
 ;; are courtesy of Bruno Boal: <https://git.sr.ht/~bboal>.  With minor
 ;; tweaks by me.
@@ -469,6 +467,8 @@ If ARG is nil, do it one time."
   (interactive "p")
   (unless (prot-simple--move-line-user-error (point-max))
     (prot-simple--move-line arg 1)))
+
+;; FIXME 2023-09-28: This is old code and needs to be simplified.
 
 (defmacro prot-simple-transpose (name scope &optional doc)
   "Macro to produce transposition functions.
