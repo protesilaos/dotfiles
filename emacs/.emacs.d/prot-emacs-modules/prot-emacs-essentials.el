@@ -9,6 +9,7 @@
   (require 'prot-common)
   (require 'prot-simple)
   (require 'prot-scratch)
+  (require 'prot-pair)
   (require 'prot-prefix)
   (require 'prot-comment)
 
@@ -73,9 +74,9 @@
     "C-=" prot-simple-insert-date
     "C-<" prot-simple-escape-url-dwim
     "C->" prot-simple-insert-line-prefix-dwim
-    "C-'" prot-simple-insert-pair
-    "M-'" prot-simple-insert-pair
-    "M-\\" prot-simple-delete-pair-dwim
+    "C-'" prot-pair-insert
+    "M-'" prot-pair-insert
+    "M-\\" prot-pair-delete
     "M-z" zap-up-to-char ; NOT `zap-to-char'
     "M-Z" prot-simple-zap-to-char-backward
     "<C-M-backspace>" backward-kill-sexp
