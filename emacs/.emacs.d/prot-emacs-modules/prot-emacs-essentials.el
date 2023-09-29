@@ -316,8 +316,20 @@
     (dotimes (_ n)
       (expreg-expand)))
 
+  (defun prot/expreg-expand-dwim ()
+    "Do-What-I-Mean `expreg-expand' to start with symbol or word.
+If over a real symbol, mark that directly, else start with a
+word.  Fall back to regular `expreg-expand'."
+    (interactive)
+    (let ((symbol (bounds-of-thing-at-point 'symbol)))
+      (cond
+       ((equal (bounds-of-thing-at-point 'word) symbol)
+        (prot/expreg-expand 1))
+       (symbol (prot/expreg-expand 2))
+       (t (expreg-expand)))))
+
   ;; There is also an `expreg-contract' command, though I have no use for it.
-  (define-key global-map (kbd "C-M-SPC") #'prot/expreg-expand)) ; overrides `mark-sexp'
+  (define-key global-map (kbd "C-M-SPC") #'prot/expreg-expand-dwim)) ; overrides `mark-sexp'
 
 ;;; Go to last change
 (prot-emacs-package goto-last-change
