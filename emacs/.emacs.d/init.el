@@ -55,6 +55,11 @@ before all other modules of my setup."
                  (const :tag "The `standard-themes' module" standard)
                  (const :tag "Do not load a theme module" nil)))
 
+(defcustom prot-emacs-evil nil
+  "When non-nil, use `evil-mode' and Vim-like key bindings."
+  :group 'prot-emacs
+  :type 'boolean)
+
 (defcustom prot-emacs-completion-ui 'vertico
   "Choose minibuffer completion UI between `mct' or `vertico'."
   :group 'prot-emacs
@@ -406,6 +411,11 @@ that is expanded with the `prot-emacs-package' macro."
 (when (executable-find "notmuch")
   (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
+
+;; We load this last to override any key bindings we have already
+;; defined.
+(when prot-emacs-evil
+  (require 'prot-emacs-evil))
 
 (setq safe-local-variable-values
       '((org-hide-leading-stars . t)
