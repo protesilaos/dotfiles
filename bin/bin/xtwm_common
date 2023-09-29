@@ -50,6 +50,14 @@ then
               -option 'compose:ins' -option 'grp:win_space_toggle'
 fi
 
+# I want my Ctrl key to be used as an Escape when tapped.  Since I
+# disable the Caps_Lock above, I must use Control_L here.  This gives
+# me the desired functionality on both the Caps and left Ctrl keys.
+if _check xcape
+then
+   xcape -e 'Control_L=Escape'
+fi
+
 # The hotkey daemon that handles all custom key bindings.  I split the
 # key chords into separate files, based on their scope.  The ones that
 # pertain to the window manager are defined in sxhkdrc_bspwm and
