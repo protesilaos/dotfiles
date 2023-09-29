@@ -55,17 +55,6 @@ before all other modules of my setup."
                  (const :tag "The `standard-themes' module" standard)
                  (const :tag "Do not load a theme module" nil)))
 
-(defcustom prot-emacs-key-bindings nil
-  "Style of key bindings to use.
-A value of `emacs' uses the default Emacs style.  The `evil'
-symbol uses Vim keys.  With `devil' enable the package of the
-same name to work mostly without modifiers."
-  :group 'prot-emacs
-  :type '(choice :tag "Style of key bindings"
-                 (const :tag "The default Emacs style" emacs)
-                 (const :tag "Vim style" evil)
-                 (const :tag "Devil style" devil)))
-
 (defcustom prot-emacs-completion-ui 'vertico
   "Choose minibuffer completion UI between `mct' or `vertico'."
   :group 'prot-emacs
@@ -417,12 +406,6 @@ that is expanded with the `prot-emacs-package' macro."
 (when (executable-find "notmuch")
   (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
-
-;; We load this last to override any key bindings we have already
-;; defined.
-(pcase prot-emacs-key-bindings
-  ('evil (require 'prot-emacs-evil))
-  ('devil (require 'prot-emacs-devil)))
 
 (setq safe-local-variable-values
       '((org-hide-leading-stars . t)
