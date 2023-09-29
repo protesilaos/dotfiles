@@ -53,21 +53,19 @@ Used by `prot-simple-inset-date'."
   :type 'string
   :group 'prot-simple)
 
-(defvar-keymap prot-simple-global-repeat-map
+(defvar-keymap prot-simple-motion-repeat-map
   :doc "Repeatable prot-simple commands, per `repeat-mode'."
   :repeat t
   "n" #'next-line
   "p" #'previous-line
   "f" #'forward-word
   "b" #'backward-word
+  "D" #'up-list ; this performs a "down" motion in my mind
+  "U" #'backward-up-list ; the actual "up"
   "N" #'forward-list
   "P" #'backward-list
   "F" #'forward-sexp
-  "B" #'backward-sexp
-  "D" #'up-list ; this performs a "down" motion in my mind
-  "U" #'backward-up-list ; the actual "up"
-  "+" #'prot-simple-number-increment
-  "-" #'prot-simple-number-decrement)
+  "B" #'backward-sexp)
 
 ;;; Commands
 
