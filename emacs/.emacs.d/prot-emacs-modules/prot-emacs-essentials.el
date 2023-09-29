@@ -317,9 +317,7 @@
       (expreg-expand)))
 
   ;; There is also an `expreg-contract' command, though I have no use for it.
-  (define-key global-map (kbd "C-M-SPC") #'prot/expreg-expand) ; overrides `mark-sexp'
-  (define-key prot-simple-global-repeat-map (kbd "SPC") #'prot/expreg-expand)
-  (put #'prot/expreg-expand 'repeat-map 'prot-simple-global-repeat-map))
+  (define-key global-map (kbd "C-M-SPC") #'prot/expreg-expand)) ; overrides `mark-sexp'
 
 ;;; Go to last change
 (prot-emacs-package goto-last-change
