@@ -331,6 +331,37 @@ word.  Fall back to regular `expreg-expand'."
   ;; There is also an `expreg-contract' command, though I have no use for it.
   (define-key global-map (kbd "C-M-SPC") #'prot/expreg-expand-dwim)) ; overrides `mark-sexp'
 
+;;; Visualise undo ring (`vundo')
+(prot-emacs-package vundo
+  (:install t)
+  (:delay 30)
+  (setq vundo-glyph-alist vundo-unicode-symbols)
+
+  (define-key global-map (kbd "C-?") #'vundo) ; override `undo-redo'
+
+  ;; Check: <https://github.com/casouri/vundo/pull/74>.
+  (defvar prot/vundo-diff-buffer-window nil
+    "Window object of `prot/vundo-diff-buffer'.")
+
+  (defun prot/vundo-quit-diff-window ()
+    "Quit `prot/vundo-diff-buffer-window' if it is live.
+Assign this function to the `vundo-post-exit-hook'."
+    (when (and prot/vundo-diff-buffer-window
+               (window-live-p prot/vundo-diff-buffer-window))
+      (quit-window nil prot/vundo-diff-buffer-window)
+      (setq prot/vundo-diff-buffer-window nil)))
+
+  (defun prot/vundo-diff-buffer (buffer)
+    "Diff BUFFER with its underlying file, if possible.
+Assign this to `vundo-after-undo-functions'.  BUFFER is provided
+by that special hook."
+    (when (buffer-file-name buffer)
+      (with-current-buffer (window-buffer (diff-buffer-with-file buffer))
+        (setq prot/vundo-diff-buffer-window (get-buffer-window)))))
+
+  (add-hook 'vundo-after-undo-functions #'prot/vundo-diff-buffer)
+  (add-hook 'vundo-post-exit-hook #'prot/vundo-quit-diff-window))
+
 ;;; Go to last change
 (prot-emacs-package goto-last-change
   (:install t)
