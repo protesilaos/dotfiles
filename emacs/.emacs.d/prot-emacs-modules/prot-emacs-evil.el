@@ -19,6 +19,7 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-minibuffer nil)
+  (setq evil-toggle-key "C-z") ; TODO
   (setq evil-respect-visual-line-mode nil)
 
   (prot-emacs-package evil
@@ -51,40 +52,42 @@
     (setq evil-vsplit-window-right nil)
     (setq evil-esc-delay 0.01)
     (setq evil-intercept-esc 'always)
-    (setq evil-show-paren-range 0)
+    (setq evil-show-paren-range 1)
     (setq evil-ex-hl-update-delay lazy-highlight-initial-delay)
     (setq evil-highlight-closing-paren-at-point-states '(not emacs insert replace))
     (setq evil-kill-on-visual-paste nil) ; Emacs style, not Vim
     (setq evil-echo-state nil) ; be silent
     (setq evil-complete-all-buffers t) ; TODO C-n and C-p in insert mode
     (setq evil-lookup-func #'man) ; TODO K in normal mode
-    (setq evil-toggle-key "C-]") ; TODO
     (setq evil-default-state 'normal) ; check `evil-set-initial-state'
     ;; evil-buffer-regexps
-    ;; evil-emacs-state-modes
-    (setq evil-insert-state-modes '(comint-mode
-                                    erc-mode
-                                    rcirc-mode
-                                    eshell-mode
-                                    inferior-emacs-lisp-mode
-                                    reb-mode
-                                    shell-mode
-                                    term-mode
-                                    wdired-mode))
-   ;; (setq evil-motion-state-modes '(apropos-mode ; FIXME 2023-09-29: What is the motion state?
-   ;;                                  Buffer-menu-mode
-   ;;                                  calendar-mode
-   ;;                                  org-agenda-mode
-   ;;                                  command-history-mode
-   ;;                                  compilation-mode
-   ;;                                  dictionary-mode
-   ;;                                  ert-results-mode
-   ;;                                  help-mode
-   ;;                                  Info-mode
-   ;;                                  Man-mode
-   ;;                                  vundo-mode
-   ;;                                  woman-mode))
+    (setq evil-motion-state-modes nil)
+    (setq evil-insert-state-modes nil)
     (setq evil-overriding-maps nil)
+    (setq evil-emacs-state-modes '(completion-list-mode
+                                   Buffer-menu-mode
+                                   dired-mode
+                                   Info-mode
+                                   help-mode
+                                   comint-mode
+                                   rcirc-mode
+                                   eshell-mode
+                                   inferior-emacs-lisp-mode
+                                   reb-mode
+                                   shell-mode
+                                   term-mode
+                                   wdired-mode
+                                   org-agenda-mode
+                                   ;; FIXME 2023-09-29: Not all Magit modes are here
+                                   log-edit-mode
+                                   git-commit-mode
+                                   magit-status-mode
+                                   magit-diff-mode
+                                   magit-log-mode
+                                   notmuch-hello-mode
+                                   notmuch-search-mode
+                                   notmuch-show-mode
+                                   notmuch-tree-mode))
     ;; evil-intercept-maps
     ;; evil-motions
     ;; evil-visual-newline-commands
@@ -109,8 +112,12 @@
 
     (evil-mode 1))
 
-  (prot-emacs-package evil-collection
-    (:install t)
-    (evil-collection-setup)))
+  ;; I will probably handle the integration myself, as I am likely working
+  ;; towards a blend between Emacs and Vim.
+
+  ;; (prot-emacs-package evil-collection
+  ;;   (:install t)
+  ;;   (evil-collection-setup))
+  )
 
 (provide 'prot-emacs-evil)
