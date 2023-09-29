@@ -388,7 +388,6 @@ that is expanded with the `prot-emacs-package' macro."
   ('ef (require 'prot-emacs-ef-themes))
   ('modus (require 'prot-emacs-modus-themes))
   ('standard (require 'prot-emacs-standard-themes)))
-(require 'prot-emacs-theme-extras)
 (require 'prot-emacs-font)
 (require 'prot-emacs-modeline)
 (require 'prot-emacs-completion-common)
