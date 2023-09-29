@@ -398,8 +398,7 @@ that is expanded with the `prot-emacs-package' macro."
 (require 'prot-emacs-dired)
 (require 'prot-emacs-window)
 (require 'prot-emacs-git)               ; git, diff, and related
-(require 'prot-emacs-write)             ; denote, logos, etc.
-(require 'prot-emacs-org)               ; org, calendar, appt
+(require 'prot-emacs-org)
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
 (when (executable-find "notmuch")
