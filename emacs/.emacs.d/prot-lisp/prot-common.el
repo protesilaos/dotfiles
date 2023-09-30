@@ -367,5 +367,36 @@ C1 and C2 are color values written in hexadecimal RGB."
                (+ (prot-common-wcag-formula c2) 0.05))))
     (max ct (/ ct))))
 
+;;;; EXPERIMENTAL macros (not meant to be used anywhere)
+
+;; TODO 2023-09-30: Try the same with `cl-defmacro' and &key
+(defmacro prot-common-if (condition &rest consequences)
+  "Separate the CONSEQUENCES of CONDITION semantically.
+Like `if', `when', `unless' but done by using `:then' and `:else'
+keywords.  The forms under each keyword of `:then' and `:else'
+belong to the given subset of CONSEQUENCES.
+
+- The absence of `:else' means: (if CONDITION (progn CONSEQUENCES)).
+- The absence of `:then' means: (if CONDITION nil CONSEQUENCES).
+- Otherwise: (if CONDITION (progn then-CONSEQUENCES) else-CONSEQUENCES)."
+  (declare (indent 1))
+  (let (then-consequences else-consequences last-kw)
+    (dolist (elt consequences)
+      (let ((is-keyword (keywordp elt)))
+        (cond
+         ((and (not is-keyword) (eq last-kw :then))
+          (push elt then-consequences))
+         ((and (not is-keyword) (eq last-kw :else))
+          (push elt else-consequences))
+         ((and is-keyword (eq elt :then))
+          (setq last-kw :then))
+         ((and is-keyword (eq elt :else))
+          (setq last-kw :else)))))
+    `(if ,condition
+         ,(if then-consequences
+              `(progn ,@(nreverse then-consequences))
+            nil)
+       ,@(nreverse else-consequences))))
+
 (provide 'prot-common)
 ;;; prot-common.el ends here
