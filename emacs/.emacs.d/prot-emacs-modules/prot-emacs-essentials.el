@@ -311,7 +311,7 @@
   (:install t)
   (:delay 5)
   (defun prot/expreg-expand (n)
-    "Expand to N syntactic units, defaulting to 1."
+    "Expand to N syntactic units, defaulting to 1 if none is provided interactively."
     (interactive "p")
     (dotimes (_ n)
       (expreg-expand)))

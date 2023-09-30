@@ -115,7 +115,8 @@ backtick and single quote, else two backticks."
   "Insert N number of PAIR around object at point.
 PAIR is one among `prot-pair-pairs'.  The object at point is
 either a symbol or the boundaries of the active region.  N is a
-numeric prefix argument, defaulting to 1 if none is provided."
+numeric prefix argument, defaulting to 1 if none is provided in
+interactive use."
   (interactive
    (list
     (prot-pair--insert-characters (prot-pair--insert-prompt))
