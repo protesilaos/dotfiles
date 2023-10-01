@@ -88,27 +88,38 @@ backtick and single quote, else two backticks."
     (cons ?« ?»))
    (t (cons ?\" ?\"))))
 
+(defvar prot-pair--insert-history nil
+  "Minibuffer history of `prot-pair--insert-prompt'.")
+
+(defun prot-pair--annotate (character)
+  "Annotate CHARACTER with its description in `prot-pair-pairs'."
+  (when-let ((char (if (characterp character) character (string-to-char character)))
+             (plist (alist-get char prot-pair-pairs))
+             (description (plist-get plist :description)))
+    (format "  %s" description)))
+
+(defun prot-pair--get-pair (character)
+  "Get the pair of corresponding to CHARACTER."
+  (when-let ((char (if (characterp character) character (string-to-char character)))
+             (plist (alist-get char prot-pair-pairs))
+             (pair (plist-get plist :pair)))
+    pair))
+
 (defun prot-pair--insert-prompt ()
-  "Prompt for initial character among `prot-pair-pairs'."
-  (car
-   (read-multiple-choice
-    "Select pair: "
-    (mapcar
-     (lambda (properties)
-       (list
-        (car properties)
-        (plist-get (cdr properties) :description)))
-     prot-pair-pairs))))
+  "Prompt for pair among `prot-pair-pairs'."
+  (let ((default (car prot-pair--insert-history))
+        (candidates (mapcar (lambda (char) (char-to-string (car char))) prot-pair-pairs))
+        (completion-extra-properties `(:annotation-function ,#'prot-pair--annotate)))
+    (completing-read
+     (format-prompt "Select pair" default)
+     candidates nil :require-match
+     nil 'prot-pair--insert-history default)))
 
 (defun prot-pair--insert-bounds ()
   "Return boundaries of symbol at point or active region."
   (if (region-active-p)
       (cons (region-beginning) (region-end))
     (bounds-of-thing-at-point 'symbol)))
-
-(defun prot-pair--insert-characters (character)
-  "Return pair corresponding to CHARACTER in `prot-pair-pairs'."
-  (plist-get (alist-get character prot-pair-pairs) :pair))
 
 ;;;###autoload
 (defun prot-pair-insert (pair n)
@@ -119,7 +130,7 @@ numeric prefix argument, defaulting to 1 if none is provided in
 interactive use."
   (interactive
    (list
-    (prot-pair--insert-characters (prot-pair--insert-prompt))
+    (prot-pair--get-pair (prot-pair--insert-prompt))
     (prefix-numeric-value current-prefix-arg)))
   (let* ((bounds (prot-pair--insert-bounds))
          (beg (car bounds))
