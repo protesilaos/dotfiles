@@ -60,6 +60,7 @@
 (prot-emacs-configure
   (:delay 5)
 ;;; `grep' package
+  (setq grep-program (or (executable-find "rg") "grep"))
   (setq grep-save-buffers nil)
   (setq grep-use-headings t) ; Emacs 30
 ;;; `re-builder' package
