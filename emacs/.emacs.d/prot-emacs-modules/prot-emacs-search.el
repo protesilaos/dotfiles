@@ -70,11 +70,7 @@
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
   (setq xref-file-name-display 'project-relative)
-  (setq xref-search-program
-        (cond
-         ((or (executable-find "ripgrep") (executable-find "rg")) 'ripgrep)
-         ((executable-find "ugrep") 'ugrep)
-         (t 'grep))))
+  (setq xref-search-program (if (string-match-p "rg" grep-program) 'ripgrep 'grep))
 
 ;;; wgrep (writable grep)
 (prot-emacs-package wgrep
