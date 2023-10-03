@@ -132,6 +132,7 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
   (declare (interactive-only t))
   (interactive)
   (prot-shell--insert-and-send
+   "cd"
    (prot-shell--cd-prompt)))
 
 ;;;;; VC root directory
