@@ -50,6 +50,8 @@
 ;;   (load-theme 'ef-duo-light t t)
 ;;   (load-theme 'ef-frost t t)
 ;;   (load-theme 'ef-light t t)
+;;   (load-theme 'ef-melissa-dark t t)
+;;   (load-theme 'ef-melissa-light t t)
 ;;   (load-theme 'ef-night t t)
 ;;   (load-theme 'ef-spring t t)
 ;;   (load-theme 'ef-summer t t)
