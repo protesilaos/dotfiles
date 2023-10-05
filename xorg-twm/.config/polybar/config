@@ -117,7 +117,7 @@ format = <label-state> <label-mode>
 type = internal/xworkspaces
 
 label-active = "[%name%]"
-label-active-font = 2b
+label-active-font = 2
 
 label-occupied = " %name%^ "
 label-occupied-foreground = ${colors.fg-dim}
