@@ -188,6 +188,9 @@
   (autoload #'tooltip-mode "tooltip")
   (tooltip-mode 1)
 
+;;;; TRAMP (remote connections)
+  (setq tramp-connection-timeout (* 60 10)) ; seconds
+
 ;;;; Display current time
   (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
