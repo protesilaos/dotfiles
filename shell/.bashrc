@@ -29,6 +29,11 @@ then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
+if [ -d "$HOME"/Builds/bin ]
+then
+    PATH=$PATH:"$HOME"/Builds/bin
+fi
+
 if [ -d "/var/lib/flatpak/exports/bin" ]
 then
     PATH=$PATH:"/var/lib/flatpak/exports/bin"

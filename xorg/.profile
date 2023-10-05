@@ -45,6 +45,11 @@ if [ -d "$HOME"/.local/bin ]; then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
+if [ -d "$HOME"/Builds/bin ]
+then
+    PATH=$PATH:"$HOME"/Builds/bin
+fi
+
 ##########################
 # Environment essentials #
 ##########################
