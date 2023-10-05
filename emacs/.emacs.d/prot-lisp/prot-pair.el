@@ -1,4 +1,4 @@
-;;; prot-pair.el --- Common commands for my dotemacs -*- lexical-binding: t -*-
+;;; prot-pair.el --- Insert character pair around symbol or region -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
 
@@ -24,7 +24,8 @@
 
 ;;; Commentary:
 ;;
-;; Common commands for my Emacs: <https://protesilaos.com/emacs/dotemacs/>.
+;; Insert character pair around symbol or region using minibuffer
+;; completion.
 ;;
 ;; Remember that every piece of Elisp that I write is for my own
 ;; educational and recreational purposes.  I am not a programmer and I
@@ -32,6 +33,10 @@
 ;; what it does.
 
 ;;; Code:
+
+(defgroup prot-pair nil
+  "Insert character pair around symbol or region."
+  :group 'editing)
 
 (defcustom prot-pair-pairs
   '((?'  :description "Single quotes"           :pair (?' . ?'))
