@@ -169,17 +169,21 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
            (directory-file-name
             (file-name-directory default-directory)))))
 
+(defvar sh-shell-file)
+
 (defun prot-shell-bookmark-make-record ()
   "Create a bookmark for the current Shell buffer."
   `(,(prot-shell-bookmark-name)
     (location . ,default-directory)
+    (shell-file-name . ,sh-shell-file)
     (handler . prot-shell-bookmark-jump)))
 
 ;;;###autoload
 (defun prot-shell-bookmark-jump (bookmark)
   "Default BOOKMARK handler for Shell buffers."
-  (let ((default-directory (bookmark-prop-get bookmark 'location)))
-    (shell)))
+  (let ((default-directory (bookmark-prop-get bookmark 'location))
+        (explicit-shell-file-name (bookmark-prop-get bookmark 'shell-file-name)))
+    (shell (get-buffer-create (car bookmark)))))
 
 (put 'prot-shell-bookmark-jump 'bookmark-handler-type "Shell")
 
