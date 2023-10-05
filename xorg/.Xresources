@@ -33,6 +33,7 @@ xterm*toolBar: false
 xterm*scrollBar: false
 xterm*geometry: 80x24
 xterm*internalBorder: 20
+xterm*borderWidth: 0
 
 ! Cursor
 ! Allowing the cursor to use the reverse colour of the background or
