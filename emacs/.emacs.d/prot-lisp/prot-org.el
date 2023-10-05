@@ -214,7 +214,7 @@ produces dates with a fixed length."
                 ;; utility in multi-day views.
                 (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
                 (org-agenda-format-date "%A %-e %B %Y")
-                (org-agenda-overriding-header "\n⦾ Today's agenda\n")))
+                (org-agenda-overriding-header "\n➤ Today's agenda\n")))
     (agenda "" ((org-agenda-start-on-weekday nil)
                 (org-agenda-start-day nil)
                 (org-agenda-start-day "+1d")
