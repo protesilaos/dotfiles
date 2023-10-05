@@ -384,7 +384,7 @@ in
         ;;
     i3) _i3 ;;
     gnome) _gnome ;;
-	mate)  _mate ;;
-    xfce)  _xfce  ;;
+    mate) _mate ;;
+    xfce) _xfce ;;
 
 esac
