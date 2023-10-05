@@ -1,0 +1,46 @@
+# i3 config file (v4)
+
+# NOTE 2023-10-05: The above line is required.
+#
+#     Since i3 4.0, a new configuration format is used. i3 will try to
+#     automatically detect the format version of a config file based on a
+#     few different keywords, but if you want to make sure that your config
+#     is read with the new format, include the following line in your config
+#     file: [...]
+#
+#     <https://i3wm.org/docs/userguide.html>
+
+gaps inner 15px
+gaps outer 0
+smart_gaps inverse_outer
+default_border pixel 3
+default_floating_border pixel 1
+hide_edge_borders both
+smart_borders on
+focus_follows_mouse yes
+workspace_auto_back_and_forth yes
+focus_on_window_activation smart
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block.
+font pango:monospace 8
+title_align center
+
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier mod4
+
+# move tiling windows via drag & drop by left-clicking into the title bar,
+# or left-clicking anywhere into the window while holding the floating modifier.
+tiling_drag modifier titlebar
+
+include i3-theme
+
+# Common settings used by all my Xorg tiling window managers, which
+# include i3WM, BSPWM, and Herbstluftwm.  I configure them to be
+# similar.  This means, among others, that I define key bindings using
+# SXHKD instead of the native configuration method (where applicable).
+exec command -v xtwm_common > /dev/null && xtwm_common

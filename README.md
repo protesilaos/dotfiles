@@ -58,34 +58,51 @@ run stow again with the `-R` flag:
 
 ## Window managers
 
-I used to have configurations for bspwm, herbstluftwm, and swaywm.
-Since 2023-02-24 I have removed sway: Wayland is not ready for my
-purposes and I have had no issues whatsoever with Xorg.  I also tried
-GNOME for a while to get a feel for Wayaland and see how Emacs
-compiled `--with-pgtk` performs.  In short: Emacs is the same and
-Wayland is not as featureful as Xorg.
-
-My two tiling window managers are bspwm and herbstluftwm.  They are
-both configured to be almost the same: they share settings for the
-wallpaper, system panel, theme, keyboard layout, and display
-compositor.  All settings are in the `xorg-twm` directory ("twm"
-stands for "tiling window manager").  What differentiates the two
-window managers is their individual features.
+My tiling window managers are bspwm, herbstluftwm, and i3 (in no
+particular order).  They are all configured to be almost the same:
+they share settings for the wallpaper, system panel, theme, keyboard
+layout, and display compositor.  All settings are in the `xorg-twm`
+directory ("twm" stands for "tiling window manager").  What
+differentiates the window managers is their individual features.
 
 + **bspwm:** I have been using it for years and consider it top-notch.
-  It is stable and scriptable.  Use this if you prefer automatic
-  tiling.
+  It is minimal, stable, and scriptable.  Use this if you prefer
+  automatic tiling.  It does not have layout features out-of-the-box,
+  such as a tabbed layout: it can place windows in tiles or float
+  them.
 
-+ **herbstluftwm (hlwm):** Shares many concepts with bspwm, though
-  herbstluftwm prioritises manual tiling methods and can treat
-  arbitrary rectangles of a monitor as virtual monitors.  The virtual
-  monitors feature is perfect for anyone with a widescreen display.
-  The one I have (which is not mine, but anyway) is 2560x1080, so I
-  split it by default into a regular 1920x1080 area and another
-  "sidebar" of 640x1080.
++ **herbstluftwm (hlwm):** herbstluftwm prioritises manual tiling
+  methods and can treat arbitrary rectangles of a monitor as virtual
+  monitors.  The virtual monitors feature is perfect for anyone with a
+  widescreen display.  The one I have (which is not mine, but anyway)
+  is 2560x1080, so I split it by default into a regular 1920x1080 area
+  and another "sidebar" of 640x1080.  herbstluftwm has the concept of
+  "frame", which is a container of regular windows.  Each frame can
+  have its own layout, including a vertical/horizontal stack, grid,
+  and tabbed.
+
++ **i3 (or i3wm):** The first tiling window manager I ever used (circa
+  2017).  The reason I abandoned it back in the day in favour of bspwm
+  is because its default tiling method requires manual intervention to
+  change the split direction.  On a small laptop monitor, I prefer
+  this to be done automatically, hence bspwm.  Though on a wide
+  monitor, I typically keep the split direction constant.  i3 has the
+  concept of the "container" (same as herbstluftwm "frame"), which can
+  be set to stacked, tabbed, or tiled layouts.  As such, i3 is
+  somewhere between bspwm and herbstluftwm.  Choose according to your
+  needs.
 
 Check the `xtwm-key-binding-cheatsheet.md` file for an overview of
 their key bindings.
+
+When I have a video call or record a video of my desktop session, I
+always use herbstluftwm because of its ability to support virtual
+monitors.  Otherwise I oscillate between bspwm and i3, depending on
+the machine I am using.
+
+What about Wayland?  It is not ready yet: I am missing something like
+sxhkd and certain applications do not work properly on it.  I may
+check again in a few years.
 
 ## Copying
 

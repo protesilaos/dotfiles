@@ -1,0 +1,50 @@
+#
+# SXHKD module with i3-specific commands
+#
+# Part of my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
+#
+### Description
+#
+# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
+# work with `i3`.  This is part of my dotfiles, which are managed with
+# GNU Stow.  See https://git.sr.ht/~protesilaos/dotfiles
+
+### Code
+
+# Reload the i3 config, restart the session in place, or exit
+mod4 + e ; {c,r,q}
+    i3-msg -t command {reload,restart,exit}
+
+mod4 + {t,s}
+    i3-msg -t command {layout,split} toggle
+
+# Close currently focused window.
+mod4 + q
+    i3-msg -t command kill
+
+#### Focus/swap windows/desktops
+
+# Focus the window in the given direction.
+mod4 + {h,j,k,l,a}
+    i3-msg -t command focus {left,down,up,right,parent}
+
+# Same as above, with arrow keys.
+mod4 + {Left,Down,Up,Right}
+    i3-msg -t command focus {left,down,up,right}
+
+# Move focused window in the given direction.
+mod4 + shift + {h,j,k,l}
+    i3-msg -t command move {left,down,up,right}
+
+# Same as above, with arrow keys.
+mod4 + shift + {Left,Down,Up,Right}
+    i3-msg -t command move {left,down,up,right}
+
+mod4 + {_,shift + }{0-9}
+    i3-msg -t command {workspace number,move container to workspace number} {0-9}
+
+# Toggle floating, tiled, fullscreen view.  Tiled is what is used by
+# default. Floating windows have their own dimensions and can be stacked
+# on top of each other.
+mod4 + {shift + space,f}
+    i3-msg -t command {floating toggle,fullscreen}

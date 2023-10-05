@@ -221,6 +221,54 @@ _bspwm_or_hlwm ()
     fi
 }
 
+# TODO 2023-10-05: Merge with `_bspwm_or_hlwm'?
+_i3 ()
+{
+    _gnome_theme
+
+    wm_theme_file="$HOME"/.config/prot-xtwm-active-theme
+    # focus_mode_status="$HOME"/.config/prot-xtwm-focus-mode
+
+	echo "$style" > "$wm_theme_file"
+    wm_theme="$style"
+
+    _emacs "$style" &
+    _xsettingsd "$style" &
+    _xterm &
+    # # NOTE 2021-09-25: I tried alacritty for a while, but the way it
+    # reads the fonts on Xorg makes the point size larger than expected.
+    # Also, it seems to miss some smaller sizes, so I cannot use it
+    # exactly how I want to.  Everything is fine on Wayland with Sway...
+    #
+    # _alacritty &
+    _feh &
+    _rofi &
+
+    #  TODO 2023-10-05: focus mode for i3
+
+    # if [ -f $focus_mode_status ] && [ "$(sed 1q "$focus_mode_status")" = off ]
+    # then
+    #     _polybar launch
+    # else
+    #     # Just update the colours, but do not launch the process.
+    #     _polybar
+    # fi
+
+    _polybar launch
+
+    active_theme="$HOME"/.config/i3/i3-theme
+
+    [ -f "$active_theme" ] || { echo "No active theme"; exit 1; }
+
+    case $wm_theme
+    in
+        light) _sed "s,vivendi,operandi," "$active_theme" ;;
+        dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
+    esac
+
+    i3-msg -t command reload
+}
+
 #### Gsettings
 
 _gsettings ()
@@ -334,6 +382,7 @@ in
 
         _bspwm_or_hlwm
         ;;
+    i3) _i3 ;;
     gnome) _gnome ;;
 	mate)  _mate ;;
     xfce)  _xfce  ;;

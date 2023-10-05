@@ -73,6 +73,7 @@ _quit()
     case "$DESKTOP_SESSION"
     in
         bspwm) bspc quit ;;
+        i3) i3-msg -t command exit ;;
         herbstluftwm) herbstclient quit ;;
     esac
 }

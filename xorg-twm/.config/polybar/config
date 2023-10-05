@@ -5,6 +5,35 @@ margin-bottom = 0
 [colors]
 include-file = ~/.config/polybar/config_colors
 
+[bar/i3]
+width = 100%
+height = 18
+bottom = true
+radius = 0
+fixed-center = false
+
+background = ${colors.bg-main}
+foreground = ${colors.fg-main}
+
+padding-left = 0
+padding-right = 1
+
+module-margin-left = 0
+module-margin-right = 2
+
+font-0 = Monospace:size=8:hintstyle=hintslight;2
+font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
+
+tray-position = right
+tray-padding = 5
+
+format-margin = 0
+
+modules-left = i3 title
+modules-center =
+modules-right = xkeyboard alsa date
+override-redirect = false
+
 [bar/bspwm]
 width = 100%
 height = 18
@@ -63,8 +92,26 @@ tray-padding = 5
 
 format-margin = 0
 
-; wm-restack = bspwm
-; override-redirect = false
+[module/i3]
+type = internal/i3
+
+label-focused = "[%name%]"
+label-focused-font = 2
+
+label-unfocused = " %name%^ "
+label-unfocused-foreground = ${colors.fg-dim}
+
+label-visible = " %name%^ "
+label-visible-foreground = ${colors.fg-dim}
+
+label-urgent = " %name%! "
+label-urgent-font = 2
+label-urgent-foreground = ${colors.red}
+
+label-empty = ""
+label-empty-foreground = ${colors.fg-dim}
+
+format = <label-state> <label-mode>
 
 [module/ewmh]
 type = internal/xworkspaces
