@@ -125,7 +125,7 @@ _polybar ()
         dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
     esac
 
-    [ -n "$1" ] && polybar "$DESKTOP_SESSION" &
+    [ -n "$1" ] && polybar -rq "$DESKTOP_SESSION" &
 }
 
 _feh ()
