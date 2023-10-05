@@ -217,8 +217,4 @@
     "<f7>" prot-sideline-mode
     "C-c z" delete-trailing-whitespace))
 
-(prot-emacs-package breadcrumb
-  (:install t)
-  (:delay 10))
-
 (provide 'prot-emacs-window)

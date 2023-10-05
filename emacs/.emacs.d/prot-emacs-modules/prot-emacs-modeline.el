@@ -30,6 +30,13 @@
   ;; Overrides the "two-column" gimmick that I will never use.
   (define-key global-map (kbd "<f2>") #'prot-modeline-subtle-mode))
 
+;;; Context of current item (breadcrumb)
+(prot-emacs-package breadcrumb
+  (:install t)
+  (:delay 10)
+  (setq breadcrumb-imenu-max-length 0.5)
+  (setq breadcrumb-project-max-length 0.5))
+
 ;;; Keycast mode
 (prot-emacs-package keycast
   (:install t)
