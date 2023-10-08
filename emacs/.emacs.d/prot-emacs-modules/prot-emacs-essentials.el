@@ -488,16 +488,7 @@ by that special hook."
 	       (battery-status-function
 	        "⏻%b%p%% ")))
 
-    (display-battery-mode 1)
-
-;;;; Configure suitable fonts for the laptop
-    (with-eval-after-load 'fontaine
-      (add-to-list 'fontaine-presets
-                   '(laptop-regular
-                     :default-family "Iosevka Comfy"
-                     :default-height 80
-                     :variable-pitch-family "Iosevka Comfy Duo"))
-      (fontaine-set-preset 'laptop-regular))))
+    (display-battery-mode 1)))
 
 ;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
