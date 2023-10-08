@@ -56,4 +56,8 @@ fi
 
 # Auto unlocks the GPG and SSH agents.
 eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-export SSH_AUTH_SOCK
+# export SSH_AUTH_SOCK
+
+# TODO 2023-10-08: Why does this work on my laptop, but not the above?
+# Is the desktop affected?
+export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
