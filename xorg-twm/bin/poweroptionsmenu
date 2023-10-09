@@ -87,7 +87,7 @@ _dynamic_menu() {
         # use printf to output array items on a new line
         rofi -dmenu -i -no-custom -p 'Power options'
     elif _checkdep dmenu; then
-        dmenu -i -p 'Power options'
+        my_dmenu -p 'Power options'
     else
         echo "Missing rofi or dmenu dependency." && exit 1
     fi
