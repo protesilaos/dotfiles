@@ -29,12 +29,15 @@ _top-or-bottom ()
 
 while IFS= read -r line
 do
-    # Balance only when splitting side-by-side.
-    if _left-or-right @east || _left-or-right @west
+    if [ $(bspc config automatic_scheme) == "longest_side" ]
     then
-        bspc node @/ --balance
-    elif _top-or-bottom @north || _top-or-bottom @south
-    then
-        bspc node @north --balance || bspc node @south --balance
+        # Balance only when splitting side-by-side.
+        if _left-or-right @east || _left-or-right @west
+        then
+            bspc node @/ --balance
+        elif _top-or-bottom @north || _top-or-bottom @south
+        then
+            bspc node @north --balance || bspc node @south --balance
+        fi
     fi
 done < <(bspc subscribe node_add node_remove)
