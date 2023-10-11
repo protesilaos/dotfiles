@@ -482,6 +482,15 @@ by that special hook."
 
     (display-battery-mode 1)))
 
+;;; Get environment variables into Emacs (exec-path-from-shell)
+;; I need these on GNOME Wayland.
+(prot-emacs-package exec-path-from-shell
+  (:install t)
+  (:delay 1)
+  (setq exec-path-from-shell-variables
+        '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
+  (exec-path-from-shell-initialize))
+
 ;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-package pulsar
