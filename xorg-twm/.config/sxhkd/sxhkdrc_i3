@@ -16,7 +16,7 @@ mod4 + e ; {c,r,q}
     i3-msg -t command {reload,restart,exit}
 
 mod4 + {t,s}
-    i3-msg -t command {layout,split} toggle
+    i3-msg -t command {layout toggle tabbed split,split toggle}
 
 # Close currently focused window.
 mod4 + q
