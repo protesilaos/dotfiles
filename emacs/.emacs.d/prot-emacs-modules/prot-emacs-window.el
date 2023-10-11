@@ -1,6 +1,6 @@
 ;;; General window and buffer configurations
 (prot-emacs-configure
-  (:delay 5)
+  (:delay 1)
 ;;;; `uniquify' (unique names for buffers)
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
@@ -124,7 +124,7 @@
 ;; <https://protesilaos.com/emacs/beframe>.
 (prot-emacs-package beframe
   (:install t)
-  (:delay 5)
+  (:delay 1)
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
 
   (beframe-mode 1)
@@ -144,7 +144,7 @@
 ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
 (prot-emacs-package spacious-padding
   (:install t)
-  (:delay 5)
+  (:delay 1)
 
   (setq spacious-padding-widths
         '( :internal-border-width 25
@@ -182,7 +182,7 @@
 
 ;;; Line numbers and relevant indicators (prot-sideline.el)
 (prot-emacs-package prot-sideline
-  (:delay 30)
+  (:delay 10)
   (require 'display-line-numbers)
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)

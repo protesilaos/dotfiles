@@ -1,6 +1,6 @@
 ;;; Essential configurations
 (prot-emacs-configure
-  (:delay 5)
+  (:delay 1)
 
   ;; NOTE 2023-05-20: Normally those would not have to be `require'd
   ;; as every point of entry is autoloaded.  But Emacs does not have
@@ -288,7 +288,7 @@
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
 (prot-emacs-package substitute
   (:install t)
-  (:delay 5)
+  (:delay 10)
   ;; Set this to non-nil to highlight all occurrences of the current
   ;; target.
   (setopt substitute-highlight t)
@@ -314,7 +314,7 @@
 ;;; Mark syntactic constructs efficiently (expreg)
 (prot-emacs-package expreg
   (:install t)
-  (:delay 5)
+  (:delay 10)
   (defun prot/expreg-expand (n)
     "Expand to N syntactic units, defaulting to 1 if none is provided interactively."
     (interactive "p")
@@ -370,7 +370,7 @@ by that special hook."
 ;;; Go to last change
 (prot-emacs-package goto-last-change
   (:install t)
-  (:delay 5)
+  (:delay 10)
   (with-eval-after-load 'prot-prefix
     (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
     (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
@@ -400,7 +400,7 @@ by that special hook."
 ;;; Pass interface (password-store)
 (prot-emacs-package password-store
   (:install t)
-  (:delay 15)
+  (:delay 5)
   (setq password-store-time-before-clipboard-restore 30)
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
@@ -494,7 +494,7 @@ by that special hook."
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-package pulsar
   (:install t)
-  (:delay 5)
+  (:delay 1)
   (dolist (cmd '( narrow-to-page narrow-to-defun
                   narrow-to-region widen
                   logos-forward-page-dwim
@@ -527,7 +527,7 @@ by that special hook."
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
 (prot-emacs-package lin
   (:install t)
-  (:delay 5)
+  (:delay 1)
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
@@ -581,7 +581,7 @@ by that special hook."
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
 (prot-emacs-package cursory
   (:install t)
-  (:delay 5)
+  (:delay 1)
   (setq cursory-presets
         '((box
            :blink-cursor-interval 0.8)

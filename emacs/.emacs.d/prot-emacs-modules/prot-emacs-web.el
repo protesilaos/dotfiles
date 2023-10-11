@@ -25,7 +25,7 @@
   (setq url-cookie-untrusted-urls '(".*")))
 
 (prot-emacs-package eww
-  (:delay 10)
+  (:delay 60)
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format nil)
@@ -60,7 +60,7 @@
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
 (prot-emacs-package prot-eww
-  (:delay 10)
+  (:delay 60)
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)
@@ -90,7 +90,7 @@
 ;;; Elfeed feed/RSS reader
 (prot-emacs-package elfeed
   (:install t)
-  (:delay 10)
+  (:delay 60)
   (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
   (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))

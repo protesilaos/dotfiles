@@ -1,6 +1,6 @@
 ;;; Dired file manager and prot-dired.el extras
 (prot-emacs-package dired
-  (:delay 5)
+  (:delay 2)
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
@@ -25,7 +25,7 @@
   (define-key dired-jump-map (kbd "j") nil))
 
 (prot-emacs-package dired-aux
-  (:delay 5)
+  (:delay 2)
   (setq dired-isearch-filenames 'dwim)
   (setq dired-create-destination-dirs 'ask) ; Emacs 27
   (setq dired-vc-rename-file t)             ; Emacs 27
@@ -47,7 +47,7 @@
 ;;   (setq find-name-arg "-iname"))
 
 (prot-emacs-package dired-x
-  (:delay 5)
+  (:delay 2)
   (setq dired-clean-up-buffers-too t)
   (setq dired-clean-confirm-killing-deleted-buffers t)
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
@@ -56,7 +56,7 @@
   (define-key dired-mode-map (kbd "I") #'dired-info))
 
 (prot-emacs-package prot-dired
-  (:delay 5)
+  (:delay 2)
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
   (prot-emacs-keybind dired-mode-map
@@ -71,19 +71,19 @@
 
 (prot-emacs-package dired-subtree
   (:install t)
-  (:delay 5)
+  (:delay 2)
   (setq dired-subtree-use-backgrounds nil)
   (prot-emacs-keybind dired-mode-map
     "<tab>" dired-subtree-toggle
     "<backtab>" dired-subtree-remove)) ; S-TAB
 
 (prot-emacs-package wdired
-  (:delay 5)
+  (:delay 2)
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
 
 (prot-emacs-package image-dired
-  (:delay 10)
+  (:delay 60)
   (setq image-dired-thumbnail-storage 'standard)
   (setq image-dired-external-viewer "xdg-open")
   (setq image-dired-thumb-size 80)
@@ -96,7 +96,7 @@
 ;;; dired-like mode for the trash (trashed.el)
 (prot-emacs-package trashed
   (:install t)
-  (:delay 10)
+  (:delay 60)
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
   (setq trashed-sort-key '("Date deleted" . t))
@@ -106,6 +106,7 @@
 ;; One of my packages: <https://protesilaos.com/emacs>
 (prot-emacs-package dired-preview
   (:install t)
+  (:delay 60)
   ;; These are all set to their default values.  I keep them here for
   ;; reference.
   (setq dired-preview-max-size (* (expt 2 20) 6))

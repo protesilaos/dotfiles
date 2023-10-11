@@ -5,6 +5,7 @@
 
 (prot-emacs-package standard-themes
   (:install t)
+  (:delay 1)
   (setq standard-themes-bold-constructs t
         standard-themes-italic-constructs t
         standard-themes-mixed-fonts t

@@ -2,7 +2,7 @@
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
   (:install t)
-  (:delay 5)
+  (:delay 1)
   (setq completions-format 'one-column)
   (setq mct-hide-completion-mode-line nil)
   ;; The blocklist and passlist accept either commands/functions or

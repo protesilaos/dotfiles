@@ -8,7 +8,7 @@
 ;; which is what we use here (they are maintained by the same people).
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-package notmuch
-  (:delay 5)
+  (:delay 1)
 ;;; Account settings
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
@@ -173,7 +173,7 @@
 
 ;;; My own tweaks for notmuch (prot-notmuch.el)
 (prot-emacs-package prot-notmuch
-  (:delay 5)
+  (:delay 1)
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
