@@ -164,6 +164,12 @@
     "C-x <right>" winner-redo
     "C-x <left>" winner-undo))
 
+;;; Frame history (undelete-frame-mode)
+(prot-emacs-configure
+  (:delay 5)
+  (define-key global-map (kbd "C-x u") #'undelete-frame) ; I use only C-/ for `undo'
+  (undelete-frame-mode 1))
+
 ;;; Directional window motions (windmove)
 (prot-emacs-package windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
