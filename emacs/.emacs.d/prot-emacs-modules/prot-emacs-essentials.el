@@ -496,6 +496,7 @@ by that special hook."
   (:install t)
   (:delay 1)
   (setopt devil-key ",") ; needs `setopt' or Customize, else use `devil-set-key'
+  (setq devil-all-keys-repeatable t)
   (setq devil-prompt (format "%s %%t" (propertize "⋆" 'face 'help-key-binding)))
   (define-key devil-mode-map (kbd ";") #'devil)
   (add-to-list 'devil-special-keys `("; ;" . ,(devil-key-executor ";")))
