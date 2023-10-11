@@ -129,11 +129,12 @@
 
   (beframe-mode 1)
 
+  ;; Bind Beframe commands to a prefix key.
+  (define-key global-map (kbd "C-c b") beframe-prefix-map)
+
   (prot-emacs-keybind global-map
     ;; Override the `set-fill-column' that I have no use for.
     "C-x f" other-frame-prefix
-    ;; Bind Beframe commands to a prefix key.
-    "C-c b" beframe-prefix-map
     ;; Replace the generic `buffer-menu'.  With a prefix argument, this
     ;; commands prompts for a frame.  Call the `buffer-menu' via M-x if
     ;; you absolutely need the global list of buffers.
