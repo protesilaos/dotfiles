@@ -466,12 +466,8 @@ by that special hook."
 
 ;;; Laptop settings
 (unless (directory-empty-p "/sys/class/power_supply/")
-  ;; When not in a tiling Window manager, I want the Emacs frame to be
-  ;; maximised because the laptop's display is much smaller than my
-  ;; desktop's.
-  (prot-emacs-with-desktop-session
-    (add-hook 'after-make-frame-functions #'toggle-frame-maximized)
-    (toggle-frame-maximized))
+  (add-to-list 'default-frame-alist '(width . (text-pixels . 800)))
+  (add-to-list 'default-frame-alist '(height . (text-pixels . 600)))
 
   (prot-emacs-configure
     (:delay 10)
