@@ -243,6 +243,7 @@
           ("Asia/Seoul" "Seoul")
           ("Asia/Tokyo" "Tokyo")
           ("Asia/Vladivostok" "Vladivostok")
+          ("Australia/Brisbane" "Brisbane")
           ("Australia/Sydney" "Sydney")
           ("Pacific/Auckland" "Auckland")))
 
