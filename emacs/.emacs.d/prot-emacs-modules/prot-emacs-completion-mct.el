@@ -65,8 +65,8 @@ active and the Completions window is on display."
       (newline n :interactive)))
 
   (prot-emacs-keybind completion-in-region-mode-map
-    "C-n" prot/mct-next-line-or-completion
-    "C-p" prot/mct-previous-line-or-completion
-    "RET" prot/mct-return-or-choose-completion))
+    "C-n" #'prot/mct-next-line-or-completion
+    "C-p" #'prot/mct-previous-line-or-completion
+    "RET" #'prot/mct-return-or-choose-completion))
 
 (provide 'prot-emacs-completion-mct)

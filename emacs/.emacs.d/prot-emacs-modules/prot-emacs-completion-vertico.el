@@ -34,19 +34,19 @@
   (vertico-multiform-mode 1)
 
   (prot-emacs-keybind vertico-map
-    "<left>" backward-char
-    "<right>" forward-char
-    "TAB" prot-vertico-private-complete
-    "DEL" vertico-directory-delete-char
-    "M-DEL" vertico-directory-delete-word
-    "M-," vertico-quick-insert
-    "M-." vertico-quick-exit)
+    "<left>" #'backward-char
+    "<right>" #'forward-char
+    "TAB" #'prot-vertico-private-complete
+    "DEL" #'vertico-directory-delete-char
+    "M-DEL" #'vertico-directory-delete-word
+    "M-," #'vertico-quick-insert
+    "M-." #'vertico-quick-exit)
 
   (prot-emacs-keybind vertico-multiform-map
-    "C-n" prot-vertico-private-next
-    "<down>" prot-vertico-private-next
-    "C-p" prot-vertico-private-previous
-    "<up>" prot-vertico-private-previous
-    "C-l" vertico-multiform-vertical))
+    "C-n" #'prot-vertico-private-next
+    "<down>" #'prot-vertico-private-next
+    "C-p" #'prot-vertico-private-previous
+    "<up>" #'prot-vertico-private-previous
+    "C-l" #'vertico-multiform-vertical))
 
 (provide 'prot-emacs-completion-vertico)

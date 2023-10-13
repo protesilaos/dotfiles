@@ -191,10 +191,10 @@
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save)
     
   (prot-emacs-keybind global-map
-    "M-/" dabbrev-expand
-    "C-x M-/" dabbrev-completion
-    "C-x a e" expand-abbrev ; default, just here for visibility
-    "C-x a u" unexpand-abbrev))
+    "M-/" #'dabbrev-expand
+    "C-x M-/" #'dabbrev-completion
+    "C-x a e" #'expand-abbrev ; default, just here for visibility
+    "C-x a u" #'unexpand-abbrev))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-package orderless
@@ -208,9 +208,9 @@
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "SPC") nil)
-    (define-key map (kbd "?") nil)))
+  (prot-emacs-keybind minibuffer-local-completion-map
+    "SPC" nil
+    "?" nil))
 
 (prot-emacs-package prot-orderless
   (setq orderless-style-dispatchers
@@ -269,18 +269,18 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (require 'consult-imenu) ; the `imenu' extension is in its own file
 
   (prot-emacs-keybind global-map
-    "M-g M-g" consult-goto-line
-    "M-K" consult-keep-lines ; M-S-k is similar to M-S-5 (M-%)
-    "M-F" consult-focus-lines ; same principle
-    "M-s M-b" consult-buffer
-    "M-s M-f" consult-find
-    "M-s M-g" consult-grep
-    "M-s M-h" consult-history
-    "M-s M-i" consult-imenu
-    "M-s M-l" consult-line
-    "M-s M-m" consult-mark
-    "M-s M-y" consult-yank-pop
-    "M-s M-s" consult-outline)
+    "M-g M-g" #'consult-goto-line
+    "M-K" #'consult-keep-lines ; M-S-k is similar to M-S-5 (M-%)
+    "M-F" #'consult-focus-lines ; same principle
+    "M-s M-b" #'consult-buffer
+    "M-s M-f" #'consult-find
+    "M-s M-g" #'consult-grep
+    "M-s M-h" #'consult-history
+    "M-s M-i" #'consult-imenu
+    "M-s M-l" #'consult-line
+    "M-s M-m" #'consult-mark
+    "M-s M-y" #'consult-yank-pop
+    "M-s M-s" #'consult-outline)
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
   (define-key minibuffer-local-map (kbd "C-s") #'consult-history)
 
@@ -365,74 +365,74 @@ Useful for prompts such as `eval-expression' and `shell-command'."
      prot/embark-org-keymaps))
 
   (prot-emacs-keybind embark-general-map
-    "i" embark-insert
-    "w" embark-copy-as-kill
-    "E" embark-export
-    "S" embark-collect
-    "A" embark-act-all
-    "DEL" delete-region)
+    "i" #'embark-insert
+    "w" #'embark-copy-as-kill
+    "E" #'embark-export
+    "S" #'embark-collect
+    "A" #'embark-act-all
+    "DEL" #'delete-region)
 
   ;; TODO 2023-03-14: `embark-url-map' for mpv
   (prot-emacs-keybind embark-url-map
-    "b" browse-url
-    "d" embark-download-url
-    "e" eww)
+    "b" #'browse-url
+    "d" #'embark-download-url
+    "e" #'eww)
 
   (prot-emacs-keybind embark-buffer-map
-    "k" prot-simple-kill-buffer
-    "o" switch-to-buffer-other-window
-    "e" ediff-buffers)
+    "k" #'prot-simple-kill-buffer
+    "o" #'switch-to-buffer-other-window
+    "e" #'ediff-buffers)
 
   (add-to-list 'embark-post-action-hooks (list 'prot-simple-kill-buffer 'embark--restart))
 
   (prot-emacs-keybind embark-file-map
-    "f" find-file
-    "j" embark-dired-jump
-    "c" copy-file
-    "e" ediff-files)
+    "f" #'find-file
+    "j" #'embark-dired-jump
+    "c" #'copy-file
+    "e" #'ediff-files)
 
   (prot-emacs-keybind embark-identifier-map
-    "h" display-local-help
-    "." xref-find-definitions
-    "o" occur)
+    "h" #'display-local-help
+    "." #'xref-find-definitions
+    "o" #'occur)
 
   (prot-emacs-keybind embark-command-map
-    "h" describe-command
-    "." embark-find-definition)
+    "h" #'describe-command
+    "." #'embark-find-definition)
 
   (prot-emacs-keybind embark-expression-map
-    "e" pp-eval-expression
-    "m" pp-macroexpand-expression)
+    "e" #'pp-eval-expression
+    "m" #'pp-macroexpand-expression)
 
   (prot-emacs-keybind embark-function-map
-    "h" describe-function
-    "." embark-find-definition)
+    "h" #'describe-function
+    "." #'embark-find-definition)
 
   (prot-emacs-keybind embark-package-map
-    "h" describe-package
-    "i" package-install
-    "d" package-delete
-    "r" package-reinstall
-    "u" embark-browse-package-url
-    "w" embark-save-package-url)
+    "h" #'describe-package
+    "i" #'package-install
+    "d" #'package-delete
+    "r" #'package-reinstall
+    "u" #'embark-browse-package-url
+    "w" #'embark-save-package-url)
 
   (prot-emacs-keybind embark-symbol-map
-    "h" describe-symbol
-    "." embark-find-definition)
+    "h" #'describe-symbol
+    "." #'embark-find-definition)
 
   (prot-emacs-keybind embark-variable-map
-    "h" describe-variable
-    "." embark-find-definition)
+    "h" #'describe-variable
+    "." #'embark-find-definition)
 
   (prot-emacs-keybind embark-region-map
-    "a" align-regexp
-    "D" delete-duplicate-lines
-    "f" flush-lines
-    "i" epa-import-keys-region
-    "d" epa-decrypt-armor-in-region
-    "r" repunctuate-sentences
-    "s" sort-lines
-    "u" untabify)
+    "a" #'align-regexp
+    "D" #'delete-duplicate-lines
+    "f" #'flush-lines
+    "i" #'epa-import-keys-region
+    "d" #'epa-decrypt-armor-in-region
+    "r" #'repunctuate-sentences
+    "s" #'sort-lines
+    "u" #'untabify)
 
   ;; FIXME 2023-04-13: Why `embark-defun-map' has `embark-expression-map' as parent?
   (set-keymap-parent embark-defun-map embark-expression-map)
@@ -457,15 +457,15 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq tempel-path (expand-file-name "tempel-templates" user-emacs-directory))
 
   (prot-emacs-keybind global-map
-    "M-+" tempel-complete ; Alternative: `tempel-expand'
-    "M-*" tempel-insert)
+    "M-+" #'tempel-complete ; Alternative: `tempel-expand'
+    "M-*" #'tempel-insert)
   (prot-emacs-keybind tempel-map
-    "RET" tempel-done
-    "C-p" tempel-previous
-    "C-n" tempel-next
-    "<tab>" tempel-next
-    "<backtab>" tempel-previous
-    "C-S-<iso-lefttab>" tempel-previous))
+    "RET" #'tempel-done
+    "C-p" #'tempel-previous
+    "C-n" #'tempel-next
+    "<tab>" #'tempel-next
+    "<backtab>" #'tempel-previous
+    "C-S-<iso-lefttab>" #'tempel-previous))
 
 ;;; Detailed completion annotations (marginalia.el)
 (prot-emacs-package marginalia

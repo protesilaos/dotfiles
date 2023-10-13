@@ -24,8 +24,8 @@
 
 ;;;; Emacs Lisp (emacs-lisp-mode)
   (prot-emacs-keybind emacs-lisp-mode-map
-    "C-x e" edebug-defun ; override `kmacro-end-and-call-macro'
-    "C-x E" edebug-remove-instrumentation)
+    "C-x e" #'edebug-defun ; override `kmacro-end-and-call-macro'
+    "C-x E" #'edebug-remove-instrumentation)
 
 ;;;; Plain text (text-mode)
   (setq sentence-end-double-space nil)
@@ -139,8 +139,8 @@ Meant to be added to `prog-mode-hook'."
   ;; `display-buffer-alist' for the relevant entry.
 
   (prot-emacs-keybind global-map
-    "M-$" prot-spell-spell-dwim
-    "C-M-$" prot-spell-change-dictionary))
+    "M-$" #'prot-spell-spell-dwim
+    "C-M-$" #'prot-spell-change-dictionary))
 
 ;;; Flymake
 (prot-emacs-package flymake
@@ -182,11 +182,11 @@ Meant to be added to `prog-mode-hook'."
 
   (define-key ctl-x-x-map "m" #'flymake-mode) ; C-x x m
   (prot-emacs-keybind flymake-mode-map
-    "C-c ! s" flymake-start
-    "C-c ! d" flymake-show-buffer-diagnostics ; Emacs28
-    "C-c ! D" flymake-show-project-diagnostics ; Emacs28
-    "C-c ! n" flymake-goto-next-error
-    "C-c ! p" flymake-goto-prev-error))
+    "C-c ! s" #'flymake-start
+    "C-c ! d" #'flymake-show-buffer-diagnostics ; Emacs28
+    "C-c ! D" #'flymake-show-project-diagnostics ; Emacs28
+    "C-c ! n" #'flymake-goto-next-error
+    "C-c ! p" #'flymake-goto-prev-error))
 
 ;;; Elisp packaging requirements
 (prot-emacs-package package-lint-flymake
@@ -297,32 +297,32 @@ Else create a new file."
   ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
   (prot-emacs-keybind global-map
-    "C-c n j" prot/denote-journal
-    "C-c n n" denote
-    "C-c n N" denote-type
-    "C-c n d" denote-date
-    "C-c n z" denote-signature ; "zettelkasten" mnemonic
-    "C-c n s" denote-subdirectory
+    "C-c n j" #'prot/denote-journal
+    "C-c n n" #'denote
+    "C-c n N" #'denote-type
+    "C-c n d" #'denote-date
+    "C-c n z" #'denote-signature ; "zettelkasten" mnemonic
+    "C-c n s" #'denote-subdirectory
     ;; If you intend to use Denote with a variety of file types, it is
     ;; easier to bind the link-related commands to the `global-map', as
     ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
     ;; `markdown-mode-map', and/or `text-mode-map'.
-    "C-c n i" denote-link ; "insert" mnemonic
-    "C-c n I" denote-add-links
-    "C-c n b" denote-backlinks
-    "C-c n f f" denote-find-link
-    "C-c n f b" denote-find-backlink
+    "C-c n i" #'denote-link ; "insert" mnemonic
+    "C-c n I" #'denote-add-links
+    "C-c n b" #'denote-backlinks
+    "C-c n f f" #'denote-find-link
+    "C-c n f b" #'denote-find-backlink
     ;; Note that `denote-rename-file' can work from any context, not
     ;; just Dired buffers.  That is why we bind it here to the
     ;; `global-map'.
     ;;
     ;; Also see `denote-rename-file-using-front-matter' further below.
-    "C-c n r" denote-rename-file)
+    "C-c n r" #'denote-rename-file)
 
   ;; Key bindings specifically for Dired.
   (prot-emacs-keybind dired-mode-map
-    "C-c C-d C-i" denote-link-dired-marked-notes
-    "C-c C-d C-r" denote-dired-rename-marked-files)
+    "C-c C-d C-i" #'denote-link-dired-marked-notes
+    "C-c C-d C-r" #'denote-dired-rename-marked-files)
 
   ;; Also see `denote-rename-file' further above.
   (define-key text-mode-map (kbd "C-c n R") #'denote-rename-file-using-front-matter)
@@ -372,13 +372,13 @@ Else create a new file."
   (add-hook 'modus-themes-post-load-theme-hook #'logos-update-fringe-in-buffers)
 
   (prot-emacs-keybind global-map
-    "C-x n n" logos-narrow-dwim
-    "C-x ]" logos-forward-page-dwim
-    "C-x [" logos-backward-page-dwim
+    "C-x n n" #'logos-narrow-dwim
+    "C-x ]" #'logos-forward-page-dwim
+    "C-x [" #'logos-backward-page-dwim
     ;; I don't think I ever saw a package bind M-] or M-[...
-    "M-]" logos-forward-page-dwim
-    "M-[" logos-backward-page-dwim
-    "<f9>" logos-focus-mode)
+    "M-]" #'logos-forward-page-dwim
+    "M-[" #'logos-backward-page-dwim
+    "<f9>" #'logos-focus-mode)
 
 ;;;; Extra tweaks
   ;; place point at the top when changing pages, but not in `prog-mode'

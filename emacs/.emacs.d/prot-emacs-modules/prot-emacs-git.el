@@ -47,10 +47,10 @@ Based on `project--keymap-prompt' and meant to be used as an
   (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
 
   (prot-emacs-keybind global-map
-    "C-x p ." project-dired
-    "C-x p C-g" keyboard-quit
-    "C-x p <return>" project-dired
-    "C-x p <delete>" project-forget-project)
+    "C-x p ." #'project-dired
+    "C-x p C-g" #'keyboard-quit
+    "C-x p <return>" #'project-dired
+    "C-x p <delete>" #'project-forget-project)
 
 ;;;; `diff-mode'
   (setq diff-default-read-only t)
@@ -118,42 +118,42 @@ Based on `project--keymap-prompt' and meant to be used as an
 
   ;; NOTE: I override lots of the defaults
   (prot-emacs-keybind global-map
-    "C-x v B" vc-annotate ; Blame mnemonic
-    "C-x v e" vc-ediff
-    "C-x v k" vc-delete-file ; 'k' for kill==>delete is more common
-    "C-x v G" vc-log-search  ; git log --grep
-    "C-x v t" vc-create-tag
-    "C-x v d" vc-diff
-    "C-x v ." vc-dir-root ; `vc-dir-root' is from Emacs 28
-    "C-x v <return>" vc-dir-root)
+    "C-x v B" #'vc-annotate ; Blame mnemonic
+    "C-x v e" #'vc-ediff
+    "C-x v k" #'vc-delete-file ; 'k' for kill==>delete is more common
+    "C-x v G" #'vc-log-search  ; git log --grep
+    "C-x v t" #'vc-create-tag
+    "C-x v d" #'vc-diff
+    "C-x v ." #'vc-dir-root ; `vc-dir-root' is from Emacs 28
+    "C-x v <return>" #'vc-dir-root)
   (prot-emacs-keybind vc-dir-mode-map
-    "t" vc-create-tag
-    "O" vc-log-outgoing
-    "o" vc-dir-find-file-other-window
-    "d" vc-diff         ; parallel to D: `vc-root-diff'
-    "k" vc-dir-delete-file
-    "G" vc-revert)
+    "t" #'vc-create-tag
+    "O" #'vc-log-outgoing
+    "o" #'vc-dir-find-file-other-window
+    "d" #'vc-diff         ; parallel to D: `vc-root-diff'
+    "k" #'vc-dir-delete-file
+    "G" #'vc-revert)
   (prot-emacs-keybind vc-git-stash-shared-map
-    "a" vc-git-stash-apply-at-point
-    "c" vc-git-stash ; "create" named stash
-    "k" vc-git-stash-delete-at-point ; symmetry with `vc-dir-delete-file'
-    "p" vc-git-stash-pop-at-point
-    "s" vc-git-stash-snapshot)
+    "a" #'vc-git-stash-apply-at-point
+    "c" #'vc-git-stash ; "create" named stash
+    "k" #'vc-git-stash-delete-at-point ; symmetry with `vc-dir-delete-file'
+    "p" #'vc-git-stash-pop-at-point
+    "s" #'vc-git-stash-snapshot)
   (prot-emacs-keybind vc-annotate-mode-map
-    "M-q" vc-annotate-toggle-annotation-visibility
-    "C-c C-c" vc-annotate-goto-line
-    "<return>" vc-annotate-find-revision-at-line)
+    "M-q" #'vc-annotate-toggle-annotation-visibility
+    "C-c C-c" #'vc-annotate-goto-line
+    "<return>" #'vc-annotate-find-revision-at-line)
   (prot-emacs-keybind log-edit-mode-map
     "M-s" nil ; I use M-s for my search commands
     "M-r" nil) ; I use `consult-history'
   (prot-emacs-keybind log-view-mode-map
-    "<tab>" log-view-toggle-entry-display
-    "<return>" log-view-find-revision
-    "s" vc-log-search
-    "o" vc-log-outgoing
-    "f" vc-log-incoming
-    "F" vc-update
-    "P" vc-push))
+    "<tab>" #'log-view-toggle-entry-display
+    "<return>" #'log-view-find-revision
+    "s" #'vc-log-search
+    "o" #'vc-log-outgoing
+    "f" #'vc-log-incoming
+    "F" #'vc-update
+    "P" #'vc-push))
 
 ;;; Agitate
 ;; A package of mine to complement VC and friends.  Read the manual
@@ -170,30 +170,30 @@ Based on `project--keymap-prompt' and meant to be used as an
   (agitate-log-edit-informative-mode 1)
 
   (prot-emacs-keybind global-map
-    "C-x v =" agitate-diff-buffer-or-file ; replace `vc-diff'
-    "C-x v g" agitate-vc-git-grep ; replace `vc-annotate'
-    "C-x v f" agitate-vc-git-find-revision
-    "C-x v s" agitate-vc-git-show
-    "C-x v w" agitate-vc-git-kill-commit-message
-    "C-x v p p" agitate-vc-git-format-patch-single
-    "C-x v p n" agitate-vc-git-format-patch-n-from-head)
+    "C-x v =" #'agitate-diff-buffer-or-file ; replace `vc-diff'
+    "C-x v g" #'agitate-vc-git-grep ; replace `vc-annotate'
+    "C-x v f" #'agitate-vc-git-find-revision
+    "C-x v s" #'agitate-vc-git-show
+    "C-x v w" #'agitate-vc-git-kill-commit-message
+    "C-x v p p" #'agitate-vc-git-format-patch-single
+    "C-x v p n" #'agitate-vc-git-format-patch-n-from-head)
   (prot-emacs-keybind diff-mode-map
-    "C-c C-b" agitate-diff-refine-cycle ; replace `diff-refine-hunk'
-    "C-c C-n" agitate-diff-narrow-dwim
-    "L" vc-print-root-log
+    "C-c C-b" #'agitate-diff-refine-cycle ; replace `diff-refine-hunk'
+    "C-c C-n" #'agitate-diff-narrow-dwim
+    "L" #'vc-print-root-log
     ;; Emacs 29 can use C-x v v in diff buffers, which is great, but now I
     ;; need quick access to it...
-    "v" vc-next-action)
+    "v" #'vc-next-action)
   (prot-emacs-keybind log-view-mode-map
-    "w" agitate-log-view-kill-revision
-    "W" agitate-log-view-kill-revision-expanded)
+    "w" #'agitate-log-view-kill-revision
+    "W" #'agitate-log-view-kill-revision-expanded)
   (define-key vc-git-log-view-mode-map (kbd "c") #'agitate-vc-git-format-patch-single)
   (prot-emacs-keybind log-edit-mode-map
-    "C-c C-i C-n" agitate-log-edit-insert-file-name
+    "C-c C-i C-n" #'agitate-log-edit-insert-file-name
     ;; See user options `agitate-log-edit-emoji-collection' and
     ;; `agitate-log-edit-conventional-commits-collection'.
-    "C-c C-i C-e" agitate-log-edit-emoji-commit
-    "C-c C-i C-c" agitate-log-edit-conventional-commit))
+    "C-c C-i C-e" #'agitate-log-edit-emoji-commit
+    "C-c C-i C-c" #'agitate-log-edit-conventional-commit))
 
 ;;; Interactive and powerful git front-end (Magit)
 

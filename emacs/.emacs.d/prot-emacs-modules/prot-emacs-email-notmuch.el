@@ -160,15 +160,15 @@
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
   (prot-emacs-keybind global-map
-    "C-c m" notmuch
-    "C-x m" notmuch-mua-new-mail) ; override `compose-mail'
+    "C-c m" #'notmuch
+    "C-x m" #'notmuch-mua-new-mail) ; override `compose-mail'
   (prot-emacs-keybind notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
-    "/" notmuch-search-filter ; alias for l
-    "r" notmuch-search-reply-to-thread ; easier to reply to all by default
-    "R" notmuch-search-reply-to-thread-sender)
+    "/" #'notmuch-search-filter ; alias for l
+    "r" #'notmuch-search-reply-to-thread ; easier to reply to all by default
+    "R" #'notmuch-search-reply-to-thread-sender)
   (prot-emacs-keybind notmuch-show-mode-map
-    "r" notmuch-show-reply ; easier to reply to all by default
-    "R" notmuch-show-reply-sender)
+    "r" #'notmuch-show-reply ; easier to reply to all by default
+    "R" #'notmuch-show-reply-sender)
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 ;;; My own tweaks for notmuch (prot-notmuch.el)
@@ -198,14 +198,14 @@
   (prot-emacs-keybind notmuch-search-mode-map
     "a" nil ; the default is too easy to hit accidentally
     "A" nil
-    "D" prot-notmuch-search-delete-thread
-    "S" prot-notmuch-search-spam-thread
-    "g" prot-notmuch-refresh-buffer)
+    "D" #'prot-notmuch-search-delete-thread
+    "S" #'prot-notmuch-search-spam-thread
+    "g" #'prot-notmuch-refresh-buffer)
   (prot-emacs-keybind notmuch-show-mode-map
     "a" nil ; the default is too easy to hit accidentally
     "A" nil
-    "D" prot-notmuch-show-delete-message
-    "S" prot-notmuch-show-spam-message)
+    "D" #'prot-notmuch-show-delete-message
+    "S" #'prot-notmuch-show-spam-message)
   (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
   ;; Like C-c M-h for `message-insert-headers'
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
