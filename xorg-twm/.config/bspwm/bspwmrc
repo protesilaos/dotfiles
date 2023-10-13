@@ -42,17 +42,11 @@ _check() {
 _check bspwm_conf_desktops && bspwm_conf_desktops
 
 #### Window management
-if [ "$HOSTNAME" == "kronos" ]
-then
-    _bc automatic_scheme longest_side
-else
-    _bc automatic_scheme spiral
-fi
-
+_bc automatic_scheme spiral
 _bc initial_polarity second_child
 _bc split_ratio 0.5
 _bc border_width 3
-_bc window_gap 0
+_bc window_gap 5
 _bc single_monocle true
 _bc borderless_monocle true
 _bc gapless_monocle false
@@ -66,8 +60,6 @@ _bc ignore_ewmh_focus false
 _check bspwm_external_rules && \
     _bc external_rules_command \
         "$(command -v bspwm_external_rules)"
-
-_check bspwm_auto_balance && bspwm_auto_balance &
 
 #### Colours
 _check bspwm_conf_colors && bspwm_conf_colors
