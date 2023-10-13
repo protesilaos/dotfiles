@@ -28,7 +28,15 @@
     "C-x E" edebug-remove-instrumentation)
 
 ;;;; Plain text (text-mode)
-  (setq sentence-end-double-space t)
+  (setq sentence-end-double-space nil)
+
+  (defun prot/prog-mode-sentence-end-double-space ()
+    "Set `sentence-end-double-space' to non-nil in the current buffer.
+Meant to be added to `prog-mode-hook'."
+    (setq-local sentence-end-double-space t))
+
+  (add-hook 'prog-mode-hook #'prot/prog-mode-sentence-end-double-space)
+
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
   (setq use-hard-newlines nil)
