@@ -482,14 +482,14 @@ by that special hook."
 
     (display-battery-mode 1)))
 
-;;; Get environment variables into Emacs (exec-path-from-shell)
-;; I need these on GNOME Wayland.
-(prot-emacs-package exec-path-from-shell
-  (:install t)
-  (:delay 1)
-  (setq exec-path-from-shell-variables
-        '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
-  (exec-path-from-shell-initialize))
+;; ;;; Get environment variables into Emacs (exec-path-from-shell)
+;; ;; I need these on GNOME Wayland.
+;; (prot-emacs-package exec-path-from-shell
+;;   (:install t)
+;;   (:delay 1)
+;;   (setq exec-path-from-shell-variables
+;;         '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
+;;   (exec-path-from-shell-initialize))
 
 ;;; Use regular key as modifier (devil-mode)
 (prot-emacs-package devil
