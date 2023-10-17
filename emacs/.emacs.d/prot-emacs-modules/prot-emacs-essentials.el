@@ -491,26 +491,6 @@ by that special hook."
 ;;         '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
 ;;   (exec-path-from-shell-initialize))
 
-;;; Use regular key as modifier (devil-mode)
-(prot-emacs-package devil
-  (:install t)
-  (:delay 1)
-  (setopt devil-key ",") ; needs `setopt' or Customize, else use `devil-set-key'
-  (setq devil-all-keys-repeatable t)
-  (setq devil-prompt (format "%s %%t" (propertize "➤" 'face 'warning)))
-  (define-key devil-mode-map (kbd ";") #'devil)
-  (add-to-list 'devil-special-keys `("; ;" . ,(devil-key-executor ";")))
-  (add-to-list 'devil-special-keys `("; SPC" . ,(devil-key-executor "; SPC")))
-  (add-to-list 'devil-special-keys `("; RET" . ,(devil-key-executor "; RET")))
-  (add-to-list 'devil-special-keys `("; <return>" . ,(devil-key-executor "; <return>")))
-  (setq devil-translations '((", q" . "C-")
-			                 ("; q" . "M-")
-			                 (", ," . ",")
-			                 ("; ;" . ";")
-			                 ("," . "C-")
-			                 (";" . "M-")))
-  (global-devil-mode 1))
-
 ;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-package pulsar
