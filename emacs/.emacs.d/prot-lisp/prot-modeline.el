@@ -251,8 +251,12 @@ See `prot-modeline-string-truncate'."
 (defun prot-modeline-buffer-name-help-echo ()
   "Return `help-echo' value for `prot-modeline-buffer-identification'."
   (concat
-   (or (buffer-file-name)
-       (format "No underlying file.\nDirectory is: %s" default-directory))))
+   (propertize (buffer-name) 'face 'mode-line-buffer-id)
+   "\n"
+   (propertize
+    (or (buffer-file-name)
+        (format "No underlying file.\nDirectory is: %s" default-directory))
+    'face 'font-lock-doc-face)))
 
 (defvar-local prot-modeline-buffer-identification
     '(:eval
