@@ -46,10 +46,10 @@ then
     PATH=$PATH:"$HOME"/.local/share/gems/bin
 fi
 
-# Needed for obs-studio
-if [ "$DESKTOP_SESSION" = "gnome" ]
+if [ "$XDG_SESSION_TYPE" = "wayland" ]
 then
-    export QT_QPA_PLATFORM=wayland
+    export QT_QPA_PLATFORM=wayland # Needed for obs-studio
+    export MOZ_ENABLE_WAYLAND=1
 fi
 
 # NOTE 2021-09-21: Check my systemd units.  Those are meant to work
