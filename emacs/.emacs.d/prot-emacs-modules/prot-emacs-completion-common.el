@@ -95,7 +95,7 @@
   ;; Mendler.  I made some small tweaks to propertize the segments of
   ;; the prompt.
   (defun crm-indicator (args)
-    (cons (format "[`crm-separator': %s]  %s"
+    (cons (format "[`completing-read-multiple': %s]  %s"
                   (propertize
                    (replace-regexp-in-string
                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
