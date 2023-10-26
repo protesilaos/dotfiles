@@ -31,7 +31,7 @@
 Use a newline character to separate each pair of key and command.
 
 Based on `project--keymap-prompt' and meant to be used as an
-:override advice for it."
+:override advice for `project--menu-prompt' on Emacs 30."
     (mapconcat
      (pcase-lambda (`(,cmd ,label ,key))
        (let ((key (prot/project--get-key key cmd)))
@@ -42,7 +42,7 @@ Based on `project--keymap-prompt' and meant to be used as an
      project-switch-commands
      "\n"))
 
-  (advice-add #'project--keymap-prompt :override #'prot/project--keymap-prompt)
+  (advice-add #'project--menu-prompt :override #'prot/project--keymap-prompt)
 
   (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
 
