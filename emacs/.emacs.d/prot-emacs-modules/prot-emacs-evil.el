@@ -1,5 +1,8 @@
 (prot-emacs-configure
   (:delay 1)
+
+;;;; General settings
+
   (setq evil-want-C-i-jump t)
   (setq evil-want-C-u-scroll t) ; Vim style
   (setq evil-want-C-d-scroll t)
@@ -55,35 +58,6 @@
   (setq evil-lookup-func #'man) ; TODO K in normal mode
   (setq evil-default-state 'normal) ; check `evil-set-initial-state'
   ;; evil-buffer-regexps
-  (setq evil-motion-state-modes
-        '(completion-list-mode
-          Buffer-menu-mode
-          Info-mode
-          help-mode
-          log-view-mode
-          org-agenda-mode
-          dired-mode
-          magit-status-mode
-          magit-diff-mode
-          magit-log-mode
-          notmuch-hello-mode
-          notmuch-search-mode
-          notmuch-show-mode
-          notmuch-tree-mode
-          tabulated-list-mode))
-  (setq evil-insert-state-modes nil)
-  (setq evil-overriding-maps nil)
-  (setq evil-emacs-state-modes
-        '(comint-mode
-          rcirc-mode
-          eshell-mode
-          inferior-emacs-lisp-mode
-          reb-mode
-          shell-mode
-          term-mode
-          wdired-mode
-          log-edit-mode
-          git-commit-mode))
   ;; evil-intercept-maps
   ;; evil-motions
   ;; evil-visual-newline-commands
@@ -105,16 +79,58 @@
   (setq evil-undo-system 'undo-redo) ; Emacs 28
   (setq evil-visual-update-x-selection-p t)
 
+;;;; Basic compatibility with other modes
+
   (prot-emacs-package evil (:install t))
-  (prot-emacs-package devil (:install t))
-  (require 'prot-prefix)
+
+  (setq evil-motion-state-modes
+        '(completion-list-mode
+          Buffer-menu-mode
+          Info-mode
+          help-mode
+          log-view-mode
+          org-agenda-mode
+          dired-mode
+          magit-status-mode
+          magit-diff-mode
+          magit-log-mode
+          notmuch-hello-mode
+          notmuch-search-mode
+          notmuch-show-mode
+          notmuch-tree-mode
+          tabulated-list-mode))
+  (setq evil-insert-state-modes nil)
+  (setq evil-emacs-state-modes
+        '(comint-mode
+          rcirc-mode
+          eshell-mode
+          inferior-emacs-lisp-mode
+          reb-mode
+          shell-mode
+          term-mode
+          wdired-mode
+          log-edit-mode
+          git-commit-mode))
+  (setq evil-overriding-maps nil)
+
+;;;; Make Emacs the Insert state
 
   (defalias 'evil-insert-state 'evil-emacs-state)
   (evil-define-key 'emacs global-map (kbd "<escape>") #'evil-normal-state)
   (setq evil-emacs-state-cursor evil-insert-state-cursor)
 
+;;;; Set up `devil-mode' to reduce modifier key usage
+
+  (prot-emacs-package devil (:install t))
+
   (evil-define-key '(normal visual motion) global-map (kbd ",") #'devil)
-  (evil-define-key '(normal visual motion) global-map (kbd "SPC") prot-prefix-map)
+
+  ;; This one affects the emacs/insert state.
+  (global-devil-mode 1)
+
+;;;; Set up my prefix keymap
+
+  (require 'prot-prefix)
 
   (defun prot/evil-prefix-or-self-insert ()
     "Self-insert key or return `prot-prefix-map'."
@@ -126,11 +142,9 @@
       (self-insert-command 1)))
 
   (evil-define-key '(emacs insert) global-map (kbd "SPC") #'prot/evil-prefix-or-self-insert)
+  (evil-define-key '(normal visual motion) global-map (kbd "SPC") prot-prefix-map)
 
-  (global-devil-mode 1)
-
-  ;; Enable the `evil-mode' last so that the key bindings and
-  ;; variables are all applied correctly.
+;;;; Activate `evil-mode'
   (evil-mode 1))
 
 (provide 'prot-emacs-evil)
