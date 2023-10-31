@@ -107,8 +107,7 @@
   "H" #'windmove-swap-states-left
   "J" #'windmove-swap-states-down
   "K" #'windmove-swap-states-up
-  "L" #'windmove-swap-states-right
-  "q" #'quit-window)
+  "L" #'windmove-swap-states-right)
 
 (defvar-keymap prot-prefix-map
   :doc "Prefix keymap with multiple subkeymaps."
