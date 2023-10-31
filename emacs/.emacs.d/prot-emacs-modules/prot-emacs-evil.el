@@ -125,6 +125,8 @@
 
   (evil-define-key '(emacs insert) global-map (kbd "SPC") #'prot/evil-prefix-or-self-insert)
 
+  (global-devil-mode 1)
+
   ;; Enable the `evil-mode' last so that the key bindings and
   ;; variables are all applied correctly.
   (evil-mode 1))
