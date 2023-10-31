@@ -43,7 +43,9 @@
   "f" #'fit-window-to-buffer
   "k" #'prot-simple-kill-buffer-current
   "g" #'revert-buffer-quick
-  "r" #'prot-simple-rename-file-and-buffer)
+  "r" #'prot-simple-rename-file-and-buffer
+  "n" #'next-buffer
+  "p" #'previous-buffer)
 
 (defvar-keymap prot-prefix-file-map
   :doc "Prefix keymaps for files."
@@ -97,8 +99,6 @@
   "3" #'split-window-right
   "#" #'split-root-window-right
   "o" #'other-window
-  "n" #'next-buffer
-  "p" #'previous-buffer
   "^" #'tear-off-window
   "h" #'windmove-left
   "j" #'windmove-down
@@ -113,6 +113,14 @@
 (defvar-keymap prot-prefix-map
   :doc "Prefix keymap with multiple subkeymaps."
   :name "Prot Prefix"
+  "0" #'delete-window
+  "1" #'delete-other-windows
+  "!" #'delete-other-windows-vertically
+  "2" #'split-window-below
+  "@" #'split-root-window-below
+  "3" #'split-window-right
+  "#" #'split-root-window-right
+  "o" #'other-window
   "Q" #'save-buffers-kill-emacs
   "b" prot-prefix-buffer-map
   "f" prot-prefix-file-map
