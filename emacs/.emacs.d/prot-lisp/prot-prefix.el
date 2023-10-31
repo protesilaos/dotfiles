@@ -50,6 +50,7 @@
   :name "File"
   "f" #'find-file
   "F" #'find-file-other-window
+  "b" #'bookmark-jump
   "d" #'dired
   "l" #'find-library
   "m" #'man)
@@ -121,6 +122,7 @@
   "t" prot-prefix-toggle-map
   "p" project-prefix-map
   "v" vc-prefix-map
+  "u" #'universal-argument
   "w" prot-prefix-window-map)
 
 ;; What follows is an older experiment with transient.  I like its
