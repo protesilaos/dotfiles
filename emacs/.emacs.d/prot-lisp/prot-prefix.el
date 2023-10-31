@@ -114,9 +114,11 @@
   :name "Prot Prefix"
   "Q" #'save-buffers-kill-emacs
   "b" prot-prefix-buffer-map
+  "f" prot-prefix-file-map
   "c" #'world-clock
   "i" prot-prefix-insert-map
   "j" #'dired-jump
+  "t" prot-prefix-toggle-map
   "p" project-prefix-map
   "v" vc-prefix-map
   "w" prot-prefix-window-map)
