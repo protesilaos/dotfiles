@@ -62,6 +62,11 @@ before all other modules of my setup."
                  (const :tag "The `mct' module" mct)
                  (const :tag "The `vertico' module" vertico)))
 
+(defcustom prot-emacs-load-evil nil
+  "When non-nil, load Vim style key bindings."
+  :group 'prot-emacs
+  :type 'boolean)
+
 (defcustom prot-emacs-omit-packages nil
   "List of package names to not load.
 This instructs the relevant macros to not `require' the given
@@ -403,6 +408,9 @@ that is expanded with the `prot-emacs-package' macro."
 (when (executable-find "notmuch")
   (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
+;; We load it last to override any other keys.
+(when prot-emacs-load-evil
+  (require 'prot-emacs-evil))
 
 (setq safe-local-variable-values
       '((org-hide-leading-stars . t)

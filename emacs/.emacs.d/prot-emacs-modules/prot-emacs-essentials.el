@@ -10,7 +10,6 @@
   (require 'prot-simple)
   (require 'prot-scratch)
   (require 'prot-pair)
-  (require 'prot-prefix)
   (require 'prot-comment)
 
 ;;;; General settings and common custom functions (prot-simple.el)
@@ -106,8 +105,6 @@
     "M-s v" #'prot-simple-buffers-vc-root
     ;; Scratch buffer for major mode of choice
     "C-c s" #'prot-scratch-buffer
-    ;; Prefix keymap (prot-prefix.el)
-    "C-z" #'prot-prefix
     ;; Comments
     "C-;" #'prot-comment
     "C-x C-;" #'prot-comment-timestamp-keyword)
@@ -362,16 +359,6 @@ by that special hook."
 
   (add-hook 'vundo-after-undo-functions #'prot/vundo-diff-buffer)
   (add-hook 'vundo-post-exit-hook #'prot/vundo-quit-diff-window))
-
-;;; Go to last change
-(prot-emacs-package goto-last-change
-  (:install t)
-  (:delay 10)
-  (with-eval-after-load 'prot-prefix
-    (define-key prot-prefix-repeat-map (kbd "z") #'goto-last-change)
-    (put #'goto-last-change 'repeat-map 'prot-prefix-repeat-map)
-    (transient-append-suffix 'prot-prefix '(0 -1 -1)
-      '("z" "goto-last-change" goto-last-change))))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.

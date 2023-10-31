@@ -50,10 +50,6 @@
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
   (dolist (event '(mouse-event-p mouse-movement-p mwheel-scroll))
-    (add-to-list 'keycast-substitute-alist `(,event nil)))
-
-  (with-eval-after-load 'prot-prefix
-    (transient-append-suffix 'prot-prefix-toggle '(0 1 0)
-      '("k" "keycast-mode" keycast-mode))))
+    (add-to-list 'keycast-substitute-alist `(,event nil))))
 
 (provide 'prot-emacs-modeline)
