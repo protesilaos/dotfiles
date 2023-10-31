@@ -119,9 +119,7 @@
   (defun prot/evil-prefix-or-self-insert ()
     "Self-insert key or return `prot-prefix-map'."
     (interactive)
-    (if (or buffer-read-only
-            (derived-mode-p 'special-mode)
-            (memq major-mode evil-emacs-state-modes))
+    (if (or buffer-read-only (derived-mode-p 'special-mode))
         (set-transient-map prot-prefix-map)
       (self-insert-command 1)))
 
