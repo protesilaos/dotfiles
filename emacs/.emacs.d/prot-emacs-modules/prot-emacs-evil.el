@@ -74,6 +74,7 @@
                                  org-agenda-mode
                                  ;; FIXME 2023-10-31: Not all Magit modes are here
                                  log-edit-mode
+                                 log-view-mode
                                  git-commit-mode
                                  magit-status-mode
                                  magit-diff-mode
