@@ -79,7 +79,7 @@
   (setq evil-undo-system 'undo-redo) ; Emacs 28
   (setq evil-visual-update-x-selection-p t)
 
-;;;; Basic compatibility with other modes
+;;;; Compatibility with other modes
 
   (prot-emacs-package evil (:install t))
 
@@ -112,6 +112,34 @@
           log-edit-mode
           git-commit-mode))
   (setq evil-overriding-maps nil)
+
+  (evil-define-state 'prot-basic
+    "Basic Vim keys.")
+  
+  (evil-define-command evil-force-prot-basic-state ()
+    "Switch to  state without recording current command."
+    :repeat abort
+    :suppress-operator t
+    (evil-prot-basic-state))
+
+  (evil-define-key 'prot-basic global-map
+    (kbd "j") #'evil-next-line
+    (kbd "k") #'evil-previous-line
+    (kbd "i") #'evil-insert
+    (kbd "<escape>") #'evil-force-prot-basic-state)
+
+  (with-eval-after-load 'notmuch
+    (evil-define-key 'motion notmuch-hello-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'motion notmuch-view-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'motion notmuch-search-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'motion notmuch-tree-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'motion notmuch-view-mode-map (kbd "K") #'notmuch-tag-jump)
+    (evil-define-key 'motion notmuch-search-mode-map (kbd "K") #'notmuch-tag-jump)
+    (evil-define-key 'motion notmuch-tree-mode-map (kbd "K") #'notmuch-tag-jump))
+
+  (with-eval-after-load 'org-agenda
+    (evil-define-key 'motion org-agenda-mode-map (kbd "j") #'evil-next-line)
+    (evil-define-key 'motion org-agenda-mode-map (kbd "k") #'evil-previous-line))
 
 ;;;; Make Emacs the Insert state
 
