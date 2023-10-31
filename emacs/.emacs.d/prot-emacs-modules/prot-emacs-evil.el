@@ -55,35 +55,35 @@
   (setq evil-lookup-func #'man) ; TODO K in normal mode
   (setq evil-default-state 'normal) ; check `evil-set-initial-state'
   ;; evil-buffer-regexps
-  (setq evil-motion-state-modes nil)
+  (setq evil-motion-state-modes
+        '(completion-list-mode
+          Buffer-menu-mode
+          Info-mode
+          help-mode
+          log-view-mode
+          org-agenda-mode
+          dired-mode
+          magit-status-mode
+          magit-diff-mode
+          magit-log-mode
+          notmuch-hello-mode
+          notmuch-search-mode
+          notmuch-show-mode
+          notmuch-tree-mode
+          tabulated-list-mode))
   (setq evil-insert-state-modes nil)
   (setq evil-overriding-maps nil)
-  (setq evil-emacs-state-modes '(completion-list-mode
-                                 Buffer-menu-mode
-                                 dired-mode
-                                 Info-mode
-                                 help-mode
-                                 comint-mode
-                                 rcirc-mode
-                                 eshell-mode
-                                 inferior-emacs-lisp-mode
-                                 reb-mode
-                                 shell-mode
-                                 term-mode
-                                 wdired-mode
-                                 org-agenda-mode
-                                 ;; FIXME 2023-10-31: Not all Magit modes are here
-                                 log-edit-mode
-                                 log-view-mode
-                                 git-commit-mode
-                                 magit-status-mode
-                                 magit-diff-mode
-                                 magit-log-mode
-                                 notmuch-hello-mode
-                                 notmuch-search-mode
-                                 notmuch-show-mode
-                                 notmuch-tree-mode
-                                 tabulated-list-mode))
+  (setq evil-emacs-state-modes
+        '(comint-mode
+          rcirc-mode
+          eshell-mode
+          inferior-emacs-lisp-mode
+          reb-mode
+          shell-mode
+          term-mode
+          wdired-mode
+          log-edit-mode
+          git-commit-mode))
   ;; evil-intercept-maps
   ;; evil-motions
   ;; evil-visual-newline-commands
@@ -119,7 +119,9 @@
   (defun prot/evil-prefix-or-self-insert ()
     "Self-insert key or return `prot-prefix-map'."
     (interactive)
-    (if (or buffer-read-only (derived-mode-p 'special-mode))
+    (if (or buffer-read-only
+            (derived-mode-p 'special-mode)
+            (memq major-mode evil-motion-state-modes))
         (set-transient-map prot-prefix-map)
       (self-insert-command 1)))
 
