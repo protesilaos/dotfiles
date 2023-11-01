@@ -157,18 +157,17 @@
   "w" prot-prefix-window-map
   "x" prot-prefix-expression-map)
 
-;; (when prot-emacs-load-which-key
-;;   (with-eval-after-load 'which-key
-;;     (which-key-add-keymap-based-replacements prot-prefix-map
-;;       "b" '("Buffer" . (keymap))
-;;       "f" '("File" . (keymap))
-;;       "h" '("Help" . (keymap))
-;;       "i" '("Insert" . (keymap))
-;;       "p" '("Project" . (keymap))
-;;       "r" '("C-x r" . (keymap))
-;;       "t" '("Toggle" . (keymap))
-;;       "v" '("C-x v" . (keymap))
-;;       "w" '("Window" . (keymap)))))
+(with-eval-after-load 'which-key
+  (which-key-add-keymap-based-replacements prot-prefix-map
+    "b" `("Buffer" . ,prot-prefix-buffer-map)
+    "f" `("File" . ,prot-prefix-file-map)
+    "h" `("Help" . ,help-map)
+    "i" `("Insert" . ,prot-prefix-insert-map)
+    "p" `("Project" . ,project-prefix-map)
+    "r" `("C-x r" . ,ctl-x-r-map)
+    "t" `("Toggle" . ,prot-prefix-toggle-map)
+    "v" `("C-x v" . ,vc-prefix-map)
+    "w" `("Window" . ,prot-prefix-window-map))))
 
 ;; What follows is an older experiment with transient.  I like its
 ;; visuals, though find it hard to extend.  Keymaps are easier for me,
