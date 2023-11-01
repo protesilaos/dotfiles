@@ -161,10 +161,10 @@
 
   (with-eval-after-load 'notmuch
     (evil-define-key 'prot-basic notmuch-hello-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-view-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "J") #'notmuch-jump-search)
     (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "J") #'notmuch-jump-search)
     (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-view-mode-map (kbd "K") #'notmuch-tag-jump)
+    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "K") #'notmuch-tag-jump)
     (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "K") #'notmuch-tag-jump)
     (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "K") #'notmuch-tag-jump))
 
