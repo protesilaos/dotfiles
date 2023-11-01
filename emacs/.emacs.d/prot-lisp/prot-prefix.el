@@ -111,6 +111,23 @@
   "K" #'windmove-swap-states-up
   "L" #'windmove-swap-states-right)
 
+(defvar-keymap prot-prefix-expression-map
+  :doc "Prefix keymap for s-expression motions."
+  :name "S-EXP"
+  :repeat t
+  "a" #'beginning-of-defun
+  "e" #'end-of-defun
+  "f" #'forward-sexp
+  "b" #'backward-sexp
+  "n" #'forward-list
+  "p" #'backward-list
+  "d" #'up-list ; confusing name for what looks "out and down" to me
+  "t" #'transpose-sexps
+  "u" #'backward-up-list ; the actual "up"
+  "k" #'kill-sexp
+  "SPC" #'prot/expreg-expand-dwim
+  "DEL" #'backward-kill-sexp)
+
 (declare-function magit-status "magit" (&optional directory cache))
 
 (defvar-keymap prot-prefix-map
@@ -137,7 +154,8 @@
   "t" prot-prefix-toggle-map
   "u" #'universal-argument
   "v" vc-prefix-map
-  "w" prot-prefix-window-map)
+  "w" prot-prefix-window-map
+  "x" prot-prefix-expression-map)
 
 ;; (when prot-emacs-load-which-key
 ;;   (with-eval-after-load 'which-key
