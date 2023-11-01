@@ -191,7 +191,8 @@
 
 ;;;; Set up my prefix keymap
 
-  (require 'prot-prefix)
+  ;; The `prot-prefix' feature is loaded by the `prot-emacs-essentials'
+  ;; module.
 
   (defun prot/evil-prefix-or-self-insert ()
     "Self-insert key or return `prot-prefix-map'."
