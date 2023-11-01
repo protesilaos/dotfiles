@@ -19,7 +19,7 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-minibuffer nil)
-  (setq evil-toggle-key "<f12>") ; TODO
+  (setq evil-toggle-key "<f12>") ; I seldom need this, so putting it somewhere far
   (setq evil-respect-visual-line-mode nil)
   (setq evil-search-module 'isearch)
   (setq evil-symbol-word-search t)
@@ -81,6 +81,8 @@
 
 ;;;; Compatibility with other modes
 
+  ;; I load the `evil' feature here because some functions/macros of
+  ;; it are needed from this point on.
   (prot-emacs-package evil (:install t))
 
   (setq evil-motion-state-modes
