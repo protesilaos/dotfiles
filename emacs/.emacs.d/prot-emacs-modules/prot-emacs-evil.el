@@ -102,14 +102,14 @@
     :suppress-operator t
     (evil-prot-basic-state))
 
-  ;; TODO 2023-11-01: Disable the visual state but keep marking a
-  ;; region?  This way we do not need to modify the keys of the visual
-  ;; state in Magit, Notmuch, etc. where the region can be used to
-  ;; perform some relevant action.
   (evil-define-key 'prot-basic global-map
+    "h" #'evil-backward-char
     "j" #'evil-next-line
     "k" #'evil-previous-line
-    "i" #'evil-insert)
+    "l" #'evil-forward-char
+    "i" #'evil-insert
+    "v" #'evil-visual-char
+    "V" #'evil-visual-line)
 
   (defun prot/evil-need-basic-p ()
     "Return non-nil if the basic state should be used."
