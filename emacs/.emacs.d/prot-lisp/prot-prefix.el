@@ -35,10 +35,12 @@
 
 (declare-function prot-simple-kill-buffer-current "prot-simple" (&optional arg))
 (declare-function prot-simple-rename-file-and-buffer "prot-simple" (name))
+(declare-function beframe-buffer-menu "beframe" (&optional frame &key sort))
 
 (defvar-keymap prot-prefix-buffer-map
   :doc "Prefix keymap for buffers."
   :name "Buffer"
+  "b" #'beframe-buffer-menu
   "c" #'clone-indirect-buffer-other-window
   "f" #'fit-window-to-buffer
   "k" #'prot-simple-kill-buffer-current
@@ -62,6 +64,7 @@
   :name "Insert"
   "i" #'insert-char
   "e" #'emoji-search
+  "q" #'quoted-insert
   "s" #'emoji-search
   "l" #'emoji-list)
 
@@ -108,6 +111,8 @@
   "K" #'windmove-swap-states-up
   "L" #'windmove-swap-states-right)
 
+(declare-function magit-status "magit" (&optional directory cache))
+
 (defvar-keymap prot-prefix-map
   :doc "Prefix keymap with multiple subkeymaps."
   :name "Prot Prefix"
@@ -121,14 +126,17 @@
   "o" #'other-window
   "Q" #'save-buffers-kill-emacs
   "b" prot-prefix-buffer-map
-  "f" prot-prefix-file-map
   "c" #'world-clock
+  "f" prot-prefix-file-map
+  "g" #'magit-status
+  "h" help-map
   "i" prot-prefix-insert-map
   "j" #'dired-jump
-  "t" prot-prefix-toggle-map
   "p" project-prefix-map
-  "v" vc-prefix-map
+  "r" ctl-x-r-map
+  "t" prot-prefix-toggle-map
   "u" #'universal-argument
+  "v" vc-prefix-map
   "w" prot-prefix-window-map)
 
 ;; What follows is an older experiment with transient.  I like its
