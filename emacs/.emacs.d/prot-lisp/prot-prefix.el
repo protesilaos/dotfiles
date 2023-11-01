@@ -58,7 +58,7 @@
   "d" #'dired
   "l" #'find-library
   "m" #'man)
-  
+
 (defvar-keymap prot-prefix-insert-map
   :doc "Prefix keymap for character insertion."
   :name "Insert"
@@ -138,6 +138,19 @@
   "u" #'universal-argument
   "v" vc-prefix-map
   "w" prot-prefix-window-map)
+
+;; (when prot-emacs-load-which-key
+;;   (with-eval-after-load 'which-key
+;;     (which-key-add-keymap-based-replacements prot-prefix-map
+;;       "b" '("Buffer" . (keymap))
+;;       "f" '("File" . (keymap))
+;;       "h" '("Help" . (keymap))
+;;       "i" '("Insert" . (keymap))
+;;       "p" '("Project" . (keymap))
+;;       "r" '("C-x r" . (keymap))
+;;       "t" '("Toggle" . (keymap))
+;;       "v" '("C-x v" . (keymap))
+;;       "w" '("Window" . (keymap)))))
 
 ;; What follows is an older experiment with transient.  I like its
 ;; visuals, though find it hard to extend.  Keymaps are easier for me,

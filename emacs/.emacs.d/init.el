@@ -67,6 +67,11 @@ before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
+(defcustom prot-emacs-load-which-key nil
+  "When non-nil, display key binding hints after a short delay."
+  :group 'prot-emacs
+  :type 'boolean)
+
 (defcustom prot-emacs-omit-packages nil
   "List of package names to not load.
 This instructs the relevant macros to not `require' the given
@@ -408,6 +413,8 @@ that is expanded with the `prot-emacs-package' macro."
 (when (executable-find "notmuch")
   (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
+(when prot-emacs-load-which-key
+  (require 'prot-emacs-which-key))
 ;; We load it last to override any other keys.
 (when prot-emacs-load-evil
   (require 'prot-emacs-evil))
