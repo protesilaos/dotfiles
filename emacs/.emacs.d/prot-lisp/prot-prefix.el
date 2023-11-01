@@ -40,7 +40,8 @@
 (defvar-keymap prot-prefix-buffer-map
   :doc "Prefix keymap for buffers."
   :name "Buffer"
-  "b" #'beframe-buffer-menu
+  "m" #'beframe-buffer-menu
+  "b" #'switch-to-buffer
   "c" #'clone-indirect-buffer-other-window
   "f" #'fit-window-to-buffer
   "k" #'prot-simple-kill-buffer-current
@@ -92,6 +93,8 @@
 (defvar-keymap prot-prefix-window-map
   :doc "Prefix keymap for windows."
   :name "Window"
+  "u" #'winner-undo
+  "r" #'winner-redo
   "b" #'balance-windows-area
   "0" #'delete-window
   "1" #'delete-other-windows
@@ -128,6 +131,8 @@
   "SPC" #'prot/expreg-expand-dwim
   "DEL" #'backward-kill-sexp)
 
+(declare-function winner-undo "winner")
+(declare-function winner-redo "winner")
 (declare-function magit-status "magit" (&optional directory cache))
 
 (defvar-keymap prot-prefix-map
@@ -149,6 +154,7 @@
   "h" help-map
   "i" prot-prefix-insert-map
   "j" #'dired-jump
+  "n" narrow-map
   "p" project-prefix-map
   "r" ctl-x-r-map
   "t" prot-prefix-toggle-map
@@ -163,6 +169,7 @@
     "f" `("File" . ,prot-prefix-file-map)
     "h" `("Help" . ,help-map)
     "i" `("Insert" . ,prot-prefix-insert-map)
+    "n" `("Narrow" . ,narrow-map)
     "p" `("Project" . ,project-prefix-map)
     "r" `("C-x r" . ,ctl-x-r-map)
     "t" `("Toggle" . ,prot-prefix-toggle-map)
