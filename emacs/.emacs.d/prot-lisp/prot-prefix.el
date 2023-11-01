@@ -89,7 +89,6 @@
 (defvar-keymap prot-prefix-window-map
   :doc "Prefix keymap for windows."
   :name "Window"
-  :repeat t
   "b" #'balance-windows-area
   "0" #'delete-window
   "1" #'delete-other-windows
