@@ -170,7 +170,7 @@
 
   ;; See TODO above about the visual state.
   (with-eval-after-load 'magit
-    (evil-define-key 'prot-basic magit-status-mode-map (kbd "K") #'magit-discard)
+    (evil-define-key '(visual prot-basic) magit-status-mode-map (kbd "K") #'magit-discard)
     (evil-define-key 'visual magit-status-mode-map (kbd "s") #'magit-stage)
     (evil-define-key 'visual magit-status-mode-map (kbd "u") #'magit-unstage))
 
