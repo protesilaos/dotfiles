@@ -429,6 +429,11 @@
     "C-c M-l" #'org-insert-last-stored-link
     "C-c C-M-l" #'org-toggle-link-display)
 
+  (prot-emacs-keybind narrow-map
+    "b" #'org-narrow-to-block
+    "e" #'org-narrow-to-element
+    "s" #'org-narrow-to-subtree)
+
 ;;; Custom extensions (prot-org.el)
   (require 'prot-org)
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
