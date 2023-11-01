@@ -167,7 +167,8 @@
     "r" `("C-x r" . ,ctl-x-r-map)
     "t" `("Toggle" . ,prot-prefix-toggle-map)
     "v" `("C-x v" . ,vc-prefix-map)
-    "w" `("Window" . ,prot-prefix-window-map))))
+    "w" `("Window" . ,prot-prefix-window-map)
+    "x" `("S-EXP" . ,prot-prefix-expression-map)))
 
 ;; What follows is an older experiment with transient.  I like its
 ;; visuals, though find it hard to extend.  Keymaps are easier for me,
