@@ -142,6 +142,7 @@
           Buffer-menu-mode
           Info-mode
           help-mode
+          diff-mode
           log-view-mode
           org-agenda-mode
           dired-mode
