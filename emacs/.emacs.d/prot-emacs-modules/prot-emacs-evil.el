@@ -36,7 +36,7 @@
   (setq evil-repeat-find-to-skip-next t)
   (setq evil-kbd-macro-suppress-motion-error nil) ; never suppress errors in kmacros, Emacs-style
   (setq evil-track-eol nil)
-  (setq evil-mode-line-format '(before . prot-modeline-buffer-identification))
+  (setq evil-mode-line-format nil) ; see `prot-modeline.el' and its implementation in `prot-emacs-modeline.el'
   (setq evil-mouse-word 'evil-word)
   (setq evil-bigword "^ \t\r\n")
   (setq evil-want-fine-undo t)

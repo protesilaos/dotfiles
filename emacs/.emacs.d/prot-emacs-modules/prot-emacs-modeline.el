@@ -9,6 +9,7 @@
                   prot-modeline-input-method
                   prot-modeline-buffer-status
                   " "
+                  prot-modeline-evil
                   prot-modeline-buffer-identification
                   "  "
                   prot-modeline-major-mode

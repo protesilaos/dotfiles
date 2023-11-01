@@ -220,6 +220,33 @@ Specific to the current window's mode line.")
                     'mouse-face 'mode-line-highlight)))
   "Mode line construct for showing remote file name.")
 
+;;;; Evil state
+
+(defvar evil-state)
+(defvar evil-visual-selection)
+
+(defun prot-modeline-evil-state-tag ()
+  "Return mode line tag depending on the Evil state."
+  (pcase evil-state
+    ('normal (propertize " [N] " 'face 'prot-modeline-indicator-blue))
+    ('insert (propertize " [I] " 'face 'prot-modeline-indicator-green))
+    ('visual (pcase evil-visual-selection
+               ('line (propertize " [Vl] " 'face 'prot-modeline-indicator-yellow))
+               ('screen-line (propertize " [Vsl] " 'face 'prot-modeline-indicator-yellow))
+               ('block (propertize " [Vb] " 'face 'prot-modeline-indicator-yellow))
+               (_ (propertize " [V] " 'face 'prot-modeline-indicator-yellow))))
+    ('motion (propertize " [M] " 'face 'prot-modeline-indicator-yellow))
+    ('emacs (propertize " [E] " 'face 'prot-modeline-indicator-magenta))
+    ('operator (propertize " [O] " 'face 'prot-modeline-indicator-red))
+    ('replace (propertize " [R] " 'face 'prot-modeline-indicator-red))
+    ('prot-basic (propertize " [PB] " 'face 'prot-modeline-indicator-blue))))
+
+(defvar-local prot-modeline-evil
+    '(:eval
+      (when (and (mode-line-window-selected-p) (bound-and-true-p evil-mode))
+        (prot-modeline-evil-state-tag)))
+  "Mode line construct to display the Evil state.")
+
 ;;;; Buffer name and modified status
 
 (defun prot-modeline-buffer-identification-face ()
@@ -573,6 +600,7 @@ Specific to the current window's mode line.")
                      prot-modeline-narrow
                      prot-modeline-input-method
                      prot-modeline-buffer-status
+                     prot-modeline-evil
                      prot-modeline-buffer-identification
                      prot-modeline-major-mode
                      prot-modeline-process
