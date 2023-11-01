@@ -85,7 +85,59 @@
   ;; it are needed from this point on.
   (prot-emacs-package evil (:install t))
 
-  (setq evil-motion-state-modes
+  (defvar prot/evil-basic-tag " <PB> "
+    "Mode line tag for the prot-basic state.")
+
+  (defvar prot/evil-basic-message "-- PROT BASIC --"
+    "Echo area message when entering the prot basic state.")
+
+  (evil-define-state prot-basic
+    "Basic Vim keys to work in most (?) read-only major modes."
+    :tag 'prot/evil-basic-tag
+    :message 'prot/evil-basic-message)
+
+  (evil-define-command evil-force-prot-basic-state ()
+    "Switch to  state without recording current command."
+    :repeat abort
+    :suppress-operator t
+    (evil-prot-basic-state))
+
+  ;; TODO 2023-11-01: Disable the visual state but keep marking a
+  ;; region?  This way we do not need to modify the keys of the visual
+  ;; state in Magit, Notmuch, etc. where the region can be used to
+  ;; perform some relevant action.
+  (evil-define-key 'prot-basic global-map
+    "j" #'evil-next-line
+    "k" #'evil-previous-line
+    "i" #'evil-insert)
+
+  (defun prot/evil-need-basic-p ()
+    "Return non-nil if the basic state should be used."
+    (or buffer-read-only
+        (memq major-mode evil-prot-basic-state-modes)))
+
+  (defun prot/evil-normal-or-basic-state ()
+    "Return to normal or basic state per `prot/evil-need-basic-p'."
+    (interactive)
+    (if (prot/evil-need-basic-p)
+        (evil-force-prot-basic-state)
+      (evil-force-normal-state)))
+
+  (setq evil-overriding-maps nil)
+  (setq evil-motion-state-modes nil)
+  (setq evil-insert-state-modes nil)
+  (setq evil-emacs-state-modes
+        '(comint-mode
+          rcirc-mode
+          eshell-mode
+          inferior-emacs-lisp-mode
+          reb-mode
+          shell-mode
+          term-mode
+          wdired-mode
+          log-edit-mode
+          git-commit-mode))
+  (setq evil-prot-basic-state-modes
         '(completion-list-mode
           Buffer-menu-mode
           Info-mode
@@ -100,60 +152,39 @@
           notmuch-search-mode
           notmuch-show-mode
           notmuch-tree-mode
-          tabulated-list-mode))
-  (setq evil-insert-state-modes nil)
-  (setq evil-emacs-state-modes
-        '(comint-mode
-          rcirc-mode
-          eshell-mode
-          inferior-emacs-lisp-mode
-          reb-mode
-          shell-mode
-          term-mode
-          wdired-mode
-          log-edit-mode
-          git-commit-mode))
-  (setq evil-overriding-maps nil)
+          special-mode
+          tabulated-list-mode
+          world-clock-mode))
 
-  (evil-define-state 'prot-basic
-    "Basic Vim keys.")
-  
-  (evil-define-command evil-force-prot-basic-state ()
-    "Switch to  state without recording current command."
-    :repeat abort
-    :suppress-operator t
-    (evil-prot-basic-state))
-
-  (evil-define-key 'prot-basic global-map
-    (kbd "j") #'evil-next-line
-    (kbd "k") #'evil-previous-line
-    (kbd "i") #'evil-insert
-    (kbd "<escape>") #'evil-force-prot-basic-state)
+  (with-eval-after-load 'dired
+    (evil-define-key 'prot-basic dired-mode-map (kbd "K") #'dired-do-kill-lines))
 
   (with-eval-after-load 'notmuch
-    (evil-define-key 'motion notmuch-hello-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'motion notmuch-view-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'motion notmuch-search-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'motion notmuch-tree-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'motion notmuch-view-mode-map (kbd "K") #'notmuch-tag-jump)
-    (evil-define-key 'motion notmuch-search-mode-map (kbd "K") #'notmuch-tag-jump)
-    (evil-define-key 'motion notmuch-tree-mode-map (kbd "K") #'notmuch-tag-jump))
+    (evil-define-key 'prot-basic notmuch-hello-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-view-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-view-mode-map (kbd "K") #'notmuch-tag-jump)
+    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "K") #'notmuch-tag-jump)
+    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "K") #'notmuch-tag-jump))
 
-  (with-eval-after-load 'org-agenda
-    (evil-define-key 'motion org-agenda-mode-map (kbd "j") #'evil-next-line)
-    (evil-define-key 'motion org-agenda-mode-map (kbd "k") #'evil-previous-line))
+  ;; See TODO above about the visual state.
+  (with-eval-after-load 'magit
+    (evil-define-key 'prot-basic magit-status-mode-map (kbd "K") #'magit-discard)
+    (evil-define-key 'visual magit-status-mode-map (kbd "s") #'magit-stage)
+    (evil-define-key 'visual magit-status-mode-map (kbd "u") #'magit-unstage))
 
 ;;;; Make Emacs the Insert state
 
   (defalias 'evil-insert-state 'evil-emacs-state)
-  (evil-define-key 'emacs global-map (kbd "<escape>") #'evil-normal-state)
+  (evil-define-key 'emacs global-map (kbd "<escape>") #'prot/evil-normal-or-basic-state)
   (setq evil-emacs-state-cursor evil-insert-state-cursor)
 
 ;;;; Set up `devil-mode' to reduce modifier key usage
 
   (prot-emacs-package devil (:install t))
 
-  (evil-define-key '(normal visual motion) global-map (kbd ",") #'devil)
+  (evil-define-key '(normal visual motion prot-basic) global-map (kbd ",") #'devil)
 
   ;; This one affects the emacs/insert state.
   (global-devil-mode 1)
@@ -165,14 +196,12 @@
   (defun prot/evil-prefix-or-self-insert ()
     "Self-insert key or return `prot-prefix-map'."
     (interactive)
-    (if (or buffer-read-only
-            (derived-mode-p 'special-mode)
-            (memq major-mode evil-motion-state-modes))
+    (if (prot/evil-need-basic-p)
         (set-transient-map prot-prefix-map)
       (self-insert-command 1)))
 
   (evil-define-key '(emacs insert) global-map (kbd "SPC") #'prot/evil-prefix-or-self-insert)
-  (evil-define-key '(normal visual motion) global-map (kbd "SPC") prot-prefix-map)
+  (evil-define-key '(normal visual motion prot-basic) global-map (kbd "SPC") prot-prefix-map)
 
 ;;;; Activate `evil-mode'
   (evil-mode 1))
