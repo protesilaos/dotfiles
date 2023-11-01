@@ -4,7 +4,7 @@
   (setq which-key-separator " ")
   (setq which-key-prefix-prefix "... ")
   (setq which-key-max-display-columns 3)
-  (setq which-key-idle-delay 2)
+  (setq which-key-idle-delay 0.5)
   (setq which-key-idle-secondary-delay 0.05)
   (setq which-key-add-column-padding 5)
   (setq which-key-max-description-length 40)
