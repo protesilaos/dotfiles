@@ -55,7 +55,7 @@
   (setq evil-kill-on-visual-paste nil) ; Emacs style, not Vim
   (setq evil-echo-state nil) ; be silent
   (setq evil-complete-all-buffers t) ; TODO C-n and C-p in insert mode
-  (setq evil-lookup-func #'man) ; TODO K in normal mode
+  (setq evil-lookup-func #'woman) ; TODO K in normal mode
   (setq evil-default-state 'normal) ; check `evil-set-initial-state'
   ;; evil-buffer-regexps
   ;; evil-intercept-maps
