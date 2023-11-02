@@ -118,6 +118,42 @@
   "K" #'windmove-swap-states-up
   "L" #'windmove-swap-states-right)
 
+(declare-function consult-find "consult" (&optional dir initial))
+(declare-function consult-ripgrep "consult" (&optional dir initial))
+(declare-function prot-search-grep "prot-search" (regexp &optional recursive))
+(declare-function prot-search-grep-todo-keywords "prot-search" (&optional arg))
+(declare-function prot-search-occur-browse-url "prot-search")
+(declare-function prot-search-occur-outline "prot-search" (&optional arg))
+(declare-function prot-simple-flush-and-diff "prot-simple" (regexp beg end))
+
+(defvar-keymap prot-prefix-search-map
+  :doc "Prefix keymap for search (and replace) commands."
+  :name "Search"
+  "f" #'consult-find
+  "d" #'prot-simple-flush-and-diff
+  "g" #'prot-search-grep
+  "o" #'prot-search-occur-outline
+  "r" #'consult-ripgrep
+  "t" #'prot-search-grep-todo-keywords
+  "u" #'prot-search-occur-browse-url)
+
+(declare-function prot-simple-transpose-chars "prot-simple")
+(declare-function prot-simple-transpose-lines "prot-simple" (arg))
+(declare-function prot-simple-transpose-paragraphs "prot-simple" (arg))
+(declare-function prot-simple-transpose-sentences "prot-simple" (arg))
+(declare-function prot-simple-transpose-words "prot-simple" (arg))
+(declare-function prot-simple-transpose-sexps "prot-simple" (arg))
+
+(defvar-keymap prot-prefix-transpose-map
+  :doc "Prefix keymap for object transposition."
+  :name "Transpose"
+  "c" #'prot-simple-transpose-chars
+  "l" #'prot-simple-transpose-lines
+  "p" #'prot-simple-transpose-paragraphs
+  "s" #'prot-simple-transpose-sentences
+  "w" #'prot-simple-transpose-words
+  "x" #'prot-simple-transpose-sexps)
+
 (defvar-keymap prot-prefix-expression-map
   :doc "Prefix keymap for s-expression motions."
   :name "S-EXP"
@@ -162,6 +198,8 @@
   "n" narrow-map
   "p" project-prefix-map
   "r" ctl-x-r-map
+  "s" prot-prefix-search-map
+  "t" prot-prefix-transpose-map
   "u" #'universal-argument
   "v" vc-prefix-map
   "w" prot-prefix-window-map
@@ -177,6 +215,8 @@
     "n" `("Narrow" . ,narrow-map)
     "p" `("Project" . ,project-prefix-map)
     "r" `("C-x r" . ,ctl-x-r-map)
+    "s" `("Search" . ,prot-prefix-search-map)
+    "t" `("Transpose" . ,prot-prefix-transpose-map)
     "v" `("C-x v" . ,vc-prefix-map)
     "w" `("Window" . ,prot-prefix-window-map)
     "x" `("S-EXP" . ,prot-prefix-expression-map)))
