@@ -1,4 +1,4 @@
-;;; prot-vertico.el --- Code for my custom mode line -*- lexical-binding: t -*-
+;;; prot-vertico.el --- Custom Vertico extras -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
 
