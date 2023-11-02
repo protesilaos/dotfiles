@@ -177,6 +177,17 @@
     (evil-define-key 'visual magit-status-mode-map (kbd "s") #'magit-stage)
     (evil-define-key 'visual magit-status-mode-map (kbd "u") #'magit-unstage))
 
+  (with-eval-after-load 'embark
+    (defun prot/evil-embark-act-or-repeat-pop ()
+      "Call `evil-repeat-pop' if relevant, else `prot/embark-act-no-quit'."
+      (interactive)
+      (call-interactively
+       (if (memq last-command '(evil-repeat evil-repeat-pop evil-repeat-pop-next))
+           #'evil-repeat-pop
+         #'prot/embark-act-no-quit)))
+
+    (evil-define-key '(normal visual motion) global-map (kbd "C-.") #'prot/evil-embark-act-or-repeat-pop))
+
 ;;;; Make Emacs the Insert state
 
   (defalias 'evil-insert-state 'evil-emacs-state)
