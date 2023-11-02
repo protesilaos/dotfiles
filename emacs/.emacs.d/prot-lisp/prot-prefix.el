@@ -168,7 +168,6 @@
   "t" #'transpose-sexps
   "u" #'backward-up-list ; the actual "up"
   "k" #'kill-sexp
-  "SPC" #'prot/expreg-expand-dwim
   "DEL" #'backward-kill-sexp)
 
 (declare-function winner-undo "winner")
