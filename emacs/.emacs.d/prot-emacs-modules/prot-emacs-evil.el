@@ -103,6 +103,8 @@
     (evil-prot-basic-state))
 
   (evil-define-key 'prot-basic global-map
+    "0" #'evil-beginning-of-line
+    "$" #'evil-end-of-line
     "h" #'evil-backward-char
     "j" #'evil-next-line
     "k" #'evil-previous-line
