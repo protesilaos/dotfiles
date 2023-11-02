@@ -453,9 +453,14 @@
             (org-agenda-remove-tags t))
            ("agenda.txt"))))
 
+  (defun prot/org-agenda ()
+    "Call Org agenda with `prot-org-custom-daily-agenda' configuration."
+    (interactive)
+    (org-agenda nil "A"))
+
   ;; I bind `org-agenda' to C-c A, so this one puts me straight into my
   ;; custom block agenda.
-  (define-key global-map (kbd "C-c a") (lambda () (interactive) (org-agenda nil "A")))
+  (define-key global-map (kbd "C-c a") #'prot/org-agenda)
 
   (prot-emacs-keybind ctl-x-x-map
     "i" #'prot-org-id-headlines
