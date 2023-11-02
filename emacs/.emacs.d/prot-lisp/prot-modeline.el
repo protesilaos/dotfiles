@@ -229,17 +229,19 @@ Specific to the current window's mode line.")
   "Return mode line tag depending on the Evil state."
   (pcase evil-state
     ('normal (propertize " [N] " 'face 'prot-modeline-indicator-blue))
-    ('insert (propertize " [I] " 'face 'prot-modeline-indicator-green))
-    ('visual (pcase evil-visual-selection
-               ('line (propertize " [Vl] " 'face 'prot-modeline-indicator-yellow))
-               ('screen-line (propertize " [Vsl] " 'face 'prot-modeline-indicator-yellow))
-               ('block (propertize " [Vb] " 'face 'prot-modeline-indicator-yellow))
-               (_ (propertize " [V] " 'face 'prot-modeline-indicator-yellow))))
+    ('insert " [I] ") ; I don't actually use an "insert" state: it switches to "emacs"
+    ('visual (propertize
+              (pcase evil-visual-selection
+                ('line " [Vl] ")
+                ('screen-line " [Vsl] ")
+                ('block " [Vb] ")
+                (_ " [V] "))
+              'face 'prot-modeline-indicator-yellow))
     ('motion (propertize " [M] " 'face 'prot-modeline-indicator-yellow))
     ('emacs (propertize " [E] " 'face 'prot-modeline-indicator-magenta))
     ('operator (propertize " [O] " 'face 'prot-modeline-indicator-red))
     ('replace (propertize " [R] " 'face 'prot-modeline-indicator-red))
-    ('prot-basic (propertize " [PB] " 'face 'prot-modeline-indicator-blue))))
+    ('prot-basic (propertize " [PB] " 'face 'prot-modeline-indicator-green))))
 
 (defvar-local prot-modeline-evil
     '(:eval
