@@ -499,19 +499,6 @@ line."
   (transpose-chars -1)
   (forward-char))
 
-;;;; Commands for code navigation (work in progress)
-
-;;;###autoload
-(defun prot-simple-downward-list (arg)
-  "Like `backward-up-list' but defaults to a forward motion.
-With numeric prefix ARG, move that many times in the given
-direction (negative is forward due to this being a
-backward-facing command)."
-  (interactive "p")
-  (backward-up-list (or (- arg) -1)))
-
-(make-obsolete 'prot-simple-downward-list 'up-list "2023-09-20")
-
 ;;;; Commands for paragraphs
 
 ;;;###autoload
