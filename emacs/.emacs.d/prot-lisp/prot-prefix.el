@@ -79,7 +79,7 @@
 (declare-function rainbow-mode "rainbow")
 (declare-function spacious-padding-mode "spacious-padding")
 
-(defvar-keymap prot-prefix-toggle-map
+(defvar-keymap prot-prefix-mode-map
   :doc "Prefix keymap for minor mode toggles."
   :name "Toggle"
   "f" #'flymake-mode
@@ -158,10 +158,10 @@
   "h" help-map
   "i" prot-prefix-insert-map
   "j" #'dired-jump
+  "m" prot-prefix-mode-map
   "n" narrow-map
   "p" project-prefix-map
   "r" ctl-x-r-map
-  "t" prot-prefix-toggle-map
   "u" #'universal-argument
   "v" vc-prefix-map
   "w" prot-prefix-window-map
@@ -173,10 +173,10 @@
     "f" `("File" . ,prot-prefix-file-map)
     "h" `("Help" . ,help-map)
     "i" `("Insert" . ,prot-prefix-insert-map)
+    "m" `("Mode" . ,prot-prefix-mode-map)
     "n" `("Narrow" . ,narrow-map)
     "p" `("Project" . ,project-prefix-map)
     "r" `("C-x r" . ,ctl-x-r-map)
-    "t" `("Toggle" . ,prot-prefix-toggle-map)
     "v" `("C-x v" . ,vc-prefix-map)
     "w" `("Window" . ,prot-prefix-window-map)
     "x" `("S-EXP" . ,prot-prefix-expression-map)))
