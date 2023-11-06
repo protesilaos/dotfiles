@@ -336,16 +336,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-key map (kbd "C-,") #'prot/embark-act-no-quit)
     (define-key map (kbd "C-.") #'prot/embark-act-quit))
 
-  ;; NOTE 2023-03-15: I am working on making my Embark buffers easier
-  ;; to read.  I am removing keys I do not use.  What follows is a
-  ;; drastic measure.  I still need to test that it works as intended.
-  (seq-do
-   (lambda (cell)
-     (let* ((keymap (cdr-safe cell))
-            (map (if (listp keymap) (car keymap) keymap)))
-       (set map (make-sparse-keymap))))
-   embark-keymap-alist)
-
+  ;; I do not want `embark-org' and am not sure what is loading it.
+  ;; So I just unsert all the keymaps...
   (with-eval-after-load 'embark-org
     (defvar prot/embark-org-keymaps
       '(embark-org-table-cell-map
@@ -362,86 +354,22 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (seq-do
      (lambda (keymap)
        (set keymap (make-sparse-keymap)))
-     prot/embark-org-keymaps))
+     prot/embark-org-keymaps)))
 
-  (prot-emacs-keybind embark-general-map
-    "i" #'embark-insert
-    "w" #'embark-copy-as-kill
-    "E" #'embark-export
-    "S" #'embark-collect
-    "A" #'embark-act-all
-    "DEL" #'delete-region)
-
-  ;; TODO 2023-03-14: `embark-url-map' for mpv
-  (prot-emacs-keybind embark-url-map
-    "b" #'browse-url
-    "d" #'embark-download-url
-    "e" #'eww)
-
-  (prot-emacs-keybind embark-buffer-map
-    "k" #'prot-simple-kill-buffer
-    "o" #'switch-to-buffer-other-window
-    "e" #'ediff-buffers)
-
-  (add-to-list 'embark-post-action-hooks (list 'prot-simple-kill-buffer 'embark--restart))
-
-  (prot-emacs-keybind embark-file-map
-    "f" #'find-file
-    "j" #'embark-dired-jump
-    "c" #'copy-file
-    "e" #'ediff-files)
-
-  (prot-emacs-keybind embark-identifier-map
-    "h" #'display-local-help
-    "." #'xref-find-definitions
-    "o" #'occur)
-
-  (prot-emacs-keybind embark-command-map
-    "h" #'describe-command
-    "." #'embark-find-definition)
-
-  (prot-emacs-keybind embark-expression-map
-    "e" #'pp-eval-expression
-    "m" #'pp-macroexpand-expression)
-
-  (prot-emacs-keybind embark-function-map
-    "h" #'describe-function
-    "." #'embark-find-definition)
-
-  (prot-emacs-keybind embark-package-map
-    "h" #'describe-package
-    "i" #'package-install
-    "d" #'package-delete
-    "r" #'package-reinstall
-    "u" #'embark-browse-package-url
-    "w" #'embark-save-package-url)
-
-  (prot-emacs-keybind embark-symbol-map
-    "h" #'describe-symbol
-    "." #'embark-find-definition)
-
-  (prot-emacs-keybind embark-variable-map
-    "h" #'describe-variable
-    "." #'embark-find-definition)
-
-  (prot-emacs-keybind embark-region-map
-    "a" #'align-regexp
-    "D" #'delete-duplicate-lines
-    "f" #'flush-lines
-    "i" #'epa-import-keys-region
-    "d" #'epa-decrypt-armor-in-region
-    "r" #'repunctuate-sentences
-    "s" #'sort-lines
-    "u" #'untabify)
-
-  ;; FIXME 2023-04-13: Why `embark-defun-map' has `embark-expression-map' as parent?
-  (set-keymap-parent embark-defun-map embark-expression-map)
-
-  (dolist (map '( embark-url-map embark-buffer-map embark-file-map
-                  embark-identifier-map embark-command-map embark-expression-map
-                  embark-function-map embark-package-map embark-symbol-map
-                  embark-variable-map embark-region-map))
-    (set-keymap-parent (symbol-value map) embark-general-map)))
+(prot-emacs-package prot-embark
+  (:delay 5)
+  (setq embark-keymap-alist
+        '((buffer prot-embark-buffer-map)
+          (command prot-embark-command-map)
+          (expression prot-embark-expression-map)
+          (file prot-embark-file-map)
+          (function prot-embark-function-map)
+          (identifier prot-embark-identifier-map)
+          (package prot-embark-package-map)
+          (region prot-embark-region-map)
+          (symbol prot-embark-symbol-map)
+          (url prot-embark-url-map)
+          (variable prot-embark-variable-map))))
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
