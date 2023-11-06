@@ -3,83 +3,74 @@
 
 ;;;; General settings
 
+  (setq evil-want-change-word-to-end t)
   (setq evil-want-C-i-jump t)
-  (setq evil-want-C-u-scroll t) ; Vim style
+  (setq evil-want-C-u-scroll t)
   (setq evil-want-C-d-scroll t)
-  (setq evil-want-C-u-delete nil) ; I can use Emacs keys in insert mode
-  (setq evil-want-C-w-delete nil) ; I can use Emacs keys in insert mode
-  (setq evil-want-C-h-delete nil) ; I can use Emacs keys in insert mode
-  (setq evil-disable-insert-state-bindings t)
   (setq evil-want-C-g-bindings nil)
-  (setq evil-want-C-w-in-emacs-state nil)
-  (setq evil-want-change-word-to-end nil)
   (setq evil-want-Y-yank-to-eol t) ; consistent with D
-  (setq evil-want-abbrev-expand-on-insert-exit nil) ; expand abbrevs outright
   (setq evil-want-empty-ex-last-command t)
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-minibuffer nil)
-  (setq evil-toggle-key "<f12>") ; I seldom need this, so putting it somewhere far
-  (setq evil-respect-visual-line-mode nil)
-  (setq evil-search-module 'isearch)
-  (setq evil-symbol-word-search t)
-  (setq evil-magic nil) ; not applicable for `evil-search-module' isearch module
-  (setq evil-ex-search-vim-style-regexp nil) ; not for isearch
-  (setq evil-shift-width tab-width)
-  (setq evil-default-cursor t)
-  (setq evil-start-of-line nil)
+
+  (setq evil-default-state 'normal) ; check `evil-set-initial-state'
+  (setq evil-echo-state nil)
+  (setq evil-mode-line-format nil) ; see `prot-modeline.el' and its implementation in `prot-emacs-modeline.el'
+  (setq evil-want-fine-undo t)
+  (setq evil-esc-delay 0.01)
+  (setq evil-intercept-esc 'always)
+  (setq evil-highlight-closing-paren-at-point-states '(not emacs insert replace))
+  (setq evil-kill-on-visual-paste nil) ; Emacs style, not Vim
+  (setq evil-auto-indent t)
+
+  (setq evil-undo-system 'undo-redo) ; Emacs 28
+  (setq evil-visual-update-x-selection-p t)
+
   (setq evil-repeat-move-cursor t)
-  (setq evil-cross-lines t)
-  (setq evil-backspace-join-lines t)
-  (setq evil-move-cursor-back nil) ; Emacs style, not Vim
-  (setq evil-move-beyond-eol t) ; Emacs style, not Vim
   (setq evil-repeat-find-to-skip-next t)
   (setq evil-kbd-macro-suppress-motion-error nil) ; never suppress errors in kmacros, Emacs-style
-  (setq evil-track-eol nil)
-  (setq evil-mode-line-format nil) ; see `prot-modeline.el' and its implementation in `prot-emacs-modeline.el'
-  (setq evil-mouse-word 'evil-word)
-  (setq evil-bigword "^ \t\r\n")
-  (setq evil-want-fine-undo t)
-  (setq evil-regexp-search nil)
-  (setq evil-search-wrap t)
-  (setq evil-search-wrap-ring-bell t) ; TODO does this quit keyboard macros, specifically with C-u 0?
-  (setq evil-flash-delay 0.5)
+
+  ;; ;; I disable K anyway
+  ;; (setq evil-lookup-func #'ignore)
+
+  ;; I only use the standard commands for window splitting...
   (setq evil-auto-balance-windows window-combination-resize)
   (setq evil-split-window-below nil)
   (setq evil-vsplit-window-right nil)
-  (setq evil-esc-delay 0.01)
-  (setq evil-intercept-esc 'always)
-  (setq evil-show-paren-range 1)
-  (setq evil-ex-hl-update-delay lazy-highlight-initial-delay)
-  (setq evil-highlight-closing-paren-at-point-states '(not emacs insert replace))
-  (setq evil-kill-on-visual-paste nil) ; Emacs style, not Vim
-  (setq evil-echo-state nil) ; be silent
-  (setq evil-complete-all-buffers t) ; TODO C-n and C-p in insert mode
-  (setq evil-lookup-func #'woman) ; TODO K in normal mode
-  (setq evil-default-state 'normal) ; check `evil-set-initial-state'
+
+  (setq evil-mouse-word 'evil-word)
+  (setq evil-bigword "^ \t\r\n")
+
+  ;; evil-complete-all-buffer
   ;; evil-buffer-regexps
   ;; evil-intercept-maps
   ;; evil-motions
   ;; evil-visual-newline-commands
-  (setq evil-v$-excludes-newline nil)
-  (setq evil-text-object-change-visual-type t)
-  ;; evil-ex-complete-emacs-commands 'in-turn
-  ;; evil-ex-visual-char-range nil
-  (setq evil-ex-interactive-search-highlight 'selected-window)
-  (setq evil-ex-search-persistent-highlight t)
-  (setq evil-ex-search-case 'smart)
-  (setq evil-ex-substitute-case nil) ; use `evil-ex-search-case'
-  (setq evil-ex-search-incremental t)
-  (setq evil-ex-search-highlight-all t)
-  (setq evil-ex-substitute-highlight-all t)
-  (setq evil-ex-substitute-interactive-replace t)
-  (setq evil-ex-substitute-global nil) ; global substitute is with s/a/b/g as it should
-  (setq evil-command-window-height 7)  ; TODO
-  (setq evil-display-shell-error-in-message nil) ; TODO
-  (setq evil-undo-system 'undo-redo) ; Emacs 28
-  (setq evil-visual-update-x-selection-p t)
+  ;; evil-text-object-change-visual-type
+  ;; evil-command-window-height
+  ;; evil-display-shell-error-in-message
 
-;;;; Compatibility with other modes
+;;;; Evil cursors
+
+  ;; TODO 2023-11-06: integrate with `cursory'
+  (setq evil-default-cursor t)
+
+;;;; How lines are treated
+
+  (setq evil-respect-visual-line-mode nil)
+
+  (setq evil-shift-width tab-width)
+  (setq evil-start-of-line t)
+  (setq evil-backspace-join-lines t)
+  (setq evil-cross-lines t)
+  (setq evil-move-cursor-back nil) ; my "insert" mode is "emacs", so not relevant
+  (setq evil-move-beyond-eol nil)
+  (setq evil-show-paren-range 0)
+  (setq evil-track-eol t)
+  (setq evil-v$-excludes-newline nil)
+
+;;;; Compatibility with other modes and other key bindings
 
   ;; I load the `evil' feature here because some functions/macros of
   ;; it are needed from this point on.
@@ -145,6 +136,7 @@
           Info-mode
           help-mode
           diff-mode
+          ediff-mode
           log-view-mode
           org-agenda-mode
           dired-mode
@@ -188,11 +180,66 @@
 
     (evil-define-key '(normal visual motion) global-map (kbd "C-.") #'prot/evil-embark-act-or-repeat-pop))
 
+  (with-eval-after-load 'org
+    (evil-define-key '(normal visual motion) org-mode-map
+      (kbd "<tab>") #'org-cycle
+      (kbd "<return>") #'org-ctrl-c-ctrl-c))
+
+  (evil-define-key '(normal visual motion) global-map
+    (kbd "<tab>") #'evil-indent
+    (kbd "<return>") #'prot-simple-new-line-below
+    (kbd "S-<return>") #'prot-simple-new-line-above
+    (kbd "K") #'ignore ; TODO 2023-11-06: do something useful with K
+    (kbd "g d") #'xref-find-definitions
+    (kbd "g D") #'xref-go-back)
+
+;;;; Evil search setup
+
+  ;; NOTE 2023-11-06: These settings do not give me the same isearch
+  ;; experience as core Emacs.  I only want that, but to use it with
+  ;; Vim keys.
+
+  (setq evil-search-module 'isearch)
+  (setq evil-symbol-word-search t)
+  (setq evil-flash-delay 0.5)
+  (setq evil-ex-hl-update-delay lazy-highlight-initial-delay)
+  (setq evil-regexp-search nil)
+  (setq evil-search-wrap t)
+  (setq evil-search-wrap-ring-bell t) ; TODO does this quit keyboard macros, specifically with C-u 0?
+  (setq evil-magic nil) ; not applicable for `evil-search-module' isearch module
+  (setq evil-ex-search-vim-style-regexp nil) ; not for isearch
+
+  ;; NOTE 2023-11-06: I have not tested all of the following and am
+  ;; not sure which ones are relevant for my use-case.
+
+;;;; Ex commands
+
+  ;; NOTE 2023-11-06: I have not used any of these...
+  (setq evil-ex-interactive-search-highlight 'selected-window)
+  (setq evil-ex-search-persistent-highlight t)
+  (setq evil-ex-search-case 'smart)
+  (setq evil-ex-substitute-case nil) ; use `evil-ex-search-case'
+  (setq evil-ex-search-incremental t)
+  (setq evil-ex-search-highlight-all t)
+  (setq evil-ex-substitute-highlight-all t)
+  (setq evil-ex-substitute-interactive-replace t)
+  (setq evil-ex-substitute-global nil)
+  ;; evil-ex-complete-emacs-commands 'in-turn
+  ;; evil-ex-visual-char-range nil
+
 ;;;; Make Emacs the Insert state
 
   (defalias 'evil-insert-state 'evil-emacs-state)
   (evil-define-key 'emacs global-map (kbd "<escape>") #'prot/evil-normal-or-basic-state)
   (setq evil-emacs-state-cursor evil-insert-state-cursor)
+
+  (setq evil-want-C-u-delete nil)
+  (setq evil-want-C-w-delete nil)
+  (setq evil-want-C-h-delete nil)
+  (setq evil-want-C-w-in-emacs-state nil)
+  (setq evil-want-abbrev-expand-on-insert-exit nil)
+  (setq evil-disable-insert-state-bindings t)
+  (setq evil-toggle-key "<f12>") ; I seldom need this, so putting it somewhere far
 
 ;;;; Set up `devil-mode' to reduce modifier key usage
 
