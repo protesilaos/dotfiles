@@ -228,20 +228,40 @@ Specific to the current window's mode line.")
 (defun prot-modeline-evil-state-tag ()
   "Return mode line tag depending on the Evil state."
   (pcase evil-state
-    ('normal (propertize " [N] " 'face 'prot-modeline-indicator-blue))
-    ('insert " [I] ") ; I don't actually use an "insert" state: it switches to "emacs"
+    ('normal (propertize " <N> "
+                         'face 'prot-modeline-indicator-blue
+                         'mouse-face 'mode-line-highlight
+                         'help-echo "Evil NORMAL state"))
+    ('insert " <I> ") ; I don't actually use an "insert" state: it switches to "emacs"
     ('visual (propertize
               (pcase evil-visual-selection
-                ('line " [Vl] ")
-                ('screen-line " [Vsl] ")
-                ('block " [Vb] ")
-                (_ " [V] "))
-              'face 'prot-modeline-indicator-yellow))
-    ('motion (propertize " [M] " 'face 'prot-modeline-indicator-yellow))
-    ('emacs (propertize " [E] " 'face 'prot-modeline-indicator-magenta))
-    ('operator (propertize " [O] " 'face 'prot-modeline-indicator-red))
-    ('replace (propertize " [R] " 'face 'prot-modeline-indicator-red))
-    ('prot-basic (propertize " [PB] " 'face 'prot-modeline-indicator-green))))
+                ('line " <Vl> ")
+                ('screen-line " <Vsl> ")
+                ('block " <Vb> ")
+                (_ " <V> "))
+              'face 'prot-modeline-indicator-yellow
+              'mouse-face 'mode-line-highlight
+              'help-echo "Evil VISUAL state"))
+    ('motion (propertize " <M> "
+                         'face 'prot-modeline-indicator-yellow
+                         'mouse-face 'mode-line-highlight
+                         'help-echo "Evil MOTION state"))
+    ('emacs (propertize " <E> "
+                        'face 'prot-modeline-indicator-magenta
+                        'mouse-face 'mode-line-highlight
+                        'help-echo "Evil EMACS state"))
+    ('operator (propertize " <O> "
+                           'face 'prot-modeline-indicator-red
+                           'mouse-face 'mode-line-highlight
+                           'help-echo "Evil OPERATOR state"))
+    ('replace (propertize " <R> "
+                          'face 'prot-modeline-indicator-red
+                          'mouse-face 'mode-line-highlight
+                          'help-echo "Evil REPLACE state"))
+    ('prot-basic (propertize " <PB> "
+                             'face 'prot-modeline-indicator-green
+                             'mouse-face 'mode-line-highlight
+                             'help-echo "Evil PROT-BASIC state"))))
 
 (defvar-local prot-modeline-evil
     '(:eval
