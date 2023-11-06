@@ -100,6 +100,7 @@
     (add-hook hook #'visual-line-mode))
 
   (add-hook 'world-clock-mode-hook #'prot-common-truncate-lines-silently)
+  (add-hook 'calendar-mode-hook #'prot-common-truncate-lines-silently)
 
   ;; NOTE 2022-09-17: Also see `prot-simple-swap-window-buffers'.
   (prot-emacs-keybind global-map
