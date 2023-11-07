@@ -21,7 +21,7 @@
   (setq evil-esc-delay 0.01)
   (setq evil-intercept-esc 'always)
   (setq evil-highlight-closing-paren-at-point-states '(not emacs insert replace))
-  (setq evil-kill-on-visual-paste nil) ; Emacs style, not Vim
+  (setq evil-kill-on-visual-paste nil) ; Does not work, see `prot/evil-visual-paste-no-kill'
   (setq evil-auto-indent t)
 
   (setq evil-undo-system 'undo-redo) ; Emacs 28
@@ -240,6 +240,18 @@
   (setq evil-want-abbrev-expand-on-insert-exit nil)
   (setq evil-disable-insert-state-bindings t)
   (setq evil-toggle-key "<f12>") ; I seldom need this, so putting it somewhere far
+
+;;;; Do not pollute the kill-ring in visual state
+
+  (defun prot/evil-visual-paste-no-kill (&rest args)
+    "Do not add visual selection to the kill-ring while pasting.
+Add as :around advice to `evil-delete', applying its ARGS."
+    (if (evil-visual-state-p)
+      (cl-letf (((symbol-function 'evil-yank) #'ignore))
+        (apply args))
+      (apply args)))
+
+  (advice-add #'evil-delete :around #'prot/evil-visual-paste-no-kill)
 
 ;;;; Set up `devil-mode' to reduce modifier key usage
 
