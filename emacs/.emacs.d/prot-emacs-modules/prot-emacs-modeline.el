@@ -6,9 +6,8 @@
                 '("%e"
                   prot-modeline-kbd-macro
                   prot-modeline-narrow
-                  prot-modeline-input-method
                   prot-modeline-buffer-status
-                  " "
+                  prot-modeline-input-method
                   prot-modeline-evil
                   prot-modeline-buffer-identification
                   "  "

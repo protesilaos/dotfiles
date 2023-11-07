@@ -173,6 +173,13 @@
        (> (length str) prot-modeline-string-truncate-length)
        (not (one-window-p :no-minibuffer))))
 
+(defun prot-modeline--truncate-p ()
+  "Return non-nil if truncation should happen.
+This is a more general and less stringent variant of
+`prot-modeline--string-truncate-p'."
+  (and (< (window-total-width) split-width-threshold)
+       (not (one-window-p :no-minibuffer))))
+
 (defun prot-modeline-string-truncate (str)
   "Return truncated STR, if appropriate, else return STR.
 Truncation is done up to `prot-modeline-string-truncate-length'."
@@ -225,48 +232,69 @@ Specific to the current window's mode line.")
 (defvar evil-state)
 (defvar evil-visual-selection)
 
-(defun prot-modeline-evil-state-tag ()
-  "Return mode line tag depending on the Evil state."
+(defconst prot-modeline-evil-state-tags
+  '((normal     :short "<N>"   :long "NORMAL")
+    (insert     :short "<I>"   :long "INSERT")
+    (visual     :short "<V>"   :long "VISUAL")
+    (vblock     :short "<Vb>"  :long "VBLOCK")
+    (vline      :short "<Vl>"  :long "VLINE")
+    (vsline     :short "<Vsl>" :long "VSLINE")
+    (motion     :short "<M>"   :long "MOTION")
+    (emacs      :short "<E>"   :long "EMACS")
+    (operator   :short "<O>"   :long "OPERATE")
+    (replace    :short "<R>"   :long "REPLACE")
+    (prot-basic :short "<B>"   :long "BASIC"))
+  "Short and long tags for Evil states.")
+
+(defun prot-modeline--evil-get-tag (state variant)
+  "Get Evil STATE tag of VARIANT :short or :long.
+VARIANT of the state tag is either :short or :long, as defined in
+`prot-modeline-evil-state-tags'."
+  (let ((tags (alist-get state prot-modeline-evil-state-tags)))
+    (plist-get tags (or variant :short))))
+
+(defun prot-modeline--evil-get-format-specifier (variant)
+  "Return a `format' specifier for VARIANT.
+VARIANT of the state tag is either :short or :long, as defined in
+`prot-modeline-evil-state-tags'."
+  (if (eq variant :short)
+      " %-5s"
+    " %-8s"))
+
+(defun prot-modeline--evil-propertize-tag (state variant &optional face)
+  "Propertize STATE tag of VARIANT with optional FACE.
+VARIANT of the state tag is either :short or :long, as defined in
+`prot-modeline-evil-state-tags'.  If FACE is nil, fall back to
+`default'."
+  (let ((tag (prot-modeline--evil-get-tag state variant)))
+    (propertize (format (prot-modeline--evil-get-format-specifier variant) tag)
+                'face (or face 'default)
+                'mouse-face 'mode-line-highlight
+                'help-echo (format "Evil `%s' state" state))))
+
+(defun prot-modeline-evil-state-tag (variant)
+  "Return mode line tag VARIANT depending on the Evil state.
+VARIANT of the state tag is either :short or :long, as defined in
+`prot-modeline-evil-state-tags'."
   (pcase evil-state
-    ('normal (propertize " <N> "
-                         'face 'prot-modeline-indicator-blue
-                         'mouse-face 'mode-line-highlight
-                         'help-echo "Evil NORMAL state"))
-    ('insert " <I> ") ; I don't actually use an "insert" state: it switches to "emacs"
-    ('visual (propertize
-              (pcase evil-visual-selection
-                ('line " <Vl> ")
-                ('screen-line " <Vsl> ")
-                ('block " <Vb> ")
-                (_ " <V> "))
-              'face 'prot-modeline-indicator-yellow
-              'mouse-face 'mode-line-highlight
-              'help-echo "Evil VISUAL state"))
-    ('motion (propertize " <M> "
-                         'face 'prot-modeline-indicator-yellow
-                         'mouse-face 'mode-line-highlight
-                         'help-echo "Evil MOTION state"))
-    ('emacs (propertize " <E> "
-                        'face 'prot-modeline-indicator-magenta
-                        'mouse-face 'mode-line-highlight
-                        'help-echo "Evil EMACS state"))
-    ('operator (propertize " <O> "
-                           'face 'prot-modeline-indicator-red
-                           'mouse-face 'mode-line-highlight
-                           'help-echo "Evil OPERATOR state"))
-    ('replace (propertize " <R> "
-                          'face 'prot-modeline-indicator-red
-                          'mouse-face 'mode-line-highlight
-                          'help-echo "Evil REPLACE state"))
-    ('prot-basic (propertize " <PB> "
-                             'face 'prot-modeline-indicator-green
-                             'mouse-face 'mode-line-highlight
-                             'help-echo "Evil PROT-BASIC state"))))
+    ('normal (prot-modeline--evil-propertize-tag 'normal variant 'prot-modeline-indicator-blue))
+    ('insert (prot-modeline--evil-propertize-tag 'insert variant))  ; I don't actually use an "insert" state: it switches to "emacs"
+    ('visual (pcase evil-visual-selection
+               ('line (prot-modeline--evil-propertize-tag 'vline variant 'prot-modeline-indicator-yellow))
+               ('screen-line (prot-modeline--evil-propertize-tag 'vsline variant 'prot-modeline-indicator-yellow))
+               ('block (prot-modeline--evil-propertize-tag 'vblock variant 'prot-modeline-indicator-yellow))
+               (_ (prot-modeline--evil-propertize-tag 'visual variant 'prot-modeline-indicator-yellow))))
+    ('motion (prot-modeline--evil-propertize-tag 'motion variant 'prot-modeline-indicator-yellow))
+    ('emacs (prot-modeline--evil-propertize-tag 'emacs variant 'prot-modeline-indicator-magenta))
+    ('operator (prot-modeline--evil-propertize-tag 'operator variant 'prot-modeline-indicator-red))
+    ('replace (prot-modeline--evil-propertize-tag 'replace variant 'prot-modeline-indicator-red))
+    ('prot-basic (prot-modeline--evil-propertize-tag 'prot-basic variant 'prot-modeline-indicator-green))))
 
 (defvar-local prot-modeline-evil
     '(:eval
       (when (and (mode-line-window-selected-p) (bound-and-true-p evil-mode))
-        (prot-modeline-evil-state-tag)))
+        (let ((variant (if (prot-modeline--truncate-p) :short :long)))
+          (prot-modeline-evil-state-tag variant))))
   "Mode line construct to display the Evil state.")
 
 ;;;; Buffer name and modified status
