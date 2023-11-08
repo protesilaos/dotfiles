@@ -245,13 +245,15 @@
 
   (defun prot/evil-visual-paste-no-kill (&rest args)
     "Do not add visual selection to the kill-ring while pasting.
-Add as :around advice to `evil-delete', applying its ARGS."
+Add as :around advice to `evil-paste-after' and `evil-paste-before',
+applying its ARGS."
     (if (evil-visual-state-p)
       (cl-letf (((symbol-function 'evil-yank) #'ignore))
         (apply args))
       (apply args)))
 
-  (advice-add #'evil-delete :around #'prot/evil-visual-paste-no-kill)
+  (advice-add #'evil-paste-after :around #'prot/evil-visual-paste-no-kill)
+  (advice-add #'evil-paste-before :around #'prot/evil-visual-paste-no-kill)
 
 ;;;; Set up `devil-mode' to reduce modifier key usage
 
