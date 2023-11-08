@@ -185,14 +185,6 @@
       (kbd "<tab>") #'org-cycle
       (kbd "<return>") #'org-ctrl-c-ctrl-c))
 
-  (evil-define-key '(normal visual motion) global-map
-    (kbd "<tab>") #'evil-indent
-    (kbd "<return>") #'prot-simple-new-line-below
-    (kbd "S-<return>") #'prot-simple-new-line-above
-    (kbd "K") #'ignore ; TODO 2023-11-06: do something useful with K
-    (kbd "g d") #'xref-find-definitions
-    (kbd "g D") #'xref-go-back)
-
 ;;;; Evil search setup
 
   ;; NOTE 2023-11-06: These settings do not give me the same isearch
@@ -254,6 +246,52 @@ applying its ARGS."
 
   (advice-add #'evil-paste-after :around #'prot/evil-visual-paste-no-kill)
   (advice-add #'evil-paste-before :around #'prot/evil-visual-paste-no-kill)
+
+;;;; Custom Evil keys
+
+  (evil-define-operator prot-evil-erase (beg end type &rest _)
+    "Erase text from BEG to END with TYPE.
+Unlike the delete operator, do not store the erased text anywhere."
+    (interactive "<R><x><y>")
+    (when (and (memq type '(inclusive exclusive))
+               (not (evil-visual-state-p))
+               (eq 'prot-evil-erase evil-this-operator)
+               (save-excursion (goto-char beg) (bolp))
+               (save-excursion (goto-char end) (eolp))
+               (<= 1 (evil-count-lines beg end)))
+      ;; Imitate Vi strangeness: if motion meets above criteria,
+      ;; delete linewise. Not for change operator or visual state.
+      (let ((new-range (evil-line-expand beg end)))
+        (setq beg (car new-range)
+              end (cadr new-range)
+              type 'line)))
+    (cond
+     ((eq type 'block)
+      (evil-apply-on-block #'delete-region beg end nil))
+     ((and (eq type 'line)
+           (= end (point-max))
+           (or (= beg end)
+               (/= (char-before end) ?\n))
+           (/= beg (point-min))
+           (= (char-before beg) ?\n))
+      (delete-region (1- beg) end))
+     (t (delete-region beg end)))
+    (when (and (eq type 'line)
+               (called-interactively-p 'any))
+      (evil-first-non-blank)
+      (when (and (not evil-start-of-line)
+                 evil-operator-start-col
+                 ;; Special exceptions to ever saving column:
+                 (not (memq evil-this-motion '(evil-forward-word-begin
+                                               evil-forward-WORD-begin))))
+        (move-to-column evil-operator-start-col))))
+
+  (evil-define-key '(normal visual motion) global-map
+    (kbd "U") #'evil-redo
+    (kbd "C-r") #'isearch-backward
+    (kbd "K") #'prot-evil-erase
+    (kbd "g d") #'xref-find-definitions
+    (kbd "g D") #'xref-go-back)
 
 ;;;; Set up `devil-mode' to reduce modifier key usage
 
