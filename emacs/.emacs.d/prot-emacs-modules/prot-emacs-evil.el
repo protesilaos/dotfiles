@@ -70,7 +70,7 @@
   (setq evil-track-eol t)
   (setq evil-v$-excludes-newline nil)
 
-;;;; Compatibility with other modes and other key bindings
+;;;; Compatibility with other modes
 
   ;; I load the `evil' feature here because some functions/macros of
   ;; it are needed from this point on.
