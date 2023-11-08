@@ -72,6 +72,12 @@ before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
+(defcustom prot-emacs-load-icons nil
+  "When non-nil, enable iconography in various contexts.
+This installs and uses the `nerd-icons' package and its variants."
+  :group 'prot-emacs
+  :type 'boolean)
+
 (defcustom prot-emacs-omit-packages nil
   "List of package names to not load.
 This instructs the relevant macros to not `require' the given
@@ -415,6 +421,8 @@ that is expanded with the `prot-emacs-package' macro."
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
 (when prot-emacs-load-which-key
   (require 'prot-emacs-which-key))
+(when prot-emacs-load-icons
+  (require 'prot-emacs-icons))
 ;; We load it last to override any other keys.
 (when prot-emacs-load-evil
   (require 'prot-emacs-evil))
