@@ -403,7 +403,7 @@ face.  Let other buffers have no face.")
         (prot-modeline-major-mode-indicator)
         " "
         (propertize
-         (prot-modeline-string-truncate
+         (prot-modeline-string-abbreviate
           (prot-modeline-major-mode-name))
          'mouse-face 'mode-line-highlight
          'help-echo (prot-modeline-major-mode-help-echo))))
