@@ -187,6 +187,35 @@ Truncation is done up to `prot-modeline-string-truncate-length'."
       (concat (substring str 0 prot-modeline-string-truncate-length) "...")
     str))
 
+(defun prot-modeline-string-truncate-end (str)
+  "Like `prot-modeline-string-truncate' but truncate from string beginning."
+  (if (prot-modeline--string-truncate-p str)
+      (concat "..." (substring str (- prot-modeline-string-truncate-length)))
+    str))
+
+(defun prot-modeline--first-char (str)
+  "Return first character from STR."
+  (substring str 0 1))
+
+(defun prot-modeline-string-abbreviate (str)
+  "Abbreviate STR individual hyphen or underscore separated words.
+Also see `prot-modeline-string-abbreviate-but-last'."
+  (if (prot-modeline--string-truncate-p str)
+      (mapconcat #'prot-modeline--first-char (split-string str "[_-]") "-")
+    str))
+
+(defun prot-modeline-string-abbreviate-but-last (str nthlast)
+  "Abbreviate STR, keeping NTHLAST words intact.
+Also see `prot-modeline-string-abbreviate'."
+  (if (prot-modeline--string-truncate-p str)
+      (let* ((all-strings (split-string str "[_-]"))
+             (nbutlast-strings (nbutlast (copy-sequence all-strings) nthlast))
+             (last-strings (nreverse (ntake nthlast (nreverse (copy-sequence all-strings)))))
+             (first-component (mapconcat #'prot-modeline--first-char nbutlast-strings "-"))
+             (last-component (mapconcat #'identity last-strings "-")))
+        (concat first-component "-" last-component))
+    str))
+
 ;;;; Keyboard macro indicator
 
 (defvar-local prot-modeline-kbd-macro
