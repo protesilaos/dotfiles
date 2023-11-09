@@ -213,7 +213,9 @@ Also see `prot-modeline-string-abbreviate'."
              (last-strings (nreverse (ntake nthlast (nreverse (copy-sequence all-strings)))))
              (first-component (mapconcat #'prot-modeline--first-char nbutlast-strings "-"))
              (last-component (mapconcat #'identity last-strings "-")))
-        (concat first-component "-" last-component))
+        (if (string-empty-p first-component)
+            last-component
+          (concat first-component "-" last-component)))
     str))
 
 ;;;; Keyboard macro indicator
