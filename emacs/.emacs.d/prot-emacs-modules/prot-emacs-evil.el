@@ -3,6 +3,13 @@
 
 ;;;; General settings
 
+  (setq evil-want-C-u-delete nil)
+  (setq evil-want-C-w-delete nil)
+  (setq evil-want-C-h-delete nil)
+  (setq evil-want-C-w-in-emacs-state nil)
+  (setq evil-want-abbrev-expand-on-insert-exit nil)
+  (setq evil-disable-insert-state-bindings t)
+
   (setq evil-want-change-word-to-end t)
   (setq evil-want-C-i-jump t)
   (setq evil-want-C-u-scroll t)
@@ -14,6 +21,7 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-minibuffer nil)
 
+  (setq evil-toggle-key "<f12>") ; I seldom need this, so putting it somewhere far
   (setq evil-default-state 'normal) ; check `evil-set-initial-state'
   (setq evil-echo-state nil)
   (setq evil-mode-line-format nil) ; see `prot-modeline.el' and its implementation in `prot-emacs-modeline.el'
@@ -21,7 +29,7 @@
   (setq evil-esc-delay 0.01)
   (setq evil-intercept-esc 'always)
   (setq evil-highlight-closing-paren-at-point-states '(not emacs insert replace))
-  (setq evil-kill-on-visual-paste nil) ; Does not work, see `prot/evil-visual-paste-no-kill'
+  (setq evil-kill-on-visual-paste nil) ; Does not work, see `prot-evil-visual-paste-no-kill'
   (setq evil-auto-indent t)
 
   (setq evil-undo-system 'undo-redo) ; Emacs 28
@@ -50,140 +58,6 @@
   ;; evil-text-object-change-visual-type
   ;; evil-command-window-height
   ;; evil-display-shell-error-in-message
-
-;;;; Evil cursors
-
-  ;; TODO 2023-11-06: integrate with `cursory'
-  (setq evil-default-cursor t)
-
-;;;; How lines are treated
-
-  (setq evil-respect-visual-line-mode nil)
-
-  (setq evil-shift-width tab-width)
-  (setq evil-start-of-line t)
-  (setq evil-backspace-join-lines t)
-  (setq evil-cross-lines t)
-  (setq evil-move-cursor-back nil) ; my "insert" mode is "emacs", so not relevant
-  (setq evil-move-beyond-eol nil)
-  (setq evil-show-paren-range 0)
-  (setq evil-track-eol t)
-  (setq evil-v$-excludes-newline nil)
-
-;;;; Compatibility with other modes
-
-  ;; I load the `evil' feature here because some functions/macros of
-  ;; it are needed from this point on.
-  (prot-emacs-package evil (:install t))
-
-  (defvar prot/evil-basic-tag " <PB> "
-    "Mode line tag for the prot-basic state.")
-
-  (defvar prot/evil-basic-message "-- PROT BASIC --"
-    "Echo area message when entering the prot basic state.")
-
-  (evil-define-state prot-basic
-    "Basic Vim keys to work in most (?) read-only major modes."
-    :tag 'prot/evil-basic-tag
-    :message 'prot/evil-basic-message)
-
-  (evil-define-command evil-force-prot-basic-state ()
-    "Switch to  state without recording current command."
-    :repeat abort
-    :suppress-operator t
-    (evil-prot-basic-state))
-
-  (evil-define-key 'prot-basic global-map
-    "0" #'evil-beginning-of-line
-    "$" #'evil-end-of-line
-    "h" #'evil-backward-char
-    "j" #'evil-next-line
-    "k" #'evil-previous-line
-    "l" #'evil-forward-char
-    "i" #'evil-insert
-    "v" #'evil-visual-char
-    "V" #'evil-visual-line)
-
-  (defun prot/evil-need-basic-p ()
-    "Return non-nil if the basic state should be used."
-    (or buffer-read-only
-        (memq major-mode evil-prot-basic-state-modes)))
-
-  (defun prot/evil-normal-or-basic-state ()
-    "Return to normal or basic state per `prot/evil-need-basic-p'."
-    (interactive)
-    (if (prot/evil-need-basic-p)
-        (evil-force-prot-basic-state)
-      (evil-force-normal-state)))
-
-  (setq evil-overriding-maps nil)
-  (setq evil-motion-state-modes nil)
-  (setq evil-insert-state-modes nil)
-  (setq evil-emacs-state-modes
-        '(comint-mode
-          rcirc-mode
-          eshell-mode
-          inferior-emacs-lisp-mode
-          reb-mode
-          shell-mode
-          term-mode
-          wdired-mode
-          log-edit-mode
-          git-commit-mode))
-  (setq evil-prot-basic-state-modes
-        '(completion-list-mode
-          Buffer-menu-mode
-          Info-mode
-          help-mode
-          diff-mode
-          ediff-mode
-          log-view-mode
-          org-agenda-mode
-          dired-mode
-          magit-status-mode
-          magit-diff-mode
-          magit-log-mode
-          notmuch-hello-mode
-          notmuch-search-mode
-          notmuch-show-mode
-          notmuch-tree-mode
-          special-mode
-          tabulated-list-mode
-          world-clock-mode))
-
-  (with-eval-after-load 'dired
-    (evil-define-key 'prot-basic dired-mode-map (kbd "K") #'dired-do-kill-lines))
-
-  (with-eval-after-load 'notmuch
-    (evil-define-key 'prot-basic notmuch-hello-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "K") #'notmuch-tag-jump)
-    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "K") #'notmuch-tag-jump)
-    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "K") #'notmuch-tag-jump))
-
-  ;; See TODO above about the visual state.
-  (with-eval-after-load 'magit
-    (evil-define-key '(visual prot-basic) magit-status-mode-map (kbd "K") #'magit-discard)
-    (evil-define-key 'visual magit-status-mode-map (kbd "s") #'magit-stage)
-    (evil-define-key 'visual magit-status-mode-map (kbd "u") #'magit-unstage))
-
-  (with-eval-after-load 'embark
-    (defun prot/evil-embark-act-or-repeat-pop ()
-      "Call `evil-repeat-pop' if relevant, else `prot/embark-act-no-quit'."
-      (interactive)
-      (call-interactively
-       (if (memq last-command '(evil-repeat evil-repeat-pop evil-repeat-pop-next))
-           #'evil-repeat-pop
-         #'prot/embark-act-no-quit)))
-
-    (evil-define-key '(normal visual motion) global-map (kbd "C-.") #'prot/evil-embark-act-or-repeat-pop))
-
-  (with-eval-after-load 'org
-    (evil-define-key '(normal visual motion) org-mode-map
-      (kbd "<tab>") #'org-cycle
-      (kbd "<return>") #'org-ctrl-c-ctrl-c))
 
 ;;;; Evil search setup
 
@@ -219,72 +93,126 @@
   ;; evil-ex-complete-emacs-commands 'in-turn
   ;; evil-ex-visual-char-range nil
 
+;;;; Evil cursors
+
+  ;; TODO 2023-11-06: integrate with `cursory'
+  (setq evil-default-cursor t)
+
+;;;; How lines are treated
+
+  (setq evil-respect-visual-line-mode nil)
+
+  (setq evil-shift-width tab-width)
+  (setq evil-start-of-line t)
+  (setq evil-backspace-join-lines t)
+  (setq evil-cross-lines t)
+  (setq evil-move-cursor-back nil) ; my "insert" mode is "emacs", so not relevant
+  (setq evil-move-beyond-eol nil)
+  (setq evil-show-paren-range 0)
+  (setq evil-track-eol t)
+  (setq evil-v$-excludes-newline nil)
+
+;;;; Compatibility with other modes
+
+  ;; I load the `evil' feature here because some functions/macros of
+  ;; it are needed from this point on.  Evil is one of those few
+  ;; packages that requires certain variables to be evaluated before
+  ;; it is `require'd.  This is why I place most of the `setq' calls
+  ;; above.
+  (prot-emacs-package evil (:install t))
+
+  ;; The `prot-evil' library defines a new state for better
+  ;; compatibility with most (all?) major modes.  It also introduces a
+  ;; new "erase" operator.  These are configured from this point on.
+  (prot-emacs-package prot-evil)
+
+  (setq evil-overriding-maps nil)
+  (setq evil-motion-state-modes nil)
+  (setq evil-insert-state-modes nil)
+  (setq evil-emacs-state-modes
+        '(comint-mode
+          rcirc-mode
+          eshell-mode
+          inferior-emacs-lisp-mode
+          reb-mode
+          shell-mode
+          term-mode
+          wdired-mode
+          log-edit-mode
+          git-commit-mode))
+  (setq evil-prot-basic-state-modes
+        '(completion-list-mode
+          Buffer-menu-mode
+          Custom-mode
+          edebug-mode
+          Info-mode
+          help-mode
+          diff-mode
+          ediff-mode
+          log-view-mode
+          org-agenda-mode
+          dired-mode
+          magit-status-mode
+          magit-diff-mode
+          magit-log-mode
+          notmuch-hello-mode
+          notmuch-search-mode
+          notmuch-show-mode
+          notmuch-tree-mode
+          special-mode
+          tabulated-list-mode
+          world-clock-mode))
+
+  (with-eval-after-load 'info
+    (evil-define-key 'prot-basic Info-mode-map (kbd "L") #'Info-history-back))
+
+  (with-eval-after-load 'help-mode
+    (evil-define-key 'prot-basic help-mode-map (kbd "L") #'help-go-back))
+
+  (with-eval-after-load 'dired
+    (evil-define-key 'prot-basic dired-mode-map (kbd "J") #'dired-goto-file)
+    (evil-define-key 'prot-basic dired-mode-map (kbd "K") #'dired-do-kill-lines))
+
+  (with-eval-after-load 'notmuch
+    (evil-define-key 'prot-basic notmuch-hello-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "J") #'notmuch-jump-search)
+    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "K") #'notmuch-tag-jump)
+    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "K") #'notmuch-tag-jump)
+    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "K") #'notmuch-tag-jump))
+
+  ;; See TODO above about the visual state.
+  (with-eval-after-load 'magit
+    (evil-define-key '(visual prot-basic) magit-status-mode-map (kbd "K") #'magit-discard)
+    (evil-define-key 'visual magit-status-mode-map (kbd "s") #'magit-stage)
+    (evil-define-key 'visual magit-status-mode-map (kbd "u") #'magit-unstage))
+
+  (with-eval-after-load 'embark
+    (defun prot-evil-embark-act-or-repeat-pop ()
+      "Call `evil-repeat-pop' if relevant, else `prot/embark-act-no-quit'."
+      (interactive)
+      (call-interactively
+       (if (memq last-command '(evil-repeat evil-repeat-pop evil-repeat-pop-next))
+           #'evil-repeat-pop
+         #'prot/embark-act-no-quit)))
+
+    (evil-define-key '(normal visual motion) global-map (kbd "C-.") #'prot-evil-embark-act-or-repeat-pop))
+
+  (with-eval-after-load 'org
+    (evil-define-key '(normal visual motion) org-mode-map
+      (kbd "<tab>") #'org-cycle
+      (kbd "<return>") #'org-ctrl-c-ctrl-c))
+
 ;;;; Make Emacs the Insert state
 
   (defalias 'evil-insert-state 'evil-emacs-state)
-  (evil-define-key 'emacs global-map (kbd "<escape>") #'prot/evil-normal-or-basic-state)
+  (evil-define-key 'emacs global-map (kbd "<escape>") #'prot-evil-normal-or-basic-state)
   (setq evil-emacs-state-cursor evil-insert-state-cursor)
-
-  (setq evil-want-C-u-delete nil)
-  (setq evil-want-C-w-delete nil)
-  (setq evil-want-C-h-delete nil)
-  (setq evil-want-C-w-in-emacs-state nil)
-  (setq evil-want-abbrev-expand-on-insert-exit nil)
-  (setq evil-disable-insert-state-bindings t)
-  (setq evil-toggle-key "<f12>") ; I seldom need this, so putting it somewhere far
-
-;;;; Do not pollute the kill-ring in visual state
-
-  (defun prot/evil-visual-paste-no-kill (&rest args)
-    "Do not add visual selection to the kill-ring while pasting.
-Add as :around advice to `evil-paste-after' and `evil-paste-before',
-applying its ARGS."
-    (if (evil-visual-state-p)
-      (cl-letf (((symbol-function 'evil-yank) #'ignore))
-        (apply args))
-      (apply args)))
-
-  (advice-add #'evil-paste-after :around #'prot/evil-visual-paste-no-kill)
-  (advice-add #'evil-paste-before :around #'prot/evil-visual-paste-no-kill)
 
 ;;;; Custom Evil keys
 
-  (evil-define-operator prot-evil-erase (beg end type &rest _)
-    "Erase text from BEG to END with TYPE.
-Unlike the delete operator, do not store the erased text anywhere."
-    (interactive "<R><x><y>")
-    (when (and (memq type '(inclusive exclusive))
-               (not (evil-visual-state-p))
-               (eq 'prot-evil-erase evil-this-operator)
-               (save-excursion (goto-char beg) (bolp))
-               (save-excursion (goto-char end) (eolp))
-               (<= 1 (evil-count-lines beg end)))
-      ;; Imitate Vi strangeness: if motion meets above criteria,
-      ;; delete linewise. Not for change operator or visual state.
-      (let ((new-range (evil-line-expand beg end)))
-        (setq beg (car new-range)
-              end (cadr new-range)
-              type 'line)))
-    (cond
-     ((eq type 'block)
-      (evil-apply-on-block #'delete-region beg end nil))
-     ((and (eq type 'line)
-           (= end (point-max))
-           (or (= beg end)
-               (/= (char-before end) ?\n))
-           (/= beg (point-min))
-           (= (char-before beg) ?\n))
-      (delete-region (1- beg) end))
-     (t (delete-region beg end)))
-    (when (and (eq type 'line)
-               (called-interactively-p 'any))
-      (evil-first-non-blank)
-      (when (and (not evil-start-of-line)
-                 evil-operator-start-col
-                 ;; Special exceptions to ever saving column:
-                 (not (memq evil-this-motion '(evil-forward-word-begin
-                                               evil-forward-WORD-begin))))
-        (move-to-column evil-operator-start-col))))
+  ;; The `prot-evil' library defines an "erase" operator.
 
   (evil-define-key '(normal visual motion) global-map
     (kbd "U") #'evil-redo
@@ -304,17 +232,7 @@ Unlike the delete operator, do not store the erased text anywhere."
 
 ;;;; Set up my prefix keymap
 
-  ;; The `prot-prefix' feature is loaded by the `prot-emacs-essentials'
-  ;; module.
-
-  (defun prot/evil-prefix-or-self-insert ()
-    "Self-insert key or return `prot-prefix-map'."
-    (interactive)
-    (if (prot/evil-need-basic-p)
-        (set-transient-map prot-prefix-map)
-      (self-insert-command 1)))
-
-  (evil-define-key '(emacs insert) global-map (kbd "SPC") #'prot/evil-prefix-or-self-insert)
+  (evil-define-key '(emacs insert) global-map (kbd "SPC") #'prot-evil-prefix-or-self-insert)
   (evil-define-key '(normal visual motion prot-basic) global-map (kbd "SPC") prot-prefix-map)
 
 ;;;; Activate `evil-mode'
