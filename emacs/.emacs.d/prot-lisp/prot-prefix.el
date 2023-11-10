@@ -173,6 +173,7 @@
 (declare-function winner-undo "winner")
 (declare-function winner-redo "winner")
 (declare-function magit-status "magit" (&optional directory cache))
+(declare-function prot-simple-other-windor-or-frame "prot-simple")
 
 (defvar-keymap prot-prefix-map
   :doc "Prefix keymap with multiple subkeymaps."
@@ -185,6 +186,7 @@
   "3" #'split-window-right
   "#" #'split-root-window-right
   "o" #'other-window
+  "O" #'prot-simple-other-windor-or-frame
   "Q" #'save-buffers-kill-emacs
   "b" prot-prefix-buffer-map
   "c" #'world-clock
