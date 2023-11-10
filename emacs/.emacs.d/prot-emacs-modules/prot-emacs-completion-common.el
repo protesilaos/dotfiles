@@ -152,7 +152,8 @@
     "meweb" "https://protesilaos.com"
     "megit" "https://git.sr.ht/~protesilaos"
     "mehub" "https://github.com/protesilaos"
-    "melab" "https://gitlab.com/protesilaos")
+    "melab" "https://gitlab.com/protesilaos"
+    "medrive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/")
 
   (prot-emacs-abbrev text-mode-abbrev-table
     "asciidoc"       "AsciiDoc"
