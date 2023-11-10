@@ -31,6 +31,8 @@
 
 ;;; Code:
 
+(require 'prot-common)
+
 (defgroup prot-modeline nil
   "Custom modeline that is stylistically close to the default."
   :group 'mode-line)

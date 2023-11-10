@@ -1,7 +1,9 @@
 ;;; Mode line
-(prot-emacs-package prot-modeline
+(prot-emacs-configure
+  (:delay 1)
+  (which-function-mode 1)
+  (require 'prot-modeline)
   (setq mode-line-compact nil) ; Emacs 28
-
   (setq-default mode-line-format
                 '("%e"
                   prot-modeline-kbd-macro
@@ -29,11 +31,6 @@
 
   ;; Overrides the "two-column" gimmick that I will never use.
   (define-key global-map (kbd "<f2>") #'prot-modeline-subtle-mode))
-
-;;; Show name of current function (which-function-mode)
-(prot-emacs-package which-fun
-  (:delay 10)
-  (which-function-mode 1))
 
 ;;; Keycast mode
 (prot-emacs-package keycast
