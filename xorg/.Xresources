@@ -35,17 +35,19 @@ xterm*geometry: 80x24
 xterm*internalBorder: 20
 xterm*borderWidth: 0
 
-! Cursor
+! Cursor shape
 ! Allowing the cursor to use the reverse colour of the background or
 ! foreground avoids circumstances, such as in Vim, where the cursor can
 ! be virtually impossible to see.  Note that this does not work when the
 ! cursor is not a block character (cursorUnderLine: true).
 xterm*cursorColor: reverse
-xterm*cursorBlink: true
-xterm*cursorOffTime: 300
-xterm*cursorOnTime: 800
 xterm*cursorUnderLine: false
 xterm*pointerShape: XTerm
+
+! Cursor blink
+xterm*cursorBlink: true
+xterm*cursorOffTime: 600
+xterm*cursorOnTime: 1200
 
 ! Bell
 xterm*bellIsUrgent: false
