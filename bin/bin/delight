@@ -363,6 +363,7 @@ _xfce ()
         _xfquery_set 'xsettings' '/Net/ThemeName' 'Adwaita'
     fi
 
+    _gnome_theme
     _emacs "$style"
     _xterm "$style"
 }
