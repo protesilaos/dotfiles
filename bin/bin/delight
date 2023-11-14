@@ -340,27 +340,27 @@ _mate ()
 
 #### Xfce
 
-_xfquery ()
+_xfquery_get ()
 {
-    xfconf-query -c xfwm4 -p /general/theme
+    xfconf-query -c "$1" -p "$2"
 }
 
-_xfquerys ()
+_xfquery_set ()
 {
     xfconf-query -c "$1" -p "$2" -s "$3"
 }
 
 _xfce ()
 {
-    if [ "$(_xfquery)" = 'Adwaita' ]
+    if [ "$(_xfquery_get 'xsettings' '/Net/ThemeName')" = 'Adwaita' ]
     then
         style=dark
-        _xfquerys 'xfwm4' '/general/theme' 'Adwaita-dark'
-        _xfquerys 'xsettings' '/Net/ThemeName' 'Adwaita-dark'
+        _xfquery_set 'xfwm4' '/general/theme' 'Adwaita-dark'
+        _xfquery_set 'xsettings' '/Net/ThemeName' 'Adwaita-dark'
     else
         style=light
-        _xfquerys 'xfwm4' '/general/theme' 'Adwaita'
-        _xfquerys 'xsettings' '/Net/ThemeName' 'Adwaita'
+        _xfquery_set 'xfwm4' '/general/theme' 'Adwaita'
+        _xfquery_set 'xsettings' '/Net/ThemeName' 'Adwaita'
     fi
 
     _emacs "$style"
