@@ -77,7 +77,7 @@ _xterm ()
     [ -f "$xresources" ] || { echo "No Xresources file"; exit 1; }
     [ -f "$active_theme" ] || { echo "No active Xresources theme"; exit 1; }
 
-    case $wm_theme
+    case ${1:-$wm_theme}
     in
         light) _sed "s,vivendi,operandi," "$active_theme" ;;
         dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
@@ -364,6 +364,7 @@ _xfce ()
     fi
 
     _emacs "$style"
+    _xterm "$style"
 }
 
 #### Sessions
