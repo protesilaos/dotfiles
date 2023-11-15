@@ -598,8 +598,10 @@ Specific to the current window's mode line.")
 
 (defun prot-modeline--box-p ()
   "Return non-nil if the `mode-line' has a box attribute."
-  (and (face-attribute 'mode-line :box)
-       (null (eq (face-attribute 'mode-line :box) 'unspecified))))
+  (when-let ((box (face-attribute 'mode-line :box))
+             ((null (eq (face-attribute 'mode-line :box) 'unspecified))))
+    (or (plist-get box :line-width)
+        t)))
 
 ;; NOTE 2023-07-13: I could also do what I am doing in
 ;; `fontaine--family-list-variable-pitch' and check if the family is a
@@ -629,9 +631,10 @@ Specific to the current window's mode line.")
       (propertize
        " "
        'display
-       (let ((box-p (prot-modeline--box-p))
-             (variable-pitch-p (prot-modeline--variable-pitch-p))
-             (magic-number (prot-modeline--magic-number)))
+       (let* ((box (prot-modeline--box-p))
+              (box-natnum-p (natnump box))
+              (variable-pitch-p (prot-modeline--variable-pitch-p))
+              (magic-number (prot-modeline--magic-number)))
          `(space
            :align-to
            (- right
@@ -643,11 +646,15 @@ Specific to the current window's mode line.")
               ,(cond
                 ;; FIXME 2023-07-13: These hardcoded numbers are
                 ;; probably wrong in some case.  I am still testing.
-                ((and variable-pitch-p box-p)
+                ((and box-natnum-p variable-pitch-p)
+                 (+ (* box 2.375) magic-number))
+                (box-natnum-p
+                 (* magic-number (* box 1.15)))
+                ((and variable-pitch-p box)
                  (* magic-number 0.5))
-                ((and (not variable-pitch-p) box-p)
+                ((and (not variable-pitch-p) box)
                  (* magic-number 0.25))
-                ((and variable-pitch-p (not box-p))
+                ((and variable-pitch-p (not box))
                  0)
                 ;; No box, no variable pitch, but I am keeping it as
                 ;; the fallback for the time being.
