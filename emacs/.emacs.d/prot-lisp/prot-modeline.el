@@ -299,11 +299,11 @@ VARIANT of the state tag is either :short or :long, as defined in
 VARIANT of the state tag is either :short or :long, as defined in
 `prot-modeline-evil-state-tags'.  If FACE is nil, fall back to
 `default'."
-  (let ((tag (prot-modeline--evil-get-tag state variant)))
-    (propertize (format (prot-modeline--evil-get-format-specifier variant) tag)
-                'face (or face 'default)
-                'mouse-face 'mode-line-highlight
-                'help-echo (format "Evil `%s' state" state))))
+  (propertize
+   (format (prot-modeline--evil-get-format-specifier variant) (prot-modeline--evil-get-tag state variant))
+   'face (or face 'mode-line)
+   'mouse-face 'mode-line-highlight
+   'help-echo (format "Evil `%s' state" state)))
 
 (defun prot-modeline-evil-state-tag (variant)
   "Return mode line tag VARIANT depending on the Evil state.
