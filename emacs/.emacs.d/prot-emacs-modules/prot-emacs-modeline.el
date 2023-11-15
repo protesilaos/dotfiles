@@ -1,8 +1,6 @@
 ;;; Mode line
-(prot-emacs-configure
+(prot-emacs-package prot-modeline
   (:delay 1)
-  (which-function-mode 1)
-  (require 'prot-modeline)
   (setq mode-line-compact nil) ; Emacs 28
   (setq-default mode-line-format
                 '("%e"
@@ -17,8 +15,6 @@
                   prot-modeline-process
                   "  "
                   prot-modeline-vc-branch
-                  "  "
-                  prot-modeline-which-function
                   "  "
                   prot-modeline-eglot
                   "  "

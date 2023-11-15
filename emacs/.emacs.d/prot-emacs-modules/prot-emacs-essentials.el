@@ -596,4 +596,10 @@ by that special hook."
   ;; suggested binding for `org-capture' and is the one I use as well.
   (define-key global-map (kbd "C-c p") #'cursory-set-preset))
 
+;;; Header line context of symbol/heading (breadcrumb.el)
+(prot-emacs-package breadcrumb
+  (:install t)
+  (:delay 2)
+  (breadcrumb-mode 1))
+
 (provide 'prot-emacs-essentials)
