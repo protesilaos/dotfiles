@@ -528,28 +528,7 @@ by that special hook."
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
   ;;
   ;; I still prefer `setq' for consistency.
-  (setq lin-face
-        (if (eq prot-emacs-load-theme-family 'modus)
-            'lin-cyan
-          'hl-line))
-
-  (setq lin-mode-hooks
-        '(bongo-mode-hook
-          dired-mode-hook
-          elfeed-search-mode-hook
-          git-rebase-mode-hook
-          ibuffer-mode-hook
-          ilist-mode-hook
-          ledger-report-mode-hook
-          log-view-mode-hook
-          magit-log-mode-hook
-          mu4e-headers-mode
-          notmuch-search-mode-hook
-          notmuch-tree-mode-hook
-          occur-mode-hook
-          org-agenda-mode-hook
-          tabulated-list-mode-hook
-          vc-dir-mode-hook))
+  (setq lin-face 'lin-green)
 
   (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 
