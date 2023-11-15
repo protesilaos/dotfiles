@@ -473,8 +473,7 @@ by that special hook."
 
     (display-battery-mode 1)))
 
-;; ;;; Get environment variables into Emacs (exec-path-from-shell)
-;; ;; I need these on GNOME Wayland.
+;;; Get environment variables into Emacs (exec-path-from-shell) while on Wayland
 (when-let ((session (getenv "XDG_SESSION_TYPE"))
            ((equal session "wayland")))
   (prot-emacs-package exec-path-from-shell
