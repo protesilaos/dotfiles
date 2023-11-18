@@ -2,6 +2,7 @@
 (prot-emacs-package prot-modeline
   (:delay 1)
   (setq mode-line-compact nil) ; Emacs 28
+  (setq mode-line-right-align-edge 'right-margin)
   (setq-default mode-line-format
                 '("%e"
                   prot-modeline-kbd-macro
@@ -20,7 +21,8 @@
                   "  "
                   prot-modeline-flymake
                   "  "
-                  prot-modeline-align-right
+                  ;; prot-modeline-align-right
+                  mode-line-format-right-align
                   prot-modeline-misc-info))
 
   (prot-modeline-subtle-mode 1)

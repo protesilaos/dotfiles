@@ -584,83 +584,83 @@ Specific to the current window's mode line.")
   "Mode line construct displaying Eglot information.
 Specific to the current window's mode line.")
 
-;;;; Right side alignment
-
-(defun prot-modeline--right-align-rest ()
-  "Return string if everything after `prot-modeline-align-right'."
-  (format-mode-line
-   `(""
-     ,@(cdr (memq 'prot-modeline-align-right mode-line-format)))))
-
-(defun prot-modeline--right-align-width ()
-  "Return pixel width of `prot-modeline--right-align-rest'."
-  (string-pixel-width (prot-modeline--right-align-rest)))
-
-(defun prot-modeline--box-p ()
-  "Return non-nil if the `mode-line' has a box attribute."
-  (when-let ((box (face-attribute 'mode-line :box))
-             ((null (eq (face-attribute 'mode-line :box) 'unspecified))))
-    (or (plist-get box :line-width)
-        t)))
-
-;; NOTE 2023-07-13: I could also do what I am doing in
-;; `fontaine--family-list-variable-pitch' and check if the family is a
-;; member of those, but I don't need that as I always inherit
-;; `variable-pitch' in my themes instead of hardcoding the family.
-(defun prot-modeline--variable-pitch-p ()
-  "Return non-nil if the `mode-line' inherits `variable-pitch'."
-  (when-let* ((mode-line-inherit (face-attribute 'mode-line :inherit))
-              ((string-match-p "variable-pitch" (symbol-name mode-line-inherit)))
-              (family-face (face-attribute mode-line-inherit :inherit))
-              (variable-pitch
-               (if (listp family-face)
-                   (memq 'variable-pitch family-face)
-                 (eq 'variable-pitch family-face))))
-    variable-pitch))
-
-;; I just came up with this experimentally, but I am not sure if it is
-;; the best approach.
-(defun prot-modeline--magic-number ()
-  "Return constant for use in `prot-modeline-align-right'."
-  (let ((height (face-attribute 'mode-line :height nil 'default))
-        (m-width (string-pixel-width (propertize "m" 'face 'mode-line))))
-    (round height (* m-width (* height m-width 0.001)))))
-
-(defvar-local prot-modeline-align-right
-    '(:eval
-      (propertize
-       " "
-       'display
-       (let* ((box (prot-modeline--box-p))
-              (box-natnum-p (natnump box))
-              (variable-pitch-p (prot-modeline--variable-pitch-p))
-              (magic-number (prot-modeline--magic-number)))
-         `(space
-           :align-to
-           (- right
-              right-fringe
-              right-margin
-              ,(ceiling
-                (prot-modeline--right-align-width)
-                (string-pixel-width (propertize "m" 'face 'mode-line)))
-              ,(cond
-                ;; FIXME 2023-07-13: These hardcoded numbers are
-                ;; probably wrong in some case.  I am still testing.
-                ((and box-natnum-p variable-pitch-p)
-                 (+ (* box 2.375) magic-number))
-                (box-natnum-p
-                 (* magic-number (* box 1.15)))
-                ((and variable-pitch-p box)
-                 (* magic-number 0.5))
-                ((and (not variable-pitch-p) box)
-                 (* magic-number 0.25))
-                ((and variable-pitch-p (not box))
-                 0)
-                ;; No box, no variable pitch, but I am keeping it as
-                ;; the fallback for the time being.
-                (t (* magic-number -0.1))))))))
-  "Mode line construct to align following elements to the right.
-Read Info node `(elisp) Pixel Specification'.")
+;; ;;;; Right side alignment
+;; 
+;; (defun prot-modeline--right-align-rest ()
+;;   "Return string if everything after `prot-modeline-align-right'."
+;;   (format-mode-line
+;;    `(""
+;;      ,@(cdr (memq 'prot-modeline-align-right mode-line-format)))))
+;; 
+;; (defun prot-modeline--right-align-width ()
+;;   "Return pixel width of `prot-modeline--right-align-rest'."
+;;   (string-pixel-width (prot-modeline--right-align-rest)))
+;; 
+;; (defun prot-modeline--box-p ()
+;;   "Return non-nil if the `mode-line' has a box attribute."
+;;   (when-let ((box (face-attribute 'mode-line :box))
+;;              ((null (eq (face-attribute 'mode-line :box) 'unspecified))))
+;;     (or (plist-get box :line-width)
+;;         t)))
+;; 
+;; ;; NOTE 2023-07-13: I could also do what I am doing in
+;; ;; `fontaine--family-list-variable-pitch' and check if the family is a
+;; ;; member of those, but I don't need that as I always inherit
+;; ;; `variable-pitch' in my themes instead of hardcoding the family.
+;; (defun prot-modeline--variable-pitch-p ()
+;;   "Return non-nil if the `mode-line' inherits `variable-pitch'."
+;;   (when-let* ((mode-line-inherit (face-attribute 'mode-line :inherit))
+;;               ((string-match-p "variable-pitch" (symbol-name mode-line-inherit)))
+;;               (family-face (face-attribute mode-line-inherit :inherit))
+;;               (variable-pitch
+;;                (if (listp family-face)
+;;                    (memq 'variable-pitch family-face)
+;;                  (eq 'variable-pitch family-face))))
+;;     variable-pitch))
+;; 
+;; ;; I just came up with this experimentally, but I am not sure if it is
+;; ;; the best approach.
+;; (defun prot-modeline--magic-number ()
+;;   "Return constant for use in `prot-modeline-align-right'."
+;;   (let ((height (face-attribute 'mode-line :height nil 'default))
+;;         (m-width (string-pixel-width (propertize "m" 'face 'mode-line))))
+;;     (round height (* m-width (* height m-width 0.001)))))
+;; 
+;; (defvar-local prot-modeline-align-right
+;;     '(:eval
+;;       (propertize
+;;        " "
+;;        'display
+;;        (let* ((box (prot-modeline--box-p))
+;;               (box-natnum-p (natnump box))
+;;               (variable-pitch-p (prot-modeline--variable-pitch-p))
+;;               (magic-number (prot-modeline--magic-number)))
+;;          `(space
+;;            :align-to
+;;            (- right
+;;               right-fringe
+;;               right-margin
+;;               ,(ceiling
+;;                 (prot-modeline--right-align-width)
+;;                 (string-pixel-width (propertize "m" 'face 'mode-line)))
+;;               ,(cond
+;;                 ;; FIXME 2023-07-13: These hardcoded numbers are
+;;                 ;; probably wrong in some case.  I am still testing.
+;;                 ((and box-natnum-p variable-pitch-p)
+;;                  (+ (* box 2.375) magic-number))
+;;                 (box-natnum-p
+;;                  (* magic-number (* box 1.15)))
+;;                 ((and variable-pitch-p box)
+;;                  (* magic-number 0.5))
+;;                 ((and (not variable-pitch-p) box)
+;;                  (* magic-number 0.25))
+;;                 ((and variable-pitch-p (not box))
+;;                  0)
+;;                 ;; No box, no variable pitch, but I am keeping it as
+;;                 ;; the fallback for the time being.
+;;                 (t (* magic-number -0.1))))))))
+;;   "Mode line construct to align following elements to the right.
+;; Read Info node `(elisp) Pixel Specification'.")
 
 ;;;; Miscellaneous
 
@@ -686,7 +686,7 @@ Specific to the current window's mode line.")
                      prot-modeline-vc-branch
                      prot-modeline-flymake
                      prot-modeline-eglot
-                     prot-modeline-align-right
+                     ;; prot-modeline-align-right
                      prot-modeline-misc-info))
   (put construct 'risky-local-variable t))
 
