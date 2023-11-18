@@ -7,3 +7,5 @@ X-GNOME-Autostart-Phase=PreDisplayServer
 X-GNOME-AutoRestart=true
 X-GNOME-Autostart-enabled=true
 X-GNOME-Autostart-Notify=true
+X-XFCE-Autostart-Override=true
+

@@ -10,3 +10,5 @@ X-GNOME-Bugzilla-Bugzilla=GNOME
 X-GNOME-Bugzilla-Product=gnome-keyring
 X-GNOME-Bugzilla-Component=general
 X-GNOME-Bugzilla-Version=3.28.2
+X-XFCE-Autostart-Override=true
+
