@@ -1,4 +1,4 @@
-;;; prot-shell.el --- Extensions to isearch, replace, grep for my dotemacs -*- lexical-binding: t -*-
+;;; prot-shell.el --- M-x shell extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
 
