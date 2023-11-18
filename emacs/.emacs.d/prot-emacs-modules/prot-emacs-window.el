@@ -6,6 +6,43 @@
   (setq uniquify-strip-common-suffix t)
   (setq uniquify-after-kill-buffer-p t)
 
+;;;; Line highlight
+  (require 'hl-line)
+  (setq hl-line-sticky-flag nil)
+  (setq hl-line-overlay-priority -50) ; emacs28
+
+;;;; Negative space highlight
+  (require 'whitespace)
+  ;; NOTE 2023-08-14: This is experimental.  I am not sure I like it.
+  (setq whitespace-style
+        '(face
+          tabs
+          spaces
+          tab-mark
+          space-mark
+          trailing
+          missing-newline-at-eof
+          space-after-tab::tab
+          space-after-tab::space
+          space-before-tab::tab
+          space-before-tab::space))
+
+;;; Line numbers on the side of the window (prot-line-numbers.el)
+  (require 'display-line-numbers)
+  ;; Set absolute line numbers, unless evil mode is loaded, in which
+  ;; case we prefer relative numbers.
+  (setq-default display-line-numbers-type (if prot-emacs-load-evil 'relative t))
+  ;; Those two variables were introduced in Emacs 27.1
+  (setq display-line-numbers-major-tick 0)
+  (setq display-line-numbers-minor-tick 0)
+  ;; Use absolute numbers in narrowed buffers
+  (setq-default display-line-numbers-widen t)
+
+  (prot-emacs-keybind global-map
+    "<f6>" #'whitespace-mode
+    "<f7>" #'display-line-numbers-mode
+    "C-c z" #'delete-trailing-whitespace)
+
 ;;;; `window', `display-buffer-alist', and related
   (require 'prot-window)
 
@@ -174,6 +211,7 @@
 
 ;;; Directional window motions (windmove)
 (prot-emacs-package windmove
+  (:delay 5)
   (setq windmove-create-window nil)     ; Emacs 27.1
 
   (prot-emacs-keybind global-map
@@ -187,42 +225,5 @@
     "C-M-S-<right>" #'windmove-swap-states-right ; conflicts with `org-increase-number-at-point'
     "C-M-S-<down>" #'windmove-swap-states-down
     "C-M-S-<left>" #'windmove-swap-states-left))
-
-;;; Line numbers and relevant indicators (prot-sideline.el)
-(prot-emacs-package prot-sideline
-  (:delay 10)
-  (require 'display-line-numbers)
-  ;; Set absolute line numbers.  A value of "relative" is also useful.
-  (setq display-line-numbers-type t)
-  ;; Those two variables were introduced in Emacs 27.1
-  (setq display-line-numbers-major-tick 0)
-  (setq display-line-numbers-minor-tick 0)
-  ;; Use absolute numbers in narrowed buffers
-  (setq-default display-line-numbers-widen t)
-
-  (require 'hl-line)
-  (setq hl-line-sticky-flag nil)
-  (setq hl-line-overlay-priority -50) ; emacs28
-
-  (require 'whitespace)
-
-  ;; NOTE 2023-08-14: This is experimental.  I am not sure I like it.
-  (setq whitespace-style
-        '(face
-          tabs
-          spaces
-          tab-mark
-          space-mark
-          trailing
-          missing-newline-at-eof
-          space-after-tab::tab
-          space-after-tab::space
-          space-before-tab::tab
-          space-before-tab::space))
-
-  (prot-emacs-keybind global-map
-    "<f6>" #'prot-sideline-negative-space-toggle
-    "<f7>" #'prot-sideline-mode
-    "C-c z" #'delete-trailing-whitespace))
 
 (provide 'prot-emacs-window)
