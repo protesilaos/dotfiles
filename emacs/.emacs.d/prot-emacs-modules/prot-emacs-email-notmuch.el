@@ -227,6 +227,10 @@
         notmuch-indicator-hide-empty-counters t
         notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
 
+  ;; I control its placement myself.  See prot-emacs-modeline.el where
+  ;; I set the `mode-line-format'.
+  (setq notmuch-indicator-add-to-mode-line-misc-info nil)
+
   (notmuch-indicator-mode 1))
 
 (provide 'prot-emacs-email-notmuch)
