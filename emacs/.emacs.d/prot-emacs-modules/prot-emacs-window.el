@@ -185,11 +185,6 @@
   (:install t)
   (:delay 1)
 
-  (setq spacious-padding-widths
-        '( :internal-border-width 25
-           :right-divider-width 30
-           :scroll-bar-width 8))
-
   (spacious-padding-mode 1)
 
   (define-key global-map (kbd "<f8>") #'spacious-padding-mode))
