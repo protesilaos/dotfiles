@@ -5,6 +5,7 @@
   (setq mode-line-right-align-edge 'right-margin)
   (setq-default mode-line-format
                 '("%e"
+                  mode-line-front-space
                   prot-modeline-kbd-macro
                   prot-modeline-narrow
                   prot-modeline-buffer-status
