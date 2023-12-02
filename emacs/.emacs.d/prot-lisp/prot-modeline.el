@@ -585,24 +585,24 @@ Specific to the current window's mode line.")
 Specific to the current window's mode line.")
 
 ;; ;;;; Right side alignment
-;; 
+;;
 ;; (defun prot-modeline--right-align-rest ()
 ;;   "Return string if everything after `prot-modeline-align-right'."
 ;;   (format-mode-line
 ;;    `(""
 ;;      ,@(cdr (memq 'prot-modeline-align-right mode-line-format)))))
-;; 
+;;
 ;; (defun prot-modeline--right-align-width ()
 ;;   "Return pixel width of `prot-modeline--right-align-rest'."
 ;;   (string-pixel-width (prot-modeline--right-align-rest)))
-;; 
+;;
 ;; (defun prot-modeline--box-p ()
 ;;   "Return non-nil if the `mode-line' has a box attribute."
 ;;   (when-let ((box (face-attribute 'mode-line :box))
 ;;              ((null (eq (face-attribute 'mode-line :box) 'unspecified))))
 ;;     (or (plist-get box :line-width)
 ;;         t)))
-;; 
+;;
 ;; ;; NOTE 2023-07-13: I could also do what I am doing in
 ;; ;; `fontaine--family-list-variable-pitch' and check if the family is a
 ;; ;; member of those, but I don't need that as I always inherit
@@ -617,7 +617,7 @@ Specific to the current window's mode line.")
 ;;                    (memq 'variable-pitch family-face)
 ;;                  (eq 'variable-pitch family-face))))
 ;;     variable-pitch))
-;; 
+;;
 ;; ;; I just came up with this experimentally, but I am not sure if it is
 ;; ;; the best approach.
 ;; (defun prot-modeline--magic-number ()
@@ -625,7 +625,7 @@ Specific to the current window's mode line.")
 ;;   (let ((height (face-attribute 'mode-line :height nil 'default))
 ;;         (m-width (string-pixel-width (propertize "m" 'face 'mode-line))))
 ;;     (round height (* m-width (* height m-width 0.001)))))
-;; 
+;;
 ;; (defvar-local prot-modeline-align-right
 ;;     '(:eval
 ;;       (propertize
