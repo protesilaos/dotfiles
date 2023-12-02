@@ -234,7 +234,7 @@
 ;;;; Set up my prefix keymap
 
   (evil-define-key '(emacs insert) global-map (kbd "SPC") #'prot-evil-prefix-or-self-insert)
-  (evil-define-key '(normal visual motion prot-basic) global-map (kbd "SPC") prot-prefix-map)
+  (evil-define-key '(normal motion prot-basic) global-map (kbd "SPC") prot-prefix-map)
 
 ;;;; Activate `evil-mode'
   (evil-mode 1))
