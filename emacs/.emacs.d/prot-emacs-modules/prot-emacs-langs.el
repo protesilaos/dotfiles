@@ -360,6 +360,7 @@ Else create a new file."
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
   ;; buffer-local.
   (setq-default logos-hide-mode-line t)
+  (setq-default logos-hide-header-line t)
   (setq-default logos-hide-buffer-boundaries t)
   (setq-default logos-hide-fringe t)
   (setq-default logos-variable-pitch t) ; see my `fontaine' configurations
