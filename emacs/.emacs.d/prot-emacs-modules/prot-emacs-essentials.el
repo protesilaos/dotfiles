@@ -28,6 +28,7 @@
   (setq kill-do-not-save-duplicates t)
   (setq duplicate-line-final-position -1 ; both are Emacs 29
         duplicate-region-final-position -1)
+  (setq scroll-error-top-bottom t)
 
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
