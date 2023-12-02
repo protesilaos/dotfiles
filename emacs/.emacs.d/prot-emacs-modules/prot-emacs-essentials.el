@@ -528,7 +528,7 @@ by that special hook."
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
   ;;
   ;; I still prefer `setq' for consistency.
-  (setq lin-face 'lin-green)
+  (setq lin-face 'lin-magenta)
 
   (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 
