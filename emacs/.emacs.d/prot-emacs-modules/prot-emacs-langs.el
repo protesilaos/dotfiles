@@ -272,46 +272,22 @@ Meant to be added to `prog-mode-hook'."
   ;; OR if only want it in `denote-dired-directories':
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
-  ;; Here is a custom, user-level command from one of the examples we
-  ;; show in this manual.  We define it here and add it to a key binding
-  ;; below.  The manual: <https://protesilaos.com/emacs/denote>.
-  (defun prot/denote-journal ()
-    "Create an entry tagged 'journal' with the date as its title.
-If a journal for the current day exists, visit it.  If multiple
-entries exist, prompt with completion for a choice between them.
-Else create a new file."
-    (interactive)
-    (let* ((today (format-time-string "%A %e %B %Y"))
-           (string (denote-sluggify today))
-           (files (denote-directory-files-matching-regexp string)))
-      (cond
-       ((> (length files) 1)
-        (find-file (completing-read "Select file: " files nil :require-match)))
-       (files
-        (find-file (car files)))
-       (t
-        (denote
-         today
-         '("journal"))))))
+  (require 'denote-journal-extras)
+  (setq denote-journal-extras-directory nil) ; use the `denote-directory'
+  (setq denote-journal-extras-title-format nil) ; always prompt for title
+  (setq denote-journal-extras-keyword "journal")
 
   ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
   (prot-emacs-keybind global-map
-    "C-c n j" #'prot/denote-journal
     "C-c n n" #'denote
     "C-c n N" #'denote-type
     "C-c n d" #'denote-date
     "C-c n z" #'denote-signature ; "zettelkasten" mnemonic
     "C-c n s" #'denote-subdirectory
-    ;; If you intend to use Denote with a variety of file types, it is
-    ;; easier to bind the link-related commands to the `global-map', as
-    ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
-    ;; `markdown-mode-map', and/or `text-mode-map'.
-    "C-c n i" #'denote-link ; "insert" mnemonic
-    "C-c n I" #'denote-add-links
-    "C-c n b" #'denote-backlinks
-    "C-c n f f" #'denote-find-link
-    "C-c n f b" #'denote-find-backlink
+    "C-c n o" #'denote-sort-dired ; "order" mnemonic
+    "C-c n j" #'denote-journal-extras-new-entry
+    "C-c n J" #'denote-journal-extras-new-or-existing-entry
     ;; Note that `denote-rename-file' can work from any context, not
     ;; just Dired buffers.  That is why we bind it here to the
     ;; `global-map'.
@@ -319,13 +295,31 @@ Else create a new file."
     ;; Also see `denote-rename-file-using-front-matter' further below.
     "C-c n r" #'denote-rename-file)
 
+  ;; If you intend to use Denote with a variety of file types, it is
+  ;; easier to bind the link-related commands to the `global-map', as
+  ;; shown here.  Otherwise follow the same pattern for
+  ;; `org-mode-map', `markdown-mode-map', and/or `text-mode-map'.
+  (prot-emacs-keybind text-mode-map
+    "C-c n i" #'denote-link ; "insert" mnemonic
+    "C-c n I" #'denote-add-links
+    "C-c n b" #'denote-backlinks
+    "C-c n f f" #'denote-find-link
+    "C-c n f b" #'denote-find-backlink
+    ;; Also see `denote-rename-file' further above.
+    "C-c n R" #'denote-rename-file-using-front-matter)
+
+  ;; I do not bind the Org dynamic blocks, but they are useful:
+  ;;
+  ;; - `denote-org-dblock-insert-links'
+  ;; - `denote-org-dblock-insert-backlinks'
+  ;; - `denote-org-dblock-insert-files'
+
   ;; Key bindings specifically for Dired.
   (prot-emacs-keybind dired-mode-map
     "C-c C-d C-i" #'denote-link-dired-marked-notes
-    "C-c C-d C-r" #'denote-dired-rename-marked-files)
-
-  ;; Also see `denote-rename-file' further above.
-  (define-key text-mode-map (kbd "C-c n R") #'denote-rename-file-using-front-matter)
+    "C-c C-d C-r" #'denote-dired-rename-marked-files
+    "C-c C-d C-k" #'denote-dired-rename-marked-files-with-keywords
+    "C-c C-d C-f" #'denote-dired-rename-marked-files-using-front-matter)
 
   (with-eval-after-load 'org-capture
     (setq denote-org-capture-specifiers "%l\n%i\n%?")
@@ -333,6 +327,18 @@ Else create a new file."
                  '("n" "New note (with denote.el)" plain
                    (file denote-last-path)
                    #'denote-org-capture
+                   :no-save t
+                   :immediate-finish nil
+                   :kill-buffer t
+                   :jump-to-captured t))
+
+    ;; This prompts for TITLE, KEYWORDS, and SUBDIRECTORY
+    (add-to-list 'org-capture-templates
+                 '("N" "New note with prompts (with denote.el)" plain
+                   (file denote-last-path)
+                   (function
+                    (lambda ()
+                      (denote-org-capture-with-prompts :title :keywords :signature)))
                    :no-save t
                    :immediate-finish nil
                    :kill-buffer t
