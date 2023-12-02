@@ -109,7 +109,7 @@ before all other modules of my setup."
 (setq default-input-method "greek")
 
 ;; Enable these
-(dolist (c '(narrow-to-region narrow-to-page upcase-region downcase-region))
+(dolist (c '(list-timers narrow-to-region narrow-to-page upcase-region downcase-region))
   (put c 'disabled nil))
 
 ;; And disable these
