@@ -355,11 +355,11 @@ _xfce ()
     if [ "$(_xfquery_get 'xsettings' '/Net/ThemeName')" = 'Adwaita' ]
     then
         style=dark
-        _xfquery_set 'xfwm4' '/general/theme' 'Adwaita-dark'
+        # _xfquery_set 'xfwm4' '/general/theme' 'Adwaita-dark'
         _xfquery_set 'xsettings' '/Net/ThemeName' 'Adwaita-dark'
     else
         style=light
-        _xfquery_set 'xfwm4' '/general/theme' 'Adwaita'
+        # _xfquery_set 'xfwm4' '/general/theme' 'Adwaita'
         _xfquery_set 'xsettings' '/Net/ThemeName' 'Adwaita'
     fi
 
