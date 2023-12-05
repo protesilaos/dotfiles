@@ -398,11 +398,8 @@ that is expanded with the `prot-emacs-package' macro."
 ;; file for other obvious customisations.
 (load (locate-user-emacs-file "prot-emacs-pre-custom.el") :no-error :no-message)
 
+(require 'prot-emacs-theme)
 (require 'prot-emacs-essentials)
-(pcase prot-emacs-load-theme-family
-  ('ef (require 'prot-emacs-ef-themes))
-  ('modus (require 'prot-emacs-modus-themes))
-  ('standard (require 'prot-emacs-standard-themes)))
 (require 'prot-emacs-font)
 (require 'prot-emacs-modeline)
 (require 'prot-emacs-completion-common)
