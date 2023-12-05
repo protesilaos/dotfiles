@@ -90,7 +90,9 @@
 ;; through themes periodically.  Check its documentation for the
 ;; technicalities: <https://git.sr.ht/~bboal/theme-buffet>.
 (prot-emacs-package theme-buffet
+  (:install t)
+  (:delay 1)
   (setq theme-buffet-menu 'modus-ef)
-   (theme-buffet-mode 1)
+   (theme-buffet-mode 1))
 
 (provide 'prot-emacs-theme)
