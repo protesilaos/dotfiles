@@ -26,12 +26,7 @@
                   mode-line-format-right-align
                   prot-modeline-notmuch-indicator
                   "  "
-                  prot-modeline-misc-info))
-
-  (prot-modeline-subtle-mode 1)
-
-  ;; Overrides the "two-column" gimmick that I will never use.
-  (define-key global-map (kbd "<f2>") #'prot-modeline-subtle-mode))
+                  prot-modeline-misc-info)))
 
 ;;; Keycast mode
 (prot-emacs-package keycast
