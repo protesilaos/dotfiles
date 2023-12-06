@@ -92,7 +92,6 @@
 (prot-emacs-package theme-buffet
   (:install t)
   (:delay 1)
-  (setq theme-buffet-menu 'modus-ef)
-   (theme-buffet-mode 1))
+  (theme-buffet-modus-ef))
 
 (provide 'prot-emacs-theme)
