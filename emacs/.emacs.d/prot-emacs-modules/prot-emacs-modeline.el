@@ -22,8 +22,7 @@
                   "  "
                   prot-modeline-flymake
                   "  "
-                  ;; prot-modeline-align-right
-                  mode-line-format-right-align
+                  mode-line-format-right-align ; Emacs 30
                   prot-modeline-notmuch-indicator
                   "  "
                   prot-modeline-misc-info)))
