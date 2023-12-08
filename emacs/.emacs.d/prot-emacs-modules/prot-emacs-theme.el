@@ -63,6 +63,10 @@
 (prot-emacs-package spacious-padding
   (:install t)
   (:delay 1)
+  ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
+  ;; is very flexible.
+  (setq spacious-padding-subtle-mode-line
+        '(:mode-line-active error :mode-line-inactive shadow))
 
   (spacious-padding-mode 1)
 
