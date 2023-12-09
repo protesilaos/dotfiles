@@ -92,14 +92,11 @@ This is done to accommodate `prot-vertico-multiform-minimal'."
   "Expand contents and show remaining candidates, if needed.
 This is done to accommodate `prot-vertico-multiform-minimal'."
   (interactive)
-  (cond
-   ((and vertico-unobtrusive-mode (> vertico--total 1))
-    (minibuffer-complete)
-    (vertico-multiform-vertical))
-   ((and vertico-unobtrusive-mode (= vertico--total 1))
-    (minibuffer-force-complete-and-exit))
-   (t
-    (vertico-insert))))
+  (if (and vertico-unobtrusive-mode (> vertico--total 1))
+      (progn
+        (minibuffer-complete)
+        (vertico-multiform-vertical))
+    (vertico-insert)))
 
 (provide 'prot-vertico)
 ;;; prot-vertico.el ends here
