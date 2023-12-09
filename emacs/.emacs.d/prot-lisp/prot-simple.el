@@ -57,6 +57,25 @@ Used by `prot-simple-inset-date'."
 
 ;;;; General commands
 
+(defun prot-simple--mark (bounds)
+  "Mark between BOUNDS as a cons cell of beginning and end positions."
+  (push-mark (car bounds))
+  (goto-char (cdr bounds))
+  (activate-mark))
+
+;;;###autoload
+(defun prot-simple-mark-sexp ()
+  "Mark symbolic expression at or near point.
+Repeat to extend the region forward to the next symbolic
+expression.  If inside a string, mark the entire string upon
+repeat."
+  (interactive)
+  (if (eq last-command this-command)
+      (if-let ((bounds (bounds-of-thing-at-point 'string)))
+          (prot-simple--mark bounds)
+        (ignore-errors (forward-sexp 1)))
+    (prot-simple--mark (bounds-of-thing-at-point 'sexp))))
+
 ;;;###autoload
 (defun prot-simple-keyboard-quit-dwim ()
   "Do-What-I-Mean behaviour for a general `keyboard-quit'.
