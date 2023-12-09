@@ -325,9 +325,10 @@ VARIANT of the state tag is either :short or :long, as defined in
 
 (defvar-local prot-modeline-evil
     '(:eval
-      (when (and (mode-line-window-selected-p) (bound-and-true-p evil-mode))
+      (if (and (mode-line-window-selected-p) (bound-and-true-p evil-mode))
         (let ((variant (if (prot-modeline--truncate-p) :short :long)))
-          (prot-modeline-evil-state-tag variant))))
+          (prot-modeline-evil-state-tag variant))
+        " "))
   "Mode line construct to display the Evil state.")
 
 ;;;; Buffer name and modified status
