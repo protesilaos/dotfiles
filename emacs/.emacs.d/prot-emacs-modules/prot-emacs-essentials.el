@@ -55,6 +55,7 @@
     "C-h h" nil
     "M-`" nil
     "C-z" prot-prefix-map
+    "<f2>" prot-prefix-map ; override that two-column gimmick
     "C-g" #'prot-simple-keyboard-quit-dwim
     "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
     "C-h F" #'describe-face ; overrides `Info-goto-emacs-command-node'
