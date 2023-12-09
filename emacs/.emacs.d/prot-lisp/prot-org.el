@@ -334,5 +334,11 @@ CUSTOM_ID of the entry is returned."
   (org-map-entries
    (lambda () (prot-org--id-get (point) t))))
 
+;;;###autoload
+(defun prot-org-id-headline ()
+  "Add missing CUSTOM_ID to headline at point."
+  (interactive)
+  (prot-org--id-get (point) t))
+
 (provide 'prot-org)
 ;;; prot-org.el ends here
