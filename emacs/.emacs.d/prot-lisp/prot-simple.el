@@ -109,6 +109,19 @@ The DWIM behaviour of this command is as follows:
   (interactive)
   (describe-symbol (symbol-at-point)))
 
+(declare-function help--symbol-completion-table "help-fns" (string pred action))
+
+;;;###autoload
+(defun prot-simple-goto-definition (symbol)
+  "Prompt for SYMBOL and go to its source.
+When called from Lisp, SYMBOL is a string."
+  (interactive
+   (list
+    (completing-read "Go to source of SYMBOL: "
+                     #'help--symbol-completion-table
+                     nil :require-match)))
+  (xref-find-definitions symbol))
+
 (autoload 'number-at-point "thingatpt")
 
 (defun prot-simple--number-operate (number amount operation)
