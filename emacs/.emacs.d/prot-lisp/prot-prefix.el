@@ -157,7 +157,6 @@
 (defvar-keymap prot-prefix-expression-map
   :doc "Prefix keymap for s-expression motions."
   :name "S-EXP"
-  :repeat t
   "a" #'beginning-of-defun
   "e" #'end-of-defun
   "f" #'forward-sexp
