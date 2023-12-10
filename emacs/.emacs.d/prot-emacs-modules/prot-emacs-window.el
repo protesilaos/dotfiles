@@ -210,4 +210,15 @@
     "C-M-S-<down>" #'windmove-swap-states-down
     "C-M-S-<left>" #'windmove-swap-states-left))
 
+;;; Header line context of symbol/heading (breadcrumb.el)
+(prot-emacs-package breadcrumb
+  (:install t)
+  (:delay 2)
+  (setq bc-project-max-length 0.2)
+  (setq bc-project-crumb-separator "/")
+  (setq bc-imenu-max-length 0.8)
+  (setq bc-imenu-crumb-separator " > ")
+
+  (breadcrumb-mode 1))
+
 (provide 'prot-emacs-window)
