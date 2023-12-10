@@ -22,8 +22,8 @@
   (setopt pulsar-pulse t
           pulsar-delay 0.055
           pulsar-iterations 10
-          pulsar-face 'pulsar-blue
-          pulsar-highlight-face 'pulsar-yellow)
+          pulsar-face 'pulsar-magenta
+          pulsar-highlight-face 'pulsar-cyan)
 
   (pulsar-global-mode 1)
 
