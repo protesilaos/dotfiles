@@ -3,10 +3,12 @@
 ;;;; Load the desired theme module
 ;; These all reference my packages: `modus-themes', `ef-themes',
 ;; `standard-themes'.
-(pcase prot-emacs-load-theme-family
-  ('ef (require 'prot-emacs-ef-themes))
-  ('modus (require 'prot-emacs-modus-themes))
-  ('standard (require 'prot-emacs-standard-themes)))
+(when prot-emacs-load-theme-family
+  (require
+   (pcase prot-emacs-load-theme-family
+     ('ef 'prot-emacs-ef-themes)
+     ('modus 'prot-emacs-modus-themes)
+     ('standard 'prot-emacs-standard-themes))))
 
 ;;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
