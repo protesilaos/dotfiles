@@ -107,9 +107,10 @@ before all other modules of my setup."
 ;; Disable the damn thing by making it disposable.
 (setq custom-file (make-temp-file "emacs-custom-"))
 
-;; There is also the greek-postfix style.  This is for inserting
-;; accents.  I am used to the standard use of a prefix.
-(setq default-input-method "greek")
+;; Watch my video about multilingual editing:
+;; <https://protesilaos.com/codelog/2023-12-12-emacs-multilingual-editing/>.
+(setq default-input-method "greek-postfix")
+(setq default-transient-input-method "greek")
 
 ;; Enable these
 (dolist (c '(list-timers narrow-to-region narrow-to-page upcase-region downcase-region))
