@@ -495,7 +495,7 @@ by that special hook."
   (:delay 1)
   (setq cursory-presets
         '((box
-           :blink-cursor-interval 0.8)
+           :blink-cursor-interval 1.2)
           (box-no-blink
            :blink-cursor-mode -1)
           (bar
