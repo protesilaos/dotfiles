@@ -190,7 +190,7 @@ Truncation is done up to `prot-modeline-string-truncate-length'."
     str))
 
 (defun prot-modeline-string-truncate-end (str)
-  "Like `prot-modeline-string-truncate' but truncate from string beginning."
+  "Like `prot-modeline-string-truncate' but truncate from STR beginning."
   (if (prot-modeline--string-truncate-p str)
       (concat "..." (substring str (- prot-modeline-string-truncate-length)))
     str))
