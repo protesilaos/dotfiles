@@ -95,11 +95,14 @@ before all other modules of my setup."
 (setq frame-title-format '("%b"))
 (setq ring-bell-function 'ignore)
 (setq use-short-answers t)
-(setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
-(setq native-compile-prune-cache t) ; Emacs 29
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
+
+;; Make native compilation silent and prune its cache.
+(when (native-comp-available-p)
+  (setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
+  (setq native-compile-prune-cache t)) ; Emacs 29
 
 ;; Disable the damn thing by making it disposable.
 (setq custom-file (make-temp-file "emacs-custom-"))
