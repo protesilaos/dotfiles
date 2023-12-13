@@ -238,38 +238,46 @@ Meant to be added to `prog-mode-hook'."
   (:delay 5)
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
+  (setq denote-file-type 'text) ; Org is the default, set others here like I do
+  (setq denote-file-name-letter-casing
+        '((signature . verbatim)
+          (title . downcase)
+          (keywords . verbatim)
+          (t , verbatim)))
+  ;; If you want to have a "controlled vocabulary" of keywords,
+  ;; meaning that you only use a predefined set of them, then you want
+  ;; `denote-infer-keywords' to be nil and `denote-known-keywords' to
+  ;; have the keywords you need.
   (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-  (setq denote-file-type 'text) ; Org is the default, set others here like I do
   (setq denote-excluded-directories-regexp nil)
-  (setq denote-allow-multi-word-keywords nil)
   (setq denote-date-format nil) ; read its doc string
+  (setq denote-rename-no-confirm t)
+  (setq denote-backlinks-show-context nil)
+  (setq denote-rename-buffer-format "[D] %t")
 
-  ;; By default, we fontify backlinks in their bespoke buffer.
-  (setq denote-link-fontify-backlinks t)
-
+  ;; Automatically rename Denote buffers when opening them so that
+  ;; instead of their long file name they have a literal "[D]"
+  ;; followed by the file's title.  Read the doc string of
+  ;; `denote-rename-buffer-format' for how to modify this.
   (denote-rename-buffer-mode 1)
-
-  ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
-  ;; advanced.
 
   ;; If you use Markdown or plain text files you want to buttonise
   ;; existing buttons upon visiting the file (Org renders links as
   ;; buttons right away).
   (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
 
-  ;; We use different ways to specify a path for demo purposes.
-  (setq denote-dired-directories
-        (list denote-directory
-              (thread-last denote-directory (expand-file-name "attachments"))
-              (expand-file-name "~/Documents/books")))
-
-  ;; Generic (great if you rename files Denote-style in lots of places):
+  ;; Highlight Denote file names in Dired buffers.  Below is the
+  ;; generic approach, which is great if you rename files Denote-style
+  ;; in lots of places as I do:
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;;
-  ;; OR if only want it in `denote-dired-directories':
-  ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  ;; OR if you only want the `denote-dired-mode' in select
+  ;; directories, then modify the variable `denote-dired-directories'
+  ;; and use the following instead:
+  ;;
+  ;;  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
   (require 'denote-journal-extras)
   (setq denote-journal-extras-directory nil) ; use the `denote-directory'
