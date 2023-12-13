@@ -5,7 +5,6 @@
   (setq mode-line-right-align-edge 'right-margin) ; Emacs 30
   (setq-default mode-line-format
                 '("%e"
-                  mode-line-front-space
                   prot-modeline-kbd-macro
                   prot-modeline-narrow
                   prot-modeline-buffer-status
