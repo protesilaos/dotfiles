@@ -65,10 +65,20 @@
 (prot-emacs-package spacious-padding
   (:install t)
   (:delay 1)
+
+  ;; These are the defaults, but I keep it here for visiibility.
+  (setq spacious-padding-widths
+        '( :internal-border-width 15
+           :header-line-width 4
+           :mode-line-width 6
+           :tab-width 4
+           :right-divider-width 30
+           :scroll-bar-width 8))
+
   ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
   ;; is very flexible.
   (setq spacious-padding-subtle-mode-line
-        '(:mode-line-active error :mode-line-inactive shadow))
+        '(:mode-line-active default :mode-line-inactive vertical-border))
 
   (spacious-padding-mode 1)
 
