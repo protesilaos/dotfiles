@@ -244,7 +244,8 @@ Specific to the current window's mode line.")
 (defvar-local prot-modeline-input-method
     '(:eval
       (when current-input-method-title
-        (propertize (format " %s" current-input-method-title)
+        (propertize (format " %s " current-input-method-title)
+                    'face 'prot-modeline-indicator-green-bg
                     'mouse-face 'mode-line-highlight)))
   "Mode line construct to report the multilingual environment.")
 
