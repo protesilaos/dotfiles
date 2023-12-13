@@ -2,7 +2,7 @@
 (prot-emacs-package prot-modeline
   (:delay 1)
   (setq mode-line-compact nil) ; Emacs 28
-  (setq mode-line-right-align-edge 'right-margin)
+  (setq mode-line-right-align-edge 'right-margin) ; Emacs 30
   (setq-default mode-line-format
                 '("%e"
                   mode-line-front-space
