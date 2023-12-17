@@ -35,6 +35,7 @@
   (prot-emacs-keybind dired-mode-map
     "C-+" #'dired-create-empty-file
     "M-s f" nil
+    "C-<return>" #'dired-do-open ; Emacs 30
     "C-x v v" #'dired-vc-next-action)) ; Emacs 28
 
 ;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
