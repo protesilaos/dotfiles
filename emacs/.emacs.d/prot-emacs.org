@@ -475,9 +475,9 @@ New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
 
 Finally, I like to call my default frame =home=. This is because I use
 my ~beframe~ package to group the list of buffers on a per-frame basis
-LINK TO BEFRAME. The multi-frame arrangement is the best thing I ever
-did to boost my productivity: bonus points when used in tandem with a
-tiling window manager.
+([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]). The multi-frame
+arrangement is the best thing I ever did to boost my productivity:
+bonus points when used in tandem with a tiling window manager.
 
 Naming frames allows you to select them using completion. Emacs can do
 this (=M-x select-frame-by-name=), though it is not always reliable as
