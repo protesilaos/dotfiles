@@ -102,7 +102,7 @@ before all other modules of my setup."
 ;; And disable these
 (mapc
  (lambda (command)
-   (put c 'disabled t))
+   (put command 'disabled t))
  '(eshell project-eshell overwrite-mode iconify-frame diary))
 
 ;; Always start with *scratch*
@@ -110,7 +110,7 @@ before all other modules of my setup."
 
 (mapc
  (lambda (string)
-   (add-to-list 'load-path (locate-user-emacs-file path)))
+   (add-to-list 'load-path (locate-user-emacs-file string)))
  '("prot-lisp" "prot-emacs-modules"))
 
 ;;;; Packages
@@ -399,8 +399,6 @@ that is expanded with the `prot-emacs-package' macro."
 (require 'prot-emacs-org)
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
-(when (executable-find "notmuch")
-  (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)
 (when prot-emacs-load-which-key
   (require 'prot-emacs-which-key))
