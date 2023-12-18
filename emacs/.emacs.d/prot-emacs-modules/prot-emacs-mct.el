@@ -69,4 +69,4 @@ active and the Completions window is on display."
     "C-p" #'prot/mct-previous-line-or-completion
     "RET" #'prot/mct-return-or-choose-completion))
 
-(provide 'prot-emacs-completion-mct)
+(provide 'prot-emacs-mct)

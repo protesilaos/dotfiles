@@ -402,7 +402,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 (when prot-emacs-completion-ui
   (require
    (pcase prot-emacs-completion-ui
-     ('mct 'prot-emacs-completion-mct)
-     ('vertico 'prot-emacs-completion-vertico))))
+     ('mct 'prot-emacs-mct)
+     ('vertico 'prot-emacs-vertico))))
 
 (provide 'prot-emacs-completion)
