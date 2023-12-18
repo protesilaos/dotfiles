@@ -198,15 +198,15 @@ be (inside the =~/.emacs.d= directory) with this command, which uses
 the ~stow~ system package (all my dotfiles are stowed in place with
 this program):
 
-#+begin_src sh
+#+begin_example sh
 ~/Git/Projects/dotfiles $ stow -t $HOME emacs
-#+end_src
+#+end_example
 
 If I ever add/remove files, I do this instead:
 
-#+begin_src sh
+#+begin_example sh
 ~/Git/Projects/dotfiles $ stow -t $HOME -R emacs
-#+end_src
+#+end_example
 
 I have built my setup from scratch and am observing best practices
 with regard to how Emacs expects things to run. I do not use the Emacs
