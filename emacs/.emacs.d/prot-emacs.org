@@ -2077,6 +2077,27 @@ Bruno Boal is the lead developer and I am a co-maintainer.
 :CUSTOM_ID: h:cb41fef0-41a5-4a85-9552-496d96290258
 :END:
 
+My ~fontaine~ package allows the user to define detailed font
+configurations and set them on demand. For example, one can have a
+=regular-editing= preset and another for =presentation-mode= (these
+are arbitrary, user-defined symbols): the former uses small fonts
+which are optimised for writing, while the latter applies typefaces
+that are pleasant to read at comfortable point sizes.
+
++ Package name (GNU ELPA): ~fontaine~
++ Official manual: <https://protesilaos.com/emacs/fontaine>
++ Change log: <https://protesilaos.com/emacs/fontaine-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/fontaine>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/fontaine>
+    + GitLab: <https://gitlab.com/protesilaos/fontaine>
++ Mailing list: <https://lists.sr.ht/~protesilaos/fontaine>
++ Backronym: Fonts, Ornaments, and Neat Typography Are Irrelevant in
+  Non-graphical Emacs
+
+You will notice that all my fonts are Iosevka Comfy variants. I
+explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Information about my Iosevka Comfy fonts]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Fontaine (font configurations)
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
