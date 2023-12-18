@@ -91,6 +91,7 @@ purpose and function:
 - The standard =early-init.el= :: It includes optimisations for
   starting up Emacs and sets some basics in place, such as to avoid
   the flash of light when starting Emacs while in a dark environment.
+
 - The standard =init.el= :: It contains foundational blocks of my
   system, i.e. Lisp macros I define, and loads the individual
   configuration modules.
