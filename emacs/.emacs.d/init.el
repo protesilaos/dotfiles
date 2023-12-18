@@ -428,10 +428,6 @@ that is expanded with the `prot-emacs-package' macro."
 (when prot-emacs-load-evil
   (require 'prot-emacs-evil))
 
-(setq safe-local-variable-values
-      '((org-hide-leading-stars . t)
-        (org-hide-macro-markers . t)))
-
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
 ;; ~/.emacs.d/prot-emacs-post-custom.el

@@ -38,6 +38,10 @@
 
   (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
+
+  (add-to-list 'safe-local-variable-values '(org-hide-leading-stars . t))
+  (add-to-list 'safe-local-variable-values '(org-hide-macro-markers . t))
+
 ;;;; general settings
   (setq org-ellipsis "⮧")
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
