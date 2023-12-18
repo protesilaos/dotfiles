@@ -4046,7 +4046,32 @@ active and the Completions window is on display."
   (prot-emacs-keybind resize-window-repeat-map
     ">" #'enlarge-window-horizontally
     "<" #'shrink-window-horizontally))
+#+end_src
 
+*** The =prot-emacs-window.el= section about ~beframe~
+:PROPERTIES:
+:CUSTOM_ID: h:77e4f174-0c86-460d-8a54-47545f922ae9
+:END:
+
+My ~beframe~ package enables a frame-oriented Emacs workflow where
+each frame has access to the list of buffers visited therein. In the
+interest of brevity, we call buffers that belong to frames "beframed".
+Check the video demo I did and note that I consider this one of the
+best changes I ever did to boost my productivity:
+<https://protesilaos.com/codelog/2023-02-28-emacs-beframe-demo/>.
+
++ Package name (GNU ELPA): ~beframe~
++ Official manual: <https://protesilaos.com/emacs/beframe>
++ Change log: <https://protesilaos.com/emacs/beframe-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/beframe>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/beframe>
+    + GitLab: <https://gitlab.com/protesilaos/beframe>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronym: Buffers Encapsulated in Frames Realise Advanced
+  Management of Emacs.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Frame-isolated buffers
 ;; Another package of mine.  Read the manual:
 ;; <https://protesilaos.com/emacs/beframe>.
