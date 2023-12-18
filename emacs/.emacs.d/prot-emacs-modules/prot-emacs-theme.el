@@ -15,12 +15,6 @@
 (prot-emacs-package pulsar
   (:install t)
   (:delay 1)
-  (dolist (cmd '( narrow-to-page narrow-to-defun
-                  narrow-to-region widen
-                  logos-forward-page-dwim
-                  logos-backward-page-dwim))
-    (add-to-list 'pulsar-pulse-functions cmd))
-
   (setopt pulsar-pulse t
           pulsar-delay 0.055
           pulsar-iterations 10
