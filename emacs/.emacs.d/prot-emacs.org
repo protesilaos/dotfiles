@@ -2706,6 +2706,18 @@ conform with the newer ~display-buffer-alist~...
   (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
 #+end_src
 
+*** The =prot-emacs-essentials.el= settings for ~proced~
+:PROPERTIES:
+:CUSTOM_ID: h:14d40e5a-327e-453e-861c-3ece24351d62
+:END:
+
+The =M-x proced= command produces a listing of all running processes
+on the system. This is like the ~top~ program on the command-line.
+While inside the =*Proced*= buffer, type =C-h m= (=M-x describe-mode=)
+to learn about keys/commands you can use therein. Personally, I mostly
+use this interface to check if some process is doing more than it should.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; `proced' (process monitor, similar to `top')
   (setq proced-auto-update-flag t)
   (setq proced-enable-color-flag t) ; Emacs 29
