@@ -129,6 +129,8 @@ shown here may not reflect the latest state of the project):
 ./
 ├── early-init.el
 ├── init.el
+├── prot-emacs-pre-custom.el
+├── prot-emacs-post-custom.el
 ├── prot-emacs-modules/
 │   ├── prot-emacs-completion.el
 │   ├── prot-emacs-dired.el
@@ -178,7 +180,7 @@ shown here may not reflect the latest state of the project):
     ├── prot-vertico.el
     └── prot-window.el
 
-3 directories, 48 files
+3 directories, 50 files
 #+end_example
 
 The reason I have this modular setup is because it is easier to debug
