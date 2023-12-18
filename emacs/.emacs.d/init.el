@@ -404,7 +404,6 @@ that is expanded with the `prot-emacs-package' macro."
 
 (require 'prot-emacs-theme)
 (require 'prot-emacs-essentials)
-(require 'prot-emacs-font)
 (require 'prot-emacs-modeline)
 (require 'prot-emacs-completion-common)
 (pcase prot-emacs-completion-ui
