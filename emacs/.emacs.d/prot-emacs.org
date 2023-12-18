@@ -2558,6 +2558,10 @@ reflect the new file contents.
 :CUSTOM_ID: h:d551b90d-d730-4eb5-976a-24b010fd4db3
 :END:
 
+Every graphical application I have ever used will delete the selected
+text upon the insertion of new text. Emacs does not do this by
+default. With ~delete-selection-mode~ we get it.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Delete selection
   (delete-selection-mode 1)
