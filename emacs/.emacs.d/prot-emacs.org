@@ -5246,7 +5246,14 @@ Meant to be added to `prog-mode-hook'."
           `((,prv . "prv/Sent")
             (,inf . "inf/Sent")
             (,pub . "pub/Sent"))))
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= section about the general user interface
+:PROPERTIES:
+:CUSTOM_ID: h:2c9a555f-d3ec-4d0e-bad6-6c26b576a49a
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; General UI
   (setq notmuch-show-logo nil
         notmuch-column-control 1.0
@@ -5255,7 +5262,14 @@ Meant to be added to `prog-mode-hook'."
         notmuch-hello-thousands-separator ""
         notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
         notmuch-show-all-tags-list t)
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= section about the presentation of search buffers
+:PROPERTIES:
+:CUSTOM_ID: h:eddc38d8-d1c1-48a4-8fa1-ce9ab2820ee3
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Search
   (setq notmuch-search-oldest-first nil
         notmuch-search-result-format
