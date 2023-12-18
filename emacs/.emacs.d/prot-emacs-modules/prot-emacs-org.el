@@ -52,6 +52,8 @@
         '(("s" . "src")
           ("e" . "src emacs-lisp")
           ("E" . "src emacs-lisp :results value code :lexical t")
+          ("t" . "src emacs-lisp :tangle FILENAME")
+          ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
           ("x" . "example")
           ("q" . "quote")))
   (setq org-catch-invisible-edits 'show)
