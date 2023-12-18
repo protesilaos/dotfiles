@@ -121,10 +121,64 @@ purpose and function:
 - The =prot-emacs.org= file :: The source of what you are currently
   reading.
 
-Here is a schematic representation of this directory structure:
+Here is a schematic representation of this directory structure (files
+shown here may not reflect the latest state of the project):
 
 #+begin_example
+~/Git/Projects/dotfiles/emacs/.emacs.d $ tree -aF
+./
+├── early-init.el
+├── init.el
+├── prot-emacs-modules/
+│   ├── prot-emacs-completion.el
+│   ├── prot-emacs-dired.el
+│   ├── prot-emacs-ef-themes.el
+│   ├── prot-emacs-email.el
+│   ├── prot-emacs-essentials.el
+│   ├── prot-emacs-evil.el
+│   ├── prot-emacs-git.el
+│   ├── prot-emacs-gnus.el
+│   ├── prot-emacs-icons.el
+│   ├── prot-emacs-langs.el
+│   ├── prot-emacs-mct.el
+│   ├── prot-emacs-modeline.el
+│   ├── prot-emacs-modus-themes.el
+│   ├── prot-emacs-mu4e.el
+│   ├── prot-emacs-notmuch.el
+│   ├── prot-emacs-org.el
+│   ├── prot-emacs-search.el
+│   ├── prot-emacs-standard-themes.el
+│   ├── prot-emacs-theme.el
+│   ├── prot-emacs-vertico.el
+│   ├── prot-emacs-web.el
+│   ├── prot-emacs-which-key.el
+│   └── prot-emacs-window.el
+├── prot-emacs.org
+└── prot-lisp/
+    ├── prot-coach.el
+    ├── prot-comment.el
+    ├── prot-common.el
+    ├── prot-dired.el
+    ├── prot-elfeed.el
+    ├── prot-embark.el
+    ├── prot-evil.el
+    ├── prot-eww.el
+    ├── prot-marginalia.el
+    ├── prot-modeline.el
+    ├── prot-notmuch.el
+    ├── prot-orderless.el
+    ├── prot-org.el
+    ├── prot-pair.el
+    ├── prot-prefix.el
+    ├── prot-scratch.el
+    ├── prot-search.el
+    ├── prot-shell.el
+    ├── prot-simple.el
+    ├── prot-spell.el
+    ├── prot-vertico.el
+    └── prot-window.el
 
+3 directories, 48 files
 #+end_example
 
 The reason I have this modular setup is because it is easier to debug
