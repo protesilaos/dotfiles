@@ -230,7 +230,7 @@ the Emacs frame. In general, this early initialisation file is meant
 to set up a few basic things before Emacs produces the initial frame
 by delegating to the =init.el= ([[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][Anatomy of my Emacs configuration]]).
 
-** The early-init.el macro to run code only in a Desktop Environment
+** The =early-init.el= macro to run code only in a Desktop Environment
 :PROPERTIES:
 :CUSTOM_ID: h:1e1b1503-0952-43f9-8bfe-4252fe874cd1
 :END:
@@ -258,7 +258,7 @@ constitutes a matching tiling window manager."
      ,@body))
 #+end_src
 
-** The early-init.el code to set frame parameters
+** The =early-init.el= code to set frame parameters
 :PROPERTIES:
 :CUSTOM_ID: h:0403b581-142b-4613-bc81-51c5dccd831d
 :END:
@@ -286,7 +286,7 @@ Simplified version of `add-to-list'."
    '(default-frame-alist initial-frame-alist)))
 #+end_src
 
-** The early-init.el basic frame settings
+** The =early-init.el= basic frame settings
 :PROPERTIES:
 :CUSTOM_ID: h:a1288a07-93f6-4e14-894e-707d5ad8b6dc
 :END:
@@ -320,7 +320,7 @@ I never want.
 (tool-bar-mode -1)
 #+end_src
 
-** The early-init.el tweaks to startup time and garbage collection
+** The =early-init.el= tweaks to startup time and garbage collection
 :PROPERTIES:
 :CUSTOM_ID: h:50d28f3c-3ada-4db5-b830-bbbbee7fec4e
 :END:
@@ -358,7 +358,7 @@ once Emacs is done loading.
                   vc-handled-backends prot-emacs--vc-handled-backends)))
 #+end_src
 
-** The early-init.el initialises the package cache
+** The =early-init.el= initialises the package cache
 :PROPERTIES:
 :CUSTOM_ID: h:7a037504-8a2f-4df0-8482-ce6476354440
 :END:
@@ -378,7 +378,7 @@ tool.
 (setq package-enable-at-startup t)
 #+end_src
 
-** The early-init.el defines general theme-related functions
+** The =early-init.el= defines general theme-related functions
 :PROPERTIES:
 :CUSTOM_ID: h:7d3a283e-1595-4692-8124-e0d683cb15b2
 :END:
@@ -431,7 +431,7 @@ not retain the generic background set by the function
     (enable-theme theme)))
 #+end_src
 
-** The early-init.el takes care to avoid the initial flash of light
+** The =early-init.el= takes care to avoid the initial flash of light
 :PROPERTIES:
 :CUSTOM_ID: h:a18a059d-4e62-4fd7-8c0b-1135a771a7aa
 :END:
@@ -467,7 +467,7 @@ New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
 (prot-emacs-avoid-initial-flash-of-light)
 #+end_src
 
-** The early-init.el gives a name to the default frame
+** The =early-init.el= gives a name to the default frame
 :PROPERTIES:
 :CUSTOM_ID: h:ad227f7e-b0a7-43f8-91d6-b50db82da9ad
 :END:
@@ -496,7 +496,7 @@ can tell). For minimalist window managers on Linux, something like the
 This is where I define the Lisp macros used in my setup and load all
 the invidiual modules.
 
-** The init.el user options
+** The =init.el= user options
 :PROPERTIES:
 :CUSTOM_ID: h:5a41861f-4c38-45ac-8da2-51d77c0b4a73
 :END:
@@ -520,7 +520,7 @@ directory as the init.el."
   :group 'file)
 #+end_src
 
-*** The init.el option to load a theme family
+*** The =init.el= option to load a theme family
 :PROPERTIES:
 :CUSTOM_ID: h:5612b5b8-45a5-4a79-a25b-6fa3d9146c39
 :END:
@@ -571,7 +571,7 @@ before all other modules of my setup."
                  (const :tag "Do not load a theme module" nil)))
 #+end_src
 
-*** The init.el option to load a minibuffer user interface
+*** The =init.el= option to load a minibuffer user interface
 :PROPERTIES:
 :CUSTOM_ID: h:f012a254-2716-4c29-a64b-c2b3df34f57f
 :END:
@@ -598,7 +598,7 @@ before all other modules of my setup.."
                  (const :tag "The `vertico' module" vertico)))
 #+end_src
 
-*** The init.el option to load Vim keys (=evil.el= and =devil.el=)
+*** The =init.el= option to load Vim keys (=evil.el= and =devil.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:d32718d6-c678-483e-8cdf-02d77053c960
 :END:
@@ -623,7 +623,7 @@ before all other modules of my setup."
   :type 'boolean)
 #+end_src
 
-*** The init.el option to enable ~which-key~
+*** The =init.el= option to enable ~which-key~
 :PROPERTIES:
 :CUSTOM_ID: h:24324854-1f8c-4d8b-aa7c-291de968cbf4
 :END:
@@ -648,7 +648,7 @@ before all other modules of my setup."
   :type 'boolean)
 #+end_src
 
-*** The init.el option to load icons (=nerd-icons.el=)
+*** The =init.el= option to load icons (=nerd-icons.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:a75444e3-527e-4525-84f8-0a43771966a6
 :END:
@@ -674,7 +674,7 @@ before all other modules of my setup."
   :type 'boolean)
 #+end_src
 
-*** The init.el option to omit packages at startup
+*** The =init.el= option to omit packages at startup
 :PROPERTIES:
 :CUSTOM_ID: h:1547dde9-6a79-4f58-8160-3ece9d1b8b8b
 :END:
@@ -696,7 +696,7 @@ before all other modules of my setup."
   :type '(repeat symbol))
 #+end_src
 
-** The init.el basic configurations to disable backups and lockfiles
+** The =init.el= basic configurations to disable backups and lockfiles
 :PROPERTIES:
 :CUSTOM_ID: h:63d74507-0318-4c02-ad30-484abcb8f78e
 :END:
@@ -713,7 +713,7 @@ either under version control or backed up to a flash drive.
 (setq create-lockfiles nil)
 #+end_src
 
-** The init.el tweaks to make native compilation silent
+** The =init.el= tweaks to make native compilation silent
 :PROPERTIES:
 :CUSTOM_ID: h:3563ceb5-b70c-4191-9c81-f2f5a202c4da
 :END:
@@ -736,7 +736,7 @@ red spots everywhere, as if we have totally broken Emacs.
   (setq native-compile-prune-cache t)) ; Emacs 29
 #+end_src
 
-** The init.el setting to send ~custom-file~ to oblivion
+** The =init.el= setting to send ~custom-file~ to oblivion
 :PROPERTIES:
 :CUSTOM_ID: h:f2ffe0e9-a58d-4bba-9831-cc35940ea83f
 :END:
@@ -765,7 +765,7 @@ altogether, but this is not possible. So here we are...
 (setq custom-file (make-temp-file "emacs-custom-"))
 #+end_src
 
-** The init.el settings for multilingual editing
+** The =init.el= settings for multilingual editing
 :PROPERTIES:
 :CUSTOM_ID: h:805e0539-c46d-4f03-b152-cefc635f945c
 :END:
@@ -782,7 +782,7 @@ Watch my video about multilingual editing:
 (setq default-transient-input-method "greek")
 #+end_src
 
-** The init.el settings to enable certain commands and disable others
+** The =init.el= settings to enable certain commands and disable others
 :PROPERTIES:
 :CUSTOM_ID: h:4ed6593f-6f55-4258-a1c2-ddb50e9e2465
 :END:
@@ -806,7 +806,7 @@ then put some on the disabled list.
  '(eshell project-eshell overwrite-mode iconify-frame diary))
 #+end_src
 
-** The init.el setting to always start with the =*scratch*= buffer
+** The =init.el= setting to always start with the =*scratch*= buffer
 :PROPERTIES:
 :CUSTOM_ID: h:96878899-f712-4900-8ee1-de8c40a634ce
 :END:
@@ -820,7 +820,7 @@ generic in this regard.
 (setq initial-buffer-choice t)
 #+end_src
 
-** The init.el arrangements for my own modules and custom libraries
+** The =init.el= arrangements for my own modules and custom libraries
 :PROPERTIES:
 :CUSTOM_ID: h:e289a614-4f17-4d6c-a028-42fe45aebe66
 :END:
@@ -882,7 +882,7 @@ files that are already placed where I need them to be.
  '("prot-lisp" "prot-emacs-modules"))
 #+end_src
 
-** The init.el settings for packages (=package.el=)
+** The =init.el= settings for packages (=package.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:424340cc-f3d7-4083-93c9-d852d40dfd40
 :END:
@@ -959,7 +959,7 @@ packages will rely on ~package-archive-priorities~.
            prot-emacs-my-packages)))
 #+end_src
 
-** The init.el option to declare all themes as safe
+** The =init.el= option to declare all themes as safe
 :PROPERTIES:
 :CUSTOM_ID: h:00213452-3671-4de6-b4ce-ca1b65f79413
 :END:
@@ -978,7 +978,7 @@ ever run ~load-theme~ without a =NO-CONFIRM= argument (like this:
 (setq custom-safe-themes t)
 #+end_src
 
-** The init.el macro to install and configure packages (~prot-emacs-package~)
+** The =init.el= macro to install and configure packages (~prot-emacs-package~)
 :PROPERTIES:
 :CUSTOM_ID: h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e
 :END:
@@ -1127,7 +1127,7 @@ Also see `prot-emacs-configure'."
 ;;   (setq denote-file-type nil))
 #+end_src
 
-** The init.el macro to evaluate arbitrary Elisp (~prot-emacs-configure~)
+** The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)
 :PROPERTIES:
 :CUSTOM_ID: h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200
 :END:
@@ -1163,7 +1163,7 @@ Also see `prot-emacs-package'."
       `(progn ,@body))))
 #+end_src
 
-** The init.el macro to bind keys (~prot-emacs-keybind~)
+** The =init.el= macro to bind keys (~prot-emacs-keybind~)
 :PROPERTIES:
 :CUSTOM_ID: h:d3684ec0-a972-4033-a4d6-41ee16e891d9
 :END:
@@ -1209,7 +1209,7 @@ DEFINITIONS is a sequence of string and command pairs."
 ;;   "C-x k" #'kill-buffer)
 #+end_src
 
-** The init.el macro to define abbreviations (~prot-emacs-abbrev~)
+** The =init.el= macro to define abbreviations (~prot-emacs-abbrev~)
 :PROPERTIES:
 :CUSTOM_ID: h:e7a12825-7848-42bd-b99b-b87903012814
 :END:
@@ -1237,7 +1237,7 @@ abbreviation to its expansion."
         (seq-split definitions 2))))
 #+end_src
 
-** The init.el to find which packages have been loaded
+** The =init.el= to find which packages have been loaded
 :PROPERTIES:
 :CUSTOM_ID: h:23c343cf-6b9b-4b35-b2af-858fb5b75163
 :END:
@@ -1259,7 +1259,7 @@ that is expanded with the `prot-emacs-package' macro."
   (delete-dups (append prot-emacs-loaded-packages package-activated-list)))
 #+end_src
 
-** The init.el addition of highlighting for my macros
+** The =init.el= addition of highlighting for my macros
 :PROPERTIES:
 :CUSTOM_ID: h:d168edaa-426f-4bd0-8275-3ec3d66bf126
 :END:
@@ -1286,7 +1286,7 @@ specifies how they should be colourised.
 (font-lock-add-keywords 'emacs-lisp-mode prot-emacs-font-lock-keywords)
 #+end_src
 
-** The init.el final part to load the individual modules
+** The =init.el= final part to load the individual modules
 :PROPERTIES:
 :CUSTOM_ID: h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872
 :END:
