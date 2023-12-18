@@ -2686,9 +2686,25 @@ these and many other buffers by configuring the ~display-buffer-alist~
   (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60)
+#+end_src
 
+*** The =prot-emacs-essentials.el= settings for manpages
+:PROPERTIES:
+:CUSTOM_ID: h:5eb16d63-ce21-4e76-8789-eef6ddbd7c00
+:END:
+
+Most buffers conform with rules we define in the ~display-buffer-alist~
+([[#h:b5fa481d-8549-4424-869e-91091cdf730b][The =prot-emacs-window.el= module]]). However, =M-x man= does not do
+this because it has its own behaviour. At least, it is customisable.
+The ~Man-notify-method~ is a very old option, according to what the
+Help buffer is telling me (check its documentation with =C-h v= or
+=M-x describe-variable=), so I suspect this was never updated to
+conform with the newer ~display-buffer-alist~...
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; `man' (manpages)
   (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
+#+end_src
 
 ;;;; `proced' (process monitor, similar to `top')
   (setq proced-auto-update-flag t)
