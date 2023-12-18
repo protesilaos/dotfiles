@@ -222,7 +222,7 @@ their specifics). What I have here is a macro which I can then use to
 wrap any code that should only be evaluated when I am not in one of my
 tiling window managers.
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 (defvar prot-emacs-tiling-window-manager-regexp
   (regexp-opt '("bspwm" "herbstluftwm" "i3"))
   "Regular expression to  tiling window managers.
@@ -251,7 +251,7 @@ the ~prot-emacs-with-desktop-session~ macro that I described above to
 set these parameters only when I am in a regular desktop environment
 ([[#h:1e1b1503-0952-43f9-8bfe-4252fe874cd1][The early-init.el macro to run code only in a Desktop Environment]]).
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 (defun prot-emacs-add-to-list (list element)
   "Add to symbol of LIST the given ELEMENT.
 Simplified version of `add-to-list'."
@@ -277,7 +277,7 @@ toolkit. In short, I want to keep things minimal. Notice the
 default Emacs will resize the frame if you adjust the font size, which
 I never want.
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t
       frame-title-format '("%b")
@@ -312,7 +312,7 @@ is to arrange for the relevant values to be set to very high values
 during startup and then be brought down to something more practical
 once Emacs is done loading.
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 ;; Temporarily increase the garbage collection threshold.  These
 ;; changes help shave off about half a second of startup time.  The
 ;; `most-positive-fixnum' is DANGEROUS AS A PERMANENT VALUE.  See the
@@ -349,7 +349,7 @@ If I have to tinker with a package's source code, I use Git
 ordinarily---no need for a package manager to also be a development
 tool.
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 ;; Initialise installed packages at this early stage, by using the
 ;; available cache.  I had tried a setup with this set to nil in the
 ;; early-init.el, but (i) it ended up being slower and (ii) various
@@ -371,7 +371,7 @@ accordingly. This is done in the sections about themes:
 - [[#h:2b2a27a1-6d2e-4b59-bf60-94682e173f2f][The =prot-emacs-ef-themes.el= module]]
 - [[#h:0c7a240c-211f-4571-a5ba-433e510f487f][The =prot-emacs-standard-themes.el= module]]
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 ;;;; General theme code
 
 (defun prot-emacs-theme-gsettings-dark-p ()
@@ -431,7 +431,7 @@ background here. That would be too slow for what we need in the early
 initialisation file, thus defeating the purpose of not having a flash
 of light at startup.
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 ;; NOTE 2023-02-05: The reason the following works is because (i) the
 ;; `mode-line-format' is specified again and (ii) the
 ;; `prot-emacs-theme-gsettings-dark-p' will load a dark theme.
@@ -464,7 +464,7 @@ it depends on the window manager (it works fine on GNOME, from what I
 can tell). For minimalist window managers on Linux, something like the
 ~rofi~ program can select system windows based on their name.
 
-#+begin_src emacs-lisp :tangle "TEST-early-init.el"
+#+begin_src emacs-lisp :tangle "early-init.el"
 (add-hook 'after-init-hook (lambda () (set-frame-name "home")))
 #+end_src
 
@@ -488,7 +488,7 @@ mostly for those who use my files as a basis for their configuration.
 All user options must be set in a =prot-emacs-pre-custom.el= file in
 the same directory as the =init.el= ([[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][Anatomy of my Emacs configuration]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load: search below for the files
 ;; prot-emacs-pre-custom.el and prot-emacs-post-custom.el
@@ -530,7 +530,7 @@ In short:
 Here we specify which module to load at startup. Remember to read how
 these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-load-theme-family 'modus
   "Set of themes to load.
 Valid values are the symbols `ef', `modus', and `standard', which
@@ -566,7 +566,7 @@ front for Emacs 30. It still has its place in the meantime.
 Here we specify which module to load at startup. Remember to read how
 these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-completion-ui 'vertico
   "Choose minibuffer completion UI between `mct' or `vertico'
 This user option must be set in the `prot-emacs-pre-custom.el'
@@ -593,7 +593,7 @@ because of the hard manual work I do around the hut).
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-load-evil nil
   "When non-nil, load Vim style key bindings as well as `devil-mode'.
 This user option must be set in the `prot-emacs-pre-custom.el'
@@ -618,7 +618,7 @@ to get information about the current major mode).
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-load-which-key nil
   "When non-nil, display key binding hints after a short delay.
 This user option must be set in the `prot-emacs-pre-custom.el'
@@ -640,7 +640,7 @@ must do this manually with =M-x nerd-icons-install-fonts=.
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-load-icons nil
   "When non-nil, enable iconography in various contexts.
 This installs and uses the `nerd-icons' package and its variants.
@@ -661,7 +661,7 @@ before all other modules of my setup."
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-omit-packages nil
   "List of package names to not load.
 This instructs the relevant macros to not `require' the given
@@ -687,7 +687,7 @@ I do not need because (i) if I am ever modifying my files externally,
 then I know what I am doing and (ii) all the files I care about are
 either under version control or backed up to a flash drive.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
@@ -709,7 +709,7 @@ count. To make things even worse, the buffer that shows these warnings
 uses the stop sign character, resulting in a long list of lines with
 red spots everywhere, as if we have totally broken Emacs.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;; Make native compilation silent and prune its cache.
 (when (native-comp-available-p)
   (setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
@@ -740,7 +740,7 @@ function because I will never rely on the ~custom-file~. I would
 prefer to just have an option to avoid the Custom infrastructure
 altogether, but this is not possible. So here we are...
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;; Disable the damn thing by making it disposable.
 (setq custom-file (make-temp-file "emacs-custom-"))
 #+end_src
@@ -757,7 +757,7 @@ I switch keyboard layouts at the system level).
 Watch my video about multilingual editing:
 <https://protesilaos.com/codelog/2023-12-12-emacs-multilingual-editing/>.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (setq default-input-method "greek") ; also check "greek-postfix"
 (setq default-transient-input-method "greek")
 #+end_src
@@ -772,7 +772,7 @@ will produce a warning when we try to invoke them and will ask us for
 confirmation. Here I define which commands I want to have enabled and
 then put some on the disabled list.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;; Enable these
 (mapc
  (lambda (command)
@@ -795,7 +795,7 @@ I like starting with a scratch buffer. I know that a lot of users
 specify a dashboard or an Org agenda view, but I prefer to keep things
 generic in this regard.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;; Always start with *scratch*
 (setq initial-buffer-choice t)
 #+end_src
@@ -855,7 +855,7 @@ would look. Plus, if I ever decide to stop using the literate config,
 I can simply stop editing it and perfom the edits directly in the
 files that are already placed where I need them to be.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (mapc
  (lambda (string)
    (add-to-list 'load-path (locate-user-emacs-file path)))
@@ -873,7 +873,7 @@ archives. Make sure to read my article about package archives, pinning
 packages, and setting priorities:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;;;; Packages
 
 (require 'package)
@@ -907,7 +907,7 @@ pinning them to that archive by setting the value of
 while also making sure the actual package works properly. All other
 packages will rely on ~package-archive-priorities~.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defvar prot-emacs-my-packages
   '(agitate
     altcaps
@@ -954,7 +954,7 @@ ever run ~load-theme~ without a =NO-CONFIRM= argument (like this:
 [ Note that Emacs considers the built-in themes "safe". This includes my
   ~modus-themes~. ]
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (setq custom-safe-themes t)
 #+end_src
 
@@ -989,7 +989,7 @@ I will not try to document the technicalities of the macro here,
 though I am happy to do this with anyone who is interested in learning
 such advanced topics (<https://protesilaos.com/coach>).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defun prot-emacs-package-install (package &optional method)
   "Install PACKAGE with optional METHOD.
 
@@ -1120,7 +1120,7 @@ those cases where some code does not belong to a specific package (or
 I simply want to group many packages as a single block and have a
 single delay for all of them).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defmacro prot-emacs-configure (&rest body)
   "Evaluate BODY as a `progn'.
 BODY consists of ordinary Lisp expressions.  The sole exception
@@ -1158,7 +1158,7 @@ means that it does not try to cover the case of =[remap COMMAND]= (I
 am not a fan of it because the code alone does not tell us which key
 we end up using).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defmacro prot-emacs-keybind (keymap &rest definitions)
   "Expand key binding DEFINITIONS for the given KEYMAP.
 DEFINITIONS is a sequence of string and command pairs."
@@ -1199,7 +1199,7 @@ the ~define-abbrev~ function ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891d9][The ini
 I probably do not need this, as I only write a small number of
 abbreviations. Though it is good to practice some programming.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defmacro prot-emacs-abbrev (table &rest definitions)
   "Expand abbrev DEFINITIONS for the given TABLE.
 DEFINITIONS is a sequence of string pairs mapping the
@@ -1229,7 +1229,7 @@ reading the value of ~package-activated-list~ as well as
 for updating the latter
 ([[*The init.el macro to install and configure packages (~prot-emacs-package~)][The init.el macro to install and configure packages (~prot-emacs-package~)]]).
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defun prot-emacs-return-loaded-packages ()
   "Return a list of all loaded packages.
 Here packages include both `prot-emacs-loaded-packages' and
@@ -1248,7 +1248,7 @@ In the previous sections, I define a few Lisp macros that I use
 throughout my setup. The following makes these known to Emacs and
 specifies how they should be colourised.
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 (defvar prot-emacs-package-form-regexp
   "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|prot-emacs-abbrev\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
@@ -1285,7 +1285,7 @@ as I have already explained in the section about these user options.
 The individual modules are documented in a section of their own under
 [[#h:dc3e88c8-4def-4a3f-b63c-9e845b0f98ef][the modules of my Emacs configuration]].
 
-#+begin_src emacs-lisp :tangle "TEST-init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
 ;; ~/.emacs.d/prot-emacs-pre-custom.el
@@ -1357,7 +1357,7 @@ We start by loading one of my themes ([[#h:5612b5b8-45a5-4a79-a25b-6fa3d9146c39]
 These are actually defined in modules of their own, though this is the
 only place where they are used.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el" :mkdirp yes
 ;;; Theme setup and related
 
 ;;;; Load the desired theme module
@@ -1412,7 +1412,7 @@ the themes across the years.
 + Mailing list: <https://lists.sr.ht/~protesilaos/modus-themes>
 + Backronym: My Old Display Unexpectedly Sharpened ... themes
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-modus-themes.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-modus-themes.el"
 ;;; The Modus themes
 
 ;; The themes are highly customisable.  Read the manual:
@@ -1529,7 +1529,7 @@ designed by me).
 + Backronym: Eclectic Fashion in Themes Hides Exaggerated Markings,
   Embellishments, and Sparkles.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-ef-themes.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-ef-themes.el"
 ;;; The Ef (εὖ) themes
 
 ;; The themes are customisable.  Read the manual:
@@ -1660,7 +1660,7 @@ interfaces by supporting a large number of packages.
 + Backronym: Standard Themes Are Not Derivatives but the
   Affectionately Reimagined Default ... themes.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-standard-themes.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-standard-themes.el"
 ;;; The Standard themes
 
 ;; The themes are customisable.  Read the manual:
@@ -1784,7 +1784,7 @@ are called. The pulse effect is added there (~pulsar-after-function-hook~).
 + Mailing list: <https://lists.sr.ht/~protesilaos/pulsar>
 + Backronym: Pulsar Unquestionably Luminates, Strictly Absent the Radiation
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-package pulsar
@@ -1850,7 +1850,7 @@ vertical axis.
 + Mailing list: <https://lists.sr.ht/~protesilaos/lin>
 + Backronym: LIN Is Noticeable
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Lin
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
 (prot-emacs-package lin
@@ -1892,7 +1892,7 @@ and [[https://github.com/minad/org-modern][Daniel Mendler's ~org-modern~ package
   Usability State ... padding; Spacious ... Precise Adjustments to
   Desktop Divider Internals Neatly Generated.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:
 ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
@@ -1928,7 +1928,7 @@ This package produces an in-buffer preview of a colour value. I use
 those while developing my themes, hence the ~prot/rainbow-mode-in-themes~
 to activate ~rainbow-mode~ if I am editing a theme file.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (prot-emacs-package rainbow-mode
   (:install t)
@@ -1970,7 +1970,7 @@ such as in the difference between writing and reading.
 + Mailing list: <https://lists.sr.ht/~protesilaos/cursory>
 + Backronym: Cursor Usability Requires Styles Objectively Rated Yearlong
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
 (prot-emacs-package cursory
@@ -2037,7 +2037,7 @@ Bruno Boal is the lead developer and I am a co-maintainer.
 + Backronym: Themes Harmoniously Exchanged Mid Evening Beget
   Understandable Feelings of Fascination, Excitement, and Thrill.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Theme buffet
 (prot-emacs-package theme-buffet
   (:install t)
@@ -2060,7 +2060,7 @@ Bruno Boal is the lead developer and I am a co-maintainer.
 Finally, we ~provide~ the module. This is the mirror function of
 ~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-theme.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 (provide 'prot-emacs-theme)
 #+end_src
 
@@ -2077,7 +2077,7 @@ I start the file with a call to the ~prot-emacs-configure~ macro. I
 wrap all sorts of related calls and introduce a one second delay to
 their evaluation. This helps speed up startup time.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el" :mkdirp yes
 ;;; Essential configurations
 (prot-emacs-configure
   (:delay 1)
@@ -2099,7 +2099,7 @@ Then I load several of my custom libraries. Check their definitions:
 - [[#h:7affcbca-0808-4159-8eab-faa7973aefc7][The =prot-comment.el= library]]
 - [[#h:f860bd85-671e-477e-8233-23a8ba43e1c6][The =prot-prefix.el= library]]
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
   ;; NOTE 2023-05-20: Normally those would not have to be `require'd
   ;; as every point of entry is autoloaded.  But Emacs does not have
   ;; an autoloads file for them, as they are not installed the usual
@@ -2116,7 +2116,7 @@ Then I load several of my custom libraries. Check their definitions:
 Then I define all sorts of settings. Better use =C-h v= (=M-x
 describe-variable=) to learn about each of these.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; General settings and common custom functions (prot-simple.el)
   (setq read-minibuffer-restore-windows nil) ; Emacs 28
   (setq blink-matching-paren nil)
@@ -2152,7 +2152,7 @@ I have a custom library that builds on what Emacs makes available by
 default ([[#h:7affcbca-0808-4159-8eab-faa7973aefc7][The =prot-comment.el= library]]). While I use this section of
 the module to set my desired configurations.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Comments (prot-comment.el)
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
@@ -2181,7 +2181,7 @@ how we type multiple ~define-key~ calls ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891
 Many of the functions here are defined in my own libraries as noted
 earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.el= block that loads my custom libraries]]).
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
   ;; General commands
   (prot-emacs-keybind global-map
     "<insert>" nil
@@ -2274,7 +2274,7 @@ earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.e
 I do use the mouse on occasion. More so when I am doing a video
 demonstration.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Mouse and mouse wheel behaviour
   (setq mouse-autoselect-window t) ; complements the auto-selection of my tiling window manager
 
@@ -2319,7 +2319,7 @@ a bit easier for users, though it still is a rather advanced feature.
 In most cases, just know that ~repeat-mode~ is nice to have, though
 you can probably use Emacs just fine without it.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Repeatable key chords (repeat-mode)
   (setq repeat-on-final-keystroke t
         repeat-exit-timeout 5
@@ -2346,7 +2346,7 @@ Use the ~bookmark-set~ command (=C-x r m= by default) to record a
 bookmark and then visit one of your bookmarks with ~bookmark-jump~
 (=C-x r b= by default).
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Built-in bookmarking framework (bookmark.el)
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations nil)
@@ -2365,7 +2365,7 @@ bookmark and then visit one of your bookmarks with ~bookmark-jump~
 :CUSTOM_ID: h:7753549e-806d-4140-b72d-5460a4a14b3e
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Auto revert mode
   (setq auto-revert-verbose t)
   (global-auto-revert-mode 1)
@@ -2376,7 +2376,7 @@ bookmark and then visit one of your bookmarks with ~bookmark-jump~
 :CUSTOM_ID: h:d551b90d-d730-4eb5-976a-24b010fd4db3
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Delete selection
   (delete-selection-mode 1)
 #+end_src
@@ -2386,7 +2386,7 @@ bookmark and then visit one of your bookmarks with ~bookmark-jump~
 :CUSTOM_ID: h:26afeb95-7920-45ed-8ff6-3648256c280b
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Tooltips (tooltip-mode)
   (setq tooltip-delay 0.5
         tooltip-short-delay 0.5
@@ -2408,7 +2408,7 @@ bookmark and then visit one of your bookmarks with ~bookmark-jump~
 
 This is displayed on my mode line. LINK TO =prot-emacs-modeline.el=.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Display current time
   (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
@@ -2448,7 +2448,7 @@ buffer with all cities and concomitant the time zones specified in
 ~zoneinfo-style-world-list~. The contents are displayed according to
 the ~world-clock-time-format~.
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; World clock (M-x world-clock)
   (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
@@ -2511,7 +2511,7 @@ the ~world-clock-time-format~.
     (server-start)))
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
@@ -2541,7 +2541,7 @@ the ~world-clock-time-format~.
     "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Mark syntactic constructs efficiently if tree-sitter is available (expreg)
 (when (treesit-available-p)
   (prot-emacs-package expreg
@@ -2569,7 +2569,7 @@ word.  Fall back to regular `expreg-expand'."
     (define-key global-map (kbd "C-M-SPC") #'prot/expreg-expand-dwim))) ; overrides `mark-sexp'
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Visualise undo ring (`vundo')
 (prot-emacs-package vundo
   (:install t)
@@ -2602,7 +2602,7 @@ by that special hook."
   (add-hook 'vundo-post-exit-hook #'prot/vundo-quit-diff-window))
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (prot-emacs-package tmr
@@ -2624,7 +2624,7 @@ by that special hook."
     "C-c t R" #'tmr-remove-finished))
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Pass interface (password-store)
 (prot-emacs-package password-store
   (:install t)
@@ -2637,7 +2637,7 @@ by that special hook."
 (prot-emacs-package pass (:install t) (:delay 5))
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Shell (M-x shell)
 (prot-emacs-package shell
   (:delay 15)
@@ -2699,7 +2699,7 @@ by that special hook."
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Laptop settings
 (unless (directory-empty-p "/sys/class/power_supply/")
   (add-to-list 'default-frame-alist '(width . (text-pixels . 800)))
@@ -2719,7 +2719,7 @@ by that special hook."
     (display-battery-mode 1)))
 #+end_src
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-essentials.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Get environment variables into Emacs (exec-path-from-shell) while on Wayland
 (when-let ((session (getenv "XDG_SESSION_TYPE"))
            ((equal session "wayland")))
@@ -2738,7 +2738,7 @@ by that special hook."
 :CUSTOM_ID: h:41ee38d0-9099-4444-85e4-cc8dce00fb9a
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-modeline.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-modeline.el" :mkdirp yes
 ;;; Mode line
 (prot-emacs-package prot-modeline
   (:delay 1)
@@ -2803,7 +2803,7 @@ by that special hook."
 :CUSTOM_ID: h:15edf2c3-4419-4101-928a-6e224958a741
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
 ;;; General minibuffer settings
 (prot-emacs-configure
   (:delay 1)
@@ -3219,7 +3219,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 :CUSTOM_ID: h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-mct.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mct.el" :mkdirp yes
 ;;; Minibuffer and Completions in Tandem
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
@@ -3300,7 +3300,7 @@ active and the Completions window is on display."
 :CUSTOM_ID: h:cff33514-d3ac-4c16-a889-ea39d7346dc5
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-vertico.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-vertico.el" :mkdirp yes
 ;;; Vertical completion layout
 (prot-emacs-package vertico
   (:install t)
@@ -3360,7 +3360,7 @@ active and the Completions window is on display."
 :CUSTOM_ID: h:e0f9c30e-3a98-4479-b709-7008277749e4
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-search.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el" :mkdirp yes
 ;;; Isearch, occur, grep, and extras (prot-search.el)
 (prot-emacs-package isearch
   (:delay 5)
@@ -3460,7 +3460,7 @@ active and the Completions window is on display."
 :CUSTOM_ID: h:f8b08a77-f3a8-42fa-b1a9-f940348889c3
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-dired.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el" :mkdirp yes
 ;;; Dired file manager and prot-dired.el extras
 (prot-emacs-package dired
   (:delay 2)
@@ -3604,7 +3604,7 @@ active and the Completions window is on display."
 :CUSTOM_ID: h:b5fa481d-8549-4424-869e-91091cdf730b
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-window.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp yes
 ;;; General window and buffer configurations
 (prot-emacs-configure
   (:delay 1)
@@ -3839,7 +3839,7 @@ active and the Completions window is on display."
 :CUSTOM_ID: h:65e3eff5-0bff-4e1f-b6c5-0d3aa1a0d232
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-git.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el" :mkdirp yes
 ;;; General Git/Project/Diff configurations
 (prot-emacs-configure
   (:delay 2)
@@ -4098,7 +4098,7 @@ Based on `project--keymap-prompt' and meant to be used as an
 :CUSTOM_ID: h:d799c3c0-bd6a-40bb-bd1a-ba4ea5367840
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
 (prot-emacs-configure
   (:delay 5)
 ;;; Calendar
@@ -4602,7 +4602,7 @@ Based on `project--keymap-prompt' and meant to be used as an
 :CUSTOM_ID: h:f44afb76-a1d7-4591-934d-b698cc79a792
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-langs.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el" :mkdirp yes
 ;;; General language/editing settings
 (prot-emacs-configure
   (:delay 2)
@@ -5016,7 +5016,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:755e195b-9471-48c7-963b-33055969b4e2
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-email.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el" :mkdirp yes
 ;;; Client-agnostic email settings
 (prot-emacs-configure
   (:delay 1)
@@ -5078,7 +5078,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:b26c6297-ebe8-4f99-b069-df53cfd90520
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;; NOTE 2022-11-15: See prot-emacs-email.el for the general setup.
 ;; This file contains the coode specific to notmuch and is loaded from
 ;; the init.el conditionally if the notmuch executable is available.
@@ -5322,7 +5322,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:ae0a1c85-8412-48d3-94a9-7d6dbd801126
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-gnus.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-gnus.el" :mkdirp yes
 ;; This is deprecated code as I stopped using Gnus a long time ago.  I
 ;; keep it here for when I need to test it for my themes (`ef-themes',
 ;; `modus-themes', `standard-themes').
@@ -5506,7 +5506,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:97282c11-475c-4ad3-9399-cb2cd12f93b7
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-mu4e.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mu4e.el" :mkdirp yes
 ;; This is deprecated code as I stopped using mu4e a long time ago.  I
 ;; keep it here for when I need to test it for my themes (`ef-themes',
 ;; `modus-themes', `standard-themes').
@@ -5634,7 +5634,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:f23d9cef-ab7b-4486-a070-9c7ae664eadf
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-web.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el" :mkdirp yes
 ;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
 (prot-emacs-configure
   (:delay 60)
@@ -5810,7 +5810,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:ddb1070d-2f91-4224-ad43-ef03f038f787
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-which-key.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-which-key.el" :mkdirp yes
 (prot-emacs-package which-key
   (:install t)
   (:delay 1)
@@ -5832,7 +5832,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:4efde779-3ef0-40b7-82e4-70f71b321428
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-icons.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-icons.el" :mkdirp yes
 ;;; Icons
 (prot-emacs-package nerd-icons
   (:install t)
@@ -5857,7 +5857,7 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:0d6763f3-56d6-44be-b10d-bfb8cc96b442
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-emacs-modules/prot-emacs-evil.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-evil.el" :mkdirp yes
 (prot-emacs-configure
   (:delay 1)
 
@@ -6123,7 +6123,7 @@ not test it as much and do not try to make it perfect.
 :CUSTOM_ID: h:dbdfc774-c389-403f-95e7-17fa62c53d84
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-coach.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-coach.el" :mkdirp yes
 ;;; prot-coach.el --- Code for my personal coaching sessions -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -6311,7 +6311,7 @@ Omit entries with a CANCEL state."
 :CUSTOM_ID: h:7affcbca-0808-4159-8eab-faa7973aefc7
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-comment.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-comment.el" :mkdirp yes
 ;;; prot-comment.el --- Extensions newcomment.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2023  Protesilaos Stavrou
@@ -6473,7 +6473,7 @@ an alternative date format, as specified by
 :CUSTOM_ID: h:3fccfadf-22e9-457f-b9fd-ed1b48600d23
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-common.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-common.el" :mkdirp yes
 ;;; prot-common.el --- Common functions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2023  Protesilaos Stavrou
@@ -6883,7 +6883,7 @@ belong to the given subset of CONSEQUENCES.
 :CUSTOM_ID: h:92cfefcf-8c20-43cd-b47c-ffe0c5fe1887
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-dired.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-dired.el" :mkdirp yes
 ;;; prot-dired.el --- Extensions to dired.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2023  Protesilaos Stavrou
@@ -7154,7 +7154,7 @@ Add this to `dired-mode-hook'."
 :CUSTOM_ID: h:98c313d7-62c2-48c1-b6ad-28cc25f22092
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-elfeed.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-elfeed.el" :mkdirp yes
 ;;; prot-elfeed.el --- Elfeed extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2023  Protesilaos Stavrou
@@ -7346,7 +7346,7 @@ minibuffer with something like `exit-minibuffer'."
 :CUSTOM_ID: h:fb034be5-c316-4c4f-a46f-cebcab332a47
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-embark.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-embark.el" :mkdirp yes
 ;;; prot-embark.el --- Custom Embark keymaps -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -7472,7 +7472,7 @@ minibuffer with something like `exit-minibuffer'."
 :CUSTOM_ID: h:a78d30dd-3724-462b-998a-212879293561
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-evil.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-evil.el" :mkdirp yes
 ;;; prot-evil.el --- Extras for Evil mode -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -7626,7 +7626,7 @@ applying its ARGS."
 :CUSTOM_ID: h:abc20037-7a4f-4555-809a-dc4165c5db6a
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-eww.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-eww.el" :mkdirp yes
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2023  Protesilaos Stavrou, Abhiseck Paira
@@ -8294,7 +8294,7 @@ As a final step, save `prot-eww-visited-history' to a file (see
 :CUSTOM_ID: h:92085a6d-213f-400d-be83-763eb80a3877
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-marginalia.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-marginalia.el" :mkdirp yes
 ;;; prot-marginalia.el --- Code for my custom mode line -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -8398,7 +8398,7 @@ As a final step, save `prot-eww-visited-history' to a file (see
 :CUSTOM_ID: h:935adc09-abaa-4413-a5ab-a7a562081c20
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-modeline.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-modeline.el" :mkdirp yes
 ;;; prot-modeline.el --- Code for my custom mode line -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -9039,7 +9039,7 @@ Specific to the current window's mode line.")
 :CUSTOM_ID: h:92ee86b8-0ead-4080-963f-3fbc9f931e3e
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-notmuch.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-notmuch.el" :mkdirp yes
 ;;; prot-notmuch.el --- Tweaks for my notmuch.el configurations -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2023  Protesilaos Stavrou
@@ -9322,7 +9322,7 @@ Add this to `notmuch-mua-send-hook'."
 :CUSTOM_ID: h:114c6e8c-697a-43e9-8fd9-52872997e1c9
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-orderless.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-orderless.el" :mkdirp yes
 ;;; prot-orderless.el --- Extensions for Orderless -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2023  Protesilaos Stavrou
@@ -9390,7 +9390,7 @@ Add this to `notmuch-mua-send-hook'."
 :CUSTOM_ID: h:9974eac8-2167-45c4-90e0-12dd877403da
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-org.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-org.el" :mkdirp yes
 ;;; prot-org.el --- Tweaks for my org-mode configurations -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2023  Protesilaos Stavrou
@@ -9742,7 +9742,7 @@ CUSTOM_ID of the entry is returned."
 :CUSTOM_ID: h:0a3f076d-386d-47e6-8af9-f17d02d507cf
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-pair.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-pair.el" :mkdirp yes
 ;;; prot-pair.el --- Insert character pair around symbol or region -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -9914,7 +9914,7 @@ controlled by `delete-pair-blink-delay'."
 :CUSTOM_ID: h:f860bd85-671e-477e-8233-23a8ba43e1c6
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-prefix.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-prefix.el" :mkdirp yes
 ;;; prot-prefix.el --- Prefix keymap for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -10260,7 +10260,7 @@ controlled by `delete-pair-blink-delay'."
 :CUSTOM_ID: h:efebaec4-7273-4c5a-a4c4-9f99df0e46bb
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-scratch.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-scratch.el" :mkdirp yes
 ;;; prot-scratch.el --- Scratch buffers for editable major mode of choice -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -10397,7 +10397,7 @@ for the given MAJOR-MODE, any text is appended to it."
 :CUSTOM_ID: h:0cab525d-fcbc-478c-b914-bbd69e33c635
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-search.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-search.el" :mkdirp yes
 ;;; prot-search.el --- Extensions to isearch, replace, grep for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2023  Protesilaos Stavrou
@@ -10905,7 +10905,7 @@ and function as links to the context they reference."
 :CUSTOM_ID: h:32f6fe0f-23c4-44cc-97cc-3e5372bd484e
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-shell.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-shell.el" :mkdirp yes
 ;;; prot-shell.el --- M-x shell extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -11241,7 +11241,7 @@ Add a bookmark handler for shell buffer and activate the
 :CUSTOM_ID: h:5f78e837-0d27-4390-bd9a-6d0bca57fa50
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-simple.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-simple.el" :mkdirp yes
 ;;; prot-simple.el --- Common commands for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2023  Protesilaos Stavrou
@@ -12044,7 +12044,7 @@ VARIANT is either `dark' or `light'."
 :CUSTOM_ID: h:551718b7-fb2d-4a4a-804e-3118001b96ec
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-spell.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-spell.el" :mkdirp yes
 ;;; prot-spell.el --- Spelling-related extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2023  Protesilaos Stavrou
@@ -12153,7 +12153,7 @@ function.  Then you can control the buffer's specifics via
 :CUSTOM_ID: h:3796a4c9-8659-4782-8aaa-3cf4e950927d
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-vertico.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-vertico.el" :mkdirp yes
 ;;; prot-vertico.el --- Custom Vertico extras -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou
@@ -12263,7 +12263,7 @@ This is done to accommodate `prot-vertico-multiform-minimal'."
 :CUSTOM_ID: h:35b8a0a5-c447-4301-a404-bc274596238d
 :END:
 
-#+begin_src emacs-lisp :tangle "TEST-prot-lisp/prot-window.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-window.el" :mkdirp yes
 ;;; prot-window.el --- Display-buffer and window-related extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023  Protesilaos Stavrou

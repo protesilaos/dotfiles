@@ -3,6 +3,12 @@
   (:install t)
   (:delay 5))
 
+(prot-emacs-package nerd-icons-completion
+  (:install t)
+  (:delay 5)
+  (nerd-icons-completion-marginalia-setup)
+  (nerd-icons-completion-mode 1))
+
 (prot-emacs-package nerd-icons-dired
   (:install t)
   (:delay 5)

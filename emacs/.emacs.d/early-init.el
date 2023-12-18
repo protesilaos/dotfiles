@@ -1,36 +1,6 @@
-;;; early-init.el --- Early Init File -*- lexical-binding: t -*-
-
-;; Copyright (c) 2020-2023  Protesilaos Stavrou <info@protesilaos.com>
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "30.1"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This file is free software: you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the
-;; Free Software Foundation, either version 3 of the License, or (at
-;; your option) any later version.
-;;
-;; This file is distributed in the hope that it will be useful, but
-;; WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-;; General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this file.  If not, see <https://www.gnu.org/licenses/>.
-
-;;; Commentary:
-
-;; See my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
-
-;;; Code:
-
 (defvar prot-emacs-tiling-window-manager-regexp
-  "\\(?:\\(?:bsp\\|herbstluft\\)wm\\)"
-  "Regular expression to match desired tiling window managers.
+  (regexp-opt '("bspwm" "herbstluftwm" "i3"))
+  "Regular expression to  tiling window managers.
 See definition of `prot-emacs-with-desktop-session'.")
 
 (defmacro prot-emacs-with-desktop-session (&rest body)
@@ -38,8 +8,8 @@ See definition of `prot-emacs-with-desktop-session'.")
 See `prot-emacs-tiling-window-manager-regexp' for what
 constitutes a matching tiling window manager."
   (declare (indent 0))
-  `(when-let* ((session (getenv "DESKTOP_SESSION"))
-               ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
+  `(when-let ((session (getenv "DESKTOP_SESSION"))
+              ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
      ,@body))
 
 (defun prot-emacs-add-to-list (list element)
@@ -57,8 +27,11 @@ Simplified version of `add-to-list'."
 
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize t
+      frame-title-format '("%b")
+      ring-bell-function 'ignore
       use-dialog-box t ; only for mouse events, which I seldom use
       use-file-dialog nil
+      use-short-answers t
       inhibit-splash-screen t
       inhibit-startup-screen t
       inhibit-x-resources t
@@ -67,7 +40,8 @@ Simplified version of `add-to-list'."
 
 ;; I do not use those graphical elements by default, but I do enable
 ;; them from time-to-time for testing purposes or to demonstrate
-;; something.
+;; something.  NEVER tell a beginner to disable any of these.  They
+;; are helpful.
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -156,5 +130,3 @@ New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
 (prot-emacs-avoid-initial-flash-of-light)
 
 (add-hook 'after-init-hook (lambda () (set-frame-name "home")))
-
-;;; early-init.el ends here

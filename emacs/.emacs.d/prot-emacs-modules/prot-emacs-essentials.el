@@ -5,7 +5,8 @@
   ;; NOTE 2023-05-20: Normally those would not have to be `require'd
   ;; as every point of entry is autoloaded.  But Emacs does not have
   ;; an autoloads file for them, as they are not installed the usual
-  ;; way.
+  ;; way and I do not want to generate such a file: the `require' is
+  ;; fine.
   (require 'prot-common)
   (require 'prot-simple)
   (require 'prot-scratch)
@@ -14,6 +15,7 @@
   (require 'prot-prefix)
 
 ;;;; General settings and common custom functions (prot-simple.el)
+  (setq read-minibuffer-restore-windows nil) ; Emacs 28
   (setq blink-matching-paren nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
   (setq help-window-select t)
@@ -21,6 +23,7 @@
   (setq find-library-include-other-files nil) ; Emacs 29
   (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
   (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
+  (setq tramp-connection-timeout (* 60 10)) ; seconds
   (setq save-interprogram-paste-before-kill t)
   (setq mode-require-final-newline 'visit-save)
   (setq-default truncate-partial-width-windows nil)
@@ -63,8 +66,11 @@
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
     "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
-    "C-c +" #'prot-simple-number-increment
-    "C-c -" #'prot-simple-number-decrement
+
+    ;; ;; NOTE 2023-12-17: I am not happy with these.  Will rewrite them.
+    ;; "C-c +" #'prot-simple-number-increment
+    ;; "C-c -" #'prot-simple-number-decrement
+
     ;; Commands for lines
     "M-o" #'delete-blank-lines   ; alias for C-x C-o
     "M-k" #'prot-simple-kill-line-backward
@@ -192,9 +198,6 @@
 
   (autoload #'tooltip-mode "tooltip")
   (tooltip-mode 1)
-
-;;;; TRAMP (remote connections)
-  (setq tramp-connection-timeout (* 60 10)) ; seconds
 
 ;;;; Display current time
   (setq display-time-format " %a %e %b, %H:%M ")
@@ -487,52 +490,5 @@ by that special hook."
     (setq exec-path-from-shell-variables
           '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
     (exec-path-from-shell-initialize)))
-
-;;; Cursor appearance (cursory)
-;; Read the manual: <https://protesilaos.com/emacs/cursory>.
-(prot-emacs-package cursory
-  (:install t)
-  (:delay 1)
-  (setq cursory-presets
-        '((box
-           :blink-cursor-interval 1.2)
-          (box-no-blink
-           :blink-cursor-mode -1)
-          (bar
-           :cursor-type (bar . 2)
-           :blink-cursor-interval 0.5)
-          (bar-no-other-window
-           :inherit bar
-           :cursor-in-non-selected-windows nil)
-          (underscore
-           :cursor-type (hbar . 3)
-           :blink-cursor-blinks 50)
-          (underscore-thin-other-window
-           :inherit underscore
-           :cursor-in-non-selected-windows (hbar . 1))
-          (underscore-thick
-           :cursor-type (hbar . 8)
-           :blink-cursor-interval 0.3
-           :blink-cursor-blinks 50
-           :cursor-in-non-selected-windows (hbar . 3))
-          (t ; the default values
-           :cursor-type box
-           :cursor-in-non-selected-windows hollow
-           :blink-cursor-mode 1
-           :blink-cursor-blinks 10
-           :blink-cursor-interval 0.2
-           :blink-cursor-delay 0.2)))
-
-  ;; I am using the default values of `cursory-latest-state-file'.
-
-  ;; Set last preset or fall back to desired style from `cursory-presets'.
-  (cursory-set-preset (or (cursory-restore-latest-preset) 'box))
-
-  ;; The other side of `cursory-restore-latest-preset'.
-  (add-hook 'kill-emacs-hook #'cursory-store-latest-preset)
-
-  ;; We have to use the "point" mnemonic, because C-c c is often the
-  ;; suggested binding for `org-capture' and is the one I use as well.
-  (define-key global-map (kbd "C-c p") #'cursory-set-preset))
 
 (provide 'prot-emacs-essentials)

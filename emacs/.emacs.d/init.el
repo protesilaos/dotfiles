@@ -1,40 +1,12 @@
-;;; init.el --- Personal configuration file -*- lexical-binding: t -*-
-
-;; Copyright (c) 2019-2023  Protesilaos Stavrou <info@protesilaos.com>
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "30.1"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This file is free software: you can redistribute it and/or modify it
-;; under the terms of the GNU General Public License as published by the
-;; Free Software Foundation, either version 3 of the License, or (at
-;; your option) any later version.
-;;
-;; This file is distributed in the hope that it will be useful, but
-;; WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-;; General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this file.  If not, see <https://www.gnu.org/licenses/>.
-
-;;; Commentary:
-
-;; See my dotfiles: <https://git.sr.ht/~protesilaos/dotfiles>
-
-;;; Code:
-
-(defgroup prot-emacs nil
-  "User options for my dotemacs."
-  :group 'file)
-
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load: search below for the files
 ;; prot-emacs-pre-custom.el and prot-emacs-post-custom.el
+(defgroup prot-emacs nil
+  "User options for my dotemacs.
+These produce the expected results only when set in a file called
+prot-emacs-pre-custom.el.  This file must be in the same
+directory as the init.el."
+  :group 'file)
 
 (defcustom prot-emacs-load-theme-family 'modus
   "Set of themes to load.
@@ -56,25 +28,40 @@ before all other modules of my setup."
                  (const :tag "Do not load a theme module" nil)))
 
 (defcustom prot-emacs-completion-ui 'vertico
-  "Choose minibuffer completion UI between `mct' or `vertico'."
+  "Choose minibuffer completion UI between `mct' or `vertico'
+This user option must be set in the `prot-emacs-pre-custom.el'
+file.  If that file exists in the Emacs directory, it is loaded
+before all other modules of my setup.."
   :group 'prot-emacs
   :type '(choice :tag "Minibuffer user interface"
                  (const :tag "The `mct' module" mct)
                  (const :tag "The `vertico' module" vertico)))
 
 (defcustom prot-emacs-load-evil nil
-  "When non-nil, load Vim style key bindings."
+  "When non-nil, load Vim style key bindings as well as `devil-mode'.
+This user option must be set in the `prot-emacs-pre-custom.el'
+file.  If that file exists in the Emacs directory, it is loaded
+before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
 (defcustom prot-emacs-load-which-key nil
-  "When non-nil, display key binding hints after a short delay."
+  "When non-nil, display key binding hints after a short delay.
+This user option must be set in the `prot-emacs-pre-custom.el'
+file.  If that file exists in the Emacs directory, it is loaded
+before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
 (defcustom prot-emacs-load-icons nil
   "When non-nil, enable iconography in various contexts.
-This installs and uses the `nerd-icons' package and its variants."
+This installs and uses the `nerd-icons' package and its variants.
+NOTE that you still need to invoke `nerd-icons-install-fonts'
+manually to first get the icon files.
+
+This user option must be set in the `prot-emacs-pre-custom.el'
+file.  If that file exists in the Emacs directory, it is loaded
+before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
@@ -91,10 +78,6 @@ before all other modules of my setup."
   :group 'prot-emacs
   :type '(repeat symbol))
 
-;; Some basic settings
-(setq frame-title-format '("%b"))
-(setq ring-bell-function 'ignore)
-(setq use-short-answers t)
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
@@ -107,31 +90,34 @@ before all other modules of my setup."
 ;; Disable the damn thing by making it disposable.
 (setq custom-file (make-temp-file "emacs-custom-"))
 
-;; Watch my video about multilingual editing:
-;; <https://protesilaos.com/codelog/2023-12-12-emacs-multilingual-editing/>.
 (setq default-input-method "greek") ; also check "greek-postfix"
 (setq default-transient-input-method "greek")
 
 ;; Enable these
-(dolist (c '(list-timers narrow-to-region narrow-to-page upcase-region downcase-region))
-  (put c 'disabled nil))
+(mapc
+ (lambda (command)
+   (put command 'disabled nil))
+ '(list-timers narrow-to-region narrow-to-page upcase-region downcase-region))
 
 ;; And disable these
-(dolist (c '(eshell project-eshell overwrite-mode iconify-frame diary))
-  (put c 'disabled t))
+(mapc
+ (lambda (command)
+   (put c 'disabled t))
+ '(eshell project-eshell overwrite-mode iconify-frame diary))
 
 ;; Always start with *scratch*
 (setq initial-buffer-choice t)
 
-;;;; Packages
+(mapc
+ (lambda (string)
+   (add-to-list 'load-path (locate-user-emacs-file path)))
+ '("prot-lisp" "prot-emacs-modules"))
 
-(dolist (path '("prot-lisp" "prot-emacs-modules"))
-  (add-to-list 'load-path (locate-user-emacs-file path)))
+;;;; Packages
 
 (require 'package)
 
-(with-eval-after-load 'project-vc
-  (setq package-vc-register-as-project nil)) ; Emacs 30
+(setq package-vc-register-as-project nil) ; Emacs 30
 
 (add-hook 'package-menu-mode-hook #'hl-line-mode)
 
@@ -148,9 +134,11 @@ before all other modules of my setup."
         ("melpa" . 2)
         ("nongnu" . 1)))
 
-;; I want to use my own packages from specific repositories.  All
-;; others will rely on `package-archive-priorities'.  I do this to
-;; test that the packaged version works as intended.
+;; NOTE 2023-08-21: I build Emacs from source, so I always get the
+;; latest version of built-in packages.  However, this is a good
+;; solution to set to non-nil if I ever switch to a stable release.
+(setq package-install-upgrade-built-in nil)
+
 (defvar prot-emacs-my-packages
   '(agitate
     altcaps
@@ -170,19 +158,16 @@ before all other modules of my setup."
     standard-themes
     substitute
     sxhkdrc-mode
+    theme-buffet
     tmr)
   "List of symbols representing the packages I develop/maintain.")
 
+;; Also read: <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>
 (setq package-pinned-packages
       `(,@(mapcar
            (lambda (package)
              (cons package "gnu-elpa-devel"))
            prot-emacs-my-packages)))
-
-;; NOTE 2023-08-21: I build Emacs from source, so I always get the
-;; latest version of built-in packages.  However, this is a good
-;; solution to set to non-nil if I ever switch to a stable release.
-(setq package-install-upgrade-built-in nil)
 
 (setq custom-safe-themes t)
 
@@ -323,7 +308,6 @@ Also see `prot-emacs-package'."
         `(run-with-timer ,delay nil (lambda () ,@body))
       `(progn ,@body))))
 
-
 (defmacro prot-emacs-keybind (keymap &rest definitions)
   "Expand key binding DEFINITIONS for the given KEYMAP.
 DEFINITIONS is a sequence of string and command pairs."
@@ -349,6 +333,8 @@ DEFINITIONS is a sequence of string and command pairs."
 ;;   "C-z" nil
 ;;   "C-x b" #'switch-to-buffer
 ;;   "C-x C-c" nil
+;; ;; Notice the -map as I am binding keymap here, not a command:
+;;   "C-c b" beframe-prefix-map
 ;;   "C-x k" #'kill-buffer)
 
 (defmacro prot-emacs-abbrev (table &rest definitions)
@@ -413,6 +399,8 @@ that is expanded with the `prot-emacs-package' macro."
 (require 'prot-emacs-org)
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
+(when (executable-find "notmuch")
+  (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)
 (when prot-emacs-load-which-key
   (require 'prot-emacs-which-key))
@@ -431,5 +419,3 @@ that is expanded with the `prot-emacs-package' macro."
 ;; for the `prot-emacs-pre-custom.el' to make changes BEFORE loading
 ;; any of my other configurations.
 (load (locate-user-emacs-file "prot-emacs-post-custom.el") :no-error :no-message)
-
-;;; init.el ends here
