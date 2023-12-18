@@ -2646,7 +2646,9 @@ I communicate with people from across the globe. Knowing their local
 time is of paramount importance. With =M-x world-clock= we get a
 buffer with all cities and concomitant the time zones specified in
 ~zoneinfo-style-world-list~. The contents are displayed according to
-the ~world-clock-time-format~.
+the ~world-clock-time-format~. Note that I control the placement of
+these and many other buffers by configuring the ~display-buffer-alist~
+([[#h:b5fa481d-8549-4424-869e-91091cdf730b][The =prot-emacs-window.el= module]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; World clock (M-x world-clock)
