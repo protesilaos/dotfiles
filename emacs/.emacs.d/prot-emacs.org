@@ -2757,6 +2757,35 @@ One is enough.
     (server-start)))
 #+end_src
 
+*** The =prot-emacs-essentials.el= section about ~substitute~
+:PROPERTIES:
+:CUSTOM_ID: h:b4b3c8b7-e35c-4a56-bfb9-0c8bb33b2423
+:END:
+
+I use ~substitute~ to efficiently replace targets in the buffer or
+context. The ~substitute~ package provides a set of commands that
+perform text replacement (i) throughout the buffer, (ii) limited to
+the current definition (per `narrow-to-defun`), (iii) from point to
+the end of the buffer, and (iv) from point to the beginning of the
+buffer.
+
+These substitutions are meant to be as quick as possible and to not
+move the point. As such, they differ from the standard ~query-replace~
+(which I still use where relevant). The provided commands prompt for
+substitute text and perform the substitution outright, without moving
+the point. Better check the video I did on the matter:
+<https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
+
++ Package name (GNU ELPA): `substitute`
++ Official manual: <https://protesilaos.com/emacs/substitute>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/substitute>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/substitute>
+    + GitLab: <https://gitlab.com/protesilaos/substitute>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronym: Some Utilities Built to Substitute Targets Independent of
+  Their Utterances, Thoroughly and Easily.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Substitute
 ;; Another package of mine... Video demo:
