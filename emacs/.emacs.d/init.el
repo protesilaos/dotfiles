@@ -405,10 +405,7 @@ that is expanded with the `prot-emacs-package' macro."
 (require 'prot-emacs-theme)
 (require 'prot-emacs-essentials)
 (require 'prot-emacs-modeline)
-(require 'prot-emacs-completion-common)
-(pcase prot-emacs-completion-ui
-  ('mct (require 'prot-emacs-completion-mct))
-  ('vertico (require 'prot-emacs-completion-vertico)))
+(require 'prot-emacs-completion)
 (require 'prot-emacs-search)
 (require 'prot-emacs-dired)
 (require 'prot-emacs-window)
