@@ -2724,17 +2724,33 @@ use this interface to check if some process is doing more than it should.
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
   (setq proced-filter 'user)
+#+end_src
 
+*** The =prot-emacs-essentials.el= arrangement to run Emacs as a server
+:PROPERTIES:
+:CUSTOM_ID: h:7709b7e9-844f-49f3-badf-784aacec4bca
+:END:
+
+The "server" is functionally like the daemon, except it is run by the
+first Emacs frame we launch. With a running server, we can connect to
+it through a new ~emacsclient~ call. This is useful if we want to
+launch new frames that share resources with the existing running
+process. Though the ~emacsclient~ can be used to simply evaluate code
+outside of an Emacs frame (e.g. to load a new theme, as I do with my
+~delight~ shell script as part of my dotfiles).
+
+When we close the last frame, the server is terminated. Whereas the
+daemon remains active even if all Emacs frames are closed. For me, the
+server is easier to work with, as I know for sure when its life cycle
+starts and ends. Beside that, I did give the daemon an honest try.
+Emacs would crash whenever I would encounter an error in some Lisp
+evaluation. Whereas the server works just fine.
+
+Note that I only ever ~server-start~ if there is no server running.
+One is enough.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Emacs server (allow emacsclient to connect to running session)
-  ;; The "server" is functionally like the daemon, except it is run by
-  ;; the first Emacs frame we launch.  When we close that frame, the
-  ;; server is terminated.  Whereas the daemon remains active even if
-  ;; all Emacs frames are closed.
-  ;;
-  ;; I experimented with the daemon for a while.  Emacs would crash
-  ;; whenever I would encounter an error in some Lisp evaluation.
-  ;; Whereas the server works just fine when I need to connect to it via
-  ;; the emacsclient.
   (require 'server)
   (setq server-client-instructions nil)
   (unless (server-running-p)
