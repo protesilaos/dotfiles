@@ -48,4 +48,7 @@
         ;; sendmail-program (executable-find "msmtp")
         message-sendmail-envelope-from 'header))
 
+(when (executable-find "notmuch")
+  (require 'prot-emacs-notmuch))
+
 (provide 'prot-emacs-email)

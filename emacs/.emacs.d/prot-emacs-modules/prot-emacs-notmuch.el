@@ -233,4 +233,4 @@
 
   (notmuch-indicator-mode 1))
 
-(provide 'prot-emacs-email-notmuch)
+(provide 'prot-emacs-notmuch)

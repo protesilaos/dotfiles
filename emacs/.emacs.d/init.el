@@ -413,8 +413,6 @@ that is expanded with the `prot-emacs-package' macro."
 (require 'prot-emacs-org)
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
-(when (executable-find "notmuch")
-  (require 'prot-emacs-email-notmuch))
 (require 'prot-emacs-web)
 (when prot-emacs-load-which-key
   (require 'prot-emacs-which-key))
