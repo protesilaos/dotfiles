@@ -1247,7 +1247,7 @@ by my Emacs. This is what ~prot-emacs-return-loaded-packages~ by
 reading the value of ~package-activated-list~ as well as
 ~prot-emacs-loaded-packages~. The ~prot-emacs-package~ is responsible
 for updating the latter
-([[*The init.el macro to install and configure packages (~prot-emacs-package~)][The init.el macro to install and configure packages (~prot-emacs-package~)]]).
+([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
 
 #+begin_src emacs-lisp :tangle "init.el"
 (defun prot-emacs-return-loaded-packages ()
