@@ -34,8 +34,8 @@ I share only that file as an email attachment---no need to send over
 this massive document).
 
 When I want to modify my Emacs setup, I edit this file and then
-evaluate the following code block. All files will be updated
-accordingly.
+evaluate the following code block or do =C-c C-v C-t=. All files will
+be updated accordingly.
 
 #+begin_src emacs-lisp :tangle no :results none
 (org-babel-tangle)
