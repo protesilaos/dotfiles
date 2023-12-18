@@ -2033,6 +2033,9 @@ Bruno Boal is the lead developer and I am a co-maintainer.
 
 + Package name (GNU ELPA): ~theme-buffet~
 + Git repo on SourceHut: <https://git.sr.ht/~bboal/theme-buffet>
+  - Mirrors:
+    + GitHub: <https://github.com/BBoal/theme-buffet>
+    + Codeberg: <https://codeberg.org/BBoal/theme-buffet>
 + Mailing list: <https://lists.sr.ht/~bboal/general-issues>
 + Backronym: Themes Harmoniously Exchanged Mid Evening Beget
   Understandable Feelings of Fascination, Excitement, and Thrill.
