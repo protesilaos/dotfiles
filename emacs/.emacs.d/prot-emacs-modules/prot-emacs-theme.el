@@ -78,7 +78,11 @@
   ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
   ;; is very flexible.
   (setq spacious-padding-subtle-mode-line
-        '(:mode-line-active default :mode-line-inactive vertical-border))
+        `( :mode-line-active ,(if (or (eq prot-emacs-load-theme-family 'modus)
+                                      (eq prot-emacs-load-theme-family 'standard))
+                                  'default
+                                'help-key-binding)
+           :mode-line-inactive vertical-border))
 
   (spacious-padding-mode 1)
 
