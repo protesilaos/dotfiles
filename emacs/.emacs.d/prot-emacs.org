@@ -12440,7 +12440,7 @@ call NAME as a function."
 ;;; prot-window.el ends here
 #+end_src
 
-* COMMENT Frequently Asked Questions (FAQ)
+* TODO Frequently Asked Questions (FAQ)
 :PROPERTIES:
 :CUSTOM_ID: h:cc8b8fac-b9d4-4a61-a69b-a0c93efa254d
 :END:
