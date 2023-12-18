@@ -189,6 +189,25 @@ it but also to share individual snippets with others. The
 an additional way of sharing my work, that of the consolidated view
 you are now seeing.
 
+When I want to make a change to my Emacs setup, I do the edits in this
+=prot-emacs.org= and then type =C-c C-v C-t= (=M-x org-babel-tangle=)
+to propagate the changes to the relevant files.
+
+On a new compueter, I put all my Emacs files where they are meant to
+be (inside the =~/.emacs.d= directory) with this command, which uses
+the ~stow~ system package (all my dotfiles are stowed in place with
+this program):
+
+#+begin_src sh
+~/Git/Projects/dotfiles $ stow -t $HOME emacs
+#+end_src
+
+If I ever add/remove files, I do this instead:
+
+#+begin_src sh
+~/Git/Projects/dotfiles $ stow -t $HOME -R emacs
+#+end_src
+
 I have built my setup from scratch and am observing best practices
 with regard to how Emacs expects things to run. I do not use the Emacs
 daemon, as I have encountered instabilities with it. Instead, I run a
