@@ -2114,28 +2114,6 @@ explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Informati
   ;; completeness.
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
 
-  ;; Iosevka Comfy is my highly customised build of Iosevka with
-  ;; monospaced and duospaced (quasi-proportional) variants as well as
-  ;; support or no support for ligatures:
-  ;; <https://git.sr.ht/~protesilaos/iosevka-comfy>.
-  ;;
-  ;; | Family                          | Shapes | Spacing | Style      | Ligatures |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy                   | Sans   | Compact | Monospaced | Yes       |
-  ;; | Iosevka Comfy Fixed             | Sans   | Compact | Monospaced | No        |
-  ;; | Iosevka Comfy Duo               | Sans   | Compact | Duospaced  | Yes       |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy Motion            | Slab   | Compact | Monospaced | Yes       |
-  ;; | Iosevka Comfy Motion Fixed      | Slab   | Compact | Monospaced | No        |
-  ;; | Iosevka Comfy Motion Duo        | Slab   | Compact | Duospaced  | Yes       |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy Wide              | Sans   | Wide    | Monospaced | Yes       |
-  ;; | Iosevka Comfy Wide Fixed        | Sans   | Wide    | Monospaced | No        |
-  ;; | Iosevka Comfy Wide Duo          | Sans   | Wide    | Duospaced  | Yes       |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy Wide Motion       | Slab   | Wide    | Monospaced | Yes       |
-  ;; | Iosevka Comfy Wide Motion Fixed | Slab   | Wide    | Monospaced | No        |
-  ;; | Iosevka Comfy Wide Motion Duo   | Slab   | Wide    | Duospaced  | Yes       |
   (setq fontaine-presets
         '((small
            :default-family "Iosevka Comfy Motion"
@@ -2211,6 +2189,44 @@ explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Informati
     (add-hook hook #'prot/enable-variable-pitch))
    prot/enable-variable-pitch-in-hooks))
 #+end_src
+
+**** Information about my Iosevka Comfy fonts
+:PROPERTIES:
+:CUSTOM_ID: h:3b989679-7e3f-4f03-b4bb-611006ea01ce
+:END:
+
+/Iosevka Comfy/ is a customised build of the Iosevka typeface, with a
+consistent rounded style and overrides for almost all individual
+glyphs in both roman (upright) and italic (slanted) variants. Many
+font families are available, covering a broad range of typographic
+weights. The README file in the git repository covers all the
+technicalities.
+
+  | Family                          | Shapes | Spacing | Style      | Ligatures |
+  |---------------------------------+--------+---------+------------+-----------|
+  | Iosevka Comfy                   | Sans   | Compact | Monospaced | Yes       |
+  | Iosevka Comfy Fixed             | Sans   | Compact | Monospaced | No        |
+  | Iosevka Comfy Duo               | Sans   | Compact | Duospaced  | Yes       |
+  |---------------------------------+--------+---------+------------+-----------|
+  | Iosevka Comfy Motion            | Slab   | Compact | Monospaced | Yes       |
+  | Iosevka Comfy Motion Fixed      | Slab   | Compact | Monospaced | No        |
+  | Iosevka Comfy Motion Duo        | Slab   | Compact | Duospaced  | Yes       |
+  |---------------------------------+--------+---------+------------+-----------|
+  | Iosevka Comfy Wide              | Sans   | Wide    | Monospaced | Yes       |
+  | Iosevka Comfy Wide Fixed        | Sans   | Wide    | Monospaced | No        |
+  | Iosevka Comfy Wide Duo          | Sans   | Wide    | Duospaced  | Yes       |
+  |---------------------------------+--------+---------+------------+-----------|
+  | Iosevka Comfy Wide Motion       | Slab   | Wide    | Monospaced | Yes       |
+  | Iosevka Comfy Wide Motion Fixed | Slab   | Wide    | Monospaced | No        |
+  | Iosevka Comfy Wide Motion Duo   | Slab   | Wide    | Duospaced  | Yes       |
+
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/iosevka-comfy>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/iosevka-comfy>
+    + GitLab: <https://gitlab.com/protesilaos/iosevka-comfy>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Sample pictures: <https://protesilaos.com/emacs/iosevka-comfy-pictures>
++ Backronym: Iosevka ... Could Only Modify a Font, Yes
 
 *** The =prot-emacs-theme.el= call to ~provide~
 :PROPERTIES:

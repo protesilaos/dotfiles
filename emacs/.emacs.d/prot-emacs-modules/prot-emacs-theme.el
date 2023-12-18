@@ -174,28 +174,6 @@
   ;; completeness.
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
 
-  ;; Iosevka Comfy is my highly customised build of Iosevka with
-  ;; monospaced and duospaced (quasi-proportional) variants as well as
-  ;; support or no support for ligatures:
-  ;; <https://git.sr.ht/~protesilaos/iosevka-comfy>.
-  ;;
-  ;; | Family                          | Shapes | Spacing | Style      | Ligatures |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy                   | Sans   | Compact | Monospaced | Yes       |
-  ;; | Iosevka Comfy Fixed             | Sans   | Compact | Monospaced | No        |
-  ;; | Iosevka Comfy Duo               | Sans   | Compact | Duospaced  | Yes       |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy Motion            | Slab   | Compact | Monospaced | Yes       |
-  ;; | Iosevka Comfy Motion Fixed      | Slab   | Compact | Monospaced | No        |
-  ;; | Iosevka Comfy Motion Duo        | Slab   | Compact | Duospaced  | Yes       |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy Wide              | Sans   | Wide    | Monospaced | Yes       |
-  ;; | Iosevka Comfy Wide Fixed        | Sans   | Wide    | Monospaced | No        |
-  ;; | Iosevka Comfy Wide Duo          | Sans   | Wide    | Duospaced  | Yes       |
-  ;; |---------------------------------+--------+---------+------------+-----------|
-  ;; | Iosevka Comfy Wide Motion       | Slab   | Wide    | Monospaced | Yes       |
-  ;; | Iosevka Comfy Wide Motion Fixed | Slab   | Wide    | Monospaced | No        |
-  ;; | Iosevka Comfy Wide Motion Duo   | Slab   | Wide    | Duospaced  | Yes       |
   (setq fontaine-presets
         '((small
            :default-family "Iosevka Comfy Motion"
