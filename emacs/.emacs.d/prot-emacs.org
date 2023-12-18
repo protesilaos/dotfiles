@@ -2572,6 +2572,11 @@ default. With ~delete-selection-mode~ we get it.
 :CUSTOM_ID: h:26afeb95-7920-45ed-8ff6-3648256c280b
 :END:
 
+With these settings in place, Emacs will use its own faces and frame
+infrastructure to display tooltips. I prefer it this way because then
+we can benefit from the text properties that can be added to these
+messages (e.g. a different colour or a slant).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Tooltips (tooltip-mode)
   (setq tooltip-delay 0.5
