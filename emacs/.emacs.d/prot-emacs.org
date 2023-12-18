@@ -52,6 +52,7 @@ Emacs.
     + GitHub: <https://github.com/protesilaos/dotfiles>
     + GitLab: <https://gitlab.com/protesilaos/dotfiles>
 + Mailing list: <https://lists.sr.ht/~protesilaos/dotfiles>
++ Video demo: <https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/>
 + Backronym: Do Observe, Transpose, Examine, or Mirror All
   Configurations, Stranger (dotemacs); Dotfiles Operate Transparently
   For the Included Linux and Emacs Setups (dotfiles).
