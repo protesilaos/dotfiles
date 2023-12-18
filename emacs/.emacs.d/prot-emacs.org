@@ -3887,12 +3887,16 @@ active and the Completions window is on display."
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
   (setq uniquify-after-kill-buffer-p t)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;;; Line highlight
   (require 'hl-line)
   (setq hl-line-sticky-flag nil)
   (setq hl-line-overlay-priority -50) ; emacs28
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;;; Negative space highlight
   (require 'whitespace)
   ;; NOTE 2023-08-14: This is experimental.  I am not sure I like it.
@@ -3908,7 +3912,9 @@ active and the Completions window is on display."
           space-after-tab::space
           space-before-tab::tab
           space-before-tab::space))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Line numbers on the side of the window (prot-line-numbers.el)
   (require 'display-line-numbers)
   ;; Set absolute line numbers, unless evil mode is loaded, in which
@@ -3924,7 +3930,9 @@ active and the Completions window is on display."
     "<f6>" #'whitespace-mode
     "<f7>" #'display-line-numbers-mode
     "C-c z" #'delete-trailing-whitespace)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;;; `window', `display-buffer-alist', and related
   (require 'prot-window)
 
