@@ -2541,6 +2541,12 @@ bookmark and then visit one of your bookmarks with ~bookmark-jump~
 :CUSTOM_ID: h:7753549e-806d-4140-b72d-5460a4a14b3e
 :END:
 
+The "auto revert" facility makes Emacs update the contents of a saved
+buffer when its underlying file is change externally. This can happen,
+for example, when a =git pull= modifies the file we are already
+displaying in a buffer. Emacs thus automatically reverts the buffer to
+reflect the new file contents.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Auto revert mode
   (setq auto-revert-verbose t)
