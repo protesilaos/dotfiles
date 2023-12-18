@@ -577,7 +577,7 @@ before all other modules of my setup."
 :CUSTOM_ID: h:f012a254-2716-4c29-a64b-c2b3df34f57f
 :END:
 
-I normally use ~vertico~ with my own custom extensions to it (LINK TO
+I normally use ~vertico~ with my own custom extensions to it (TODO LINK TO
 =prot-vertico.el=), though I also maintain the ~mct~ package for those
 who want to use the built-in completion framework with a few extras
 for better movement and the like. I think ~mct~ will eventually be
