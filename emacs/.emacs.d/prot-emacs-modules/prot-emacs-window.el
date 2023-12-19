@@ -1,6 +1,7 @@
 ;;; General window and buffer configurations
 (prot-emacs-configure
   (:delay 1)
+
 ;;;; `uniquify' (unique names for buffers)
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)

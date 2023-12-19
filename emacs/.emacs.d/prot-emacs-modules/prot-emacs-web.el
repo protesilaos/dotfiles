@@ -111,7 +111,7 @@
             (lambda () (setq-local shr-width (current-fill-column))))
 
   (define-key global-map (kbd "C-c e") #'elfeed)
-  
+
   (prot-emacs-keybind elfeed-search-mode-map
     "w" #'elfeed-search-yank
     "g" #'elfeed-update
@@ -123,7 +123,7 @@
   (prot-emacs-package prot-elfeed
     (setq prot-elfeed-tag-faces t)
     (prot-elfeed-fontify-tags)
-    
+
     (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
 
     (prot-emacs-keybind elfeed-search-mode-map

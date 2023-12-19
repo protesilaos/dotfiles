@@ -122,7 +122,7 @@
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
-  
+
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 500)
@@ -190,7 +190,7 @@
   ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
   ;; do I want it.
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save)
-    
+
   (prot-emacs-keybind global-map
     "M-/" #'dabbrev-expand
     "C-x M-/" #'dabbrev-completion
@@ -382,7 +382,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (:delay 5)
   (setq marginalia-max-relative-age 0) ; absolute time
   (marginalia-mode 1))
-  
+
 ;;;; Custom completion annotations
 (prot-emacs-package prot-marginalia
   (:delay 5)

@@ -349,7 +349,7 @@ demarcated by BEG and END."
 ;; `prot-simple-insert-line-prefix'."
 ;;   :type '(repeat string)
 ;;   :group 'prot-simple)
-;; 
+;;
 ;; (defun prot-simple--line-prefix-regexp (&optional string)
 ;;   "Format regular expression for `prot-simple--line-prefix-p'.
 ;; With optional STRING use it directly.  Else format the regexp by
@@ -357,36 +357,36 @@ demarcated by BEG and END."
 ;;   (if string
 ;;       (format "^%s " string)
 ;;     (format "^[%s] " (apply #'concat prot-simple-line-prefix-strings))))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-p (&optional string)
 ;;   "Return non-nil if line beginning has an appropriate string prefix.
 ;; With optional STRING test that it is at the beginning of the line."
 ;;   (save-excursion
 ;;     (goto-char (line-beginning-position))
 ;;     (looking-at (prot-simple--line-prefix-regexp string))))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-insert (string)
 ;;   "Insert STRING at the beginning of the line, followed by a space."
 ;;   (save-excursion
 ;;     (goto-char (line-beginning-position))
 ;;     (insert string)
 ;;     (insert " ")))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-infer-string ()
 ;;   "Return line prefix string if it matches `prot-simple--line-prefix-p'."
 ;;   (when (prot-simple--line-prefix-p)
 ;;     (string-trim
 ;;      (buffer-substring-no-properties (match-beginning 0) (match-end 0)))))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-toggle (string)
 ;;   "Insert or remove STRING at the beginning of the line."
 ;;   (if (prot-simple--line-prefix-p string)
 ;;       (delete-region (match-beginning 0) (match-end 0))
 ;;     (prot-simple--line-prefix-insert string)))
-;; 
+;;
 ;; (defvar prot-simple--line-prefix-history nil
 ;;   "Minibuffer history of `prot-simple--line-prefix-prompt'.")
-;; 
+;;
 ;; (defun prot-simple--line-prefix-prompt ()
 ;;   "Prompt for string to use as line prefix.
 ;; Provide `prot-simple-line-prefix-strings' as completion
@@ -397,24 +397,24 @@ demarcated by BEG and END."
 ;;      prot-simple-line-prefix-strings
 ;;      nil nil nil
 ;;      'prot-simple--line-prefix-history default)))
-;; 
+;;
 ;; (defun prot-simple-line-prefix-infer-or-prompt ()
 ;;   "Infer string for line prefix or prompt for one."
 ;;   (or (prot-simple--line-prefix-infer-string)
 ;;       (prot-simple--line-prefix-prompt)))
-;; 
+;;
 ;; ;;;###autoload
 ;; (defun prot-simple-insert-line-prefix-dwim (string)
 ;;   "Toggle presence of STRING at the beginning of the line.
-;; 
+;;
 ;; When called interactively try to infer STRING based on the line
 ;; prefix.  If one is found among `prot-simple-line-prefix-strings',
 ;; perform a removal outright.
-;; 
+;;
 ;; If no string can be inferred, prompt for STRING among
 ;; `prot-simple-line-prefix-strings'.  Accept arbitrary strings at
 ;; the prompt.
-;; 
+;;
 ;; When the region is active, toggle the presence of STRING for each
 ;; line in the region."
 ;;   (interactive (list (prot-simple-line-prefix-infer-or-prompt)))
