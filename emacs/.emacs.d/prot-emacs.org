@@ -4296,7 +4296,35 @@ best changes I ever did to boost my productivity:
     ;; Not specific to Beframe, but since it renames frames (by means
     ;; of `beframe-mode') it is appropriate to have this here:
     "C-x B" #'select-frame-by-name))
+#+end_src
 
+*** The =prot-emacs-window.el= configuration of ~undelete-frame-mode~ and ~winner-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:2df15080-77f9-45f8-a3b5-1adddc70a512
+:END:
+
+Since I am using my ~beframe~ package to isolate buffers per frame
+([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]), I appreciate the
+feature of Emacs 29 to undo the deletion of frames. Note the key
+binding I use for this purpose. It overrides one of the alternative
+for the standard ~undo~ command, though I personally only ever use
+=C-/=: everything else is free to use as I see fit.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
+;;; Frame history (undelete-frame-mode)
+(prot-emacs-configure
+  (:delay 5)
+  (define-key global-map (kbd "C-x u") #'undelete-frame) ; I use only C-/ for `undo'
+  (undelete-frame-mode 1))
+#+end_src
+
+The ~winner-mode~ is basically the same idea as ~undelete-frame-mode~
+but for window layouts. Or maybe I should phrase this the other way
+round, given that ~winner~ is the older package. But the point is that
+we can quickly go back to an earlier arrangement of windows in a
+frame.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Window history (winner-mode)
 (prot-emacs-package winner
   (:delay 5)
@@ -4305,13 +4333,9 @@ best changes I ever did to boost my productivity:
   (prot-emacs-keybind global-map
     "C-x <right>" #'winner-redo
     "C-x <left>" #'winner-undo))
+#+end_src
 
-;;; Frame history (undelete-frame-mode)
-(prot-emacs-configure
-  (:delay 5)
-  (define-key global-map (kbd "C-x u") #'undelete-frame) ; I use only C-/ for `undo'
-  (undelete-frame-mode 1))
-
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Directional window motions (windmove)
 (prot-emacs-package windmove
   (:delay 5)

@@ -184,6 +184,12 @@
     ;; of `beframe-mode') it is appropriate to have this here:
     "C-x B" #'select-frame-by-name))
 
+;;; Frame history (undelete-frame-mode)
+(prot-emacs-configure
+  (:delay 5)
+  (define-key global-map (kbd "C-x u") #'undelete-frame) ; I use only C-/ for `undo'
+  (undelete-frame-mode 1))
+
 ;;; Window history (winner-mode)
 (prot-emacs-package winner
   (:delay 5)
@@ -192,12 +198,6 @@
   (prot-emacs-keybind global-map
     "C-x <right>" #'winner-redo
     "C-x <left>" #'winner-undo))
-
-;;; Frame history (undelete-frame-mode)
-(prot-emacs-configure
-  (:delay 5)
-  (define-key global-map (kbd "C-x u") #'undelete-frame) ; I use only C-/ for `undo'
-  (undelete-frame-mode 1))
 
 ;;; Directional window motions (windmove)
 (prot-emacs-package windmove
