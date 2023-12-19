@@ -273,15 +273,6 @@
   (setq proced-filter 'user)
 
 ;;;; Emacs server (allow emacsclient to connect to running session)
-  ;; The "server" is functionally like the daemon, except it is run by
-  ;; the first Emacs frame we launch.  When we close that frame, the
-  ;; server is terminated.  Whereas the daemon remains active even if
-  ;; all Emacs frames are closed.
-  ;;
-  ;; I experimented with the daemon for a while.  Emacs would crash
-  ;; whenever I would encounter an error in some Lisp evaluation.
-  ;; Whereas the server works just fine when I need to connect to it via
-  ;; the emacsclient.
   (require 'server)
   (setq server-client-instructions nil)
   (unless (server-running-p)
