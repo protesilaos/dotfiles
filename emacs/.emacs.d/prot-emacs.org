@@ -4024,6 +4024,56 @@ Here I simply bind some keys for the aforementioned.
     "C-c z" #'delete-trailing-whitespace)
 #+end_src
 
+*** The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)
+:PROPERTIES:
+:CUSTOM_ID: h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f
+:END:
+
+The ~display-buffer-alist~ is a powerful user option and somewhat hard
+to get started with. The reason for its difficulty comes from the
+knowledge required to understand the underlying ~display-buffer~
+mechanism.
+
+Here is the gist of what we do with it:
+
+- The alist is a list of lists.
+- Each element of the alist (i.e. one of the lists) is of the
+  following form:
+
+  #+begin_example
+  (BUFFER-MATCHER
+   FUNCTIONS-TO-DISPLAY-BUFFER
+   OTHER-PARAMETERS)
+  #+end_example
+
+- The =BUFFER-MATCHER= is either a regular expression to match the
+  buffer by its name or a method to get the buffer whose major mode is
+  the one specified. In the latter case, you will see the use of cons
+  cells (like =(one . two)=) involving the ~derived-mode~ symbol
+  (remember that I build Emacs from source, so ~derived-mode~ may not
+  exist in your version of Emacs).
+
+- The =FUNCTIONS-TO-DISPLAY-BUFFER= is a list of ~display-buffer~
+  functions that are tried in the order they appear in until one
+  works. The list can be of one element, as you will notice with some
+  of my entries.
+
+- The =OTHER-PARAMETERS= are enumerated in the Emacs Lisp Reference
+  Manual. Evaluate:
+
+  #+begin_src emacs-lisp
+  (info "(elisp) Buffer Display Action Alists")
+  #+end_src
+
+In my =prot-window.el= library, I define functions that determined how
+a buffer should be displayed, given size considerations ([[#h:35b8a0a5-c447-4301-a404-bc274596238d][The =prot-window.el= library]]).
+You will find the functions ~prot-window-shell-or-term-p~ to determine
+what a shell or terminal is, ~prot-window-display-buffer-below-or-pop~
+to display the buffer below the current one or to its side depending
+on how much width is available, and ~prot-window-select-fit-size~ to
+perform the two-fold task of selecting a window and making it fit up
+to a certain height.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;;; `window', `display-buffer-alist', and related
   (require 'prot-window)
@@ -4105,7 +4155,9 @@ Here I simply bind some keys for the aforementioned.
                   (derived-mode . woman-mode)
                   "\\*\\(Man\\|woman\\).*"))
            (display-buffer-same-window))))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
@@ -4114,13 +4166,17 @@ Here I simply bind some keys for the aforementioned.
   (setq split-width-threshold 125)
   (setq window-min-height 3)
   (setq window-min-width 30)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
   (dolist (hook '(epa-info-mode-hook help-mode-hook custom-mode-hook))
     (add-hook hook #'visual-line-mode))
 
   (add-hook 'world-clock-mode-hook #'prot-common-truncate-lines-silently)
   (add-hook 'calendar-mode-hook #'prot-common-truncate-lines-silently)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
   ;; NOTE 2022-09-17: Also see `prot-simple-swap-window-buffers'.
   (prot-emacs-keybind global-map
     "C-x <down>" #'next-buffer
