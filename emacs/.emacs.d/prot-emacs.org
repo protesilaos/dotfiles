@@ -3946,6 +3946,22 @@ do not matter.
   (setq hl-line-overlay-priority -50) ; emacs28
 #+end_src
 
+*** The =prot-emacs-window.el= section about negative space highlighting (~whitespace-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:ad2945c5-992d-4c82-a8b8-652f47ebdbea
+:END:
+
+Much like ~hl-line-mode~, I normally do not use the ~whitespace-mode~
+([[#h:ec156866-3d25-42e7-8247-b190103b6f17][The =prot-emacs-window.el= section about line highlighting (~hl-line-mode~)]]).
+I do it only when I have to demonstrate something, or to quickly check
+that my spacing is correct in some context where that matters.
+
+The changes I have made to ~whitespace-style~ are experimental and I
+do not recommend you copy them. I basically tried to make it less
+busy, by highlighting fewer elements. For example, I do not highlight
+newline characters (represented as a =$=) because these are easy to
+infer in most cases.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;;; Negative space highlight
   (require 'whitespace)
