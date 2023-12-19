@@ -3982,6 +3982,21 @@ infer in most cases.
           space-before-tab::space))
 #+end_src
 
+*** The =prot-emacs-window.el= section about line numbers (~display-line-numbers-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:f45ea51c-8129-41bd-8d6e-4b66e7f35a49
+:END:
+
+As with the two previous sections, I do not like to see line numbers
+by default and seldom use ~display-line-numbers-mode~. They do not
+help me navigate a buffer, nor are they relevant in most cases. I
+enable the mode only when I need to compare buffers or to get a sense
+of how far apart two relevant section are in a file.
+
+You will notice that I use absolute numbers even for narrowed buffers,
+while I set a relative count for contextual lines when ~prot-emacs-load-evil~
+is true ([[#h:0d6763f3-56d6-44be-b10d-bfb8cc96b442][The =prot-emacs-evil.el= module]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Line numbers on the side of the window (prot-line-numbers.el)
   (require 'display-line-numbers)
