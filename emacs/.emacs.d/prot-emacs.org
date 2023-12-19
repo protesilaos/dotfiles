@@ -3203,7 +3203,7 @@ by that special hook."
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
-  
+
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 500)
@@ -3271,7 +3271,7 @@ by that special hook."
   ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
   ;; do I want it.
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save)
-    
+
   (prot-emacs-keybind global-map
     "M-/" #'dabbrev-expand
     "C-x M-/" #'dabbrev-completion
@@ -3463,7 +3463,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (:delay 5)
   (setq marginalia-max-relative-age 0) ; absolute time
   (marginalia-mode 1))
-  
+
 ;;;; Custom completion annotations
 (prot-emacs-package prot-marginalia
   (:delay 5)
@@ -6071,7 +6071,7 @@ Meant to be added to `prog-mode-hook'."
             (lambda () (setq-local shr-width (current-fill-column))))
 
   (define-key global-map (kbd "C-c e") #'elfeed)
-  
+
   (prot-emacs-keybind elfeed-search-mode-map
     "w" #'elfeed-search-yank
     "g" #'elfeed-update
@@ -6083,7 +6083,7 @@ Meant to be added to `prog-mode-hook'."
   (prot-emacs-package prot-elfeed
     (setq prot-elfeed-tag-faces t)
     (prot-elfeed-fontify-tags)
-    
+
     (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
 
     (prot-emacs-keybind elfeed-search-mode-map
@@ -11916,7 +11916,7 @@ demarcated by BEG and END."
 ;; `prot-simple-insert-line-prefix'."
 ;;   :type '(repeat string)
 ;;   :group 'prot-simple)
-;; 
+;;
 ;; (defun prot-simple--line-prefix-regexp (&optional string)
 ;;   "Format regular expression for `prot-simple--line-prefix-p'.
 ;; With optional STRING use it directly.  Else format the regexp by
@@ -11924,36 +11924,36 @@ demarcated by BEG and END."
 ;;   (if string
 ;;       (format "^%s " string)
 ;;     (format "^[%s] " (apply #'concat prot-simple-line-prefix-strings))))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-p (&optional string)
 ;;   "Return non-nil if line beginning has an appropriate string prefix.
 ;; With optional STRING test that it is at the beginning of the line."
 ;;   (save-excursion
 ;;     (goto-char (line-beginning-position))
 ;;     (looking-at (prot-simple--line-prefix-regexp string))))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-insert (string)
 ;;   "Insert STRING at the beginning of the line, followed by a space."
 ;;   (save-excursion
 ;;     (goto-char (line-beginning-position))
 ;;     (insert string)
 ;;     (insert " ")))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-infer-string ()
 ;;   "Return line prefix string if it matches `prot-simple--line-prefix-p'."
 ;;   (when (prot-simple--line-prefix-p)
 ;;     (string-trim
 ;;      (buffer-substring-no-properties (match-beginning 0) (match-end 0)))))
-;; 
+;;
 ;; (defun prot-simple--line-prefix-toggle (string)
 ;;   "Insert or remove STRING at the beginning of the line."
 ;;   (if (prot-simple--line-prefix-p string)
 ;;       (delete-region (match-beginning 0) (match-end 0))
 ;;     (prot-simple--line-prefix-insert string)))
-;; 
+;;
 ;; (defvar prot-simple--line-prefix-history nil
 ;;   "Minibuffer history of `prot-simple--line-prefix-prompt'.")
-;; 
+;;
 ;; (defun prot-simple--line-prefix-prompt ()
 ;;   "Prompt for string to use as line prefix.
 ;; Provide `prot-simple-line-prefix-strings' as completion
@@ -11964,24 +11964,24 @@ demarcated by BEG and END."
 ;;      prot-simple-line-prefix-strings
 ;;      nil nil nil
 ;;      'prot-simple--line-prefix-history default)))
-;; 
+;;
 ;; (defun prot-simple-line-prefix-infer-or-prompt ()
 ;;   "Infer string for line prefix or prompt for one."
 ;;   (or (prot-simple--line-prefix-infer-string)
 ;;       (prot-simple--line-prefix-prompt)))
-;; 
+;;
 ;; ;;;###autoload
 ;; (defun prot-simple-insert-line-prefix-dwim (string)
 ;;   "Toggle presence of STRING at the beginning of the line.
-;; 
+;;
 ;; When called interactively try to infer STRING based on the line
 ;; prefix.  If one is found among `prot-simple-line-prefix-strings',
 ;; perform a removal outright.
-;; 
+;;
 ;; If no string can be inferred, prompt for STRING among
 ;; `prot-simple-line-prefix-strings'.  Accept arbitrary strings at
 ;; the prompt.
-;; 
+;;
 ;; When the region is active, toggle the presence of STRING for each
 ;; line in the region."
 ;;   (interactive (list (prot-simple-line-prefix-infer-or-prompt)))
