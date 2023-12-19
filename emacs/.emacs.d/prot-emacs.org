@@ -4392,6 +4392,15 @@ leads to the current heading. Same idea for programming modes. Neat!
   (breadcrumb-mode 1))
 #+end_src
 
+*** The =prot-emacs-window.el= ~provide~ form
+:PROPERTIES:
+:CUSTOM_ID: h:2124c200-734d-49c4-aeb1-513caaf957ae
+:END:
+
+As always, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 (provide 'prot-emacs-window)
 #+end_src
 
