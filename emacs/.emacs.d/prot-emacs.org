@@ -4194,6 +4194,26 @@ mode by adding it to these mode hooks.
    '(epa-info-mode-hook help-mode-hook custom-mode-hook))
 #+end_src
 
+*** The =prot-emacs-window.el= settings to truncate some buffers silently
+:PROPERTIES:
+:CUSTOM_ID: h:b6754236-3d08-4448-9c86-3e5923737e4b
+:END:
+
+This here is the opposite of what we saw above ([[#h:bf3f50d5-c5db-4704-9498-9e8bfe1b45a8][The =prot-emacs-window.el= setting to enable ~visual-line-mode~ in some contexts]]).
+Unlike ~visual-line-mode~ where long lines are made to look like
+paragraphs, "truncation" means to let the line cover its natural
+length and simply cut it off screen.
+
+I have a custom library that defines a function which performs line
+truncation without displaying a message about the fact ([[#h:3fccfadf-22e9-457f-b9fd-ed1b48600d23][The =prot-common.el= library]]).
+Why do we need this? Check the output of =M-x calendar= in a tiny
+window and you will see the reason. In short, it is better to have
+lines not show their full contents that to have something that looks
+completely broken.
+
+The whole point of using hooks is to make these decisions on a
+case-by-case basis.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
   (add-hook 'world-clock-mode-hook #'prot-common-truncate-lines-silently)
   (add-hook 'calendar-mode-hook #'prot-common-truncate-lines-silently)
