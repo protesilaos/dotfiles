@@ -607,10 +607,12 @@ before all other modules of my setup.."
 I was a Vim user for three years before eventually switching to Emacs.
 As part of that transition, I also conveted to the Emacs style key
 bindings. They have stronger mnemonics and scale better as a result.
+
 Nevertheless, I provide this option for those who need Vim keys in
 Emacs: I was using it myself for a few weeks while my left wrist was
-in pain (in part due to the cheap/bad keyboard I was using but also
-because of the hard manual work I do around the hut).
+in pain (([[#h:0d6763f3-56d6-44be-b10d-bfb8cc96b442][The =prot-emacs-evil.el= module]])). This was in part due to
+the cheap/bad keyboard I am using but also because of the hard manual
+work I do around the hut.
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
@@ -6245,6 +6247,8 @@ Meant to be added to `prog-mode-hook'."
 :PROPERTIES:
 :CUSTOM_ID: h:0d6763f3-56d6-44be-b10d-bfb8cc96b442
 :END:
+
+([[#h:d32718d6-c678-483e-8cdf-02d77053c960][The =init.el= option to load Vim keys (=evil.el= and =devil.el=)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-evil.el" :mkdirp yes
 (prot-emacs-configure
