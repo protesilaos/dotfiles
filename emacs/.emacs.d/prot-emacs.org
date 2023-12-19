@@ -2818,6 +2818,34 @@ the point. Better check the video I did on the matter:
     "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 #+end_src
 
+*** The =prot-emacs-essentials.el= section about ~expreg~ (tree-sitter mark syntactically)
+:PROPERTIES:
+:CUSTOM_ID: h:ceb193bf-0de3-4c43-8ab7-6daa50817754
+:END:
+
+The ~expreg~ package by Yuan Fu (aka casouri) uses the tree-sitter
+framework to incrementally expand the region from the smallest to the
+largest syntactic unit in the given context. This is a powerful
+feature, though it (i) requires Emacs to be built with tree-sitter
+support and (ii) for the user to be running a major mode that is
+designed for tree-sitter (Lisp seems to work regardless).
+
+The package offers the ~expreg-expand~ and ~expreg-contract~ commands.
+I believe I have never used the latter. I find it easier to just abort
+and start again than to have a special key for the rare scenario where
+I widened the selection more than I should.
+
+If tree-sitter functionality is not available, then the =C-M-SPC=
+binding is taken by ~prot-simple-mark-sexp~ which is similar in spirit
+([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
+
+For me, ~expreg~ is mostly an investment into the future, as I am
+monitoring developments on the tree-sitter front.
+
+Note that in the code block below I define two small commands. Custom
+code belong in libraries, though not in cases where it is ad-hoc like
+this ([[#h:fc1ea247-5ef6-4c4e-a807-6c7b2482af90][The custom libraries of my configuration]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Mark syntactic constructs efficiently if tree-sitter is available (expreg)
 (when (treesit-available-p)
