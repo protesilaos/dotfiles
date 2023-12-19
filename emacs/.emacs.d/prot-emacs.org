@@ -4365,17 +4365,32 @@ the placement of a window in the given direction.
     "C-M-S-<right>" #'windmove-swap-states-right ; conflicts with `org-increase-number-at-point'
     "C-M-S-<down>" #'windmove-swap-states-down
     "C-M-S-<left>" #'windmove-swap-states-left))
+#+end_src
 
+*** The =prot-emacs-window.el= use of contextual header line (~breadcrumb~)
+:PROPERTIES:
+:CUSTOM_ID: h:29ced61b-4b5a-4f63-af00-fe311468d1cd
+:END:
+
+The ~breadcrumb~ package by João Távora lets us display contextual
+information about the current heading or code definition in the header
+line. The header line is displayed above the contents of each buffer
+in the given window. When we are editing an Org file, for example, we
+see the path to the file, followed by a reference to the tree that
+leads to the current heading. Same idea for programming modes. Neat!
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Header line context of symbol/heading (breadcrumb.el)
 (prot-emacs-package breadcrumb
   (:install t)
   (:delay 2)
-  (setq bc-project-max-length 0.5)
-  (setq bc-project-crumb-separator "/")
-  (setq bc-imenu-max-length 1.0)
-  (setq bc-imenu-crumb-separator " > ")
+  (setq breadcrumb-project-max-length 0.5)
+  (setq breadcrumb-project-crumb-separator "/")
+  (setq breadcrumb-imenu-max-length 1.0)
+  (setq breadcrumb-imenu-crumb-separator " > ")
 
   (breadcrumb-mode 1))
+#+end_src
 
 (provide 'prot-emacs-window)
 #+end_src

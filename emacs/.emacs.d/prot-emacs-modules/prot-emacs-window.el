@@ -220,10 +220,10 @@
 (prot-emacs-package breadcrumb
   (:install t)
   (:delay 2)
-  (setq bc-project-max-length 0.5)
-  (setq bc-project-crumb-separator "/")
-  (setq bc-imenu-max-length 1.0)
-  (setq bc-imenu-crumb-separator " > ")
+  (setq breadcrumb-project-max-length 0.5)
+  (setq breadcrumb-project-crumb-separator "/")
+  (setq breadcrumb-imenu-max-length 1.0)
+  (setq breadcrumb-imenu-crumb-separator " > ")
 
   (breadcrumb-mode 1))
 
