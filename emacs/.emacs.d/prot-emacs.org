@@ -3891,6 +3891,31 @@ deferred loading time to speed up startup
   (:delay 1)
   #+end_src
 
+*** The =prot-emacs-window.el= section about uniquifying buffer names
+:PROPERTIES:
+:CUSTOM_ID: h:cfbea29c-3290-4fd1-a02a-d7e887c15674
+:END:
+
+When a buffer name is reserved, Emacs tried to produce the new buffer
+by finding a suitable variant of the original name. The doc string of
+the variable ~uniquify-buffer-name-style~ does a good job at
+explaining the various patterns:
+
+#+begin_example
+For example, the files ‘/foo/bar/mumble/name’ and ‘/baz/quux/mumble/name’
+would have the following buffer names in the various styles:
+
+  forward                       bar/mumble/name    quux/mumble/name
+  reverse                       name\mumble\bar    name\mumble\quux
+  post-forward                  name|bar/mumble    name|quux/mumble
+  post-forward-angle-brackets   name<bar/mumble>   name<quux/mumble>
+  nil                           name               name<2>
+#+end_example
+
+I use the =forward= style, which is the closest to the actual file
+name.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;;; `uniquify' (unique names for buffers)
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
