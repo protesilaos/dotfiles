@@ -134,8 +134,10 @@
   (setq window-min-height 3)
   (setq window-min-width 30)
 
-  (dolist (hook '(epa-info-mode-hook help-mode-hook custom-mode-hook))
-    (add-hook hook #'visual-line-mode))
+  (mapc
+   (lambda (hook)
+     (add-hook hook #'visual-line-mode))
+   '(epa-info-mode-hook help-mode-hook custom-mode-hook))
 
   (add-hook 'world-clock-mode-hook #'prot-common-truncate-lines-silently)
   (add-hook 'calendar-mode-hook #'prot-common-truncate-lines-silently)

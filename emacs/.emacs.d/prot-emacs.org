@@ -4174,10 +4174,27 @@ and the other more basic functions I have defined for this purpose.
   (setq window-min-width 30)
 #+end_src
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
-  (dolist (hook '(epa-info-mode-hook help-mode-hook custom-mode-hook))
-    (add-hook hook #'visual-line-mode))
+*** The =prot-emacs-window.el= setting to enable ~visual-line-mode~ in some contexts
+:PROPERTIES:
+:CUSTOM_ID: h:bf3f50d5-c5db-4704-9498-9e8bfe1b45a8
+:END:
 
+I normally do not use ~visual-line-mode~. What it does is to break
+long lines to span multiple lines without actually affecting the
+underlying text. In other words, we still have one long line only its
+visualisation is as a paragraph.
+
+For the cases where I am fine with ~visual-line-mode~, I enable the
+mode by adding it to these mode hooks.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
+  (mapc
+   (lambda (hook)
+     (add-hook hook #'visual-line-mode))
+   '(epa-info-mode-hook help-mode-hook custom-mode-hook))
+#+end_src
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
   (add-hook 'world-clock-mode-hook #'prot-common-truncate-lines-silently)
   (add-hook 'calendar-mode-hook #'prot-common-truncate-lines-silently)
 #+end_src
