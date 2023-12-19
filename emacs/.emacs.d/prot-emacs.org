@@ -3874,15 +3874,23 @@ active and the Completions window is on display."
 (provide 'prot-emacs-dired)
 #+end_src
 
-** TODO The =prot-emacs-window.el= module
+** The =prot-emacs-window.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:b5fa481d-8549-4424-869e-91091cdf730b
 :END:
+
+This module is all about buffers and windows. How they are managed and
+displayed. We start with the ~prot-emacs-configure~ macro to simply
+group together lots of built-in functionality and give it a slight
+deferred loading time to speed up startup
+([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp yes
 ;;; General window and buffer configurations
 (prot-emacs-configure
   (:delay 1)
+  #+end_src
+
 ;;;; `uniquify' (unique names for buffers)
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
