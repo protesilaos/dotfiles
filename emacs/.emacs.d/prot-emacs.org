@@ -3922,6 +3922,23 @@ name.
   (setq uniquify-after-kill-buffer-p t)
 #+end_src
 
+*** The =prot-emacs-window.el= section about line highlighting (~hl-line-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:ec156866-3d25-42e7-8247-b190103b6f17
+:END:
+
+The built-in ~hl-line-mode~ highlights the current line by adding a
+background colour to it. I normally do not use this functionality. I
+do it only when I need to draw attention to something I am demonstrating.
+
+The ~nil~ value for ~hl-line-sticky-flag~ make the line highlight not
+show up in unfocused windows. I prefer to keep highlights at a
+minimum, because I then find it harder to focus on where I am. The
+~hl-line-overlay-priority~ is a more obscure aspect of how Emacs
+decides which background should take precedence. You most probably do
+not need this, though I had a case for it a while ago: the specifics
+do not matter.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;;; Line highlight
   (require 'hl-line)
