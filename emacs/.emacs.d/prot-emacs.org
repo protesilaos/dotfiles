@@ -4335,6 +4335,19 @@ frame.
     "C-x <left>" #'winner-undo))
 #+end_src
 
+*** The =prot-emacs-window.el= keys for window motions (~windmove~)
+:PROPERTIES:
+:CUSTOM_ID: h:84a0d366-d4d7-42f4-a8b7-2ec1af08cee4
+:END:
+
+I usually cycle between windows with =C-x o= (=M-x other-window=).
+This is because I use two or three windows at most. It is easier to
+use the same key, especially with the addition of ~repeat-mode~
+([[#h:fbe6f9da-25ee-46a3-bb03-8fa7c1d48dab][The =prot-emacs-essentials.el= settings for ~repeat-mode~]]).
+Nevertheless, the built-in ~windmove~ package provides a set of useful
+commands to move focus directionally between windows but also to shift
+the placement of a window in the given direction.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Directional window motions (windmove)
 (prot-emacs-package windmove
