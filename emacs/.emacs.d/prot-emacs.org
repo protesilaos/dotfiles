@@ -2776,7 +2776,7 @@ substitute text and perform the substitution outright, without moving
 the point. Better check the video I did on the matter:
 <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
 
-+ Package name (GNU ELPA): `substitute`
++ Package name (GNU ELPA): ~substitute~
 + Official manual: <https://protesilaos.com/emacs/substitute>
 + Git repo on SourceHut: <https://git.sr.ht/~protesilaos/substitute>
   - Mirrors:
