@@ -4008,7 +4008,16 @@ is true ([[#h:0d6763f3-56d6-44be-b10d-bfb8cc96b442][The =prot-emacs-evil.el= mod
   (setq display-line-numbers-minor-tick 0)
   ;; Use absolute numbers in narrowed buffers
   (setq-default display-line-numbers-widen t)
+#+end_src
 
+*** The =prot-emacs-window.el= key bindings for built-in space and line number functionality
+:PROPERTIES:
+:CUSTOM_ID: h:6fa708d4-f1a8-41a2-ad29-dba9b1966b65
+:END:
+
+Here I simply bind some keys for the aforementioned.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
   (prot-emacs-keybind global-map
     "<f6>" #'whitespace-mode
     "<f7>" #'display-line-numbers-mode
