@@ -13173,7 +13173,7 @@ Furthermore, the single ~setq~ call is harder to read when (i) there
 are lots of variables involved and/or (ii) the values are longer lists
 which themselves take some effort to figure out.
 
-** What hardware do you use?
+** What hardware and software do you use?
 :PROPERTIES:
 :CUSTOM_ID: h:5668958c-2fc0-4a38-bd1f-3e0c6484977d
 :END:
@@ -13181,16 +13181,17 @@ which themselves take some effort to figure out.
 I have a Lenovo ThinkPad T470. It is a second-hand laptop that I got
 from Ebay courtesy of a generous donation by Anush V. I run Debian on
 this laptop. I do not mind having older versions of system packages.
-The only program I need to run an up-to-date version of is Emacs and I
-compile that from source.
+The only program I need to run an up-to-date version of is Emacs---and
+I compile that from source.
 
 During the summer of 2023, I used the laptop to experiment with the
 GNU Guix system but I eventually abandoned that project. Guix solves
 problems that I do not have, while it does things very differently to
-how other Unix-like systems are doing them. The cost-benefit
-calculation is favourable for my use-case.
+how other Unix-like systems are doing them. I cannot justify spending
+a considerable amount of time for something I do not really need,
+especially with the busy schedule I have.
 
-I also have a desktop computer that I built in 2021 from donations I
+I also use a desktop computer that I built in 2021 with donations I
 got from the Emacs community. At the time, I had a Lenovo ThinkPad
 X220 laptop as my sole computer: it broke and I posted an announcement
 to the effect that I would not be available for a while. Then
@@ -13202,6 +13203,25 @@ cost me a bit less than 600 EUR to build it with the help of a local
 who knows more about computer hardware than I do. I installed Arch
 when I first got this computer and it has been stable ever since (Arch
 is reliable if you know what you are doing).
+
+On the laptop, I use the GNOME desktop environment. It is good for
+keyboard usage, plus it has excellent support for the trackpad. On the
+desktop, I normally use a tiling window manager, though I have lately
+been relying on GNOME to take small breaks from the keyboard.
+
+The keyboard I have on my desktop is a generic, toy-grade, Qwerty
+model (I literally bought it from a toy store, together with the mouse
+for ~10 EUR). Someone bought me an entry-level programmable keyboard,
+which I have not received yet. Once I do, I will ask if I can share
+more about who this person is, to thank them publicly for the
+donation.
+
+Finally, I have a mobile phone that Dmitry Matveyev bought for me. It
+is a Samsung A53 model. I run the factory operating system on it. I
+have removed all apps that can be removed and use it only for its
+camera and phone capabilities. I know I could run Emacs on android
+(Emacs 30 has an Android build), but that is the sort of rabbit hole
+I need to avoid (like Guix).
 
 ** What is your desktop setup?
 :PROPERTIES:
