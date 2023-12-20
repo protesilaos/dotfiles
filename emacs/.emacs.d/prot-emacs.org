@@ -580,12 +580,12 @@ before all other modules of my setup."
 :CUSTOM_ID: h:f012a254-2716-4c29-a64b-c2b3df34f57f
 :END:
 
-I normally use ~vertico~ with my own custom extensions to it (TODO LINK TO
-=prot-vertico.el=), though I also maintain the ~mct~ package for those
-who want to use the built-in completion framework with a few extras
-for better movement and the like. I think ~mct~ will eventually be
-replaced by built-in facilities, given there are developments on that
-front for Emacs 30. It still has its place in the meantime.
+I normally use ~vertico~ with my own custom extensions to it ([[#h:3796a4c9-8659-4782-8aaa-3cf4e950927d][The =prot-vertico.el= library]]),
+though I also maintain the ~mct~ package for those who want to use the
+built-in completion framework with a few extras for better movement
+and the like. I think ~mct~ will eventually be replaced by built-in
+facilities, given there are developments on that front for Emacs 30.
+It still has its place in the meantime.
 
 Here we specify which module to load at startup. Remember to read how
 these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
