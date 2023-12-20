@@ -81,6 +81,9 @@ refer to this =PKGBUILD= I maintain for my purposes:
 :CUSTOM_ID: h:103d6f5a-bdb1-4b49-946a-708a83c79a7d
 :END:
 
+[ Also read: [[#h:74c3a9e1-6852-4307-b7ba-925d8d2f61ff][Why many modules instead of one init.el?]] and
+  [[#h:2d28a65c-bef6-4829-89d9-aef3581da7cd][Why use Org when you can have an outline in Elisp?]] ]
+
 What you are now reading is the =prot-emacs.org= file. It is the
 document that generates---and thus controls---every other file that
 underpinns my Emacs configuration.
@@ -188,8 +191,8 @@ shown here may not reflect the latest state of the project):
 The reason I have this modular setup is because it is easier to debug
 it but also to share individual snippets with others. The
 =prot-emacs.org= file is not a hindrance in this regard: it provides
-an additional way of sharing my work, that of the consolidated view
-you are now seeing.
+an additional way of sharing my work in the form of this consolidated
+view you are now seeing.
 
 When I want to make a change to my Emacs setup, I do the edits in this
 =prot-emacs.org= and then type =C-c C-v C-t= (=M-x org-babel-tangle=)
@@ -13063,10 +13066,82 @@ call NAME as a function."
 ;;; prot-window.el ends here
 #+end_src
 
-* TODO Frequently Asked Questions (FAQ)
+* Frequently Asked Questions (FAQ)
 :PROPERTIES:
 :CUSTOM_ID: h:cc8b8fac-b9d4-4a61-a69b-a0c93efa254d
 :END:
+
+** Why many modules instead of one init.el?
+:PROPERTIES:
+:CUSTOM_ID: h:74c3a9e1-6852-4307-b7ba-925d8d2f61ff
+:END:
+
+[ This question is in relation to the [[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][the anatomy of my Emacs configuration]]. ]
+
+I prefer to keep things separate by splitting them into modules and
+custom libraries. Smaller files are easier to work with, including
+from the command line or with a generic text editor. They are also
+easier to share with others, which I do frequently.
+
+A large file is fully dependent on the capabilities of Emacs. This is
+fine if you know your way around. But it does not work for people of
+different skill levels. Remember that I am sharing my configuration
+and keeping everything well documented to help others learn. The
+target audience is not Emacs veterans. I cannot expect an
+inexperienced user to already be familiar with how to navigate the
+outline, narrow to a defun, jump back to a mark, and so on, just to
+navigate one massive file.
+
+Furthermore, I am not convinced by the argument that loading one large
+=init.el= is more efficient than loading many smaller modules. The
+reason is that the init file will anyway have multiple ~require~ calls
+or use autoloaded functions which themselves load all those other
+files. If, say, you are anyway loading a ~100 files through your
+=init.el=, do a few extra files really affect performance at startup?
+And if yes, is this enough to forgo the aforementioned usability and
+accessibility considerations?
+
+Thoe granted, my current setup *does not make me dependent on Org*
+because I can at any moment stop editing this =prot-emacs.org= file
+and continue my work in the many small files I already have.
+
+** Why use Org when you can have an outline in Elisp?
+:PROPERTIES:
+:CUSTOM_ID: h:2d28a65c-bef6-4829-89d9-aef3581da7cd
+:END:
+
+[ Also read: [[#h:74c3a9e1-6852-4307-b7ba-925d8d2f61ff][Why many modules instead of one init.el?]] ]
+
+This question is about the use of the built-in ~outline-minor-mode~ or
+the ~outshine~ package. They provide folding capabilities like those
+of Org mode and can, in principle, be enabled in any buffer (provided
+it has a recognisable outline).
+
+I am, in fact, using outlines in all my Elisp files. Not just here,
+but also in all my public-facing Emacs packages. You can spot the
+entries to the outline as comments that have three or more delimiters.
+I can thus visit the =.el= file I am interested in and enable
+~outline-minor-mode~ to get the folding capabilities and extras.
+Furthermore, I can use the ~consult-outline~ command to navigate to a
+heading with minibuffer completion.
+
+What the =prot-emacs.org= provides is an /optional single point of
+entry/ to my Emacs configuration. I use this to produce all the
+individual files ([[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][Anatomy of my Emacs configuration]]). It allows me to
+document my comprehensive corpus of work for the benefit of the Emacs
+community at-large. I can establish links between sections and use
+richer typography, something that ~outline-minor-mode~ does not
+provide. This document is exported to my website as a standalone web
+page. People can find what they want there. They may also read the
+source of this file to learn more about the technicalities of how this
+is done. And they can still use only the =.el= files, if they do not
+want to deal with Org. Everybody is covered.
+
+The =prot-emacs.org= *does not introduce a dependency on Org mode*.
+This file is not loaded at startup. I can remove =prot-emacs.org= at
+any moment and my setup will continue to work. This arrangement is so
+effective that I might actually convert the entirety of my dotfiles to
+it (long-term though, as it is a lot of work to document everything).
 
 ** Why do you use multiple ~setq~ instead of one?
 :PROPERTIES:
