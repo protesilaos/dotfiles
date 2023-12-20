@@ -2836,7 +2836,10 @@ designed for tree-sitter (Lisp seems to work regardless).
 The package offers the ~expreg-expand~ and ~expreg-contract~ commands.
 I believe I have never used the latter. I find it easier to just abort
 and start again than to have a special key for the rare scenario where
-I widened the selection more than I should.
+I widened the selection more than I should. For that case, we can
+always exchange point and mark. I have explained this in my video
+about mark and register basics:
+<https://protesilaos.com/codelog/2023-06-28-emacs-mark-register-basics/>.
 
 If tree-sitter functionality is not available, then the =C-M-SPC=
 binding is taken by ~prot-simple-mark-sexp~ which is similar in spirit
