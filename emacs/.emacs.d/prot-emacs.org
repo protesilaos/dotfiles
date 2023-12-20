@@ -5,8 +5,10 @@
 #+options: ':t toc:nil author:t email:t num:t
 #+startup: content indent
 #+macro: latest-export-date (eval (format-time-string "%F %T %z"))
+#+macro: word-count (eval (count-words (point-min) (point-max)))
 
-*Last revised and exported on {{{latest-export-date}}}.*
+*Last revised and exported on {{{latest-export-date}}} with a word
+count of {{{word-count}}}.*
 
 This is my literate Emacs configuration file. It is a combination of
 prose and code. You can either read this page or check my dotfiles to
