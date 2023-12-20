@@ -1916,6 +1916,9 @@ and [[https://github.com/minad/org-modern][Daniel Mendler's ~org-modern~ package
   Usability State ... padding; Spacious ... Precise Adjustments to
   Desktop Divider Internals Neatly Generated.
 
+I also take care to make it work with my customised mode line
+([[#h:30bfbf81-a5ad-44af-a91b-6b8dd37ff789][The =prot-emacs-modeline.el= integration with ~spacious-padding~]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:
@@ -3099,10 +3102,19 @@ only find a few cases where this is needed.
                   prot-modeline-misc-info))
 #+end_src
 
-*** TODO The =prot-emacs-modeline.el= integration with ~spacious-padding~
+*** The =prot-emacs-modeline.el= integration with ~spacious-padding~
 :PROPERTIES:
 :CUSTOM_ID: h:30bfbf81-a5ad-44af-a91b-6b8dd37ff789
 :END:
+
+My ~spacious-padding~ package adds, among others, a box effect to mode
+line constructs ([[#h:6c118185-fcb1-4c9a-93af-71814cb84279][The =prot-emacs-theme.el= section for ~spacious-padding~]]).
+
+To make the faces of ~prot-modeline.el~ look right in this scenario, I
+add a box to them as well. They then adopt whatever padding is there.
+
+The ~with-eval-after-load~ pattern is a nice way to evaluate some code
+as soon as the given package/feature is loaded.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-modeline.el" :mkdirp yes
   (with-eval-after-load 'spacious-padding
