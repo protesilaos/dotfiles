@@ -666,6 +666,8 @@ must do this manually with =M-x nerd-icons-install-fonts=.
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
+Also check [[#h:4efde779-3ef0-40b7-82e4-70f71b321428][the =prot-emacs-icons.el= module]].
+
 #+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-load-icons nil
   "When non-nil, enable iconography in various contexts.
@@ -6446,10 +6448,16 @@ Meant to be added to `prog-mode-hook'."
 (provide 'prot-emacs-which-key)
 #+end_src
 
-** TODO The =prot-emacs-icons.el= module
+** The =prot-emacs-icons.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:4efde779-3ef0-40b7-82e4-70f71b321428
 :END:
+
+I define a user option to conditionally load icons in various parts of
+the Emacs interface ([[#h:a75444e3-527e-4525-84f8-0a43771966a6][The =init.el= option to load icons (=nerd-icons.el=)]]).
+These are purely cosmetic. I normally work without them, though I do
+enable them for video demonstrations because they communicate more
+information, which some people may find helpful.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-icons.el" :mkdirp yes
 ;;; Icons
