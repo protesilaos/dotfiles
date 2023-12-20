@@ -644,6 +644,8 @@ to get information about the current major mode).
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
+Also check [[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][the =prot-emacs-which-key.el= module]].
+
 #+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-load-which-key nil
   "When non-nil, display key binding hints after a short delay.
@@ -6426,10 +6428,20 @@ Meant to be added to `prog-mode-hook'."
 (provide 'prot-emacs-web)
 #+end_src
 
-** TODO The =prot-emacs-which-key.el= module
+** The =prot-emacs-which-key.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:ddb1070d-2f91-4224-ad43-ef03f038f787
 :END:
+
+There is a user option in my setup to load this module
+([[#h:24324854-1f8c-4d8b-aa7c-291de968cbf4][The =init.el= option to enable ~which-key~]]).
+
+When the ~which-key-mode~ is enabled, any incomplete key sequence will
+produce a popup at the lower part of the Emacs frame showing keys that
+complete the current sequence together with the name of the command
+they are invoking.
+
+I personally do not use this, except when I need to do a demonstration.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-which-key.el" :mkdirp yes
 (prot-emacs-package which-key
