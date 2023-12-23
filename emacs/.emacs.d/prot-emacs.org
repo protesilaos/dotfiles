@@ -3173,15 +3173,36 @@ with my customised mode line ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =pr
 (provide 'prot-emacs-modeline)
 #+end_src
 
-** TODO The =prot-emacs-completion.el= module
+** The =prot-emacs-completion.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:15edf2c3-4419-4101-928a-6e224958a741
 :END:
+
+The term "completion" describes a process where user input is assisted
+by pattern matching algorithms to type out incomplete terms. The most
+basic way of this model of interaction is what we get in a
+command-line prompt, where we can hit =TAB= to expand the word before
+point to something the program already knows about (e.g =ema= followed
+by =TAB= may complete to =emacs=).
+
+In Emacs, completion encompasses user interfaces that show the
+available candidates (the likely options) right away, as well as
+provide more advanced capabilities for storing the history of previous
+inputs, displaying helpful annotations next to each candidate, and
+"completion styles" to control how user input is matched to
+candidates. Because we use the minibuffer for most common
+interactions, completion is an integral part of any setup.
+
+I start configuring this setion with some built-in options about the
+underlying framework. Since there is no specific package I am
+targeting, I use the ~prot-emacs-configure~ macro
+([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
 ;;; General minibuffer settings
 (prot-emacs-configure
   (:delay 1)
+#+end_src
 ;;;; Minibuffer configurations
   (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
