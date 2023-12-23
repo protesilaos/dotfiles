@@ -3203,10 +3203,74 @@ targeting, I use the ~prot-emacs-configure~ macro
 (prot-emacs-configure
   (:delay 1)
 #+end_src
+
+*** The =prot-emacs-completion.el= settings for completion styles
+
+The ~completion-styles~ are pattern matching algorithms. They
+interpret user input and match candidates accordingly.
+
+- emacs22 :: Prefix completion that only operates on the text before
+  point. If we are in =prefix|suffix=, with =|= representing the
+  cursor, it will consider everything that expands =prefix= and then
+  add back to it the =suffix=.
+
+- basic :: Prefix completion that also accounts for the text after
+  point. Using the above example, this one will consider patterns that
+  match all of ~emacs22~ as well as anything that completes =suffix=.
+
+- partial-completion :: This is used for file navigation. Instead of
+  typing out a full path like =~/.local/share/fonts=, we do =~/.l/s/f=
+  or variants thereof to make the matches unique such as =~/.l/sh/fon=.
+  It is a joy to navigate the fily system in this way.
+
+- substring :: Matches the given sequence of characters literally
+  regardless of where it is in a word. So =pro= will match
+  =professional= as well as =reproduce=.
+
+- flex :: Completion of an in-order subset of characters. It does not
+  matter where the charactes are in the word, so long as they are
+  encountered in the given order. The input =lad= will thus match
+  ~list-faces-display~ as well as ~pulsar-highlight-dwim~.
+
+- initials :: Completion of acronyms and initialisms. Typing =lfd=
+  will thus match ~list-faces-display~. This completion style can also
+  be used for file system navigation, though I prefer to only have
+  ~partial-completion~ handle that task.
+
+- orderless :: This is the only completion style I use which is not
+  built into Emacs. It matches patterns out-of-order. Patterns are
+  typically words separated by spaces, though they can also be regular
+  expressions, and even styles that are the same as the aforementioned
+  ~flex~ and ~initials~.
+
+Now that you know about the completion styles I use, take a look at
+the value of my ~completion-styles~. You will notice that ~orderless~,
+which is the most powerful/flexible is placed last. I do this because
+Emacs tries the styles in the given order from left to right, moving
+the next one until it finds a match. As such, I usually want to start
+with tight matches (e.g. =li-fa-di= for ~list-faces-display~) and only
+widen the scope of the search as I need to. This is easy to do because
+none of the built-in completion styles parses the empty space, so as
+soon as I type a space after some characters I am using ~orderless~.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; Minibuffer configurations
   (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
+#+end_src
 
+The ~completion-styles~ is the default. Though there are plenty of
+completion categories where we may want a deviation from the rule. To
+this end, we configure the user option ~completion-category-overrides~.
+Notice, for example, how I arrange for ~partial-completion~ to be set
+only for the =file= completion category, as I only ever need it there.
+Also bear in mind what I described above about why ~orderless~ is
+placed last on the list: Emacs uses the completion styles from left to
+right until something matches the given input. So I do not need to
+have ~partial-completion~ first as ~basic~ will never match something
+like =~/.l/s/fo= for =~/.local/share/fonts=.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
   ;; A list of known completion categories:
   ;;
   ;; - `bookmark'
@@ -3234,16 +3298,10 @@ targeting, I use the ~prot-emacs-configure~ macro
   ;; - `theme'
   ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
   ;; - `variable' (the `describe-variable' command bound to `C-h v')
-  ;;
-  ;; From the `consult' package:
-  ;;
   ;; - `consult-grep'
   ;; - `consult-isearch'
   ;; - `consult-kmacro'
   ;; - `consult-location'
-  ;;
-  ;; From the `embark' package:
-  ;;
   ;; - `embark-keybinding'
   ;;
   (setq completion-category-overrides
@@ -3266,12 +3324,20 @@ targeting, I use the ~prot-emacs-configure~ macro
           (consult-location (styles . (basic substring orderless)))
           (kill-ring (styles . (emacs22 orderless)))
           (eglot (styles . (emacs22 substring orderless)))))
+#+end_src
 
+*** TODO The =prot-emacs-completion.el= settings to ignore letter casing
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
   (setq completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
   (setq-default case-fold-search t)   ; For general regexp
+#+end_src
 
+*** TODO The =prot-emacs-completion.el= settings for recursive minibuffers
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
   (setq enable-recursive-minibuffers t)
   ;; Allow Emacs to resize mini windows, otherwise this does not work:
   ;;   (setq org-use-fast-todo-selection 'expert)

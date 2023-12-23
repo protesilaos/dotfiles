@@ -1,6 +1,7 @@
 ;;; General minibuffer settings
 (prot-emacs-configure
   (:delay 1)
+
 ;;;; Minibuffer configurations
   (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
@@ -32,16 +33,10 @@
   ;; - `theme'
   ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
   ;; - `variable' (the `describe-variable' command bound to `C-h v')
-  ;;
-  ;; From the `consult' package:
-  ;;
   ;; - `consult-grep'
   ;; - `consult-isearch'
   ;; - `consult-kmacro'
   ;; - `consult-location'
-  ;;
-  ;; From the `embark' package:
-  ;;
   ;; - `embark-keybinding'
   ;;
   (setq completion-category-overrides
