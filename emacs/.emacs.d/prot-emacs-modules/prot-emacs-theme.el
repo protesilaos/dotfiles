@@ -126,6 +126,10 @@
            :blink-cursor-interval 0.3
            :blink-cursor-blinks 50
            :cursor-in-non-selected-windows (hbar . 3))
+          (underscore-thick-no-blink
+           :blink-cursor-mode -1
+           :cursor-type (hbar . 8)
+           :cursor-in-non-selected-windows (hbar . 3))
           (t ; the default values
            :cursor-type box
            :cursor-in-non-selected-windows hollow
