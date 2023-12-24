@@ -3205,6 +3205,9 @@ targeting, I use the ~prot-emacs-configure~ macro
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for completion styles
+:PROPERTIES:
+:CUSTOM_ID: h:14b09958-279e-4069-81e3-5a16c9b69892
+:END:
 
 The ~completion-styles~ are pattern matching algorithms. They
 interpret user input and match candidates accordingly.
@@ -3326,7 +3329,17 @@ like =~/.l/s/fo= for =~/.local/share/fonts=.
           (eglot (styles . (emacs22 substring orderless)))))
 #+end_src
 
-*** TODO The =prot-emacs-completion.el= settings to ignore letter casing
+*** The =prot-emacs-completion.el= settings to ignore letter casing
+:PROPERTIES:
+:CUSTOM_ID: h:7fe1787d-dba3-46fe-82a9-5dc5f8ea6217
+:END:
+
+I never really need to match letters case-sensitively in the
+minibuffer. Let's have everything ignore casing by default.
+
+[ In some Elisp that I write there is a ~let~ binding for
+  ~case-fold-search~ to make the search case-sensitive. Butf those are
+  the exceptions. ]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
   (setq completion-ignore-case t)
