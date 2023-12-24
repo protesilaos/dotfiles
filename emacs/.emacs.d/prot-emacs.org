@@ -3815,7 +3815,57 @@ Useful for prompts such as `eval-expression' and `shell-command'."
       (corfu-mode 1)))
 
   (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
+#+end_src
 
+*** The =prot-emacs-completion.el= settings for ~consult~
+:PROPERTIES:
+:CUSTOM_ID: h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d
+:END:
+
+~consult~ is another wonderful package by Daniel Mendler. It provides
+a number of commands that turbocharge the minibuffer with advanced
+capabilities for filtering, asynchronous input, and previewing of the
+current candidate's context.
+
+- A case where filtering is in use is the ~consult-buffer~ command,
+  which many users have a drop-in replacement to the generic =C-x b=
+  (=M-x switch-to-buffer=). It is a one-stop-shop for buffers,
+  recently visited files (if ~recentf-mode~ is use---I don't),
+  bookmarks ([[#h:581aa0ff-b136-4099-a321-3b86edbfbccb][The =prot-emacs-essentials.el= settings for bookmarks]]),
+  and, in principle, anything else that defines a source for this
+  interface. To filter those source, we can type at the empty
+  minibuffer =b SPC=, which will insert a filter specific to buffers.
+  Delete back to remove the =[Buffer]= filter and insert another
+  filter. Available filters are displayed by typing =?= at the prompt
+  (I define it this way to call the command ~consult-narrow-help~).
+  Every multi-source command from ~consult~ relies on this paradigm.
+
+- Asynchronous input pertains to the intersection between Emacs and
+  external search programs. A case in point is ~consult-grep~, which
+  calls the system's ~grep~ program. The prompt distinguishes between
+  what is sent to the external program and what is only shown to Emacs
+  by wrapping the former inside of =#=. So the input =#prot-#completion=
+  will send =prot-= to the ~grep~ program and then use =completion=
+  inside of the minibuffer to perform the subsequent pattern-matching
+  (e.g. with help from ~orderless~ ([[#h:7cc77fd0-8f98-4fc0-80be-48a758fcb6e2][The =prot-emacs-completion.el= for the ~orderless~ completion style]]).
+  The part that is sent to the external program does not block Emacs.
+  It is handled asynchronously, so everything stays responsive.
+
+- As for previewing, ~consult~ commands show the context of the
+  current match and update the window as we move between completion
+  candidates in the minibuffer. For example, the ~consult-line~
+  command performs an in-buffer search and lets us move between
+  matches in the minibuffer while seeing in the window above what the
+  surrounding text looks like. This is an excellent feature when we
+  are trying to find something and do not quite remember all the
+  search terms to narrow down to it simply by typing at the minibuffer
+  prompt.
+
+The commands I use the most from this package are ~consult-outline~,
+especially in Org buffers, and ~consult-imenu~ in Elisp files. The
+rest have situational uses.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-package consult
   (:install t)
