@@ -3442,6 +3442,19 @@ experience.
   candidate, =TAB=, then input the ~crm-separator~, and repeat until
   you are done selecting at which point you type =RET=.
 
+- Finally the ~file-name-shadow-mode~ is a neat little feature to
+  remove the "shadowed" part of a file prompt while using something
+  like =C-x C-f= (=M-x find-file=). File name shadowing happens when
+  we invoke ~find-file~ and instead of first deleting the contents of
+  the minibuffer, we start typing out the file system path we wish to
+  visit. For example, I am in =~/Git/Projects/= and type directly
+  after it something like =~/.local/share/fonts/=, so Emacs displays
+  =~/Git/Projects/~/.local/share/fonts/= with the original part greyed
+  out. With ~file-name-shadow-mode~ the "shadowed" part is removed
+  altogether. This is especially nice when combined with the
+  completion style called ~partial-completion~
+  ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
   (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
@@ -3473,6 +3486,8 @@ experience.
           (cdr args)))
 
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  (file-name-shadow-mode 1)
 #+end_src
 
 
@@ -3489,8 +3504,6 @@ experience.
   (setq completions-header-format
         (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
   (setq completions-highlight-face 'completions-highlight)
-
-  (file-name-shadow-mode 1)
 
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
