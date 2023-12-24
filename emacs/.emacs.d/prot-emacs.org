@@ -3692,12 +3692,38 @@ templates to have a real need for it---but it works).
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 #+end_src
 
+*** The =prot-emacs-completion.el= for the ~orderless~ completion style
+:PROPERTIES:
+:CUSTOM_ID: h:7cc77fd0-8f98-4fc0-80be-48a758fcb6e2
+:END:
+
+The ~orderless~ package by Omar Antolín Camarena provides one of the
+completion styles that I use ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]). 
+It is a powerful pattern matching algorithm that parses user input and
+interprets it out-of-order, so that =in pa= will cover ~insert-pair~
+as well as ~package-install~. Components of the search are
+space-separated, by default, though we can modify the user option
+~orderless-component-separator~ to have something else (but I cannot
+think of a better value). In the section about completion styles, I
+explain how I use ~orderless~ and why its power does not result in
+lots of false positives.
+
+With ~orderless~ we can also define so-called "style dispatchers".
+These are characters attached to the input which instruct ~orderless~
+to use a specific pattern for that component. My =prot-orderless.el=
+defines such style dispatchers as postfix operators: they are added to
+the end of the input ([[#h:114c6e8c-697a-43e9-8fd9-52872997e1c9][The =prot-orderless.el= library]]). The equals
+sign takes the input literally, the dot interprets it as a file type
+extension, while the tilde means to match the input either at the
+beginning or the end. Granted, these are overkill most of the time. It
+is easier to just continue typing to narrow the list of candidates.
+Still, they do have their uses.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-package orderless
   (:install t)
   (:delay 5)
-  (setq orderless-component-separator " +")
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
   (setq orderless-matching-styles
@@ -3714,7 +3740,9 @@ templates to have a real need for it---but it works).
         '(prot-orderless-literal
           prot-orderless-file-ext
           prot-orderless-beg-or-end)))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Corfu (in-buffer completion popup)
 (prot-emacs-package corfu
   (:install t)
