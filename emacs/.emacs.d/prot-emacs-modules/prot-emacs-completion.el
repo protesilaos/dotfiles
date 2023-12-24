@@ -332,9 +332,11 @@ Useful for prompts such as `eval-expression' and `shell-command'."
           (variable prot-embark-variable-map)
           (t embark-general-map)))
 
-  (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "C-,") #'prot-embark-act-no-quit)
-    (define-key map (kbd "C-.") #'prot-embark-act-quit)))
+  (mapc
+   (lambda (map)
+     (define-key map (kbd "C-,") #'prot-embark-act-no-quit)
+     (define-key map (kbd "C-.") #'prot-embark-act-quit))
+   (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map)))
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
