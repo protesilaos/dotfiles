@@ -3401,13 +3401,52 @@ which can be confusing or distracting.
   (minibuffer-electric-default-mode 1)
 #+end_src
 
+*** The =prot-emacs-completion.el= settings for common interactions
+:PROPERTIES:
+:CUSTOM_ID: h:b640f032-ad11-413e-ad8f-63408671d500
+:END:
+
+Here I combine several small tweaks to improve the overall minibuffer
+experience.
+
+- The need to ~resize-mini-windows~ arises on some occasions where
+  Emacs has to show text spanning multiple lines in the "mini
+  windows". A common scenario for me is in Org mode buffers where I
+  set the =TODO= keyword of a task with =C-c C-t= (=M-x org-todo=) and
+  have this as my setting: ~(setq org-use-fast-todo-selection 'expert)~
+  Otherwise, this is not an issue anyway and I may also like other
+  options for ~org-use-fast-todo-selection~.
+
+- The ~read-answer-short~ is complementary to ~use-short-answers~.
+  This is about providing the shorter version to some confirmation
+  prompt, such as =y= instead of =yes=.
+
+- The ~echo-keystrokes~ is set to a low value to show in the echo area
+  the incomplete key sequence I have just typed. This is especially
+  helpful for demonstration purposes but also to double check that I
+  did not mistype something (I cannot touch-type, so this happens a lot).
+
+- The ~minibuffer-prompt-properties~ and advice to ~completing-read-multiple~
+  make it so that (i) the minibuffer prompt is not accessible with
+  regular motions to avoid mistakes and (ii) prompts that complete
+  multiple targets show an indicator about this fact. With regard to
+  the latter in particular, we have prompts like that of Org to set
+  tags for a heading (with =C-c C-q= else =M-x org-set-tags-command=)
+  where more than one candidates can be provided using completion,
+  provided each candidate is separated by the ~crm-separator~ (a comma
+  by default, though Org uses =:= in that scenario).
+
+  Remember that when using completion in the minibuffer, you can hit
+  =TAB= to expand the selected choice without exiting with it. For
+  cases when multiple candidates can be selected, you select the
+  candidate, =TAB=, then input the ~crm-separator~, and repeat until
+  you are done selecting at which point you type =RET=.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-  ;; Allow Emacs to resize mini windows, otherwise this does not work:
-  ;;   (setq org-use-fast-todo-selection 'expert)
   (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq echo-keystrokes 0.25)
-  (setq kill-ring-max 60)               ; Keep it small
+  (setq kill-ring-max 60) ; Keep it small
 
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
   ;; got this from the documentation of Daniel Mendler's Vertico
@@ -3434,7 +3473,10 @@ which can be confusing or distracting.
           (cdr args)))
 
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+#+end_src
 
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
   ;; Settings for the default completion UI.  These do not come into
   ;; effect unless `prot-emacs-completion-ui' is nil or when not using
   ;; any package for in-buffer completion.
