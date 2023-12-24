@@ -2316,7 +2316,6 @@ describe-variable=) to learn about each of these.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; General settings and common custom functions (prot-simple.el)
-  (setq read-minibuffer-restore-windows nil) ; Emacs 28
   (setq blink-matching-paren nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
   (setq help-window-select t)
@@ -3348,10 +3347,36 @@ minibuffer. Let's have everything ignore casing by default.
   (setq-default case-fold-search t)   ; For general regexp
 #+end_src
 
-*** TODO The =prot-emacs-completion.el= settings for recursive minibuffers
+*** The =prot-emacs-completion.el= settings for recursive minibuffers
+:PROPERTIES:
+:CUSTOM_ID: h:4299825a-db51-49fe-b415-fb1749eed289
+:END:
+
+"Recursive minibuffers" are of those advanced features that you don't
+need frequently, but when you do, it is an excellent addition to your
+workflow. The concept describes the use of a minibuffer while another
+minibuffer is already open.
+
+The need to have multiple (i.e. "recursive") minibuffers arises when
+you initiate a command, such as =M-x= followed by some incomplete
+command where you remember that you forgot to perform another command
+before confirming the first one. I mostly use this as a combination of
+=M-x= (~execute-extended-command~) and =M-:= (~eval-expression~).
+
+The ~read-minibuffer-restore-windows~ restores the window layout that
+was in place when the minibuffer recursion started. I personally do
+not want that: just leave me where I am.
+
+The ~minibuffer-depth-indicate-mode~ shows a number next to the
+minibuffer prompt, indicating the level of depth in the recursion,
+starting with =2=.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
   (setq enable-recursive-minibuffers t)
+  (setq read-minibuffer-restore-windows nil) ; Emacs 28
+  (minibuffer-depth-indicate-mode 1)
+#+end_src
+
   ;; Allow Emacs to resize mini windows, otherwise this does not work:
   ;;   (setq org-use-fast-todo-selection 'expert)
   (setq resize-mini-windows t)
