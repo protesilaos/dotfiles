@@ -3724,7 +3724,7 @@ templates to have a real need for it---but it works).
 :END:
 
 The ~orderless~ package by Omar Antolín Camarena provides one of the
-completion styles that I use ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]). 
+completion styles that I use ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
 It is a powerful pattern matching algorithm that parses user input and
 interprets it out-of-order, so that =in pa= will cover ~insert-pair~
 as well as ~package-install~. Components of the search are
