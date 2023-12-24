@@ -66,14 +66,16 @@
   (setq-default case-fold-search t)   ; For general regexp
 
   (setq enable-recursive-minibuffers t)
-  ;; Allow Emacs to resize mini windows, otherwise this does not work:
-  ;;   (setq org-use-fast-todo-selection 'expert)
-  (setq resize-mini-windows t)
-  (setq minibuffer-eldef-shorten-default t)
+  (setq read-minibuffer-restore-windows nil) ; Emacs 28
+  (minibuffer-depth-indicate-mode 1)
 
+  (setq minibuffer-default-prompt-format " [%s]") ; Emacs 29
+  (minibuffer-electric-default-mode 1)
+
+  (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq echo-keystrokes 0.25)
-  (setq kill-ring-max 60)               ; Keep it small
+  (setq kill-ring-max 60) ; Keep it small
 
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
   ;; got this from the documentation of Daniel Mendler's Vertico
@@ -101,9 +103,8 @@
 
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
-  ;; Settings for the default completion UI.  These do not come into
-  ;; effect unless `prot-emacs-completion-ui' is nil or when not using
-  ;; any package for in-buffer completion.
+  (file-name-shadow-mode 1)
+
   (setq completion-show-help nil)
   (setq completion-auto-help t)
   (setq completion-auto-select nil)
@@ -114,13 +115,9 @@
         (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
   (setq completions-highlight-face 'completions-highlight)
 
-  (file-name-shadow-mode 1)
-  (minibuffer-depth-indicate-mode 1)
-  (minibuffer-electric-default-mode 1)
-
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
-  (setq history-length 500)
+  (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (setq savehist-additional-variables '(register-alist kill-ring))
@@ -184,19 +181,12 @@
   ;; By default, abbrev asks for confirmation on whether to use
   ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
   ;; do I want it.
-  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save)
-
-  (prot-emacs-keybind global-map
-    "M-/" #'dabbrev-expand
-    "C-x M-/" #'dabbrev-completion
-    "C-x a e" #'expand-abbrev ; default, just here for visibility
-    "C-x a u" #'unexpand-abbrev))
+  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-package orderless
   (:install t)
   (:delay 5)
-  (setq orderless-component-separator " +")
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
   (setq orderless-matching-styles
@@ -218,11 +208,14 @@
 (prot-emacs-package corfu
   (:install t)
   (:delay 5)
+
   (global-corfu-mode 1)
 
   (setq corfu-popupinfo-delay '(1.25 . 0.5))
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
+  ;; Also have (setq tab-always-indent 'complete) for TAB to complete
+  ;; if it does not have to perform an indentation change.
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
   ;; Sort by input history (no need to modify `corfu-sort-function').
@@ -250,8 +243,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key nil)
-  (setq register-preview-delay 0.8
-        register-preview-function #'consult-register-format)
   (setq consult-find-args
         (concat "find . -not ( "
                 "-path */.git* -prune "
@@ -290,9 +281,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 (prot-emacs-package embark
   (:install t)
   (:delay 5)
-  (setq prefix-help-command #'embark-prefix-help-command)
-  ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
-
   (setq embark-confirm-act-all nil)
   (setq embark-mixed-indicator-both nil)
   (setq embark-mixed-indicator-delay 1.0)
@@ -307,30 +295,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; binding for `embark-act'.  So I just add some obscure key that I
   ;; do not have.  I absolutely do not want to cycle by accident!
   (setq embark-cycle-key "<XF86Travel>")
-
-  ;; The minimal indicator shows cycling options, but I have no use
-  ;; for those.  I want it to be silent.
-  (defun prot/embark-no-minimal-indicator ())
-  (advice-add #'embark-minimal-indicator :override #'prot/embark-no-minimal-indicator)
-
-  (defun prot/embark-act-no-quit ()
-    "Call `embark-act' but do not quit after the action."
-    (interactive)
-    (let ((embark-quit-after-action nil))
-      (call-interactively #'embark-act)))
-
-  (defun prot/embark-act-quit ()
-    "Call `embark-act' and quit after the action."
-    (interactive)
-    (let ((embark-quit-after-action t))
-      (call-interactively #'embark-act))
-    (when (and (> (minibuffer-depth) 0)
-               (derived-mode-p 'completion-list-mode))
-      (abort-recursive-edit)))
-
-  (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "C-,") #'prot/embark-act-no-quit)
-    (define-key map (kbd "C-.") #'prot/embark-act-quit))
 
   ;; I do not want `embark-org' and am not sure what is loading it.
   ;; So I just unsert all the keymaps...
@@ -365,7 +329,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
           (region prot-embark-region-map)
           (symbol prot-embark-symbol-map)
           (url prot-embark-url-map)
-          (variable prot-embark-variable-map))))
+          (variable prot-embark-variable-map)
+          (t embark-general-map)))
+
+  (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
+    (define-key map (kbd "C-,") #'prot/embark-act-no-quit)
+    (define-key map (kbd "C-.") #'prot/embark-act-quit)))
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.

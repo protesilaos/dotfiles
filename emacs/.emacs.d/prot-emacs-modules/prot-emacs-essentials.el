@@ -15,7 +15,6 @@
   (require 'prot-prefix)
 
 ;;;; General settings and common custom functions (prot-simple.el)
-  (setq read-minibuffer-restore-windows nil) ; Emacs 28
   (setq blink-matching-paren nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
   (setq help-window-select t)
@@ -178,6 +177,10 @@
   (setq bookmark-save-flag 1)
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
+
+;;;; Registers (registers.el)
+(setq register-preview-delay 0.8
+        register-preview-function #'register-preview-default)
 
 ;;;; Auto revert mode
   (setq auto-revert-verbose t)

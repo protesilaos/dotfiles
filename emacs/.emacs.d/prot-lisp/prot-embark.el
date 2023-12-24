@@ -114,5 +114,25 @@
   "s" #'sort-lines
   "u" #'untabify)
 
+;; The minimal indicator shows cycling options, but I have no use
+;; for those.  I want it to be silent.
+(defun prot-embark-no-minimal-indicator ())
+(advice-add #'embark-minimal-indicator :override #'prot-embark-no-minimal-indicator)
+
+(defun prot-embark-act-no-quit ()
+  "Call `embark-act' but do not quit after the action."
+  (interactive)
+  (let ((embark-quit-after-action nil))
+    (call-interactively #'embark-act)))
+
+(defun prot-embark-act-quit ()
+  "Call `embark-act' and quit after the action."
+  (interactive)
+  (let ((embark-quit-after-action t))
+    (call-interactively #'embark-act))
+  (when (and (> (minibuffer-depth) 0)
+             (derived-mode-p 'completion-list-mode))
+    (abort-recursive-edit)))
+
 (provide 'prot-embark)
 ;;; prot-embark.el ends here
