@@ -3742,16 +3742,37 @@ Still, they do have their uses.
           prot-orderless-beg-or-end)))
 #+end_src
 
+*** The =prot-emacs-completion.el= for in-buffer completion popup (~corfu~)
+:PROPERTIES:
+:CUSTOM_ID: h:804b858f-7913-47ef-aaf4-8eef5b59ecb4
+:END:
+
+I generally do not rely on in-buffer text completion. I feel it slows
+me down and distracts me. When I do, however, need to rely on it, I
+have the ~corfu~ package by Daniel Mendler: it handles the task
+splendidly as it works with Emacs' underlying infrastructure for
+~completion-at-point-functions~.
+
+Completion is triggered with the =TAB= key, which produces a popup
+where the cursor is. The companion ~corfu-popupinfo-mode~ will show a
+secondary documentation popup if we move over a candidate but do not
+do anything with it.
+
+Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.el= settings for dynamic text expansion (~dabbrev~)]].
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Corfu (in-buffer completion popup)
 (prot-emacs-package corfu
   (:install t)
   (:delay 5)
+
   (global-corfu-mode 1)
 
   (setq corfu-popupinfo-delay '(1.25 . 0.5))
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
+  ;; Also have (setq tab-always-indent 'complete) for TAB to complete
+  ;; if it does not have to perform an indentation change.
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
   ;; Sort by input history (no need to modify `corfu-sort-function').
