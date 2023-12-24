@@ -3909,14 +3909,18 @@ rest have situational uses.
     (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
     (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
       (add-hook 'consult-after-jump-hook fn))))
+#+end_src
 
+*** TODO The =prot-emacs-completion.el= section about ~embark~
+:PROPERTIES:
+:CUSTOM_ID: h:61863da4-8739-42ae-a30f-6e9d686e1995
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
 (prot-emacs-package embark
   (:install t)
   (:delay 5)
-  (setq prefix-help-command #'embark-prefix-help-command)
-  ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
-
   (setq embark-confirm-act-all nil)
   (setq embark-mixed-indicator-both nil)
   (setq embark-mixed-indicator-delay 1.0)
@@ -3931,30 +3935,6 @@ rest have situational uses.
   ;; binding for `embark-act'.  So I just add some obscure key that I
   ;; do not have.  I absolutely do not want to cycle by accident!
   (setq embark-cycle-key "<XF86Travel>")
-
-  ;; The minimal indicator shows cycling options, but I have no use
-  ;; for those.  I want it to be silent.
-  (defun prot/embark-no-minimal-indicator ())
-  (advice-add #'embark-minimal-indicator :override #'prot/embark-no-minimal-indicator)
-
-  (defun prot/embark-act-no-quit ()
-    "Call `embark-act' but do not quit after the action."
-    (interactive)
-    (let ((embark-quit-after-action nil))
-      (call-interactively #'embark-act)))
-
-  (defun prot/embark-act-quit ()
-    "Call `embark-act' and quit after the action."
-    (interactive)
-    (let ((embark-quit-after-action t))
-      (call-interactively #'embark-act))
-    (when (and (> (minibuffer-depth) 0)
-               (derived-mode-p 'completion-list-mode))
-      (abort-recursive-edit)))
-
-  (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "C-,") #'prot/embark-act-no-quit)
-    (define-key map (kbd "C-.") #'prot/embark-act-quit))
 
   ;; I do not want `embark-org' and am not sure what is loading it.
   ;; So I just unsert all the keymaps...
@@ -3989,12 +3969,24 @@ rest have situational uses.
           (region prot-embark-region-map)
           (symbol prot-embark-symbol-map)
           (url prot-embark-url-map)
-          (variable prot-embark-variable-map))))
+          (variable prot-embark-variable-map)
+          (t embark-general-map)))
+
+  (dolist (map (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))
+    (define-key map (kbd "C-,") #'prot/embark-act-no-quit)
+    (define-key map (kbd "C-.") #'prot/embark-act-quit)))
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
 (prot-emacs-package embark-consult (:install t) (:delay 5))
+#+end_src
 
+*** TODO The =prot-emacs-completion.el= section to configure completion annotations (~marginalia~)
+:PROPERTIES:
+:CUSTOM_ID: h:bd3f7a1d-a53d-4d3e-860e-25c5b35d8e7e
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Detailed completion annotations (marginalia.el)
 (prot-emacs-package marginalia
   (:install t)
@@ -4016,7 +4008,17 @@ rest have situational uses.
           (imenu marginalia-annotate-imenu)
           (package prot-marginalia-package)
           (unicode-name marginalia-annotate-char))))
+#+end_src
 
+*** TODO The =prot-emacs-completion.el= setting to load a minibuffer UI submodule
+:PROPERTIES:
+:CUSTOM_ID: h:db620e44-fc8f-45b8-a7fd-ae1d0b7ce86c
+:END:
+
+- [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
+- [[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)]]
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; The minibuffer user interface (mct, vertico, or none)
 (when prot-emacs-completion-ui
   (require
@@ -8608,6 +8610,26 @@ minibuffer with something like `exit-minibuffer'."
   "r" #'repunctuate-sentences
   "s" #'sort-lines
   "u" #'untabify)
+
+;; The minimal indicator shows cycling options, but I have no use
+;; for those.  I want it to be silent.
+(defun prot-embark-no-minimal-indicator ())
+(advice-add #'embark-minimal-indicator :override #'prot-embark-no-minimal-indicator)
+
+(defun prot-embark-act-no-quit ()
+  "Call `embark-act' but do not quit after the action."
+  (interactive)
+  (let ((embark-quit-after-action nil))
+    (call-interactively #'embark-act)))
+
+(defun prot-embark-act-quit ()
+  "Call `embark-act' and quit after the action."
+  (interactive)
+  (let ((embark-quit-after-action t))
+    (call-interactively #'embark-act))
+  (when (and (> (minibuffer-depth) 0)
+             (derived-mode-p 'completion-list-mode))
+    (abort-recursive-edit)))
 
 (provide 'prot-embark)
 ;;; prot-embark.el ends here
