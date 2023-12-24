@@ -3555,6 +3555,36 @@ basis.
   (savehist-mode 1)
 #+end_src
 
+*** The =prot-emacs-completion.el= settings for dynamic text expansion (~dabbrev~)
+:PROPERTIES:
+:CUSTOM_ID: h:567bb00f-1d82-4746-93e5-e0f60721728a
+:END:
+
+The built-in ~dabbrev~ package provides a text completion method that
+reads the contents of a buffer and expands the text before the cursor
+to match possible candidates. This is done with =M-/= (~dabbrev-expand~)
+which is what I use most of the time to perform in-buffer completions.
+
+I like ~dabbrev~ because it is minimal. It does not produce any popup
+or affect the window layout and so it is keeping me focused on what I
+am doing. I wish it had a behaviour where we could initiate it and at
+any point demand a fully fledged minibuffer presentation of what it is
+trying to match, instead of cycling through the candidates with
+repeated =M-/=. Granted, I normally do not cycle in that way, as I
+typically type out enough to get an exact match or be one =M-/= away
+from it.
+
+Apart from the ~dabbrev-expand~ command, we have ~dabbrev-completion~.
+I do not use it because it does not feel natural while typing to stop,
+check the minibuffer for some text, select it, and go back to typing.
+Perhaps this is because I have a style of writing without
+interruptions and without going back to immediately edit what I wrote
+(unless I am doing a demonstration, where the viewer needs to follow
+along).
+
+The term "dabbrev" stands for "dynamic abbreviation". Emacs also has
+static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
@@ -3568,7 +3598,52 @@ basis.
   (setq dabbrev-upcase-means-case-search t)
   (setq dabbrev-ignored-buffer-modes
         '(archive-mode image-mode docview-mode pdf-view-mode))
+#+end_src
 
+*** The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)
+:PROPERTIES:
+:CUSTOM_ID: h:fd84b79a-351e-40f0-b383-bf520d77834b
+:END:
+
+Unlike "dynamic abbreviations" that depend on the text already
+available in a buffer, we can define abbreviations that always expand
+to what we have specified ([[#h:567bb00f-1d82-4746-93e5-e0f60721728a][The =prot-emacs-completion.el= settings for dynamic text expansion (~dabbrev~)]]).
+
+Abbreviations, else the ~abbrev~ mechanism, are strings of characters
+that when typed out are replaced by another string. For example, if I
+want to type in my website's URL, I insert =meweb= and continue
+typing. Emacs will expand that word into =https://protesilaos.com=.
+
+Unless you are documenting what your abbreviation does or have abbrevs
+that are easy to mistype, you will never need to tell Emacs not to
+expand the given input. Note that the command ~unexpand-abbrev~ is
+there if you need it. I had to use it in the above paragraph to first
+type out the abbrev I used as an example.
+
+Similarly, we can expand an abbrev anywhere with the command
+~expand-abbrev~, though we normally do not have to do this because it
+happens automatically as we type.
+
+Emacs is smart about how we define and use abbrevs. Each major mode
+has its own abbrev table, to which we add our definitions. When we are
+in a buffer that has that major mode, we gain access to the relevant
+abbreviations. A ~global-abbrev-table~ is also available. In case of a
+conflict between a major-mode-specific table and the global one, the
+former takes precedence. Furthermore, abbrev tables conform with the
+same inheritence principle as major modes at-large, meaning that
+something like Org mode will inherit the ~text-mode-abbrev-table~
+because ~org-mode~ is derived from ~text-mode~. Abbrev tables are thus
+consistent with how hooks and keymaps work in terms of precedence and
+inheritence.
+
+As you will notice below, I use the ~prot-emacs-abbrev~ macro to make
+it easier to define these ([[#h:e7a12825-7848-42bd-b99b-b87903012814][The =init.el= macro to define abbreviations (~prot-emacs-abbrev~)]]).
+Most of my abbrevs are simple letter casing tweaks. Though keep in
+mind that the underlying mechanism is powerful and can evaluate
+arbitrary Elisp code (I played around with it, though I don't use
+templates to have a real need for it---but it works).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
@@ -3614,14 +3689,10 @@ basis.
   ;; By default, abbrev asks for confirmation on whether to use
   ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
   ;; do I want it.
-  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save)
+  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
+#+end_src
 
-  (prot-emacs-keybind global-map
-    "M-/" #'dabbrev-expand
-    "C-x M-/" #'dabbrev-completion
-    "C-x a e" #'expand-abbrev ; default, just here for visibility
-    "C-x a u" #'unexpand-abbrev))
-
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-package orderless
   (:install t)
