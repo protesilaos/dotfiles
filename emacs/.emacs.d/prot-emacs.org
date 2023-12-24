@@ -2543,6 +2543,8 @@ Use the ~bookmark-set~ command (=C-x r m= by default) to record a
 bookmark and then visit one of your bookmarks with ~bookmark-jump~
 (=C-x r b= by default).
 
+Also see [[#h:5685df62-4484-42ad-a062-d55ab19022e3][the =prot-emacs-essentials.el= settings for registers]].
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Built-in bookmarking framework (bookmark.el)
   (setq bookmark-use-annotations nil)
@@ -2555,6 +2557,30 @@ bookmark and then visit one of your bookmarks with ~bookmark-jump~
   (setq bookmark-save-flag 1)
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
+#+end_src
+
+*** The =prot-emacs-essentials.el= settings for registers
+:PROPERTIES:
+:CUSTOM_ID: h:5685df62-4484-42ad-a062-d55ab19022e3
+:END:
+
+Much like bookmarks, registers store data that we can reinstate
+quickly ([[#h:581aa0ff-b136-4099-a321-3b86edbfbccb][The =prot-emacs-essentials.el= settings for bookmarks]]). A
+common use-case is to write some text to a register and then insert
+that text by calling the given register. This is much better than
+relying on the ~kill-ring~, because registers are meant to be
+overwritten by the user, whereas the ~kill-ring~ accumulates lots of
+text that we do not necessarily need.
+
+To me, registers are essential for keyboard macros. By default,
+registers do not persist between Emacs sessions, though I do need to
+re-use them from time to time, hence the arrangement to record them
+with ~savehist-mode~ ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;;; Registers (registers.el)
+(setq register-preview-delay 0.8
+        register-preview-function #'register-preview-default)
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for auto revert
@@ -3800,8 +3826,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key nil)
-  (setq register-preview-delay 0.8
-        register-preview-function #'consult-register-format)
   (setq consult-find-args
         (concat "find . -not ( "
                 "-path */.git* -prune "
