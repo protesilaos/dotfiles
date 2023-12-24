@@ -3516,15 +3516,46 @@ completion (such as the ~corfu~ package).
   (setq completions-highlight-face 'completions-highlight)
 #+end_src
 
+*** The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:25765797-27a5-431e-8aa4-cc890a6a913a
+:END:
+
+Minibuffer prompts can have their own history. When they do not, they
+share a common history of user inputs. Emacs keeps track of that
+history in the current session, but loses it as soon as we close it.
+With ~savehist-mode~ enabled, all minibuffer histories are written to
+a file and are restored when we start Emacs again.
+
+Histories are useful in two ways:
+
+1. Recent choices appear at the top, so we can find them more easily.
+2. The =M-p= (~previous-history-element~) and =M-n= (~next-history-element~)
+   commands in the minibuffer while be useful right away upon
+   restoring Emacs (all my packages make good use of minibuffer
+   histories per prompt, so =M-p= and =M-n= only show relevant values).
+
+Since we are already recording minibuffer histories, we can instruct
+~savehist-mode~ to also keep track of additional variables and restore
+them next time we use Emacs. Hence ~savehist-additional-variables~.
+
+Note that the user option ~history-length~ applies to each individual
+history variable: it is not about all histories combined.
+
+Overall, I am happy with this feature and benefit from it on a daily
+basis.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
-  (setq history-length 500)
+  (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (setq savehist-additional-variables '(register-alist kill-ring))
   (savehist-mode 1)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
