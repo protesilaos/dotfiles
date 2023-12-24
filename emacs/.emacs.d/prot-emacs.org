@@ -3490,11 +3490,21 @@ experience.
   (file-name-shadow-mode 1)
 #+end_src
 
+*** The =prot-emacs-completion.el= generic minibuffer UI settings
+:PROPERTIES:
+:CUSTOM_ID: h:de61a607-0bdf-462b-94cd-c0898319590e
+:END:
+
+These are some settings for the default completion user interface.
+These do not come into effect unless ~prot-emacs-completion-ui~ is set
+to a ~nil~ value or when we are not using any package for in-buffer
+completion (such as the ~corfu~ package).
+
+- [[#h:f012a254-2716-4c29-a64b-c2b3df34f57f][The =init.el= option to load a minibuffer user interface]]
+- [[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)]]
+- [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-  ;; Settings for the default completion UI.  These do not come into
-  ;; effect unless `prot-emacs-completion-ui' is nil or when not using
-  ;; any package for in-buffer completion.
   (setq completion-show-help nil)
   (setq completion-auto-help t)
   (setq completion-auto-select nil)
@@ -3504,7 +3514,9 @@ experience.
   (setq completions-header-format
         (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
   (setq completions-highlight-face 'completions-highlight)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 500)
