@@ -4305,6 +4305,10 @@ active and the Completions window is on display."
         (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
                 "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
+  (with-eval-after-load 'pulsar
+    (add-hook 'prot-search-outline-hook #'pulsar-recenter-center)
+    (add-hook 'prot-search-outline-hook #'pulsar-reveal-entry))
+
   (prot-emacs-keybind global-map
     "M-s M-%" #'prot-search-replace-markup ; see `prot-search-markup-replacements'
     "M-s M-<" #'prot-search-isearch-beginning-of-buffer
@@ -11974,13 +11978,17 @@ Also see `prot-search-grep-todo-keywords'."
         (nreverse candidates)
       (user-error "No outline"))))
 
+(defvar prot-search-outline-hook nil
+  "Normal hook to run at the end of `prot-search-outline'.")
+
 ;;;###autoload
 (defun prot-search-outline ()
   "Go to the line of the given outline using completion."
   (interactive)
   (when-let ((selection (completing-read "Go to outline: " (prot-search--get-outline) nil :require-match))
              (line (string-to-number (car (split-string selection "\t")))))
-    (goto-line line)))
+    (goto-line line)
+    (run-hooks 'prot-search-outline-hook)))
 
 ;;;; Grep
 

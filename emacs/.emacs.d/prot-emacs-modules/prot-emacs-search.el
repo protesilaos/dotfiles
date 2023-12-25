@@ -41,6 +41,10 @@
         (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
                 "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
+  (with-eval-after-load 'pulsar
+    (add-hook 'prot-search-outline-hook #'pulsar-recenter-center)
+    (add-hook 'prot-search-outline-hook #'pulsar-reveal-entry))
+
   (prot-emacs-keybind global-map
     "M-s M-%" #'prot-search-replace-markup ; see `prot-search-markup-replacements'
     "M-s M-<" #'prot-search-isearch-beginning-of-buffer

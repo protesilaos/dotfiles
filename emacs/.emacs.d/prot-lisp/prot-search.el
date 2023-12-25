@@ -319,13 +319,17 @@ Also see `prot-search-grep-todo-keywords'."
         (nreverse candidates)
       (user-error "No outline"))))
 
+(defvar prot-search-outline-hook nil
+  "Normal hook to run at the end of `prot-search-outline'.")
+
 ;;;###autoload
 (defun prot-search-outline ()
   "Go to the line of the given outline using completion."
   (interactive)
   (when-let ((selection (completing-read "Go to outline: " (prot-search--get-outline) nil :require-match))
              (line (string-to-number (car (split-string selection "\t")))))
-    (goto-line line)))
+    (goto-line line)
+    (run-hooks 'prot-search-outline-hook)))
 
 ;;;; Grep
 
