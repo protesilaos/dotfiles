@@ -3983,10 +3983,28 @@ rest have situational uses.
 (prot-emacs-package embark-consult (:install t) (:delay 5))
 #+end_src
 
-*** TODO The =prot-emacs-completion.el= section to configure completion annotations (~marginalia~)
+*** The =prot-emacs-completion.el= section to configure completion annotations (~marginalia~)
 :PROPERTIES:
 :CUSTOM_ID: h:bd3f7a1d-a53d-4d3e-860e-25c5b35d8e7e
 :END:
+
+The ~marginalia~ package, co-authored by Daniel Mendler and Omar
+Antolín Camarena, provides helpful annotations to the side of
+completion candidates. We its effect, for example, when we call =M-x=:
+each command has a brief description next to it (taken from its doc
+string) as well as a key binding, if it has one.
+
+Annotations are provided on a per-category basis. Categories are
+metadata associated with the completion table, which describe what the
+candidates are about. I cover this concept also in my section on
+completion styles where I configure pattern-matching algorithms
+accordingly ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
+
+The out-of-the-box settings of ~marginalia~ are perfectly usable.
+Though there are some categories that I either do not want to annotate
+(like =file=) or that I want to tweak their presentation of. You will
+thus notice how my =prot-marginalia.el= configures the user option
+~marginalia-annotator-registry~ ([[#h:92085a6d-213f-400d-be83-763eb80a3877][The =prot-marginalia.el= library]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Detailed completion annotations (marginalia.el)
