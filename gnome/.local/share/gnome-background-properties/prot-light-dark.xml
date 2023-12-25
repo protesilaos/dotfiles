@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+  <wallpaper deleted="false">
+    <name>Default Prot Background</name>
+    <filename>/home/prot/Pictures/light.jpg</filename>
+    <filename-dark>/home/prot/Pictures/dark.jpg</filename-dark>
+    <options>zoom</options>
+    <shade_type>solid</shade_type>
+    <pcolor>#80c6bb</pcolor>
+    <scolor>#000000</scolor>
+  </wallpaper>
+</wallpapers>
