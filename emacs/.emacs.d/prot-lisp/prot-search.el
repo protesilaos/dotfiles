@@ -293,6 +293,40 @@ Also see `prot-search-grep-todo-keywords'."
          (buf-name (format "*keywords in <%s>*" (buffer-name))))
     (occur-1 prot-search-todo-keywords num (list (current-buffer)) buf-name)))
 
+;;;; Outline
+
+(defun prot-search--get-outline ()
+  "Return alist of outline outline-regexp and positions."
+  (let* ((outline-regexp (format "^\\(?:%s\\)" (or (bound-and-true-p outline-regexp) "[*\^L]+")))
+         (heading-alist (bound-and-true-p outline-heading-alist))
+         (level-fun (or (bound-and-true-p outline-level)
+                        (lambda () ;; as in the default from outline.el
+                          (or (cdr (assoc (match-string 0) heading-alist))
+                              (- (match-end 0) (match-beginning 0))))))
+         candidates)
+    (save-excursion
+      (goto-char (point-min))
+      (while (if (bound-and-true-p outline-search-function)
+                 (funcall outline-search-function)
+               (re-search-forward outline-regexp nil t))
+        (push
+         (format "%s	%s"
+                 (line-number-at-pos (point))
+                 (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+         candidates)
+        (goto-char (1+ (line-end-position)))))
+    (if candidates
+        (nreverse candidates)
+      (user-error "No outline"))))
+
+;;;###autoload
+(defun prot-search-outline ()
+  "Go to the line of the given outline using completion."
+  (interactive)
+  (when-let ((selection (completing-read "Go to outline: " (prot-search--get-outline) nil :require-match))
+             (line (string-to-number (car (split-string selection "\t")))))
+    (goto-line line)))
+
 ;;;; Grep
 
 (defvar prot-search--grep-hist nil

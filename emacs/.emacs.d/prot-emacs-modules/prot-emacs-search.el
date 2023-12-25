@@ -49,6 +49,7 @@
     "M-s u" #'prot-search-occur-urls
     "M-s t" #'prot-search-occur-todo-keywords
     "M-s M-t" #'prot-search-grep-todo-keywords ; With C-u it runs `prot-search-git-grep-todo-keywords'
+    "M-s M-s" #'prot-search-outline
     "M-s M-o" #'prot-search-occur-outline
     "M-s M-u" #'prot-search-occur-browse-url)
   (prot-emacs-keybind isearch-mode-map
