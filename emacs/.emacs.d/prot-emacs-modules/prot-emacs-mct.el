@@ -1,4 +1,4 @@
-;;; Minibuffer and Completions in Tandem
+;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
   (:install t)
@@ -36,6 +36,8 @@ Add this to `completion-list-mode-hook'."
 
   ;; Specify the sorting function.
   (setq completions-sort #'mct-sort-multi-category)
+
+;;;; MCT-like motions for the generic in-buffer completion
 
   (defun prot/mct-next-line-or-completion (n)
     "Select next completion or move to next line N times.

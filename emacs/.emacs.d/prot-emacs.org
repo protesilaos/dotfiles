@@ -4030,10 +4030,28 @@ thus notice how my =prot-marginalia.el= configures the user option
           (unicode-name marginalia-annotate-char))))
 #+end_src
 
-*** TODO The =prot-emacs-completion.el= setting to load a minibuffer UI submodule
+*** The =prot-emacs-completion.el= setting to load a minibuffer UI submodule
 :PROPERTIES:
 :CUSTOM_ID: h:db620e44-fc8f-45b8-a7fd-ae1d0b7ce86c
 :END:
+
+In my =init.el= I define a user option to select a user interface for
+the minibuffer ([[#h:f012a254-2716-4c29-a64b-c2b3df34f57f][The =init.el= option to load a minibuffer user interface]]).
+The choice is between my ~mct~ package and ~vertico~ by Daniel
+Mendler. I think ~vertico~ is the better choice overall and is why I
+set it as the default. Whereas ~mct~ is for users who are more
+familiar with the default minibuffer interface and want a bit more
+interactivity or convenience on top.
+
+Newer versions of Emacs keep receiving MCT-like tweaks to the default
+UI, which means that ~mct~ will eventually be superseded by built-in
+options. Until then, I keep it around in a maintenance-only state for
+those who need it.
+
+Note that due to my particular needs to not display the minibuffer
+eagerly (I do not wish to accidentaly share private details when doing
+a presentation), I configure ~vertico~ to be more "private" and thus
+function as close to ~mct~ as possible.
 
 - [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
 - [[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)]]
@@ -4049,13 +4067,31 @@ thus notice how my =prot-marginalia.el= configures the user option
 (provide 'prot-emacs-completion)
 #+end_src
 
-*** TODO The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)
+*** The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a
 :END:
 
+[ This is subject to a user option: [[#h:db620e44-fc8f-45b8-a7fd-ae1d0b7ce86c][The =prot-emacs-completion.el= setting to load a minibuffer UI submodule]]. ]
+
+The ~mct~ package is my set of tweaks on top of the default minibuffer
+and =*Completions*= interface to make them work as part of a
+contiguous space. It all starts by providing cycling motions from the
+minibuffer to the =*Completions*= and back, as well as a few extras to
+perform the necessary actions. Candidates are updated live to match
+the user input.
+
+With ~mct~ we can specify a passlist of commands or completion
+categories that eagerly display the =*Completions*=. Or we can have a
+blocklist to never display that buffer, unless explicitly requested.
+Overall, ~mct~ is a capable tool with a minimal aesthetic.
+
+Newer versions of Emacs keep gaining MCT-like capabilities, so I
+expect the out-of-the-box experience to eventually supersede my
+package. Until then, I keep it around for those who like it.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mct.el" :mkdirp yes
-;;; Minibuffer and Completions in Tandem
+;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
   (:install t)
@@ -4093,6 +4129,8 @@ Add this to `completion-list-mode-hook'."
 
   ;; Specify the sorting function.
   (setq completions-sort #'mct-sort-multi-category)
+
+;;;; MCT-like motions for the generic in-buffer completion
 
   (defun prot/mct-next-line-or-completion (n)
     "Select next completion or move to next line N times.
