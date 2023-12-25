@@ -234,109 +234,111 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
 
 ;;; Enhanced minibuffer commands (consult.el)
-(prot-emacs-package consult
-  (:install t)
-  (:delay 5)
-  (setq consult-line-numbers-widen t)
-  ;; (setq completion-in-region-function #'consult-completion-in-region)
-  (setq consult-async-min-input 3)
-  (setq consult-async-input-debounce 0.5)
-  (setq consult-async-input-throttle 0.8)
-  (setq consult-narrow-key nil)
-  (setq consult-find-args
-        (concat "find . -not ( "
-                "-path */.git* -prune "
-                "-or -path */.cache* -prune )"))
-  (setq consult-preview-key 'any)
+(when prot-emacs-completion-extras
+  (prot-emacs-package consult
+    (:install t)
+    (:delay 5)
+    (setq consult-line-numbers-widen t)
+    ;; (setq completion-in-region-function #'consult-completion-in-region)
+    (setq consult-async-min-input 3)
+    (setq consult-async-input-debounce 0.5)
+    (setq consult-async-input-throttle 0.8)
+    (setq consult-narrow-key nil)
+    (setq consult-find-args
+          (concat "find . -not ( "
+                  "-path */.git* -prune "
+                  "-or -path */.cache* -prune )"))
+    (setq consult-preview-key 'any)
 
-  (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
+    (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
 
-  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
+    (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
-  (require 'consult-imenu) ; the `imenu' extension is in its own file
+    (require 'consult-imenu) ; the `imenu' extension is in its own file
 
-  (prot-emacs-keybind global-map
-    "M-g M-g" #'consult-goto-line
-    "M-K" #'consult-keep-lines ; M-S-k is similar to M-S-5 (M-%)
-    "M-F" #'consult-focus-lines ; same principle
-    "M-s M-b" #'consult-buffer
-    "M-s M-f" #'consult-find
-    "M-s M-g" #'consult-grep
-    "M-s M-h" #'consult-history
-    "M-s M-i" #'consult-imenu
-    "M-s M-l" #'consult-line
-    "M-s M-m" #'consult-mark
-    "M-s M-y" #'consult-yank-pop
-    "M-s M-s" #'consult-outline)
-  (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
-  (define-key minibuffer-local-map (kbd "C-s") #'consult-history)
+    (prot-emacs-keybind global-map
+      "M-g M-g" #'consult-goto-line
+      "M-K" #'consult-keep-lines ; M-S-k is similar to M-S-5 (M-%)
+      "M-F" #'consult-focus-lines ; same principle
+      "M-s M-b" #'consult-buffer
+      "M-s M-f" #'consult-find
+      "M-s M-g" #'consult-grep
+      "M-s M-h" #'consult-history
+      "M-s M-i" #'consult-imenu
+      "M-s M-l" #'consult-line
+      "M-s M-m" #'consult-mark
+      "M-s M-y" #'consult-yank-pop
+      "M-s M-s" #'consult-outline)
+    (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
+    (define-key minibuffer-local-map (kbd "C-s") #'consult-history)
 
-  (with-eval-after-load 'pulsar
-    ;; see my `pulsar' package: <https://protesilaos.com/emacs/pulsar>
-    (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
-    (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
-      (add-hook 'consult-after-jump-hook fn))))
+    (with-eval-after-load 'pulsar
+      ;; see my `pulsar' package: <https://protesilaos.com/emacs/pulsar>
+      (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
+      (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
+        (add-hook 'consult-after-jump-hook fn)))))
 
 ;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
-(prot-emacs-package embark
-  (:install t)
-  (:delay 5)
-  (setq embark-confirm-act-all nil)
-  (setq embark-mixed-indicator-both nil)
-  (setq embark-mixed-indicator-delay 1.0)
-  (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
-  (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
-  (setq embark-verbose-indicator-buffer-sections '(bindings))
-  (setq embark-verbose-indicator-excluded-actions
-        '(embark-cycle embark-act-all embark-collect embark-export embark-insert))
+(when prot-emacs-completion-extras
+  (prot-emacs-package embark
+    (:install t)
+    (:delay 5)
+    (setq embark-confirm-act-all nil)
+    (setq embark-mixed-indicator-both nil)
+    (setq embark-mixed-indicator-delay 1.0)
+    (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
+    (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
+    (setq embark-verbose-indicator-buffer-sections '(bindings))
+    (setq embark-verbose-indicator-excluded-actions
+          '(embark-cycle embark-act-all embark-collect embark-export embark-insert))
 
-  ;; I never cycle and want to disable the key.  Normally, a nil value
-  ;; disables a key binding but here that value is interpreted as the
-  ;; binding for `embark-act'.  So I just add some obscure key that I
-  ;; do not have.  I absolutely do not want to cycle by accident!
-  (setq embark-cycle-key "<XF86Travel>")
+    ;; I never cycle and want to disable the key.  Normally, a nil value
+    ;; disables a key binding but here that value is interpreted as the
+    ;; binding for `embark-act'.  So I just add some obscure key that I
+    ;; do not have.  I absolutely do not want to cycle by accident!
+    (setq embark-cycle-key "<XF86Travel>")
 
-  ;; I do not want `embark-org' and am not sure what is loading it.
-  ;; So I just unsert all the keymaps...
-  (with-eval-after-load 'embark-org
-    (defvar prot/embark-org-keymaps
-      '(embark-org-table-cell-map
-        embark-org-table-map
-        embark-org-link-copy-map
-        embark-org-link-map
-        embark-org-src-block-map
-        embark-org-item-map
-        embark-org-plain-list-map
-        embark-org-export-in-place-map)
-      "List of Embark keymaps for Org.")
+    ;; I do not want `embark-org' and am not sure what is loading it.
+    ;; So I just unsert all the keymaps...
+    (with-eval-after-load 'embark-org
+      (defvar prot/embark-org-keymaps
+        '(embark-org-table-cell-map
+          embark-org-table-map
+          embark-org-link-copy-map
+          embark-org-link-map
+          embark-org-src-block-map
+          embark-org-item-map
+          embark-org-plain-list-map
+          embark-org-export-in-place-map)
+        "List of Embark keymaps for Org.")
 
-    ;; Reset `prot/embark-org-keymaps'.
-    (seq-do
-     (lambda (keymap)
-       (set keymap (make-sparse-keymap)))
-     prot/embark-org-keymaps)))
+      ;; Reset `prot/embark-org-keymaps'.
+      (seq-do
+       (lambda (keymap)
+         (set keymap (make-sparse-keymap)))
+       prot/embark-org-keymaps)))
 
-(prot-emacs-package prot-embark
-  (:delay 5)
-  (setq embark-keymap-alist
-        '((buffer prot-embark-buffer-map)
-          (command prot-embark-command-map)
-          (expression prot-embark-expression-map)
-          (file prot-embark-file-map)
-          (function prot-embark-function-map)
-          (identifier prot-embark-identifier-map)
-          (package prot-embark-package-map)
-          (region prot-embark-region-map)
-          (symbol prot-embark-symbol-map)
-          (url prot-embark-url-map)
-          (variable prot-embark-variable-map)
-          (t embark-general-map)))
+  (prot-emacs-package prot-embark
+    (:delay 5)
+    (setq embark-keymap-alist
+          '((buffer prot-embark-buffer-map)
+            (command prot-embark-command-map)
+            (expression prot-embark-expression-map)
+            (file prot-embark-file-map)
+            (function prot-embark-function-map)
+            (identifier prot-embark-identifier-map)
+            (package prot-embark-package-map)
+            (region prot-embark-region-map)
+            (symbol prot-embark-symbol-map)
+            (url prot-embark-url-map)
+            (variable prot-embark-variable-map)
+            (t embark-general-map)))
 
-  (mapc
-   (lambda (map)
-     (define-key map (kbd "C-,") #'prot-embark-act-no-quit)
-     (define-key map (kbd "C-.") #'prot-embark-act-quit))
-   (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map)))
+    (mapc
+     (lambda (map)
+       (define-key map (kbd "C-,") #'prot-embark-act-no-quit)
+       (define-key map (kbd "C-.") #'prot-embark-act-quit))
+     (list global-map embark-collect-mode-map minibuffer-local-filename-completion-map))))
 
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
