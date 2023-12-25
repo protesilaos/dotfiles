@@ -63,6 +63,7 @@
     "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
     "C-h F" #'describe-face ; overrides `Info-goto-emacs-command-node'
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
+    "C-h u" #'apropos-user-option
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
     "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
 
