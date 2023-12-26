@@ -103,26 +103,35 @@ The DWIM behaviour of this command is as follows:
    (t
     (keyboard-quit))))
 
-(autoload 'symbol-at-point "thingatpt")
+;; DEPRECATED 2023-12-26: I have not used `prot-simple-describe-symbol'
+;; since a very long time.  The idea is fine, but having a key binding
+;; to provide a shortcut for C-h o RET is wasteful.
 
-;;;###autoload
-(defun prot-simple-describe-symbol ()
-  "Run `describe-symbol' for the `symbol-at-point'."
-  (interactive)
-  (describe-symbol (symbol-at-point)))
+;; (autoload 'symbol-at-point "thingatpt")
+;;
+;; ;;;###autoload
+;; (defun prot-simple-describe-symbol ()
+;;   "Run `describe-symbol' for the `symbol-at-point'."
+;;   (interactive)
+;;   (describe-symbol (symbol-at-point)))
 
-(declare-function help--symbol-completion-table "help-fns" (string pred action))
+;; DEPRECATED 2023-12-26: The `prot-simple-goto-definition' is a good
+;; idea but it needs more work.  Ultimately though, it is easier to
+;; just produce a Help buffer and just go to the source from there by
+;; typing 's'.
 
-;;;###autoload
-(defun prot-simple-goto-definition (symbol)
-  "Prompt for SYMBOL and go to its source.
-When called from Lisp, SYMBOL is a string."
-  (interactive
-   (list
-    (completing-read "Go to source of SYMBOL: "
-                     #'help--symbol-completion-table
-                     nil :require-match)))
-  (xref-find-definitions symbol))
+;; (declare-function help--symbol-completion-table "help-fns" (string pred action))
+;;
+;; ;;;###autoload
+;; (defun prot-simple-goto-definition (symbol)
+;;   "Prompt for SYMBOL and go to its source.
+;; When called from Lisp, SYMBOL is a string."
+;;   (interactive
+;;    (list
+;;     (completing-read "Go to source of SYMBOL: "
+;;                      #'help--symbol-completion-table
+;;                      nil :require-match)))
+;;   (xref-find-definitions symbol))
 
 ;; DEPRECATED 2023-12-26: I have no need for these commands.  I was
 ;; just experimenting with a simple implementation.  It is not robust.
@@ -130,7 +139,7 @@ When called from Lisp, SYMBOL is a string."
 ;; instead.
 
 ;; (autoload 'number-at-point "thingatpt")
-;; 
+;;
 ;; (defun prot-simple--number-operate (number amount operation)
 ;;   "Perform OPERATION on NUMBER given AMOUNT and return the result.
 ;; OPERATION is the keyword `:increment' or `:decrement' to perform
@@ -141,7 +150,7 @@ When called from Lisp, SYMBOL is a string."
 ;;                 (:decrement #'-)
 ;;                 (_ (user-error "Unknown operation `%s' for number `%s'" operation number)))))
 ;;       (funcall fn number amount))))
-;; 
+;;
 ;; (defun prot-simple--number-replace (number amount operation)
 ;;   "Perform OPERATION on NUMBER at point by AMOUNT."
 ;;   (when-let ((bounds (bounds-of-thing-at-point 'number))
@@ -149,7 +158,7 @@ When called from Lisp, SYMBOL is a string."
 ;;     (delete-region (car bounds) (cdr bounds))
 ;;     (save-excursion
 ;;       (insert (number-to-string replacement)))))
-;; 
+;;
 ;; ;;;###autoload
 ;; (defun prot-simple-number-increment (number amount)
 ;;   "Increment NUMBER by AMOUNT.
@@ -160,7 +169,7 @@ When called from Lisp, SYMBOL is a string."
 ;;     (number-at-point)
 ;;     (prefix-numeric-value current-prefix-arg)))
 ;;   (prot-simple--number-replace number amount :increment))
-;; 
+;;
 ;; ;;;###autoload
 ;; (defun prot-simple-number-decrement (number amount)
 ;;   "Decrement NUMBER by AMOUNT.

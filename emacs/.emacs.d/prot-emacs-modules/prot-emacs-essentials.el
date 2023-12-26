@@ -59,8 +59,6 @@
     "C-z" prot-prefix-map
     "<f2>" prot-prefix-map ; override that two-column gimmick
     "C-g" #'prot-simple-keyboard-quit-dwim
-    "C-x ." #'prot-simple-goto-definition ; overrides `set-fill-prefix'
-    "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
     "C-h u" #'apropos-user-option
     "C-h F" #'apropos-function ; lower case is `describe-function'
