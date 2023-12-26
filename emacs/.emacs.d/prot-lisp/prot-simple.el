@@ -67,14 +67,16 @@ Used by `prot-simple-inset-date'."
 (defun prot-simple-mark-sexp ()
   "Mark symbolic expression at or near point.
 Repeat to extend the region forward to the next symbolic
-expression.  If inside a string, mark the entire string upon
-repeat."
+expression."
   (interactive)
   (if (eq last-command this-command)
-      (if-let ((bounds (bounds-of-thing-at-point 'string)))
-          (prot-simple--mark bounds)
-        (ignore-errors (forward-sexp 1)))
-    (prot-simple--mark (bounds-of-thing-at-point 'sexp))))
+      (ignore-errors (forward-sexp 1))
+    (let ((thing (cond
+                  ((thing-at-point 'url) 'url)
+                  ((thing-at-point 'sexp) 'sexp)
+                  ((thing-at-point 'string) 'string)
+                  (t 'word))))
+      (prot-simple--mark (bounds-of-thing-at-point thing)))))
 
 ;;;###autoload
 (defun prot-simple-keyboard-quit-dwim ()
