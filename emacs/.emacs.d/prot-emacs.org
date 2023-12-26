@@ -2435,9 +2435,11 @@ earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.e
     "C-g" #'prot-simple-keyboard-quit-dwim
     "C-x ." #'prot-simple-goto-definition ; overrides `set-fill-prefix'
     "C-h ." #'prot-simple-describe-symbol ; overrides `display-local-help'
-    "C-h F" #'describe-face ; overrides `Info-goto-emacs-command-node'
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
     "C-h u" #'apropos-user-option
+    "C-h F" #'apropos-function ; lower case is `describe-function'
+    "C-h V" #'apropos-variable ; lower case is `describe-variable'
+    "C-h L" #'apropos-library ; lower case is `view-lossage'
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
     "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
 
