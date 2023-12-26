@@ -3014,6 +3014,8 @@ to be cycling through the edits."
     (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))
 #+end_src
 
+*** TODO The =prot-emacs-essentials.el= section about ~tmr~ (set timers)
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
@@ -3036,6 +3038,8 @@ to be cycling through the edits."
     "C-c t R" #'tmr-remove-finished))
 #+end_src
 
+*** TODO The =prot-emacs-essentials.el= section about ~password-store~
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Pass interface (password-store)
 (prot-emacs-package password-store
@@ -3048,6 +3052,8 @@ to be cycling through the edits."
 
 (prot-emacs-package pass (:install t) (:delay 5))
 #+end_src
+
+*** TODO The =prot-emacs-essentials.el= section about ~shell~
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Shell (M-x shell)
@@ -3111,6 +3117,8 @@ to be cycling through the edits."
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 #+end_src
 
+*** TODO The =prot-emacs-essentials.el= section about the laptop battery
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Laptop settings
 (unless (directory-empty-p "/sys/class/power_supply/")
@@ -3130,6 +3138,8 @@ to be cycling through the edits."
 
     (display-battery-mode 1)))
 #+end_src
+
+*** TODO The =prot-emacs-essentials.el= section about ~exec-path-from-shell~
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Get environment variables into Emacs (exec-path-from-shell) while on Wayland
