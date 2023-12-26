@@ -339,28 +339,20 @@ word.  Fall back to regular `expreg-expand'."
 
   (define-key global-map (kbd "C-?") #'vundo) ; override `undo-redo'
 
-  ;; Check: <https://github.com/casouri/vundo/pull/74>.
-  (defvar prot/vundo-diff-buffer-window nil
-    "Window object of `prot/vundo-diff-buffer'.")
+  (defun prot/vundo-if-repeat-undo ()
+    "Use `vundo' if the last command was an `undo'.
+In other words, start visualising the undo ring if we are going
+to be cycling through the edits."
+    (interactive)
+    (call-interactively
+    (if (eq last-command 'undo)
+        'vundo
+      'undo)))
 
-  (defun prot/vundo-quit-diff-window ()
-    "Quit `prot/vundo-diff-buffer-window' if it is live.
-Assign this function to the `vundo-post-exit-hook'."
-    (when (and prot/vundo-diff-buffer-window
-               (window-live-p prot/vundo-diff-buffer-window))
-      (quit-window nil prot/vundo-diff-buffer-window)
-      (setq prot/vundo-diff-buffer-window nil)))
+  (define-key global-map (kbd "C-/") #'prot/vundo-if-repeat-undo) ; override `undo'
 
-  (defun prot/vundo-diff-buffer (buffer)
-    "Diff BUFFER with its underlying file, if possible.
-Assign this to `vundo-after-undo-functions'.  BUFFER is provided
-by that special hook."
-    (when (buffer-file-name buffer)
-      (with-current-buffer (window-buffer (diff-buffer-with-file buffer))
-        (setq prot/vundo-diff-buffer-window (get-buffer-window)))))
-
-  (add-hook 'vundo-after-undo-functions #'prot/vundo-diff-buffer)
-  (add-hook 'vundo-post-exit-hook #'prot/vundo-quit-diff-window))
+  (with-eval-after-load 'pulsar
+    (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
