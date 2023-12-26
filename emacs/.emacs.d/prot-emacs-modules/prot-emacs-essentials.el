@@ -68,11 +68,6 @@
     "C-h L" #'apropos-library ; lower case is `view-lossage'
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
     "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
-
-    ;; ;; NOTE 2023-12-17: I am not happy with these.  Will rewrite them.
-    ;; "C-c +" #'prot-simple-number-increment
-    ;; "C-c -" #'prot-simple-number-decrement
-
     ;; Commands for lines
     "M-o" #'delete-blank-lines   ; alias for C-x C-o
     "M-k" #'prot-simple-kill-line-backward

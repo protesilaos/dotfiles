@@ -2442,11 +2442,6 @@ earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.e
     "C-h L" #'apropos-library ; lower case is `view-lossage'
     "C-h c" #'describe-char ; overrides `describe-key-briefly'
     "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
-
-    ;; ;; NOTE 2023-12-17: I am not happy with these.  Will rewrite them.
-    ;; "C-c +" #'prot-simple-number-increment
-    ;; "C-c -" #'prot-simple-number-decrement
-
     ;; Commands for lines
     "M-o" #'delete-blank-lines   ; alias for C-x C-o
     "M-k" #'prot-simple-kill-line-backward
@@ -12690,48 +12685,53 @@ When called from Lisp, SYMBOL is a string."
                      nil :require-match)))
   (xref-find-definitions symbol))
 
-(autoload 'number-at-point "thingatpt")
+;; DEPRECATED 2023-12-26: I have no need for these commands.  I was
+;; just experimenting with a simple implementation.  It is not robust.
+;; I can fix it, but I will still not use it, so I am deprecating it
+;; instead.
 
-(defun prot-simple--number-operate (number amount operation)
-  "Perform OPERATION on NUMBER given AMOUNT and return the result.
-OPERATION is the keyword `:increment' or `:decrement' to perform
-`1+' or `1-', respectively."
-  (when (and (numberp number) (numberp amount))
-    (let ((fn (pcase operation
-                (:increment #'+)
-                (:decrement #'-)
-                (_ (user-error "Unknown operation `%s' for number `%s'" operation number)))))
-      (funcall fn number amount))))
-
-(defun prot-simple--number-replace (number amount operation)
-  "Perform OPERATION on NUMBER at point by AMOUNT."
-  (when-let ((bounds (bounds-of-thing-at-point 'number))
-             (replacement (prot-simple--number-operate number amount operation)))
-    (delete-region (car bounds) (cdr bounds))
-    (save-excursion
-      (insert (number-to-string replacement)))))
-
-;;;###autoload
-(defun prot-simple-number-increment (number amount)
-  "Increment NUMBER by AMOUNT.
-When called interactively, NUMBER is the one at point, while
-AMOUNT is either 1 or that of a number prefix argument."
-  (interactive
-   (list
-    (number-at-point)
-    (prefix-numeric-value current-prefix-arg)))
-  (prot-simple--number-replace number amount :increment))
-
-;;;###autoload
-(defun prot-simple-number-decrement (number amount)
-  "Decrement NUMBER by AMOUNT.
-When called interactively, NUMBER is the one at point, while
-AMOUNT is either 1 or that of a number prefix argument."
-  (interactive
-   (list
-    (number-at-point)
-    (prefix-numeric-value current-prefix-arg)))
-  (prot-simple--number-replace number amount :decrement))
+;; (autoload 'number-at-point "thingatpt")
+;; 
+;; (defun prot-simple--number-operate (number amount operation)
+;;   "Perform OPERATION on NUMBER given AMOUNT and return the result.
+;; OPERATION is the keyword `:increment' or `:decrement' to perform
+;; `1+' or `1-', respectively."
+;;   (when (and (numberp number) (numberp amount))
+;;     (let ((fn (pcase operation
+;;                 (:increment #'+)
+;;                 (:decrement #'-)
+;;                 (_ (user-error "Unknown operation `%s' for number `%s'" operation number)))))
+;;       (funcall fn number amount))))
+;; 
+;; (defun prot-simple--number-replace (number amount operation)
+;;   "Perform OPERATION on NUMBER at point by AMOUNT."
+;;   (when-let ((bounds (bounds-of-thing-at-point 'number))
+;;              (replacement (prot-simple--number-operate number amount operation)))
+;;     (delete-region (car bounds) (cdr bounds))
+;;     (save-excursion
+;;       (insert (number-to-string replacement)))))
+;; 
+;; ;;;###autoload
+;; (defun prot-simple-number-increment (number amount)
+;;   "Increment NUMBER by AMOUNT.
+;; When called interactively, NUMBER is the one at point, while
+;; AMOUNT is either 1 or that of a number prefix argument."
+;;   (interactive
+;;    (list
+;;     (number-at-point)
+;;     (prefix-numeric-value current-prefix-arg)))
+;;   (prot-simple--number-replace number amount :increment))
+;; 
+;; ;;;###autoload
+;; (defun prot-simple-number-decrement (number amount)
+;;   "Decrement NUMBER by AMOUNT.
+;; When called interactively, NUMBER is the one at point, while
+;; AMOUNT is either 1 or that of a number prefix argument."
+;;   (interactive
+;;    (list
+;;     (number-at-point)
+;;     (prefix-numeric-value current-prefix-arg)))
+;;   (prot-simple--number-replace number amount :decrement))
 
 ;;;; Commands for lines
 
