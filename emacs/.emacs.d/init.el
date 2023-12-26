@@ -39,7 +39,10 @@ before all other modules of my setup."
 
 (defcustom prot-emacs-completion-extras t
   "When non-nil load extras for minibuffer completion.
-These include the `consult' and `embark' packages."
+These include packages such as `consult' and `embark'."
+  :group 'prot-emacs
+  :type 'boolean)
+
   :group 'prot-emacs
   :type 'boolean)
 

@@ -617,10 +617,16 @@ these features can set the option for nil.
 - [[#h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d][The =prot-emacs-completion.el= settings for ~consult~]]
 - [[#h:61863da4-8739-42ae-a30f-6e9d686e1995][The =prot-emacs-completion.el= section about ~embark~]]
 
+Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
+
 #+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-completion-extras t
   "When non-nil load extras for minibuffer completion.
-These include the `consult' and `embark' packages."
+These include packages such as `consult' and `embark'."
+  :group 'prot-emacs
+  :type 'boolean)
+#+end_src
+
   :group 'prot-emacs
   :type 'boolean)
 #+end_src
