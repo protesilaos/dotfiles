@@ -311,7 +311,7 @@
     "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 
 ;;; Mark syntactic constructs efficiently if tree-sitter is available (expreg)
-(when (treesit-available-p)
+(when (and (treesit-available-p) prot-emacs-treesitter-extras)
   (prot-emacs-package expreg
     (:install t)
     (:delay 10)

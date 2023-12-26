@@ -627,6 +627,22 @@ These include packages such as `consult' and `embark'."
   :type 'boolean)
 #+end_src
 
+*** The =init.el= user option to load treesitter extras
+:PROPERTIES:
+:CUSTOM_ID: h:32703a47-edff-47a8-b275-3cb5b9f9e244
+:END:
+
+I configure Emacs to support the ~tree-sitter~ program, though I do
+not use anything that leverages it. I either code in Emacs Lisp or
+write prose. This user option
+
+Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
+
+#+begin_src emacs-lisp :tangle "init.el"
+(defcustom prot-emacs-treesitter-extras t
+  "When non-nil load extras for tree-sitter integration
+These include packages such as `expreg' and generally anything
+that adds functionality on top of what the major mode provides."
   :group 'prot-emacs
   :type 'boolean)
 #+end_src
@@ -2916,7 +2932,8 @@ binding is taken by ~prot-simple-mark-sexp~ which is similar in spirit
 ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
 
 For me, ~expreg~ is mostly an investment into the future, as I am
-monitoring developments on the tree-sitter front.
+monitoring developments on the tree-sitter front. My setup provides a
+user option to not load such tree-sitter extras ([[#h:32703a47-edff-47a8-b275-3cb5b9f9e244][The =init.el= user option to load treesitter extras]]).
 
 Note that in the code block below I define two small commands. Custom
 code belong in libraries, though not in cases where it is ad-hoc like
@@ -2924,7 +2941,7 @@ this ([[#h:fc1ea247-5ef6-4c4e-a807-6c7b2482af90][The custom libraries of my conf
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Mark syntactic constructs efficiently if tree-sitter is available (expreg)
-(when (treesit-available-p)
+(when (and (treesit-available-p) prot-emacs-treesitter-extras)
   (prot-emacs-package expreg
     (:install t)
     (:delay 10)

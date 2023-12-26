@@ -43,6 +43,10 @@ These include packages such as `consult' and `embark'."
   :group 'prot-emacs
   :type 'boolean)
 
+(defcustom prot-emacs-treesitter-extras t
+  "When non-nil load extras for tree-sitter integration
+These include packages such as `expreg' and generally anything
+that adds functionality on top of what the major mode provides."
   :group 'prot-emacs
   :type 'boolean)
 
