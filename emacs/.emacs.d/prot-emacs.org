@@ -3230,10 +3230,20 @@ Now the actual configurations:
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 #+end_src
 
-*** TODO The =prot-emacs-essentials.el= section about the laptop battery
+*** The =prot-emacs-essentials.el= section about the laptop-specific settings
 :PROPERTIES:
 :CUSTOM_ID: h:080aa291-95b4-4d54-8783-d156b13190e9
 :END:
+
+Due to my limited electricity setup, I spend about half my computer
+time on the laptop ([[#h:5668958c-2fc0-4a38-bd1f-3e0c6484977d][What hardware and software do you use?]]). It does
+not add to the load that my solar-powered batteries have to handle and
+I can thus keep the lights on until ~21:00.
+
+When I am working on my laptop, I want to make a few tweaks to the
+default dimensions of Emacs frames ([[#h:0403b581-142b-4613-bc81-51c5dccd831d][The =early-init.el= code to set frame parameters]]).
+I also arrange for the battery indicator to be displayed on the mode
+line.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Laptop settings
