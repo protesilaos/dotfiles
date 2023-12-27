@@ -3045,6 +3045,9 @@ to be cycling through the edits."
 #+end_src
 
 *** TODO The =prot-emacs-essentials.el= section about ~password-store~
+:PROPERTIES:
+:CUSTOM_ID: h:aac21cc5-19eb-4a6c-a8ab-01b829df0d64
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Pass interface (password-store)
@@ -3060,6 +3063,9 @@ to be cycling through the edits."
 #+end_src
 
 *** TODO The =prot-emacs-essentials.el= section about ~shell~
+:PROPERTIES:
+:CUSTOM_ID: h:7c25e281-d92e-4605-b5d6-18fe1f280a73
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Shell (M-x shell)
@@ -3124,6 +3130,9 @@ to be cycling through the edits."
 #+end_src
 
 *** TODO The =prot-emacs-essentials.el= section about the laptop battery
+:PROPERTIES:
+:CUSTOM_ID: h:080aa291-95b4-4d54-8783-d156b13190e9
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Laptop settings
@@ -3146,6 +3155,9 @@ to be cycling through the edits."
 #+end_src
 
 *** TODO The =prot-emacs-essentials.el= section about ~exec-path-from-shell~
+:PROPERTIES:
+:CUSTOM_ID: h:f2447060-5d89-48d5-a682-5cfc76e0928e
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Get environment variables into Emacs (exec-path-from-shell) while on Wayland
