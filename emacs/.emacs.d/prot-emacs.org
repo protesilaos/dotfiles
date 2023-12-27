@@ -3020,7 +3020,29 @@ to be cycling through the edits."
     (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))
 #+end_src
 
-*** TODO The =prot-emacs-essentials.el= section about ~tmr~ (set timers)
+*** The =prot-emacs-essentials.el= section about ~tmr~ (set timers)
+:PROPERTIES:
+:CUSTOM_ID: h:6dce278e-86c7-4620-9271-d5af5499f0cc
+:END:
+
+This is a package that I wrote and for which I received substantial
+code contributions from Damien Cassou and Daniel Mendler. With ~tmr~
+we set timers using a convenient notation. The point of entry is the
+~tmr~ command (or ~tmr-with-description~ if you want to describe what
+the timer is about).
+
+Set  a timer by specifying one of these:
+
+| Input | Meaning              |
+|-------+----------------------|
+| 5     | 5 Minutes from now   |
+| 5m    | Same as abovre       |
+| 1h    | 1 hour from now      |
+| 06:35 | From now until 06:35 |
+
+To view the running timers in a tabulated list, invoke the command
+~tmr-tabulated-view~. From there, type =C-h m= (or =M-x describe-mode=)
+to learn about all the available commands and their respective key bindings.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; TMR May Ring (tmr is used to set timers)
