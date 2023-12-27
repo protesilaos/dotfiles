@@ -3103,10 +3103,70 @@ easy to retrieve what I need.
 (prot-emacs-package pass (:install t) (:delay 5))
 #+end_src
 
-*** TODO The =prot-emacs-essentials.el= section about ~shell~
+*** The =prot-emacs-essentials.el= section about ~shell~
 :PROPERTIES:
 :CUSTOM_ID: h:7c25e281-d92e-4605-b5d6-18fe1f280a73
 :END:
+
+Before using Emacs, I did not have a clear idea of what the
+distinction between a "shell" and a "terminal" is. But I quickly
+learnt that a terminal ("terminal emulator") is an application that
+provides a text-centric interface and handles all the technicalities
+of presenting text accordingly. Whereas the "shell" (or "command-line
+shell") is the program that runs inside the terminal whose job is to
+interpret the user's input and communicate with the computer.
+Something like ~xterm~ or ~gnome-terminal~ is a terminal. While the
+likes of ~bash~, ~zsh~, and ~fish~ are shells.
+
+In Emacs we can have both. Emacs can run a process that constitutes a
+fully fledged terminal emulator, such as with the ~vterm~ package, or
+it can provide the interface necessary for a mere shell to handle the
+command-line interactivity.
+
+A terminal emulator is only needed if we use programs that require
+Terminal User Interface (TUI) capabilities, such as ~htop~. I do not
+run any of those, in large part because Emacs has better or equally
+capable alternatives like =M-x proced= to do what ~htop~ does in the
+terminal ([[#h:14d40e5a-327e-453e-861c-3ece24351d62][The =prot-emacs-essentials.el= settings for ~proced~]]).
+
+With the TUI out of the way, we can have =M-x shell= run a native Unix
+shell for us. Mine is ~bash~ because I am a simpleton, but also
+because my =prot-shell.el= provides a few niceties that improve the
+user experience ([[#h:32f6fe0f-23c4-44cc-97cc-3e5372bd484e][The =prot-shell.el= library]]).
+
+I run a shell to do tihngs like interface with my system's package
+manager or run a program with some flags. =M-x shell= is more than
+enough for this purppose.
+
+Note that there also exists a shell implemented in Emacs Lisp. It is
+called ~eshell~. Unlike ~shell~, it does not read the =~/.bashrc= and
+is its own little Emacs-only thing with its own command-line syntax.
+In short, it is "okay" in a vacuum but I have no use for it beside
+tinkering with Elisp, while I prefer to have a reliable =~/.bashrc= at
+all times. As such, the ~eshell~ command is on the list of disabled
+commands ([[#h:4ed6593f-6f55-4258-a1c2-ddb50e9e2465][The =init.el= settings to enable certain commands and disable others]]).
+
+My ~prot-shell-mode~ defines a few extra key bindings (per the
+~prot-shell-mode-map~) and also implements a bookmark handler for
+shell buffers ([[#h:581aa0ff-b136-4099-a321-3b86edbfbccb][The =prot-emacs-essentials.el= settings for bookmarks]]).
+The bookmarking functionality is a wonderful extra, as it leverages
+Emacs' TRAMP infrastructure to re-establish the connection to the
+given host. For example, if I do =M-x find-file= and then input
+=/sudo::/usr/share/= to go to =/usr/share/= with =sudo= privileges,
+then I can open a shell there and bookmark it. When I jump back to the
+bookmark, Emacs will automatically handle the =sudo= part while taking
+me to that shell in its directory. Relevant note from my source code:
+
+#+begin_example emacs-lisp
+;; NOTE 2023-08-18: I sent this to the Emacs maintainers as a patch
+;; (bug#65039).  I received approval to proceed with the change, but I
+;; did not do it because a user reported an issue with SSH (TRAMP).  I
+;; do not have access to SSH and am not familiar with such workflows.
+;; If/when that changes, I will try again.  In the meantime, this is
+;; good code and it works for me.
+#+end_example
+
+Now the actual configurations:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Shell (M-x shell)
