@@ -3066,10 +3066,29 @@ to learn about all the available commands and their respective key bindings.
     "C-c t R" #'tmr-remove-finished))
 #+end_src
 
-*** TODO The =prot-emacs-essentials.el= section about ~password-store~
+*** The =prot-emacs-essentials.el= section about ~password-store~
 :PROPERTIES:
 :CUSTOM_ID: h:aac21cc5-19eb-4a6c-a8ab-01b829df0d64
 :END:
+
+The ~pass~ program (aka =password-store=) is a Unix-style password
+manager. Each password entry is its own encrypted file, stored in a
+local directory (=~/.password-store=, by default). Encryption is done
+with GPG, though I believe Age can also be used. It can generate
+strong passwords and allows us to quickly retrieve the password
+associated with a given file.
+
+The Emacs interface makes it easy to access passowrds with =M-x pass=.
+The resulting buffer shows a tree representation of the =~/.password-store=
+and provides an overview of the available key bindings. From here we
+can write a new entry, generate a password for an existing one, and so
+on.
+
+My most common interaction with it is via the command ~password-store-copy~
+which uses minibuffer completion to match an entry and get the
+password from it. On this note, I have a convention of naming password
+files based on their scope, like =username@website=. This makes it
+easy to retrieve what I need.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Pass interface (password-store)
