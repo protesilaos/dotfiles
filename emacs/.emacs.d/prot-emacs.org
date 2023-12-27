@@ -2977,8 +2977,13 @@ prefer nothing to pop up unless it is necessary. To this end, my
 command ~prot/vundo-if-repeat-undo~ produces a visualisation of the
 undo steps only after I repeat the ~undo~ command. The assumption is
 that if I am repeating, I am already interested in something further
-back in history, at which point having a representation of it is very
+back in history, at which point having a representation of it is
 helpful.
+
+To make this feel natural, I bind keys in the ~vundo-mode-map~ that
+are consistent with the defaults for ~undo~ and ~undo-redo~. This way,
+I can keep operating on the buffer without switching contexts. The
+visualisation is a nice extra ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891d9][The =init.el= macro to bind keys (~prot-emacs-keybind~)]]).
 
 I did contribute to the ~vundo~ package a while ago to define the
 ~vundo-after-undo-functions~. This was an abnormal hook that we could
@@ -2996,8 +3001,6 @@ to pulse the region.
   (:delay 30)
   (setq vundo-glyph-alist vundo-unicode-symbols)
 
-  (define-key global-map (kbd "C-?") #'vundo) ; override `undo-redo'
-
   (defun prot/vundo-if-repeat-undo ()
     "Use `vundo' if the last command was an `undo'.
 In other words, start visualising the undo ring if we are going
@@ -3009,6 +3012,9 @@ to be cycling through the edits."
       'undo)))
 
   (define-key global-map (kbd "C-/") #'prot/vundo-if-repeat-undo) ; override `undo'
+  (prot-emacs-keybind vundo-mode-map
+    "C-/" #'vundo-backward
+    "C-?" #'vundo-forward)
 
   (with-eval-after-load 'pulsar
     (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))

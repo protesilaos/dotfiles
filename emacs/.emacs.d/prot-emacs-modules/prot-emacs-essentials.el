@@ -337,8 +337,6 @@ word.  Fall back to regular `expreg-expand'."
   (:delay 30)
   (setq vundo-glyph-alist vundo-unicode-symbols)
 
-  (define-key global-map (kbd "C-?") #'vundo) ; override `undo-redo'
-
   (defun prot/vundo-if-repeat-undo ()
     "Use `vundo' if the last command was an `undo'.
 In other words, start visualising the undo ring if we are going
@@ -350,6 +348,9 @@ to be cycling through the edits."
       'undo)))
 
   (define-key global-map (kbd "C-/") #'prot/vundo-if-repeat-undo) ; override `undo'
+  (prot-emacs-keybind vundo-mode-map
+    "C-/" #'vundo-backward
+    "C-?" #'vundo-forward)
 
   (with-eval-after-load 'pulsar
     (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))
