@@ -3265,10 +3265,16 @@ line.
     (display-battery-mode 1)))
 #+end_src
 
-*** TODO The =prot-emacs-essentials.el= section about ~exec-path-from-shell~
+*** The =prot-emacs-essentials.el= section about ~exec-path-from-shell~
 :PROPERTIES:
 :CUSTOM_ID: h:f2447060-5d89-48d5-a682-5cfc76e0928e
 :END:
+
+The ~exec-path-from-shell~ package by Steve Purcell gets environment
+variables from the system shell and makes them available to Emacs. I
+have found that I need this while running on Wayland to properly use
+SSH, but maybe I can do without it if I tweak a few things in
+=~/.config/environment.d=envvars.conf=... I will check.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Get environment variables into Emacs (exec-path-from-shell) while on Wayland
