@@ -3286,7 +3286,17 @@ SSH, but maybe I can do without it if I tweak a few things in
     (setq exec-path-from-shell-variables
           '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
     (exec-path-from-shell-initialize)))
+#+end_src
 
+*** The =prot-emacs-essentials.el= call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:c8b2f021-fe5a-4f6b-944c-20340f764fb2
+:END:
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 (provide 'prot-emacs-essentials)
 #+end_src
 
