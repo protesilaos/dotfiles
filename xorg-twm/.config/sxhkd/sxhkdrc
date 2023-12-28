@@ -63,9 +63,10 @@ mod4 + Delete
 mod4 + {_, shift +,ctrl + shift + } Return
     {uxterm,emacsclient -w 2 -a "" -e "(prot-window-shell)",emacsclient -w 2 -a "" -e "(prot-window-coach)"}
 
-# Custom dmenu app launcher script
-mod4 + d
-    my_dmenu_run_history
+# Show the desired rofi views for "buffers" (windows) and desktop
+# applications.
+mod4 + {b,d}
+    rofi -show {window,drun}
 
 #### Miscellaneous tools and media keys
 
