@@ -4310,6 +4310,10 @@ Newer versions of Emacs keep gaining MCT-like capabilities, so I
 expect the out-of-the-box experience to eventually supersede my
 package. Until then, I keep it around for those who like it.
 
+Note that I normally use ~vertico~ in my setup, but configure it to
+behave similar to what I have here for ~mct~, meaning that it does not
+pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mct.el" :mkdirp yes
 ;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
@@ -4336,10 +4340,34 @@ package. Until then, I keep it around for those who like it.
 #+end_src
 
 
-*** TODO The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)
+*** The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:cff33514-d3ac-4c16-a889-ea39d7346dc5
 :END:
+
+[ This is subject to a user option: [[#h:db620e44-fc8f-45b8-a7fd-ae1d0b7ce86c][The =prot-emacs-completion.el= setting to load a minibuffer UI submodule]]. ]
+
+The ~vertico~ package by Daniel Mendler displays the minibuffer in a
+vertical layout. Under the hood, it takes care to be responsive and to
+handle even massive completion tables gracefully. Whereas, say, the
+built-in completion user interface (and thus ~mct~) will suffer from a
+noticeable performance penalty.
+
+All we need to get a decent experience with ~vertico~ is to enable the
+~vertico-mode~. For most users this is enough. In my case though, I
+have to use the "multiform" mechanism of this package to make it not
+show up eagerly. I do this as I frequently to control what I am
+displaying while doing a presentation. As such, the overall experience
+I get with ~vertico~ is the same as with ~mct~, albeit with better
+performance ([[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]).
+
+Beside what I am using it for, the "multiform" mechanism allows us to
+change the layout of ~vertico~ on a per-command or per-category basis.
+We can, for instance, have a horizontal presentation for some items. I
+have tried this for a while, but ultimately decided to go with a more
+predictable scheme.
+
+The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e950927d][the =prot-vertico.el= library]].
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-vertico.el" :mkdirp yes
 ;;; Vertical completion layout
