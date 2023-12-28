@@ -244,6 +244,16 @@ tools (e.g. `embark')."
         `(metadata (category . ,category))
       (complete-with-action action candidates string pred))))
 
+;;;###autoload
+(defun prot-common-completion-table-no-sort (category candidates)
+  "Pass appropriate metadata CATEGORY to completion CANDIDATES.
+Like `prot-common-completion-table' but also disable sorting."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (category . ,category)
+                   (display-sort-function . ,#'identity))
+      (complete-with-action action candidates string pred))))
+
 ;; Thanks to Igor Lima for the `prot-common-crm-exclude-selected-p':
 ;; <https://github.com/0x462e41>.
 ;; This is used as a filter predicate in the relevant prompts.

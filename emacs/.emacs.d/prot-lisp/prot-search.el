@@ -319,6 +319,13 @@ Also see `prot-search-grep-todo-keywords'."
         (nreverse candidates)
       (user-error "No outline"))))
 
+(defun prot-search--outline-prompt ()
+  "Prompt for outline among headings retrieved by `prot-search--get-outline'."
+  (completing-read
+   "Go to outline: "
+   (prot-common-completion-table-no-sort 'imenu (prot-search--get-outline))
+   nil :require-match))
+
 (defvar prot-search-outline-hook nil
   "Normal hook to run at the end of `prot-search-outline'.")
 
@@ -326,7 +333,7 @@ Also see `prot-search-grep-todo-keywords'."
 (defun prot-search-outline ()
   "Go to the line of the given outline using completion."
   (interactive)
-  (when-let ((selection (completing-read "Go to outline: " (prot-search--get-outline) nil :require-match))
+  (when-let ((selection (prot-search--outline-prompt))
              (line (string-to-number (car (split-string selection "\t")))))
     (goto-line line)
     (run-hooks 'prot-search-outline-hook)))

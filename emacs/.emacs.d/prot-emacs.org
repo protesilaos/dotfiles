@@ -8127,6 +8127,16 @@ tools (e.g. `embark')."
         `(metadata (category . ,category))
       (complete-with-action action candidates string pred))))
 
+;;;###autoload
+(defun prot-common-completion-table-no-sort (category candidates)
+  "Pass appropriate metadata CATEGORY to completion CANDIDATES.
+Like `prot-common-completion-table' but also disable sorting."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (category . ,category)
+                   (display-sort-function . ,#'identity))
+      (complete-with-action action candidates string pred))))
+
 ;; Thanks to Igor Lima for the `prot-common-crm-exclude-selected-p':
 ;; <https://github.com/0x462e41>.
 ;; This is used as a filter predicate in the relevant prompts.
@@ -12146,6 +12156,13 @@ Also see `prot-search-grep-todo-keywords'."
         (nreverse candidates)
       (user-error "No outline"))))
 
+(defun prot-search--outline-prompt ()
+  "Prompt for outline among headings retrieved by `prot-search--get-outline'."
+  (completing-read
+   "Go to outline: "
+   (prot-common-completion-table-no-sort 'imenu (prot-search--get-outline))
+   nil :require-match))
+
 (defvar prot-search-outline-hook nil
   "Normal hook to run at the end of `prot-search-outline'.")
 
@@ -12153,7 +12170,7 @@ Also see `prot-search-grep-todo-keywords'."
 (defun prot-search-outline ()
   "Go to the line of the given outline using completion."
   (interactive)
-  (when-let ((selection (completing-read "Go to outline: " (prot-search--get-outline) nil :require-match))
+  (when-let ((selection (prot-search--outline-prompt))
              (line (string-to-number (car (split-string selection "\t")))))
     (goto-line line)
     (run-hooks 'prot-search-outline-hook)))
