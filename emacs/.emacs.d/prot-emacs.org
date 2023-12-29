@@ -13959,15 +13959,19 @@ Used by `prot-spell-change-dictionary'."
 
 ;;;###autoload
 (defun prot-spell-spell-dwim (beg end)
-  "Spellcheck between BEG END, current word, or select dictionary.
+  "Spell check between BEG END, current word, or select a dictionary.
 
-Use `flyspell-region' on the active region.  With point over a
-word and no active region invoke `ispell-word'.  Else call
-`prot-spell-change-dictionary'."
+Use `flyspell-region' on the active region and deactivate the
+mark.
+
+With point over a word and no active region invoke `ispell-word'.
+
+Else call `prot-spell-change-dictionary'."
   (interactive "r")
   (cond
    ((use-region-p)
-    (flyspell-region beg end))
+    (flyspell-region beg end)
+    (deactivate-mark))
    ((thing-at-point 'word)
     (call-interactively 'ispell-word))
    (t
