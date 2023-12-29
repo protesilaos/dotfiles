@@ -4077,9 +4077,7 @@ current candidate's context.
   search terms to narrow down to it simply by typing at the minibuffer
   prompt.
 
-The commands I use the most from this package are ~consult-outline~,
-especially in Org buffers, and ~consult-imenu~ in Elisp files. The
-rest have situational uses.
+Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el= module]].
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Enhanced minibuffer commands (consult.el)
