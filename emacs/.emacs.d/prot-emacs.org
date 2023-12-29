@@ -4804,10 +4804,33 @@ Finally, we ~provide~ the module. This is the mirror function of
 (provide 'prot-emacs-search)
 #+end_src
 
-** TODO The =prot-emacs-dired.el= module
+** The =prot-emacs-dired.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:f8b08a77-f3a8-42fa-b1a9-f940348889c3
 :END:
+
+[ Watch: <https://protesilaos.com/codelog/2023-06-26-emacs-file-dired-basics/> (2023-06-26) ]
+
+Dired is probably my favourite Emacs tool. It exemplifies how I see
+Emacs a whole: a layer of interactivity on top of Unix. The ~dired~
+interface wraps---and puts to synergy---standard commands like ~ls~,
+~cp~, ~mv~, ~rm~, ~mkdir~, ~chmod~, and related. All while granting
+access to many other conveniences, such as (i) marking files to
+operate on (individually, with a regexp, etc.), (ii) bulk renaming
+files by making the buffer writable and editing it like a regular
+file, (iii) showing only files you want, (iv) listing the contents of
+any subdirectory, such as to benefit of the bulk-renaming capability,
+(v) running a keyboard macro that edits file contents while using
+Dired to navigate their list, (vi) open files in an external
+application, and more.
+
+Dired lets us operate on our files in a way that still feels close to
+the command-line, yet has more powerful interactive features than
+fully fledged, graphical file managers. The only area where it is not
+as good is in previewing multimedia files, though I anyway rely on my
+Denote file-naming convention to find what I am looking for (far more
+reliable than a preview, plus it is easy to open the video in a media
+player).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el" :mkdirp yes
 ;;; Dired file manager and prot-dired.el extras
@@ -4835,7 +4858,11 @@ Finally, we ~provide~ the module. This is the mirror function of
   ;; repeat C-x C-j just by following it up with j.  For me, this is a
   ;; problem as j calls `dired-goto-file', which I often use.
   (define-key dired-jump-map (kbd "j") nil))
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about various conveniences
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package dired-aux
   (:delay 2)
   (setq dired-isearch-filenames 'dwim)
@@ -4867,7 +4894,11 @@ Finally, we ~provide~ the module. This is the mirror function of
   (setq dired-bind-man nil)
   (setq dired-bind-info nil)
   (define-key dired-mode-map (kbd "I") #'dired-info))
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about my extras (=prot-dired.el=)
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package prot-dired
   (:delay 2)
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
@@ -4881,7 +4912,11 @@ Finally, we ~provide~ the module. This is the mirror function of
     "M-p" #'prot-dired-subdirectory-previous
     "C-c C-p" #'prot-dired-subdirectory-previous
     "M-s G" #'prot-dired-grep-marked-files)) ; M-s g is `prot-search-grep'
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about ~dired-subtree~
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package dired-subtree
   (:install t)
   (:delay 2)
@@ -4889,12 +4924,20 @@ Finally, we ~provide~ the module. This is the mirror function of
   (prot-emacs-keybind dired-mode-map
     "<tab>" #'dired-subtree-toggle
     "<backtab>" #'dired-subtree-remove)) ; S-TAB
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about ~wdired~ (writable Dired)
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package wdired
   (:delay 2)
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about ~image-dired~
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package image-dired
   (:delay 60)
   (setq image-dired-thumbnail-storage 'standard)
@@ -4905,7 +4948,11 @@ Finally, we ~provide~ the module. This is the mirror function of
   (setq image-dired-thumbs-per-row 4)
   (define-key image-dired-thumbnail-mode-map
               (kbd "<return>") #'image-dired-thumbnail-display-external))
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about =trashed.el=
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; dired-like mode for the trash (trashed.el)
 (prot-emacs-package trashed
   (:install t)
@@ -4914,7 +4961,11 @@ Finally, we ~provide~ the module. This is the mirror function of
   (setq trashed-use-header-line t)
   (setq trashed-sort-key '("Date deleted" . t))
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about ~dired-preview~
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; Automatically preview Dired file at point (dired-preview.el)
 ;; One of my packages: <https://protesilaos.com/emacs>
 (prot-emacs-package dired-preview
@@ -4933,7 +4984,11 @@ Finally, we ~provide~ the module. This is the mirror function of
             (lambda ()
               (when (string-match-p "Pictures" default-directory)
                 (dired-preview-mode 1)))))
+#+end_src
 
+*** TODO The =prot-emacs-dired.el= section about ~mandoura~ (~mpv~ media player)
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
 (prot-emacs-package mandoura
@@ -4944,7 +4999,17 @@ Finally, we ~provide~ the module. This is the mirror function of
   (define-key dired-mode-map (kbd "M-<return>") #'mandoura-play-files)
   (define-key global-map (kbd "M-<AudioPlay>") #'mandoura-return-track-title-and-time)
   (define-key global-map (kbd "M-<XF86AudioPlay>") #'mandoura-return-track-title-and-time))
+#+end_src
 
+*** The =prot-emacs-dired.el= call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:c8b2f021-fe5a-4f6b-944c-20340f764fb2
+:END:
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (provide 'prot-emacs-dired)
 #+end_src
 
