@@ -4077,9 +4077,7 @@ current candidate's context.
   search terms to narrow down to it simply by typing at the minibuffer
   prompt.
 
-The commands I use the most from this package are ~consult-outline~,
-especially in Org buffers, and ~consult-imenu~ in Elisp files. The
-rest have situational uses.
+Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el= module]].
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Enhanced minibuffer commands (consult.el)
@@ -4424,42 +4422,287 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
 (provide 'prot-emacs-vertico)
 #+end_src
 
-** TODO The =prot-emacs-search.el= module
+** The =prot-emacs-search.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:e0f9c30e-3a98-4479-b709-7008277749e4
 :END:
+
+[ Watch: [[https://protesilaos.com/codelog/2023-06-10-emacs-search-replace-basics/][Emacs: basics of search and replace]] (2023-06-10). ]
+
+Emacs provides lots of useful facilities to search the contents of
+buffers or files. The most common scenario is to type =C-s=
+(~isearch-forward~) to perform a search forward from point or =C-r=
+(~isearch-backward~) to do so in reverse. These commands pack a ton of
+functionality and they integrate nicely with related facilities, such
+as those of (i) permanently highlighting the thing being searched,
+(ii) putting all results in a buffer that is useful for navigation
+purposes, among others, and (iii) replacing the given matching items
+with another term.
+
+Here I summarise the functionality, though do check the video I did on
+the basics of search and replace:
+
+- =C-s= (~isearch-forward~) :: Search forward from point (incremental
+  search); retype =C-s= to move forth.
+
+- =C-r= (~isearch-backward~) :: Search backward from point
+  (incremental); retype =C-r= to move back. While using either =C-s=
+  and =C-r= you can move in the opposite direction with either of
+  those keys when performing a repeat.
+
+- =C-M-s= (~isearch-forward-regexp~) :: Same as =C-s= but matches a
+  regular expression. The =C-s= and =C-r= motions are the same after
+  matches are found.
+
+- =C-M-r= (~isearch-backward-regexp~) :: The counterpart of the above
+  =C-M-s= for starting in reverse.
+
+- =C-s C-w= (~isearch-yank-word-or-char~) :: Search forward for
+  word-at-point. Again, =C-s= and =C-r= move forth and back,
+  respectively.
+
+- =C-r C-w= (~isearch-yank-word-or-char~) :: Same as above, but
+  backward.
+
+- =M-s o= (~occur~) :: Search for the given regular expression
+  throughout the buffer and collect the matches in an =*occur*=
+  buffer. Also check what I am doing with this in my custom
+  extensions: [[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]].
+
+- =C-u 5 M-s o= (~occur~) :: Like the above, but give it N lines of
+  context when N is the prefix numeric argument  (5 in
+  this example).
+
+- =C-s SEARCH= followed by =M-s o=  (~isearch-forward~ --> ~occur~) ::
+  Like =C-s= but then put the matches in an *occur* buffer.
+
+- =C-s SEARCH= followed by =C-u 5 M-s o= (~isearch-forward~ -->
+  ~occur~) :: Same as above, but now with N lines of context (5 in
+  this example).
+
+- =M-%= (~query-replace~) :: Prompt for target to replace and then
+  prompt for its replacement (see explanation)
+
+- =C-M-%= (~query-replace-regexp~) :: Same as above, but for REGEXP
+
+- =C-s SEARCH= followed by =M-%= (~isearch-forward~ --> ~query-replace~) :: Search
+  with =C-s= and then perform a query-replace for the following
+  matches.
+
+- =C-M-s SEARCH M-%= (~isearch-forward-regexp~ -->
+  ~query-replace-regexp~) :: As above, but regexp-aware.
+
+- =C-s SEARCH C-M-%= (~isearch-forward~ --> ~query-replace-regexp~) :: Same
+  as above.
+
+- =M-s h r= (~highlight-regexp~) :: Prompt for a face (like
+  ~hi-yellow~) to highlight the given regular expression.
+
+- =M-s h u= (~unhighlight-regexp~) :: Prompt for an already
+  highlighted regular expression to unhighlight (do it after the
+  above).
+
+For starters, just learn:
+
+- =C-s=
+- =C-r=
+- =M-s o=
+- =M-%=
+
+Now on to the configurations.
+
+*** The =prot-emacs-search.el= on isearch lax space
+:PROPERTIES:
+:CUSTOM_ID: h:95947b37-2071-4ee7-a201-8e19bf3322e9
+:END:
+
+As noted in the introduction to this module, the built-in Isearch
+mechanism is at the centre of lots of useful patterns of interaction
+([[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el= module]]).
+
+The first thing I want to do for Isearch, is make it more convenient
+for me to match words that occur in sequence but are not necessarily
+following each other. By default, we can do that with something like
+=C-M-s= (~isearch-forward-regexp~) followed by =one.*two=. Though it
+is inconvenient to be a regexp-aware search mode when all we want is
+to just type =one two= and have the space be interpreted as
+"intermediate characters" rather than a literal space. The following
+do exactly this for regular =C-s= (~isearch-forward~) and =C-r=
+(~isearch-backward~).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el" :mkdirp yes
 ;;; Isearch, occur, grep, and extras (prot-search.el)
 (prot-emacs-package isearch
   (:delay 5)
-  (setq search-highlight t)
   (setq search-whitespace-regexp ".*?" ; one `setq' here to make it obvious they are a bundle
         isearch-lax-whitespace t
         isearch-regexp-lax-whitespace nil)
+#+end_src
+
+*** The =prot-emacs-search.el= settings for isearch highlighting
+:PROPERTIES:
+:CUSTOM_ID: h:ed1307e7-f8a0-4b0a-8d91-2de9c1e2479c
+:END:
+
+Here I am just tweaking the delay that affects when deferred
+highlights are applied. The current match is highlighted immediately.
+The rest are done after ~lazy-highlight-initial-delay~ unless they are
+longer in character count than ~lazy-highlight-no-delay-length~.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
+  (setq search-highlight t)
   (setq isearch-lazy-highlight t)
-  (setq list-matching-lines-jump-to-current-line nil) ; for `occur'
-  ;; All of the following variables were introduced in Emacs 27.1.
+  (setq lazy-highlight-initial-delay 0.5)
+  (setq lazy-highlight-no-delay-length 4)
+#+end_src
+
+*** The =prot-emacs-search.el= on isearch match counter
+:PROPERTIES:
+:CUSTOM_ID: h:acfdc17f-7ffb-48d3-90ff-49bd00463934
+:END:
+
+I think the following options should be enabled by default. They
+produce a counter next to the isearch prompt that shows the position
+of the current match relative to the total count (like =5/20=). As we
+move to the next/previous match, the counter is updated accordingly.
+We have the option to place this information after the search terms,
+though I prefer to have them as a prefix so as not to interfere with
+what I am typing.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format "(%s/%s) ")
   (setq lazy-count-suffix-format nil)
-  (setq isearch-yank-on-move 'shift)
-  (setq isearch-allow-scroll 'unlimited)
-  ;; These variables are from Emacs 28
-  (setq isearch-repeat-on-direction-change t)
-  (setq lazy-highlight-initial-delay 0.5)
-  (setq lazy-highlight-no-delay-length 3)
-  (setq isearch-wrap-pause t) ; `no-ding' makes keyboard macros never quit
+#+end_src
 
+*** The =prot-emacs-search.el= tweaks to the isearch motion behaviour
+:PROPERTIES:
+:CUSTOM_ID: h:e6fd4ff0-86c7-423b-9cf3-0a9061505136
+:END:
+
+With the default settings, when we are repeating an isearch in the
+opposite direction, Emacs does not move directly to the next/previous
+match. Instead, it places the cursor at the opposite end of the
+current match. So, if we start with =C-s= and search for =word= we now
+see =word|= where the bar represents the cursor. With =C-r= we now
+have =|word= on the same match we were on. I do not like this
+behaviour so I configure ~isearch-repeat-on-direction-change~
+accordingly. Furthermore, I can always control where the cursor is
+left after existing the search either by performing the given motion
+(e.g. =M-f= (~forward-word~)) or by using my custom command to exit on
+the opposite end with =C-RET= while in an isearch (~prot-search-isearch-other-end~).
+
+[ See: [[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]. ]
+
+If you are using keyboard macros that rely on isearch, DO NOT set
+~isearch-wrap-pause~ to the =no-ding= value. That disables the error
+isearch produces when it reaches the end of the matches. This error
+exits the keyboard macro, which is exactly what you want if you are
+calling it with a =0= numeric argument (to run from point until the
+end of the buffer).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
+  (setq isearch-repeat-on-direction-change t)
+  (setq isearch-wrap-pause t) ; `no-ding' makes keyboard macros never quit
+#+end_src
+
+*** The =prot-emacs-search.el= tweaks for the occur buffer
+:PROPERTIES:
+:CUSTOM_ID: h:85aca4da-b89b-4fbe-89e9-3ec536ad7b0d
+:END:
+
+Here I am making some minor tweaks to =*occur*= buffer (remember to
+read the introduction to this section ([[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el= module]])).
+I always want (i) the cursor to be at the top of the buffer, (ii) the
+current line to be highlighted, as it is easier for selection
+purposes, and (iii) for long lines to be truncated, meaning to stretch
+beyond the visible portion of the window without wrapping below, and
+for this to be done silently without messaging me about it.
+
+The latter depends on my =prot-common.el= library, which is loaded
+early at startup ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.el= block that loads my custom libraries]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
+  (setq list-matching-lines-jump-to-current-line nil) ; do not jump to current line in `*occur*' buffers
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
+#+end_src
 
+*** The =prot-emacs-search.el= modified isearch and occur key bindings
+:PROPERTIES:
+:CUSTOM_ID: h:5ce6216d-f318-4191-9d4f-9681c92f7582
+:END:
+
+These are some minor tweaks to the key maps for isearch and occur. I
+don't feel strongly about the rest, but the change to =C-g= is
+important for me as I want to exit the search altogether, not resume
+the search of the previous succesful match.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
   (define-key minibuffer-local-isearch-map (kbd "M-/") #'isearch-complete-edit)
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines)
+
   (prot-emacs-keybind isearch-mode-map
     "C-g" #'isearch-cancel ; instead of `isearch-abort'
     "M-/" #'isearch-complete))
+#+end_src
 
+*** The =prot-emacs-search.el= extras provided by the =prot-search.el= library
+:PROPERTIES:
+:CUSTOM_ID: h:b902e6a3-cdd2-420f-bc99-3d973c37cd20
+:END:
+
+My =prot-search.el= provides lots of useful extras that I use on a
+regular basis ([[#h:0cab525d-fcbc-478c-b914-bbd69e33c635][The =prot-search.el= library]]).
+
+For isearch, I have:
+
+- Move to next/previous match in isearch with the down/up arrow keys
+  (=C-s= or =C-r= still work though).
+
+- Place the cursor on the opposite end of an isearch when exiting. Do
+  it with =C-RET= while in isearch ([[#h:e6fd4ff0-86c7-423b-9cf3-0a9061505136][The =prot-emacs-search.el= tweaks to the isearch motion behaviour]]).
+
+- Delete the non-matching portion of a query in isearch with a single
+  backspace instead of doing it character-by-character.
+
+- Type =M-s M-<= (~prot-search-isearch-beginning-of-buffer~) or =M-s
+  M->= (~prot-search-isearch-end-of-buffer~) to search for the symbol
+  at point starting from the beginning/end of the buffer.
+
+For variants of ~occur~ or ~grep~, which also benefit from the rules I have on
+where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]):
+
+- Type =M-s M-o= (~prot-search-occur-outline~) to produce an outline
+  of the given buffer. What constitutes an outline is defined in the
+  user option ~prot-search-outline-regexp-alist~. I only configure it
+  for the major modes I care about, though the mechanism should work
+  for every buffer that has an outline.
+
+- Type =M-s M-t= (~prot-search-grep-todo-keywords~) to produce an
+  =*occur*= buffer that matches keywords like =TODO=. The full regular
+  expression is specified in the user option ~prot-search-todo-keywords~.
+
+- Type =C-u M-s M-t= or =M-s M-T= (~prot-search-git-grep-todo-keywords~)
+  to do the same as above but with the ~git-grep~ program instead of
+  Emacs' ~occur~. This will match the keywords throughout the current
+  Git repository. Grep buffers are editable, like those of ~occur~ 
+  ([[#h:9a3581df-ab18-4266-815e-2edd7f7e4852][The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)]]).
+
+- Type =M-s g= (~prot-search-grep~) to perform a "local grep" across
+  the current directory. Do =C-u M-s g= to perform a "recursive grep"
+  from the current directory and into all subdirectories. This is
+  basically a streamlined version of =M-x lgrep= and =M-x rgrep= and
+  is one of my favourite commands.
+
+Note that the ~consult~ package provides lots of useful commands that
+perform a search while also displaying a preview of what you are
+matching ([[#h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d][The =prot-emacs-completion.el= settings for ~consult~]]).
+Depending on your workflow, this is better, though I seldom need the
+preview as I know what to expect or otherwise peruse contents either
+by visiting individual files or by using a grep buffer as an index.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 (prot-emacs-package prot-search
   (:delay 5)
   (setq prot-search-outline-regexp-alist
@@ -4485,6 +4728,7 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
     "M-s u" #'prot-search-occur-urls
     "M-s t" #'prot-search-occur-todo-keywords
     "M-s M-t" #'prot-search-grep-todo-keywords ; With C-u it runs `prot-search-git-grep-todo-keywords'
+    "M-s M-T" #'prot-search-git-grep-todo-keywords
     "M-s M-s" #'prot-search-outline
     "M-s M-o" #'prot-search-occur-outline
     "M-s M-u" #'prot-search-occur-browse-url)
@@ -4493,7 +4737,21 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
     "<down>" #'prot-search-isearch-repeat-forward
     "<backspace>" #'prot-search-isearch-abort-dwim
     "<C-return>" #'prot-search-isearch-other-end))
+#+end_src
 
+*** The =prot-emacs-search.el= tweaks to ~xref~, ~re-builder~ and ~grep~
+:PROPERTIES:
+:CUSTOM_ID: h:ceb286c5-a5f7-4cc8-b883-89d20a75ea02
+:END:
+
+These are some configurations for built-in tools. I wrap them in a
+~prot-emacs-configure~ call, as I do not need to call (i.e. ~require~)
+their respective packages at this point.
+
+The changes here are minor tweaks. Note the use of the ~let~ to decide
+whether I use the ~grep~ or ~rg~ (~ripgrep~) program.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 ;;; grep and xref
 (prot-emacs-configure
   (:delay 5)
@@ -4514,7 +4772,14 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
               "/usr/bin/rg -nH --null -e <R> <F>"
             "/usr/bin/grep <X> <C> -nH --null -e <R> <F>"))
     (setq xref-search-program (if rgp 'ripgrep 'grep))))
+#+end_src
 
+*** The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)
+:PROPERTIES:
+:CUSTOM_ID: h:9a3581df-ab18-4266-815e-2edd7f7e4852
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 ;;; wgrep (writable grep)
 (prot-emacs-package wgrep
   (:install t)
@@ -4525,7 +4790,17 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
     "e" #'wgrep-change-to-wgrep-mode
     "C-x C-q" #'wgrep-change-to-wgrep-mode
     "C-c C-c" #'wgrep-finish-edit))
+#+end_src
 
+*** The =prot-emacs-search.el= call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:c8b2f021-fe5a-4f6b-944c-20340f764fb2
+:END:
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 (provide 'prot-emacs-search)
 #+end_src
 
@@ -4922,6 +5197,7 @@ to a certain height.
            (dedicated . t)
            (preserve-size . (t . t)))
           ((or . ((derived-mode . occur-mode)
+                  (derived-mode . grep-mode)
                   (derived-mode . Buffer-menu-mode)
                   (derived-mode . log-view-mode)
                   (derived-mode . help-mode) ; See the hooks for `visual-line-mode'
