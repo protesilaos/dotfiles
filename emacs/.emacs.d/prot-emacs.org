@@ -1643,11 +1643,11 @@ designed by me).
 ;;   (add-to-list 'load-path "/home/prot/Git/Projects/ef-themes/")
 ;;
 ;;   (require 'ef-themes)
+;;   (load-theme 'ef-arbutus t t)
 ;;   (load-theme 'ef-autumn t t)
 ;;   (load-theme 'ef-bio t t)
 ;;   (load-theme 'ef-cherie t t)
 ;;   (load-theme 'ef-chloe-dark t t)
-;;   (load-theme 'ef-chloe-light t t)
 ;;   (load-theme 'ef-cyprus t t)
 ;;   (load-theme 'ef-dark t t)
 ;;   (load-theme 'ef-day t t)
