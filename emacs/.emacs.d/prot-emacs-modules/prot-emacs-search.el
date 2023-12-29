@@ -1,29 +1,29 @@
 ;;; Isearch, occur, grep, and extras (prot-search.el)
 (prot-emacs-package isearch
   (:delay 5)
-  (setq search-highlight t)
   (setq search-whitespace-regexp ".*?" ; one `setq' here to make it obvious they are a bundle
         isearch-lax-whitespace t
         isearch-regexp-lax-whitespace nil)
+
+  (setq search-highlight t)
   (setq isearch-lazy-highlight t)
-  (setq list-matching-lines-jump-to-current-line nil) ; for `occur'
-  ;; All of the following variables were introduced in Emacs 27.1.
+  (setq lazy-highlight-initial-delay 0.5)
+  (setq lazy-highlight-no-delay-length 4)
+
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format "(%s/%s) ")
   (setq lazy-count-suffix-format nil)
-  (setq isearch-yank-on-move 'shift)
-  (setq isearch-allow-scroll 'unlimited)
-  ;; These variables are from Emacs 28
+
   (setq isearch-repeat-on-direction-change t)
-  (setq lazy-highlight-initial-delay 0.5)
-  (setq lazy-highlight-no-delay-length 3)
   (setq isearch-wrap-pause t) ; `no-ding' makes keyboard macros never quit
 
+  (setq list-matching-lines-jump-to-current-line nil) ; do not jump to current line in `*occur*' buffers
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
 
   (define-key minibuffer-local-isearch-map (kbd "M-/") #'isearch-complete-edit)
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines)
+
   (prot-emacs-keybind isearch-mode-map
     "C-g" #'isearch-cancel ; instead of `isearch-abort'
     "M-/" #'isearch-complete))
@@ -53,6 +53,7 @@
     "M-s u" #'prot-search-occur-urls
     "M-s t" #'prot-search-occur-todo-keywords
     "M-s M-t" #'prot-search-grep-todo-keywords ; With C-u it runs `prot-search-git-grep-todo-keywords'
+    "M-s M-T" #'prot-search-git-grep-todo-keywords
     "M-s M-s" #'prot-search-outline
     "M-s M-o" #'prot-search-occur-outline
     "M-s M-u" #'prot-search-occur-browse-url)
