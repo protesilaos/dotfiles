@@ -4906,7 +4906,28 @@ for the ~ls~ manpage to learn about what I have here. In short:
         "-AGFhlv --group-directories-first --time-style=long-iso")
 #+end_src
 
+*** The =prot-emacs-dired.el= setting for dual-pane Dired
+:PROPERTIES:
+:CUSTOM_ID: h:8225364c-3856-48bc-bf64-60d40ddd3320
+:END:
+
+I often have two Dired buffers open side-by-side and want to move
+files between them. By setting ~dired-dwim-target~ to a ~t~ value,
+we get the other buffer as the default target of the current rename or
+copy operation. This is exactly what I want.
+
+If there are more than two windows showing Dired buffers, the default
+target is the previously visited window.
+
+Note that this only affects how quickly we can access the default
+value, as we can always type =M-p= (~previous-history-element~) and
+=M-n= (~next-history-element~) to cycle through the minibuffer
+history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
   (setq dired-dwim-target t)
+#+end_src
+
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
   (setq dired-make-directory-clickable t) ; Emacs 29.1
   (setq dired-free-space nil) ; Emacs 29.1
