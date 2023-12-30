@@ -5150,10 +5150,19 @@ Note that we have a variant of ~wdired~ for ~grep~ buffers
   (setq wdired-create-parent-directories t))
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= section about ~image-dired~
+*** The =prot-emacs-dired.el= section about ~image-dired~
 :PROPERTIES:
 :CUSTOM_ID: h:198cdda8-fc3f-4672-8fd6-dfc795cea9e0
 :END:
+
+The built-in ~image-dired~ feature is one of those tools that I like
+when I use, but never remember exactly how to use because of how
+infrequent my need for it is. The gist is that we put thumbnails in a
+buffer and can browse through them in a file listing. It is okay,
+though if I really have to rely on image previewing, I might just open
+the graphical file manager. It is not a sin to use something outside
+of Emacs and, anyway, I don't think Emacs' editing capabilities are of
+any relevance when we are just previewing a picture.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package image-dired
@@ -5166,6 +5175,43 @@ Note that we have a variant of ~wdired~ for ~grep~ buffers
   (setq image-dired-thumbs-per-row 4)
   (define-key image-dired-thumbnail-mode-map
               (kbd "<return>") #'image-dired-thumbnail-display-external))
+#+end_src
+
+*** The =prot-emacs-dired.el= section about ~dired-preview~
+:PROPERTIES:
+:CUSTOM_ID: h:c345ff72-d905-482a-a885-fc111252aacf
+:END:
+
+The ~dired-preview~ is a package of mine that, unfortunately, I have
+not had the time to develop beyond the original release: it coincided
+with my relocation to the hut and I still am busy doing all sorts of
+work here. Once I get the opportunity, I will resume development of
+this package.
+
+At any rate, ~dired-preview~ previews the file at point in an Emacs
+window. The goal is to make this work for large files, so that we
+never experience any lag. I will expand this section once I feel we
+are where we need to be.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
+;;; Automatically preview Dired file at point (dired-preview.el)
+;; One of my packages: <https://protesilaos.com/emacs>
+(prot-emacs-package dired-preview
+  (:install t)
+  (:delay 60)
+  ;; These are all set to their default values.  I keep them here for
+  ;; reference.
+  (setq dired-preview-max-size (* (expt 2 20) 6))
+  (setq dired-preview-delay 0.3)
+  (setq dired-preview-ignored-extensions-regexp
+        (concat "\\."
+                "\\(mkv\\|" "webm\\|" "mp4\\|" "mp3\\|" "ogg\\|" "m4a\\|"
+                "gz\\|" "zst\\|" "tar\\|" "xz\\|" "rar\\|" "zip\\|"
+                "iso\\|" "epub\\|" "\\)"))
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (when (string-match-p "Pictures" default-directory)
+                (dired-preview-mode 1)))))
 #+end_src
 
 *** The =prot-emacs-dired.el= section about =trashed.el=
@@ -5188,32 +5234,6 @@ to apply the effect.
   (setq trashed-use-header-line t)
   (setq trashed-sort-key '("Date deleted" . t))
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
-#+end_src
-
-*** TODO The =prot-emacs-dired.el= section about ~dired-preview~
-:PROPERTIES:
-:CUSTOM_ID: h:c345ff72-d905-482a-a885-fc111252aacf
-:END:
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
-;;; Automatically preview Dired file at point (dired-preview.el)
-;; One of my packages: <https://protesilaos.com/emacs>
-(prot-emacs-package dired-preview
-  (:install t)
-  (:delay 60)
-  ;; These are all set to their default values.  I keep them here for
-  ;; reference.
-  (setq dired-preview-max-size (* (expt 2 20) 6))
-  (setq dired-preview-delay 0.3)
-  (setq dired-preview-ignored-extensions-regexp
-        (concat "\\."
-                "\\(mkv\\|" "webm\\|" "mp4\\|" "mp3\\|" "ogg\\|" "m4a\\|"
-                "gz\\|" "zst\\|" "tar\\|" "xz\\|" "rar\\|" "zip\\|"
-                "iso\\|" "epub\\|" "\\)"))
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              (when (string-match-p "Pictures" default-directory)
-                (dired-preview-mode 1)))))
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about ~mandoura~ (~mpv~ media player)

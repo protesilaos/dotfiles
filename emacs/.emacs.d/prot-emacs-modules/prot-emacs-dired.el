@@ -98,15 +98,6 @@
   (define-key image-dired-thumbnail-mode-map
               (kbd "<return>") #'image-dired-thumbnail-display-external))
 
-;;; dired-like mode for the trash (trashed.el)
-(prot-emacs-package trashed
-  (:install t)
-  (:delay 60)
-  (setq trashed-action-confirmer 'y-or-n-p)
-  (setq trashed-use-header-line t)
-  (setq trashed-sort-key '("Date deleted" . t))
-  (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
-
 ;;; Automatically preview Dired file at point (dired-preview.el)
 ;; One of my packages: <https://protesilaos.com/emacs>
 (prot-emacs-package dired-preview
@@ -125,6 +116,15 @@
             (lambda ()
               (when (string-match-p "Pictures" default-directory)
                 (dired-preview-mode 1)))))
+
+;;; dired-like mode for the trash (trashed.el)
+(prot-emacs-package trashed
+  (:install t)
+  (:delay 60)
+  (setq trashed-action-confirmer 'y-or-n-p)
+  (setq trashed-use-header-line t)
+  (setq trashed-sort-key '("Date deleted" . t))
+  (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
