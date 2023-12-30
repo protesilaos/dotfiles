@@ -4929,7 +4929,7 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
   (setq dired-dwim-target t)
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= settings to open files externally
+*** The =prot-emacs-dired.el= settings to open files externally
 :PROPERTIES:
 :CUSTOM_ID: h:d7d5e619-3d50-4d9e-a951-7262462a60c9
 :END:
