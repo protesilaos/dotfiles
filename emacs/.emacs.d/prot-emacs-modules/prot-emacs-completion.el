@@ -150,6 +150,7 @@
   (prot-emacs-abbrev text-mode-abbrev-table
     "asciidoc"       "AsciiDoc"
     "auctex"         "AUCTeX"
+    "cafe"           "café"
     "cliche"         "cliché"
     "clojurescript"  "ClojureScript"
     "emacsconf"      "EmacsConf"
