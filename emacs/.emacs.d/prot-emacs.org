@@ -4856,8 +4856,56 @@ them manually. I prefer this extra layer of safety. Plus, we have the
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
+#+end_src
+
+*** The =prot-emacs-dired.el= switches for ~ls~ (how files are listed)
+:PROPERTIES:
+:CUSTOM_ID: h:679e4460-b306-450f-aa20-497243057e02
+:END:
+
+As I already explained, Dired is a layer of interactivity on top of
+standard Unix tools ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]). We can see
+this in how Dired produces the file listing and how we can affect it.
+The ~ls~ program accepts an =-l= flag for a "long", detailed list of
+files. This is what Dired uses. But we can pass more flags by setting
+the value of ~dired-listing-switches~. Do =M-x man= and then search
+for the ~ls~ manpage to learn about what I have here. In short:
+
+- =-A= :: Show hidden files ("dotfiles"), such as =.bashrc=, but omit
+  the implied =.= and =..= targets. The latter two refer to the
+  present and parent directory, respectively.
+
+- =-G= :: Do not show the group name in the long listing. Only show
+  the owner of the file.
+
+- =-F= :: Differentiate regular from special files by appending a
+  character to them. The =*= is for executables, the =/= is for
+  directories, the =|= is for a named pipe, the ~=~ is for a socket,
+  the =@= and the =>= are for stuff I have never seen.
+
+- =-h= :: Make file sizes easier to read, such as =555k= instead of
+  =568024= (the size of =prot-emacs.org= as of this writing).
+
+- =-l= :: Produce a long, detailed listing. Dired requires this.
+
+- =-v= :: Sort files by version numbers, such that =file1=, =file2=,
+  and =file10= appear in this order instead of 1, 10, 2. The latter is
+  called "lexicograhic" and I have not found a single case where it is
+  useful to me.
+
+- =--group-directories-first= :: Does what it says to place all
+  directories before files in the listing. I prefer this over a strict
+  sorting that does not differentiate between files and directories.
+
+- =--time-style=long-iso= :: Uses the international standard for time
+  representation in the file listing. So we have something like
+  =2023-12-30 06:38= to show the last modified time.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
   (setq dired-listing-switches
         "-AGFhlv --group-directories-first --time-style=long-iso")
+#+end_src
+
   (setq dired-dwim-target t)
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
   (setq dired-make-directory-clickable t) ; Emacs 29.1
