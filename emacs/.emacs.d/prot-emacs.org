@@ -4775,10 +4775,21 @@ whether I use the ~grep~ or ~rg~ (~ripgrep~) program.
     (setq xref-search-program (if rgp 'ripgrep 'grep))))
 #+end_src
 
-*** TODO The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)
+*** The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)
 :PROPERTIES:
 :CUSTOM_ID: h:9a3581df-ab18-4266-815e-2edd7f7e4852
 :END:
+
+The ~wgrep~ package by Masahiro Hayashi lets us make ~grep~ buffers
+editable ([[#h:ceb286c5-a5f7-4cc8-b883-89d20a75ea02][The =prot-emacs-search.el= tweaks to ~xref~, ~re-builder~ and ~grep~]]).
+I use this in tandem with my ~prot-search-grep~ command.
+
+The idea of an editable buffer is neat, because we can employ all the
+text-editing capabilities of Emacs to quickly produce a large number
+of replacements across many files. We have the same concept with occur
+(=M-x occur=) as well as with Dired buffers ([[#h:1b53bc10-8b1b-4f68-bbec-165909761e43][The =prot-emacs-dired.el= section about ~wdired~ (writable Dired)]]).
+The key bindings I define for the ~wgrep~ actions are consistent with
+those we find in the other "editable/writable buffer" interfaces.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 ;;; wgrep (writable grep)
@@ -5124,9 +5135,13 @@ need it.
 
 As noted in the introduction, Dired can be made writable
 ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]). This way, we can quickly rename
-multiple files using Emacs' panoply of editing capabilities. Both of
-the variables I configure here have situational usage. I cannot
-remember the last time I benefited from them.
+multiple files using Emacs' panoply of editing capabilities.
+
+Both of the variables I configure here have situational usage. I
+cannot remember the last time I benefited from them.
+
+Note that we have a variant of ~wdired~ for ~grep~ buffers
+([[#h:9a3581df-ab18-4266-815e-2edd7f7e4852][The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package wdired
