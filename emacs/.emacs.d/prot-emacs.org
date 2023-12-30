@@ -5050,12 +5050,32 @@ are:
   (define-key dired-mode-map (kbd "I") #'dired-info))
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= section about my extras (=prot-dired.el=)
+*** The =prot-emacs-dired.el= section about my extras (=prot-dired.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:933b156a-3be2-4025-96e9-e14687c8dcf1
 :END:
 
-([[#h:92cfefcf-8c20-43cd-b47c-ffe0c5fe1887][The =prot-dired.el= library]])
+Dired is excellent out-of-the-box. What I provide are a few minor
+commands that make it more convenient for me to perform common
+actions ([[#h:92cfefcf-8c20-43cd-b47c-ffe0c5fe1887][The =prot-dired.el= library]]). Chief among them is the
+~prot-dired-limit-regexp~ (bound to =C-c C-l=), which is an easier way
+to do this in standard Dired:
+
+- Type =% m= (~dired-mark-files-regexp~) to mark files you want to
+  keep seeing. Provide a regular expression or simply a common word.
+- Toggle the mark so that you now cover everything you do not want to
+  see.
+- Invoke ~dired-do-kill-lines~ (bound to =k= by default) to remove the
+  marked files from the view until the buffer is generated again (with
+  =g= by default (~revert-buffer~)).
+
+All this is fine, but with ~prot-dired-limit-regexp~ I simply provide
+the regexp I want to see.
+
+The other commands have situational uses. For example, the
+~prot-dired-grep-marked-files~ is something I have only used a few
+times where ~prot-search-grep~ would produce too many results in a
+given directory ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package prot-dired
