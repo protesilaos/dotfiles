@@ -5117,10 +5117,16 @@ need it.
     "<backtab>" #'dired-subtree-remove)) ; S-TAB
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= section about ~wdired~ (writable Dired)
+*** The =prot-emacs-dired.el= section about ~wdired~ (writable Dired)
 :PROPERTIES:
 :CUSTOM_ID: h:1b53bc10-8b1b-4f68-bbec-165909761e43
 :END:
+
+As noted in the introduction, Dired can be made writable
+([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]). This way, we can quickly rename
+multiple files using Emacs' panoply of editing capabilities. Both of
+the variables I configure here have situational usage. I cannot
+remember the last time I benefited from them.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package wdired
