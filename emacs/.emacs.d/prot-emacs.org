@@ -5153,10 +5153,16 @@ remember the last time I benefited from them.
               (kbd "<return>") #'image-dired-thumbnail-display-external))
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= section about =trashed.el=
+*** The =prot-emacs-dired.el= section about =trashed.el=
 :PROPERTIES:
 :CUSTOM_ID: h:2e005bd1-d098-426d-91f9-2a31a6e55caa
 :END:
+
+The ~trashed~ package by Shingo Tanaka provides a Dired-like interface
+to the system's virtual trash directory. The few times I need to
+restore a file, I do =M-x dired=, then type =r= to mark the file to be
+restored (=M-x trashed-flag-restore=), and then type =x= (=M-x trashed-do-execute=)
+to apply the effect.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; dired-like mode for the trash (trashed.el)
