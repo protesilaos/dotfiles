@@ -4686,7 +4686,7 @@ where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][
 - Type =C-u M-s M-t= or =M-s M-T= (~prot-search-git-grep-todo-keywords~)
   to do the same as above but with the ~git-grep~ program instead of
   Emacs' ~occur~. This will match the keywords throughout the current
-  Git repository. Grep buffers are editable, like those of ~occur~ 
+  Git repository. Grep buffers are editable, like those of ~occur~
   ([[#h:9a3581df-ab18-4266-815e-2edd7f7e4852][The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)]]).
 
 - Type =M-s g= (~prot-search-grep~) to perform a "local grep" across
@@ -4834,7 +4834,7 @@ fully fledged, graphical file managers.
 :END:
 
 I start with the now-familiar ~prot-emacs-package~ macro to ~require~
-the ~dired~ feature with a slight delay and then start tweaking it 
+the ~dired~ feature with a slight delay and then start tweaking it
 ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
 Then I add two settings which make all copy, rename/move, and delete
 operations more intuitive. I always want to perform those actions in a
@@ -4928,25 +4928,42 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
   (setq dired-dwim-target t)
 #+end_src
 
+*** TODO The =prot-emacs-dired.el= settings to open files externally
+:PROPERTIES:
+:CUSTOM_ID: h:d7d5e619-3d50-4d9e-a951-7262462a60c9
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
+  (setq dired-guess-shell-alist-user ; those are the suggestions for ! and & in Dired
+        '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh" "xdg-open")
+          ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv" "xdg-open")
+          (".*" "xdg-open")))
+#+end_src
+
+*** TODO The =prot-emacs-dired.el= miscellaneous tweaks
+:PROPERTIES:
+:CUSTOM_ID: h:6327e6ba-a468-416f-ad26-b530c32fe235
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
   (setq dired-make-directory-clickable t) ; Emacs 29.1
   (setq dired-free-space nil) ; Emacs 29.1
   (setq dired-mouse-drag-files t) ; Emacs 29.1
-  (setq dired-guess-shell-alist-user ; those are the suggestions for ! and & in Dired
-        '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh" "xdg-open")
-          ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv" "xdg-open")
-		  (".*" "xdg-open")))
 
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode)
 
-  ;; In Emacs 29 there is a binding for `repeat-mode' which let you
+  ;; In Emacs 29 there is a binding for `repeat-mode' which lets you
   ;; repeat C-x C-j just by following it up with j.  For me, this is a
   ;; problem as j calls `dired-goto-file', which I often use.
   (define-key dired-jump-map (kbd "j") nil))
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about various conveniences
+:PROPERTIES:
+:CUSTOM_ID: h:6758bf16-e47e-452e-b39d-9d67c2b9aa4b
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package dired-aux
@@ -4983,6 +5000,11 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about my extras (=prot-dired.el=)
+:PROPERTIES:
+:CUSTOM_ID: h:933b156a-3be2-4025-96e9-e14687c8dcf1
+:END:
+
+([[#h:92cfefcf-8c20-43cd-b47c-ffe0c5fe1887][The =prot-dired.el= library]])
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package prot-dired
@@ -5001,6 +5023,9 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about ~dired-subtree~
+:PROPERTIES:
+:CUSTOM_ID: h:3a4a29bc-3491-4d01-9d64-1cef63b3116a
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package dired-subtree
@@ -5013,6 +5038,9 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about ~wdired~ (writable Dired)
+:PROPERTIES:
+:CUSTOM_ID: h:1b53bc10-8b1b-4f68-bbec-165909761e43
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package wdired
@@ -5022,6 +5050,9 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about ~image-dired~
+:PROPERTIES:
+:CUSTOM_ID: h:198cdda8-fc3f-4672-8fd6-dfc795cea9e0
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package image-dired
@@ -5037,6 +5068,9 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about =trashed.el=
+:PROPERTIES:
+:CUSTOM_ID: h:2e005bd1-d098-426d-91f9-2a31a6e55caa
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; dired-like mode for the trash (trashed.el)
@@ -5050,6 +5084,9 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about ~dired-preview~
+:PROPERTIES:
+:CUSTOM_ID: h:c345ff72-d905-482a-a885-fc111252aacf
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; Automatically preview Dired file at point (dired-preview.el)
@@ -5073,6 +5110,9 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 #+end_src
 
 *** TODO The =prot-emacs-dired.el= section about ~mandoura~ (~mpv~ media player)
+:PROPERTIES:
+:CUSTOM_ID: h:bdea93a8-f420-400c-ac3a-9663cb10dbd2
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; Play back media with Dired (mandoura.el)
