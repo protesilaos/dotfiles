@@ -5812,6 +5812,11 @@ As always, we ~provide~ the module. This is the mirror function of
 ;;; General Git/Project/Diff configurations
 (prot-emacs-configure
   (:delay 2)
+#+end_src
+
+[ Watch: [[https://protesilaos.com/codelog/2023-11-17-emacs-ediff-basics/][Emacs: ediff basics]] (2023-12-30) ]
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `ediff'
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)
@@ -5819,7 +5824,9 @@ As always, we ~provide~ the module. This is the mirror function of
   (setq ediff-show-clashes-only t)
   (setq ediff-split-window-function 'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `project'
   (setopt project-switch-commands
           '((project-find-file "Find file")
@@ -5885,7 +5892,9 @@ Based on `project--keymap-prompt' and meant to be used as an
     "C-x p C-g" #'keyboard-quit
     "C-x p <return>" #'project-dired
     "C-x p <delete>" #'project-forget-project)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `diff-mode'
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
@@ -5894,7 +5903,9 @@ Based on `project--keymap-prompt' and meant to be used as an
   (setq diff-refine nil) ; I do it on demand, with my `agitate' package (more below)
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
   (setq diff-font-lock-syntax 'hunk-also))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Version control framework (vc.el, vc-git.el, and more)
 (prot-emacs-package vc
   (:delay 2)
@@ -5988,7 +5999,9 @@ Based on `project--keymap-prompt' and meant to be used as an
     "f" #'vc-log-incoming
     "F" #'vc-update
     "P" #'vc-push))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Agitate
 ;; A package of mine to complement VC and friends.  Read the manual
 ;; here: <https://protesilaos.com/emacs/agitate>.
@@ -6028,7 +6041,9 @@ Based on `project--keymap-prompt' and meant to be used as an
     ;; `agitate-log-edit-conventional-commits-collection'.
     "C-c C-i C-e" #'agitate-log-edit-emoji-commit
     "C-c C-i C-c" #'agitate-log-edit-conventional-commit))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
 
 ;; There is no need to install the package, as transient.el is built
