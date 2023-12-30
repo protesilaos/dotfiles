@@ -5093,10 +5093,19 @@ given directory ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-sear
     "M-s G" #'prot-dired-grep-marked-files)) ; M-s g is `prot-search-grep'
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= section about ~dired-subtree~
+*** The =prot-emacs-dired.el= section about ~dired-subtree~
 :PROPERTIES:
 :CUSTOM_ID: h:3a4a29bc-3491-4d01-9d64-1cef63b3116a
 :END:
+
+The ~dired-subtree~ package by Matúš Goljer provides the convenience
+of quickly revealing the contents of the directory at point. We do not
+have to insert its contents below the current listing, as we would
+normally do in Dired, nor do we have to open it in another buffer just
+to check if we need to go further.
+
+I do not use this feature frequently, though I appreciate it when I do
+need it.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package dired-subtree
