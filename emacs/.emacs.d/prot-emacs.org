@@ -4933,6 +4933,16 @@ history ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.e
 :CUSTOM_ID: h:d7d5e619-3d50-4d9e-a951-7262462a60c9
 :END:
 
+From inside a Dired buffer, we can type =!= (=M-x dired-do-shell-command=)
+or =&= (=M-x dired-do-async-shell-command=) to run an arbitrary
+command with the given file (or marked files) as an argument. These
+commands will produce a minibuffer prompt, which expects us to type in
+the name of the command. Emacs already tries to guess some relevant
+defaults, though we can make it do what we want by configuring the
+~dired-guess-shell-alist-user~ user option.
+
+This variable takes an alist value...
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
   (setq dired-guess-shell-alist-user ; those are the suggestions for ! and & in Dired
         '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh" "xdg-open")
