@@ -4775,7 +4775,7 @@ whether I use the ~grep~ or ~rg~ (~ripgrep~) program.
     (setq xref-search-program (if rgp 'ripgrep 'grep))))
 #+end_src
 
-*** The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)
+*** TODO The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)
 :PROPERTIES:
 :CUSTOM_ID: h:9a3581df-ab18-4266-815e-2edd7f7e4852
 :END:
