@@ -4819,18 +4819,35 @@ access to many other conveniences, such as (i) marking files to
 operate on (individually, with a regexp, etc.), (ii) bulk renaming
 files by making the buffer writable and editing it like a regular
 file, (iii) showing only files you want, (iv) listing the contents of
-any subdirectory, such as to benefit of the bulk-renaming capability,
-(v) running a keyboard macro that edits file contents while using
-Dired to navigate their list, (vi) open files in an external
-application, and more.
+any subdirectory, such as to benefit from the bulk-renaming
+capability, (v) running a keyboard macro that edits file contents
+while using Dired to navigate the file listing, (vi) open files in an
+external application, and more.
 
-Dired lets us operate on our files in a way that still feels close to
-the command-line, yet has more powerful interactive features than
-fully fledged, graphical file managers. The only area where it is not
-as good is in previewing multimedia files, though I anyway rely on my
-Denote file-naming convention to find what I am looking for (far more
-reliable than a preview, plus it is easy to open the video in a media
-player).
+Dired lets us work with our files in a way that still feels close to
+the command-line, yet has more powerful interactive features than even
+fully fledged, graphical file managers.
+
+*** The =prot-emacs-dired.el= settings for common operations
+:PROPERTIES:
+:CUSTOM_ID: h:39fb0eab-54bb-4e5b-8e38-9443dbe5c5ee
+:END:
+
+I start with the now-familiar ~prot-emacs-package~ macro to ~require~
+the ~dired~ feature with a slight delay and then start tweaking it 
+([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
+Then I add two settings which make all copy, rename/move, and delete
+operations more intuitive. I always want to perform those actions in a
+recursive manner, as this is the intent I have when I am targeting
+directories.
+
+The ~delete-by-moving-to-trash~ is a deviation from the behaviour of
+the ~rm~ program, as it sends the file into the virtual trash folder.
+Depending on the system, files in the trash are either removed
+automatically after a few days, or we still have to permanently delete
+them manually. I prefer this extra layer of safety. Plus, we have the
+~trashed~ package to navigate the trash folder in a Dired-like way
+([[#h:2e005bd1-d098-426d-91f9-2a31a6e55caa][The =prot-emacs-dired.el= section about =trashed.el=]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el" :mkdirp yes
 ;;; Dired file manager and prot-dired.el extras
