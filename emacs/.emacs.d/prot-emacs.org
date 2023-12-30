@@ -4942,7 +4942,22 @@ the name of the command. Emacs already tries to guess some relevant
 defaults, though we can make it do what we want by configuring the
 ~dired-guess-shell-alist-user~ user option.
 
-This variable takes an alist value...
+This variable takes an alist value: a list of lists. Each element
+(each list) has the first item in the list as a regular expression to
+match file names. We normally want to have file type extensions here,
+though we can also target the full name of a file. The remaining
+entries in the list are strings that specify the name of the external
+program to use. We can have as many as we want and cycle between them
+using the familiar =M-p= and =M-n= keys inside the minibuffer (which
+call the commands ~previous-history-element~ and ~next-history-element~,
+respectively).
+
+On Linux, the generic "open with default app" call is ~xdg-open~, so
+we always want that as a fallback.
+
+Note that Emacs 30 (current development target as of this writing on
+2023-12-30 16:12 +0200), we have the command ~dired-do-open~, which is
+the equivalent of typing =&= and then specifying the ~xdg-open~ command.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
   (setq dired-guess-shell-alist-user ; those are the suggestions for ! and & in Dired
