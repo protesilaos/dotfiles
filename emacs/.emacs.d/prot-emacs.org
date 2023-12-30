@@ -4966,10 +4966,20 @@ the equivalent of typing =&= and then specifying the ~xdg-open~ command.
           (".*" "xdg-open")))
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= miscellaneous tweaks
+*** The =prot-emacs-dired.el= miscellaneous tweaks
 :PROPERTIES:
 :CUSTOM_ID: h:6327e6ba-a468-416f-ad26-b530c32fe235
 :END:
+
+These are some minor tweaks that I do not really care about. The only
+one which is really nice in my opinion is the hook that involves the
+~dired-hide-details-mode~. This is the command that hides the noisy
+output of the ~ls~ =-l= flag, leaving only the file names in the list
+([[#h:679e4460-b306-450f-aa20-497243057e02][The =prot-emacs-dired.el= switches for ~ls~ (how files are listed)]]).
+We can toggle this effect at any time with the =(= key, by default.
+
+I disable the repetition of the =j= key as I do use ~repeat-mode~
+([[#h:fbe6f9da-25ee-46a3-bb03-8fa7c1d48dab][The =prot-emacs-essentials.el= settings for ~repeat-mode~]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
