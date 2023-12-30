@@ -4996,10 +4996,25 @@ I disable the repetition of the =j= key as I do use ~repeat-mode~
   (define-key dired-jump-map (kbd "j") nil))
 #+end_src
 
-*** TODO The =prot-emacs-dired.el= section about various conveniences
+*** The =prot-emacs-dired.el= section about various conveniences
 :PROPERTIES:
 :CUSTOM_ID: h:6758bf16-e47e-452e-b39d-9d67c2b9aa4b
 :END:
+
+The =dired-aux.el= and =dired-x.el= are two built-in libraries that
+provide useful extras for Dired. The highlights from what I have here
+are:
+
+- the user option ~dired-create-destination-dirs~ and
+  ~dired-create-destination-dirs-on-trailing-dirsep~, which offer to
+  create the specified directory path if it is missing.
+
+- the user options ~dired-clean-up-buffers-too~ and
+  ~dired-clean-confirm-killing-deleted-buffers~ which cover the
+  deletion of buffers related to files that we delete from Dired.
+
+- the key binding for ~dired-do-open~, which opens the file or
+  directory externally ([[#h:d7d5e619-3d50-4d9e-a951-7262462a60c9][The =prot-emacs-dired.el= settings to open files externally]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-package dired-aux
