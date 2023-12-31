@@ -1,6 +1,7 @@
 ;;; General Git/Project/Diff configurations
 (prot-emacs-configure
   (:delay 2)
+
 ;;;; `ediff'
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)

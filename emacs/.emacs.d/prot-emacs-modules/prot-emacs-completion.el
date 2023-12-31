@@ -111,8 +111,7 @@
   (setq completions-detailed t)
   (setq completion-show-inline-help nil)
   (setq completions-max-height 6)
-  (setq completions-header-format
-        (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
+  (setq completions-header-format (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
   (setq completions-highlight-face 'completions-highlight)
 
 ;;;; `savehist' (minibuffer and related histories)
