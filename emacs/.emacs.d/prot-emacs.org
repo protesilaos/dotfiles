@@ -526,7 +526,7 @@ directory as the init.el."
   :group 'file)
 #+end_src
 
-*** The =init.el= option to load a theme family
+*** The =init.el= user option to load a theme family
 :PROPERTIES:
 :CUSTOM_ID: h:5612b5b8-45a5-4a79-a25b-6fa3d9146c39
 :END:
@@ -577,7 +577,7 @@ before all other modules of my setup."
                  (const :tag "Do not load a theme module" nil)))
 #+end_src
 
-*** The =init.el= option to load a minibuffer user interface
+*** The =init.el= user option to load a minibuffer user interface
 :PROPERTIES:
 :CUSTOM_ID: h:f012a254-2716-4c29-a64b-c2b3df34f57f
 :END:
@@ -647,7 +647,7 @@ that adds functionality on top of what the major mode provides."
   :type 'boolean)
 #+end_src
 
-*** The =init.el= option to load Vim keys (=evil.el= and =devil.el=)
+*** The =init.el= user option to load Vim keys (=evil.el= and =devil.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:d32718d6-c678-483e-8cdf-02d77053c960
 :END:
@@ -674,7 +674,7 @@ before all other modules of my setup."
   :type 'boolean)
 #+end_src
 
-*** The =init.el= option to enable ~which-key~
+*** The =init.el= user option to enable ~which-key~
 :PROPERTIES:
 :CUSTOM_ID: h:24324854-1f8c-4d8b-aa7c-291de968cbf4
 :END:
@@ -701,7 +701,7 @@ before all other modules of my setup."
   :type 'boolean)
 #+end_src
 
-*** The =init.el= option to load icons (=nerd-icons.el=)
+*** The =init.el= user option to load icons (=nerd-icons.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:a75444e3-527e-4525-84f8-0a43771966a6
 :END:
@@ -729,7 +729,7 @@ before all other modules of my setup."
   :type 'boolean)
 #+end_src
 
-*** The =init.el= option to omit packages at startup
+*** The =init.el= user option to omit packages at startup
 :PROPERTIES:
 :CUSTOM_ID: h:1547dde9-6a79-4f58-8160-3ece9d1b8b8b
 :END:
