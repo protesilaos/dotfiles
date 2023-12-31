@@ -4288,7 +4288,7 @@ function as close to ~mct~ as possible.
 (provide 'prot-emacs-completion)
 #+end_src
 
-*** The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)
+**** The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a
 :END:
@@ -4341,7 +4341,7 @@ pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =p
 #+end_src
 
 
-*** The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)
+**** The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:cff33514-d3ac-4c16-a889-ea39d7346dc5
 :END:
