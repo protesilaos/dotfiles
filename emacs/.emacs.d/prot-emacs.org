@@ -6083,6 +6083,12 @@ Based on `project--keymap-prompt' and meant to be used as an
 :CUSTOM_ID: h:d799c3c0-bd6a-40bb-bd1a-ba4ea5367840
 :END:
 
+Watch:
+
+- [[https://protesilaos.com/codelog/2023-05-23-emacs-org-basics/][Basics of Org mode]] (2023-05-23)
+- [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09)
+- [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][Primer on "org-capture"]] (2020-02-04)
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
 (prot-emacs-configure
   (:delay 5)
@@ -6104,7 +6110,9 @@ Based on `project--keymap-prompt' and meant to be used as an
   ;; (require 'cal-dst)
   (setq calendar-standard-time-zone-name "+0200")
   (setq calendar-daylight-time-zone-name "+0300")
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Appt (appointment reminders which also integrate with Org agenda)
   (setq appt-display-diary nil
         appt-display-format nil
@@ -6116,7 +6124,9 @@ Based on `project--keymap-prompt' and meant to be used as an
 
   (with-eval-after-load 'org-agenda
     (appt-activate 1))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Org-mode (personal information manager)
   ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
   ;; otherwise we have to use the Custom UI.  No thanks!
@@ -6525,7 +6535,9 @@ Based on `project--keymap-prompt' and meant to be used as an
     "b" #'org-narrow-to-block
     "e" #'org-narrow-to-element
     "s" #'org-narrow-to-subtree)
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Custom extensions (prot-org.el)
   (require 'prot-org)
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
