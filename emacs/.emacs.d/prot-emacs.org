@@ -2641,6 +2641,25 @@ reflect the new file contents.
   (global-auto-revert-mode 1)
 #+end_src
 
+*** The =prot-emacs-essentials.el= settings for auto saving files (~auto-save-visited-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:4a8caede-80b0-4195-8b5d-7f60ab64a3d4
+:END:
+
+When this mode is enabled, file-visiting buffers are automatically
+saved to their files after ~auto-save-visited-interval~ of idleness.
+This is in contrast to the ~auto-save-mode~, which automatically saves such
+buffers to a separate file, leaving the original file intact. We can
+then recover the auto-saved alternative file, if we want, but I prefer
+to just write directly to disk.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;;; Auto save buffers visiting files
+  (setq auto-save-visited-interval 2)
+  (setq remote-file-name-inhibit-auto-save-visited t)
+  (auto-save-visited-mode 1)
+#+end_src
+
 *** The =prot-emacs-essentials.el= section for ~delete-selection-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:d551b90d-d730-4eb5-976a-24b010fd4db3

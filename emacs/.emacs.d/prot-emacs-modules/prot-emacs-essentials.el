@@ -182,6 +182,11 @@
   (setq auto-revert-verbose t)
   (global-auto-revert-mode 1)
 
+;;;; Auto save buffers visiting files
+  (setq auto-save-visited-interval 2)
+  (setq remote-file-name-inhibit-auto-save-visited t)
+  (auto-save-visited-mode 1)
+
 ;;;; Delete selection
   (delete-selection-mode 1)
 
