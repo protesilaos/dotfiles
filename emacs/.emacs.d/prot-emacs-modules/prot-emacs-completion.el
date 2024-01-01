@@ -208,6 +208,7 @@
 (prot-emacs-package corfu
   (:install t)
   (:delay 5)
+  (setq corfu-min-width 20)
 
   (global-corfu-mode 1)
 
