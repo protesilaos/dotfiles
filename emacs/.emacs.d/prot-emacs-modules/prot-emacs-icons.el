@@ -9,6 +9,11 @@
   (nerd-icons-completion-marginalia-setup)
   (nerd-icons-completion-mode 1))
 
+(prot-emacs-package nerd-icons-corfu
+  (:install t)
+  (:delay 5)
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
 (prot-emacs-package nerd-icons-dired
   (:install t)
   (:delay 5)
