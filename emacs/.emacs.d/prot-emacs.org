@@ -3267,29 +3267,6 @@ line.
     (display-battery-mode 1)))
 #+end_src
 
-*** The =prot-emacs-essentials.el= section about ~exec-path-from-shell~
-:PROPERTIES:
-:CUSTOM_ID: h:f2447060-5d89-48d5-a682-5cfc76e0928e
-:END:
-
-The ~exec-path-from-shell~ package by Steve Purcell gets environment
-variables from the system shell and makes them available to Emacs. I
-have found that I need this while running on Wayland to properly use
-SSH, but maybe I can do without it if I tweak a few things in
-=~/.config/environment.d=envvars.conf=... I will check.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-;;; Get environment variables into Emacs (exec-path-from-shell) while on Wayland
-(when-let ((session (getenv "XDG_SESSION_TYPE"))
-           ((equal session "wayland")))
-  (prot-emacs-package exec-path-from-shell
-    (:install t)
-    (:delay 1)
-    (setq exec-path-from-shell-variables
-          '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
-    (exec-path-from-shell-initialize)))
-#+end_src
-
 *** The =prot-emacs-essentials.el= call to ~provide~
 :PROPERTIES:
 :CUSTOM_ID: h:c8b2f021-fe5a-4f6b-944c-20340f764fb2
@@ -7856,7 +7833,7 @@ I personally do not use this, except when I need to do a demonstration.
 (provide 'prot-emacs-which-key)
 #+end_src
 
-** The =prot-emacs-icons.el= module
+** The =prot-emacs-icons.el= module (~nerd-icons~ for various packages)
 :PROPERTIES:
 :CUSTOM_ID: h:4efde779-3ef0-40b7-82e4-70f71b321428
 :END:

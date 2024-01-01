@@ -464,14 +464,4 @@ to be cycling through the edits."
 
     (display-battery-mode 1)))
 
-;;; Get environment variables into Emacs (exec-path-from-shell) while on Wayland
-(when-let ((session (getenv "XDG_SESSION_TYPE"))
-           ((equal session "wayland")))
-  (prot-emacs-package exec-path-from-shell
-    (:install t)
-    (:delay 1)
-    (setq exec-path-from-shell-variables
-          '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
-    (exec-path-from-shell-initialize)))
-
 (provide 'prot-emacs-essentials)
