@@ -305,6 +305,13 @@
     "M-# d" #'substitute-target-in-defun    ; "defun" mnemonic
     "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 
+(prot-emacs-package goto-chg
+  (:install t)
+  (:delay 1)
+  (prot-emacs-keybind global-map
+    "C-(" #'goto-last-change
+    "C-)" #'goto-last-change-reverse))
+
 ;;; Mark syntactic constructs efficiently if tree-sitter is available (expreg)
 (when (and (treesit-available-p) prot-emacs-treesitter-extras)
   (prot-emacs-package expreg

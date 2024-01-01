@@ -2904,6 +2904,25 @@ the point. Better check the video I did on the matter:
     "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
 #+end_src
 
+*** The =prot-emacs-essentials.el= section about ~goto-chg~ (go to change)
+:PROPERTIES:
+:CUSTOM_ID: h:1cbb0a14-a2d4-49d1-88e9-688115445810
+:END:
+
+The ~goto-chg~ package, authored by David Andersson and maintained by
+Vasilij Schneidermann, moves the cursor to the point where the last
+change happened. Calling the command again cycles to the point before
+that and so on. Simple and super effective.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+(prot-emacs-package goto-chg
+  (:install t)
+  (:delay 1)
+  (prot-emacs-keybind global-map
+    "C-(" #'goto-last-change
+    "C-)" #'goto-last-change-reverse))
+#+end_src
+
 *** The =prot-emacs-essentials.el= section about ~expreg~ (tree-sitter mark syntactically)
 :PROPERTIES:
 :CUSTOM_ID: h:ceb193bf-0de3-4c43-8ab7-6daa50817754
