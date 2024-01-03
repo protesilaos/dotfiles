@@ -5936,10 +5936,22 @@ As always, we ~provide~ the module. This is the mirror function of
 (provide 'prot-emacs-window)
 #+end_src
 
-** TODO The =prot-emacs-git.el= module
+** The =prot-emacs-git.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:65e3eff5-0bff-4e1f-b6c5-0d3aa1a0d232
 :END:
+
+Emacs can handle several version control programs, though I only ever
+use ~git~. Version control is essential to any public-facing
+programming project: the history of changes is stored persistently, so
+the developer can retrace when a given snippet of code was introduced
+or modified. Plus, it is integral to collaboration, which is what free
+software (such as Emacs and all its packages) is all about.
+
+This section covers my settings for version control per se, but more
+widely for tools related to checking different versions of files and
+working with so-called "projects". Given that I am loading several
+built-in tools, I use my ~prot-emacs-configure~ macro ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el" :mkdirp yes
 ;;; General Git/Project/Diff configurations
@@ -5947,7 +5959,29 @@ As always, we ~provide~ the module. This is the mirror function of
   (:delay 2)
 #+end_src
 
+*** The =prot-emacs-git.el= section about ediff
+:PROPERTIES:
+:CUSTOM_ID: h:89edea05-4d94-4ea1-b2a8-5ad01422618c
+:END:
+
 [ Watch: [[https://protesilaos.com/codelog/2023-11-17-emacs-ediff-basics/][Emacs: ediff basics]] (2023-12-30) ]
+
+The built-in ~ediff~ feature provides several commands that let us
+compare files or buffers side-by-side. The default of ~ediff~ are bad,
+in my opinion: it put buffers one on top of the other and places the
+"control panel" in a separate Emacs frame. The first time I tried to
+use it, I thought I broke my setup because it is unlike anything we
+normally interact with. As such, the settings I have for
+~ediff-split-window-function~ and ~ediff-window-setup-function~ are
+what I would expect Emacs maintainers to adopt as the new default. I
+strongly encourage everyone to start with them.
+
+In my workflow, the points of entry to the ~ediff~ feature are the
+commands ~ediff-files~, ~ediff-buffers~. Sometimes I use the 3-way
+variants with ~ediff-files3~ and ~ediff-buffers3~, though this is rare.
+Do watch the video I link to in the beginning of this section, as it
+covers the main functionality of this neat tool. I also show how it
+integrates with ~magit~ [[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]). 
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `ediff'
@@ -5958,6 +5992,12 @@ As always, we ~provide~ the module. This is the mirror function of
   (setq ediff-split-window-function 'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 #+end_src
+
+*** TODO The =prot-emacs-git.el= section about =project.el=
+:PROPERTIES:
+:CUSTOM_ID: h:7dcbcadf-8af6-487d-b864-e4ce56d69530
+:END:
+
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `project'
@@ -6027,6 +6067,11 @@ Based on `project--keymap-prompt' and meant to be used as an
     "C-x p <delete>" #'project-forget-project)
 #+end_src
 
+*** TODO The =prot-emacs-git.el= section about ~diff-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:8b426a69-e3cd-42ac-8788-f41f6629f879
+:END:
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `diff-mode'
   (setq diff-default-read-only t)
@@ -6037,6 +6082,11 @@ Based on `project--keymap-prompt' and meant to be used as an
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
   (setq diff-font-lock-syntax 'hunk-also))
 #+end_src
+
+*** TODO The =prot-emacs-git.el= section about =vc.el= and related
+:PROPERTIES:
+:CUSTOM_ID: h:50add1d8-f0f4-49be-9e57-ab280a4aa300
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Version control framework (vc.el, vc-git.el, and more)
@@ -6175,6 +6225,11 @@ Based on `project--keymap-prompt' and meant to be used as an
     "C-c C-i C-e" #'agitate-log-edit-emoji-commit
     "C-c C-i C-c" #'agitate-log-edit-conventional-commit))
 #+end_src
+
+*** TODO The =prot-emacs-git.el= section about ~magit~ (great Git client)
+:PROPERTIES:
+:CUSTOM_ID: h:b08af527-9ebf-4425-ac3a-24b4f371a4fd
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
