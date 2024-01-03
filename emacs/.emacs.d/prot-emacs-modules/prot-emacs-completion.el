@@ -285,6 +285,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (:install t)
     (:delay 5)
     (setq embark-confirm-act-all nil)
+    ;; The prot-embark.el has an advice to further simplify the
+    ;; minimal indicator.  It shows cycling, which I never want to see
+    ;; or do.
     (setq embark-mixed-indicator-both nil)
     (setq embark-mixed-indicator-delay 1.0)
     (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
@@ -293,14 +296,16 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (setq embark-verbose-indicator-excluded-actions
           '(embark-cycle embark-act-all embark-collect embark-export embark-insert))
 
-    ;; I never cycle and want to disable the key.  Normally, a nil value
-    ;; disables a key binding but here that value is interpreted as the
-    ;; binding for `embark-act'.  So I just add some obscure key that I
-    ;; do not have.  I absolutely do not want to cycle by accident!
+    ;; I never cycle and want to disable the damn thing.  Normally, a
+    ;; nil value disables a key binding but here that value is
+    ;; interpreted as the binding for `embark-act'.  So I just add
+    ;; some obscure key that I do not have.  I absolutely do not want
+    ;; to cycle!
     (setq embark-cycle-key "<XF86Travel>")
 
     ;; I do not want `embark-org' and am not sure what is loading it.
-    ;; So I just unsert all the keymaps...
+    ;; So I just unsert all the keymaps... This is the nuclear option
+    ;; but here we are.
     (with-eval-after-load 'embark-org
       (defvar prot/embark-org-keymaps
         '(embark-org-table-cell-map
@@ -319,6 +324,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
          (set keymap (make-sparse-keymap)))
        prot/embark-org-keymaps)))
 
+  ;; I define my own keymaps because I only use a few functions in a
+  ;; limited number of contexts.
   (prot-emacs-package prot-embark
     (:delay 5)
     (setq embark-keymap-alist

@@ -4164,12 +4164,101 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
         (add-hook 'consult-after-jump-hook fn)))))
 #+end_src
 
-*** TODO The =prot-emacs-completion.el= section about ~embark~
+*** The =prot-emacs-completion.el= section about ~embark~
 :PROPERTIES:
 :CUSTOM_ID: h:61863da4-8739-42ae-a30f-6e9d686e1995
 :END:
 
 [ This feature is subject to [[#h:91477890-49d5-48c3-9627-62295d2ab35d][The =init.el= user option to load extras for minibuffer completion]]. ]
+
+The ~embark~ package by Omar Antolín Camarena, provides a mechanism to
+perform relevant actions in the given context. What constitutes "the
+given context" depends on where the cursor is, such as if it is at the
+end of a symbolic expression in Lisp code or inside the minibuffer.
+The single point of entry is the ~embark-act~ command or variants like
+~embark-dwim~.
+
+With ~embark-act~ we gain access to a customisable list of commands
+for the given context. If we are over a Lisp symbol, one possible
+action is to describe it (i.e. produce documentation about it). If we
+are browsing files in the minibuffer, possible actions include file
+operations such as to delete or rename the file. And so on for
+everything.
+
+The ~embark-dwim~ command always performs the default action for the
+given context. It is like invoking ~embark-act~ and then typing the
+=RET= key.
+
+A killer feature of ~embark~ is the concepts of "collect" and
+"export". These are used in the minibuffer to produce a dedicated
+buffer that contains all the completion candidates. For example, if we
+are reading documentation about =embark-= and have 10 items there, we
+can "collect" the results in their own buffer and then navigate it as
+if it were the minibuffer: =RET= will perform the action that the
+actual minibuffer would have carried out (to show documentation, in
+this case). Similarly, the export mechanism takes the completion
+candidates out of the minibuffer, though it also puts them in a major
+mode that is appropriate for them. Files, for instance, will be placed
+in a Dired buffer ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]).
+
+Depending on the configuations about the "indicator", the ~embark-act~
+command will display an informative buffer with keys and their
+corresponding commands. We can control its placement the same way we
+do with all well-behaved buffers ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]).
+
+One downside of ~embark~ is that it is hard to know what the context
+is. I have had this experience myself several times, where I though I
+was targeting the URL at point while the actions were about Org source
+blocks, headings, and whatnot. Embark is probably correct in such a
+case, though I cannot make my brain think the way it expects.
+
+Another downside, which is also true for ~which-key~ ([[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][The =prot-emacs-which-key.el= module]]),
+is the sheer number of options for each context. I feel that the
+defaults should be more conservative, to have 3-4 actions per context
+to make it easier to find stuff. Those who need more, can add them.
+Documentation can also be provided to that end. Adding commands to
+such a list is not a trivial task, because the user must modify
+keymaps and thus understand the relevant concepts. Sure, we can all
+learn, but this is not your usual ~setq~ tweak.
+
+All things considered, I do not recommend ~embark~ to new users as I
+know for a fact that people have trouble using it effectively. Power
+users can benefit from it, though you will notice in the following
+code block and in =prot-embark.el= how even power users need to put in
+some work ([[#h:fb034be5-c316-4c4f-a46f-cebcab332a47][The =prot-embark.el= library]]). Whether it is worth it or
+not depends on one's use-case.
+
+Karthik Chikmagalur has an excellently written and presented essay on
+[[https://karthinks.com/software/fifteen-ways-to-use-embark/][Fifteen ways to use Embark]]. If you plan on becoming an ~embark~ power
+user, this will help you. Quote from Karthik:
+
+#+begin_quote
+Despite what these examples suggest, I estimate that I use less than a
+third of what Embark provides. Even so, in allowing me to change or
+chain actions at any time, it lets me pilot Emacs by the seat of my
+pants. A second, unforeseen benefit is that it makes commands and
+listings that I would never use available in a frictionless way:
+commands like ~transpose-regions~ and ~apply-macro-to-region-lines~,
+or custom ~dired~, ~ibuffer~ and ~package-menu~ listings that are
+interactively inaccessible otherwise4. The ability to quickly whip up
+such buffers makes knowhing how to use dired or ibuffer pay off
+several fold. In composing such features seamlessly with minibuffer
+interaction or with text-regions, Embark acts as a lever to amplify
+the power of Emacs’ myriad built in commands and libraries.
+#+end_quote
+
+I have been using Emacs since 2019 and not once did I have a use for
+~transpose-regions~ or ~apply-macro-to-region-lines~. To run a
+keyboard macro in a region, narrow to it, and call the kmacro with a
+=0= argument (run until you encounter an error or the end of the
+buffer). Why remember such a specialised function when the general
+pattern is getting the job done? And why be presented with the option
+of that same function every single time you ~embark-act~ on a region?
+
+Personally, I would be content with a package that does the equivalent
+of "collect" and "export". The rest is about organising keybindings
+and how you approach a given task (workflow as opposed to core
+functionality).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
@@ -4178,6 +4267,9 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
     (:install t)
     (:delay 5)
     (setq embark-confirm-act-all nil)
+    ;; The prot-embark.el has an advice to further simplify the
+    ;; minimal indicator.  It shows cycling, which I never want to see
+    ;; or do.
     (setq embark-mixed-indicator-both nil)
     (setq embark-mixed-indicator-delay 1.0)
     (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
@@ -4186,14 +4278,16 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
     (setq embark-verbose-indicator-excluded-actions
           '(embark-cycle embark-act-all embark-collect embark-export embark-insert))
 
-    ;; I never cycle and want to disable the key.  Normally, a nil value
-    ;; disables a key binding but here that value is interpreted as the
-    ;; binding for `embark-act'.  So I just add some obscure key that I
-    ;; do not have.  I absolutely do not want to cycle by accident!
+    ;; I never cycle and want to disable the damn thing.  Normally, a
+    ;; nil value disables a key binding but here that value is
+    ;; interpreted as the binding for `embark-act'.  So I just add
+    ;; some obscure key that I do not have.  I absolutely do not want
+    ;; to cycle!
     (setq embark-cycle-key "<XF86Travel>")
 
     ;; I do not want `embark-org' and am not sure what is loading it.
-    ;; So I just unsert all the keymaps...
+    ;; So I just unsert all the keymaps... This is the nuclear option
+    ;; but here we are.
     (with-eval-after-load 'embark-org
       (defvar prot/embark-org-keymaps
         '(embark-org-table-cell-map
@@ -4212,6 +4306,8 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
          (set keymap (make-sparse-keymap)))
        prot/embark-org-keymaps)))
 
+  ;; I define my own keymaps because I only use a few functions in a
+  ;; limited number of contexts.
   (prot-emacs-package prot-embark
     (:delay 5)
     (setq embark-keymap-alist
