@@ -5786,6 +5786,8 @@ the mouse for such a case.
 :CUSTOM_ID: h:77e4f174-0c86-460d-8a54-47545f922ae9
 :END:
 
+[ Also see: [[#h:7dcbcadf-8af6-487d-b864-e4ce56d69530][The =prot-emacs-git.el= section about =project.el=]]. ]
+
 My ~beframe~ package enables a frame-oriented Emacs workflow where
 each frame has access to the list of buffers visited therein. In the
 interest of brevity, we call buffers that belong to frames "beframed".
@@ -5993,11 +5995,49 @@ integrates with ~magit~ [[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-ema
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 #+end_src
 
-*** TODO The =prot-emacs-git.el= section about =project.el=
+*** The =prot-emacs-git.el= section about =project.el=
 :PROPERTIES:
 :CUSTOM_ID: h:7dcbcadf-8af6-487d-b864-e4ce56d69530
 :END:
 
+In Emacs parlance, a "project" is a collection of files and/or
+directories that share the same root. The root of a project is
+identified by a special file or directory, with =.git/= being one of
+the defaults as it is a version control system supported by the
+built-in =vc.el= ([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]]).
+
+We can specify more project roots as a list of strings in the user
+option ~project-vc-extra-root-markers~. I work exclusively with Git
+repositories, so I just add there a =.project= file in case I ever
+need to register a project without it being controlled by ~git~. In
+that case, the =.project= file is just an empty file in a directory
+that I want to treat as the root of this project.
+
+The common way to switch to a project is to type =C-x p p=, which
+calls the command ~project-switch-project~. It lists all registered
+projects and also includes a =... (choose a dir)= option. By choosing
+a new directory, we register it in our project list if it has a
+recognisable root. Once we select a project, we are presented with a
+list of common actions to start working on the project. These are
+defined in the user option ~project-switch-commands~ and are activated
+by the final key that accesses them from the =C-x p= prefix. As such,
+do =M-x describe-keymap= and check the ~project-prefix-map~. For
+example, I bind ~project-dired~ to =C-x p RET=, so =RET= accesses this
+command after =C-x p p= as well.
+
+While inside a project, we have many commands that operate on the
+project level. For example, =C-x p f= (~project-find-file~) searches
+for a file across the project, while =C-x p b= (~project-switch-to-buffer~)
+switches to a buffer that is specific to the project. Again, check the
+~project-prefix-map~ for available commands.
+
+If not inside a project, the project-related commands will first
+prompt to select a project (same as typing =C-x p p=) and then carry
+out their action.
+
+I combine projects with my ~beframe~ package, so that when I switch to
+a project I get a new frame that limits the buffers I visit there
+limited to that frame ([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `project'
