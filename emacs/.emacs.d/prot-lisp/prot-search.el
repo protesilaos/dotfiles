@@ -310,7 +310,7 @@ Also see `prot-search-grep-todo-keywords'."
                  (funcall outline-search-function)
                (re-search-forward outline-regexp nil t))
         (push
-         (format "%-8s %s"
+         (format "%-5s %s"
                  (line-number-at-pos (point))
                  (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
          candidates)
