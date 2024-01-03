@@ -346,23 +346,40 @@ word.  Fall back to regular `expreg-expand'."
 ;;; Visualise undo ring (`vundo')
 (prot-emacs-package vundo
   (:install t)
-  (:delay 30)
+  (:delay 1)
   (setq vundo-glyph-alist vundo-unicode-symbols)
 
-  (defun prot/vundo-if-repeat-undo ()
-    "Use `vundo' if the last command was an `undo'.
+  (defvar prot/vundo-undo-functions '(undo undo-only undo-redo)
+    "List of undo functions to check if we need to visualise the undo ring.")
+
+  (defvar prot/vundo-undo-command #'undo
+    "Command to call if we are not going to visualise the undo ring.")
+
+  (defun prot/vundo-if-repeat-undo (&rest args)
+    "Use `vundo' if the last command is among `prot/vundo-undo-functions'.
 In other words, start visualising the undo ring if we are going
 to be cycling through the edits."
     (interactive)
-    (call-interactively
-    (if (eq last-command 'undo)
-        'vundo
-      'undo)))
+     (if (member last-command prot/vundo-undo-functions)
+         (call-interactively 'vundo)
+       (apply args)))
 
-  (define-key global-map (kbd "C-/") #'prot/vundo-if-repeat-undo) ; override `undo'
+  (mapc
+   (lambda (fn)
+     (advice-add fn :around #'prot/vundo-if-repeat-undo))
+   prot/vundo-undo-functions)
+
   (prot-emacs-keybind vundo-mode-map
     "C-/" #'vundo-backward
-    "C-?" #'vundo-forward)
+    "C-?" #'vundo-forward
+    "u" #'vundo-backward
+    "U" #'vundo-forward
+    "g" #'vundo-goto-last-saved
+    "." #'vundo-goto-last-saved
+    "h" #'vundo-backward
+    "j" #'vundo-next
+    "k" #'vundo-previous
+    "l" #'vundo-forward)
 
   (with-eval-after-load 'pulsar
     (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))

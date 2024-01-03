@@ -3018,7 +3018,10 @@ command ~prot/vundo-if-repeat-undo~ produces a visualisation of the
 undo steps only after I repeat the ~undo~ command. The assumption is
 that if I am repeating, I am already interested in something further
 back in history, at which point having a representation of it is
-helpful.
+helpful. I am implementing this using the advice mechanism, so that I
+(i) the command calls the original function if needed, and (ii) I can
+extend the functionality to many functions without needing to rebind
+any keys.
 
 To make this feel natural, I bind keys in the ~vundo-mode-map~ that
 are consistent with the defaults for ~undo~ and ~undo-redo~. This way,
@@ -3038,23 +3041,40 @@ to pulse the region.
 ;;; Visualise undo ring (`vundo')
 (prot-emacs-package vundo
   (:install t)
-  (:delay 30)
+  (:delay 1)
   (setq vundo-glyph-alist vundo-unicode-symbols)
 
-  (defun prot/vundo-if-repeat-undo ()
-    "Use `vundo' if the last command was an `undo'.
+  (defvar prot/vundo-undo-functions '(undo undo-only undo-redo)
+    "List of undo functions to check if we need to visualise the undo ring.")
+
+  (defvar prot/vundo-undo-command #'undo
+    "Command to call if we are not going to visualise the undo ring.")
+
+  (defun prot/vundo-if-repeat-undo (&rest args)
+    "Use `vundo' if the last command is among `prot/vundo-undo-functions'.
 In other words, start visualising the undo ring if we are going
 to be cycling through the edits."
     (interactive)
-    (call-interactively
-    (if (eq last-command 'undo)
-        'vundo
-      'undo)))
+     (if (member last-command prot/vundo-undo-functions)
+         (call-interactively 'vundo)
+       (apply args)))
 
-  (define-key global-map (kbd "C-/") #'prot/vundo-if-repeat-undo) ; override `undo'
+  (mapc
+   (lambda (fn)
+     (advice-add fn :around #'prot/vundo-if-repeat-undo))
+   prot/vundo-undo-functions)
+
   (prot-emacs-keybind vundo-mode-map
     "C-/" #'vundo-backward
-    "C-?" #'vundo-forward)
+    "C-?" #'vundo-forward
+    "u" #'vundo-backward
+    "U" #'vundo-forward
+    "g" #'vundo-goto-last-saved
+    "." #'vundo-goto-last-saved
+    "h" #'vundo-backward
+    "j" #'vundo-next
+    "k" #'vundo-previous
+    "l" #'vundo-forward)
 
   (with-eval-after-load 'pulsar
     (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))
