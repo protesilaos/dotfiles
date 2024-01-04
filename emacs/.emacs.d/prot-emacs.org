@@ -4807,6 +4807,21 @@ For isearch, I have:
 For variants of ~occur~ or ~grep~, which also benefit from the rules I have on
 where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]):
 
+- Type =M-s M-s= (~prot-search-outline~) to use minibuffer completion
+  to match an entry across the buffer's outline. This is probably my
+  most used command. What I like about it is that it benefits from the
+  extensive customisations I make to the completion mechanism and the
+  minibuffer user interface ([[#h:15edf2c3-4419-4101-928a-6e224958a741][The =prot-emacs-completion.el= module]]).
+  Concretely, I can benefit from the visualisation produced by the
+  ~vertico~ or ~mct~ packages and match the heading with an
+  out-of-order pattern using ~orderless~. Simple and super effective!
+  Note that the ~consult~ package provides the ~consult-outline~
+  command, which was the basis for my variant. Unlike mine, it shows a
+  preview of the current match. I find previews disorienting when I
+  type quickly and do not want to experience any motion sickness while
+  using Emacs (this is not the fault of ~consult~, just me needing to
+  have a more static interface).
+
 - Type =M-s M-o= (~prot-search-occur-outline~) to produce an outline
   of the given buffer. What constitutes an outline is defined in the
   user option ~prot-search-outline-regexp-alist~. I only configure it
