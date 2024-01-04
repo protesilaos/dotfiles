@@ -6239,6 +6239,11 @@ Based on `project--keymap-prompt' and meant to be used as an
     "P" #'vc-push))
 #+end_src
 
+*** TODO The =prot-emacs-git.el= section about ~agitate~
+:PROPERTIES:
+:CUSTOM_ID: h:257b9118-4407-410e-a56a-134fd5d1a3b4
+:END:
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Agitate
 ;; A package of mine to complement VC and friends.  Read the manual
