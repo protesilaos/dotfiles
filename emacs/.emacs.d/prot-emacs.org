@@ -2478,7 +2478,7 @@ earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.e
     ;; Commands for paragraphs
     "M-Q" #'prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
-    "C-x O" #'prot-simple-other-windor-or-frame
+    "C-x O" #'next-multiframe-window
     "C-x n k" #'prot-simple-delete-page-delimiters
     "C-x M-r" #'prot-simple-swap-window-buffers
     ;; Commands for buffers
@@ -14462,14 +14462,6 @@ Name the buffer after the defun's symbol."
   (narrow-to-defun))
 
 ;;;; Commands for buffers
-
-;;;###autoload
-(defun prot-simple-other-windor-or-frame ()
-  "Switch to other window or frame.
-If there is only one window, call `other-frame'.  Otherwise use
-`other-window'."
-  (interactive)
-  (call-interactively (if (one-window-p) #'other-frame #'other-window)))
 
 ;;;###autoload
 (defun prot-simple-kill-buffer (buffer)

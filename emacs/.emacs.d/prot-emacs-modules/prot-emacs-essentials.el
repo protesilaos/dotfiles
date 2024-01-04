@@ -102,7 +102,7 @@
     ;; Commands for paragraphs
     "M-Q" #'prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
-    "C-x O" #'prot-simple-other-windor-or-frame
+    "C-x O" #'next-multiframe-window
     "C-x n k" #'prot-simple-delete-page-delimiters
     "C-x M-r" #'prot-simple-swap-window-buffers
     ;; Commands for buffers

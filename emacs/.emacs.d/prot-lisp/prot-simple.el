@@ -675,14 +675,6 @@ Name the buffer after the defun's symbol."
 ;;;; Commands for buffers
 
 ;;;###autoload
-(defun prot-simple-other-windor-or-frame ()
-  "Switch to other window or frame.
-If there is only one window, call `other-frame'.  Otherwise use
-`other-window'."
-  (interactive)
-  (call-interactively (if (one-window-p) #'other-frame #'other-window)))
-
-;;;###autoload
 (defun prot-simple-kill-buffer (buffer)
   "Kill current BUFFER without confirmation.
 When called interactively, prompt for BUFFER."
