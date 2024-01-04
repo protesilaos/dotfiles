@@ -6846,6 +6846,12 @@ Watch:
 :CUSTOM_ID: h:f44afb76-a1d7-4591-934d-b698cc79a792
 :END:
 
+
+*** TODO The =prot-emacs-langs.el= settings for TAB
+:PROPERTIES:
+:CUSTOM_ID: h:559713c8-0e1e-44aa-bca8-0caae01cc8bb
+:END:
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el" :mkdirp yes
 ;;; General language/editing settings
 (prot-emacs-configure
@@ -6855,7 +6861,14 @@ Watch:
                 tab-first-completion 'word-or-paren-or-punct ; Emacs 27
                 tab-width 4
                 indent-tabs-mode nil)
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for "electric" behaviour
+:PROPERTIES:
+:CUSTOM_ID: h:ebbc4e05-3654-4fc4-9948-d29dffeb6356
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Disable "electric" behaviour
   (electric-pair-mode -1)
   (electric-quote-mode -1)
@@ -6864,18 +6877,28 @@ Watch:
   (electric-indent-mode -1)
   (add-hook 'prog-mode-hook #'electric-indent-local-mode)
 
+#+end_src
+
+*** TODO The =prot-emacs-langs.el= settings ~show-paren-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:7cd21ea6-c5d8-4258-999d-ad94cac2d8bf
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Parentheses (show-paren-mode)
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
   (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
   (add-hook 'after-init-hook #'show-paren-mode)
+#+end_src
 
-;;;; Emacs Lisp (emacs-lisp-mode)
-  (prot-emacs-keybind emacs-lisp-mode-map
-    "C-x e" #'edebug-defun ; override `kmacro-end-and-call-macro'
-    "C-x E" #'edebug-remove-instrumentation)
+*** TODO The =prot-emacs-langs.el= settings for plain text
+:PROPERTIES:
+:CUSTOM_ID: h:c5fbd6dd-2982-4fca-aeed-d0e750d399bd
+:END:
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Plain text (text-mode)
   (setq sentence-end-double-space nil)
 
@@ -6894,32 +6917,74 @@ Meant to be added to `prog-mode-hook'."
   (add-hook 'text-mode-hook #'turn-on-auto-fill)
 
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for common file types
+:PROPERTIES:
+:CUSTOM_ID: h:1a132701-9487-4af0-8759-a8d64d02bf1f
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Arch Linux and AUR package scripts (sh-mode)
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode))
 
 ;;;; SystemD and other configuration files (conf-mode)
   (add-to-list 'auto-mode-alist '("\\.\\(service\\|timer\\)\\'" . conf-mode))
   (add-to-list 'auto-mode-alist '("dircolors" . conf-mode))
+#+end_src
 
-;;;; Eldoc (elisp live documentation feedback)
+*** TODO The =prot-emacs-langs.el= settings for ~eldoc~
+:PROPERTIES:
+:CUSTOM_ID: h:a5773a39-a78f-43fa-8feb-669492c1d5a9
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;;; Eldoc (Emacs live documentation feedback)
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
   (global-eldoc-mode 1)
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for ~eglot~
+:PROPERTIES:
+:CUSTOM_ID: h:92258aa8-0d8c-4c12-91b4-5f44420435ce
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Eglot (built-in client for the language server protocol)
   (setq eglot-sync-connect nil)
   (setq eglot-autoshutdown t)
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for very long lines
+:PROPERTIES:
+:CUSTOM_ID: h:20948a81-858d-4b21-b221-3b24833f5ad8
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Handle performance for very long lines (so-long.el)
   (global-so-long-mode 1))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for ~markdown-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:c9063898-07ae-4635-8853-bb5f4bbab421
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Markdown (markdown-mode)
 (prot-emacs-package markdown-mode
   (:install t)
   (:delay 5)
   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for ~sxhkdrc-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:88e36f15-4c74-4b7c-9ba6-cf5fb112ffd9
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; SXHKDRC mode (one of my many packages)
 (prot-emacs-package sxhkdrc-mode
   (:install t)
@@ -6928,7 +6993,14 @@ Meant to be added to `prog-mode-hook'."
   ;; relevant entries as well.  I separate my keys into different
   ;; modules and load only what I need.
   (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for spell checking
+:PROPERTIES:
+:CUSTOM_ID: h:115806c4-88b0-43c1-8db2-d9d8d20a5c17
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;; FIXME 2023-08-28: The laptop I use now that I do not have
 ;; electricity/Internet at home does not build the Jinx C module.  I
 ;; am not sure what is happening.  Commenting out for the time being,
@@ -6989,7 +7061,14 @@ Meant to be added to `prog-mode-hook'."
   (prot-emacs-keybind global-map
     "M-$" #'prot-spell-spell-dwim
     "C-M-$" #'prot-spell-change-dictionary))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for code linting (~flymake~)
+:PROPERTIES:
+:CUSTOM_ID: h:df6d1b52-0306-4ace-9099-17dded11fbed
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Flymake
 (prot-emacs-package flymake
   (:delay 30)
@@ -7041,7 +7120,14 @@ Meant to be added to `prog-mode-hook'."
   (:install t)
   (:delay 30)
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for ~outline-minor-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; General configurations for prose/writing
 (prot-emacs-configure
 ;;;; `outline' (`outline-mode' and `outline-minor-mode')
@@ -7051,21 +7137,28 @@ Meant to be added to `prog-mode-hook'."
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (setq outline-minor-mode-use-margins nil) ; as above
   (define-key global-map (kbd "<f10>") #'outline-minor-mode)
+#+end_src
 
-;;;; `docview' (simple PDF viewer)
-  ;; The "mupdf" is a reference to the Arch Linux system packages
-  ;; `mupdf', `mupdf-tools', `libmupdf'.
-  (setq doc-view-pdf->png-converter-function #'doc-view-pdf->png-converter-mupdf)
-  (setq doc-view-mupdf-use-svg (image-type-available-p 'svg)) ; Emacs 30
-  (setq doc-view-resolution 300) ; (doc-view-clear-cache)
+*** TODO The =prot-emacs-langs.el= settings for ~dictionary~
+:PROPERTIES:
+:CUSTOM_ID: h:f91563d8-f176-4555-b45b-ece56de03279
+:END:
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; `dictionary'
   (setq dictionary-server "dict.org"
         dictionary-default-popup-strategy "lev" ; read doc string
         dictionary-create-buttons nil
         dictionary-use-single-buffer t)
   (define-key global-map (kbd "C-c d") #'dictionary-search))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for ~altcaps~ (alternating letter casing)
+:PROPERTIES:
+:CUSTOM_ID: h:2a2728a9-e392-4fbe-bf2a-83e883387857
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
 (prot-emacs-package altcaps
@@ -7079,7 +7172,14 @@ Meant to be added to `prog-mode-hook'."
   ;; The available commands: `altcaps-word', `altcaps-region',
   ;; `altcaps-dwim'.
   (define-key global-map (kbd "C-x C-a") #'altcaps-dwim))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for ~denote~ (notes and file-naming)
+:PROPERTIES:
+:CUSTOM_ID: h:e86a66dc-7ef9-4f09-ad7e-946de2034e8d
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Denote (simple note-taking and file-naming)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
 (prot-emacs-package denote
@@ -7199,7 +7299,14 @@ Meant to be added to `prog-mode-hook'."
                    :immediate-finish nil
                    :kill-buffer t
                    :jump-to-captured t))))
+#+end_src
 
+*** TODO The =prot-emacs-langs.el= settings for ~logos~ (writing extras and file navigation)
+:PROPERTIES:
+:CUSTOM_ID: h:137c67f1-b112-42b7-aec9-c44ef4a6241a
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
 (prot-emacs-package olivetti
@@ -7208,7 +7315,9 @@ Meant to be added to `prog-mode-hook'."
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 (prot-emacs-package logos
   (:install t)
   (:delay 10)
@@ -7251,7 +7360,9 @@ Meant to be added to `prog-mode-hook'."
       (recenter 1))) ; Use 0 for the absolute top
 
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 (provide 'prot-emacs-langs)
 #+end_src
 

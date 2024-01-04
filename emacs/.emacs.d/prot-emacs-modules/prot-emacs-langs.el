@@ -22,11 +22,6 @@
   (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
   (add-hook 'after-init-hook #'show-paren-mode)
 
-;;;; Emacs Lisp (emacs-lisp-mode)
-  (prot-emacs-keybind emacs-lisp-mode-map
-    "C-x e" #'edebug-defun ; override `kmacro-end-and-call-macro'
-    "C-x E" #'edebug-remove-instrumentation)
-
 ;;;; Plain text (text-mode)
   (setq sentence-end-double-space nil)
 
@@ -53,7 +48,7 @@ Meant to be added to `prog-mode-hook'."
   (add-to-list 'auto-mode-alist '("\\.\\(service\\|timer\\)\\'" . conf-mode))
   (add-to-list 'auto-mode-alist '("dircolors" . conf-mode))
 
-;;;; Eldoc (elisp live documentation feedback)
+;;;; Eldoc (Emacs live documentation feedback)
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
   (global-eldoc-mode 1)
 
@@ -202,13 +197,6 @@ Meant to be added to `prog-mode-hook'."
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (setq outline-minor-mode-use-margins nil) ; as above
   (define-key global-map (kbd "<f10>") #'outline-minor-mode)
-
-;;;; `docview' (simple PDF viewer)
-  ;; The "mupdf" is a reference to the Arch Linux system packages
-  ;; `mupdf', `mupdf-tools', `libmupdf'.
-  (setq doc-view-pdf->png-converter-function #'doc-view-pdf->png-converter-mupdf)
-  (setq doc-view-mupdf-use-svg (image-type-available-p 'svg)) ; Emacs 30
-  (setq doc-view-resolution 300) ; (doc-view-clear-cache)
 
 ;;;; `dictionary'
   (setq dictionary-server "dict.org"
