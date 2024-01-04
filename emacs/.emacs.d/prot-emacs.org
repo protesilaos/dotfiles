@@ -4240,8 +4240,8 @@ pants. A second, unforeseen benefit is that it makes commands and
 listings that I would never use available in a frictionless way:
 commands like ~transpose-regions~ and ~apply-macro-to-region-lines~,
 or custom ~dired~, ~ibuffer~ and ~package-menu~ listings that are
-interactively inaccessible otherwise4. The ability to quickly whip up
-such buffers makes knowhing how to use dired or ibuffer pay off
+interactively inaccessible otherwise. The ability to quickly whip up
+such buffers makes knowing how to use dired or ibuffer pay off
 several fold. In composing such features seamlessly with minibuffer
 interaction or with text-regions, Embark acts as a lever to amplify
 the power of Emacs’ myriad built in commands and libraries.
