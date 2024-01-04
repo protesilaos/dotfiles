@@ -29,7 +29,7 @@
 MODE must be the symbol of the major mode, without a quote.  FILE
 is a string."
     (let ((project-find-fn (intern (format "project-find-%s-root" mode)))
-          (major-mode-fn (intern (format "bb-%s-project-find-function" mode)))
+          (major-mode-fn (intern (format "prot-%s-project-find-function" mode)))
           (file-symbol (intern file)))
       `(progn
          (defun ,project-find-fn (dir)
@@ -39,7 +39,7 @@ is a string."
          (cl-defmethod project-root ((project (head ,file-symbol)))
            (cdr project))
 
-         (defun ,(intern (format "bb-%s-project-find-function" mode)) ()
+         (defun ,(intern (format "prot-%s-project-find-function" mode)) ()
            (add-hook 'project-find-functions #',project-find-fn :depth :local))
 
          (add-hook ',(intern (format "%s-hook" mode)) #',major-mode-fn))))
