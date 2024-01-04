@@ -6122,10 +6122,41 @@ Based on `project--keymap-prompt' and meant to be used as an
     "C-x p <delete>" #'project-forget-project)
 #+end_src
 
-*** TODO The =prot-emacs-git.el= section about ~diff-mode~
+*** The =prot-emacs-git.el= section about ~diff-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:8b426a69-e3cd-42ac-8788-f41f6629f879
 :END:
+
+This built-in mode is an easy and effective way to interact with
+diffs. A "diff" is a Unix tradition of showing line-wise differences
+in a file. If you, say, edit a line to replace =this= with =that=, the
+diff output will show the original line prefixed with a minus sign and
+the new line prefixed with a plus sign.
+
+Individual words can also be highlighted. This word-wise operation is
+known as "refining" the diff. In my setup, this is handled by the
+~agitate~ package, which provides convenience functions for various
+version control operations. The command is ~agitate-diff-refine-cycle~,
+bound to =C-c C-b= inside of diff buffers.
+
+With ~diff-mode~, we can also apply the "diff hunk" at point, if we
+have the corresponding files. The diff hunk is the section of the diff
+that pertains to a given region in the file and is delimited by a
+heading that enumerates the affected range, like =@@ -6125,7 +6125,9 @@=.
+Type =C-c C-a= (~diff-apply-hunk~).
+
+The ~diff-mode~ buffers specify the ~outline-regexp~, meaning that
+they can be used with the built-in ~outline-minor-mode~ to, for
+example, fold the invidual diff hunks and move between them ([[#h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35][The =prot-emacs-langs.el= settings for ~outline-minor-mode~]]).
+Personally, I combine this feature with my ~prot-search-outline~
+command to quickly jump to an outline heading use minibuffer
+completion ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]).
+
+Outside of Emacs, I have settings for ~git~ which produce more
+informative diff hunk headings in Elisp and Org buffers. I wrote about
+it here: <https://protesilaos.com/codelog/2021-01-26-git-diff-hunk-elisp-org/>.
+The configurations are part of my dotfiles (linked to at the opening
+section of this file).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `diff-mode'
