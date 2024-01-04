@@ -221,9 +221,6 @@ Based on `project--keymap-prompt' and meant to be used as an
 
 ;;; Interactive and powerful git front-end (Magit)
 
-;; There is no need to install the package, as transient.el is built
-;; into Emacs.  By requiring it, I prevent the installation of the
-;; package, which would be done by Magit.
 (prot-emacs-package transient (:delay 2))
 
 (prot-emacs-package magit

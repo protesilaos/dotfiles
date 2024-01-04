@@ -5998,7 +5998,7 @@ commands ~ediff-files~, ~ediff-buffers~. Sometimes I use the 3-way
 variants with ~ediff-files3~ and ~ediff-buffers3~, though this is rare.
 Do watch the video I link to in the beginning of this section, as it
 covers the main functionality of this neat tool. I also show how it
-integrates with ~magit~ [[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]). 
+integrates with ~magit~ [[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `ediff'
@@ -6169,10 +6169,84 @@ section of this file).
   (setq diff-font-lock-syntax 'hunk-also))
 #+end_src
 
-*** TODO The =prot-emacs-git.el= section about =vc.el= and related
+*** The =prot-emacs-git.el= section about =vc.el= and related
 :PROPERTIES:
 :CUSTOM_ID: h:50add1d8-f0f4-49be-9e57-ab280a4aa300
 :END:
+
+The concept of "version control" pertains to a system of versioning
+files, to track and visualise changes from record to record
+([[#h:8b426a69-e3cd-42ac-8788-f41f6629f879][The =prot-emacs-git.el= section about ~diff-mode~]]).
+These version-controlled files may be part of a project
+([[#h:7dcbcadf-8af6-487d-b864-e4ce56d69530][The =prot-emacs-git.el= section about =project.el=]]).
+
+There are many programs that fall in the category of Version Control
+Software (VCS). I only use ~git~, simply because it is ubiquitous
+though there are others which have technical merits as well.
+
+VCSs have some common features, such as how they record a unit of
+history, and how they handle the synchronisation of their state across
+computers. Because of these commonalities, Emacs is able to provide a
+layer of abstraction, known as "Version Control", else =vc.el= and its
+accoutrements.
+
+[ Technically, the =vc.el= file is not the only one defining relevant
+  functionality. There are VCS-specific variants, such as =vc-git.el=,
+  as well as complementary features like =vc-annotate.el=. All these
+  are hereinafter referred to as =vc=. ]
+
+With =vc=, we can carry out all the common actions related to version
+control, such as to commit (to make a record of) changes and pull/push
+them from/to the remote (i.e. the server with which we sync our
+project). Whatever the VCS we use, the workflow is the same:
+
+- Make changes to a file.
+- Type =C-x v v= (~vc-next-action~).
+  - If the file is already under version control, =vc= will produce a
+    "log edit" buffer to let you commit the changes.
+  - If the file is not under version control, =vc= will use a
+    minibuffer prompt to ask which VCS to use. These are also known as
+    backends and are stored in the user option ~vc-handled-backends~.
+  - If the file is not under version control but is in a directory
+    which itself is version controlled, then the file will be added to
+    the list of tracked files.
+- Type =C-x v v= again and =vc= will proceed to the next action, which
+  is to commit the changes to history. This is done in the new
+  =log-edit= buffer.
+- By convention, the message of each commit is separated into a
+  summary and the body of the message. An empty line divides them. The
+  summary is the first line of the message and should, as a matter of
+  best practices, be brief yet sufficiently descriptive. The rest is
+  free form text. In the =log-edit= buffer, the empty separator line
+  between the summary and the body is shown as a border, so there is
+  no need to add another line there.
+- Once the message is ready, type =C-c C-c= (~log-edit-done~) to
+  confirm it or =C-c C-k= (~log-edit-kill-buffer~) to cancel the
+  operation.
+- From the =log-edit= buffer, it is possible to see the underlying
+  changes in a diff buffer. Do it with =C-c C-d= (~log-edit-show-diff~).
+- The record of commits to the history of the entire project is
+  accessed with the command ~vc-print-root-log~, while that of
+  individual files is handled by the command ~vc-print-log~.
+- To pull from a remote, do ~vc-update~. To push, invoke ~vc-push~.
+- A Dired-like buffer is also available to perform these actions
+  across many edited files. Check the commands, ~vc-dir~,
+  ~vc-dir-root~, or even ~project-vc-dir~.
+
+Remember to use =C-h m= (~describe-mode~) to get help for the buffer
+you are in and to learn the relevant key bindings.
+
+There is more functionality, though this should already give you an
+overview of what is on offer. The gist is that =vc= provides a fast
+and minimalist way to accomplish the basic tasks related to version
+control. For more demanding operations, there is either the
+command-line or the wonderful ~magit~ Emacs package
+([[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]).
+
+Note that in the following code block I redefine lots of key bindings.
+They make more sense to me. Furthermore, my ~agitate~ package defines
+lots of extras on top of ~vc~ that I use daily in my workflow
+([[#h:257b9118-4407-410e-a56a-134fd5d1a3b4][The =prot-emacs-git.el= section about ~agitate~]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Version control framework (vc.el, vc-git.el, and more)
@@ -6325,9 +6399,6 @@ section of this file).
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
 
-;; There is no need to install the package, as transient.el is built
-;; into Emacs.  By requiring it, I prevent the installation of the
-;; package, which would be done by Magit.
 (prot-emacs-package transient (:delay 2))
 
 (prot-emacs-package magit
