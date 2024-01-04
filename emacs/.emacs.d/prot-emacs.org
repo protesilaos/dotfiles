@@ -6872,11 +6872,25 @@ Watch:
 (provide 'prot-emacs-org)
 #+end_src
 
-** TODO The =prot-emacs-langs.el= module
+** The =prot-emacs-langs.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:f44afb76-a1d7-4591-934d-b698cc79a792
 :END:
 
+This module encompasses a wide range of packages and built-in
+configurations that relate to "language" in the wider sense. Settings
+here include basic patterns of interaction, such as what the =TAB= key
+does, to spell checking, code linting, and writing.
+
+The opening part covers built-in functionality, so I use my
+~prot-emacs-configure~ macro to handle this case ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]])
+as opposed to ~prot-emacs-package~ ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el" :mkdirp yes
+;;; General language/editing settings
+(prot-emacs-configure
+  (:delay 2)
+#+end_src
 
 *** TODO The =prot-emacs-langs.el= settings for TAB
 :PROPERTIES:
@@ -6884,9 +6898,6 @@ Watch:
 :END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el" :mkdirp yes
-;;; General language/editing settings
-(prot-emacs-configure
-  (:delay 2)
 ;;;; Tabs, indentation, and the TAB key
   (setq-default tab-always-indent 'complete
                 tab-first-completion 'word-or-paren-or-punct ; Emacs 27
