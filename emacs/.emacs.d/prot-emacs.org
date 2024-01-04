@@ -6892,16 +6892,44 @@ as opposed to ~prot-emacs-package~ ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][T
   (:delay 2)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for TAB
+*** The =prot-emacs-langs.el= settings for TAB
 :PROPERTIES:
 :CUSTOM_ID: h:559713c8-0e1e-44aa-bca8-0caae01cc8bb
 :END:
 
+When I first switched to Emacs, I found the behaviour of the =TAB= key
+confusing. I was used to it inserting tabs or, at least, spaces.
+Whereas in Emacs, =TAB= tries to be smarter, depending on the major
+mode, as it tries to indent the current line to where it should be
+given the context. This works best when we mark a region of text and
+hit =TAB= there.
+
+If we need to forcefully indent, we can use =C-x C-i= (~indent-rigidly~).
+This command allows us to shift the region left or right using the
+arrow keys. A common use-case for me is to paste some text I want to
+indent, and then do =C-u C-x C-i=, which indents by four spaces the
+implicit region. I have explained this in my video about mark and register basics:
+<https://protesilaos.com/codelog/2023-06-28-emacs-mark-register-basics/>.
+
+To the settings I have here, the ~tab-always-indent~ makes the =TAB=
+key assume the dual role of indenting text as well as triggering
+completion at point ([[#h:804b858f-7913-47ef-aaf4-8eef5b59ecb4][The =prot-emacs-completion.el= for in-buffer completion popup (~corfu~)]]).
+When it can perform indentation, it does that, otherwise it starts a
+completion loop. The ~tab-first-completion~ determines when not to
+complete. Read its doc string for the technicalities.
+
+Finally, the ~tab-width~ and ~indent-tabs-mode~ are about the use of
+tabs. I never want them, as I only use spaces. Notice the ~setq-default~
+here: we need this form when the buffer's value automatically becomes
+buffer-local. This is very important, otherwise we will be setting the
+value only in the Emacs init file, which contradicts our intent. There
+are a few cases where ~setq-default~ is needed, so keep this in mind.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el" :mkdirp yes
 ;;;; Tabs, indentation, and the TAB key
-  (setq-default tab-always-indent 'complete
-                tab-first-completion 'word-or-paren-or-punct ; Emacs 27
-                tab-width 4
+  (setq tab-always-indent 'complete)
+  (setq tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
+  (setq-default tab-width 4
                 indent-tabs-mode nil)
 #+end_src
 

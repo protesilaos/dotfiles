@@ -1,10 +1,11 @@
 ;;; General language/editing settings
 (prot-emacs-configure
   (:delay 2)
+
 ;;;; Tabs, indentation, and the TAB key
-  (setq-default tab-always-indent 'complete
-                tab-first-completion 'word-or-paren-or-punct ; Emacs 27
-                tab-width 4
+  (setq tab-always-indent 'complete)
+  (setq tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
+  (setq-default tab-width 4
                 indent-tabs-mode nil)
 
 ;;;; Disable "electric" behaviour
