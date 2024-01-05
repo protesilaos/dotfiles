@@ -6540,7 +6540,17 @@ cases, a combination of =vc= and the command-line will suffice
         '(("~/Git/Projects" . 1)))
 
   (define-key global-map (kbd "C-c g") #'magit-status))
+#+end_src
 
+*** The =prot-emacs-git.el= call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:4e7035c5-9350-4c51-be85-85f2539ed295
+:END:
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 (provide 'prot-emacs-git)
 #+end_src
 
