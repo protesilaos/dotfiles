@@ -6445,10 +6445,73 @@ Control framework and its accoutrements (`diff-mode.el`,
     "C-c C-i C-c" #'agitate-log-edit-conventional-commit))
 #+end_src
 
-*** TODO The =prot-emacs-git.el= section about ~magit~ (great Git client)
+*** The =prot-emacs-git.el= section about ~magit~ (great Git client)
 :PROPERTIES:
 :CUSTOM_ID: h:b08af527-9ebf-4425-ac3a-24b4f371a4fd
 :END:
+
+The ~magit~ package, maintained by Jonas Bernoulli, is the best
+front-end to ~git~ I have ever used. Not only is it excellent at
+getting the job done, it also helps you learn more about what ~git~
+has to offer.
+
+At the core of its interface is ~transient~. This is a library that
+was originally developed as Magit-specific code that was then
+abstracted away and ultimately incorporated into Emacs version 29.
+With ~transient~, we get a window pop up with keys and commands
+corresponding to them. The window is interactive, as the user can set
+a value or toggle an option and have it take effect when the relevant
+command is eventually invoked. For ~git~, in particular, this
+interface is a genious way to surface the plethora of options.
+
+To start, call the command ~magit-status~. It brings up a buffer that
+shows information about the state of the repository. Sections include
+an overview of the current =HEAD=, untracked files, unstaged changes,
+staged changes, and recent commits. Each section's visibility state
+can be cycled by pressing =TAB= (variations of this are available---remember
+to do =C-h m= (~describe-mode~) in an unfamiliar major mode to get
+information about its key bindings).
+
+From the status buffer, we can perform all the usual version control
+operations. By typing =?= (~magit-dispatch~), we bring up the main
+~transient~ menu, with keys that then bring up their own submenus,
+such as for viewing commit logs, setting the remotes, switching
+branches, etc.
+
+Before I used ~magit~, I only knew the basics of adding files for a
+commit, writing a commit message inline with the =-m= flag on the
+command line, and pushing to the remote. Magit shows the staging
+area in the status buffer and makes "staging" a key part of the
+process of committing changes to history. To stage something, is to
+make it a candidate for the next commit action: only the staged parts
+are committed.
+
+Magit has a refined understanding of context. We can target an
+individual line, a single diff hunk, a single file, or a range of
+files for staging or unstaging (among others). If the the region is
+active, then only the selection is affected. If the cursor is on or
+somewhere inside a diff hunk, then that is targeted. If the cursor is
+over a file, then the file is the target. Same idea for the section
+heading, which then extends to everything under it.
+
+This contextuality extends to every ~git~ command that accepts a
+commit hash as an argument. For example, if we are in a Magit commit
+log view and want to do a hard reset on the commit at point, Magit
+knows what commit hash to use (and presents it as an option when we
+choose where to reset to). Same principle for rebasing, cherry
+picking, and more.
+
+Magit is good for newer users but also for those who have experience
+with ~git~ and the command-line in general. With it, I can easily
+maintain a project that needs to track separate remotes and push/pull
+between them in a fairly complicated manner. Partly supported by
+~transient~ and partly by the Emacs completion user interface, we have
+all we need to select targets with ease ([[#h:15edf2c3-4419-4101-928a-6e224958a741][The =prot-emacs-completion.el= module]]).
+
+The only downside of this wonderful package is that it is slow on
+Windows (based on what others have told me and showed me)... In those
+cases, a combination of =vc= and the command-line will suffice 
+([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
