@@ -6344,10 +6344,36 @@ lots of extras on top of ~vc~ that I use daily in my workflow
     "P" #'vc-push))
 #+end_src
 
-*** TODO The =prot-emacs-git.el= section about ~agitate~
+*** The =prot-emacs-git.el= section about ~agitate~
 :PROPERTIES:
 :CUSTOM_ID: h:257b9118-4407-410e-a56a-134fd5d1a3b4
 :END:
+
+This is an experimental package of mine whose role is to extend the
+functionality provided by the =vc= suite of tools ([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]]),
+as well as that of ~diff-mode~ ([[#h:8b426a69-e3cd-42ac-8788-f41f6629f879][The =prot-emacs-git.el= section about ~diff-mode~]]).
+What ~agitate~ does is define several commands that are in the spirit
+of those built-in tools.
+
+Because it is (i) an experimental package and (ii) =vc= is probably a
+niche feature, I will not document much here.
+
+## Agitate (experimental)
+
+Agitate is a collection of commands or potentially useful functions
+that expand on the available version control features of Emacs.  Those
+are meant to complement a workflow that relies on the built-in Version
+Control framework and its accoutrements (`diff-mode.el`,
+`log-view.el`, `log-edit.el`, `vc-git.el`, and potentially others).
+
++ Package name (GNU ELPA): ~agitate~
++ Official manual: <https://protesilaos.com/emacs/agitate>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/agitate>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/agitate>
+    + GitLab: <https://gitlab.com/protesilaos/agitate>
++ Mailing list: <https://lists.sr.ht/~protesilaos/agitate>
++ Backronym: Another Git Interface Trying to Agitate Tranquil Emacsers
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Agitate
