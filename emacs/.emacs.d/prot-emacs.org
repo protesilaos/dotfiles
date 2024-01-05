@@ -3104,6 +3104,16 @@ To view the running timers in a tabulated list, invoke the command
 ~tmr-tabulated-view~. From there, type =C-h m= (or =M-x describe-mode=)
 to learn about all the available commands and their respective key bindings.
 
++ Package name (GNU ELPA): ~tmr~
++ Official manual: <https://protesilaos.com/emacs/tmr>
++ Change log: <https://protesilaos.com/emacs/tmr-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/tmr>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/tmr>
+    + GitLab: <https://gitlab.com/protesilaos/tmr>
++ Mailing list: <https://lists.sr.ht/~protesilaos/tmr>
++ Backronym: TMR May Ring; Timer Must Run
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
@@ -5341,6 +5351,16 @@ window. The goal is to make this work for large files, so that we
 never experience any lag. I will expand this section once I feel we
 are where we need to be.
 
++ Package name (GNU ELPA): ~dired-preview~
++ Official manual: <https://protesilaos.com/emacs/dired-preview>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/dired-preview>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/dired-preview>
+    + GitLab: <https://gitlab.com/protesilaos/dired-preview>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronym: Directories Invariably Render Everything Decently; PDFs
+  Require Extra Viewing Instructions for Emacs to Work.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; Automatically preview Dired file at point (dired-preview.el)
 ;; One of my packages: <https://protesilaos.com/emacs>
@@ -5396,6 +5416,14 @@ for just playback, but I do need/want to develop it further as it
 really is nothing but a prototype right now. You will thus notice that
 the ~prot-emacs-package~ is actually installing the file from source
 ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
+
++ Package name (GNU ELPA): ~mandoura~ (⛔ not available yet)
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/mandoura>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/mandoura>
+    + GitLab: <https://gitlab.com/protesilaos/mandoura>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronym: MPV Access Needs Dired to Output User's Requested Audio.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; Play back media with Dired (mandoura.el)
@@ -6245,7 +6273,7 @@ command-line or the wonderful ~magit~ Emacs package
 
 Note that in the following code block I redefine lots of key bindings.
 They make more sense to me. Furthermore, my ~agitate~ package defines
-lots of extras on top of ~vc~ that I use daily in my workflow
+many extras on top of ~vc~ that I use daily in my workflow
 ([[#h:257b9118-4407-410e-a56a-134fd5d1a3b4][The =prot-emacs-git.el= section about ~agitate~]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
@@ -7151,6 +7179,21 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:88e36f15-4c74-4b7c-9ba6-cf5fb112ffd9
 :END:
 
+This is a major mode for editing ~sxhkdrc~ files.  SXHKD is the Simple
+X Hot Key Daemon which is commonly used in minimalist desktop sessions
+on Xorg, such as with the Binary Space Partitioning Window Manager
+(BSPWM).  The ~sxhkdrc~ file configures key chords, binding them to
+commands.  For the technicalities, read the man page ~sxhkd(1)~.
+
++ Package name (GNU ELPA): ~sxhkdrc-mode~
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/sxhkdrc-mode>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/sxhkdrc-mode>
+    + GitLab: <https://gitlab.com/protesilaos/sxhkdrc-mode>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronym: Such Xenotropic Hot Keys Demonstrate Robustness and
+  Configurability ... mode.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; SXHKDRC mode (one of my many packages)
 (prot-emacs-package sxhkdrc-mode
@@ -7325,6 +7368,22 @@ Meant to be added to `prog-mode-hook'."
 :CUSTOM_ID: h:2a2728a9-e392-4fbe-bf2a-83e883387857
 :END:
 
+The ~altcaps~ package is a small, focused-in-scope tool that helps
+users communicate mockery or sarcasm effectively.  It does this by
+alternating the letter casing of characters in the words it affects.
+
++ Package name (GNU ELPA): ~altcaps~
++ Official manual: <https://protesilaos.com/emacs/altcaps>
++ Change log: <https://protesilaos.com/emacs/altcaps-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/altcaps>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/altcaps>
+    + GitLab: <https://gitlab.com/protesilaos/altcaps>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronyms: Alternating Letters Transform Casual Asides to Playful
+  Statements.  ALTCAPS Lets Trolls Convert Aphorisms to Proper
+  Shitposts.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
@@ -7345,6 +7404,31 @@ Meant to be added to `prog-mode-hook'."
 :PROPERTIES:
 :CUSTOM_ID: h:e86a66dc-7ef9-4f09-ad7e-946de2034e8d
 :END:
+
+Denote is a simple note-taking tool for Emacs.  It is based on the idea
+that notes should follow a predictable and descriptive file-naming
+scheme.  The file name must offer a clear indication of what the note is
+about, without reference to any other metadata.  Denote basically
+streamlines the creation of such files while providing facilities to
+link between them.
+
+Denote's file-naming scheme is not limited to "notes".  It can be used
+for all types of file, including those that are not editable in Emacs,
+such as videos.  Naming files in a consistent way makes their
+filtering and retrieval considerably easier.  Denote provides relevant
+facilities to rename files, regardless of file type.
+
++ Package name (GNU ELPA): ~denote~
++ Official manual: <https://protesilaos.com/emacs/denote>
++ Change log: <https://protesilaos.com/emacs/denote-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/denote>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/denote>
+    + GitLab: <https://gitlab.com/protesilaos/denote>
++ Mailing list: <https://lists.sr.ht/~protesilaos/denote>
++ Video demo: <https://protesilaos.com/codelog/2022-06-18-denote-demo/>
++ Backronyms: Denote Everything Neatly; Omit The Excesses.  Don't Ever
+  Note Only The Epiphenomenal.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Denote (simple note-taking and file-naming)
@@ -7472,6 +7556,26 @@ Meant to be added to `prog-mode-hook'."
 :PROPERTIES:
 :CUSTOM_ID: h:137c67f1-b112-42b7-aec9-c44ef4a6241a
 :END:
+
+This package provides a simple approach to setting up a "focus mode".
+It uses the ~page-delimiter~ (typically =^L=) or the outline together
+with some commands to move between pages whether narrowing is in effect
+or not.  It also provides some optional aesthetic tweaks which come into
+effect when the buffer-local ~logos-focus-mode~ is enabled.  The manual
+shows how to extend the code to achieve the desired result.
+
+(all my videos since early 2022 use ~logos~).
+
++ Package name (GNU ELPA): ~logos~
++ Official manual: <https://protesilaos.com/emacs/logos>
++ Change log: <https://protesilaos.com/emacs/logos-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/logos>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/logos>
+    + GitLab: <https://gitlab.com/protesilaos/logos>
++ Mailing list: <https://lists.sr.ht/~protesilaos/logos>
++ Video demo: <https://protesilaos.com/codelog/2022-03-11-emacs-logos-demo/>
++ Backronyms: =^L= Only Generates Ostensible Slides; Logos Optionally Goes through Outline Sections
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Custom extensions for "focus mode" (logos.el)
@@ -7835,6 +7939,25 @@ Meant to be added to `prog-mode-hook'."
 :PROPERTIES:
 :CUSTOM_ID: h:0f12f144-ca9f-4d07-8563-c33b3521bfb5
 :END:
+
+This is a simple package that renders an indicator with an email count
+of the ~notmuch~ index on the Emacs mode line.  The underlying mechanism
+is that of ~notmuch-count(1)~, which is used to find the number of items
+that match the given search terms.  In practice, the user can define one
+or more searches and display their counters.  These form a listing which
+realistically is like: =@50 😱1000 💕0= for unread messages, bills, and
+love letters, respectively.
+
++ Package name (GNU ELPA): ~notmuch-indicator~
++ Official manual: <https://protesilaos.com/emacs/notmuch-indicator>
++ Change log: <https://protesilaos.com/emacs/notmuch-indicator-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/notmuch-indicator>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/notmuch-indicator>
+    + GitLab: <https://gitlab.com/protesilaos/notmuch-indicator>
++ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
++ Backronym: notmuch-... Interested in Notmuch Data Indicators that
+  Count Any Terms Ordinarily Requested.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; notmuch-indicator (another package of mine)
