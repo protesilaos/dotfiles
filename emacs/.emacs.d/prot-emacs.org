@@ -6648,6 +6648,11 @@ Org is far more capable, though I switched to it completely.
   (setq calendar-daylight-time-zone-name "+0300")
 #+end_src
 
+*** TODO The =prot-emacs-org.el= section about appointment reminders
+:PROPERTIES:
+:CUSTOM_ID: h:bd4b0dcb-a925-4bd7-90db-6379a7ca6f5e
+:END:
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Appt (appointment reminders which also integrate with Org agenda)
   (setq appt-display-diary nil
@@ -6661,6 +6666,8 @@ Org is far more capable, though I switched to it completely.
   (with-eval-after-load 'org-agenda
     (appt-activate 1))
 #+end_src
+
+*** TODO The =prot-emacs-org.el= section with basic Org settings
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Org-mode (personal information manager)
@@ -6698,7 +6705,12 @@ Org is far more capable, though I switched to it completely.
   (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
+  (setq org-read-date-prefer-future 'time)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org to-do and refile settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; refile, todo
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 2))
@@ -6735,7 +6747,11 @@ Org is far more capable, though I switched to it completely.
   (setq org-highest-priority ?A)
   (setq org-lowest-priority ?C)
   (setq org-default-priority ?A)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org heading tags
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; tags
   (setq org-tag-alist ; I don't really use those, but whatever
         '(("meeting")
@@ -6755,19 +6771,30 @@ Org is far more capable, though I switched to it completely.
 
   (setq org-auto-align-tags nil)
   (setq org-tags-column 0)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org time/state logging
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; log
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-log-note-clock-out nil)
   (setq org-log-redeadline 'time)
   (setq org-log-reschedule 'time)
-  (setq org-read-date-prefer-future 'time)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org link settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; links
   (setq org-link-keep-stored-after-insertion nil)
   ;; TODO 2021-10-15 org-link-make-description-function
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org capture templates
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; capture
   (setq org-capture-templates
         `(("b" "Basic task for future review" entry
@@ -6837,7 +6864,11 @@ Org is far more capable, though I switched to it completely.
         '(("e" ((in-mode . "notmuch-search-mode")
                 (in-mode . "notmuch-show-mode")
                 (in-mode . "notmuch-tree-mode")))))
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org agenda settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; agenda
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
@@ -7014,7 +7045,11 @@ Org is far more capable, though I switched to it completely.
   ;; ;; Always show the habit graph, even if there are no habits for
   ;; ;; today.
   ;; (setq org-habit-show-all-today t)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org code block settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
   (setq org-src-window-setup 'current-window)
@@ -7023,7 +7058,11 @@ Org is far more capable, though I switched to it completely.
   (setq org-src-preserve-indentation t)
   (setq org-src-tab-acts-natively t)
   (setq org-edit-src-content-indentation 0)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org export settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; export
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
@@ -7033,11 +7072,18 @@ Org is far more capable, though I switched to it completely.
   (setq org-html-head-include-scripts nil)
   ;; (require 'ox-texinfo)
   ;; (require 'ox-md)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org ID settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; IDs
-  (setq org-id-link-to-org-use-id
-        'create-if-interactive-and-no-custom-id)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= section about Org hooks and key bindings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; Hooks and key bindings
 
   ;; See my `pulsar' package, defined elsewhere in this setup.
@@ -7072,6 +7118,13 @@ Org is far more capable, though I switched to it completely.
     "e" #'org-narrow-to-element
     "s" #'org-narrow-to-subtree)
 #+end_src
+
+*** TODO The =prot-emacs-org.el= custom Org extensions (=prot-org.el=)
+
+[ Watch: [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09). It has
+  changed a bit since then, but the idea is the same. ]
+
+([[#h:9974eac8-2167-45c4-90e0-12dd877403da][The =prot-org.el= library]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Custom extensions (prot-org.el)
@@ -7126,7 +7179,14 @@ Org is far more capable, though I switched to it completely.
 (prot-emacs-package prot-coach
   (:delay 10)
   (define-key global-map (kbd "C-c j") #'prot-coach-jitsi-link))
+#+end_src
 
+*** The =prot-emacs-org.el= call to ~provide~
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 (provide 'prot-emacs-org)
 #+end_src
 

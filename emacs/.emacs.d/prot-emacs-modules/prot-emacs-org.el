@@ -67,6 +67,7 @@
   (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
+  (setq org-read-date-prefer-future 'time)
 
 ;;;; refile, todo
   (setq org-refile-targets
@@ -131,7 +132,6 @@
   (setq org-log-note-clock-out nil)
   (setq org-log-redeadline 'time)
   (setq org-log-reschedule 'time)
-  (setq org-read-date-prefer-future 'time)
 
 ;;;; links
   (setq org-link-keep-stored-after-insertion nil)
@@ -404,8 +404,7 @@
   ;; (require 'ox-md)
 
 ;;;; IDs
-  (setq org-id-link-to-org-use-id
-        'create-if-interactive-and-no-custom-id)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
 ;;;; Hooks and key bindings
 
