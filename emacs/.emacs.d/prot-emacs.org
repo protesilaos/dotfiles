@@ -6554,20 +6554,65 @@ Finally, we ~provide~ the module. This is the mirror function of
 (provide 'prot-emacs-git)
 #+end_src
 
-** TODO The =prot-emacs-org.el= module
+** The =prot-emacs-org.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:d799c3c0-bd6a-40bb-bd1a-ba4ea5367840
 :END:
 
 Watch:
 
+- [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18) 
 - [[https://protesilaos.com/codelog/2023-05-23-emacs-org-basics/][Basics of Org mode]] (2023-05-23)
 - [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09)
 - [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][Primer on "org-capture"]] (2020-02-04)
 
+At its core, Org is a plain text markup language. By "markup
+language", we refer to the use of common characters to apply styling,
+such as how a word wrapped in asterisks acquires strong emphasis.
+Check the video I link to above on the basics of Org mode.
+
+Though what makes Org powerful is not the markup per se, but the fact
+that it has a rich corpus of Emacs Lisp code that does a lot with this
+otherwise plain text notation. Some of the headline features:
+
+- Cycle the visibility of any heading and its subheadings. This lets
+  you quickly fold a section you do not need to see (or reveal the one
+  you care about).
+- Mix prose with code in a single document to either make the whole
+  thing an actual program or to evaluate/demonstrate some snippets.
+- Convert ("export") an Org file to a variety of formats, including
+  HTML and PDF.
+- Use LaTeX inside of Org files to produce a scientific paper without
+  all the markup of LaTeX.
+- Manage TODO lists and implement a concomitant methodology of
+  labelling task states.
+- Quickly shift a "thing" (heading, list item, paragraph, ...) further
+  up or down in the file.
+- Use tables with formulas as a lightweight alternative to speadsheet
+  software.
+- Capture data or fleeting thoughts efficiently using templates.
+- Maintain an agenda for all your date-bound activities.
+- Clock in and out of tasks, to eventually track how you are spending
+  your time.
+- Link to files regardless of file type. This includes special links
+  such as to an Info manual or an email, if you also have that running
+  locally and integrated with Emacs ([[#h:755e195b-9471-48c7-963b-33055969b4e2][The =prot-emacs-email.el= module]]).
+
+In other words, Org is highly capable and widely considered one of the
+killer apps of Emacs.
+
+This section covers the relevant configurations. You will notice that
+it is not limited to Org, as some other built-in features are also
+relevant here.
+
+Given that I am setting up lots of built-in symbols, I do not need the
+~prot-emacs-package~ macro at this stage, switching to its simplified
+~prot-emacs-configure~ counterpart ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
 (prot-emacs-configure
   (:delay 5)
+#+end_src
 ;;; Calendar
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)

@@ -1,5 +1,6 @@
 (prot-emacs-configure
   (:delay 5)
+
 ;;; Calendar
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)
