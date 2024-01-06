@@ -6613,6 +6613,21 @@ Given that I am setting up lots of built-in symbols, I do not need the
 (prot-emacs-configure
   (:delay 5)
 #+end_src
+
+*** The =prot-emacs-org.el= section on the ~calendar~
+:PROPERTIES:
+:CUSTOM_ID: h:94d48381-1711-4d6b-8449-918bc1e3836c
+:END:
+
+The ~calendar~ is technically independent of Org, though it tighly
+integrates with it. We witness this when we are setting timestamps,
+such as while setting a =SCHEDULED= or =DEADLINE= entry for a given
+heading. All I do here is set some stylistic preferences.
+
+Note that Emacs also has a ~diary~ command. I used it for a while, but
+Org is far more capable, though I switched to it completely.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Calendar
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)
@@ -6624,11 +6639,11 @@ Given that I am setting up lots of built-in symbols, I do not need the
   (setq calendar-date-style 'iso)
   (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-  ;; (require 'solar)
-  ;; (setq calendar-latitude 35.17         ; Not my actual coordinates
-  ;;       calendar-longitude 33.36)
+  (require 'solar)
+  (setq calendar-latitude 35.17         ; Not my actual coordinates
+        calendar-longitude 33.36)
 
-  ;; (require 'cal-dst)
+  (require 'cal-dst)
   (setq calendar-standard-time-zone-name "+0200")
   (setq calendar-daylight-time-zone-name "+0300")
 #+end_src

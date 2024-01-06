@@ -12,11 +12,11 @@
   (setq calendar-date-style 'iso)
   (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-  ;; (require 'solar)
-  ;; (setq calendar-latitude 35.17         ; Not my actual coordinates
-  ;;       calendar-longitude 33.36)
+  (require 'solar)
+  (setq calendar-latitude 35.17         ; Not my actual coordinates
+        calendar-longitude 33.36)
 
-  ;; (require 'cal-dst)
+  (require 'cal-dst)
   (setq calendar-standard-time-zone-name "+0200")
   (setq calendar-daylight-time-zone-name "+0300")
 
