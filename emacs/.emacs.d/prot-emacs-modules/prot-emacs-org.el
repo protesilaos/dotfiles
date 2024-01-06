@@ -1,5 +1,6 @@
 (prot-emacs-configure
   (:delay 5)
+
 ;;; Calendar
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)
@@ -11,11 +12,11 @@
   (setq calendar-date-style 'iso)
   (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-  ;; (require 'solar)
-  ;; (setq calendar-latitude 35.17         ; Not my actual coordinates
-  ;;       calendar-longitude 33.36)
+  (require 'solar)
+  (setq calendar-latitude 35.17         ; Not my actual coordinates
+        calendar-longitude 33.36)
 
-  ;; (require 'cal-dst)
+  (require 'cal-dst)
   (setq calendar-standard-time-zone-name "+0200")
   (setq calendar-daylight-time-zone-name "+0300")
 
@@ -66,6 +67,7 @@
   (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
+  (setq org-read-date-prefer-future 'time)
 
 ;;;; refile, todo
   (setq org-refile-targets
@@ -130,7 +132,6 @@
   (setq org-log-note-clock-out nil)
   (setq org-log-redeadline 'time)
   (setq org-log-reschedule 'time)
-  (setq org-read-date-prefer-future 'time)
 
 ;;;; links
   (setq org-link-keep-stored-after-insertion nil)
@@ -403,8 +404,7 @@
   ;; (require 'ox-md)
 
 ;;;; IDs
-  (setq org-id-link-to-org-use-id
-        'create-if-interactive-and-no-custom-id)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
 ;;;; Hooks and key bindings
 

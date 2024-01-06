@@ -6445,10 +6445,73 @@ Control framework and its accoutrements (`diff-mode.el`,
     "C-c C-i C-c" #'agitate-log-edit-conventional-commit))
 #+end_src
 
-*** TODO The =prot-emacs-git.el= section about ~magit~ (great Git client)
+*** The =prot-emacs-git.el= section about ~magit~ (great Git client)
 :PROPERTIES:
 :CUSTOM_ID: h:b08af527-9ebf-4425-ac3a-24b4f371a4fd
 :END:
+
+The ~magit~ package, maintained by Jonas Bernoulli, is the best
+front-end to ~git~ I have ever used. Not only is it excellent at
+getting the job done, it also helps you learn more about what ~git~
+has to offer.
+
+At the core of its interface is ~transient~. This is a library that
+was originally developed as Magit-specific code that was then
+abstracted away and ultimately incorporated into Emacs version 29.
+With ~transient~, we get a window pop up with keys and commands
+corresponding to them. The window is interactive, as the user can set
+a value or toggle an option and have it take effect when the relevant
+command is eventually invoked. For ~git~, in particular, this
+interface is a genious way to surface the plethora of options.
+
+To start, call the command ~magit-status~. It brings up a buffer that
+shows information about the state of the repository. Sections include
+an overview of the current =HEAD=, untracked files, unstaged changes,
+staged changes, and recent commits. Each section's visibility state
+can be cycled by pressing =TAB= (variations of this are available---remember
+to do =C-h m= (~describe-mode~) in an unfamiliar major mode to get
+information about its key bindings).
+
+From the status buffer, we can perform all the usual version control
+operations. By typing =?= (~magit-dispatch~), we bring up the main
+~transient~ menu, with keys that then bring up their own submenus,
+such as for viewing commit logs, setting the remotes, switching
+branches, etc.
+
+Before I used ~magit~, I only knew the basics of adding files for a
+commit, writing a commit message inline with the =-m= flag on the
+command line, and pushing to the remote. Magit shows the staging
+area in the status buffer and makes "staging" a key part of the
+process of committing changes to history. To stage something, is to
+make it a candidate for the next commit action: only the staged parts
+are committed.
+
+Magit has a refined understanding of context. We can target an
+individual line, a single diff hunk, a single file, or a range of
+files for staging or unstaging (among others). If the the region is
+active, then only the selection is affected. If the cursor is on or
+somewhere inside a diff hunk, then that is targeted. If the cursor is
+over a file, then the file is the target. Same idea for the section
+heading, which then extends to everything under it.
+
+This contextuality extends to every ~git~ command that accepts a
+commit hash as an argument. For example, if we are in a Magit commit
+log view and want to do a hard reset on the commit at point, Magit
+knows what commit hash to use (and presents it as an option when we
+choose where to reset to). Same principle for rebasing, cherry
+picking, and more.
+
+Magit is good for newer users but also for those who have experience
+with ~git~ and the command-line in general. With it, I can easily
+maintain a project that needs to track separate remotes and push/pull
+between them in a fairly complicated manner. Partly supported by
+~transient~ and partly by the Emacs completion user interface, we have
+all we need to select targets with ease ([[#h:15edf2c3-4419-4101-928a-6e224958a741][The =prot-emacs-completion.el= module]]).
+
+The only downside of this wonderful package is that it is slow on
+Windows (based on what others have told me and showed me)... In those
+cases, a combination of =vc= and the command-line will suffice 
+([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
@@ -6477,24 +6540,94 @@ Control framework and its accoutrements (`diff-mode.el`,
         '(("~/Git/Projects" . 1)))
 
   (define-key global-map (kbd "C-c g") #'magit-status))
+#+end_src
 
+*** The =prot-emacs-git.el= call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:4e7035c5-9350-4c51-be85-85f2539ed295
+:END:
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 (provide 'prot-emacs-git)
 #+end_src
 
-** TODO The =prot-emacs-org.el= module
+** The =prot-emacs-org.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:d799c3c0-bd6a-40bb-bd1a-ba4ea5367840
 :END:
 
 Watch:
 
+- [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18) 
 - [[https://protesilaos.com/codelog/2023-05-23-emacs-org-basics/][Basics of Org mode]] (2023-05-23)
 - [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09)
 - [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][Primer on "org-capture"]] (2020-02-04)
 
+At its core, Org is a plain text markup language. By "markup
+language", we refer to the use of common characters to apply styling,
+such as how a word wrapped in asterisks acquires strong emphasis.
+Check the video I link to above on the basics of Org mode.
+
+Though what makes Org powerful is not the markup per se, but the fact
+that it has a rich corpus of Emacs Lisp code that does a lot with this
+otherwise plain text notation. Some of the headline features:
+
+- Cycle the visibility of any heading and its subheadings. This lets
+  you quickly fold a section you do not need to see (or reveal the one
+  you care about).
+- Mix prose with code in a single document to either make the whole
+  thing an actual program or to evaluate/demonstrate some snippets.
+- Convert ("export") an Org file to a variety of formats, including
+  HTML and PDF.
+- Use LaTeX inside of Org files to produce a scientific paper without
+  all the markup of LaTeX.
+- Manage TODO lists and implement a concomitant methodology of
+  labelling task states.
+- Quickly shift a "thing" (heading, list item, paragraph, ...) further
+  up or down in the file.
+- Use tables with formulas as a lightweight alternative to speadsheet
+  software.
+- Capture data or fleeting thoughts efficiently using templates.
+- Maintain an agenda for all your date-bound activities.
+- Clock in and out of tasks, to eventually track how you are spending
+  your time.
+- Link to files regardless of file type. This includes special links
+  such as to an Info manual or an email, if you also have that running
+  locally and integrated with Emacs ([[#h:755e195b-9471-48c7-963b-33055969b4e2][The =prot-emacs-email.el= module]]).
+
+In other words, Org is highly capable and widely considered one of the
+killer apps of Emacs.
+
+This section covers the relevant configurations. You will notice that
+it is not limited to Org, as some other built-in features are also
+relevant here.
+
+Given that I am setting up lots of built-in symbols, I do not need the
+~prot-emacs-package~ macro at this stage, switching to its simplified
+~prot-emacs-configure~ counterpart ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
 (prot-emacs-configure
   (:delay 5)
+#+end_src
+
+*** The =prot-emacs-org.el= section on the ~calendar~
+:PROPERTIES:
+:CUSTOM_ID: h:94d48381-1711-4d6b-8449-918bc1e3836c
+:END:
+
+The ~calendar~ is technically independent of Org, though it tighly
+integrates with it. We witness this when we are setting timestamps,
+such as while setting a =SCHEDULED= or =DEADLINE= entry for a given
+heading. All I do here is set some stylistic preferences.
+
+Note that Emacs also has a ~diary~ command. I used it for a while, but
+Org is far more capable, though I switched to it completely.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Calendar
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)
@@ -6506,14 +6639,19 @@ Watch:
   (setq calendar-date-style 'iso)
   (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-  ;; (require 'solar)
-  ;; (setq calendar-latitude 35.17         ; Not my actual coordinates
-  ;;       calendar-longitude 33.36)
+  (require 'solar)
+  (setq calendar-latitude 35.17         ; Not my actual coordinates
+        calendar-longitude 33.36)
 
-  ;; (require 'cal-dst)
+  (require 'cal-dst)
   (setq calendar-standard-time-zone-name "+0200")
   (setq calendar-daylight-time-zone-name "+0300")
 #+end_src
+
+*** TODO The =prot-emacs-org.el= section about appointment reminders
+:PROPERTIES:
+:CUSTOM_ID: h:bd4b0dcb-a925-4bd7-90db-6379a7ca6f5e
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Appt (appointment reminders which also integrate with Org agenda)
@@ -6528,6 +6666,8 @@ Watch:
   (with-eval-after-load 'org-agenda
     (appt-activate 1))
 #+end_src
+
+*** TODO The =prot-emacs-org.el= section with basic Org settings
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Org-mode (personal information manager)
@@ -6565,7 +6705,12 @@ Watch:
   (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
+  (setq org-read-date-prefer-future 'time)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org to-do and refile settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; refile, todo
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 2))
@@ -6602,7 +6747,11 @@ Watch:
   (setq org-highest-priority ?A)
   (setq org-lowest-priority ?C)
   (setq org-default-priority ?A)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org heading tags
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; tags
   (setq org-tag-alist ; I don't really use those, but whatever
         '(("meeting")
@@ -6622,19 +6771,30 @@ Watch:
 
   (setq org-auto-align-tags nil)
   (setq org-tags-column 0)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org time/state logging
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; log
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-log-note-clock-out nil)
   (setq org-log-redeadline 'time)
   (setq org-log-reschedule 'time)
-  (setq org-read-date-prefer-future 'time)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org link settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; links
   (setq org-link-keep-stored-after-insertion nil)
   ;; TODO 2021-10-15 org-link-make-description-function
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org capture templates
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; capture
   (setq org-capture-templates
         `(("b" "Basic task for future review" entry
@@ -6704,7 +6864,11 @@ Watch:
         '(("e" ((in-mode . "notmuch-search-mode")
                 (in-mode . "notmuch-show-mode")
                 (in-mode . "notmuch-tree-mode")))))
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org agenda settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; agenda
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
@@ -6881,7 +7045,11 @@ Watch:
   ;; ;; Always show the habit graph, even if there are no habits for
   ;; ;; today.
   ;; (setq org-habit-show-all-today t)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org code block settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
   (setq org-src-window-setup 'current-window)
@@ -6890,7 +7058,11 @@ Watch:
   (setq org-src-preserve-indentation t)
   (setq org-src-tab-acts-natively t)
   (setq org-edit-src-content-indentation 0)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org export settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; export
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
@@ -6900,11 +7072,18 @@ Watch:
   (setq org-html-head-include-scripts nil)
   ;; (require 'ox-texinfo)
   ;; (require 'ox-md)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= Org ID settings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; IDs
-  (setq org-id-link-to-org-use-id
-        'create-if-interactive-and-no-custom-id)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+#+end_src
 
+*** TODO The =prot-emacs-org.el= section about Org hooks and key bindings
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; Hooks and key bindings
 
   ;; See my `pulsar' package, defined elsewhere in this setup.
@@ -6939,6 +7118,13 @@ Watch:
     "e" #'org-narrow-to-element
     "s" #'org-narrow-to-subtree)
 #+end_src
+
+*** TODO The =prot-emacs-org.el= custom Org extensions (=prot-org.el=)
+
+[ Watch: [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09). It has
+  changed a bit since then, but the idea is the same. ]
+
+([[#h:9974eac8-2167-45c4-90e0-12dd877403da][The =prot-org.el= library]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Custom extensions (prot-org.el)
@@ -6993,7 +7179,14 @@ Watch:
 (prot-emacs-package prot-coach
   (:delay 10)
   (define-key global-map (kbd "C-c j") #'prot-coach-jitsi-link))
+#+end_src
 
+*** The =prot-emacs-org.el= call to ~provide~
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 (provide 'prot-emacs-org)
 #+end_src
 
