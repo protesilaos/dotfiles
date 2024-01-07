@@ -64,7 +64,6 @@ Meant to be added to `prog-mode-hook'."
 (prot-emacs-package markdown-mode
   (:install t)
   (:delay 5)
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 
 ;;; SXHKDRC mode (one of my many packages)

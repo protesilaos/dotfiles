@@ -7478,17 +7478,23 @@ in case.
   (global-so-long-mode 1))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~markdown-mode~
+*** The =prot-emacs-langs.el= settings for ~markdown-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:c9063898-07ae-4635-8853-bb5f4bbab421
 :END:
+
+The ~markdown-mode~ lets us edit Markdown files. We get syntax
+highlighting and several extras, such as the folding of headings and
+navigation between them. The mode actually provides lots of added
+functionality for GitHub-flavoured Markdown and to preview a Markdown
+file's HTML representation on a web page. Though I only use it for
+basic text editing.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Markdown (markdown-mode)
 (prot-emacs-package markdown-mode
   (:install t)
   (:delay 5)
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 #+end_src
 
