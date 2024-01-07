@@ -7460,10 +7460,18 @@ worked fine.
   (setq eglot-autoshutdown t)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for very long lines
+*** The =prot-emacs-langs.el= settings for very long lines
 :PROPERTIES:
 :CUSTOM_ID: h:20948a81-858d-4b21-b221-3b24833f5ad8
 :END:
+
+Emacs is notoriously bad at performing well when parsing long lines.
+I believe this has to do with how syntax highlighting and code
+navigation are implemented. The ~global-so-long-mode~ tries to
+mitigate this problem by disabling such extras when we visit a file
+with really long lines, such as minified JavaScript. I have not used
+it enough to know how reliable this is, though it is nice to have just
+in case.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Handle performance for very long lines (so-long.el)
