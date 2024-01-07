@@ -7695,10 +7695,46 @@ of packaging. I use it whenever I work on my numerous Emacs packages.
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~outline-minor-mode~
+*** The =prot-emacs-langs.el= settings for ~outline-minor-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35
 :END:
+
+The built-in ~outline-minor-mode~ defines folding and navigation
+commands for the file's outline. The "outline" is the document's
+discernible structure, defined by the local value of the variable
+~outline-regexp~. Simply put, it is about the headings in the
+document.
+
+Any file can have its own outline. For example, in Emacs Lisp any
+comment with three or more delimiters that starts at the beginning of
+the line counts as a heading. Three delimiters make it a level 1
+heading; four delimiters for level 2, and so on. You will notice that
+I already use outlines in all my files. Sometimes I enable the
+~outline-minor-mode~, though I do not really need the folding
+capabilities. Plus, I can navigate the file using minibuffer
+completion among outline entries without enabling
+~outline-minor-mode~, courtesy of the command ~prot-search-outline~
+([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]).
+
+A common question/remark about my literate configuration with Org is
+why not use ~outline-minor-mode~ or the external ~outshine~ package to
+get "the same features" without Org. The feature sets are not really
+comparable. With Org we can comment at length without putting all that
+in the actual code, whereas with ~outline-minor-mode~ you would be
+reading all this commentary in the source code: now you only read it
+in this Org document and its website counterpart. Furthermore, we have
+links between headings, a convenient export mechanism to a website,
+and the ability to easily redirect where the code blocks are tangled
+to. On the latter point, if, for instance, I ever choose to
+consolidate all my Emacs setup in a monolithic =init.el=, I just run a
+quick replace for all the =:tangle= values in this document. Finally,
+we have to consider the use-case: if you have a private config, then
+~outline-minor-mode~ may be enough. In my case, I maintain a massive
+document which, I think, can be helpful for others in the community as
+well.
+
+[ Also read: [[#h:2d28a65c-bef6-4829-89d9-aef3581da7cd][Why use Org when you can have an outline in Elisp?]] ]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; General configurations for prose/writing
@@ -15635,9 +15671,10 @@ and continue my work in the many small files I already have.
 [ Also read: [[#h:74c3a9e1-6852-4307-b7ba-925d8d2f61ff][Why many modules instead of one init.el?]] ]
 
 This question is about the use of the built-in ~outline-minor-mode~ or
-the ~outshine~ package. They provide folding capabilities like those
-of Org mode and can, in principle, be enabled in any buffer (provided
-it has a recognisable outline).
+the ~outshine~ package ([[#h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35][The =prot-emacs-langs.el= settings for ~outline-minor-mode~]]).
+They provide folding capabilities like those of Org mode and can, in
+principle, be enabled in any buffer (provided it has a recognisable
+outline).
 
 I am, in fact, using outlines in all my Elisp files. Not just here,
 but also in all my public-facing Emacs packages. You can spot the
