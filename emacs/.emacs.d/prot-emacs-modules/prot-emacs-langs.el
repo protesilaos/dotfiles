@@ -97,8 +97,6 @@ Meant to be added to `prog-mode-hook'."
 ;;                "[a-z]+://\\S-+"
 ;;                "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?")))
 ;;
-;;     (global-jinx-mode 1)
-;;
 ;;     (define-key ctl-x-x-map "j" #'jinx-mode) ; C-x x j
 ;;
 ;;     (prot-emacs-keybind global-map

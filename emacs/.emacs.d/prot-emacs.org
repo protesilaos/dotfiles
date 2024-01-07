@@ -7529,10 +7529,29 @@ commands. For the technicalities, read the man page ~sxhkd(1)~.
   (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for spell checking
+*** The =prot-emacs-langs.el= settings for spell checking
 :PROPERTIES:
 :CUSTOM_ID: h:115806c4-88b0-43c1-8db2-d9d8d20a5c17
 :END:
+
+The ~jinx~ package by Daniel Mendler handles spell checking as you
+type. It does it in an efficient way that does not block other Emacs
+processes. On top of that, ~jinx~ works with multiple languages, so
+any mixed language document will not be a problem for it. All you need
+is to activate ~jinx-mode~ in the current buffer or enable its global
+counterpart, ~global-jinx-mode~, at startup.
+
+I had a problem using ~jinx~ on my laptop and have not tried to make
+it work ever since. I plan to do it at some point. In the meantime, I
+rely on the built-in ~flyspell~ feature that I complement with some
+small extras ([[#h:551718b7-fb2d-4a4a-804e-3118001b96ec][The =prot-spell.el= library]]).
+
+In terms of workflow, I do not like to see any spell checking while I
+type. I prefer to write out the entire draft and then do a spell check
+at the end. Whatever typos do not bother me (and I have commented many
+times before about my "alla prima" approach to creativity). It is
+harder to set up multilingual spell checking with ~flyspell~ and I do
+not even bother trying as I seldom have that need.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;; FIXME 2023-08-28: The laptop I use now that I do not have
@@ -7556,8 +7575,6 @@ commands. For the technicalities, read the man page ~sxhkd(1)~.
 ;;                "\\w*?[0-9\.'\"-]\\w*"
 ;;                "[a-z]+://\\S-+"
 ;;                "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?")))
-;;
-;;     (global-jinx-mode 1)
 ;;
 ;;     (define-key ctl-x-x-map "j" #'jinx-mode) ; C-x x j
 ;;
