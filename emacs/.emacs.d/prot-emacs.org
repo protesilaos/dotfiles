@@ -7768,14 +7768,20 @@ out. A neat package overall!
   (define-key global-map (kbd "C-c d") #'dictionary-search))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~altcaps~ (alternating letter casing)
+*** The =prot-emacs-langs.el= settings for ~altcaps~ (alternating letter casing)
 :PROPERTIES:
 :CUSTOM_ID: h:2a2728a9-e392-4fbe-bf2a-83e883387857
 :END:
 
-The ~altcaps~ package is a small, focused-in-scope tool that helps
-users communicate mockery or sarcasm effectively.  It does this by
-alternating the letter casing of characters in the words it affects.
+What follows is another package of mine. I wrote it to practice some
+programming concepts, though I genuinely find it useful. How else are
+we supposed to mock people when they say /wHy WoN't YoU sPoOnFeEd Me
+AlL tHe AnSwErS?/
+
+Technically, the ~altcaps~ package is a small, focused-in-scope tool
+that helps users communicate mockery or sarcasm effectively. It does
+this by alternating the letter casing of characters in the words it
+affects.
 
 + Package name (GNU ELPA): ~altcaps~
 + Official manual: <https://protesilaos.com/emacs/altcaps>
