@@ -51,7 +51,7 @@ Meant to be added to `prog-mode-hook'."
 
 ;;;; Eldoc (Emacs live documentation feedback)
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
-  (global-eldoc-mode 1)
+  (add-hook 'prog-mode-hook #'eldoc-mode)
 
 ;;;; Eglot (built-in client for the language server protocol)
   (setq eglot-sync-connect nil)

@@ -7383,15 +7383,27 @@ recipes, by the way.
   (add-to-list 'auto-mode-alist '("dircolors" . conf-mode))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~eldoc~
+*** The =prot-emacs-langs.el= settings for ~eldoc~
 :PROPERTIES:
 :CUSTOM_ID: h:a5773a39-a78f-43fa-8feb-669492c1d5a9
 :END:
 
+The built-in ~eldoc~ feature is especially useful in programming
+modes. While we are in a function call, it produces an indicator in
+the echo area (where the minibuffer appears upon invocation) that
+shows the name of the function, the arguments it takes, if any, and
+highlights the current argument we are positioned at. This way, we do
+not have to go back to review the signature of the function just to
+remember its arity. Same principle for variables, where ~eldoc-mode~
+puts the first line of their documentation string in the echo area.
+
+Of course, this works out-of-the-box for Emacs Lisp code. Other modes
+need to arrange how to use this feature.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Eldoc (Emacs live documentation feedback)
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
-  (global-eldoc-mode 1)
+  (add-hook 'prog-mode-hook #'eldoc-mode)
 #+end_src
 
 *** TODO The =prot-emacs-langs.el= settings for ~eglot~
