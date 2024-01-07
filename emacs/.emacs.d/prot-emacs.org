@@ -7406,7 +7406,7 @@ need to arrange how to use this feature.
   (add-hook 'prog-mode-hook #'eldoc-mode)
 #+end_src
 
-*** The =prot-emacs-langs.el= settings for ~eglot~
+*** The =prot-emacs-langs.el= settings for ~eglot~ (LSP client)
 :PROPERTIES:
 :CUSTOM_ID: h:92258aa8-0d8c-4c12-91b4-5f44420435ce
 :END:
