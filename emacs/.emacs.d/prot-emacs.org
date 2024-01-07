@@ -7332,6 +7332,13 @@ not use Emacs (e.g. if I use ~cat~ or ~less~ on the command-line).
 Auto-filled text does not affect published prose, as the relevant
 programs strip away the newlines inside a paragraph.
 
+To manually fill a region of text, mark it and type =M-q=. Or do =M-q=
+to operate on the current paragraph without marking it. Depending on
+the major mode you are in, this key binding calls a different command.
+The generic one is ~fill-paragraph~. I use =M-Q= to "unfill" text,
+which corresponds to the ~prot-simple-unfill-region-or-paragraph~
+command ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
+
 Finally, notice how I am adding an association to the
 ~auto-mode-alist~. The file names specified in that regular expression
 will be using ~text-mode~ when I visit them.
