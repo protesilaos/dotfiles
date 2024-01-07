@@ -55,7 +55,7 @@ Emacs.
     + GitLab: <https://gitlab.com/protesilaos/dotfiles>
 + Mailing list: <https://lists.sr.ht/~protesilaos/dotfiles>
 + Video demo: <https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/>
-+ Backronym: Do Observe, Transpose, Examine, or Mirror All
++ Backronyms: Do Observe, Transpose, Examine, or Mirror All
   Configurations, Stranger (dotemacs); Dotfiles Operate Transparently
   For the Included Linux and Emacs Setups (dotfiles).
 
@@ -6510,7 +6510,7 @@ all we need to select targets with ease ([[#h:15edf2c3-4419-4101-928a-6e224958a7
 
 The only downside of this wonderful package is that it is slow on
 Windows (based on what others have told me and showed me)... In those
-cases, a combination of =vc= and the command-line will suffice 
+cases, a combination of =vc= and the command-line will suffice
 ([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
@@ -6561,7 +6561,7 @@ Finally, we ~provide~ the module. This is the mirror function of
 
 Watch:
 
-- [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18) 
+- [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18)
 - [[https://protesilaos.com/codelog/2023-05-23-emacs-org-basics/][Basics of Org mode]] (2023-05-23)
 - [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09)
 - [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][Primer on "org-capture"]] (2020-02-04)
@@ -7438,7 +7438,7 @@ following capabilities:
     principle, be implemented by the major mode though I see no reason
     why a language server cannot also be involved in this task. You
     can use the built-in ~outline-minor-mode~ to provide Org-like
-    folding capabilties for outline headings ([[#h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35][The =prot-emacs-langs.el= settings for ~outline-minor-mode~]]). 
+    folding capabilties for outline headings ([[#h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35][The =prot-emacs-langs.el= settings for ~outline-minor-mode~]]).
     I usually navigate the outline using minibuffer completion, with
     the help of my ~prot-search-outline~ command ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]). ]
 
