@@ -7614,10 +7614,32 @@ not even bother trying as I seldom have that need.
     "C-M-$" #'prot-spell-change-dictionary))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for code linting (~flymake~)
+*** The =prot-emacs-langs.el= settings for code linting (~flymake~)
 :PROPERTIES:
 :CUSTOM_ID: h:df6d1b52-0306-4ace-9099-17dded11fbed
 :END:
+
+The built-in ~flymake~ feature defines an interface for viewing the
+output of linter programs. A "linter" parses a file and reports
+possible notes/warnings/errors in it. With ~flymake~ we get these
+diagnostics in the form of a standalone buffer as well as inline
+highlights (typically underlines combined with fringe indicators) for
+the portion of text in question. The linter report is displayed with
+the command ~flymake-show-buffer-diagnostics~, or ~flymake-show-project-diagnostics~.
+Highlights are shown in the context of the file.
+
+The built-in ~eglot~ feature uses ~flymake~ internally to handle the
+LSP linter output ([[#h:92258aa8-0d8c-4c12-91b4-5f44420435ce][The =prot-emacs-langs.el= settings for ~eglot~]]).
+
+As for what I have in this configuration block, the essentials for me
+are the user options ~flymake-start-on-save-buffer~ and ~flymake-start-on-flymake-mode~
+as they make the linter update its report when the buffer is saved and
+when ~flymake-mode~ is started, respectively. Otherwise, we have to
+run it manually, which is cumbersome.
+
+The ~package-lint-flymake~ package by Steve Purcell adds the glue code
+to make ~flymake~ report issues with Emacs Lisp files for the purposes
+of packaging. I use it whenever I work on my numerous Emacs packages.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Flymake
@@ -7625,8 +7647,8 @@ not even bother trying as I seldom have that need.
   (:delay 30)
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
-  (setq flymake-start-on-flymake-mode t)
   (setq flymake-no-changes-timeout nil)
+  (setq flymake-start-on-flymake-mode t)
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
