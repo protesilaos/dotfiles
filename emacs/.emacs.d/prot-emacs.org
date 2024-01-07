@@ -2134,7 +2134,7 @@ Bruno Boal is the lead developer and I am a co-maintainer.
         '( :night     (modus-vivendi ef-dark ef-winter ef-autumn ef-night ef-duo-dark ef-symbiosis)
            :morning   (modus-operandi ef-light ef-cyprus ef-spring ef-frost ef-duo-light)
            :afternoon (modus-operandi-tinted ef-arbutus ef-day ef-kassio ef-summer ef-elea-light ef-maris-light ef-melissa-light ef-trio-light)
-           :evening   (modus-vivendi-tinted ef-elea-dark ef-maris-dark ef-melissa-dark ef-trio-dark)))
+           :evening   (modus-vivendi-tinted ef-rosa ef-elea-dark ef-maris-dark ef-melissa-dark ef-trio-dark)))
 
   (theme-buffet-timer-hours 1))
 #+end_src
@@ -7251,10 +7251,23 @@ are a few cases where ~setq-default~ is needed, so keep this in mind.
                 indent-tabs-mode nil)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for "electric" behaviour
+*** The =prot-emacs-langs.el= settings for "electric" behaviour
 :PROPERTIES:
 :CUSTOM_ID: h:ebbc4e05-3654-4fc4-9948-d29dffeb6356
 :END:
+
+Emacs describes as "electric" any behaviour that tries to be smart
+about how to handle a given action. The ~electric-pair-mode~, for
+example, automatically inserts a closing parenthesis when the user
+inputs an opening parenthesis. Same idea with quotes, performed by the
+~electric-quote-mode~. While the ~electric-indent-mode~ tries to be
+smart about how to indent a line, which is fine for programming
+purposes but makes a mess of things in Org and related because you
+have to delete back to the beginning of a line if you want to "escape"
+from the indentation of a list or something.
+
+If I need to manually wrap the symbol at point or a region in a pair
+of characters, I use my ~prot-pair-insert~ command ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Disable "electric" behaviour
@@ -7264,13 +7277,19 @@ are a few cases where ~setq-default~ is needed, so keep this in mind.
   ;; programming.
   (electric-indent-mode -1)
   (add-hook 'prog-mode-hook #'electric-indent-local-mode)
-
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings ~show-paren-mode~
+*** The =prot-emacs-langs.el= settings ~show-paren-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:7cd21ea6-c5d8-4258-999d-ad94cac2d8bf
 :END:
+
+The built-in ~show-paren-mode~ highlights the parenthesis on the
+opposite end of the current symbolic expression. It also highlights
+matching terms of control flow in programming languages that are not
+using parentheses like Lisp: for instance, in a ~bash~ shell script it
+highlights the ~if~ and ~fi~ keywords. This mode also works for prose
+and I use it globally. Simple and effective!
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Parentheses (show-paren-mode)
@@ -7281,10 +7300,48 @@ are a few cases where ~setq-default~ is needed, so keep this in mind.
   (add-hook 'after-init-hook #'show-paren-mode)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for plain text
+*** The =prot-emacs-langs.el= settings for plain text
 :PROPERTIES:
 :CUSTOM_ID: h:c5fbd6dd-2982-4fca-aeed-d0e750d399bd
 :END:
+
+These are some basic settings for plain text files but also for any
+major mode that inherits from ~text-mode~ (like Org and Markdown). For
+a long time, I was using double spaces after a sentence, as this is
+the Emacs default. I don't have a strong preference for or against it,
+though I reverted to the single space convention as it is the norm
+nowadays.
+
+The technical benefit of double spaces is that it makes sentence
+navigation less ambiguous as you do not get false positives like
+"Dr.". Though I realised I seldom use such language so why type more
+spaces for a theoretical advantage?
+
+I still need to use double spaces for Elisp programming, otherwise the
+byte compiler produces warnings. It is annoyingly pedantic, but here
+we are...
+
+The other setting that matters here is the use of "auto fill", else
+the ~auto-fill-mode~. This is about the automatic break of long lines
+so that they wrap at the ~fill-column~ length: it happens as you type.
+This way, a paragraph is not a single long line, but several shorter
+lines with newline characters between them. I find this much more
+pleasant to work with than to have to rely on ~visual-line-mode~ to
+visually wrap long lines. I want my text to be readable even if I do
+not use Emacs (e.g. if I use ~cat~ or ~less~ on the command-line).
+Auto-filled text does not affect published prose, as the relevant
+programs strip away the newlines inside a paragraph.
+
+To manually fill a region of text, mark it and type =M-q=. Or do =M-q=
+to operate on the current paragraph without marking it. Depending on
+the major mode you are in, this key binding calls a different command.
+The generic one is ~fill-paragraph~. I use =M-Q= to "unfill" text,
+which corresponds to the ~prot-simple-unfill-region-or-paragraph~
+command ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
+
+Finally, notice how I am adding an association to the
+~auto-mode-alist~. The file names specified in that regular expression
+will be using ~text-mode~ when I visit them.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Plain text (text-mode)
@@ -7295,7 +7352,7 @@ are a few cases where ~setq-default~ is needed, so keep this in mind.
 Meant to be added to `prog-mode-hook'."
     (setq-local sentence-end-double-space t))
 
-  (add-hook 'prog-mode-hook #'prot/prog-mode-sentence-end-double-space)
+  (add-hook 'emacs-lisp-mode-hook #'prot/prog-mode-sentence-end-double-space)
 
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
@@ -7307,10 +7364,15 @@ Meant to be added to `prog-mode-hook'."
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for common file types
+*** The =prot-emacs-langs.el= settings for common file types
 :PROPERTIES:
 :CUSTOM_ID: h:1a132701-9487-4af0-8759-a8d64d02bf1f
 :END:
+
+As I explained above about ~auto-mode-alist~ ([[#h:c5fbd6dd-2982-4fca-aeed-d0e750d399bd][The =prot-emacs-langs.el= settings for plain text]]),
+this is how we tell Emacs what major mode to use for files that match
+the given regular expression. The =PKGBUILD= is for Arch Linux package
+recipes, by the way.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Arch Linux and AUR package scripts (sh-mode)
@@ -7321,21 +7383,76 @@ Meant to be added to `prog-mode-hook'."
   (add-to-list 'auto-mode-alist '("dircolors" . conf-mode))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~eldoc~
+*** The =prot-emacs-langs.el= settings for ~eldoc~
 :PROPERTIES:
 :CUSTOM_ID: h:a5773a39-a78f-43fa-8feb-669492c1d5a9
 :END:
 
+The built-in ~eldoc~ feature is especially useful in programming
+modes. While we are in a function call, it produces an indicator in
+the echo area (where the minibuffer appears upon invocation) that
+shows the name of the function, the arguments it takes, if any, and
+highlights the current argument we are positioned at. This way, we do
+not have to go back to review the signature of the function just to
+remember its arity. Same principle for variables, where ~eldoc-mode~
+puts the first line of their documentation string in the echo area.
+
+Of course, this works out-of-the-box for Emacs Lisp code. Other modes
+need to arrange how to use this feature.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Eldoc (Emacs live documentation feedback)
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
-  (global-eldoc-mode 1)
+  (add-hook 'prog-mode-hook #'eldoc-mode)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~eglot~
+*** The =prot-emacs-langs.el= settings for ~eglot~
 :PROPERTIES:
 :CUSTOM_ID: h:92258aa8-0d8c-4c12-91b4-5f44420435ce
 :END:
+
+The built-in ~eglot~ feature, developed and maintained by João Távora,
+is Emacs' own client for the Language Server Protocol (LSP). The LSP
+technology is all about enhancing the ability of a text editor to work
+with a given programming language. This works by installing a
+so-called "language server" on your computer, which the "LSP client"
+(i.e. ~eglot~) will plug into. A typical language server provides the
+following capabilities:
+
+- Code completion :: This can be visualised for in-buffer
+  automatic expansion of function calls, variables, and the like
+  ([[#h:804b858f-7913-47ef-aaf4-8eef5b59ecb4][The =prot-emacs-completion.el= for in-buffer completion popup (~corfu~)]]).
+
+- Code linting :: To display suggestions, warnings, or errors. These
+  are highlighted in the buffer, usually with an underline, and can
+  also be displayed in a standalone buffer with the commands
+  ~flymake-show-buffer-diagnostics~, ~flymake-show-project-diagnostics~
+  ([[#h:df6d1b52-0306-4ace-9099-17dded11fbed][The =prot-emacs-langs.el= settings for code linting (~flymake~)]]).
+
+- Code navigation and cross-referencing :: While over a symbol, use a
+  command to jump directly to its definition. The default key bindings
+  for going forth and then back are =M-.= (~xref-find-definitions~)
+  and =M-,= (~xref-go-back~).
+
+  [ Features such as the definition of the outline should, in
+    principle, be implemented by the major mode though I see no reason
+    why a language server cannot also be involved in this task. You
+    can use the built-in ~outline-minor-mode~ to provide Org-like
+    folding capabilties for outline headings ([[#h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35][The =prot-emacs-langs.el= settings for ~outline-minor-mode~]]). 
+    I usually navigate the outline using minibuffer completion, with
+    the help of my ~prot-search-outline~ command ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]). ]
+
+Assuming the language server is installed, to start using the LSP
+client in a given file, do =M-x eglot=. To make this happen
+automatically for every newly visited file, add a hook like this:
+
+#+begin_example
+(add-hook 'SOME-MAJOR-mode #'eglot-ensure)
+#+end_example
+
+I only code in Emacs Lisp, so I am actually not using ~eglot~
+anywhere. Though I have tried it in Bash and JavaScript files and it
+worked fine.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Eglot (built-in client for the language server protocol)
@@ -7343,40 +7460,54 @@ Meant to be added to `prog-mode-hook'."
   (setq eglot-autoshutdown t)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for very long lines
+*** The =prot-emacs-langs.el= settings for very long lines
 :PROPERTIES:
 :CUSTOM_ID: h:20948a81-858d-4b21-b221-3b24833f5ad8
 :END:
+
+Emacs is notoriously bad at performing well when parsing long lines.
+I believe this has to do with how syntax highlighting and code
+navigation are implemented. The ~global-so-long-mode~ tries to
+mitigate this problem by disabling such extras when we visit a file
+with really long lines, such as minified JavaScript. I have not used
+it enough to know how reliable this is, though it is nice to have just
+in case.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Handle performance for very long lines (so-long.el)
   (global-so-long-mode 1))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~markdown-mode~
+*** The =prot-emacs-langs.el= settings for ~markdown-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:c9063898-07ae-4635-8853-bb5f4bbab421
 :END:
+
+The ~markdown-mode~ lets us edit Markdown files. We get syntax
+highlighting and several extras, such as the folding of headings and
+navigation between them. The mode actually provides lots of added
+functionality for GitHub-flavoured Markdown and to preview a Markdown
+file's HTML representation on a web page. Though I only use it for
+basic text editing.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Markdown (markdown-mode)
 (prot-emacs-package markdown-mode
   (:install t)
   (:delay 5)
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~sxhkdrc-mode~
+*** The =prot-emacs-langs.el= settings for ~sxhkdrc-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:88e36f15-4c74-4b7c-9ba6-cf5fb112ffd9
 :END:
 
-This is a major mode for editing ~sxhkdrc~ files.  SXHKD is the Simple
+This is a major mode for editing ~sxhkdrc~ files. SXHKD is the Simple
 X Hot Key Daemon which is commonly used in minimalist desktop sessions
 on Xorg, such as with the Binary Space Partitioning Window Manager
-(BSPWM).  The ~sxhkdrc~ file configures key chords, binding them to
-commands.  For the technicalities, read the man page ~sxhkd(1)~.
+(BSPWM). The ~sxhkdrc~ file configures key chords, binding them to
+commands. For the technicalities, read the man page ~sxhkd(1)~.
 
 + Package name (GNU ELPA): ~sxhkdrc-mode~
 + Git repo on SourceHut: <https://git.sr.ht/~protesilaos/sxhkdrc-mode>
@@ -7501,11 +7632,11 @@ commands.  For the technicalities, read the man page ~sxhkd(1)~.
       (flymake-mode 1)))
 
   (defun prot/flymake-mode-in-my-projects ()
-    (when-let* ((file (buffer-file-name))
-                ((string-prefix-p prot/flymake-mode-projects-path
-                                  (expand-file-name file)))
-                ((not (file-directory-p file)))
-                ((file-regular-p file)))
+    (when-let ((file (buffer-file-name))
+               ((string-prefix-p prot/flymake-mode-projects-path
+                                 (expand-file-name file)))
+               ((not (file-directory-p file)))
+               ((file-regular-p file)))
       (add-hook 'find-file-hook #'prot/flymake-mode-lexical-binding nil t)))
 
   (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
@@ -7536,7 +7667,7 @@ commands.  For the technicalities, read the man page ~sxhkd(1)~.
 ;;;; `outline' (`outline-mode' and `outline-minor-mode')
   (:delay 10)
   (setq outline-minor-mode-highlight nil) ; emacs28
-  (setq outline-minor-mode-cycle t)             ; emacs28
+  (setq outline-minor-mode-cycle t) ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (setq outline-minor-mode-use-margins nil) ; as above
   (define-key global-map (kbd "<f10>") #'outline-minor-mode)

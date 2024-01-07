@@ -31,7 +31,7 @@
 Meant to be added to `prog-mode-hook'."
     (setq-local sentence-end-double-space t))
 
-  (add-hook 'prog-mode-hook #'prot/prog-mode-sentence-end-double-space)
+  (add-hook 'emacs-lisp-mode-hook #'prot/prog-mode-sentence-end-double-space)
 
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
@@ -51,7 +51,7 @@ Meant to be added to `prog-mode-hook'."
 
 ;;;; Eldoc (Emacs live documentation feedback)
   (setq eldoc-message-function #'message) ; don't use mode line for M-x eval-expression, etc.
-  (global-eldoc-mode 1)
+  (add-hook 'prog-mode-hook #'eldoc-mode)
 
 ;;;; Eglot (built-in client for the language server protocol)
   (setq eglot-sync-connect nil)
@@ -64,7 +64,6 @@ Meant to be added to `prog-mode-hook'."
 (prot-emacs-package markdown-mode
   (:install t)
   (:delay 5)
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 
 ;;; SXHKDRC mode (one of my many packages)
@@ -166,11 +165,11 @@ Meant to be added to `prog-mode-hook'."
       (flymake-mode 1)))
 
   (defun prot/flymake-mode-in-my-projects ()
-    (when-let* ((file (buffer-file-name))
-                ((string-prefix-p prot/flymake-mode-projects-path
-                                  (expand-file-name file)))
-                ((not (file-directory-p file)))
-                ((file-regular-p file)))
+    (when-let ((file (buffer-file-name))
+               ((string-prefix-p prot/flymake-mode-projects-path
+                                 (expand-file-name file)))
+               ((not (file-directory-p file)))
+               ((file-regular-p file)))
       (add-hook 'find-file-hook #'prot/flymake-mode-lexical-binding nil t)))
 
   (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
@@ -194,7 +193,7 @@ Meant to be added to `prog-mode-hook'."
 ;;;; `outline' (`outline-mode' and `outline-minor-mode')
   (:delay 10)
   (setq outline-minor-mode-highlight nil) ; emacs28
-  (setq outline-minor-mode-cycle t)             ; emacs28
+  (setq outline-minor-mode-cycle t) ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (setq outline-minor-mode-use-margins nil) ; as above
   (define-key global-map (kbd "<f10>") #'outline-minor-mode)
