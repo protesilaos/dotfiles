@@ -7498,16 +7498,16 @@ basic text editing.
   (setq markdown-fontify-code-blocks-natively t))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~sxhkdrc-mode~
+*** The =prot-emacs-langs.el= settings for ~sxhkdrc-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:88e36f15-4c74-4b7c-9ba6-cf5fb112ffd9
 :END:
 
-This is a major mode for editing ~sxhkdrc~ files.  SXHKD is the Simple
+This is a major mode for editing ~sxhkdrc~ files. SXHKD is the Simple
 X Hot Key Daemon which is commonly used in minimalist desktop sessions
 on Xorg, such as with the Binary Space Partitioning Window Manager
-(BSPWM).  The ~sxhkdrc~ file configures key chords, binding them to
-commands.  For the technicalities, read the man page ~sxhkd(1)~.
+(BSPWM). The ~sxhkdrc~ file configures key chords, binding them to
+commands. For the technicalities, read the man page ~sxhkd(1)~.
 
 + Package name (GNU ELPA): ~sxhkdrc-mode~
 + Git repo on SourceHut: <https://git.sr.ht/~protesilaos/sxhkdrc-mode>
