@@ -165,11 +165,11 @@ Meant to be added to `prog-mode-hook'."
       (flymake-mode 1)))
 
   (defun prot/flymake-mode-in-my-projects ()
-    (when-let* ((file (buffer-file-name))
-                ((string-prefix-p prot/flymake-mode-projects-path
-                                  (expand-file-name file)))
-                ((not (file-directory-p file)))
-                ((file-regular-p file)))
+    (when-let ((file (buffer-file-name))
+               ((string-prefix-p prot/flymake-mode-projects-path
+                                 (expand-file-name file)))
+               ((not (file-directory-p file)))
+               ((file-regular-p file)))
       (add-hook 'find-file-hook #'prot/flymake-mode-lexical-binding nil t)))
 
   (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
@@ -193,7 +193,7 @@ Meant to be added to `prog-mode-hook'."
 ;;;; `outline' (`outline-mode' and `outline-minor-mode')
   (:delay 10)
   (setq outline-minor-mode-highlight nil) ; emacs28
-  (setq outline-minor-mode-cycle t)             ; emacs28
+  (setq outline-minor-mode-cycle t) ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (setq outline-minor-mode-use-margins nil) ; as above
   (define-key global-map (kbd "<f10>") #'outline-minor-mode)
