@@ -7279,10 +7279,17 @@ of characters, I use my ~prot-pair-insert~ command ([[#h:a7edbb23-2daa-4d8f-bcdd
   (add-hook 'prog-mode-hook #'electric-indent-local-mode)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings ~show-paren-mode~
+*** The =prot-emacs-langs.el= settings ~show-paren-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:7cd21ea6-c5d8-4258-999d-ad94cac2d8bf
 :END:
+
+The built-in ~show-paren-mode~ highlights the parenthesis on the
+opposite end of the current symbolic expression. It also highlights
+matching terms of control flow in programming languages that are not
+using parentheses like Lisp: for instance, in a ~bash~ shell script it
+highlights the ~if~ and ~fi~ keywords. This mode also works for prose
+and I use it globally. Simple and effective!
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Parentheses (show-paren-mode)
