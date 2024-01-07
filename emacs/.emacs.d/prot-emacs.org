@@ -7300,10 +7300,41 @@ and I use it globally. Simple and effective!
   (add-hook 'after-init-hook #'show-paren-mode)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for plain text
+*** The =prot-emacs-langs.el= settings for plain text
 :PROPERTIES:
 :CUSTOM_ID: h:c5fbd6dd-2982-4fca-aeed-d0e750d399bd
 :END:
+
+These are some basic settings for plain text files but also for any
+major mode that inherits from ~text-mode~ (like Org and Markdown). For
+a long time, I was using double spaces after a sentence, as this is
+the Emacs default. I don't have a strong preference for or against it,
+though I reverted to the single space convention as it is the norm
+nowadays.
+
+The technical benefit of double spaces is that it makes sentence
+navigation less ambiguous as you do not get false positives like
+"Dr.". Though I realised I seldom use such language so why type more
+spaces for a theoretical advantage?
+
+I still need to use double spaces for Elisp programming, otherwise the
+byte compiler produces warnings. It is annoyingly pedantic, but here
+we are...
+
+The other setting that matters here is the use of "auto fill", else
+the ~auto-fill-mode~. This is about the automatic break of long lines
+so that they wrap at the ~fill-column~ length: it happens as you type.
+This way, a paragraph is not a single long line, but several shorter
+lines with newline characters between them. I find this much more
+pleasant to work with than to have to rely on ~visual-line-mode~ to
+visually wrap long lines. I want my text to be readable even if I do
+not use Emacs (e.g. if I use ~cat~ or ~less~ on the command-line).
+Auto-filled text does not affect published prose, as the relevant
+programs strip away the newlines inside a paragraph.
+
+Finally, notice how I am adding an association to the
+~auto-mode-alist~. The file names specified in that regular expression
+will be using ~text-mode~ when I visit them.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Plain text (text-mode)
@@ -7314,7 +7345,7 @@ and I use it globally. Simple and effective!
 Meant to be added to `prog-mode-hook'."
     (setq-local sentence-end-double-space t))
 
-  (add-hook 'prog-mode-hook #'prot/prog-mode-sentence-end-double-space)
+  (add-hook 'emacs-lisp-mode-hook #'prot/prog-mode-sentence-end-double-space)
 
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)

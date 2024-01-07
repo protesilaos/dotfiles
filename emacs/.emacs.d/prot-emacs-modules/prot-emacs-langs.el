@@ -31,7 +31,7 @@
 Meant to be added to `prog-mode-hook'."
     (setq-local sentence-end-double-space t))
 
-  (add-hook 'prog-mode-hook #'prot/prog-mode-sentence-end-double-space)
+  (add-hook 'emacs-lisp-mode-hook #'prot/prog-mode-sentence-end-double-space)
 
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
