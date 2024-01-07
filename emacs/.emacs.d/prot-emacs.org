@@ -7748,10 +7748,16 @@ well.
   (define-key global-map (kbd "<f10>") #'outline-minor-mode)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~dictionary~
+*** The =prot-emacs-langs.el= settings for ~dictionary~
 :PROPERTIES:
 :CUSTOM_ID: h:f91563d8-f176-4555-b45b-ece56de03279
 :END:
+
+The built-in ~dictionary~ feature lets us access a webpage (or local
+server) to read dictionary entries. The command ~dictionary-search~ is
+also smart enough to use the word at point as the default value, so we
+can type =RET= at the minibuffer prompt to select it without typing it
+out. A neat package overall!
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; `dictionary'
