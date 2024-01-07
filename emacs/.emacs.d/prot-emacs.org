@@ -15693,20 +15693,30 @@ but also in all my public-facing Emacs packages. You can spot the
 entries to the outline as comments that have three or more delimiters.
 I can thus visit the =.el= file I am interested in and enable
 ~outline-minor-mode~ to get the folding capabilities and extras.
-Furthermore, I can use the ~consult-outline~ command to navigate to a
-heading with minibuffer completion.
+Furthermore, I can use the ~consult-outline~ or ~prot-search-outline~
+command to navigate to a heading with minibuffer completion.
 
 What the =prot-emacs.org= provides is an /optional single point of
 entry/ to my Emacs configuration. I use this to produce all the
 individual files ([[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][Anatomy of my Emacs configuration]]). It allows me to
 document my comprehensive corpus of work for the benefit of the Emacs
-community at-large. I can establish links between sections and use
-richer typography, something that ~outline-minor-mode~ does not
-provide. This document is exported to my website as a standalone web
-page. People can find what they want there. They may also read the
-source of this file to learn more about the technicalities of how this
-is done. And they can still use only the =.el= files, if they do not
-want to deal with Org. Everybody is covered.
+community at-large:
+
+- I can establish links between sections and use richer typography,
+  something that ~outline-minor-mode~ does not provide.
+
+- The extensive commentary included herein is not added to the source
+  code, thus making it easier for me or others to focus on the
+  programming parts when we want to.
+
+- This document is exported to my website as a standalone web page.
+  People can find what they need there and share it with friends,
+  regardless of their skill level.
+
+- Anyone may read the source of this file to learn more about the
+  technicalities of how this is done. And they can still use only the
+  =.el= files, if they do not want to deal with Org. Everybody is
+  covered.
 
 The =prot-emacs.org= *does not introduce a dependency on Org mode*.
 This file is not loaded at startup. I can remove =prot-emacs.org= at
