@@ -7406,10 +7406,53 @@ need to arrange how to use this feature.
   (add-hook 'prog-mode-hook #'eldoc-mode)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~eglot~
+*** The =prot-emacs-langs.el= settings for ~eglot~
 :PROPERTIES:
 :CUSTOM_ID: h:92258aa8-0d8c-4c12-91b4-5f44420435ce
 :END:
+
+The built-in ~eglot~ feature, developed and maintained by João Távora,
+is Emacs' own client for the Language Server Protocol (LSP). The LSP
+technology is all about enhancing the ability of a text editor to work
+with a given programming language. This works by installing a
+so-called "language server" on your computer, which the "LSP client"
+(i.e. ~eglot~) will plug into. A typical language server provides the
+following capabilities:
+
+- Code completion :: This can be visualised for in-buffer
+  automatic expansion of function calls, variables, and the like
+  ([[#h:804b858f-7913-47ef-aaf4-8eef5b59ecb4][The =prot-emacs-completion.el= for in-buffer completion popup (~corfu~)]]).
+
+- Code linting :: To display suggestions, warnings, or errors. These
+  are highlighted in the buffer, usually with an underline, and can
+  also be displayed in a standalone buffer with the commands
+  ~flymake-show-buffer-diagnostics~, ~flymake-show-project-diagnostics~
+  ([[#h:df6d1b52-0306-4ace-9099-17dded11fbed][The =prot-emacs-langs.el= settings for code linting (~flymake~)]]).
+
+- Code navigation and cross-referencing :: While over a symbol, use a
+  command to jump directly to its definition. The default key bindings
+  for going forth and then back are =M-.= (~xref-find-definitions~)
+  and =M-,= (~xref-go-back~).
+
+  [ Features such as the definition of the outline should, in
+    principle, be implemented by the major mode though I see no reason
+    why a language server cannot also be involved in this task. You
+    can use the built-in ~outline-minor-mode~ to provide Org-like
+    folding capabilties for outline headings ([[#h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35][The =prot-emacs-langs.el= settings for ~outline-minor-mode~]]). 
+    I usually navigate the outline using minibuffer completion, with
+    the help of my ~prot-search-outline~ command ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]). ]
+
+Assuming the language server is installed, to start using the LSP
+client in a given file, do =M-x eglot=. To make this happen
+automatically for every newly visited file, add a hook like this:
+
+#+begin_example
+(add-hook 'SOME-MAJOR-mode #'eglot-ensure)
+#+end_example
+
+I only code in Emacs Lisp, so I am actually not using ~eglot~
+anywhere. Though I have tried it in Bash and JavaScript files and it
+worked fine.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Eglot (built-in client for the language server protocol)
