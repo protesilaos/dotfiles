@@ -7251,10 +7251,23 @@ are a few cases where ~setq-default~ is needed, so keep this in mind.
                 indent-tabs-mode nil)
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for "electric" behaviour
+*** The =prot-emacs-langs.el= settings for "electric" behaviour
 :PROPERTIES:
 :CUSTOM_ID: h:ebbc4e05-3654-4fc4-9948-d29dffeb6356
 :END:
+
+Emacs describes as "electric" any behaviour that tries to be smart
+about how to handle a given action. The ~electric-pair-mode~, for
+example, automatically inserts a closing parenthesis when the user
+inputs an opening parenthesis. Same idea with quotes, performed by the
+~electric-quote-mode~. While the ~electric-indent-mode~ tries to be
+smart about how to indent a line, which is fine for programming
+purposes but makes a mess of things in Org and related because you
+have to delete back to the beginning of a line if you want to "escape"
+from the indentation of a list or something.
+
+If I need to manually wrap the symbol at point or a region in a pair
+of characters, I use my ~prot-pair-insert~ command ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Disable "electric" behaviour
@@ -7264,7 +7277,6 @@ are a few cases where ~setq-default~ is needed, so keep this in mind.
   ;; programming.
   (electric-indent-mode -1)
   (add-hook 'prog-mode-hook #'electric-indent-local-mode)
-
 #+end_src
 
 *** TODO The =prot-emacs-langs.el= settings ~show-paren-mode~
