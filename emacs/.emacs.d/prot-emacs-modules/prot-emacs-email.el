@@ -1,14 +1,15 @@
 ;;; Client-agnostic email settings
 (prot-emacs-configure
   (:delay 1)
+
 ;;;; File with authentication credentials (`auth-source')
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
         user-mail-address "public@protesilaos.com")
 
 ;;;; Encoding settings (`mm-encode')
-  (setq mm-encrypt-option nil ; use 'guided if you need more control
-        mm-sign-option nil)  ; same
+  (setq mm-encrypt-option nil ; use 'guided for both if you need more control
+        mm-sign-option nil)
 
 ;;;; Encryption settings (`mml-sec')
   (setq mml-secure-openpgp-encrypt-to-self t

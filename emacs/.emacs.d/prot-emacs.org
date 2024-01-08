@@ -6668,6 +6668,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= section with basic Org settings
+:PROPERTIES:
+:CUSTOM_ID: h:e03df1e0-b43e-49b5-978e-6a511165617c
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Org-mode (personal information manager)
@@ -6709,6 +6712,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org to-do and refile settings
+:PROPERTIES:
+:CUSTOM_ID: h:024dd541-0061-4a10-b10b-b17dcd4794b9
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; refile, todo
@@ -6750,6 +6756,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org heading tags
+:PROPERTIES:
+:CUSTOM_ID: h:81de4e32-a1af-4e1f-9e10-90eb0c90afa2
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; tags
@@ -6774,6 +6783,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org time/state logging
+:PROPERTIES:
+:CUSTOM_ID: h:0884658e-9eb5-47e3-9338-66e09004a1a0
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; log
@@ -6785,6 +6797,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org link settings
+:PROPERTIES:
+:CUSTOM_ID: h:da8ce883-7f21-4a6e-a41f-d668ad762b41
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; links
@@ -6793,6 +6808,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org capture templates
+:PROPERTIES:
+:CUSTOM_ID: h:f8f06938-0dfe-45c3-b4cf-996d36cba82d
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; capture
@@ -6867,6 +6885,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org agenda settings
+:PROPERTIES:
+:CUSTOM_ID: h:7fe87b83-2815-4617-a5f9-d3417dd9d248
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; agenda
@@ -7048,6 +7069,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org code block settings
+:PROPERTIES:
+:CUSTOM_ID: h:1f5a0d46-5202-48dd-8048-b48ce17f3df8
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; code blocks
@@ -7061,6 +7085,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org export settings
+:PROPERTIES:
+:CUSTOM_ID: h:bd11d4d8-6e9f-4536-87a4-4018783bf8f5
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; export
@@ -7075,6 +7102,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org ID settings
+:PROPERTIES:
+:CUSTOM_ID: h:ffb2ebcf-9f41-4ec0-892c-2e5789ebb437
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; IDs
@@ -7082,6 +7112,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= section about Org hooks and key bindings
+:PROPERTIES:
+:CUSTOM_ID: h:36d53809-2594-4b67-b6e5-19dde7d37644
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; Hooks and key bindings
@@ -7120,6 +7153,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** TODO The =prot-emacs-org.el= custom Org extensions (=prot-org.el=)
+:PROPERTIES:
+:CUSTOM_ID: h:62055c1b-5356-4639-9c52-b6b77b41ad9f
+:END:
 
 [ Watch: [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09). It has
   changed a bit since then, but the idea is the same. ]
@@ -7182,6 +7218,9 @@ Org is far more capable, though I switched to it completely.
 #+end_src
 
 *** The =prot-emacs-org.el= call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:62eb7ca3-2f79-45a6-a018-38238b486e98
+:END:
 
 Finally, we ~provide~ the module. This is the mirror function of
 ~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
@@ -8048,23 +8087,83 @@ shows how to extend the code to achieve the desired result.
 (provide 'prot-emacs-langs)
 #+end_src
 
-** TODO The =prot-emacs-email.el= module
+** The =prot-emacs-email.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:755e195b-9471-48c7-963b-33055969b4e2
 :END:
+
+Email inside of Emacs is one of the best changes I have ever made to
+my workflow. I consider it far better than the ~mutt~ setup I once
+had. The benefits are down to the interconnectedness of the Emacs
+environment (watch: [[https://protesilaos.com/codelog/2020-10-21-emacs-favourite-package/][Why Emacs itself is my "favourite Emacs package"]]
+(2020-10-21)). All text editing capabilities are available. Same for
+buffer navigation. Same for themes and fonts. Then we have integration
+with ~org-capture~ to quickly produce a task that shows up on the Org
+agenda and has a link back to the original email ([[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates]]).
+And there is also te seamless connection between Emacs and GPG, so any
+encrypted file/email is decrypted behind the scenes with us
+experiencing it as every other regular file. Fantastic stuff!
+
+In this portion of the configuration, I am configuring several of
+built-in variable, so I use the ~prot-emacs-configure~ macro to do so
+with a short delay post startup ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el" :mkdirp yes
 ;;; Client-agnostic email settings
 (prot-emacs-configure
   (:delay 1)
+#+end_src
+
+*** TODO The =prot-emacs-email.el= basic settings (including =authinfo=)
+:PROPERTIES:
+:CUSTOM_ID: h:24f17614-ee3d-4cd1-bbe3-f53e4f39c281
+:END:
+
+Emacs reads login credentials from the list of files specified in the
+user option ~auth-sources~. I set it to a single GPG-encrypted entry.
+The contents of that file look like this:
+
+#+begin_example
+machine pub port 993 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
+machine inf port 993 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
+
+machine mail.gandi.net port 465 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
+machine mail.gandi.net port 465 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
+#+end_example
+
+Each line can be read as a map of key-value pairs. Think of it like this:
+
+#+begin_example
+machine pub
+port 993
+login SOME-USER-NAME-HERE
+password SOME-PASSWORD-HERE
+#+end_example
+
+Depending on the settings and the applicable program, Emacs reads this
+file to establish a connection. This is not limited to emails, mind
+you, as we can have credentials such as for running ~sudo~ via TRAMP
+or logging in to IRC with the ~rcirc~ command ([[#h:f23d9cef-ab7b-4486-a070-9c7ae664eadf][The =prot-emacs-web.el= module]]).
+
+For my email purposes, Emacs does not read from the ~auto-sources~,
+though I do keep this in place for other programs to read from. CONTINUE.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; File with authentication credentials (`auth-source')
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
         user-mail-address "public@protesilaos.com")
+#+end_src
 
+*** TODO The =prot-emacs-email.el= message composition and encryption settings
+:PROPERTIES:
+:CUSTOM_ID: h:49815c07-737f-4f10-95ee-63640f9ae18b
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; Encoding settings (`mm-encode')
-  (setq mm-encrypt-option nil ; use 'guided if you need more control
-        mm-sign-option nil)  ; same
+  (setq mm-encrypt-option nil ; use 'guided for both if you need more control
+        mm-sign-option nil)
 
 ;;;; Encryption settings (`mml-sec')
   (setq mml-secure-openpgp-encrypt-to-self t
@@ -8091,10 +8190,26 @@ shows how to extend the code to achieve the desired result.
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (add-hook 'message-setup-hook #'message-sort-headers)
+#+end_src
 
+*** TODO The =prot-emacs-email.el= integration with Dired for email attachments (~gnus-dired-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:deccd4f1-c1bd-4b02-993e-914f57ea0fac
+:END:
+
+([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
   (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode)
+#+end_src
 
+*** TODO The =prot-emacs-email.el= settings for ~sendmail~
+:PROPERTIES:
+:CUSTOM_ID: h:c7c9815c-e259-4810-816a-9ebc1a146004
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; `sendmail' (mail transfer agent)
   (setq send-mail-function 'sendmail-send-it
         ;; ;; NOTE 2023-08-08: We do not need this if we have the Arch
@@ -8103,7 +8218,19 @@ shows how to extend the code to achieve the desired result.
         ;;
         ;; sendmail-program (executable-find "msmtp")
         message-sendmail-envelope-from 'header))
+#+end_src
 
+*** TODO The =prot-emacs-email.el= loading of the email client and call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:200bc618-678a-4dc8-9d30-876d89e1edae
+:END:
+
+([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]])
+
+Finally, we ~provide~ the module. This is the mirror function of
+~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 (when (executable-find "notmuch")
   (require 'prot-emacs-notmuch))
 
