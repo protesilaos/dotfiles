@@ -8092,6 +8092,8 @@ shows how to extend the code to achieve the desired result.
 :CUSTOM_ID: h:755e195b-9471-48c7-963b-33055969b4e2
 :END:
 
+[ Also see: [[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]]. ]
+
 Email inside of Emacs is one of the best changes I have ever made to
 my workflow. I consider it far better than the ~mutt~ setup I once
 had. The benefits are down to the interconnectedness of the Emacs
@@ -8114,7 +8116,7 @@ with a short delay post startup ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The 
   (:delay 1)
 #+end_src
 
-*** TODO The =prot-emacs-email.el= basic settings (including =authinfo=)
+*** The =prot-emacs-email.el= basic settings (including =authinfo=)
 :PROPERTIES:
 :CUSTOM_ID: h:24f17614-ee3d-4cd1-bbe3-f53e4f39c281
 :END:
@@ -8146,7 +8148,11 @@ you, as we can have credentials such as for running ~sudo~ via TRAMP
 or logging in to IRC with the ~rcirc~ command ([[#h:f23d9cef-ab7b-4486-a070-9c7ae664eadf][The =prot-emacs-web.el= module]]).
 
 For my email purposes, Emacs does not read from the ~auto-sources~,
-though I do keep this in place for other programs to read from. CONTINUE.
+though I do keep this in place for other programs to read from. These
+programs include ~mbsync~ and ~msmtp~ ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][How I use email in Emacs]]).
+
+Other than that, all I do in this snippet is set the default name and
+email, which are consulted by miscellaneous pieces Emacs functionality.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; File with authentication credentials (`auth-source')
@@ -8833,6 +8839,243 @@ love letters, respectively.
 
 (provide 'prot-emacs-mu4e)
 #+end_src
+
+*** Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)
+:PROPERTIES:
+:CUSTOM_ID: h:33151014-3621-4be6-9185-aacc34ee2d2c
+:END:
+
+I have a regular IMAP email setup. This is the protocol that allows
+the server to retain messages, which is of practical benefit for
+accessing mail on multiple machines.
+
+A copy of my server's contents needs to be stored locally. This is
+valuable for backup purposes. It also provides the option to move to
+another email service provider by just syncing the local data to the
+new location while deleting the old one. More importantly though,
+local files can be indexed, granting us access to a powerful search
+mechanism (more below).
+
+The program that stores email locally is called ~mbsync~. For whatever
+reason, the system package is ~isync~. This is true for Arch Linux and
+Debian. (I also heard it is the case with ~homebrew~, but please check.)
+
+With ~mbsync~ we synchronise the state from the server (known as the
+"far" side) to our computer (the "near" side). The directionality can
+be one-way, far to near or near to far. Or it can be two-way, as is
+the case on my end. Concretely, what I have on my computer is mirrored
+on the server.
+
+The format ~mbsync~ uses is called =maildir=. This is in contrast to
+the Unix =mbox=. I do not know about the pros and cons of each format,
+other than the fact that =maildir= has been working flawlessly for me
+for years---and email is my primary medium of communication online
+([[#h:bf540a85-12a6-4005-bf00-2ff3370e5adb][Contents of my =.mbsyncrc=]]).
+
+The local files are indexed with a "mail indexer" system program.
+There are a few of those. The ones I have used are ~mu~ and ~notmuch~.
+Both are built on top of the ~xapian~ search engine software and both
+offer the same features. The noticeable differences exist at the level
+of the email client, else the Mail User Agent (MUA), which I cover
+further below.
+
+Mail indexers create a database out of a local email directory for the
+purposes of retrieving data from it. In practical terms, we can run a
+search like =notmuch search from:protesilaos= to produce a list of all
+messages whose =From= mail header matches the given name. The search
+terms are quite sophisticated, accepting tags, date ranges, and even
+queries for message contents.
+
+Indexation is an archiving process. We do not need a Mail User Agent
+(MUA) to handle all the interactivity involved. There are cases where
+we can have some old messages in such a read-only state. Though we
+most probably need to deal with email in present time, hence the need
+for a MUA.
+
+The MUA is responsible for all the interactive aspects of dealing with
+email: show a list of messages, display an individual email, handle
+message composition, and others such as tagging, searching,
+downloading... In short, the mail user agent is what we normally
+understand as the "email app".
+
+The ~mu~ and ~notmuch~ indexers both come with their own Emacs MUA as
+part of their system package. For the former, the Emacs package is known
+as ~mu4e~ ([[#h:97282c11-475c-4ad3-9399-cb2cd12f93b7][The deprecated =prot-emacs-mu4e.el= module]]), while the
+latter's is ~notmuch~ or =notmuch.el= to differentiate it from the
+system program ([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]).
+
+I have used both MUAs extensively and settled with =notmuch.el= simply
+because it has a threaded view: ~mu4e~ uses a tree view, which is fine
+if you are not dealing with lots of emails, but is harder to spot what
+you need when conversations start getting longer and you have plenty
+of them. I never use the tree view provided by =notmuch.el=, unless I
+am testing something.
+
+Behind the scenes, the MUA needs some other program to actually send
+messages. For this purpose, I set up the ~msmtp~ system package, which
+defines a handler for the standard ~sendmail~ system utility. Not to
+bother you with the technicalities: ~msmtp~ is basically the same as
+~mbsync~ but for sending instead of fetching.
+
+This all sounds complex to anyone who expects email to be encapsulated
+in a single application. What we have here is the Unix paradigm in
+action. Need another program for mail indexing? Good, just swap out
+~mbsync~ for ~offlineimap~ and continue using the rest of the tool
+kit. This is the sort of idea.
+
+Overall, I am happy with my setup. Email is integral to my online
+communications: I need it to be reliable and efficient. Having the MUA
+in Emacs is extra nice because it integrates an essential part of my
+daily computing with the rest of what I do ([[#h:755e195b-9471-48c7-963b-33055969b4e2][The =prot-emacs-email.el= module]]).
+
+**** Contents of my =.mbsyncrc=
+:PROPERTIES:
+:CUSTOM_ID: h:bf540a85-12a6-4005-bf00-2ff3370e5adb
+:END:
+
+This file is stored in the home directory at =~/.mbsyncrc= (it can be
+placed elsewhere, but I do not mind it there). Notice that the user
+name and password are not written in the file directly but are instead
+retrieved by a system call that reads the encrypted =~/.authinfo.gpg=
+file ([[#h:24f17614-ee3d-4cd1-bbe3-f53e4f39c281][The =prot-emacs-email.el= basic settings (including =authinfo=)]]).
+
+What you see there is three separate email accounts.
+
+# I know about the Org '#+include' directive but this file rarely
+# changes so I do not mind copying it here directly.
+
+#+begin_example sh
+IMAPAccount pub
+Host mail.gandi.net
+UserCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }'"
+PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore pub-remote
+Account pub
+
+MaildirStore pub-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/pub/
+Inbox ~/.mail/pub/Inbox
+
+Channel pub
+Far :pub-remote:
+Near :pub-local:
+# Include everything
+Patterns *
+Sync All
+Create Both
+Remove Both
+Expunge Both
+SyncState *
+
+##########
+
+IMAPAccount inf
+Host mail.gandi.net
+UserCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }'"
+PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore inf-remote
+Account inf
+
+MaildirStore inf-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/inf/
+Inbox ~/.mail/inf/Inbox
+
+Channel inf
+Far :inf-remote:
+Near :inf-local:
+# Include everything
+Pattern *
+Sync All
+Create Both
+Remove Both
+Expunge Both
+SyncState *
+
+##########
+
+IMAPAccount prv
+Host mail.gandi.net
+UserCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }'"
+PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore prv-remote
+Account prv
+
+MaildirStore prv-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/prv/
+Inbox ~/.mail/prv/Inbox
+
+Channel prv
+Far :prv-remote:
+Near :prv-local:
+# Include everything
+Patterns *
+Sync All
+Create Both
+Remove Both
+Expunge Both
+SyncState *
+#+end_example
+
+**** Contents of my ~msmtp~ configuration file
+:PROPERTIES:
+:CUSTOM_ID: h:c7b8940b-7452-429e-ba2d-dd39da5e9cd9
+:END:
+
+This file is stored at =~/.config/msmtp/config= (well, unless you
+change the XDG directory but then you know what you are doing). Just
+as with ~mbsync~, I retrieve the user name and password via command
+that read from the =~/.authinfo= file ([[#h:bf540a85-12a6-4005-bf00-2ff3370e5adb][Contents of my =.mbsyncrc=]]).
+
+#+begin_example sh
+# See my mbsync config, which is reflectd here.
+# https://git.sr.ht/~protesilaos/dotfiles
+
+defaults
+auth on
+protocol smtp
+tls on
+# FIXME 2023-08-08: I cannot send the message if `tls_starttls' is on.
+# Why?
+tls_starttls off
+host mail.gandi.net
+port 465
+
+# pub
+account pub
+# FIXME 2023-08-08: Optimise this?
+eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
+eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
+passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
+
+# inf
+account inf
+# FIXME 2023-08-08: Optimise this?
+eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
+eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
+passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
+
+# prv
+account prv
+# FIXME 2023-08-08: Optimise this?
+eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
+eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
+passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
+
+# Set a default account (I copied from man msmtp)
+account default : pub
+#+end_example
 
 ** TODO The =prot-emacs-web.el= module
 :PROPERTIES:
