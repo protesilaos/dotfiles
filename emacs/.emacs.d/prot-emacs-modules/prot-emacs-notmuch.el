@@ -136,16 +136,16 @@
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
 ;;;; Reading messages
-  (setq notmuch-show-relative-dates t
-        notmuch-show-all-multipart/alternative-parts nil
-        notmuch-show-indent-messages-width 0
-        notmuch-show-indent-multipart nil
-        notmuch-show-part-button-default-action 'notmuch-show-view-part
-        notmuch-show-text/html-blocked-images "." ; block everything
-        notmuch-wash-wrap-lines-length 120
-        notmuch-unthreaded-show-out nil
-        notmuch-message-headers '("To" "Cc" "Subject" "Date")
-        notmuch-message-headers-visible t)
+  (setq notmuch-show-relative-dates t)
+  (setq notmuch-show-all-multipart/alternative-parts nil)
+  (setq notmuch-show-indent-messages-width 0)
+  (setq notmuch-show-indent-multipart nil)
+  (setq notmuch-show-part-button-default-action 'notmuch-show-view-part)
+  (setq notmuch-show-text/html-blocked-images ".") ; block everything
+  (setq notmuch-wash-wrap-lines-length 120)
+  (setq notmuch-unthreaded-show-out nil)
+  (setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
+  (setq notmuch-message-headers-visible t)
 
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
     (setq notmuch-wash-citation-lines-prefix count

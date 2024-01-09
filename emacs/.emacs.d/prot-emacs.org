@@ -8631,23 +8631,38 @@ confirmation where needed.
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= section about reading messages
+**** The =prot-emacs-notmuch.el= section about reading messages
 :PROPERTIES:
 :CUSTOM_ID: h:f2b7a39e-fb10-4886-9765-4be8a1701c67
 :END:
 
+Some simple tweaks here to get the presentation I like while reading
+messages. Everything here is valueble to me, though note the "wash"
+parts. These pertain to a behaviour where long quotes are hidden
+behind a button. The idea is to hide most of the text and reveal it on
+demand. I never want that: if there is a long section of text there, I
+need to see it.
+
+Note that the presentation of HTML messages is affect by the state of
+the built-in Simple HTML Renderer ([[#h:60483672-aeb6-427b-bbef-54a5c31e39ab][The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)]]).
+Concretely, there is the ~shr-use-colors~ option, which I disable
+because I do not want hardcoded values to mess up my theme. As such,
+newletters, receipts, etc., which are usually rendered on a white
+background will be dark while using a dark theme. This is considerably
+nicer.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Reading messages
-  (setq notmuch-show-relative-dates t
-        notmuch-show-all-multipart/alternative-parts nil
-        notmuch-show-indent-messages-width 0
-        notmuch-show-indent-multipart nil
-        notmuch-show-part-button-default-action 'notmuch-show-view-part
-        notmuch-show-text/html-blocked-images "." ; block everything
-        notmuch-wash-wrap-lines-length 120
-        notmuch-unthreaded-show-out nil
-        notmuch-message-headers '("To" "Cc" "Subject" "Date")
-        notmuch-message-headers-visible t)
+  (setq notmuch-show-relative-dates t)
+  (setq notmuch-show-all-multipart/alternative-parts nil)
+  (setq notmuch-show-indent-messages-width 0)
+  (setq notmuch-show-indent-multipart nil)
+  (setq notmuch-show-part-button-default-action 'notmuch-show-view-part)
+  (setq notmuch-show-text/html-blocked-images ".") ; block everything
+  (setq notmuch-wash-wrap-lines-length 120)
+  (setq notmuch-unthreaded-show-out nil)
+  (setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
+  (setq notmuch-message-headers-visible t)
 
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
     (setq notmuch-wash-citation-lines-prefix count
