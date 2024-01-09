@@ -8299,10 +8299,24 @@ numerous accoutrements.
   (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode)
 #+end_src
 
-*** TODO The =prot-emacs-email.el= settings for ~sendmail~
+*** The =prot-emacs-email.el= settings for ~sendmail~
 :PROPERTIES:
 :CUSTOM_ID: h:c7c9815c-e259-4810-816a-9ebc1a146004
 :END:
+
+As I explain in the [[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]],
+I use the external ~msmtp~ program to handle email sending, else to
+set up the Mail Transfer Agent (MTA). With ~msmtp~ and a compatibility
+package installed (~msmtp-mta~ on Arch Linux), the standard ~sendmail~
+executable becomes a symlink to the ~msmtp~ program.
+
+I use this method because it is more portable and flexible. With the
+standard built-in Emacs design to use the ~smtpmail-send-it~ function
+as the value of ~send-mail-function~, I also need to declare in Elisp
+what the SMTP server is. I would rather encapsulate the login
+credentials in a separate configuration file, independent of Emacs,
+while also ensuring that different accounts can use their own SMTP
+server.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; `sendmail' (mail transfer agent)
