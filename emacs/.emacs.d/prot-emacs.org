@@ -8228,7 +8228,17 @@ My comment on it.
 Another comment of mine here.
 #+end_example
 
-# TODO 2024-01-09 07:10 +0200: mention attachments. ([[#h:deccd4f1-c1bd-4b02-993e-914f57ea0fac][The =prot-emacs-email.el= integration with Dired for email attachments (~gnus-dired-mode~)]])
+To attach a file, type =C-c C-a= (~mml-attach-file~). This uses
+minibuffer completion to select a single file. An alternative is to
+use ~dired~ to produce a file listing, mark the relevant files, and
+attach them from there ([[#h:deccd4f1-c1bd-4b02-993e-914f57ea0fac][The =prot-emacs-email.el= integration with Dired for email attachments (~gnus-dired-mode~)]])
+
+Once the message is done, type =C-c C-c= to send it. The exact command
+depends on the mail user agent. In my case, it is ~notmuch-mua-send-and-exit~.
+By default, Emacs prompts for confirmation before sending out the
+message. I disable that by modifying ~message-confirm-send~.
+Similarly, I prefer to delete the buffer of a sent message, so I
+change the value of ~message-kill-buffer-on-exit~.
 
 Between frictionless encryption and the ease of editing text in a
 message composition buffer, the email setup I have in Emacs is the
@@ -8273,11 +8283,12 @@ most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overvie
 The whole point of using Emacs is to draw linkages between different
 specialised tools. One such case is to use the built-in file manager
 to select some files and attach them to the currently open message
-composition buffer ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]). This also works
-without an open message composition buffer. In that case, it produces
-such a buffer, with the attachments in plce. Though I usually have the
-message buffer in place before going to ~dired~ to find some
-attachments ([[#h:49815c07-737f-4f10-95ee-63640f9ae18b][The =prot-emacs-email.el= message composition and encryption settings (=message.el=)]]).
+composition buffer ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]). Do it by typing
+=C-c C-m C-a= (~gnus-dired-attach~). This also works without an open
+message composition buffer. In that case, it produces such a buffer,
+with the attachments in plce. Though I usually have the message buffer
+in place before going to ~dired~ to find some attachments
+([[#h:49815c07-737f-4f10-95ee-63640f9ae18b][The =prot-emacs-email.el= message composition and encryption settings (=message.el=)]]).
 
 Note that the minor mode which sets up the relevant settings is called
 ~gnus-dired-mode~, although it does not require ~gnus~ and its
