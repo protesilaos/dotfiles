@@ -8228,6 +8228,8 @@ My comment on it.
 Another comment of mine here.
 #+end_example
 
+# TODO 2024-01-09 07:10 +0200: mention attachments. ([[#h:deccd4f1-c1bd-4b02-993e-914f57ea0fac][The =prot-emacs-email.el= integration with Dired for email attachments (~gnus-dired-mode~)]])
+
 Between frictionless encryption and the ease of editing text in a
 message composition buffer, the email setup I have in Emacs is the
 most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]]).
@@ -8263,12 +8265,23 @@ most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overvie
   (add-hook 'message-setup-hook #'message-sort-headers)
 #+end_src
 
-*** TODO The =prot-emacs-email.el= integration with Dired for email attachments (~gnus-dired-mode~)
+*** The =prot-emacs-email.el= integration with Dired for email attachments (~gnus-dired-mode~)
 :PROPERTIES:
 :CUSTOM_ID: h:deccd4f1-c1bd-4b02-993e-914f57ea0fac
 :END:
 
-([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]).
+The whole point of using Emacs is to draw linkages between different
+specialised tools. One such case is to use the built-in file manager
+to select some files and attach them to the currently open message
+composition buffer ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]). This also works
+without an open message composition buffer. In that case, it produces
+such a buffer, with the attachments in plce. Though I usually have the
+message buffer in place before going to ~dired~ to find some
+attachments ([[#h:49815c07-737f-4f10-95ee-63640f9ae18b][The =prot-emacs-email.el= message composition and encryption settings (=message.el=)]]).
+
+Note that the minor mode which sets up the relevant settings is called
+~gnus-dired-mode~, although it does not require ~gnus~ and its
+numerous accoutrements.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
