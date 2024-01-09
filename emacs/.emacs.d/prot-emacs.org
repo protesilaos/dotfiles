@@ -8598,24 +8598,34 @@ incorporation in the subsequent section about setting up
            (concat "🏷️" tag))))
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= section about email composition
+**** The =prot-emacs-notmuch.el= section about email composition settings
 :PROPERTIES:
 :CUSTOM_ID: h:b91c062d-add7-42e6-b425-4fa287763b1b
 :END:
 
+Most of the settings here are stylistic. I would not mind having them
+differently. They are complementary to those germane to the built-in
+=message.el= ([[#h:49815c07-737f-4f10-95ee-63640f9ae18b][The =prot-emacs-email.el= message composition and encryption settings (=message.el=)]]).
+
+The ~notmuch-mua-attachment-regexp~ is a neat little helper to prevent
+me from sending out a message without its stipulated attachment. It
+can give false positives, as I may write something that is about
+"emotional attachment", but on the balance I do like being asked for
+confirmation where needed.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Email composition
-  (setq notmuch-mua-compose-in 'current-window
-        notmuch-mua-hidden-headers nil ; TODO 2021-05-12: Review hidden headers
-        notmuch-address-command 'internal
-        notmuch-always-prompt-for-sender t
-        notmuch-mua-cite-function 'message-cite-original-without-signature
-        notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never
-        notmuch-mua-user-agent-function nil
-        notmuch-maildir-use-notmuch-insert t
-        notmuch-crypto-process-mime t
-        notmuch-crypto-get-keys-asynchronously t
-        notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
+  (setq notmuch-mua-compose-in 'current-window)
+  (setq notmuch-mua-hidden-headers nil)
+  (setq notmuch-address-command 'internal) ; NOTE 2024-01-09: I am not using this and must review it.
+  (setq notmuch-always-prompt-for-sender t)
+  (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
+  (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
+  (setq notmuch-mua-user-agent-function nil)
+  (setq notmuch-maildir-use-notmuch-insert t)
+  (setq notmuch-crypto-process-mime t)
+  (setq notmuch-crypto-get-keys-asynchronously t)
+  (setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
         (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
                 "pi[èe]ce\s+jointe?\\|"
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))

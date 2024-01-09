@@ -120,17 +120,17 @@
            (concat "🏷️" tag))))
 
 ;;;; Email composition
-  (setq notmuch-mua-compose-in 'current-window
-        notmuch-mua-hidden-headers nil ; TODO 2021-05-12: Review hidden headers
-        notmuch-address-command 'internal
-        notmuch-always-prompt-for-sender t
-        notmuch-mua-cite-function 'message-cite-original-without-signature
-        notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never
-        notmuch-mua-user-agent-function nil
-        notmuch-maildir-use-notmuch-insert t
-        notmuch-crypto-process-mime t
-        notmuch-crypto-get-keys-asynchronously t
-        notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
+  (setq notmuch-mua-compose-in 'current-window)
+  (setq notmuch-mua-hidden-headers nil)
+  (setq notmuch-address-command 'internal) ; NOTE 2024-01-09: I am not using this and must review it.
+  (setq notmuch-always-prompt-for-sender t)
+  (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
+  (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
+  (setq notmuch-mua-user-agent-function nil)
+  (setq notmuch-maildir-use-notmuch-insert t)
+  (setq notmuch-crypto-process-mime t)
+  (setq notmuch-crypto-get-keys-asynchronously t)
+  (setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
         (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
                 "pi[èe]ce\s+jointe?\\|"
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
