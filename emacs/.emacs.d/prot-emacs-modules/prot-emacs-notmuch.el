@@ -30,21 +30,21 @@
         notmuch-show-all-tags-list t)
 
 ;;;; Search
-  (setq notmuch-search-oldest-first nil
-        notmuch-search-result-format
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-search-result-format
         '(("date" . "%12s  ")
           ("count" . "%-7s  ")
           ("authors" . "%-20s  ")
           ("subject" . "%-80s  ")
-          ("tags" . "(%s)"))
-        notmuch-tree-result-format
+          ("tags" . "(%s)")))
+  (setq notmuch-tree-result-format
         '(("date" . "%12s  ")
           ("authors" . "%-20s  ")
           ((("tree" . "%s")
             ("subject" . "%s"))
            . " %-80s  ")
-          ("tags" . "(%s)"))
-        notmuch-search-line-faces
+          ("tags" . "(%s)")))
+  (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
           ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
           ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
@@ -57,9 +57,9 @@
           ;; it without any face and I was okay with it.  The upside of
           ;; having a face is that you can identify the message even
           ;; when the window is split and you don't see the tags.
-          ("flag" . italic))
-        notmuch-show-empty-saved-searches t
-        notmuch-saved-searches
+          ("flag" . italic)))
+  (setq notmuch-show-empty-saved-searches t)
+  (setq notmuch-saved-searches
         `(( :name "📥 inbox"
             :query "tag:inbox"
             :sort-order newest-first

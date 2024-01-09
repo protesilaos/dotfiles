@@ -8439,10 +8439,10 @@ pseudo-graphical widgets to check the available tags, view recent
 searches, perform a new search, and the like. I find it too busy and
 not useful, as all that functionality is already available directly
 with key bindings. Why nagivate all the way to the search box when =s=
-initiates a new search? As always, use =M-x describe-mode= (or type
-=C-h m=) to learn about the keys and commands of the current major
-mode (as well as to check all the minor modes that are effective
-therein).
+(~notmuch-search~) initiates a new search? As always, use =M-x
+describe-mode= (or type =C-h m=) to learn about the keys and commands
+of the current major mode (as well as to check all the minor modes
+that are effective therein).
 
 My "hello" buffer is a single vertical listing of my saved searches.
 Those include the name of the search, such as =inbox=, followed by a
@@ -8461,28 +8461,42 @@ are not relevant.
         notmuch-show-all-tags-list t)
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= section about the presentation of search buffers
+**** The =prot-emacs-notmuch.el= section about the presentation of search buffers
 :PROPERTIES:
 :CUSTOM_ID: h:eddc38d8-d1c1-48a4-8fa1-ce9ab2820ee3
 :END:
 
+The search buffers are the interface I work with the most. They
+provide a listing of all message threads that match the given search
+terms.
+
+Most of the configurations I have here are stylistic in nature. The
+one that defines necessary functionality is the value of the user
+option ~notmuch-saved-searches~. The =:query= of those saved searches
+is what we would normally pass at the command line on the =notmuch
+search= invocation, or inside of the mail user agent by typing =s=
+(~notmuch-search~).
+
+The emoji spotted here and elsewhere are purely cosmetic: they do not
+form part of the search terms or tags.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Search
-  (setq notmuch-search-oldest-first nil
-        notmuch-search-result-format
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-search-result-format
         '(("date" . "%12s  ")
           ("count" . "%-7s  ")
           ("authors" . "%-20s  ")
           ("subject" . "%-80s  ")
-          ("tags" . "(%s)"))
-        notmuch-tree-result-format
+          ("tags" . "(%s)")))
+  (setq notmuch-tree-result-format
         '(("date" . "%12s  ")
           ("authors" . "%-20s  ")
           ((("tree" . "%s")
             ("subject" . "%s"))
            . " %-80s  ")
-          ("tags" . "(%s)"))
-        notmuch-search-line-faces
+          ("tags" . "(%s)")))
+  (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
           ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
           ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
@@ -8495,9 +8509,9 @@ are not relevant.
           ;; it without any face and I was okay with it.  The upside of
           ;; having a face is that you can identify the message even
           ;; when the window is split and you don't see the tags.
-          ("flag" . italic))
-        notmuch-show-empty-saved-searches t
-        notmuch-saved-searches
+          ("flag" . italic)))
+  (setq notmuch-show-empty-saved-searches t)
+  (setq notmuch-saved-searches
         `(( :name "📥 inbox"
             :query "tag:inbox"
             :sort-order newest-first
