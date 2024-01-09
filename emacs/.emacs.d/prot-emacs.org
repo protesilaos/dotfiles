@@ -8528,7 +8528,14 @@ are not relevant.
           ( :name "🐛 emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
             :sort-order newest-first :key ,(kbd "e b"))))
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= section about tag settings
+:PROPERTIES:
+:CUSTOM_ID: h:f19e7ef2-9a90-4fbd-879b-8ee0acfa1b5a
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Tags
   (setq notmuch-archive-tags nil ; I do not archive email
         notmuch-message-replied-tags '("+replied")
@@ -8556,7 +8563,14 @@ are not relevant.
            (concat "💥" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "🏷️" tag))))
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= section about email composition
+:PROPERTIES:
+:CUSTOM_ID: h:b91c062d-add7-42e6-b425-4fa287763b1b
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Email composition
   (setq notmuch-mua-compose-in 'current-window
         notmuch-mua-hidden-headers nil ; TODO 2021-05-12: Review hidden headers
@@ -8572,7 +8586,14 @@ are not relevant.
         (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
                 "pi[èe]ce\s+jointe?\\|"
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= section about reading messages
+:PROPERTIES:
+:CUSTOM_ID: h:f2b7a39e-fb10-4886-9765-4be8a1701c67
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Reading messages
   (setq notmuch-show-relative-dates t
         notmuch-show-all-multipart/alternative-parts nil
@@ -8588,7 +8609,14 @@ are not relevant.
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
     (setq notmuch-wash-citation-lines-prefix count
           notmuch-wash-citation-lines-suffix count))
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= section about hooks and key bindings
+:PROPERTIES:
+:CUSTOM_ID: h:6148eea6-7859-4b53-95ce-7e198fc831e0
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
@@ -8606,7 +8634,14 @@ are not relevant.
     "r" #'notmuch-show-reply ; easier to reply to all by default
     "R" #'notmuch-show-reply-sender)
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)
+:PROPERTIES:
+:CUSTOM_ID: h:dbd2b775-8f51-451a-8e24-9c8424fd2e89
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; My own tweaks for notmuch (prot-notmuch.el)
 (prot-emacs-package prot-notmuch
   (:delay 1)
@@ -8645,7 +8680,14 @@ are not relevant.
   (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
   ;; Like C-c M-h for `message-insert-headers'
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
+#+end_src
 
+**** TODO The =prot-emacs-notmuch.el= glue code for ~org-capture~ (=ol-notmuch.el=)
+:PROPERTIES:
+:CUSTOM_ID: h:49890997-448e-408d-bebe-2003259bb125
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; Glue code for notmuch and org-link (ol-notmuch.el)
 (prot-emacs-package ol-notmuch (:install t) (:delay 5))
 #+end_src
@@ -8695,7 +8737,17 @@ love letters, respectively.
   (setq notmuch-indicator-add-to-mode-line-misc-info nil)
 
   (notmuch-indicator-mode 1))
+#+end_src
 
+**** The =prot-emacs-notmuch.el= call to ~provide~
+:PROPERTIES:
+:CUSTOM_ID: h:340e745d-544c-4473-969e-ade21ae7710d
+:END:
+
+Finally, we ~provide~ the submodule. This is the mirror function of
+~require~ ([[#h:200bc618-678a-4dc8-9d30-876d89e1edae][The =prot-emacs-email.el= loading of the email client and call to ~provide~]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 (provide 'prot-emacs-notmuch)
 #+end_src
 
