@@ -8395,10 +8395,22 @@ macro, I do not set up its =:install= directive ([[#h:1457099d-fb05-4e38-9f8f-cf
   (:delay 1)
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= section about the acount settings
+**** The =prot-emacs-notmuch.el= section about the acount settings
 :PROPERTIES:
 :CUSTOM_ID: h:2fca749c-a84e-415c-9ac0-b1518d06fa51
 :END:
+
+To actually use the ~notmuch~ mail user agent ([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]), 
+we need to specify (i) who we are and (ii) where should sent mail be
+directed to. This is what the user options ~notmuch-identities~ and
+~notmuch-fcc-dirs~ are about.
+
+Notice that I use the ~prot-common-auth-get-field~ function, which
+reads data from my encrypted =~/.authinfo.gpg= file ([[#h:24f17614-ee3d-4cd1-bbe3-f53e4f39c281][The =prot-emacs-email.el= basic settings (including =authinfo=)]]).
+In =prot-common.el=, I define a few helper functions that are general
+in nature and may be used by other Elisp snippets of mine ([[#h:3fccfadf-22e9-457f-b9fd-ed1b48600d23][The =prot-common.el= library]]).
+Doing things this way ensures that I do not share the details about
+the accounts I set.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Account settings
