@@ -1,14 +1,12 @@
-;; NOTE 2022-11-15: See prot-emacs-email.el for the general setup.
-;; This file contains the coode specific to notmuch and is loaded from
-;; the init.el conditionally if the notmuch executable is available.
-
 ;;; Notmuch (mail indexer and mail user agent (MUA))
+
 ;; I install notmuch from the distro's repos because the CLI program is
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-package notmuch
   (:delay 1)
+
 ;;; Account settings
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))

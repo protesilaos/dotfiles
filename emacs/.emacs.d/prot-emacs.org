@@ -8351,23 +8351,56 @@ Finally, we ~provide~ the module. This is the mirror function of
 (provide 'prot-emacs-email)
 #+end_src
 
-*** TODO The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)
+*** The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:b26c6297-ebe8-4f99-b069-df53cfd90520
 :END:
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
-;; NOTE 2022-11-15: See prot-emacs-email.el for the general setup.
-;; This file contains the coode specific to notmuch and is loaded from
-;; the init.el conditionally if the notmuch executable is available.
+When we refer to ~notmuch~ we cover three distinct concepts:
 
+- The command-line mail indexer :: It produces a database out of our
+  local mail directory. We can then query the database to get to the
+  email we are looking for.
+
+- The Mail User Agent (MUA), else email client :: It provides an
+  Emacs interface to the aforementioned indexer. This MUA also draws
+  linkages between other programs, to write and send messages. The
+  user does not need to know that under the hood it is not one
+  "thing" that gets the job done, though this is how it appears prima
+  facie.
+
+- The system package :: At least on Arch Linux and Debian, the
+  ~notmuch~ package bundles together the above two. In fact, the
+  indexer and the Emacs MUA are maintained in tandem by the same
+  developers.
+
+I install the system package to get the command-line utility. Since it
+ships with the Emacs files, I do not install the relevant Emacs
+package, but arrange for the ~notmuch~ system path to be added to the
+Emacs ~load-path~. The ~load-path~ is where Emacs checks to find Elisp
+programs (when we ~require~ some feature, it works because of its
+directory being part of the ~load-path~).
+
+To this end, you will notice that while I use the ~prot-emacs-package~
+macro, I do not set up its =:install= directive ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]). 
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Notmuch (mail indexer and mail user agent (MUA))
+
 ;; I install notmuch from the distro's repos because the CLI program is
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-package notmuch
   (:delay 1)
+#+end_src
+
+**** TODO The =prot-emacs-notmuch.el= section about the acount settings
+:PROPERTIES:
+:CUSTOM_ID: h:2fca749c-a84e-415c-9ac0-b1518d06fa51
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Account settings
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
