@@ -1,6 +1,7 @@
 ;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
 (prot-emacs-configure
   (:delay 60)
+
 ;;;; `browse-url'
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser)
@@ -11,7 +12,7 @@
   (setq goto-address-mail-face nil)
   (setq goto-address-mail-mouse-face 'highlight)
 
-;;;; `shr'
+;;;; `shr' (Simple HTML Renderer)
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
@@ -24,6 +25,7 @@
 ;;;; `url-cookie'
   (setq url-cookie-untrusted-urls '(".*")))
 
+;;;; `eww' (Emacs Web Wowser)
 (prot-emacs-package eww
   (:delay 60)
   (setq eww-restore-desktop t)
@@ -59,6 +61,7 @@
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
+;;;; `prot-eww' extras
 (prot-emacs-package prot-eww
   (:delay 60)
   (setq prot-eww-save-history-file

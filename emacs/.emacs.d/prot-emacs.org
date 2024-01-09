@@ -9352,17 +9352,39 @@ account default : pub
 ;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
 (prot-emacs-configure
   (:delay 60)
+#+end_src
+
+*** TODO The =prot-emacs-web.el= settings about following links (~browse-url~)
+:PROPERTIES:
+:CUSTOM_ID: h:edb70963-d590-4959-bc59-1e5435c8e78a
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `browse-url'
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser)
+#+end_src
 
+*** TODO The =prot-emacs-web.el= settings about buttonising links (~goto-addr~)
+:PROPERTIES:
+:CUSTOM_ID: h:7639683b-4b6f-42ee-9ae0-76eeec6fee9a
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `goto-addr'
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
   (setq goto-address-mail-face nil)
   (setq goto-address-mail-mouse-face 'highlight)
+#+end_src
 
-;;;; `shr'
+*** TODO The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)
+:PROPERTIES:
+:CUSTOM_ID: h:60483672-aeb6-427b-bbef-54a5c31e39ab
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
+;;;; `shr' (Simple HTML Renderer)
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
@@ -9371,10 +9393,25 @@ account default : pub
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
   (setq shr-cookie-policy nil)
+#+end_src
 
+*** TODO The =prot-emacs-web.el= settings about browser cookies
+:PROPERTIES:
+:CUSTOM_ID: h:399f1ec8-30e6-40c3-931b-e7c7409716c8
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `url-cookie'
   (setq url-cookie-untrusted-urls '(".*")))
+#+end_src
 
+*** TODO The =prot-emacs-web.el= settings about the web browser (~eww~)
+:PROPERTIES:
+:CUSTOM_ID: h:b09b4fce-31fe-4381-a49a-6a7206ac5f1b
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
+;;;; `eww' (Emacs Web Wowser)
 (prot-emacs-package eww
   (:delay 60)
   (setq eww-restore-desktop t)
@@ -9409,7 +9446,15 @@ account default : pub
   (define-key dired-mode-map (kbd "E") #'eww-open-file) ; to render local HTML files
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
+#+end_src
 
+*** TODO The =prot-emacs-web.el= extras for ~eww~ (=prot-eww.el=)
+:PROPERTIES:
+:CUSTOM_ID: h:1fcd7008-b7ed-4441-8a7b-82db43a05775
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
+;;;; `prot-eww' extras
 (prot-emacs-package prot-eww
   (:delay 60)
   (setq prot-eww-save-history-file
@@ -9437,7 +9482,14 @@ account default : pub
     "J" #'prot-eww-jump-to-url-on-page
     "R" #'prot-eww-readable
     "Q" #'prot-eww-quit))
+#+end_src
 
+*** TODO The =prot-emacs-web.el= RSS/Atom reader (~elfeed~)
+:PROPERTIES:
+:CUSTOM_ID: h:adc258d3-f444-4bb5-8a8d-43025a689167
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;; Elfeed feed/RSS reader
 (prot-emacs-package elfeed
   (:install t)
@@ -9482,7 +9534,14 @@ account default : pub
       "+" #'prot-elfeed-toggle-tag)
 
     (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
+#+end_src
 
+*** TODO The =prot-emacs-web.el= settings for the IRC client
+:PROPERTIES:
+:CUSTOM_ID: h:b9e6834b-e636-414e-8c50-9e04ba77a0a3
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;; Rcirc (IRC client)
 
 ;; NOTE 2023-04-24: I seldom use IRC.  When I have to, I simply
@@ -9515,7 +9574,9 @@ account default : pub
 ;;   (rcirc-track-minor-mode 1)
 ;;
 ;;   (define-key global-map (kbd "C-c i") #'irc))
+#+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 (provide 'prot-emacs-web)
 #+end_src
 
