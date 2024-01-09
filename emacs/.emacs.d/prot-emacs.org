@@ -8161,17 +8161,82 @@ email, which are consulted by miscellaneous pieces Emacs functionality.
         user-mail-address "public@protesilaos.com")
 #+end_src
 
-*** TODO The =prot-emacs-email.el= message composition and encryption settings
+*** The =prot-emacs-email.el= message composition and encryption settings (=message.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:49815c07-737f-4f10-95ee-63640f9ae18b
 :END:
 
+Across all Emacs email clients that I have used (~gnus~, ~mu4e~, and
+~notmuch~) message composition is handled by the same built-in library:
+=message.el=. It produces a buffer with email headers at the top,
+followed by a separator line, and then the body of the message where
+we write what we want. The body can have a signature automatically
+appended to it.
+
+Message buffers can integrate with the system's GPG agent to encrypt
+the current message. This is done by inserting a special MIME tag at
+the top of the message body. I do it by typing =C-c C-m C-e=, which
+invokes the command ~mml-secure-message-sign-encrypt~. If the GPG
+agent is running and the password is already saved in the keyring, the
+message is sent encrypted without any further prompts (Emacs generally
+treats encrypted files transparently if everything is set up at the
+environment level).
+
+When replying to emails I receive, I normally comment inline by citing
+the original message. Concretely, this looks like this:
+
+#+begin_example message
+> Some text I am commenting on.
+
+My comment on it.
+#+end_example
+
+The settings I have for citing messages ensure that the top of the
+message includes the =From= and =Date= headers, so the original email
+I am replying to looks like this in my message composition buffer:
+
+#+begin_example message
+> From: Some Name <name@domain.tld>
+> Date: Tue,  9 Jan 2024 06:58:38 +0200
+>
+> Some text I am commenting on.
+
+My comment on it.
+#+end_example
+
+Check the documentation of the ~format-time-string~ function to
+understand how the date is defined in the user option ~message-citation-line-format~.
+
+When citing a portion of text, I do not need to include the entirety
+of it, but also the parts that are pertinent to the matter at hand. I
+thus frequently elide text by marking it and then typing =C-c C-e=
+(~message-elide-region~). The ~message-elide-ellipsis~ I specify here
+turns the region into a cited snippet that references the line count, like:
+
+#+begin_example message
+> From: Some Name <name@domain.tld>
+> Date: Tue,  9 Jan 2024 06:58:38 +0200
+>
+> Some text I am commenting on.
+
+My comment on it.
+
+> Something that shows lots of details I do not need to keep in place:
+>
+> [... 20 lines elided]
+
+Another comment of mine here.
+#+end_example
+
+Between frictionless encryption and the ease of editing text in a
+message composition buffer, the email setup I have in Emacs is the
+most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
-;;;; Encoding settings (`mm-encode')
+;;;; Encryption settings (`mm-encode' and `mml-sec')
   (setq mm-encrypt-option nil ; use 'guided for both if you need more control
         mm-sign-option nil)
 
-;;;; Encryption settings (`mml-sec')
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
@@ -8179,20 +8244,20 @@ email, which are consulted by miscellaneous pieces Emacs functionality.
 
 ;;;; Message composition (`message')
   (setq mail-user-agent 'message-user-agent
-        mail-header-separator (purecopy "*****")
-        message-elide-ellipsis "\n> [... %l lines elided]\n"
-        compose-mail-user-agent-warnings nil
-        message-mail-user-agent t      ; use `mail-user-agent'
-        mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
-        message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
-        message-citation-line-function #'message-insert-formatted-citation-line
-        message-citation-line-format (concat "> From: %f\n"
+        message-mail-user-agent t) ; use `mail-user-agent'
+  (setq mail-header-separator "*****")
+  (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
+  (setq compose-mail-user-agent-warnings nil)
+  (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
+        mail-signature message-signature)
+  (setq message-citation-line-function #'message-insert-formatted-citation-line)
+  (setq message-citation-line-format (concat "> From: %f\n"
                                              "> Date: %a, %e %b %Y %T %z\n"
                                              ">")
-        message-ignored-cited-headers "" ; default is "." for all headers
-        message-confirm-send nil
-        message-kill-buffer-on-exit t
-        message-wide-reply-confirm-recipients t)
+        message-ignored-cited-headers "") ; default is "." for all headers
+  (setq message-confirm-send nil)
+  (setq message-kill-buffer-on-exit t)
+  (setq message-wide-reply-confirm-recipients t)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (add-hook 'message-setup-hook #'message-sort-headers)

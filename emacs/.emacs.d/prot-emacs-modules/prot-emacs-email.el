@@ -7,11 +7,10 @@
         user-full-name "Protesilaos Stavrou"
         user-mail-address "public@protesilaos.com")
 
-;;;; Encoding settings (`mm-encode')
+;;;; Encryption settings (`mm-encode' and `mml-sec')
   (setq mm-encrypt-option nil ; use 'guided for both if you need more control
         mm-sign-option nil)
 
-;;;; Encryption settings (`mml-sec')
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
@@ -19,20 +18,20 @@
 
 ;;;; Message composition (`message')
   (setq mail-user-agent 'message-user-agent
-        mail-header-separator (purecopy "*****")
-        message-elide-ellipsis "\n> [... %l lines elided]\n"
-        compose-mail-user-agent-warnings nil
-        message-mail-user-agent t      ; use `mail-user-agent'
-        mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
-        message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
-        message-citation-line-function #'message-insert-formatted-citation-line
-        message-citation-line-format (concat "> From: %f\n"
+        message-mail-user-agent t) ; use `mail-user-agent'
+  (setq mail-header-separator "*****")
+  (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
+  (setq compose-mail-user-agent-warnings nil)
+  (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
+        mail-signature message-signature)
+  (setq message-citation-line-function #'message-insert-formatted-citation-line)
+  (setq message-citation-line-format (concat "> From: %f\n"
                                              "> Date: %a, %e %b %Y %T %z\n"
                                              ">")
-        message-ignored-cited-headers "" ; default is "." for all headers
-        message-confirm-send nil
-        message-kill-buffer-on-exit t
-        message-wide-reply-confirm-recipients t)
+        message-ignored-cited-headers "") ; default is "." for all headers
+  (setq message-confirm-send nil)
+  (setq message-kill-buffer-on-exit t)
+  (setq message-wide-reply-confirm-recipients t)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (add-hook 'message-setup-hook #'message-sort-headers)
