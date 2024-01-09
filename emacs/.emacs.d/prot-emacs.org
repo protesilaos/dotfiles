@@ -8427,10 +8427,28 @@ the accounts I set.
             (,pub . "pub/Sent"))))
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= section about the general user interface
+**** The =prot-emacs-notmuch.el= section about the general user interface
 :PROPERTIES:
 :CUSTOM_ID: h:2c9a555f-d3ec-4d0e-bad6-6c26b576a49a
 :END:
+
+When we use the ~notmuch~ Emacs command to get into the mail user
+agent ([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]),
+we are presented in the "hello" buffer. It contains a set of
+pseudo-graphical widgets to check the available tags, view recent
+searches, perform a new search, and the like. I find it too busy and
+not useful, as all that functionality is already available directly
+with key bindings. Why nagivate all the way to the search box when =s=
+initiates a new search? As always, use =M-x describe-mode= (or type
+=C-h m=) to learn about the keys and commands of the current major
+mode (as well as to check all the minor modes that are effective
+therein).
+
+My "hello" buffer is a single vertical listing of my saved searches.
+Those include the name of the search, such as =inbox=, followed by a
+total message count. Everything else is removed. As such, the values
+of ~notmuch-hello-recent-searches-max~ and ~notmuch-show-all-tags-list~
+are not relevant.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; General UI
