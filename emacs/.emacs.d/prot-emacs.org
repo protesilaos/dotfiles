@@ -8329,12 +8329,17 @@ server.
         message-sendmail-envelope-from 'header))
 #+end_src
 
-*** TODO The =prot-emacs-email.el= loading of the email client and call to ~provide~
+*** The =prot-emacs-email.el= loading of the email client and call to ~provide~
 :PROPERTIES:
 :CUSTOM_ID: h:200bc618-678a-4dc8-9d30-876d89e1edae
 :END:
 
-([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]])
+All the above are the client-agnostic settings. Now I have to put in
+place the specifics of my mail user agent. I could have a user option
+here to select one among ~notmuch~, ~mu4e~, or ~gnus~, but it is not
+practical to have two indexers check the same files, as I will need to
+keep everything in sync for no apparent benefit. One MUA is more than
+enough ([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]).
 
 Finally, we ~provide~ the module. This is the mirror function of
 ~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
