@@ -8544,10 +8544,29 @@ form part of the search terms or tags.
             :sort-order newest-first :key ,(kbd "e b"))))
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= section about tag settings
+**** The =prot-emacs-notmuch.el= section about tag settings
 :PROPERTIES:
 :CUSTOM_ID: h:f19e7ef2-9a90-4fbd-879b-8ee0acfa1b5a
 :END:
+
+Part of the value of using a mail indexer is the ability to tag
+messages. These help with data retrieval and filtering. For ~notmuch~,
+tags are a purely indexing construct, meaning that they are not
+written to the underlying file. An exception to this are the standard
+IMAP tags for read/unread, seen, attachments, and deleted (I think
+that's all, but please double check).
+
+The =+= or =-= prefix indicates whether a tag is added or removed from
+the list. The same characters work as key bindings in all ~notmuch~
+buffers to bring up a minibuffer interface for adding/removing tags.
+This interface accepts multiple entries, so even if we start with a
+=-= we can still continue with an addition.
+
+Otherwise, tagging operations follow a predefined scheme, specified in
+the user option ~notmuch-tagging-keys~. I do not specify its value
+here because I give some of my custom functions, hence its
+incorporation in the subsequent section about setting up
+=prot-notmuch.el= ([[#h:dbd2b775-8f51-451a-8e24-9c8424fd2e89][The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Tags
