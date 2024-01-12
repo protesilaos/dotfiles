@@ -1033,6 +1033,26 @@ ever run ~load-theme~ without a =NO-CONFIRM= argument (like this:
 (setq custom-safe-themes t)
 #+end_src
 
+** The =init.el= macro to do nothing with Elisp code (~prot-emacs-comment~)
+:PROPERTIES:
+:CUSTOM_ID: h:3b14faa6-83fd-4d5f-b3bc-85f72fd572d4
+:END:
+
+This is something I learnt while studying Clojure: a ~comment~ macro
+that wraps some code, effectively commenting it out, while keeping
+indentation and syntax highlighting intact.
+
+What I have here is technically not commenting out the code, because
+it is still read, but I take it.
+
+#+begin_src emacs-lisp :tangle "init.el"
+(defmacro prot-emacs-comment (&rest body)
+  "Do nothing with BODY and return nil.
+Unlike `ignore', produce no side effects."
+  (declare (indent defun))
+  nil)
+#+end_src
+
 ** The =init.el= macro to install and configure packages (~prot-emacs-package~)
 :PROPERTIES:
 :CUSTOM_ID: h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e
@@ -1063,6 +1083,10 @@ Hence my ~prot-emacs-package~. It is a macro that does the following:
 I will not try to document the technicalities of the macro here,
 though I am happy to do this with anyone who is interested in learning
 such advanced topics (<https://protesilaos.com/coach>).
+
+The samples below the macro use the ~prot-emacs-comment~ macro
+([[#h:3b14faa6-83fd-4d5f-b3bc-85f72fd572d4][The =init.el= macro to do nothing with Elisp code (~prot-emacs-comment~)]])
+to not run anything while keeping syntax highlighting on.
 
 #+begin_src emacs-lisp :tangle "init.el"
 (defun prot-emacs-package-install (package &optional method)
@@ -1142,44 +1166,45 @@ Also see `prot-emacs-configure'."
 
 ;; Samples of `prot-emacs-package' (expand them with `pp-macroexpand-last-sexp').
 
-;; (prot-emacs-package denote
-;;   (setq denote-directory "path/to/dir")
-;;   (define-key global-map (kbd "C-c n") #'denote)
-;;   (:install '(denote . (:url "https://git.sr.ht/~protesilaos/denote" :branch "main")))
-;;   (:delay 5)
-;;   (setq denote-file-type nil))
-;;
-;; (prot-emacs-package denote
-;;   (setq denote-directory "path/to/dir")
-;;   (define-key global-map (kbd "C-c n") #'denote)
-;;   (:install "https://git.sr.ht/~protesilaos/denote")
-;;   (:delay 5)
-;;   (setq denote-file-type nil))
-;;
-;; (prot-emacs-package denote
-;;   (:delay 5)
-;;   (setq denote-directory "path/to/dir")
-;;   (define-key global-map (kbd "C-c n") #'denote)
-;;   (:install "https://git.sr.ht/~protesilaos/denote")
-;;   (setq denote-file-type nil))
-;;
-;; (prot-emacs-package denote
-;;   (:install "https://git.sr.ht/~protesilaos/denote")
-;;   (:delay 5)
-;;   (setq denote-directory "path/to/dir")
-;;   (define-key global-map (kbd "C-c n") #'denote)
-;;   (setq denote-file-type nil))
-;;
-;; (prot-emacs-package denote
-;;   (:delay 5)
-;;   (setq denote-directory "path/to/dir")
-;;   (define-key global-map (kbd "C-c n") #'denote)
-;;   (setq denote-file-type nil))
-;;
-;; (prot-emacs-package denote
-;;   (setq denote-directory "path/to/dir")
-;;   (define-key global-map (kbd "C-c n") #'denote)
-;;   (setq denote-file-type nil))
+(prot-emacs-comment
+  (prot-emacs-package denote
+    (setq denote-directory "path/to/dir")
+    (define-key global-map (kbd "C-c n") #'denote)
+    (:install '(denote . (:url "https://git.sr.ht/~protesilaos/denote" :branch "main")))
+    (:delay 5)
+    (setq denote-file-type nil))
+
+  (prot-emacs-package denote
+    (setq denote-directory "path/to/dir")
+    (define-key global-map (kbd "C-c n") #'denote)
+    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:delay 5)
+    (setq denote-file-type nil))
+
+  (prot-emacs-package denote
+    (:delay 5)
+    (setq denote-directory "path/to/dir")
+    (define-key global-map (kbd "C-c n") #'denote)
+    (:install "https://git.sr.ht/~protesilaos/denote")
+    (setq denote-file-type nil))
+
+  (prot-emacs-package denote
+    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:delay 5)
+    (setq denote-directory "path/to/dir")
+    (define-key global-map (kbd "C-c n") #'denote)
+    (setq denote-file-type nil))
+
+  (prot-emacs-package denote
+    (:delay 5)
+    (setq denote-directory "path/to/dir")
+    (define-key global-map (kbd "C-c n") #'denote)
+    (setq denote-file-type nil))
+
+  (prot-emacs-package denote
+    (setq denote-directory "path/to/dir")
+    (define-key global-map (kbd "C-c n") #'denote)
+    (setq denote-file-type nil)))
 #+end_src
 
 ** The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)
@@ -1336,7 +1361,9 @@ specifies how they should be colourised.
   '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
      (2 font-lock-constant-face nil t))
     ("(\\(prot-emacs-\\(keybind\\|abbrev\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
-     (3 font-lock-variable-name-face nil t))))
+     (3 font-lock-variable-name-face nil t))
+    ("(\\(prot-emacs-comment\\)\\_>[ \t']*"
+     (1 font-lock-preprocessor-face nil t))))
 
 (font-lock-add-keywords 'emacs-lisp-mode prot-emacs-font-lock-keywords)
 #+end_src
