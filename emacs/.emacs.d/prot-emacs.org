@@ -1115,7 +1115,7 @@ The :delay property makes the evaluation of PACKAGE with the
 expanded BODY happen with `run-with-timer'.
 
 Also see `prot-emacs-configure'."
-  (declare (indent 1))
+  (declare (indent defun))
   (unless (memq package prot-emacs-omit-packages)
     (let (install delay)
       (dolist (element body)
