@@ -8421,7 +8421,7 @@ programs (when we ~require~ some feature, it works because of its
 directory being part of the ~load-path~).
 
 To this end, you will notice that while I use the ~prot-emacs-package~
-macro, I do not set up its =:install= directive ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]). 
+macro, I do not set up its =:install= directive ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Notmuch (mail indexer and mail user agent (MUA))
@@ -8439,7 +8439,7 @@ macro, I do not set up its =:install= directive ([[#h:1457099d-fb05-4e38-9f8f-cf
 :CUSTOM_ID: h:2fca749c-a84e-415c-9ac0-b1518d06fa51
 :END:
 
-To actually use the ~notmuch~ mail user agent ([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]), 
+To actually use the ~notmuch~ mail user agent ([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]),
 we need to specify (i) who we are and (ii) where should sent mail be
 directed to. This is what the user options ~notmuch-identities~ and
 ~notmuch-fcc-dirs~ are about.
