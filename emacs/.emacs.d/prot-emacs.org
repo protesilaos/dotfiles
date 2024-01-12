@@ -7339,7 +7339,7 @@ and I use it globally. Simple and effective!
   (add-hook 'after-init-hook #'show-paren-mode)
 #+end_src
 
-*** The =prot-emacs-langs.el= settings for plain text
+*** The =prot-emacs-langs.el= settings for plain text (double spaces, ~auto-fill-mode~)
 :PROPERTIES:
 :CUSTOM_ID: h:c5fbd6dd-2982-4fca-aeed-d0e750d399bd
 :END:
@@ -7378,9 +7378,9 @@ The generic one is ~fill-paragraph~. I use =M-Q= to "unfill" text,
 which corresponds to the ~prot-simple-unfill-region-or-paragraph~
 command ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
 
-Finally, notice how I am adding an association to the
-~auto-mode-alist~. The file names specified in that regular expression
-will be using ~text-mode~ when I visit them.
+Finally, notice how I am adding an association to the ~auto-mode-alist~.
+The file names specified in that regular expression will be using
+~text-mode~ when I visit them.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Plain text (text-mode)
