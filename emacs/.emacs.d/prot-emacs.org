@@ -1051,6 +1051,25 @@ Unlike `ignore', produce no side effects."
   nil)
 #+end_src
 
+And here is a function I might develop further to quickly insert
+~prot-emacs-comment~ (though another is needed to also remove it and
+then a Do-What-I-Mean wrapper to switch between the two):
+
+#+begin_src emacs-lisp :tangle "init.el"
+;; Sample use of `prot-emacs-comment'.  The function
+;; `prot-emacs-insert-comment-macro' is never evaluated.
+(prot-emacs-comment
+  (defun prot-emacs-insert-comment-macro (beg end)
+    "Wrap region between BEG and END in `prot-emacs-comment'."
+    (interactive "r")
+    (if (region-active-p)
+        (let ((text (buffer-substring beg end)))
+          (delete-region beg end)
+          (insert (format "(prot-emacs-comment\n%s)" text))
+          (indent-region beg end))
+      (user-error "No active region; will not insert `prot-emacs-comment' here"))))
+#+end_src
+
 ** The =init.el= macro to install and configure packages (~prot-emacs-package~)
 :PROPERTIES:
 :CUSTOM_ID: h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e
