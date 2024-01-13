@@ -6110,6 +6110,12 @@ do =M-x describe-keymap= and check the ~project-prefix-map~. For
 example, I bind ~project-dired~ to =C-x p RET=, so =RET= accesses this
 command after =C-x p p= as well.
 
+If any of the =project.el= commands is called from outside a project,
+it first prompts for a project and then carries out its action. For
+example, ~project-find-file~ will ask for a project to use, then
+switch to it, and then prompt for a file inside of the specified
+project.
+
 While inside a project, we have many commands that operate on the
 project level. For example, =C-x p f= (~project-find-file~) searches
 for a file across the project, while =C-x p b= (~project-switch-to-buffer~)
