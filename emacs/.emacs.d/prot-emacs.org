@@ -6135,6 +6135,7 @@ limited to that frame ([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emac
             (project-shell "Shell")
             (keyboard-quit "Quit")))
   (setq project-vc-extra-root-markers '(".project")) ; Emacs 29
+  (setq project-key-prompt-style t) ; Emacs 30
 
   ;; I don't actually have a use-case for `prot-find-project-root',
   ;; but I wrote it once so I keep it here in case I ever need it.
@@ -6158,30 +6159,6 @@ is a string."
            (add-hook 'project-find-functions #',project-find-fn :depth :local))
 
          (add-hook ',(intern (format "%s-hook" mode)) #',major-mode-fn))))
-
-  (defun prot/project--get-key (key cmd)
-    "Return key binding for KEY, falling back to what CMD is bound to."
-    (if key
-        (vector key)
-      (where-is-internal cmd (list project-prefix-map) t)))
-
-  (defun prot/project--keymap-prompt ()
-    "Return `project-switch-commands' and their fontified key bindings.
-Use a newline character to separate each pair of key and command.
-
-Based on `project--keymap-prompt' and meant to be used as an
-:override advice for `project--menu-prompt' on Emacs 30."
-    (mapconcat
-     (pcase-lambda (`(,cmd ,label ,key))
-       (let ((key (prot/project--get-key key cmd)))
-         (format
-          "%s	%s"
-          (propertize (key-description key) 'face 'help-key-binding)
-          label)))
-     project-switch-commands
-     "\n"))
-
-  (advice-add #'project--menu-prompt :override #'prot/project--keymap-prompt)
 
   (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
 
