@@ -3831,6 +3831,7 @@ completion (such as the ~corfu~ package).
 - [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+  (setq completions-format 'one-column)
   (setq completion-show-help nil)
   (setq completion-auto-help t)
   (setq completion-auto-select nil)
@@ -4501,7 +4502,6 @@ pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =p
 (prot-emacs-package mct
   (:install t)
   (:delay 1)
-  (setq completions-format 'one-column)
   (setq mct-hide-completion-mode-line nil)
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.

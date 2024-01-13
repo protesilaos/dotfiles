@@ -105,6 +105,7 @@
 
   (file-name-shadow-mode 1)
 
+  (setq completions-format 'one-column)
   (setq completion-show-help nil)
   (setq completion-auto-help t)
   (setq completion-auto-select nil)
