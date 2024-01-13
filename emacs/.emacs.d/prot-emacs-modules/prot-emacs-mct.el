@@ -3,7 +3,7 @@
 (prot-emacs-package mct
   (:install t)
   (:delay 1)
-  (setq mct-hide-completion-mode-line nil)
+  (setq mct-hide-completion-mode-line t)
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
   (setq mct-completion-blocklist '(notmuch-mua-new-mail notmuch-mua-prompt-for-sender))
