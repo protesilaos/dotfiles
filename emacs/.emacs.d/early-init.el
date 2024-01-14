@@ -20,8 +20,8 @@ Simplified version of `add-to-list'."
 (prot-emacs-with-desktop-session
   (mapc
    (lambda (var)
-     (prot-emacs-add-to-list var '(width . (text-pixels . 900)))
-     (prot-emacs-add-to-list var '(height . (text-pixels . 600)))
+     (prot-emacs-add-to-list var '(width . (text-pixels . 1200)))
+     (prot-emacs-add-to-list var '(height . (text-pixels . 900)))
      (prot-emacs-add-to-list var '(scroll-bar-width  . 10)))
    '(default-frame-alist initial-frame-alist)))
 
