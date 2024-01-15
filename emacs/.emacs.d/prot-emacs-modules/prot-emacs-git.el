@@ -22,29 +22,6 @@
   (setq project-vc-extra-root-markers '(".project")) ; Emacs 29
   (setq project-key-prompt-style t) ; Emacs 30
 
-  ;; I don't actually have a use-case for `prot-find-project-root',
-  ;; but I wrote it once so I keep it here in case I ever need it.
-  ;; Use it like this: (prot-find-project-root c-mode "Makefile")
-  (defmacro prot-find-project-root (mode file)
-    "Define project root check for MODE given FILE.
-MODE must be the symbol of the major mode, without a quote.  FILE
-is a string."
-    (let ((project-find-fn (intern (format "project-find-%s-root" mode)))
-          (major-mode-fn (intern (format "prot-%s-project-find-function" mode)))
-          (file-symbol (intern file)))
-      `(progn
-         (defun ,project-find-fn (dir)
-           (when-let ((root (locate-dominating-file dir ,file)))
-             (cons ',file-symbol root)))
-
-         (cl-defmethod project-root ((project (head ,file-symbol)))
-           (cdr project))
-
-         (defun ,(intern (format "prot-%s-project-find-function" mode)) ()
-           (add-hook 'project-find-functions #',project-find-fn :depth :local))
-
-         (add-hook ',(intern (format "%s-hook" mode)) #',major-mode-fn))))
-
   (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
 
   (prot-emacs-keybind global-map
