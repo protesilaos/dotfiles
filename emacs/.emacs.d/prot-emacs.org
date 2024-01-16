@@ -3849,6 +3849,7 @@ completion (such as the ~corfu~ package).
   (setq completions-max-height 6)
   (setq completions-header-format (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
   (setq completions-highlight-face 'completions-highlight)
+  (setq minibuffer-visible-completions t) ; Emacs 30
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)
