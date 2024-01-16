@@ -16597,6 +16597,24 @@ search for the command /in the current major mode/, but this too
 requires some experience. Whereas an explicit key binding is self
 explanatory.
 
+** Why not use Org block arguments in the properties drawer?
+:PROPERTIES:
+:CUSTOM_ID: h:893f3735-ecb9-4e50-bb24-8389872aa650
+:END:
+
+The code blocks I define in this document have directives to tangle
+their contents to files. I do this for each code block, though it is
+possible to set the same settings inside the parent heading's
+=PROPERTIES= drawer and achieve the same result.
+
+The problem I have with that approach is that it is less discoverable
+in a massive file like this one. People are not expected to read this
+document from start to end. Instead, they will jump directly to the
+section that is of interest to them (perhaps by performing a search).
+They will thus skip past whatever parent heading declares the
+arguments. Whereas the code block encapsulates its own data and thus
+is self-documenting.
+
 ** What hardware and software do you use?
 :PROPERTIES:
 :CUSTOM_ID: h:5668958c-2fc0-4a38-bd1f-3e0c6484977d
