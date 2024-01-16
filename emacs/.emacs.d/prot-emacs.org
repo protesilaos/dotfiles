@@ -2276,11 +2276,20 @@ explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Informati
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
   (define-key global-map (kbd "C-c F") #'fontaine-set-face-font))
 
-;;;;; `variable-pitch-mode' setup
+;;;;; `variable-pitch-mode' setup and more key bindings
 
 (prot-emacs-configure
   (:delay 5)
   (define-key ctl-x-x-map (kbd "v") #'variable-pitch-mode)
+
+  ;; Emacs 29 introduces commands that resize the font across all
+  ;; buffers (including the minibuffer), which is what I want, as
+  ;; opposed to doing it only in the current buffer.  The keys are the
+  ;; same as the defaults.
+  (prot-emacs-keybind global-map
+    "C-x C-=" #'global-text-scale-adjust
+    "C-x C-+" #'global-text-scale-adjust
+    "C-x C-0" #'global-text-scale-adjust)
 
   ;; NOTE 2022-11-20: This may not cover every case, though it works
   ;; fine in my workflow.  I am still undecided by EWW.
