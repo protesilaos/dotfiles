@@ -33,6 +33,9 @@
 
 ;;; Code:
 
+(require 'project)
+(require 'tab-bar)
+
 ;; NOTE 2024-01-15 07:07:52 +0200: I define the "in tab" functions as
 ;; a coding exercise.  I don't have a use for it, as I prefer to use
 ;; the approach of my `beframe' package instead.
@@ -73,7 +76,7 @@ If FRAME is nil, use the current frame."
 (defun prot-project-in-tab (directory)
   "Switch to project DIRECTORY in a tab.
 If a tab is named after the non-directory component of DIRECTORY,
-switch to it. Otherwise, create a new tab and name it after the
+switch to it.  Otherwise, create a new tab and name it after the
 non-directory component of DIRECTORY.
 
 Use this as an alternative to `project-switch-project'."
