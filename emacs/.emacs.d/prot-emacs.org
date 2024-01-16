@@ -2188,6 +2188,8 @@ Bruno Boal is the lead developer and I am a co-maintainer.
 :CUSTOM_ID: h:cb41fef0-41a5-4a85-9552-496d96290258
 :END:
 
+[ Watch: [[https://protesilaos.com/codelog/2024-01-16-customize-emacs-fonts/][Customise Emacs fonts]] (2024-01-16) ]
+
 My ~fontaine~ package allows the user to define detailed font
 configurations and set them on demand. For example, one can have a
 =regular-editing= preset and another for =presentation-mode= (these
