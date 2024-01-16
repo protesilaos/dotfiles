@@ -52,7 +52,6 @@ Emacs.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/dotfiles>
   - GitLab: <https://gitlab.com/protesilaos/dotfiles>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/dotfiles>
 + Video demo: <https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/>
 + Backronyms: Do Observe, Transpose, Examine, or Mirror All
   Configurations, Stranger (dotemacs); Dotfiles Operate Transparently
@@ -72,7 +71,6 @@ refer to this =PKGBUILD= I maintain for my purposes:
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/emacs-arch-linux-pkgbuild>
   - GitLab: <https://gitlab.com/protesilaos/emacs-arch-linux-pkgbuild>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronym for "PKGBUILD ... of Emacs": Package Knowhow Germane to
   Building Unapologetically Individuated Local Design ... of Emacs.
 
@@ -1123,7 +1121,7 @@ controlled repository of PACKAGE.  Installation is done with
 If METHOD is a quoted list, it must have a form accepted by
 `package-vc-install' such as:
 
-\\='(denote :url \"https://git.sr.ht/~protesilaos/denote\" :branch \"main\")
+\\='(denote :url \"https://GitHub.com/protesilaos/denote\" :branch \"main\")
 
 If METHOD is any other non-nil value, install PACKAGE using
 `package-install'."
@@ -1191,14 +1189,14 @@ Also see `prot-emacs-configure'."
   (prot-emacs-package denote
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)
-    (:install '(denote . (:url "https://git.sr.ht/~protesilaos/denote" :branch "main")))
+    (:install '(denote . (:url "https://github.com/protesilaos/denote" :branch "main")))
     (:delay 5)
     (setq denote-file-type nil))
 
   (prot-emacs-package denote
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:install "https://github.com/protesilaos/denote")
     (:delay 5)
     (setq denote-file-type nil))
 
@@ -1206,11 +1204,11 @@ Also see `prot-emacs-configure'."
     (:delay 5)
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:install "https://github.com/protesilaos/denote")
     (setq denote-file-type nil))
 
   (prot-emacs-package denote
-    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:install "https://github.com/protesilaos/denote")
     (:delay 5)
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)
@@ -1529,7 +1527,6 @@ the themes across the years.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/modus-themes>
   - GitLab: <https://gitlab.com/protesilaos/modus-themes>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/modus-themes>
 + Backronym: My Old Display Unexpectedly Sharpened ... themes
 
 Note that the ~prot-emacs-comment~ is there for my testing purposes
@@ -1648,7 +1645,6 @@ designed by me).
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/ef-themes>
   - GitLab: <https://gitlab.com/protesilaos/ef-themes>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/ef-themes>
 + Backronym: Eclectic Fashion in Themes Hides Exaggerated Markings,
   Embellishments, and Sparkles.
 
@@ -1782,7 +1778,6 @@ interfaces by supporting a large number of packages.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/standard-themes>
   - GitLab: <https://gitlab.com/protesilaos/standard-themes>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/standard-themes>
 + Backronym: Standard Themes Are Not Derivatives but the
   Affectionately Reimagined Default ... themes.
 
@@ -1910,7 +1905,6 @@ are called. The pulse effect is added there (~pulsar-after-function-hook~).
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/pulsar>
   - GitLab: <https://gitlab.com/protesilaos/pulsar>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/pulsar>
 + Backronym: Pulsar Unquestionably Luminates, Strictly Absent the Radiation
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
@@ -1971,7 +1965,6 @@ vertical axis.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/lin>
   - GitLab: <https://gitlab.com/protesilaos/lin>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/lin>
 + Backronym: LIN Is Noticeable
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
@@ -2011,7 +2004,6 @@ and [[https://github.com/minad/org-modern][Daniel Mendler's ~org-modern~ package
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/spacious-padding>
   - GitLab: <https://gitlab.com/protesilaos/spacious-padding>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Sample images:
   - <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>
   - <https://protesilaos.com/codelog/2023-11-15-spacious-padding-extra-ui-dev/>
@@ -2100,7 +2092,6 @@ such as in the difference between writing and reading.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/cursory>
   - GitLab: <https://gitlab.com/protesilaos/cursory>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/cursory>
 + Backronym: Cursor Usability Requires Styles Objectively Rated Yearlong
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
@@ -2210,7 +2201,6 @@ that are pleasant to read at comfortable point sizes.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/fontaine>
   - GitLab: <https://gitlab.com/protesilaos/fontaine>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/fontaine>
 + Backronym: Fonts, Ornaments, and Neat Typography Are Irrelevant in
   Non-graphical Emacs
 
@@ -2341,7 +2331,6 @@ technicalities.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/iosevka-comfy>
   - GitLab: <https://gitlab.com/protesilaos/iosevka-comfy>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Sample pictures: <https://protesilaos.com/emacs/iosevka-comfy-pictures>
 + Backronym: Iosevka ... Could Only Modify a Font, Yes
 
@@ -2938,7 +2927,6 @@ the point. Better check the video I did on the matter:
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/substitute>
   - GitLab: <https://gitlab.com/protesilaos/substitute>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronym: Some Utilities Built to Substitute Targets Independent of
   Their Utterances, Thoroughly and Easily.
 
@@ -3159,7 +3147,6 @@ to learn about all the available commands and their respective key bindings.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/tmr>
   - GitLab: <https://gitlab.com/protesilaos/tmr>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/tmr>
 + Backronym: TMR May Ring; Timer Must Run
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
@@ -3986,7 +3973,7 @@ templates to have a real need for it---but it works).
 
   (prot-emacs-abbrev global-abbrev-table
     "meweb" "https://protesilaos.com"
-    "megit" "https://git.sr.ht/~protesilaos"
+    "megit" "https://github.com/protesilaos"
     "mehub" "https://github.com/protesilaos"
     "melab" "https://gitlab.com/protesilaos"
     "medrive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/")
@@ -5405,7 +5392,6 @@ are where we need to be.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/dired-preview>
   - GitLab: <https://gitlab.com/protesilaos/dired-preview>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronym: Directories Invariably Render Everything Decently; PDFs
   Require Extra Viewing Instructions for Emacs to Work.
 
@@ -5469,14 +5455,13 @@ the ~prot-emacs-package~ is actually installing the file from source
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/mandoura>
   - GitLab: <https://gitlab.com/protesilaos/mandoura>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronym: MPV Access Needs Dired to Output User's Requested Audio.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
 (prot-emacs-package mandoura
-  (:install "https://git.sr.ht/~protesilaos/mandoura")
+  (:install "https://github.com/protesilaos/mandoura")
   (:delay 5)
   (setq mandoura-saved-playlist-directory "~/Music/playlists/")
 
@@ -5891,7 +5876,6 @@ best changes I ever did to boost my productivity:
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/beframe>
   - GitLab: <https://gitlab.com/protesilaos/beframe>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronym: Buffers Encapsulated in Frames Realise Advanced
   Management of Emacs.
 
@@ -6409,7 +6393,6 @@ Control framework and its accoutrements (`diff-mode.el`,
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/agitate>
   - GitLab: <https://gitlab.com/protesilaos/agitate>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/agitate>
 + Backronym: Another Git Interface Trying to Agitate Tranquil Emacsers
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
@@ -7561,7 +7544,6 @@ commands. For the technicalities, read the man page ~sxhkd(1)~.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/sxhkdrc-mode>
   - GitLab: <https://gitlab.com/protesilaos/sxhkdrc-mode>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronym: Such Xenotropic Hot Keys Demonstrate Robustness and
   Configurability ... mode.
 
@@ -7836,7 +7818,6 @@ affects.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/altcaps>
   - GitLab: <https://gitlab.com/protesilaos/altcaps>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronyms: Alternating Letters Transform Casual Asides to Playful
   Statements.  ALTCAPS Lets Trolls Convert Aphorisms to Proper
   Shitposts.
@@ -7881,7 +7862,6 @@ facilities to rename files, regardless of file type.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/denote>
   - GitLab: <https://gitlab.com/protesilaos/denote>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/denote>
 + Video demo: <https://protesilaos.com/codelog/2022-06-18-denote-demo/>
 + Backronyms: Denote Everything Neatly; Omit The Excesses.  Don't Ever
   Note Only The Epiphenomenal.
@@ -8028,7 +8008,6 @@ shows how to extend the code to achieve the desired result.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/logos>
   - GitLab: <https://gitlab.com/protesilaos/logos>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/logos>
 + Video demo: <https://protesilaos.com/codelog/2022-03-11-emacs-logos-demo/>
 + Backronyms: =^L= Only Generates Ostensible Slides; Logos Optionally Goes through Outline Sections
 
@@ -8774,7 +8753,6 @@ love letters, respectively.
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/notmuch-indicator>
   - GitLab: <https://gitlab.com/protesilaos/notmuch-indicator>
-+ Mailing list: <https://lists.sr.ht/~protesilaos/general-issues>
 + Backronym: notmuch-... Interested in Notmuch Data Indicators that
   Count Any Terms Ordinarily Requested.
 
@@ -9325,7 +9303,7 @@ that read from the =~/.authinfo= file ([[#h:bf540a85-12a6-4005-bf00-2ff3370e5adb
 
 #+begin_example sh
 # See my mbsync config, which is reflectd here.
-# https://git.sr.ht/~protesilaos/dotfiles
+# https://github.com/protesilaos/dotfiles
 
 defaults
 auth on
@@ -14556,7 +14534,7 @@ boundaries, else start from point to the end of the buffer."
     (user-error "`%s' is not part of `prot-search-markup-replacements'" type)))
 
 ;; NOTE 2023-01-14: See my `substitute' package instead of the
-;; following: <https://git.sr.ht/~protesilaos/substitute>.
+;; following: <https://github.com/protesilaos/substitute>.
 
 ;; (defun prot-search-isearch-replace-symbol ()
 ;;   "Run `query-replace-regexp' for the symbol at point."
