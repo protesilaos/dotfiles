@@ -194,7 +194,6 @@
            :inherit medium
            :default-height 150)
           (presentation
-           :inherit medium
            :default-weight light
            :default-height 180)
           (t

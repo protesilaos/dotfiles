@@ -2247,7 +2247,6 @@ explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Informati
            :inherit medium
            :default-height 150)
           (presentation
-           :inherit medium
            :default-weight light
            :default-height 180)
           (t
