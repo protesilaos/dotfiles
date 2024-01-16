@@ -1275,7 +1275,7 @@ arguments supplied to it as an even number and the odd ones are key
 bindings (strings that can be passed to the ~kbd~ function). This
 means that it does not try to cover the case of =[remap COMMAND]= (I
 am not a fan of it because the code alone does not tell us which key
-we end up using).
+we end up using ([[#h:6b6778af-8bd2-4f97-a794-e23774aa6cf3][Why don't you remap keys?]])).
 
 #+begin_src emacs-lisp :tangle "init.el"
 (defmacro prot-emacs-keybind (keymap &rest definitions)
@@ -16577,6 +16577,25 @@ me to copy-paste what I need when communicating with someone.
 Furthermore, the single ~setq~ call is harder to read when (i) there
 are lots of variables involved and/or (ii) the values are longer lists
 which themselves take some effort to figure out.
+
+** Why don't you remap keys?
+:PROPERTIES:
+:CUSTOM_ID: h:6b6778af-8bd2-4f97-a794-e23774aa6cf3
+:END:
+
+This is about the following pattern:
+
+#+begin_example emacs-lisp
+(define-key some-map [remap old-command] #'new-command)
+#+end_example
+
+This is a good way to replace in situ a command you don't use for the
+one you want. The problem is that it is not didactic for new users.
+The person reading my code will not know which key binding I am
+referencing. Sure, they can type =C-h w= (~where-is~ command) to
+search for the command /in the current major mode/, but this too
+requires some experience. Whereas an explicit key binding is self
+explanatory.
 
 ** What hardware and software do you use?
 :PROPERTIES:
