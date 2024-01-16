@@ -16558,7 +16558,7 @@ it (long-term though, as it is a lot of work to document everything).
 
 This question is about the following pattern:
 
-#+begin_src emacs-lisp
+#+begin_example emacs-lisp
 ;; I usually have this:
 (setq var-1 val-1)
 (setq var-2 val-2)
@@ -16568,7 +16568,7 @@ This question is about the following pattern:
 (setq var-1 val-1
       var-2 val-2
       var-3 val-3)
-#+end_src
+#+end_example
 
 I actually use both approaches. To me, the latter is better when I
 want to say "these go together", while the former makes it easier for
