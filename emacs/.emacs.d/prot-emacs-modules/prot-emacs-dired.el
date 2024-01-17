@@ -129,7 +129,7 @@
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
 (prot-emacs-package mandoura
-  (:install "https://git.sr.ht/~protesilaos/mandoura")
+  (:install "https://github.com/protesilaos/mandoura")
   (:delay 5)
   (setq mandoura-saved-playlist-directory "~/Music/playlists/")
 

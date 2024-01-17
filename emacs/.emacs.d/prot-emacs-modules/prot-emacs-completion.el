@@ -143,7 +143,7 @@
 
   (prot-emacs-abbrev global-abbrev-table
     "meweb" "https://protesilaos.com"
-    "megit" "https://git.sr.ht/~protesilaos"
+    "megit" "https://github.com/protesilaos"
     "mehub" "https://github.com/protesilaos"
     "melab" "https://gitlab.com/protesilaos"
     "medrive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/")

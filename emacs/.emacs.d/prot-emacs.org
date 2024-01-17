@@ -1121,7 +1121,7 @@ controlled repository of PACKAGE.  Installation is done with
 If METHOD is a quoted list, it must have a form accepted by
 `package-vc-install' such as:
 
-\\='(denote :url \"https://GitHub.com/protesilaos/denote\" :branch \"main\")
+\\='(denote :url \"https://github.com/protesilaos/denote\" :branch \"main\")
 
 If METHOD is any other non-nil value, install PACKAGE using
 `package-install'."

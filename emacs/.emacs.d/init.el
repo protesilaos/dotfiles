@@ -216,7 +216,7 @@ controlled repository of PACKAGE.  Installation is done with
 If METHOD is a quoted list, it must have a form accepted by
 `package-vc-install' such as:
 
-\\='(denote :url \"https://git.sr.ht/~protesilaos/denote\" :branch \"main\")
+\\='(denote :url \"https://github.com/protesilaos/denote\" :branch \"main\")
 
 If METHOD is any other non-nil value, install PACKAGE using
 `package-install'."
@@ -284,14 +284,14 @@ Also see `prot-emacs-configure'."
   (prot-emacs-package denote
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)
-    (:install '(denote . (:url "https://git.sr.ht/~protesilaos/denote" :branch "main")))
+    (:install '(denote . (:url "https://github.com/protesilaos/denote" :branch "main")))
     (:delay 5)
     (setq denote-file-type nil))
 
   (prot-emacs-package denote
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:install "https://github.com/protesilaos/denote")
     (:delay 5)
     (setq denote-file-type nil))
 
@@ -299,11 +299,11 @@ Also see `prot-emacs-configure'."
     (:delay 5)
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:install "https://github.com/protesilaos/denote")
     (setq denote-file-type nil))
 
   (prot-emacs-package denote
-    (:install "https://git.sr.ht/~protesilaos/denote")
+    (:install "https://github.com/protesilaos/denote")
     (:delay 5)
     (setq denote-directory "path/to/dir")
     (define-key global-map (kbd "C-c n") #'denote)

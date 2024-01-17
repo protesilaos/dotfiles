@@ -187,7 +187,7 @@ boundaries, else start from point to the end of the buffer."
     (user-error "`%s' is not part of `prot-search-markup-replacements'" type)))
 
 ;; NOTE 2023-01-14: See my `substitute' package instead of the
-;; following: <https://git.sr.ht/~protesilaos/substitute>.
+;; following: <https://github.com/protesilaos/substitute>.
 
 ;; (defun prot-search-isearch-replace-symbol ()
 ;;   "Run `query-replace-regexp' for the symbol at point."
