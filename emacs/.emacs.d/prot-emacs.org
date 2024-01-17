@@ -2209,6 +2209,9 @@ that are pleasant to read at comfortable point sizes.
 You will notice that all my fonts are Iosevka Comfy variants. I
 explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Information about my Iosevka Comfy fonts]]).
 
+The next section defines some complementary functionality
+([[#h:60d6aae2-6e4b-402c-b6a8-411fc49a6857][The =prot-emacs-theme.el= section about ~variable-pitch-mode~ and font resizing]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Fontaine (font configurations)
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
@@ -2275,21 +2278,38 @@ explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Informati
 
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
   (define-key global-map (kbd "C-c F") #'fontaine-set-face-font))
+#+end_src
 
-;;;;; `variable-pitch-mode' setup and more key bindings
+*** The =prot-emacs-theme.el= section about ~variable-pitch-mode~ and font resizing
+:PROPERTIES:
+:CUSTOM_ID: h:60d6aae2-6e4b-402c-b6a8-411fc49a6857
+:END:
 
+[ Watch: [[https://protesilaos.com/codelog/2024-01-16-customize-emacs-fonts/][Customise Emacs fonts]] (2024-01-16) ]
+
+The built-in ~variable-pitch-mode~ makes the current buffer use a
+proportionately spaced font. In technical terms, it remaps the
+~default~ face to ~variable-pitch~, so whatever applies to the latter
+takes effect over the former. I take care of their respective font
+families in my ~fontaine~ setup ([[#h:cb41fef0-41a5-4a85-9552-496d96290258][The =prot-emacs-theme.el= section about ~fontaine~]]).
+
+I want to activate ~variable-pitch-mode~ in all buffers where I
+normally focus on prose. The exact mode hooks are specified in the
+variable =prot/enable-variable-pitch-in-hooks=. Exceptions to these
+are major modes that I do not consider related to prose (and which in
+my opinion should not be derived from ~text-mode~): these are excluded
+in the function ~prot/enable-variable-pitch~.
+
+Then I also arrange the key bindings that resize text on-the-fly. I
+want those to have a global effect, meaning that they affect all
+buffers and the minibuffer, instead of the default behaviour to only
+adjust the current buffer's text size ([[#h:6b6778af-8bd2-4f97-a794-e23774aa6cf3][Why don't you remap keys?]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 (prot-emacs-configure
   (:delay 5)
+;;;;; `variable-pitch-mode' setup
   (define-key ctl-x-x-map (kbd "v") #'variable-pitch-mode)
-
-  ;; Emacs 29 introduces commands that resize the font across all
-  ;; buffers (including the minibuffer), which is what I want, as
-  ;; opposed to doing it only in the current buffer.  The keys are the
-  ;; same as the defaults.
-  (prot-emacs-keybind global-map
-    "C-x C-=" #'global-text-scale-adjust
-    "C-x C-+" #'global-text-scale-adjust
-    "C-x C-0" #'global-text-scale-adjust)
 
   ;; NOTE 2022-11-20: This may not cover every case, though it works
   ;; fine in my workflow.  I am still undecided by EWW.
@@ -2306,7 +2326,18 @@ explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Informati
   (mapc
    (lambda (hook)
     (add-hook hook #'prot/enable-variable-pitch))
-   prot/enable-variable-pitch-in-hooks))
+   prot/enable-variable-pitch-in-hooks)
+
+;;;;; Resize keys with global effect
+
+  ;; Emacs 29 introduces commands that resize the font across all
+  ;; buffers (including the minibuffer), which is what I want, as
+  ;; opposed to doing it only in the current buffer.  The keys are the
+  ;; same as the defaults.
+  (prot-emacs-keybind global-map
+    "C-x C-=" #'global-text-scale-adjust
+    "C-x C-+" #'global-text-scale-adjust
+    "C-x C-0" #'global-text-scale-adjust))
 #+end_src
 
 **** Information about my Iosevka Comfy fonts

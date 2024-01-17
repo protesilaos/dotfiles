@@ -231,10 +231,9 @@
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
   (define-key global-map (kbd "C-c F") #'fontaine-set-face-font))
 
-;;;;; `variable-pitch-mode' setup
-
 (prot-emacs-configure
   (:delay 5)
+;;;;; `variable-pitch-mode' setup
   (define-key ctl-x-x-map (kbd "v") #'variable-pitch-mode)
 
   ;; NOTE 2022-11-20: This may not cover every case, though it works
@@ -252,6 +251,17 @@
   (mapc
    (lambda (hook)
     (add-hook hook #'prot/enable-variable-pitch))
-   prot/enable-variable-pitch-in-hooks))
+   prot/enable-variable-pitch-in-hooks)
+
+;;;;; Resize keys with global effect
+
+  ;; Emacs 29 introduces commands that resize the font across all
+  ;; buffers (including the minibuffer), which is what I want, as
+  ;; opposed to doing it only in the current buffer.  The keys are the
+  ;; same as the defaults.
+  (prot-emacs-keybind global-map
+    "C-x C-=" #'global-text-scale-adjust
+    "C-x C-+" #'global-text-scale-adjust
+    "C-x C-0" #'global-text-scale-adjust))
 
 (provide 'prot-emacs-theme)
