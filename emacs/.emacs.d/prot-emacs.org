@@ -21,9 +21,9 @@ value. That method works but is very slow, because we have to load Org
 before starting Emacs (and Org loads a bunch of other things we do not
 need at such an early stage).
 
-Whereas this Org serves as (i) a single point of entry to my Emacs
-setup and (ii) the origin of all of my Emacs configurations. While I
-am defining everything in a single Org file, I am not actually
+Whereas this Org document serves as (i) a single point of entry to my
+Emacs setup and (ii) the origin of all of my Emacs configurations.
+While I am defining everything in a single Org file, I am not actually
 starting Emacs by reading this file. Rather, I am instructing Org to
 put the code blocks defined herein in standalone files, organised by
 scope. The end result is something where you cannot tell whether a
