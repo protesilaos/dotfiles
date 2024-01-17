@@ -2463,6 +2463,10 @@ describe-variable=) to learn about each of these.
   (setq prot-simple-time-specifier "%R %z")
 
   (setq prot-scratch-default-mode 'text-mode)
+
+  ;; NEVER tell me which key can call a command that I specifically
+  ;; invoked with M-x: I have a good reason to use it that way.
+  (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore)
 #+end_src
 
 *** The =prot-emacs-essentials.el= section for comments
@@ -10664,6 +10668,10 @@ completion (per `completing-read')."
      (insert-file-contents file)
      (buffer-substring-no-properties (point-min) (point-max)))
    "\n" :omit-nulls "[\s\f\t\n\r\v]+"))
+
+(defun prot-common-ignore (&rest _)
+  "Use this as override advice to make a function do nothing."
+  nil)
 
 ;; NOTE 2023-06-02: The `prot-common-wcag-formula' and
 ;; `prot-common-contrast' are taken verbatim from my `modus-themes'

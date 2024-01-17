@@ -37,6 +37,8 @@
 
   (setq prot-scratch-default-mode 'text-mode)
 
+  ;; (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore)
+
 ;;;; Comments (prot-comment.el)
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)

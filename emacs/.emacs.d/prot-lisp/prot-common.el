@@ -352,6 +352,10 @@ completion (per `completing-read')."
      (buffer-substring-no-properties (point-min) (point-max)))
    "\n" :omit-nulls "[\s\f\t\n\r\v]+"))
 
+(defun prot-common-ignore (&rest _)
+  "Use this as override advice to make a function do nothing."
+  nil)
+
 ;; NOTE 2023-06-02: The `prot-common-wcag-formula' and
 ;; `prot-common-contrast' are taken verbatim from my `modus-themes'
 ;; and renamed to have the prefix `prot-common-' instead of
