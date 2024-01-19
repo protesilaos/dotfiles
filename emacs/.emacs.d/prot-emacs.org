@@ -9666,6 +9666,10 @@ These are purely cosmetic. I normally work without them, though I do
 enable them for video demonstrations because they communicate more
 information, which some people may find helpful.
 
+Remember that these packages do not automatically install any font
+files. The user must handle this step by invoking the command
+~nerd-icons-install-fonts~.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-icons.el" :mkdirp yes
 ;;; Icons
 (prot-emacs-package nerd-icons
