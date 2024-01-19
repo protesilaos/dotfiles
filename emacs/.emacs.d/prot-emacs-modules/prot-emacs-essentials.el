@@ -37,7 +37,9 @@
 
   (setq prot-scratch-default-mode 'text-mode)
 
-  ;; (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore)
+  ;; NEVER tell me which key can call a command that I specifically
+  ;; invoked with M-x: I have a good reason to use it that way.
+  (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore)
 
 ;;;; Comments (prot-comment.el)
   (setq comment-empty-lines t)
