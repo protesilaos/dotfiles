@@ -526,6 +526,27 @@ directory as the init.el."
   :group 'file)
 #+end_src
 
+*** The =init.el= user option to load key bindings involving the Super key
+:PROPERTIES:
+:CUSTOM_ID: h:04b5b80d-22af-4167-b28c-84a80c3cd0e4
+:END:
+
+The Super key is normally not used anywhere in Emacs. Depending on the
+desktop environment, it is reserved for system-wide shortcuts.
+Otherwise, it is an extra modifier that lets us define alternatives to
+common keys that are hard to press, such as =s-f= instead of =C-x
+C-f=. Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
+
+#+begin_src emacs-lisp :tangle "init.el"
+(defcustom prot-emacs-load-super-keys nil
+  "When non-nil load the `prot-emacs-super-keys-map'.
+This key map defines bindings involving the Super key for common
+commands.  The original key binding of each of those commands is
+still available."
+  :group 'prot-emacs
+  :type 'boolean)
+#+end_src
+
 *** The =init.el= user option to load a theme family
 :PROPERTIES:
 :CUSTOM_ID: h:5612b5b8-45a5-4a79-a25b-6fa3d9146c39
@@ -1437,6 +1458,11 @@ The individual modules are documented in a section of their own under
 ;; We load it last to override any other keys.
 (when prot-emacs-load-evil
   (require 'prot-emacs-evil))
+;; This one comes after Evil mode because it is the only one that uses
+;; the Super key for key bindings, so we do not worry about overriding
+;; anything.
+(when prot-emacs-load-super-keys
+  (require 'prot-emacs-super-keys))
 
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
@@ -9945,6 +9971,63 @@ files. The user must handle this step by invoking the command
   (evil-mode 1))
 
 (provide 'prot-emacs-evil)
+#+end_src
+
+** The =prot-emacs-super-keys.el= module
+:PROPERTIES:
+:CUSTOM_ID: h:cc2a8257-8e4a-4494-8abd-d24a09716ae9
+:END:
+
+This module is subject to a user option and is not enabled by default
+([[#h:04b5b80d-22af-4167-b28c-84a80c3cd0e4][The =init.el= user option to use Super for key bindings]]). It defines
+a new key map that uses the Super key for common commands. Super is
+often used by the desktop environment, so them may be cases where keys
+are not passed through to Emacs at all.
+
+Here is what is included:
+
+| Command                | Standard key | Super key |
+|------------------------+--------------+-----------|
+| find-file              | C-x C-f      | s-f       |
+| dired-jump             | C-x C-j      | s-j       |
+| switch-to-buffer       | C-x b        | s-b       |
+| other-window           | C-x o        | s-o       |
+| indent-rigidly         | C-x C-i      | s-i       |
+| delete-other-windows   | C-x 1        | s-1       |
+| split-window-below     | C-x 2        | s-2       |
+| split-window-right     | C-x 3        | s-3       |
+| delete-window          | C-x 0        | s-0       |
+| bookmark-jump          | C-x r b      | s-m       |
+| copy-to-register       | C-x r s      | s-s       |
+| project-switch-project | C-x p p      | s-p       |
+| vc-next-action         | C-x v v      | s-v       |
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-super-keys.el" :mkdirp yes
+;;; Common command alternatives using the Super key
+(prot-emacs-configure
+  (:delay 2)
+  (defvar-keymap prot-emacs-super-keys-map
+    :doc "Common command alternatives using the Super key."
+    "s-f" #'find-file
+    "s-b" #'switch-to-buffer
+    "s-j" #'dired-jump
+    "s-o" #'other-window
+    "s-i" #'indent-rigidly
+    "s-1" #'delete-other-windows
+    "s-2" #'split-window-below
+    "s-3" #'split-window-right
+    "s-0" #'delete-window
+    "s-m" #'bookmark-jump
+    "s-s" #'copy-to-register
+    "s-p" #'project-switch-project)
+
+  (define-minor-mode prot-emacs-super-keys-mode
+    "Provide Super key alternatives to common command."
+    :global t
+    :init-value t
+    :keymap prot-emacs-super-keys-map))
+
+(provide 'prot-emacs-super-keys)
 #+end_src
 
 * The custom libraries of my configuration
