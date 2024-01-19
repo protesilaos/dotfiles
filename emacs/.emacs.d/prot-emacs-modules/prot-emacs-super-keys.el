@@ -14,7 +14,8 @@
     "s-0" #'delete-window
     "s-m" #'bookmark-jump
     "s-s" #'copy-to-register
-    "s-p" #'project-switch-project)
+    "s-p" #'project-switch-project
+    "s-v" #'vc-next-action)
 
   (define-minor-mode prot-emacs-super-keys-mode
     "Provide Super key alternatives to common command."
