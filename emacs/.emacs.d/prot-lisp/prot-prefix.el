@@ -74,7 +74,7 @@
   "l" #'emoji-list)
 
 (declare-function logos-focus-mode "logos")
-(declare-function keycast-mode "keycast")
+(declare-function keycast-mode-line-mode "keycast")
 (declare-function rainbow-mode "rainbow")
 (declare-function spacious-padding-mode "spacious-padding")
 
@@ -83,7 +83,7 @@
   :name "Toggle"
   "f" #'flymake-mode
   "h" #'hl-line-mode
-  "k" #'keycast-mode
+  "k" #'keycast-mode-line-mode
   "l" #'logos-focus-mode
   "m" #'menu-bar-mode
   "n" #'display-line-numbers-mode
