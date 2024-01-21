@@ -62,8 +62,8 @@ _emacs ()
     in
         # TODO 2023-03-01: Define a function to load appropriate Emacs
         # theme.
-        l*) emacsclient -e "(when (and (functionp 'modus-themes--current-theme) (modus-themes--current-theme)) (load-theme '${light_theme} :no-confirm))" > /dev/null ;;
-        d*) emacsclient -e "(when (and (functionp 'modus-themes--current-theme) (modus-themes--current-theme)) (load-theme '${dark_theme} :no-confirm))"  > /dev/null ;;
+        l*) emacsclient -e "(when (and (functionp 'modus-themes--current-theme) (modus-themes--current-theme)) (modus-themes-load-theme '${light_theme}))" > /dev/null ;;
+        d*) emacsclient -e "(when (and (functionp 'modus-themes--current-theme) (modus-themes--current-theme)) (modus-themes-load-theme '${dark_theme}))"  > /dev/null ;;
     esac
 }
 
