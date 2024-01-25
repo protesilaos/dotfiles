@@ -16062,6 +16062,22 @@ Name the buffer after the defun's symbol."
 ;;;; Commands for buffers
 
 ;;;###autoload
+(defun prot-simple-copy-current-buffer-name ()
+  "Add the current buffer's name to the `kill-ring'."
+  (declare (interactive-only t))
+  (interactive)
+  (kill-new (buffer-name (current-buffer))))
+
+;;;###autoload
+(defun prot-simple-copy-current-buffer-file ()
+  "Add the current buffer's file path to the `kill-ring'."
+  (declare (interactive-only t))
+  (interactive)
+  (if buffer-file-name
+      (kill-new buffer-file-name)
+    (user-error "%s is not associated with a file" (buffer-name (current-buffer)))))
+
+;;;###autoload
 (defun prot-simple-kill-buffer (buffer)
   "Kill current BUFFER without confirmation.
 When called interactively, prompt for BUFFER."
