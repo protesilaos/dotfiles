@@ -15,7 +15,7 @@
     "s-m" #'bookmark-jump
     "s-s" #'copy-to-register
     "s-p" #'project-switch-project
-    "s-v" #'vc-next-action)
+    "s-k" #'prot-simple-kill-buffer-current)
 
   (define-minor-mode prot-emacs-super-keys-mode
     "Provide Super key alternatives to common command."

@@ -9986,21 +9986,21 @@ are not passed through to Emacs at all.
 
 Here is what is included:
 
-| Command                | Standard key | Super key |
-|------------------------+--------------+-----------|
-| find-file              | C-x C-f      | s-f       |
-| dired-jump             | C-x C-j      | s-j       |
-| switch-to-buffer       | C-x b        | s-b       |
-| other-window           | C-x o        | s-o       |
-| indent-rigidly         | C-x C-i      | s-i       |
-| delete-other-windows   | C-x 1        | s-1       |
-| split-window-below     | C-x 2        | s-2       |
-| split-window-right     | C-x 3        | s-3       |
-| delete-window          | C-x 0        | s-0       |
-| bookmark-jump          | C-x r b      | s-m       |
-| copy-to-register       | C-x r s      | s-s       |
-| project-switch-project | C-x p p      | s-p       |
-| vc-next-action         | C-x v v      | s-v       |
+| Command                         | Standard key | Super key |
+|---------------------------------+--------------+-----------|
+| find-file                       | C-x C-f      | s-f       |
+| dired-jump                      | C-x C-j      | s-j       |
+| switch-to-buffer                | C-x b        | s-b       |
+| other-window                    | C-x o        | s-o       |
+| indent-rigidly                  | C-x C-i      | s-i       |
+| delete-other-windows            | C-x 1        | s-1       |
+| split-window-below              | C-x 2        | s-2       |
+| split-window-right              | C-x 3        | s-3       |
+| delete-window                   | C-x 0        | s-0       |
+| bookmark-jump                   | C-x r b      | s-m       |
+| copy-to-register                | C-x r s      | s-s       |
+| project-switch-project          | C-x p p      | s-p       |
+| prot-simple-kill-buffer-current | C-x k        | s-k       |
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-super-keys.el" :mkdirp yes
 ;;; Common command alternatives using the Super key
@@ -10020,7 +10020,7 @@ Here is what is included:
     "s-m" #'bookmark-jump
     "s-s" #'copy-to-register
     "s-p" #'project-switch-project
-    "s-v" #'vc-next-action)
+    "s-k" #'prot-simple-kill-buffer-current)
 
   (define-minor-mode prot-emacs-super-keys-mode
     "Provide Super key alternatives to common command."
