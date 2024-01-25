@@ -188,21 +188,27 @@ This is a more general and less stringent variant of
   (and (prot-common-window-narrow-p)
        (not (one-window-p :no-minibuffer))))
 
-(defun prot-modeline-string-truncate (str)
+(defun prot-modeline-string-cut-end (str)
   "Return truncated STR, if appropriate, else return STR.
-Truncation is done up to `prot-modeline-string-truncate-length'."
+Cut off the end of STR by counting from its start up to
+`prot-modeline-string-truncate-length'."
   (if (prot-modeline--string-truncate-p str)
       (concat (substring str 0 prot-modeline-string-truncate-length) "...")
     str))
 
-(defun prot-modeline-string-truncate-end (str)
-  "Like `prot-modeline-string-truncate' but truncate from STR beginning."
+(defun prot-modeline-string-cut-beginning (str)
+  "Return truncated STR, if appropriate, else return STR.
+Cut off the beginning of STR by counting from its end up to
+`prot-modeline-string-truncate-length'."
   (if (prot-modeline--string-truncate-p str)
       (concat "..." (substring str (- prot-modeline-string-truncate-length)))
     str))
 
-(defun prot-modeline-string-truncate-mid (str)
-  "Like `prot-modeline-string-truncate' but truncate the middle of STR."
+(defun prot-modeline-string-cut-middle (str)
+  "Return truncated STR, if appropriate, else return STR.
+Cut off the middle of STR by counting half of
+`prot-modeline-string-truncate-length' both from its beginning
+and end."
   (let ((half (floor prot-modeline-string-truncate-length 2)))
     (if (prot-modeline--string-truncate-p str)
         (concat (substring str 0 half) "..." (substring str (- (+ 4 half))))
@@ -362,9 +368,9 @@ VARIANT of the state tag is either :short or :long, as defined in
 
 (defun prot-modeline--buffer-name ()
   "Return `buffer-name', truncating it if necessary.
-See `prot-modeline-string-truncate-mid'."
+See `prot-modeline-string-cut-middle'."
   (when-let ((name (buffer-name)))
-    (prot-modeline-string-truncate-mid name)))
+    (prot-modeline-string-cut-middle name)))
 
 (defun prot-modeline-buffer-name ()
   "Return buffer name, with read-only indicator if relevant."
@@ -498,7 +504,7 @@ With optional FACE, use it to propertize the BRANCH."
   "Return Git BRANCH details for FILE, truncating it if necessary.
 The string is truncated if the width of the window is smaller
 than `split-width-threshold'."
-  (prot-modeline-string-truncate
+  (prot-modeline-string-cut-end
    (prot-modeline--vc-text file branch face)))
 
 (defvar prot-modeline--vc-faces
