@@ -205,6 +205,12 @@ respectively."
       (and (numberp split-height-threshold)
            (> (window-total-height) split-height-threshold))))
 
+(defun prot-common-window-narrow-p ()
+  "Return non-nil if window is narrow.
+Check if the `window-width' is less than `split-width-threshold'."
+  (and (numberp split-width-threshold)
+       (< (window-total-width) split-width-threshold)))
+
 ;;;###autoload
 (defun prot-common-three-or-more-windows-p (&optional frame)
   "Return non-nil if three or more windows occupy FRAME.
