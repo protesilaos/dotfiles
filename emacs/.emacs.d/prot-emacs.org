@@ -12571,6 +12571,13 @@ Truncation is done up to `prot-modeline-string-truncate-length'."
       (concat "..." (substring str (- prot-modeline-string-truncate-length)))
     str))
 
+(defun prot-modeline-string-truncate-mid (str)
+  "Like `prot-modeline-string-truncate' but truncate the middle of STR."
+  (let ((half (floor prot-modeline-string-truncate-length 2)))
+    (if (prot-modeline--string-truncate-p str)
+        (concat (substring str 0 half) "..." (substring str (- (+ 4 half))))
+      str)))
+
 (defun prot-modeline--first-char (str)
   "Return first character from STR."
   (substring str 0 1))
@@ -12725,9 +12732,9 @@ VARIANT of the state tag is either :short or :long, as defined in
 
 (defun prot-modeline--buffer-name ()
   "Return `buffer-name', truncating it if necessary.
-See `prot-modeline-string-truncate'."
+See `prot-modeline-string-truncate-mid'."
   (when-let ((name (buffer-name)))
-    (prot-modeline-string-truncate name)))
+    (prot-modeline-string-truncate-mid name)))
 
 (defun prot-modeline-buffer-name ()
   "Return buffer name, with read-only indicator if relevant."
