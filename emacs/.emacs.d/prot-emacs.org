@@ -4606,10 +4606,10 @@ noticeable performance penalty.
 All we need to get a decent experience with ~vertico~ is to enable the
 ~vertico-mode~. For most users this is enough. In my case though, I
 have to use the "multiform" mechanism of this package to make it not
-show up eagerly. I do this as I frequently to control what I am
-displaying while doing a presentation. As such, the overall experience
-I get with ~vertico~ is the same as with ~mct~, albeit with better
-performance ([[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]).
+show up eagerly. I do this frequently to control what I am displaying
+while doing a presentation. As such, the overall experience I get with
+~vertico~ is the same as with ~mct~, albeit with better performance
+([[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]).
 
 Beside what I am using it for, the "multiform" mechanism allows us to
 change the layout of ~vertico~ on a per-command or per-category basis.
