@@ -71,14 +71,17 @@
            :right-divider-width 30
            :scroll-bar-width 8))
 
-  ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
-  ;; is very flexible.
-  (setq spacious-padding-subtle-mode-line
-        `( :mode-line-active ,(if (or (eq prot-emacs-load-theme-family 'modus)
-                                      (eq prot-emacs-load-theme-family 'standard))
-                                  'default
-                                'help-key-binding)
-           :mode-line-inactive vertical-border))
+  ;; ;; Read the doc string of `spacious-padding-subtle-mode-line' as
+  ;; ;; it is very flexible.
+  ;;
+  ;; (setq spacious-padding-subtle-mode-line
+  ;;       `( :mode-line-active ,(if (or (eq prot-emacs-load-theme-family 'modus)
+  ;;                                     (eq prot-emacs-load-theme-family 'standard))
+  ;;                                 'default
+  ;;                               'help-key-binding)
+  ;;          :mode-line-inactive vertical-border))
+
+  (setq spacious-padding-subtle-mode-line nil)
 
   (spacious-padding-mode 1)
 
