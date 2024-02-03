@@ -196,7 +196,7 @@ When I want to make a change to my Emacs setup, I do the edits in this
 =prot-emacs.org= and then type =C-c C-v C-t= (=M-x org-babel-tangle=)
 to propagate the changes to the relevant files.
 
-On a new compueter, I put all my Emacs files where they are meant to
+On a new computer, I put all my Emacs files where they are meant to
 be (inside the =~/.emacs.d= directory) with this command, which uses
 the ~stow~ system package (all my dotfiles are stowed in place with
 this program):
