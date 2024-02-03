@@ -74,8 +74,8 @@
     ;; Commands for lines
     "M-o" #'delete-blank-lines   ; alias for C-x C-o
     "M-k" #'prot-simple-kill-line-backward
+    "C-S-d" #'prot-simple-duplicate-line-or-region
     "C-S-w" #'prot-simple-copy-line
-    "C-S-d" #'duplicate-dwim ; Emacs 29
     "C-S-y" #'prot-simple-yank-replace-line-or-region
     "M-SPC" #'cycle-spacing
     "C-v" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
