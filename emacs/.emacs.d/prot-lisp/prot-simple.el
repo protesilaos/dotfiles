@@ -71,11 +71,11 @@ expression."
   (interactive)
   (if (eq last-command this-command)
       (ignore-errors (forward-sexp 1))
-    (let ((thing (cond
-                  ((thing-at-point 'url) 'url)
-                  ((thing-at-point 'sexp) 'sexp)
-                  ((thing-at-point 'string) 'string)
-                  (t 'word))))
+    (when-let ((thing (cond
+                       ((thing-at-point 'url) 'url)
+                       ((thing-at-point 'sexp) 'sexp)
+                       ((thing-at-point 'string) 'string)
+                       (t 'word))))
       (prot-simple--mark (bounds-of-thing-at-point thing)))))
 
 ;;;###autoload
