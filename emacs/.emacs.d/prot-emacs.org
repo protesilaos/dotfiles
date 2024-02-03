@@ -4928,7 +4928,7 @@ For isearch, I have:
 For variants of ~occur~ or ~grep~, which also benefit from the rules I have on
 where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]):
 
-- Type =M-s M-s= (~prot-search-outline~) to use minibuffer completion
+- Type =M-s s= or =M-s M-s= (~prot-search-outline~) to use minibuffer completion
   to match an entry across the buffer's outline. This is probably my
   most used command. What I like about it is that it benefits from the
   extensive customisations I make to the completion mechanism and the
@@ -4999,6 +4999,7 @@ by visiting individual files or by using a grep buffer as an index.
     "M-s t" #'prot-search-occur-todo-keywords
     "M-s M-t" #'prot-search-grep-todo-keywords ; With C-u it runs `prot-search-git-grep-todo-keywords'
     "M-s M-T" #'prot-search-git-grep-todo-keywords
+    "M-s s" #'prot-search-outline
     "M-s M-s" #'prot-search-outline
     "M-s M-o" #'prot-search-occur-outline
     "M-s M-u" #'prot-search-occur-browse-url)
