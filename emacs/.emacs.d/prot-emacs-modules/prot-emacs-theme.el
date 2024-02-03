@@ -194,7 +194,6 @@
            :inherit medium
            :default-height 150)
           (presentation
-           :default-weight light
            :default-height 180)
           (t
            ;; I keep all properties for didactic purposes, but most can be
