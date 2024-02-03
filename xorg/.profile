@@ -50,6 +50,11 @@ then
     PATH=$PATH:"$HOME"/Builds/bin
 fi
 
+if [ -d /opt/bin ]
+then
+    PATH=$PATH:/opt/bin
+fi
+
 ##########################
 # Environment essentials #
 ##########################

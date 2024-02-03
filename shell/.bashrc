@@ -34,6 +34,11 @@ then
     PATH=$PATH:"$HOME"/Builds/bin
 fi
 
+if [ -d /opt/bin ]
+then
+    PATH=$PATH:/opt/bin
+fi
+
 if [ -d "/var/lib/flatpak/exports/bin" ]
 then
     PATH=$PATH:"/var/lib/flatpak/exports/bin"
