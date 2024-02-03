@@ -14,23 +14,23 @@ port 465
 # pub
 account pub
 # FIXME 2023-08-08: Optimise this?
-eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
-eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
-passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
+eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
+eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
+passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
 
 # inf
 account inf
 # FIXME 2023-08-08: Optimise this?
-eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
-eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
-passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
+eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
+eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
+passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
 
 # prv
 account prv
 # FIXME 2023-08-08: Optimise this?
-eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
-eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
-passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
+eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
+eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
+passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
 
 # Set a default account (I copied from man msmtp)
 account default : pub
