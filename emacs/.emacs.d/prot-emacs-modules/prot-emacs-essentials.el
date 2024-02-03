@@ -365,9 +365,10 @@ word.  Fall back to regular `expreg-expand'."
 In other words, start visualising the undo ring if we are going
 to be cycling through the edits."
     (interactive)
-     (if (member last-command prot/vundo-undo-functions)
-         (call-interactively 'vundo)
-       (apply args)))
+    (if (and (member last-command prot/vundo-undo-functions)
+             (not undo-in-region))
+        (call-interactively 'vundo)
+      (apply args)))
 
   (mapc
    (lambda (fn)
