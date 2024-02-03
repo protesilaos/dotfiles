@@ -61,6 +61,6 @@ ansi_sequences+="\\033]11;$(_get_hex_value background)\\007"
 ansi_sequences+="\\033]17;$(_get_hex_value foreground)\\007"
 
 # Apply ANSI sequences to running terminals.
-for term in /dev/pts/[0-9]*; do
+for term in /dev/pts/[0-4]*; do
     printf "%b" "$ansi_sequences" > "$term" &
 done
