@@ -138,7 +138,6 @@
         '(archive-mode image-mode docview-mode pdf-view-mode))
 
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
-  (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
   (prot-emacs-abbrev global-abbrev-table
