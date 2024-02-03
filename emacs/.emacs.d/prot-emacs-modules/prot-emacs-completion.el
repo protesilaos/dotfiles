@@ -141,10 +141,11 @@
   (setq only-global-abbrevs nil)
 
   (prot-emacs-abbrev global-abbrev-table
-    "meweb" "https://protesilaos.com"
-    "megit" "https://github.com/protesilaos"
-    "mehub" "https://github.com/protesilaos"
-    "melab" "https://gitlab.com/protesilaos"
+    "meweb"   "https://protesilaos.com"
+    "megit"   "https://github.com/protesilaos"
+    "mehub"   "https://github.com/protesilaos"
+    "meclone" "git@github.com/protesilaos/"
+    "melab"   "https://gitlab.com/protesilaos"
     "medrive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/")
 
   (prot-emacs-abbrev text-mode-abbrev-table
@@ -172,7 +173,10 @@
       "bestregards"  "Best regards,\nProtesilaos (or simply \"Prot\")"
       "allthebest"   "All the best,\nProtesilaos (or simply \"Prot\")"
       "abest"        "All the best,\nProt"
-      "bregards"     "Best regards,\nProt"))
+      "bregards"     "Best regards,\nProt"
+      "nosrht"       "P.S. I am phasing out SourceHut:
+<https://protesilaos.com/codelog/2024-01-27-sourcehut-no-more/>.
+Development continues on GitHub with GitLab as a mirror."))
 
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
