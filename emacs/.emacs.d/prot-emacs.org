@@ -11713,7 +11713,8 @@ Add as :around advice to `evil-paste-after' and `evil-paste-before',
 applying its ARGS."
   (if (evil-visual-state-p)
       (cl-letf (((symbol-function 'evil-yank) #'ignore))
-        (apply args))
+        (apply args)
+        (setq evil-last-paste nil))
     (apply args)))
 
 (advice-add #'evil-paste-after :around #'prot-evil-visual-paste-no-kill)
