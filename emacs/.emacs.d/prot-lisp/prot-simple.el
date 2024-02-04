@@ -224,11 +224,9 @@ BOUNDARIES is a cons cell representing buffer positions."
     (error "`%s' is not a cons cell" boundaries))
   (let ((beg (car boundaries))
         (end (cdr boundaries)))
-    (save-excursion
-      (goto-char end)
-      (newline)
-      (insert (buffer-substring-no-properties beg end))
-      (indent-for-tab-command))))
+    (goto-char end)
+    (newline)
+    (insert (buffer-substring-no-properties beg end))))
 
 ;;;###autoload
 (defun prot-simple-duplicate-line-or-region (&optional beg end)
