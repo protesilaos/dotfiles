@@ -3555,7 +3555,7 @@ with my customised mode line ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =pr
 ;;; Keycast mode
 (prot-emacs-package keycast
   (:install t)
-  (:delay 60)
+  (:delay 5)
   (setq keycast-mode-line-format "%2s%k%c%R")
   (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
   (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)

@@ -42,7 +42,7 @@
 ;;; Keycast mode
 (prot-emacs-package keycast
   (:install t)
-  (:delay 60)
+  (:delay 5)
   (setq keycast-mode-line-format "%2s%k%c%R")
   (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
   (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
