@@ -841,7 +841,7 @@ altogether, but this is not possible. So here we are...
 (setq custom-file (make-temp-file "emacs-custom-"))
 #+end_src
 
-** The =init.el= settings for multilingual editing
+** The =init.el= settings for multilingual editing (input methods)
 :PROPERTIES:
 :CUSTOM_ID: h:805e0539-c46d-4f03-b152-cefc635f945c
 :END:
