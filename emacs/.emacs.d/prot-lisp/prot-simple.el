@@ -229,9 +229,11 @@ BOUNDARIES is a cons cell representing buffer positions."
     (insert (buffer-substring-no-properties beg end))))
 
 ;;;###autoload
-(defun prot-simple-duplicate-line-or-region (&optional beg end)
+(defun prot-simple-duplicate-line-or-region ()
   "Duplicate the current line or active region."
-  (interactive "r")
+  (interactive)
+  (unless mark-ring                  ; needed when entering a new buffer
+    (push-mark (point) t nil))
   (prot-simple--duplicate-buffer-substring
    (if (region-active-p)
        (cons (region-beginning) (region-end))
