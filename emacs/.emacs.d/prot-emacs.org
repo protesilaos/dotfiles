@@ -1334,6 +1334,8 @@ DEFINITIONS is a sequence of string and command pairs."
 :CUSTOM_ID: h:e7a12825-7848-42bd-b99b-b87903012814
 :END:
 
+[ Watch: [[https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/][abbreviations with abbrev-mode (quick text expansion)]] (2024-02-03). ]
+
 This is the same idea as ~prot-emacs-keybind~, adjusted to work with
 the ~define-abbrev~ function ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891d9][The init.el macro to bind keys (~prot-emacs-keybind~)]]).
 I probably do not need this, as I only write a small number of
@@ -2525,6 +2527,8 @@ the module to set my desired configurations.
 :CUSTOM_ID: h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7
 :END:
 
+[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
+
 I always define key bindings as the final part of a configuration
 block. Now that we are done with tweaking variables, let us define
 keys. You will notice that I redefine some default key bindings whose
@@ -3463,6 +3467,8 @@ Finally, we ~provide~ the module. This is the mirror function of
 :CUSTOM_ID: h:41ee38d0-9099-4444-85e4-cc8dce00fb9a
 :END:
 
+[ Watch: [[https://protesilaos.com/codelog/2023-07-29-emacs-custom-modeline-tutorial/][write a custom mode line]] (2023-07-29) and [[https://protesilaos.com/codelog/2024-01-13-customize-emacs-mode-line/][customise mode line colours]] (2024-01-13). ]
+
 I use a custom mode line that is close in spirit to the default one.
 The main difference is that I design most of the components to only
 appear in the focused window. This way, I get a minimal view while
@@ -4003,6 +4009,8 @@ static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][T
 :PROPERTIES:
 :CUSTOM_ID: h:fd84b79a-351e-40f0-b383-bf520d77834b
 :END:
+
+[ Watch: [[https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/][abbreviations with abbrev-mode (quick text expansion)]] (2024-02-03). ]
 
 Unlike "dynamic abbreviations" that depend on the text already
 available in a buffer, we can define abbreviations that always expand
@@ -12375,6 +12383,8 @@ As a final step, save `prot-eww-visited-history' to a file (see
 :CUSTOM_ID: h:935adc09-abaa-4413-a5ab-a7a562081c20
 :END:
 
+[ Watch: [[https://protesilaos.com/codelog/2023-07-29-emacs-custom-modeline-tutorial/][write a custom mode line]] (2023-07-29) and [[https://protesilaos.com/codelog/2024-01-13-customize-emacs-mode-line/][customise mode line colours]] (2024-01-13). ]
+
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-modeline.el" :mkdirp yes
 ;;; prot-modeline.el --- Code for my custom mode line -*- lexical-binding: t -*-
 
@@ -13903,6 +13913,8 @@ controlled by `delete-pair-blink-delay'."
 :PROPERTIES:
 :CUSTOM_ID: h:f860bd85-671e-477e-8233-23a8ba43e1c6
 :END:
+
+[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
 
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-prefix.el" :mkdirp yes
 ;;; prot-prefix.el --- Prefix keymap for my dotemacs -*- lexical-binding: t -*-
