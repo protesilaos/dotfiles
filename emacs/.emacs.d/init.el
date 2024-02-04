@@ -381,7 +381,9 @@ DEFINITIONS is a sequence of string and command pairs."
 (defmacro prot-emacs-abbrev (table &rest definitions)
   "Expand abbrev DEFINITIONS for the given TABLE.
 DEFINITIONS is a sequence of string pairs mapping the
-abbreviation to its expansion."
+abbreviation to its expansion.
+
+Also see `prot-emacs-abbrev-function'."
   (declare (indent 1))
   (unless (zerop (% (length definitions) 2))
     (error "Uneven number of key+command pairs"))
@@ -392,6 +394,24 @@ abbreviation to its expansion."
           (when-let ((abbrev (car pair))
                      (expansion (cadr pair)))
             `(define-abbrev table ,abbrev ,expansion)))
+        (seq-split definitions 2))))
+
+(defmacro prot-emacs-abbrev-function (table &rest definitions)
+  "Expand abbrev DEFINITIONS for the given TABLE.
+DEFINITIONS is a sequence of string and function symbol pairs
+mapping the abbreviation to its expansion.
+
+Also see `prot-emacs-abbrev'."
+  (declare (indent 1))
+  (unless (zerop (% (length definitions) 2))
+    (error "Uneven number of key+command pairs"))
+  `(when-let (((abbrev-table-p ,table))
+              (table ,table))
+     ,@(mapcar
+        (lambda (pair)
+          (when-let ((abbrev (car pair))
+                     (expansion (cadr pair)))
+            `(define-abbrev table ,abbrev "" ,expansion)))
         (seq-split definitions 2))))
 
 (defun prot-emacs-return-loaded-packages ()
@@ -413,7 +433,7 @@ that is expanded with the `prot-emacs-package' macro."
 (defconst prot-emacs-font-lock-keywords
   '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
      (2 font-lock-constant-face nil t))
-    ("(\\(prot-emacs-\\(keybind\\|abbrev\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
+    ("(\\(prot-emacs-\\(keybind\\|abbrev\\|abbrev-function\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
      (3 font-lock-variable-name-face nil t))
     ("(\\(prot-emacs-comment\\)\\_>[ \t']*"
      (1 font-lock-preprocessor-face nil t))))

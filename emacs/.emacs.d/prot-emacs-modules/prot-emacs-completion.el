@@ -166,22 +166,48 @@
     "texmacs"        "TeXmacs"
     "typescript"     "TypeScript"
     "visavis"        "vis-à-vis"
-    "youtube"        "YouTube")
+    "youtube"        "YouTube"
+    ":up"            "🙃"
+    ":uni"           "🦄"
+    ":laugh"         "🤣"
+    ":smile"         "😀"
+    ":sun"           "☀️")
+
+  ;; Allow abbrevs with a prefix colon or underscore.  I demonstrated
+  ;; this here: <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
+  (abbrev-table-put text-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:_].*\\|.*\\)")
 
   (with-eval-after-load 'message
     (prot-emacs-abbrev message-mode-abbrev-table
       "bestregards"  "Best regards,\nProtesilaos (or simply \"Prot\")"
       "allthebest"   "All the best,\nProtesilaos (or simply \"Prot\")"
+      "niceday"      "Have a nice day,\nProtesilaos (or simply \"Prot\")"
       "abest"        "All the best,\nProt"
       "bregards"     "Best regards,\nProt"
+      "nday"         "Have a nice day,\nProt"
       "nosrht"       "P.S. I am phasing out SourceHut:
 <https://protesilaos.com/codelog/2024-01-27-sourcehut-no-more/>.
 Development continues on GitHub with GitLab as a mirror."))
+
+  ;; Unlike the above, the `prot-emacs-abbrev-function' macro does not
+  ;; expand a static text, but calls a function which dynamically
+  ;; expands into the requisite form.
+  (require 'prot-abbrev)
+  (prot-emacs-abbrev-function global-abbrev-table
+    "metime" #'prot-abbrev-current-time
+    "medate" #'prot-abbrev-current-date
+    "mejitsi" #'prot-abbrev-jitsi-link)
 
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
   (dolist (hook '(text-mode-hook prog-mode-hook git-commit-mode-hook))
     (add-hook hook #'abbrev-mode))
+
+  ;; Because the *scratch* buffer is produced before we load this, we
+  ;; have to explicitly activate the mode there.
+  (when-let ((scratch (get-buffer "*scratch*")))
+    (with-current-buffer scratch
+      (abbrev-mode 1)))
 
   ;; By default, abbrev asks for confirmation on whether to use
   ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
