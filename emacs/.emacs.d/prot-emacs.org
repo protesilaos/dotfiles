@@ -4085,7 +4085,13 @@ templates to have a real need for it---but it works).
     "mehub"   "https://github.com/protesilaos"
     "meclone" "git@github.com/protesilaos/"
     "melab"   "https://gitlab.com/protesilaos"
-    "medrive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/")
+    "medrive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/"
+    ";web"   "https://protesilaos.com"
+    ";git"   "https://github.com/protesilaos"
+    ";hub"   "https://github.com/protesilaos"
+    ";clone" "git@github.com/protesilaos/"
+    ";lab"   "https://gitlab.com/protesilaos"
+    ";drive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/")
 
   (prot-emacs-abbrev text-mode-abbrev-table
     "asciidoc"       "AsciiDoc"
@@ -4106,15 +4112,16 @@ templates to have a real need for it---but it works).
     "typescript"     "TypeScript"
     "visavis"        "vis-à-vis"
     "youtube"        "YouTube"
-    ":up"            "🙃"
-    ":uni"           "🦄"
-    ":laugh"         "🤣"
-    ":smile"         "😀"
-    ":sun"           "☀️")
+    ";up"            "🙃"
+    ";uni"           "🦄"
+    ";laugh"         "🤣"
+    ";smile"         "😀"
+    ";sun"           "☀️")
 
-  ;; Allow abbrevs with a prefix colon or underscore.  I demonstrated
+  ;; Allow abbrevs with a prefix colon, semicolon, or underscore.  I demonstrated
   ;; this here: <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
-  (abbrev-table-put text-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:_].*\\|.*\\)")
+  (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
+  (abbrev-table-put text-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
 
   (with-eval-after-load 'message
     (prot-emacs-abbrev message-mode-abbrev-table
@@ -4135,7 +4142,10 @@ Development continues on GitHub with GitLab as a mirror."))
   (prot-emacs-abbrev-function global-abbrev-table
     "metime" #'prot-abbrev-current-time
     "medate" #'prot-abbrev-current-date
-    "mejitsi" #'prot-abbrev-jitsi-link)
+    "mejitsi" #'prot-abbrev-jitsi-link
+    ";time" #'prot-abbrev-current-time
+    ";date" #'prot-abbrev-current-date
+    ";jitsi" #'prot-abbrev-jitsi-link)
 
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
