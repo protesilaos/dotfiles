@@ -115,6 +115,7 @@
   (setq completions-header-format (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
   (setq completions-highlight-face 'completions-highlight)
   (setq minibuffer-visible-completions t) ; Emacs 30
+  (setq completions-sort 'historical)
 
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
