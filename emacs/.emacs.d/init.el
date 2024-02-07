@@ -36,12 +36,16 @@ before all other modules of my setup."
                  (const :tag "Do not load a theme module" nil)))
 
 (defcustom prot-emacs-completion-ui 'vertico
-  "Choose minibuffer completion UI between `mct' or `vertico'
+  "Choose minibuffer completion UI between `mct' or `vertico'.
+If the value is nil, the default completion user interface is
+used.  On Emacs 30, this is close the experience with `mct'.
+
 This user option must be set in the `prot-emacs-pre-custom.el'
 file.  If that file exists in the Emacs directory, it is loaded
 before all other modules of my setup."
   :group 'prot-emacs
   :type '(choice :tag "Minibuffer user interface"
+                 (const :tag "Default user interface" nil)
                  (const :tag "The `mct' module" mct)
                  (const :tag "The `vertico' module" vertico)))
 
