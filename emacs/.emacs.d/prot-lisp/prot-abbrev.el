@@ -59,5 +59,21 @@
   "Insert a Jitsi link."
   (insert (concat "https://meet.jit.si/" (format-time-string "%Y%M%dT%H%M%S"))))
 
+(defvar prot-abbrev-update-html-history nil
+  "Minibuffer history for `prot-abbrev-update-html-prompt'.")
+
+(defun prot-abbrev-update-html-prompt ()
+  "Minibuffer prompt for `prot-abbrev-update-html'.
+Use completion among previous entries, retrieving their data from
+`prot-abbrev-update-html-history'."
+  (completing-read
+   "Insert update for manual: "
+   'prot-abbrev-update-html-history
+   nil nil nil 'prot-abbrev-update-html-history))
+
+(defun prot-abbrev-update-html ()
+  "Insert message to update NAME.html page, by prompting for NAME."
+  (insert (format "Update %s.html" (prot-abbrev-update-html-prompt))))
+
 (provide 'prot-abbrev)
 ;;; prot-abbrev.el ends here

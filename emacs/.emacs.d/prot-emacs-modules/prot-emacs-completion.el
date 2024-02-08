@@ -217,6 +217,9 @@ Development continues on GitHub with GitLab as a mirror."))
     ";date" #'prot-abbrev-current-date
     ";jitsi" #'prot-abbrev-jitsi-link)
 
+  (prot-emacs-abbrev-function text-mode-abbrev-table
+    ";update" #'prot-abbrev-update-html)
+
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
   (dolist (hook '(text-mode-hook prog-mode-hook git-commit-mode-hook))

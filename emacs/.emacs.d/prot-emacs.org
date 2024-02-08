@@ -4155,6 +4155,9 @@ Development continues on GitHub with GitLab as a mirror."))
     ";date" #'prot-abbrev-current-date
     ";jitsi" #'prot-abbrev-jitsi-link)
 
+  (prot-emacs-abbrev-function text-mode-abbrev-table
+    ";update" #'prot-abbrev-update-html)
+
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
   (dolist (hook '(text-mode-hook prog-mode-hook git-commit-mode-hook))
@@ -10188,6 +10191,22 @@ not test it as much and do not try to make it perfect.
 (defun prot-abbrev-jitsi-link ()
   "Insert a Jitsi link."
   (insert (concat "https://meet.jit.si/" (format-time-string "%Y%M%dT%H%M%S"))))
+
+(defvar prot-abbrev-update-html-history nil
+  "Minibuffer history for `prot-abbrev-update-html-prompt'.")
+
+(defun prot-abbrev-update-html-prompt ()
+  "Minibuffer prompt for `prot-abbrev-update-html'.
+Use completion among previous entries, retrieving their data from
+`prot-abbrev-update-html-history'."
+  (completing-read
+   "Insert update for manual: "
+   'prot-abbrev-update-html-history
+   nil nil nil 'prot-abbrev-update-html-history))
+
+(defun prot-abbrev-update-html ()
+  "Insert message to update NAME.html page, by prompting for NAME."
+  (insert (format "Update %s.html" (prot-abbrev-update-html-prompt))))
 
 (provide 'prot-abbrev)
 ;;; prot-abbrev.el ends here
