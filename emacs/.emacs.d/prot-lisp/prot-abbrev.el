@@ -57,7 +57,7 @@
 
 (defun prot-abbrev-jitsi-link ()
   "Insert a Jitsi link."
-  (insert (concat "https://meet.jit.si/" (format-time-string "%Y%M%dT%H%M%S"))))
+  (insert (concat "https://meet.jit.si/" (format-time-string "%Y%m%dT%H%M%S"))))
 
 (defvar prot-abbrev-update-html-history nil
   "Minibuffer history for `prot-abbrev-update-html-prompt'.")
