@@ -280,6 +280,16 @@ Specific to the current window's mode line.")
                     'mouse-face 'mode-line-highlight)))
   "Mode line construct for showing remote file name.")
 
+;;;; Dedicated window
+
+(defvar-local prot-modeline-window-dedicated-status
+    '(:eval
+      (when (window-dedicated-p)
+        (propertize " * "
+                    'face 'prot-modeline-indicator-yellow-bg
+                    'mouse-face 'mode-line-highlight)))
+  "Mode line construct for dedicated window indicator.")
+
 ;;;; Evil state
 
 (defvar evil-state)
@@ -630,6 +640,7 @@ Specific to the current window's mode line.")
                      prot-modeline-narrow
                      prot-modeline-input-method
                      prot-modeline-buffer-status
+                     prot-modeline-window-dedicated-status
                      prot-modeline-evil
                      prot-modeline-buffer-identification
                      prot-modeline-major-mode
