@@ -201,8 +201,7 @@
       "abest"        "All the best,\nProt"
       "bregards"     "Best regards,\nProt"
       "nday"         "Have a nice day,\nProt"
-      "nosrht"       "P.S. I am phasing out SourceHut:
-<https://protesilaos.com/codelog/2024-01-27-sourcehut-no-more/>.
+      "nosrht"       "P.S. I am phasing out SourceHut: <https://protesilaos.com/codelog/2024-01-27-sourcehut-no-more/>.
 Development continues on GitHub with GitLab as a mirror."))
 
   ;; Unlike the above, the `prot-emacs-abbrev-function' macro does not
