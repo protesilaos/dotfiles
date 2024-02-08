@@ -107,15 +107,23 @@
 
   (setq completions-format 'one-column)
   (setq completion-show-help nil)
-  (setq completion-auto-help t)
+  (setq completion-auto-help 'always)
   (setq completion-auto-select nil)
   (setq completions-detailed t)
   (setq completion-show-inline-help nil)
   (setq completions-max-height 6)
-  (setq completions-header-format (propertize "%s candidates:\n" 'face 'font-lock-comment-face))
+  (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
   (setq completions-highlight-face 'completions-highlight)
+  (setq minibuffer-completion-auto-choose t)
   (setq minibuffer-visible-completions t) ; Emacs 30
   (setq completions-sort 'historical)
+
+  (unless prot-emacs-completion-ui
+    (prot-emacs-keybind minibuffer-local-completion-map
+      "<up>" #'minibuffer-previous-line-completion
+      "<down>" #'minibuffer-next-line-completion)
+
+    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently))
 
 ;;;; `savehist' (minibuffer and related histories)
   (setq savehist-file (locate-user-emacs-file "savehist"))
