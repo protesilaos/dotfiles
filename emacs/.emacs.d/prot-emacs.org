@@ -5785,6 +5785,8 @@ Here I simply bind some keys for the aforementioned.
 :CUSTOM_ID: h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f
 :END:
 
+[ Watch: [[https://protesilaos.com/codelog/2024-02-08-emacs-window-rules-display-buffer-alist/][control where buffers are displayed (the ~display-buffer-alist~)]] (2024-02-08). ]
+
 The ~display-buffer-alist~ is a powerful user option and somewhat hard
 to get started with. The reason for its difficulty comes from the
 knowledge required to understand the underlying ~display-buffer~
