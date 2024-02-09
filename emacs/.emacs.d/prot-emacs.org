@@ -84,7 +84,7 @@ refer to this =PKGBUILD= I maintain for my purposes:
 
 What you are now reading is the =prot-emacs.org= file. It is the
 document that generates---and thus controls---every other file that
-underpinns my Emacs configuration.
+underpins my Emacs configuration.
 
 This Org file is not loaded directly. Its sole purpose is to produce
 the files that do the actual work. These files are organised by their
@@ -451,7 +451,7 @@ a fairly dark environment. Whereas my arrangement here makes sure that
 Emacs uses a black background if the environment is dark.
 
 Note that in the snippet below I hardcode the black colour (=#000000=)
-to avoid any extra calciulations at this early stage. Otherwise, I
+to avoid any extra calculations at this early stage. Otherwise, I
 would have to check which theme will be loaded and then set its
 background here. That would be too slow for what we need in the early
 initialisation file, thus defeating the purpose of not having a flash
@@ -637,7 +637,7 @@ before all other modules of my setup."
 I normally load some packages that enhance the experience with the
 minibuffer. The upside is that we get more power out of Emacs. The
 downside is that they have a learning curve. Users who do not need
-these features can set the option for nil.
+these features can set the option to nil.
 
 - [[#h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d][The =prot-emacs-completion.el= settings for ~consult~]]
 - [[#h:61863da4-8739-42ae-a30f-6e9d686e1995][The =prot-emacs-completion.el= section about ~embark~]]
@@ -659,7 +659,7 @@ These include packages such as `consult' and `embark'."
 
 I configure Emacs to support the ~tree-sitter~ program, though I do
 not use anything that leverages it. I either code in Emacs Lisp or
-write prose. This user option
+write prose. This user option FIXME (missing continuation)
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
@@ -678,7 +678,7 @@ that adds functionality on top of what the major mode provides."
 :END:
 
 I was a Vim user for three years before eventually switching to Emacs.
-As part of that transition, I also conveted to the Emacs style key
+As part of that transition, I also converted to the Emacs style key
 bindings. They have stronger mnemonics and scale better as a result.
 
 Nevertheless, I provide this option for those who need Vim keys in
@@ -705,7 +705,7 @@ before all other modules of my setup."
 :END:
 
 The ~which-key~ package provides hints for keys that complete the
-currently incomplete sequence. Here we determined whether to load the
+currently incomplete sequence. Here we determine whether to load the
 module or not. I personally never rely on ~which-key~ even if I enable
 its mode. If I ever need to review which key bindings are available I
 will either type =C-h= to complete a key sequence (produces a Help
@@ -851,7 +851,7 @@ altogether, but this is not possible. So here we are...
 :END:
 
 This sets up Emacs for me to be able to type in Greek while still
-using Emacs key bindings involving modifier keys (I don't get tihs if
+using Emacs key bindings involving modifier keys (I don't get this if
 I switch keyboard layouts at the system level).
 
 Watch my video about multilingual editing:
@@ -906,7 +906,7 @@ generic in this regard.
 :END:
 
 I use a literate configuration as the "source of truth" for my Emacs
-configuration. What I do is to specify everytihng in one file and
+configuration. What I do is to specify everything in one file and
 provide instructions for where things should go. The end product
 consists of a large set of files, encompassing the =early-init.el=
 ([[#h:7b7b5898-09f7-4128-8af0-4041f67cb729][The early initialisation of Emacs (=early-init.el=)]]), the =init.el=
@@ -1047,7 +1047,7 @@ packages will rely on ~package-archive-priorities~.
 When loading a theme, Emacs will produce a warning explaining how
 themes are ordinary Elisp and thus can run harmful code. I understand
 why this message is there, but I do not need to be reminded about it.
-Setting this to a non-nil saves me from the occasional warning if I
+Setting this to non-nil saves me from the occasional warning if I
 ever run ~load-theme~ without a =NO-CONFIRM= argument (like this:
 =(load-theme 'modus-operandi :no-confirm)=).
 
@@ -1103,7 +1103,7 @@ then a Do-What-I-Mean wrapper to switch between the two):
 :END:
 
 The de facto standard for configuring packages is ~use-package~. It is
-even built into Emacs, staring with version 29. I have used it before,
+even built into Emacs, starting with version 29. I have used it before,
 but do not like parts of its design, such as how =:demand= is
 something needed because =:bind= autoloads commands, or how =:hook=
 entries do not have a =-hook= suffix by default whereas =:map= do have
@@ -1258,7 +1258,7 @@ Also see `prot-emacs-configure'."
 
 The ~prot-emacs-configure~ is a simplified version of the
 ~prot-emacs-package~ ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The init.el macro to install and configure packages (~prot-emacs-package~)]]).
-It basically evaluated the given Elisp with an optional delay.
+It basically evaluates the given Elisp with an optional delay.
 I don't use this frequently, though it is a nice option to have for
 those cases where some code does not belong to a specific package (or
 I simply want to group many packages as a single block and have a
@@ -1389,7 +1389,7 @@ Also see `prot-emacs-abbrev'."
 :END:
 
 Once in a blue moon, I need to check which packages have been loaded
-by my Emacs. This is what ~prot-emacs-return-loaded-packages~ by
+by my Emacs. This is what ~prot-emacs-return-loaded-packages~ does by
 reading the value of ~package-activated-list~ as well as
 ~prot-emacs-loaded-packages~. The ~prot-emacs-package~ is responsible
 for updating the latter
@@ -1506,7 +1506,7 @@ The individual modules are documented in a section of their own under
 :CUSTOM_ID: h:dc3e88c8-4def-4a3f-b63c-9e845b0f98ef
 :END:
 
-In my =init.el= I have a section when I add my modules to the
+In my =init.el= I have a section where I add my modules to the
 ~load-path~ so that Emacs can run their code ([[#h:e289a614-4f17-4d6c-a028-42fe45aebe66][The init.el arrangements for my own modules and custom libraries]]).
 The subheadings of this chapter define modules, each of which is
 loaded at the end of my =init.el= ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
@@ -2043,9 +2043,9 @@ vertical axis.
 :END:
 
 This package provides a global minor mode to increase the
-spacing/padding of Emacs windows and frames.  The idea is to make
-editing and reading feel more comfortable.  Enable the mode with ~M-x
-spacious-padding-mode~.  Adjust the exact spacing values by modifying
+spacing/padding of Emacs windows and frames. The idea is to make
+editing and reading feel more comfortable. Enable the mode with ~M-x
+spacious-padding-mode~. Adjust the exact spacing values by modifying
 the user option ~spacious-padding-widths~.
 
 Inspiration for this package comes from [[https://github.com/rougier][Nicolas Rougier's impressive designs]]
@@ -2772,7 +2772,7 @@ with ~savehist-mode~ ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs
 :END:
 
 The "auto revert" facility makes Emacs update the contents of a saved
-buffer when its underlying file is change externally. This can happen,
+buffer when its underlying file is changed externally. This can happen,
 for example, when a =git pull= modifies the file we are already
 displaying in a buffer. Emacs thus automatically reverts the buffer to
 reflect the new file contents.
@@ -2851,7 +2851,7 @@ This is what ~display-time-mode~ does. Note that my custom modeline
 shows the time only in the active/selected window. Otherwise, the
 default is to show the time on all mode lines, which is annoying.
 
-The =time.el= librart which provides the ~display-time-mode~ also
+The =time.el= library which provides the ~display-time-mode~ also
 defines functions to get the load average and check a directory for
 new emails. I have no use for the load avergae, while emails counters
 are best handled by my ~notmuch-indicator~ package
@@ -2893,7 +2893,7 @@ are best handled by my ~notmuch-indicator~ package
 
 I communicate with people from across the globe. Knowing their local
 time is of paramount importance. With =M-x world-clock= we get a
-buffer with all cities and concomitant the time zones specified in
+buffer with all cities and concomitant time zones specified in
 ~zoneinfo-style-world-list~. The contents are displayed according to
 the ~world-clock-time-format~. Note that I control the placement of
 these and many other buffers by configuring the ~display-buffer-alist~
@@ -3158,7 +3158,7 @@ command ~prot/vundo-if-repeat-undo~ produces a visualisation of the
 undo steps only after I repeat the ~undo~ command. The assumption is
 that if I am repeating, I am already interested in something further
 back in history, at which point having a representation of it is
-helpful. I am implementing this using the advice mechanism, so that I
+helpful. I am implementing this using the advice mechanism, so that
 (i) the command calls the original function if needed, and (ii) I can
 extend the functionality to many functions without needing to rebind
 any keys.
@@ -3345,7 +3345,7 @@ user experience ([[#h:32f6fe0f-23c4-44cc-97cc-3e5372bd484e][The =prot-shell.el= 
 
 I run a shell to do tihngs like interface with my system's package
 manager or run a program with some flags. =M-x shell= is more than
-enough for this purppose.
+enough for this purpose.
 
 Note that there also exists a shell implemented in Emacs Lisp. It is
 called ~eshell~. Unlike ~shell~, it does not read the =~/.bashrc= and
@@ -3652,7 +3652,7 @@ interpret user input and match candidates accordingly.
 - partial-completion :: This is used for file navigation. Instead of
   typing out a full path like =~/.local/share/fonts=, we do =~/.l/s/f=
   or variants thereof to make the matches unique such as =~/.l/sh/fon=.
-  It is a joy to navigate the fily system in this way.
+  It is a joy to navigate the file system in this way.
 
 - substring :: Matches the given sequence of characters literally
   regardless of where it is in a word. So =pro= will match
@@ -3766,7 +3766,7 @@ I never really need to match letters case-sensitively in the
 minibuffer. Let's have everything ignore casing by default.
 
 [ In some Elisp that I write there is a ~let~ binding for
-  ~case-fold-search~ to make the search case-sensitive. Butf those are
+  ~case-fold-search~ to make the search case-sensitive. But those are
   the exceptions. ]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
@@ -3813,7 +3813,7 @@ starting with =2=.
 
 Minibuffer prompts often have a default value. This is used when the
 user types =RET= without inputting anything. The out-of-the-box
-behaviour of Emacs is to append informative text the prompt like
+behaviour of Emacs is to append informative text to the prompt like
 =(default some-default-value)=. With the tweak to ~minibuffer-default-prompt-format~
 we get a more compact style of =[some-default-value]=, which looks
 better to me.
@@ -3861,7 +3861,7 @@ experience.
   multiple targets show an indicator about this fact. With regard to
   the latter in particular, we have prompts like that of Org to set
   tags for a heading (with =C-c C-q= else =M-x org-set-tags-command=)
-  where more than one candidates can be provided using completion,
+  where more than one candidate can be provided using completion,
   provided each candidate is separated by the ~crm-separator~ (a comma
   by default, though Org uses =:= in that scenario).
 
@@ -3970,7 +3970,7 @@ Histories are useful in two ways:
 
 1. Recent choices appear at the top, so we can find them more easily.
 2. The =M-p= (~previous-history-element~) and =M-n= (~next-history-element~)
-   commands in the minibuffer while be useful right away upon
+   commands in the minibuffer will be useful right away upon
    restoring Emacs (all my packages make good use of minibuffer
    histories per prompt, so =M-p= and =M-n= only show relevant values).
 
@@ -4278,9 +4278,9 @@ capabilities for filtering, asynchronous input, and previewing of the
 current candidate's context.
 
 - A case where filtering is in use is the ~consult-buffer~ command,
-  which many users have a drop-in replacement to the generic =C-x b=
+  which many users have as a drop-in replacement to the generic =C-x b=
   (=M-x switch-to-buffer=). It is a one-stop-shop for buffers,
-  recently visited files (if ~recentf-mode~ is use---I don't),
+  recently visited files (if ~recentf-mode~ is used---I don't),
   bookmarks ([[#h:581aa0ff-b136-4099-a321-3b86edbfbccb][The =prot-emacs-essentials.el= settings for bookmarks]]),
   and, in principle, anything else that defines a source for this
   interface. To filter those source, we can type at the empty
@@ -4367,7 +4367,7 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
 
 [ This feature is subject to [[#h:91477890-49d5-48c3-9627-62295d2ab35d][The =init.el= user option to load extras for minibuffer completion]]. ]
 
-The ~embark~ package by Omar Antolín Camarena, provides a mechanism to
+The ~embark~ package by Omar Antolín Camarena provides a mechanism to
 perform relevant actions in the given context. What constitutes "the
 given context" depends on where the cursor is, such as if it is at the
 end of a symbolic expression in Lisp code or inside the minibuffer.
@@ -4397,7 +4397,7 @@ candidates out of the minibuffer, though it also puts them in a major
 mode that is appropriate for them. Files, for instance, will be placed
 in a Dired buffer ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]).
 
-Depending on the configuations about the "indicator", the ~embark-act~
+Depending on the configurations about the "indicator", the ~embark-act~
 command will display an informative buffer with keys and their
 corresponding commands. We can control its placement the same way we
 do with all well-behaved buffers ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]).
@@ -4538,7 +4538,7 @@ functionality).
 
 The ~marginalia~ package, co-authored by Daniel Mendler and Omar
 Antolín Camarena, provides helpful annotations to the side of
-completion candidates. We its effect, for example, when we call =M-x=:
+completion candidates. We see its effect, for example, when we call =M-x=:
 each command has a brief description next to it (taken from its doc
 string) as well as a key binding, if it has one.
 
@@ -4586,7 +4586,7 @@ thus notice how my =prot-marginalia.el= configures the user option
 In my =init.el= I define a user option to select a user interface for
 the minibuffer ([[#h:f012a254-2716-4c29-a64b-c2b3df34f57f][The =init.el= option to load a minibuffer user interface]]).
 The choice is between my ~mct~ package and ~vertico~ by Daniel
-Mendler. I think ~vertico~ is the better choice overall and is why I
+Mendler. I think ~vertico~ is the better choice overall and that is why I
 set it as the default. Whereas ~mct~ is for users who are more
 familiar with the default minibuffer interface and want a bit more
 interactivity or convenience on top.
@@ -4917,7 +4917,7 @@ see =word|= where the bar represents the cursor. With =C-r= we now
 have =|word= on the same match we were on. I do not like this
 behaviour so I configure ~isearch-repeat-on-direction-change~
 accordingly. Furthermore, I can always control where the cursor is
-left after existing the search either by performing the given motion
+left after exiting the search either by performing the given motion
 (e.g. =M-f= (~forward-word~)) or by using my custom command to exit on
 the opposite end with =C-RET= while in an isearch (~prot-search-isearch-other-end~).
 
@@ -5168,7 +5168,7 @@ Finally, we ~provide~ the module. This is the mirror function of
 [ Watch: <https://protesilaos.com/codelog/2023-06-26-emacs-file-dired-basics/> (2023-06-26) ]
 
 Dired is probably my favourite Emacs tool. It exemplifies how I see
-Emacs a whole: a layer of interactivity on top of Unix. The ~dired~
+Emacs as a whole: a layer of interactivity on top of Unix. The ~dired~
 interface wraps---and puts to synergy---standard commands like ~ls~,
 ~cp~, ~mv~, ~rm~, ~mkdir~, ~chmod~, and related. All while granting
 access to many other conveniences, such as (i) marking files to
@@ -5654,7 +5654,7 @@ deferred loading time to speed up startup
 :CUSTOM_ID: h:cfbea29c-3290-4fd1-a02a-d7e887c15674
 :END:
 
-When a buffer name is reserved, Emacs tried to produce the new buffer
+When a buffer name is reserved, Emacs tries to produce the new buffer
 by finding a suitable variant of the original name. The doc string of
 the variable ~uniquify-buffer-name-style~ does a good job at
 explaining the various patterns:
@@ -5689,7 +5689,7 @@ The built-in ~hl-line-mode~ highlights the current line by adding a
 background colour to it. I normally do not use this functionality. I
 do it only when I need to draw attention to something I am demonstrating.
 
-The ~nil~ value for ~hl-line-sticky-flag~ make the line highlight not
+The ~nil~ value for ~hl-line-sticky-flag~ makes the line highlight not
 show up in unfocused windows. I prefer to keep highlights at a
 minimum, because I then find it harder to focus on where I am. The
 ~hl-line-overlay-priority~ is a more obscure aspect of how Emacs
@@ -5747,7 +5747,7 @@ As with the two previous sections, I do not like to see line numbers
 by default and seldom use ~display-line-numbers-mode~. They do not
 help me navigate a buffer, nor are they relevant in most cases. I
 enable the mode only when I need to compare buffers or to get a sense
-of how far apart two relevant section are in a file.
+of how far apart two relevant sections are in a file.
 
 You will notice that I use absolute numbers even for narrowed buffers,
 while I set a relative count for contextual lines when ~prot-emacs-load-evil~
@@ -5823,7 +5823,7 @@ Here is the gist of what we do with it:
   (info "(elisp) Buffer Display Action Alists")
   #+end_src
 
-In my =prot-window.el= library, I define functions that determined how
+In my =prot-window.el= library, I define functions that determine how
 a buffer should be displayed, given size considerations ([[#h:35b8a0a5-c447-4301-a404-bc274596238d][The =prot-window.el= library]]).
 You will find the functions ~prot-window-shell-or-term-p~ to determine
 what a shell or terminal is, ~prot-window-display-buffer-below-or-pop~
@@ -5967,7 +5967,7 @@ I have a custom library that defines a function which performs line
 truncation without displaying a message about the fact ([[#h:3fccfadf-22e9-457f-b9fd-ed1b48600d23][The =prot-common.el= library]]).
 Why do we need this? Check the output of =M-x calendar= in a tiny
 window and you will see the reason. In short, it is better to have
-lines not show their full contents that to have something that looks
+lines not show their full contents than to have something that looks
 completely broken.
 
 The whole point of using hooks is to make these decisions on a
@@ -6065,7 +6065,7 @@ best changes I ever did to boost my productivity:
 Since I am using my ~beframe~ package to isolate buffers per frame
 ([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]), I appreciate the
 feature of Emacs 29 to undo the deletion of frames. Note the key
-binding I use for this purpose. It overrides one of the alternative
+binding I use for this purpose. It overrides one of the alternatives
 for the standard ~undo~ command, though I personally only ever use
 =C-/=: everything else is free to use as I see fit.
 
@@ -6194,8 +6194,8 @@ built-in tools, I use my ~prot-emacs-configure~ macro ([[#h:54a4cb92-e7f8-4291-a
 [ Watch: [[https://protesilaos.com/codelog/2023-11-17-emacs-ediff-basics/][Emacs: ediff basics]] (2023-12-30) ]
 
 The built-in ~ediff~ feature provides several commands that let us
-compare files or buffers side-by-side. The default of ~ediff~ are bad,
-in my opinion: it put buffers one on top of the other and places the
+compare files or buffers side-by-side. The defaults of ~ediff~ are bad,
+in my opinion: it puts buffers one on top of the other and places the
 "control panel" in a separate Emacs frame. The first time I tried to
 use it, I thought I broke my setup because it is unlike anything we
 normally interact with. As such, the settings I have for
@@ -6323,7 +6323,7 @@ The ~diff-mode~ buffers specify the ~outline-regexp~, meaning that
 they can be used with the built-in ~outline-minor-mode~ to, for
 example, fold the invidual diff hunks and move between them ([[#h:ffff5f7b-a62b-4d4a-ae29-af75402e5c35][The =prot-emacs-langs.el= settings for ~outline-minor-mode~]]).
 Personally, I combine this feature with my ~prot-search-outline~
-command to quickly jump to an outline heading use minibuffer
+command to quickly jump to an outline heading using minibuffer
 completion ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]).
 
 Outside of Emacs, I have settings for ~git~ which produce more
@@ -6372,7 +6372,7 @@ accoutrements.
 With =vc=, we can carry out all the common actions related to version
 control, such as to commit (to make a record of) changes and pull/push
 them from/to the remote (i.e. the server with which we sync our
-project). Whatever the VCS we use, the workflow is the same:
+project). Whatever VCS we use, the workflow is the same:
 
 - Make changes to a file.
 - Type =C-x v v= (~vc-next-action~).
@@ -6632,7 +6632,7 @@ are committed.
 
 Magit has a refined understanding of context. We can target an
 individual line, a single diff hunk, a single file, or a range of
-files for staging or unstaging (among others). If the the region is
+files for staging or unstaging (among others). If the region is
 active, then only the selection is affected. If the cursor is on or
 somewhere inside a diff hunk, then that is targeted. If the cursor is
 over a file, then the file is the target. Same idea for the section
@@ -6732,7 +6732,7 @@ otherwise plain text notation. Some of the headline features:
   labelling task states.
 - Quickly shift a "thing" (heading, list item, paragraph, ...) further
   up or down in the file.
-- Use tables with formulas as a lightweight alternative to speadsheet
+- Use tables with formulas as a lightweight alternative to spreadsheet
   software.
 - Capture data or fleeting thoughts efficiently using templates.
 - Maintain an agenda for all your date-bound activities.
@@ -6763,13 +6763,13 @@ Given that I am setting up lots of built-in symbols, I do not need the
 :CUSTOM_ID: h:94d48381-1711-4d6b-8449-918bc1e3836c
 :END:
 
-The ~calendar~ is technically independent of Org, though it tighly
+The ~calendar~ is technically independent of Org, though it tightly
 integrates with it. We witness this when we are setting timestamps,
 such as while setting a =SCHEDULED= or =DEADLINE= entry for a given
 heading. All I do here is set some stylistic preferences.
 
 Note that Emacs also has a ~diary~ command. I used it for a while, but
-Org is far more capable, though I switched to it completely.
+Org is far more capable, so I switched to it completely.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Calendar
@@ -7445,7 +7445,7 @@ example, automatically inserts a closing parenthesis when the user
 inputs an opening parenthesis. Same idea with quotes, performed by the
 ~electric-quote-mode~. While the ~electric-indent-mode~ tries to be
 smart about how to indent a line, which is fine for programming
-purposes but makes a mess of things in Org and related because you
+purposes, it makes a mess of things in Org and related because you
 have to delete back to the beginning of a line if you want to "escape"
 from the indentation of a list or something.
 
@@ -7995,17 +7995,17 @@ affects.
 :CUSTOM_ID: h:e86a66dc-7ef9-4f09-ad7e-946de2034e8d
 :END:
 
-Denote is a simple note-taking tool for Emacs.  It is based on the idea
+Denote is a simple note-taking tool for Emacs. It is based on the idea
 that notes should follow a predictable and descriptive file-naming
-scheme.  The file name must offer a clear indication of what the note is
-about, without reference to any other metadata.  Denote basically
+scheme. The file name must offer a clear indication of what the note is
+about, without reference to any other metadata. Denote basically
 streamlines the creation of such files while providing facilities to
 link between them.
 
-Denote's file-naming scheme is not limited to "notes".  It can be used
+Denote's file-naming scheme is not limited to "notes". It can be used
 for all types of file, including those that are not editable in Emacs,
-such as videos.  Naming files in a consistent way makes their
-filtering and retrieval considerably easier.  Denote provides relevant
+such as videos. Naming files in a consistent way makes their
+filtering and retrieval considerably easier. Denote provides relevant
 facilities to rename files, regardless of file type.
 
 + Package name (GNU ELPA): ~denote~
@@ -8148,8 +8148,8 @@ facilities to rename files, regardless of file type.
 This package provides a simple approach to setting up a "focus mode".
 It uses the ~page-delimiter~ (typically =^L=) or the outline together
 with some commands to move between pages whether narrowing is in effect
-or not.  It also provides some optional aesthetic tweaks which come into
-effect when the buffer-local ~logos-focus-mode~ is enabled.  The manual
+or not. It also provides some optional aesthetic tweaks which come into
+effect when the buffer-local ~logos-focus-mode~ is enabled. The manual
 shows how to extend the code to achieve the desired result.
 
 (all my videos since early 2022 use ~logos~).
@@ -8238,12 +8238,12 @@ environment (watch: [[https://protesilaos.com/codelog/2020-10-21-emacs-favourite
 buffer navigation. Same for themes and fonts. Then we have integration
 with ~org-capture~ to quickly produce a task that shows up on the Org
 agenda and has a link back to the original email ([[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates]]).
-And there is also te seamless connection between Emacs and GPG, so any
+And there is also the seamless connection between Emacs and GPG, so any
 encrypted file/email is decrypted behind the scenes with us
 experiencing it as every other regular file. Fantastic stuff!
 
-In this portion of the configuration, I am configuring several of
-built-in variable, so I use the ~prot-emacs-configure~ macro to do so
+In this portion of the configuration, I am configuring several
+built-in variables, so I use the ~prot-emacs-configure~ macro to do so
 with a short delay post startup ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el" :mkdirp yes
@@ -8422,7 +8422,7 @@ to select some files and attach them to the currently open message
 composition buffer ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]). Do it by typing
 =C-c C-m C-a= (~gnus-dired-attach~). This also works without an open
 message composition buffer. In that case, it produces such a buffer,
-with the attachments in plce. Though I usually have the message buffer
+with the attachments in place. Though I usually have the message buffer
 in place before going to ~dired~ to find some attachments
 ([[#h:49815c07-737f-4f10-95ee-63640f9ae18b][The =prot-emacs-email.el= message composition and encryption settings (=message.el=)]]).
 
@@ -8779,7 +8779,7 @@ behind a button. The idea is to hide most of the text and reveal it on
 demand. I never want that: if there is a long section of text there, I
 need to see it.
 
-Note that the presentation of HTML messages is affect by the state of
+Note that the presentation of HTML messages is affected by the state of
 the built-in Simple HTML Renderer ([[#h:60483672-aeb6-427b-bbef-54a5c31e39ab][The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)]]).
 Concretely, there is the ~shr-use-colors~ option, which I disable
 because I do not want hardcoded values to mess up my theme. As such,
@@ -8892,10 +8892,10 @@ nicer.
 :END:
 
 This is a simple package that renders an indicator with an email count
-of the ~notmuch~ index on the Emacs mode line.  The underlying mechanism
+of the ~notmuch~ index on the Emacs mode line. The underlying mechanism
 is that of ~notmuch-count(1)~, which is used to find the number of items
-that match the given search terms.  In practice, the user can define one
-or more searches and display their counters.  These form a listing which
+that match the given search terms. In practice, the user can define one
+or more searches and display their counters. These form a listing which
 realistically is like: =@50 😱1000 💕0= for unread messages, bills, and
 love letters, respectively.
 
@@ -9450,7 +9450,7 @@ SyncState *
 
 This file is stored at =~/.config/msmtp/config= (well, unless you
 change the XDG directory but then you know what you are doing). Just
-as with ~mbsync~, I retrieve the user name and password via command
+as with ~mbsync~, I retrieve the user name and password via commands
 that read from the =~/.authinfo= file ([[#h:bf540a85-12a6-4005-bf00-2ff3370e5adb][Contents of my =.mbsyncrc=]]).
 
 #+begin_example sh
@@ -10061,7 +10061,7 @@ files. The user must handle this step by invoking the command
 This module is subject to a user option and is not enabled by default
 ([[#h:04b5b80d-22af-4167-b28c-84a80c3cd0e4][The =init.el= user option to use Super for key bindings]]). It defines
 a new key map that uses the Super key for common commands. Super is
-often used by the desktop environment, so them may be cases where keys
+often used by the desktop environment, so there may be cases where keys
 are not passed through to Emacs at all.
 
 Here is what is included:
