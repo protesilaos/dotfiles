@@ -659,7 +659,8 @@ These include packages such as `consult' and `embark'."
 
 I configure Emacs to support the ~tree-sitter~ program, though I do
 not use anything that leverages it. I either code in Emacs Lisp or
-write prose. This user option FIXME (missing continuation)
+write prose. This user option is in place for those who want to use my
+configuration as a basis for their own setup.
 
 Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
