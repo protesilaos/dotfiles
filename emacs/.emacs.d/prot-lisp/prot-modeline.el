@@ -173,6 +173,21 @@ package).")
   "Face for modeline indicators with a background."
   :group 'prot-modeline-faces)
 
+(defface prot-modeline-indicator-gray
+  '((t :inherit shadow))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
+(defface prot-modeline-indicator-gray-bg
+  '((default :inherit (bold prot-modeline-indicator-button))
+    (((class color) (min-colors 88) (background light))
+     :background "#808080" :foreground "white")
+    (((class color) (min-colors 88) (background dark))
+     :background "#a0a0a0" :foreground "black")
+    (t :inverse-video t))
+  "Face for modeline indicatovrs with a background."
+  :group 'prot-modeline-faces)
+
 ;;;; Common helper functions
 
 (defun prot-modeline--string-truncate-p (str)
@@ -286,7 +301,7 @@ Specific to the current window's mode line.")
     '(:eval
       (when (window-dedicated-p)
         (propertize " = "
-                    'face 'prot-modeline-indicator-magenta-bg
+                    'face 'prot-modeline-indicator-gray-bg
                     'mouse-face 'mode-line-highlight)))
   "Mode line construct for dedicated window indicator.")
 
