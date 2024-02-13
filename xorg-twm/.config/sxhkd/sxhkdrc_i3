@@ -1,13 +1,13 @@
 #
 # SXHKD module with i3-specific commands
 #
-# Part of my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
+# Part of my dotfiles: https://github.com/protesilaos/dotfiles
 #
 ### Description
 #
 # Partial configuration file for the Simple X Hotkey Daemon.  Meant to
 # work with `i3`.  This is part of my dotfiles, which are managed with
-# GNU Stow.  See https://git.sr.ht/~protesilaos/dotfiles
+# GNU Stow.  See https://github.com/protesilaos/dotfiles
 
 ### Code
 

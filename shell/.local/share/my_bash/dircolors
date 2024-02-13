@@ -2,7 +2,7 @@
 # Then I modified it heavily.  For Emacs in particular, the M-x shell
 # benefits from the inclusion of `TERM dumb-emacs-ansi'.  Check my
 # .bashrc for the relevant entry.  Everything is part of my dotfiles:
-# <https://git.sr.ht/~protesilaos/dotfiles>.
+# <https://github.com/protesilaos/dotfiles>.
 
 
 # Configuration file for dircolors, a utility to help you set the

@@ -19,7 +19,7 @@
 #
 # This script is a core part of my custom desktop session, centred
 # around GNU Emacs and a tiling window manager:
-# <https://git.sr.ht/~protesilaos/dotfiles>.
+# <https://github.com/protesilaos/dotfiles>.
 #
 ### Code:
 
