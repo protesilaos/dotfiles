@@ -102,7 +102,6 @@
                   prot-window-shell-or-term-p
                   ,world-clock-buffer-name))
            (prot-window-display-buffer-below-or-pop)
-           (dedicated . t)
            (body-function . prot-window-select-fit-size))
           ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)

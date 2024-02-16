@@ -5896,7 +5896,6 @@ to a certain height.
                   prot-window-shell-or-term-p
                   ,world-clock-buffer-name))
            (prot-window-display-buffer-below-or-pop)
-           (dedicated . t)
            (body-function . prot-window-select-fit-size))
           ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
@@ -16727,7 +16726,7 @@ number (integer or floating point) or a function.")
      (t
       (error "The value of `%s' is neither a number nor a function" key)))))
 
-(defun prot-window-select-fit-size (window &rest _)
+(defun prot-window-select-fit-size (window)
   "Select WINDOW and resize it.
 The resize pertains to the maximum and minimum values for height
 and width, per `prot-window-window-sizes'.
@@ -16739,7 +16738,13 @@ Use this as the `body-function' in a `display-buffer-alist' entry."
    (prot-window--get-window-size :max-height)
    (prot-window--get-window-size :min-height)
    (prot-window--get-window-size :max-width)
-   (prot-window--get-window-size :min-width)))
+   (prot-window--get-window-size :min-width))
+  ;; If we did not use `display-buffer-below-selected', then we must
+  ;; be in a lateral window, which has more space.  Then we do not
+  ;; want to dedicate the window to this buffer, because we will be
+  ;; running out of space.
+  (when (or (window-in-direction 'above) (window-in-direction 'below))
+    (set-window-dedicated-p window t)))
 
 (defun prot-window--get-display-buffer-below-or-pop ()
   "Return list of functions for `prot-window-display-buffer-below-or-pop'."
@@ -16774,6 +16779,18 @@ use in `display-buffer-alist'."
       ;; REVIEW 2022-07-14: Is this robust?
       (and (not (derived-mode-p 'message-mode 'text-mode))
            (derived-mode-p 'eshell-mode 'shell-mode 'comint-mode 'fundamental-mode)))))
+
+(defun prot-window-remove-dedicated (&rest _)
+  "Remove dedicated window parameter.
+Use this as :after advice to `delete-other-windows' and
+`delete-window'."
+  (when (one-window-p :no-mini)
+    (set-window-dedicated-p nil nil)))
+
+(mapc
+ (lambda (fn)
+   (advice-add fn :after #'prot-window-remove-dedicated))
+ '(delete-other-windows delete-window))
 
 (defmacro prot-window-define-full-frame (name &rest args)
   "Define command to call ARGS in new frame with `display-buffer-full-frame' bound.
