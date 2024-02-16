@@ -1293,6 +1293,8 @@ Also see `prot-emacs-package'."
 :CUSTOM_ID: h:d3684ec0-a972-4033-a4d6-41ee16e891d9
 :END:
 
+[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
+
 This Lisp macro does not try to be too smart. It simply reduces the
 typing we have to do to define key bindings. As with the underlying
 ~define-key~ function, it can bind a key sequence to a command, a nil
@@ -2747,6 +2749,8 @@ Also see [[#h:5685df62-4484-42ad-a062-d55ab19022e3][the =prot-emacs-essentials.e
 :PROPERTIES:
 :CUSTOM_ID: h:5685df62-4484-42ad-a062-d55ab19022e3
 :END:
+
+[ Watch: [[https://protesilaos.com/codelog/2023-06-28-emacs-mark-register-basics/][Mark and register basics]] (2023-06-28). ]
 
 Much like bookmarks, registers store data that we can reinstate
 quickly ([[#h:581aa0ff-b136-4099-a321-3b86edbfbccb][The =prot-emacs-essentials.el= settings for bookmarks]]). A
@@ -6168,6 +6172,8 @@ As always, we ~provide~ the module. This is the mirror function of
 :PROPERTIES:
 :CUSTOM_ID: h:65e3eff5-0bff-4e1f-b6c5-0d3aa1a0d232
 :END:
+
+[ Watch: [[https://protesilaos.com/codelog/2023-08-03-contribute-core-emacs/][Contribute to GNU Emacs core]] (2023-08-03). ]
 
 Emacs can handle several version control programs, though I only ever
 use ~git~. Version control is essential to any public-facing
