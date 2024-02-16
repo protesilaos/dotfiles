@@ -432,8 +432,12 @@
     "<C-S-return>" nil
     "C-M-S-<right>" nil
     "C-M-S-<left>" nil
+    "C-c ;" nil
+    "M-." #'org-edit-special ; alias for C-c ' (mnenomic is global M-. that goes to source)
     "C-c M-l" #'org-insert-last-stored-link
     "C-c C-M-l" #'org-toggle-link-display)
+
+  (define-key org-src-mode-map (kbd "M-,") #'org-edit-src-exit)
 
   (prot-emacs-keybind narrow-map
     "b" #'org-narrow-to-block
