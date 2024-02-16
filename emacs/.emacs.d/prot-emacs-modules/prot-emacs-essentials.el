@@ -190,6 +190,20 @@
 ;;;; Auto save buffers visiting files
   (setq auto-save-visited-interval 2)
   (setq remote-file-name-inhibit-auto-save-visited t)
+
+  (defvar prot/auto-save-visited-blocklist
+    '(message-mode)
+    "List of major modes where files should not be auto-saved.")
+
+  (defun prot/auto-save-visited-p ()
+    "Predicate function for `auto-save-visited-predicate'.
+  Do not save the buffer if its major mode is among those specified
+  in `prot/auto-save-visited-blocklist'."
+    (and (derived-mode-p 'text-mode 'prog-mode)
+         (not (memq major-mode prot/auto-save-visited-blocklist))))
+
+  (setq auto-save-visited-predicate #'prot/auto-save-visited-p)
+
   (auto-save-visited-mode 1)
 
 ;;;; Delete selection

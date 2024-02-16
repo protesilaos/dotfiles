@@ -2800,10 +2800,28 @@ buffers to a separate file, leaving the original file intact. We can
 then recover the auto-saved alternative file, if we want, but I prefer
 to just write directly to disk.
 
+The ~prot/auto-save-visited-p~ and ~prot/auto-save-visited-blocklist~
+are set up for future review as I continue using this mode. Basically,
+there are cases where I do not want auto-saving to happen.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Auto save buffers visiting files
   (setq auto-save-visited-interval 2)
   (setq remote-file-name-inhibit-auto-save-visited t)
+
+  (defvar prot/auto-save-visited-blocklist
+    '(message-mode)
+    "List of major modes where files should not be auto-saved.")
+
+  (defun prot/auto-save-visited-p ()
+    "Predicate function for `auto-save-visited-predicate'.
+  Do not save the buffer if its major mode is among those specified
+  in `prot/auto-save-visited-blocklist'."
+    (and (derived-mode-p 'text-mode 'prog-mode)
+         (not (memq major-mode prot/auto-save-visited-blocklist))))
+
+  (setq auto-save-visited-predicate #'prot/auto-save-visited-p)
+
   (auto-save-visited-mode 1)
 #+end_src
 
