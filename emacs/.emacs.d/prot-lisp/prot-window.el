@@ -167,8 +167,9 @@ call NAME as a function."
 ;; will ever set it to the left.  It feels awkward there.
 (defun prot-window-scroll-bar-placement ()
   "Control the placement of scroll bars."
-  (setq default-frame-scroll-bars 'right)
-  (set-scroll-bar-mode 'right))
+  (when scroll-bar-mode
+    (setq default-frame-scroll-bars 'right)
+    (set-scroll-bar-mode 'right)))
 
 (add-hook 'scroll-bar-mode-hook #'prot-window-scroll-bar-placement)
 
