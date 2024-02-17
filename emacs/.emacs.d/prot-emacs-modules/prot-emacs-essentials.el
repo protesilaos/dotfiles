@@ -60,8 +60,9 @@
     "C-x C-c C-c" #'save-buffers-kill-emacs
     "C-h h" nil
     "M-`" nil
-    "C-z" prot-prefix-map
-    "<f2>" prot-prefix-map ; override that two-column gimmick
+    "<insert>" 'prot-prefix
+    "C-z" 'prot-prefix
+    "<f2>" 'prot-prefix ; override that two-column gimmick
     "ESC ESC" #'prot-simple-keyboard-quit-dwim
     "C-g" #'prot-simple-keyboard-quit-dwim
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
