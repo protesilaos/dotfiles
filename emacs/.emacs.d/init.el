@@ -197,10 +197,23 @@ before all other modules of my setup."
 (setq custom-safe-themes t)
 
 (defmacro prot-emacs-comment (&rest body)
-  "Do nothing with BODY and return nil.
-Unlike `ignore', produce no side effects."
+  "Determine what to do with BODY.
+
+If BODY contains an unquoted plist of the form (:eval t) then
+return BODY inside a `progn'.
+
+Otherwise, do nothing with BODY and return nil, with no side
+effects."
   (declare (indent defun))
-  nil)
+  (let ((eval))
+    (dolist (element body)
+      (when-let (((plistp element))
+                 (key (car element))
+                 ((eq key :eval))
+                 (val (cadr element)))
+        (setq eval val
+              body (delq element body))))
+    (when eval `(progn ,@body))))
 
 ;; Sample use of `prot-emacs-comment'.  The function
 ;; `prot-emacs-insert-comment-macro' is never evaluated.

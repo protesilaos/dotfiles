@@ -1069,14 +1069,40 @@ that wraps some code, effectively commenting it out, while keeping
 indentation and syntax highlighting intact.
 
 What I have here is technically not commenting out the code, because
-it is still read, but I take it.
+the expansion of the macro is nil, not the actual code with comments
+around it.
+
+#+begin_example emacs-lisp
+(defmacro prot-emacs-comment (&rest body)
+  "Do nothing with BODY and return nil, with no side effects."
+  (declare (indent defun))
+  nil)
+#+end_example
+
+The above is an example. What I actually use is the following. It
+behaves the same as above, except when it reads a plist of the form
+=(:eval t)=. The idea is for me to quickly activate something I want
+to test by passing that to the macro. So here we have it:
 
 #+begin_src emacs-lisp :tangle "init.el"
 (defmacro prot-emacs-comment (&rest body)
-  "Do nothing with BODY and return nil.
-Unlike `ignore', produce no side effects."
+  "Determine what to do with BODY.
+
+If BODY contains an unquoted plist of the form (:eval t) then
+return BODY inside a `progn'.
+
+Otherwise, do nothing with BODY and return nil, with no side
+effects."
   (declare (indent defun))
-  nil)
+  (let ((eval))
+    (dolist (element body)
+      (when-let (((plistp element))
+                 (key (car element))
+                 ((eq key :eval))
+                 (val (cadr element)))
+        (setq eval val
+              body (delq element body))))
+    (when eval `(progn ,@body))))
 #+end_src
 
 And here is a function I might develop further to quickly insert
@@ -1625,6 +1651,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment
+  (:eval nil)
   (progn
     (mapc #'disable-theme custom-enabled-themes)
 
@@ -1742,6 +1769,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment
+  (:eval nil)
   (progn
     (mapc #'disable-theme custom-enabled-themes)
 
@@ -1888,6 +1916,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment
+  (:eval nil)
   (progn
     (mapc #'disable-theme custom-enabled-themes)
 
