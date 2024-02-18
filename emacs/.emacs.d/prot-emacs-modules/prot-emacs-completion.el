@@ -260,6 +260,7 @@ Development continues on GitHub with GitLab as a mirror."))
 (prot-emacs-package corfu
   (:install t)
   (:delay 5)
+  (setq corfu-preview-current nil)
   (setq corfu-min-width 20)
 
   (global-corfu-mode 1)
