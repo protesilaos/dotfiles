@@ -75,6 +75,31 @@
       (evil-force-prot-basic-state)
     (evil-force-normal-state)))
 
+;;;; Basic commands
+
+;; FIXME 2024-02-18: Make sure that v does the same thing as V.
+(defun prot-evil-shift-left (&optional beg end)
+  "Left shift the region and keep it highlighted.
+The region is between BEG and END, if it is active.  Otherwise,
+it is retrieved interactively with regular Evil motions."
+  (interactive "r")
+  (if (region-active-p)
+      (progn
+        (evil-shift-left beg end)
+        (evil-active-region 1))
+    (call-interactively #'evil-shift-left)))
+
+(defun prot-evil-shift-right (&optional beg end)
+  "Right shift the region and keep it highlighted.
+The region is between BEG and END, if it is active.  Otherwise,
+it is retrieved interactively with regular Evil motions."
+  (interactive "r")
+  (if (region-active-p)
+      (progn
+        (evil-shift-right beg end)
+        (evil-active-region 1))
+    (call-interactively #'evil-shift-right)))
+
 ;;;; The "erase" operator
 
 (evil-define-operator prot-evil-erase (beg end type &rest _)

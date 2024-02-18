@@ -220,7 +220,9 @@
     (kbd "C-r") #'isearch-backward
     (kbd "K") #'prot-evil-erase
     (kbd "g d") #'xref-find-definitions
-    (kbd "g D") #'xref-go-back)
+    (kbd "g D") #'xref-go-back
+    (kbd "<") #'prot-evil-shift-left
+    (kbd ">") #'prot-evil-shift-right)
 
 ;;;; Set up `devil-mode' to reduce modifier key usage
 
