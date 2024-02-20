@@ -13963,26 +13963,19 @@ To be used with `advice-add'.")
 (declare-function org-id-new "org")
 (declare-function org-entry-put "org")
 
-;; Copied from this article (with minor tweaks from my side):
+;; Original idea:
 ;; <https://writequit.org/articles/emacs-org-mode-generate-ids.html>.
-(defun prot-org--id-get (&optional pom create prefix)
-  "Get the CUSTOM_ID property of the entry at point-or-marker POM.
-
-If POM is nil, refer to the entry at point.  If the entry does
-not have an CUSTOM_ID, the function returns nil.  However, when
-CREATE is non nil, create a CUSTOM_ID if none is present already.
-PREFIX will be passed through to `org-id-new'.  In any case, the
-CUSTOM_ID of the entry is returned."
-  (org-with-point-at pom
-    (let ((id (org-entry-get nil "CUSTOM_ID")))
-      (cond
-       ((and id (stringp id) (string-match "\\S-" id))
-        id)
-       (create
-        (setq id (org-id-new (concat prefix "h")))
-        (org-entry-put pom "CUSTOM_ID" id)
-        (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
-        id)))))
+(defun prot-org--id-get ()
+  "Get the CUSTOM_ID of the current entry.
+If the entry already has a CUSTOM_ID, return it as-is, else
+create a new one."
+  (let* ((pos (point))
+         (id (org-entry-get pos "CUSTOM_ID")))
+    (if (and id (stringp id) (string-match-p "\\S-" id))
+        id
+      (setq id (org-id-new "h"))
+      (org-entry-put pos "CUSTOM_ID" id)
+      id)))
 
 (declare-function org-map-entries "org")
 
@@ -13991,13 +13984,13 @@ CUSTOM_ID of the entry is returned."
   "Add missing CUSTOM_ID to all headlines in current file."
   (interactive)
   (org-map-entries
-   (lambda () (prot-org--id-get (point) t))))
+   (lambda () (prot-org--id-get))))
 
 ;;;###autoload
 (defun prot-org-id-headline ()
   "Add missing CUSTOM_ID to headline at point."
   (interactive)
-  (prot-org--id-get (point) t))
+  (prot-org--id-get))
 
 (provide 'prot-org)
 ;;; prot-org.el ends here
