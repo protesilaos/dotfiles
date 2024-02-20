@@ -8342,7 +8342,7 @@ file to establish a connection. This is not limited to emails, mind
 you, as we can have credentials such as for running ~sudo~ via TRAMP
 or logging in to IRC with the ~rcirc~ command ([[#h:f23d9cef-ab7b-4486-a070-9c7ae664eadf][The =prot-emacs-web.el= module]]).
 
-For my email purposes, Emacs does not read from the ~auto-sources~,
+For my email purposes, Emacs does not read from the ~auth-sources~,
 though I do keep this in place for other programs to read from. These
 programs include ~mbsync~ and ~msmtp~ ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][How I use email in Emacs]]).
 
