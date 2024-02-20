@@ -68,7 +68,7 @@ Use completion among previous entries, retrieving their data from
 `prot-abbrev-update-html-history'."
   (completing-read
    "Insert update for manual: "
-   'prot-abbrev-update-html-history
+   prot-abbrev-update-html-history
    nil nil nil 'prot-abbrev-update-html-history))
 
 (defun prot-abbrev-update-html ()
