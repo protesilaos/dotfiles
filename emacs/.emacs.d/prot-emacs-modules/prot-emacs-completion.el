@@ -191,7 +191,14 @@
   ;; Allow abbrevs with a prefix colon, semicolon, or underscore.  I demonstrated
   ;; this here: <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
   (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
-  (abbrev-table-put text-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
+
+  (with-eval-after-load 'text-mode
+    (abbrev-table-put text-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)"))
+
+  (with-eval-after-load 'org
+    (prot-emacs-abbrev org-mode-abbrev-table
+      ";dev" "{{{development-version}}}")
+    (abbrev-table-put org-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)"))
 
   (with-eval-after-load 'message
     (prot-emacs-abbrev message-mode-abbrev-table
