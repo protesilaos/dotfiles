@@ -198,10 +198,11 @@
 
   (defun prot/auto-save-visited-p ()
     "Predicate function for `auto-save-visited-predicate'.
-  Do not save the buffer if its major mode is among those specified
-  in `prot/auto-save-visited-blocklist'."
-    (and (derived-mode-p 'text-mode 'prog-mode)
-         (not (memq major-mode prot/auto-save-visited-blocklist))))
+    Do not save the buffer if its major mode parent is among those
+    specified in `prot/auto-save-visited-blocklist'."
+    (when (derived-mode-p 'text-mode 'prog-mode)
+      (not (or (memq major-mode prot/auto-save-visited-blocklist)
+               (memq (get major-mode 'derived-mode-parent) prot/auto-save-visited-blocklist)))))
 
   (setq auto-save-visited-predicate #'prot/auto-save-visited-p)
 
