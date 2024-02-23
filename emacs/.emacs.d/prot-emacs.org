@@ -1387,11 +1387,11 @@ making an abbreviation to a function."
        (progn
          ,@(mapcar
             (lambda (pair)
-              (when-let ((abbrev (car pair))
-                         (expansion (cadr pair)))
-                (if (functionp expansion)
-                    `(define-abbrev ,table ,abbrev "" ,expansion)
-                  `(define-abbrev ,table ,abbrev ,expansion))))
+              (let ((abbrev (nth 0 pair))
+                    (expansion (nth 1 pair)))
+                (if (stringp expansion)
+                    `(define-abbrev ,table ,abbrev ,expansion)
+                  `(define-abbrev ,table ,abbrev "" ,expansion))))
             (seq-split definitions 2)))
      (error "%s is not an abbrev table" ,table)))
 #+end_src
