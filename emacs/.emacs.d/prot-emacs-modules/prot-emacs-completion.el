@@ -211,9 +211,11 @@
       "nosrht"       "P.S. I am phasing out SourceHut: <https://protesilaos.com/codelog/2024-01-27-sourcehut-no-more/>.
 Development continues on GitHub with GitLab as a mirror."))
 
-  ;; Unlike the above, the `prot-emacs-abbrev-function' macro does not
-  ;; expand a static text, but calls a function which dynamically
-  ;; expands into the requisite form.
+  ;; The `prot-emacs-abbrev' macro, which simplifies how we use
+  ;; `define-abbrev', does not only expand a static text.  It can take
+  ;; a pair of string and function to trigger the latter when the
+  ;; former is inserted.  Think of it like the basis of a simplistic
+  ;; templating system.
   (require 'prot-abbrev)
   (prot-emacs-abbrev global-abbrev-table
     "metime" #'prot-abbrev-current-time
@@ -223,7 +225,7 @@ Development continues on GitHub with GitLab as a mirror."))
     ";date" #'prot-abbrev-current-date
     ";jitsi" #'prot-abbrev-jitsi-link)
 
-  (prot-emacs-abbrev-function text-mode-abbrev-table
+  (prot-emacs-abbrev text-mode-abbrev-table
     ";update" #'prot-abbrev-update-html)
 
   ;; message-mode derives from text-mode, so we don't need a separate

@@ -410,8 +410,8 @@ making an abbreviation to a function."
               (when-let ((abbrev (car pair))
                          (expansion (cadr pair)))
                 (if (functionp expansion)
-                    `(define-abbrev table ,abbrev "" ,expansion)
-                  `(define-abbrev table ,abbrev ,expansion))))
+                    `(define-abbrev ,table ,abbrev "" ,expansion)
+                  `(define-abbrev ,table ,abbrev ,expansion))))
             (seq-split definitions 2)))
      (error "%s is not an abbrev table" ,table)))
 
