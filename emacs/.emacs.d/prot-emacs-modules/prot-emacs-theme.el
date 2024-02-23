@@ -195,16 +195,16 @@
            :default-weight semilight
            :default-height 115
            :bold-weight extrabold)
+          (large
+           :inherit medium
+           :default-height 150)
           (live-stream
            :default-family "Iosevka Comfy Wide Motion"
-           :default-height 130
+           :default-height 150
            :default-weight medium
            :fixed-pitch-family "Iosevka Comfy Wide Motion"
            :variable-pitch-family "Iosevka Comfy Wide Duo"
            :bold-weight extrabold)
-          (large
-           :inherit medium
-           :default-height 150)
           (presentation
            :default-height 180)
           (t
