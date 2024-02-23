@@ -215,7 +215,7 @@ Development continues on GitHub with GitLab as a mirror."))
   ;; expand a static text, but calls a function which dynamically
   ;; expands into the requisite form.
   (require 'prot-abbrev)
-  (prot-emacs-abbrev-function global-abbrev-table
+  (prot-emacs-abbrev global-abbrev-table
     "metime" #'prot-abbrev-current-time
     "medate" #'prot-abbrev-current-date
     "mejitsi" #'prot-abbrev-jitsi-link

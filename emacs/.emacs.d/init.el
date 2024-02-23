@@ -397,39 +397,23 @@ DEFINITIONS is a sequence of string and command pairs."
 
 (defmacro prot-emacs-abbrev (table &rest definitions)
   "Expand abbrev DEFINITIONS for the given TABLE.
-DEFINITIONS is a sequence of string pairs mapping the
-abbreviation to its expansion.
-
-Also see `prot-emacs-abbrev-function'."
+DEFINITIONS is a sequence of (i) string pairs mapping the
+abbreviation to its expansion or (ii) a string and symbol pair
+making an abbreviation to a function."
   (declare (indent 1))
   (unless (zerop (% (length definitions) 2))
     (error "Uneven number of key+command pairs"))
-  `(when-let (((abbrev-table-p ,table))
-              (table ,table))
-     ,@(mapcar
-        (lambda (pair)
-          (when-let ((abbrev (car pair))
-                     (expansion (cadr pair)))
-            `(define-abbrev table ,abbrev ,expansion)))
-        (seq-split definitions 2))))
-
-(defmacro prot-emacs-abbrev-function (table &rest definitions)
-  "Expand abbrev DEFINITIONS for the given TABLE.
-DEFINITIONS is a sequence of string and function symbol pairs
-mapping the abbreviation to its expansion.
-
-Also see `prot-emacs-abbrev'."
-  (declare (indent 1))
-  (unless (zerop (% (length definitions) 2))
-    (error "Uneven number of key+command pairs"))
-  `(when-let (((abbrev-table-p ,table))
-              (table ,table))
-     ,@(mapcar
-        (lambda (pair)
-          (when-let ((abbrev (car pair))
-                     (expansion (cadr pair)))
-            `(define-abbrev table ,abbrev "" ,expansion)))
-        (seq-split definitions 2))))
+  `(if (abbrev-table-p ,table)
+       (progn
+         ,@(mapcar
+            (lambda (pair)
+              (when-let ((abbrev (car pair))
+                         (expansion (cadr pair)))
+                (if (functionp expansion)
+                    `(define-abbrev table ,abbrev "" ,expansion)
+                  `(define-abbrev table ,abbrev ,expansion))))
+            (seq-split definitions 2)))
+     (error "%s is not an abbrev table" ,table)))
 
 (defun prot-emacs-return-loaded-packages ()
   "Return a list of all loaded packages.
