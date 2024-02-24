@@ -3690,7 +3690,8 @@ with my customised mode line ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =pr
   (dolist (input '(self-insert-command org-self-insert-command))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
-  (dolist (event '(mouse-event-p mouse-movement-p mwheel-scroll))
+  (dolist (event '( mouse-event-p mouse-movement-p mwheel-scroll handle-select-window
+                    mouse-set-point mouse-drag-region))
     (add-to-list 'keycast-substitute-alist `(,event nil))))
 
 (provide 'prot-emacs-modeline)
