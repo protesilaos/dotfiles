@@ -68,10 +68,10 @@
            :header-line-width 4
            :mode-line-width 6
            :tab-width 4
-           :right-divider-width 30
+           :right-divider-width 1
            :scroll-bar-width 8
-           :left-fringe-width 8
-           :right-fringe-width 8))
+           :left-fringe-width 20
+           :right-fringe-width 20))
 
   ;; ;; Read the doc string of `spacious-padding-subtle-mode-line' as
   ;; ;; it is very flexible.
