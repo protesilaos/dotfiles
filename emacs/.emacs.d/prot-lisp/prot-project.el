@@ -36,6 +36,37 @@
 (require 'project)
 (require 'tab-bar)
 
+(defun prot-project--switch (directory &optional command)
+  "Do the work of `project-switch-project' in the given DIRECTORY.
+With optional COMMAND, run it in DIRECTORY."
+  (let ((command (or (when (functionp command) command)
+                     (if (symbolp project-switch-commands)
+                         project-switch-commands
+                       (project--switch-project-command))))
+        (buffer (current-buffer)))
+    (unwind-protect
+        (progn
+          (setq-local project-current-directory-override directory)
+          (call-interactively command))
+      (with-current-buffer buffer
+        (kill-local-variable 'project-current-directory-override)))))
+
+(defun prot-project--frame-names ()
+  "Return a list of frame names."
+  (mapcar #'car (make-frame-names-alist)))
+
+;;;###autoload
+(defun prot-project-switch (directory)
+  "Switch to project DIRECTORY.
+If DIRECTORY exists in a frame, select it.  Otherwise switch to
+the project in DIRECTORY using `project-dired'."
+  (interactive (list (funcall project-prompter)))
+  (project--remember-dir directory)
+  (let ((name (file-name-nondirectory (directory-file-name directory))))
+    (if (member name (prot-project--frame-names))
+        (select-frame-by-name name)
+      (prot-project--switch directory 'project-dired))))
+
 ;; NOTE 2024-01-15 07:07:52 +0200: I define the "in tab" functions as
 ;; a coding exercise.  I don't have a use for it, as I prefer to use
 ;; the approach of my `beframe' package instead.
@@ -47,24 +78,11 @@ If FRAME is nil, use the current frame."
      (alist-get 'name tab))
    (frame-parameter frame 'tabs)))
 
-(defun prot-project-in-tab--switch (directory)
-  "Do the work of `project-switch-project' in the given DIRECTORY."
-  (let ((command (if (symbolp project-switch-commands)
-                     project-switch-commands
-                   (project--switch-project-command)))
-        (buffer (current-buffer)))
-    (unwind-protect
-        (progn
-          (setq-local project-current-directory-override directory)
-          (call-interactively command))
-      (with-current-buffer buffer
-        (kill-local-variable 'project-current-directory-override)))))
-
 (defun prot-project-in-tab--create-tab (directory name)
   "Create new tab visiting DIRECTORY and named NAME."
   (tab-new)
   (find-file directory)
-  (prot-project-in-tab--switch directory)
+  (prot-project--switch directory)
   (tab-rename name)
   ;; NOTE 2024-01-15 06:52 +0200: I am adding this because
   ;; `tab-rename' is not persistent for some reason. Probably a bug...

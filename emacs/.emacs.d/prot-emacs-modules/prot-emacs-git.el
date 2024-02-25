@@ -30,6 +30,12 @@
     "C-x p <return>" #'project-dired
     "C-x p <delete>" #'project-forget-project)
 
+  (require 'prot-project)
+  ;; Also check the command `prot-project-in-tab'.  I do not use it
+  ;; because I prefer to manage my buffers in frames, with my
+  ;; `beframe' package.
+  (define-key project-prefix-map "p" #'prot-project-switch)
+
 ;;;; `diff-mode'
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
