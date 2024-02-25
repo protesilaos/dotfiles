@@ -217,10 +217,10 @@
   (:delay 5)
 
   (setq notmuch-indicator-args
-        '((:terms "tag:unread and tag:inbox" :label "Ⓐ" :face prot-modeline-indicator-green)
-          (:terms "tag:unread and tag:inbox and not tag:package and not tag:coach" :label "Ⓤ" :face prot-modeline-indicator-blue)
-          (:terms "tag:unread and tag:package" :label "Ⓟ" :face prot-modeline-indicator-cyan)
-          (:terms "tag:unread and tag:coach" :label "Ⓒ" :face prot-modeline-indicator-magenta))
+        '((:terms "tag:unread and tag:inbox" :label "[A] " :face prot-modeline-indicator-green)
+          (:terms "tag:unread and tag:inbox and not tag:package and not tag:coach" :label "[U] " :face prot-modeline-indicator-cyan)
+          (:terms "tag:unread and tag:package" :label "[P] " :face prot-modeline-indicator-magenta)
+          (:terms "tag:unread and tag:coach" :label "[C] " :face prot-modeline-indicator-red))
 
         notmuch-indicator-refresh-count (* 60 3)
         notmuch-indicator-hide-empty-counters t
