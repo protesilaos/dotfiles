@@ -19,7 +19,7 @@
 ;;;; Message composition (`message')
   (setq mail-user-agent 'message-user-agent
         message-mail-user-agent t) ; use `mail-user-agent'
-  (setq mail-header-separator "*****")
+  (setq mail-header-separator "--text follows this line--")
   (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
   (setq compose-mail-user-agent-warnings nil)
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
@@ -31,7 +31,7 @@
         message-ignored-cited-headers "") ; default is "." for all headers
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
-  (setq message-wide-reply-confirm-recipients t)
+  (setq message-wide-reply-confirm-recipients nil)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (add-hook 'message-setup-hook #'message-sort-headers)
