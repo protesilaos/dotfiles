@@ -98,7 +98,7 @@
                   (derived-mode . Buffer-menu-mode)
                   (derived-mode . log-view-mode)
                   (derived-mode . help-mode) ; See the hooks for `visual-line-mode'
-                  "\\*\\(|Buffer List\\|Occur\\|vc-change-log\\).*"
+                  "\\*\\(|Buffer List\\|Occur\\|vc-change-log\\|eldoc.*\\).*"
                   prot-window-shell-or-term-p
                   ,world-clock-buffer-name))
            (prot-window-display-buffer-below-or-pop)
