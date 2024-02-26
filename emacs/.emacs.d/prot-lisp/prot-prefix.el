@@ -103,6 +103,7 @@
   "u" #'winner-undo
   "r" #'winner-redo
   "b" #'balance-windows-area
+  "d" #'toggle-window-dedicated
   "0" #'delete-window
   "1" #'delete-other-windows
   "!" #'delete-other-windows-vertically
