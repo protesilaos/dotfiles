@@ -2520,50 +2520,29 @@ This module load basic configurations that apply to most facets of
 Emacs. Many of my own custom libraries are loaded here
 ([[#h:e289a614-4f17-4d6c-a028-42fe45aebe66][The init.el arrangements for my own modules and custom libraries]]).
 
-I start the file with a call to the ~prot-emacs-configure~ macro. I
-wrap all sorts of related calls and introduce a one second delay to
-their evaluation. This helps speed up startup time.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el" :mkdirp yes
-;;; Essential configurations
-(prot-emacs-configure
-  (:delay 1)
-#+end_src
+In every section, I start with a call to the ~prot-emacs-configure~
+macro. I wrap all sorts of related calls and introduce a one second
+delay to their evaluation. This helps speed up startup time ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
 *** The =prot-emacs-essentials.el= block that loads my custom libraries
 :PROPERTIES:
 :CUSTOM_ID: h:713ede33-3802-40c6-a8e3-7e1fc0d0a924
 :END:
 
-At the first line of this module, I add a call to
-~prot-emacs-configure~ ([[#h:0ef52ed9-7b86-4329-ae4e-eff9ab8d07f2][The =prot-emacs-essentials.el= module]]).
-Then I load several of my custom libraries. Check their definitions:
+At the first line of this module, I call ~prot-emacs-configure~ ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
+Then I set all sorts of basic yet not necessarily related settings.
+Better use =C-h v= (=M-x describe-variable=) to learn about each of
+these. Since I am here, I also unbind or repurpose some of the default
+key bindings.
 
-- [[#h:3fccfadf-22e9-457f-b9fd-ed1b48600d23][The =prot-common.el= library]]
-- [[#h:5f78e837-0d27-4390-bd9a-6d0bca57fa50][The =prot-simple.el= library]]
-- [[#h:efebaec4-7273-4c5a-a4c4-9f99df0e46bb][The =prot-scratch.el= library]]
-- [[#h:0a3f076d-386d-47e6-8af9-f17d02d507cf][The =prot-pair.el= library]]
-- [[#h:7affcbca-0808-4159-8eab-faa7973aefc7][The =prot-comment.el= library]]
-- [[#h:f860bd85-671e-477e-8233-23a8ba43e1c6][The =prot-prefix.el= library]]
+Remember that ~prot-emacs-keybind~ is a macro of mine that simplifies
+how we type multiple ~define-key~ calls ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891d9][The init.el macro to bind keys (~prot-emacs-keybind~)]]).
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-  ;; NOTE 2023-05-20: Normally those would not have to be `require'd
-  ;; as every point of entry is autoloaded.  But Emacs does not have
-  ;; an autoloads file for them, as they are not installed the usual
-  ;; way and I do not want to generate such a file: the `require' is
-  ;; fine.
-  (require 'prot-common)
-  (require 'prot-simple)
-  (require 'prot-scratch)
-  (require 'prot-pair)
-  (require 'prot-comment)
-  (require 'prot-prefix)
-#+end_src
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el" :mkdirp yes
+;;; Essential configurations
+(prot-emacs-configure
+  (:delay 1)
 
-Then I define all sorts of settings. Better use =C-h v= (=M-x
-describe-variable=) to learn about each of these.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; General settings and common custom functions (prot-simple.el)
   (setq blink-matching-paren nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
@@ -2582,85 +2561,104 @@ describe-variable=) to learn about each of these.
         duplicate-region-final-position -1)
   (setq scroll-error-top-bottom t)
 
-  (setq prot-simple-date-specifier "%F")
-  (setq prot-simple-time-specifier "%R %z")
-
-  (setq prot-scratch-default-mode 'text-mode)
-
-  ;; NEVER tell me which key can call a command that I specifically
-  ;; invoked with M-x: I have a good reason to use it that way.
-  (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore)
-#+end_src
-
-*** The =prot-emacs-essentials.el= section for comments
-:PROPERTIES:
-:CUSTOM_ID: h:85755648-bf1f-408b-bc65-4db357fbf1dd
-:END:
-
-A big part of writing code is the ability to quickly insert comments.
-I have a custom library that builds on what Emacs makes available by
-default ([[#h:7affcbca-0808-4159-8eab-faa7973aefc7][The =prot-comment.el= library]]). While I use this section of
-the module to set my desired configurations.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-;;;; Comments (prot-comment.el)
-  (setq comment-empty-lines t)
-  (setq comment-fill-column nil)
-  (setq comment-multi-line t)
-  (setq comment-style 'multi-line)
-  (setq-default comment-column 0)
-
-  (setq prot-comment-comment-keywords '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
-  (setq prot-comment-timestamp-format-concise "%F")
-  (setq prot-comment-timestamp-format-verbose "%F %T %z")
-#+end_src
-
-*** The =prot-emacs-essentials.el= section with key bindings
-:PROPERTIES:
-:CUSTOM_ID: h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7
-:END:
-
-[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
-
-I always define key bindings as the final part of a configuration
-block. Now that we are done with tweaking variables, let us define
-keys. You will notice that I redefine some default key bindings whose
-original command I have no use for.
-
-Remember that ~prot-emacs-keybind~ is a macro of mine that simplifies
-how we type multiple ~define-key~ calls ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891d9][The init.el macro to bind keys (~prot-emacs-keybind~)]]).
-
-Many of the functions here are defined in my own libraries as noted
-earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.el= block that loads my custom libraries]]).
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-  ;; General commands
+  ;; Keys I unbind here are either to avoid accidents or to bind them
+  ;; elsewhere later in the configuration.
   (prot-emacs-keybind global-map
     "<insert>" nil
-    "C-x C-z" nil
+    "C-z" nil ; I have a window manager, thanks!
+    "C-x C-z" nil ; same idea as above
     "C-x C-c" nil ; avoid accidentally exiting Emacs
-    "C-x C-c C-c" #'save-buffers-kill-emacs
-    "C-h h" nil
+    "C-x C-c C-c" #'save-buffers-kill-emacs ; more cumbersome, less error-prone
+    "C-h h" nil ; Never show that "hello" file
     "M-`" nil
-    "<insert>" 'prot-prefix
-    "C-z" 'prot-prefix
-    "<f2>" 'prot-prefix ; override that two-column gimmick
-    "ESC ESC" #'prot-simple-keyboard-quit-dwim
-    "C-g" #'prot-simple-keyboard-quit-dwim
+    "M-o" #'delete-blank-lines ; alias for C-x C-o
+    "M-SPC" #'cycle-spacing
+    "M-z" #'zap-up-to-char ; NOT `zap-to-char'
+    "M-c" #'capitalize-dwim
+    "M-l" #'downcase-dwim ; "lower" case
+    "M-u" #'upcase-dwim
+    "M-=" #'count-words
+    "C-x O" #'next-multiframe-window
     "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
     "C-h u" #'apropos-user-option
     "C-h F" #'apropos-function ; lower case is `describe-function'
     "C-h V" #'apropos-variable ; lower case is `describe-variable'
     "C-h L" #'apropos-library ; lower case is `view-lossage'
-    "C-h c" #'describe-char ; overrides `describe-key-briefly'
+    "C-h c" #'describe-char) ; overrides `describe-key-briefly'
+
+  (prot-emacs-keybind prog-mode-map
+    "C-M-d" #'up-list ; confusing name for what looks like "down" to me
+    "<C-M-backspace>" #'backward-kill-sexp)
+
+  ;; Keymap for buffers (Emacs28)
+  (prot-emacs-keybind ctl-x-x-map
+    "f" #'follow-mode  ; override `font-lock-update'
+    "r" #'rename-uniquely
+    "l" #'visual-line-mode))
+#+end_src
+
+*** The =prot-emacs-essentials.el= section about =prot-common.el= (custom basic functions)
+:PROPERTIES:
+:CUSTOM_ID: h:116854fa-2e31-4d23-ae6f-72f57ed571bc
+:END:
+
+[[#h:3fccfadf-22e9-457f-b9fd-ed1b48600d23][The =prot-common.el= library]] contains custom snippets that I use in
+various other parts of my setup, notably my custom libraries
+("packages"). All I do here is load it, so that others will have it
+available by the time they need it.
+
+Since the =prot-common.el= defines some basic functions that can be
+used outside the narrow confines of my custom code, I set them up
+here:
+
+1. Truncate lines by default in a number of places and do not produce
+   a message about the fact. Note that the function used to achieve
+   this, i.e. ~prot-common-truncate-lines-silently~, may also be set
+   up elsewhere and described in that context. Here I only cover the
+   basic parent modes.
+
+2. Make =M-x= not produce any message about how such and such command
+   can also be called via this or that key binding. If I am doing
+   something with =M-x= instead of a key binding, I have a good reason
+   for it and do not want the extra noise.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+(prot-emacs-package prot-common
+  (:delay 1)
+  (mapc
+   (lambda (hook)
+     (add-hook hook #'prot-common-truncate-lines-silently))
+   '(fundamental-mode-hook text-mode-hook prog-mode-hook special-mode-hook))
+  ;; NEVER tell me which key can call a command that I specifically
+  ;; invoked with M-x: I have a good reason to use it that way.
+  (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore))
+#+end_src
+
+*** The =prot-emacs-essentials.el= section about =prot-simple.el= (custom basic commands)
+:PROPERTIES:
+:CUSTOM_ID: h:f15bc843-2dd1-4792-95ec-9b7b6e561804
+:END:
+
+[[#h:5f78e837-0d27-4390-bd9a-6d0bca57fa50][The =prot-simple.el= library]] is done in the same spirit as the
+built-in =simple.el=: it is a file with a collection of little
+commands that are useful for everyday tasks. I bind these commands to
+keys.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+(prot-emacs-package prot-simple
+  (:delay 1)
+  (setq prot-simple-date-specifier "%F")
+  (setq prot-simple-time-specifier "%R %z")
+
+  (prot-emacs-keybind global-map
+    "ESC ESC" #'prot-simple-keyboard-quit-dwim
+    "C-g" #'prot-simple-keyboard-quit-dwim
     "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
-    "M-o" #'delete-blank-lines   ; alias for C-x C-o
     "M-k" #'prot-simple-kill-line-backward
     "C-S-d" #'prot-simple-duplicate-line-or-region
     "C-S-w" #'prot-simple-copy-line
     "C-S-y" #'prot-simple-yank-replace-line-or-region
-    "M-SPC" #'cycle-spacing
     "C-v" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
     "M-v" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
     "<C-return>" #'prot-simple-new-line-below
@@ -2669,15 +2667,7 @@ earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.e
     "C-=" #'prot-simple-insert-date
     "C-<" #'prot-simple-escape-url-dwim
     ;; "C->" #'prot-simple-insert-line-prefix-dwim
-    "C-'" #'prot-pair-insert
-    "M-'" #'prot-pair-insert
-    "M-\\" #'prot-pair-delete
-    "M-z" #'zap-up-to-char ; NOT `zap-to-char'
     "M-Z" #'prot-simple-zap-to-char-backward
-    "<C-M-backspace>" #'backward-kill-sexp
-    "M-c" #'capitalize-dwim
-    "M-l" #'downcase-dwim        ; "lower" case
-    "M-u" #'upcase-dwim
     ;; Commands for object transposition
     "C-S-p" #'prot-simple-move-above-dwim
     "C-S-n" #'prot-simple-move-below-dwim
@@ -2690,30 +2680,118 @@ earlier ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-essentials.e
     ;; Commands for paragraphs
     "M-Q" #'prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
-    "C-x O" #'next-multiframe-window
     "C-x n k" #'prot-simple-delete-page-delimiters
     "C-x M-r" #'prot-simple-swap-window-buffers
     ;; Commands for buffers
-    "M-=" #'count-words
     "<C-f2>" #'prot-simple-rename-file-and-buffer
     "C-x k" #'prot-simple-kill-buffer-current
-    "C-x K" #'kill-buffer
+    "C-x K" #'kill-buffer ; leaving this here to contrast with the above
     "M-s b" #'prot-simple-buffers-major-mode
-    "M-s v" #'prot-simple-buffers-vc-root
-    ;; Scratch buffer for major mode of choice
-    "C-c s" #'prot-scratch-buffer
-    ;; Comments
+    "M-s v" #'prot-simple-buffers-vc-root))
+#+end_src
+
+*** The =prot-emacs-essentials.el= section about =prot-scratch.el= (scratch buffer per major mode)
+:PROPERTIES:
+:CUSTOM_ID: h:45b4fffa-2ce3-4119-b8c9-081a75135d98
+:END:
+
+[[#h:efebaec4-7273-4c5a-a4c4-9f99df0e46bb][The =prot-scratch.el= library]] provides the means to create a scratch
+buffer for a given major mode. It has the option to set a default
+major mode to use. It can also copy the active region into the scratch
+buffer. Read the doc string of the command ~prot-scratch-buffer~.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;;; Scratch buffers per major mode (prot-scratch.el)
+(prot-emacs-package prot-scratch
+  (:delay 5)
+  (setq prot-scratch-default-mode 'text-mode)
+  (define-key global-map (kbd "C-c s") #'prot-scratch-buffer))
+#+end_src
+
+*** The =prot-emacs-essentials.el= section about =prot-pair.el= (insert character pairs)
+:PROPERTIES:
+:CUSTOM_ID: h:48d2bab5-241f-49dd-9554-8a4dcedce75e
+:END:
+
+[[#h:0a3f076d-386d-47e6-8af9-f17d02d507cf][The =prot-pair.el= library]] defines a mechanism to insert character
+pairs around the symbol at point or the active region. There is a user
+option called ~prot-pair-pairs~, which specifies which characters form
+pairs. This can also run a function to set a pair according to some
+context, environment, or any such condition. I use it to insert
+quotation marks specific to natural languages I have set up.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;;; Insert character pairs (prot-pair.el)
+(prot-emacs-package prot-pair
+  (:delay 5)
+  (prot-emacs-keybind global-map
+    "C-'" #'prot-pair-insert
+    "M-'" #'prot-pair-insert
+    "M-\\" #'prot-pair-delete))
+#+end_src
+
+*** The =prot-emacs-essentials.el= section for comments
+:PROPERTIES:
+:CUSTOM_ID: h:85755648-bf1f-408b-bc65-4db357fbf1dd
+:END:
+
+[[#h:7affcbca-0808-4159-8eab-faa7973aefc7][The =prot-comment.el= library]] expands the built-in commenting
+facilities with what makes sense to me. The ~prot-comment~ command is
+like the built-in ~comment-dwim~, but toggles linewise commenting
+instead of appending to them by default. While the ~prot-comment-timestamp-keyword~
+prompts for a keyword among ~prot-comment-keywords~ and formats it as
+a comment with a timestamp next to it. The format of the latter is
+controlled by the user option ~prot-comment-timestamp-format-concise~
+or ~prot-comment-timestamp-format-verbose~ (the verbose is set when
+the command is called with a prefix argument (=C-u= by default)).
+
+A big part of writing code is the ability to quickly insert comments.
+I have a custom library that builds on what Emacs makes available by
+default ([[#h:7affcbca-0808-4159-8eab-faa7973aefc7][The =prot-comment.el= library]]). While I use this section of
+the module to set my desired configurations.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;;; Comments (prot-comment.el)
+(prot-emacs-package prot-comment
+  (:delay 5)
+  (setq comment-empty-lines t)
+  (setq comment-fill-column nil)
+  (setq comment-multi-line t)
+  (setq comment-style 'multi-line)
+  (setq-default comment-column 0)
+
+  (setq prot-comment-comment-keywords '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
+  (setq prot-comment-timestamp-format-concise "%F")
+  (setq prot-comment-timestamp-format-verbose "%F %T %z")
+
+  (prot-emacs-keybind global-map
     "C-;" #'prot-comment
-    "C-x C-;" #'prot-comment-timestamp-keyword)
+    "C-x C-;" #'prot-comment-timestamp-keyword))
+#+end_src
 
-  (prot-emacs-keybind prog-mode-map
-    "C-M-d" #'up-list) ; confusing name for what looks like "down" to me
+*** The =prot-emacs-essentials.el= section about =prot-prefix.el= (prefix nested keymaps)
+:PROPERTIES:
+:CUSTOM_ID: h:15ad94b3-f714-4b39-973e-b68c76b38be3
+:END:
 
-  ;; Keymap for buffers (Emacs28)
-  (prot-emacs-keybind ctl-x-x-map
-    "f" #'follow-mode  ; override `font-lock-update'
-    "r" #'rename-uniquely
-    "l" #'visual-line-mode)
+[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
+
+[[#h:f860bd85-671e-477e-8233-23a8ba43e1c6][The =prot-prefix.el= library]] defines a set of keymaps with commonly
+used commands and puts them behind a prefix map. The idea is to hit a
+series of keys to get to the desired command. Keymaps are organised
+thematically and rely on strong mnemonics, such as =b= for buffers,
+=w= for windows, and so on. The ~which-key~ package is a nice addition
+for this purpose, as it visualises incomplete key bindings after a
+configurable amount of time ([[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][The =prot-emacs-which-key.el= module]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;;; Prefix keymap (prot-prefix.el)
+(prot-emacs-package prot-prefix
+  (:delay 1)
+  (prot-emacs-keybind global-map
+    "<insert>" 'prot-prefix
+    "<f2>" 'prot-prefix ; override that two-column gimmick
+    "C-z" 'prot-prefix))
 #+end_src
 
 *** The =prot-emacs-essentials.el= mouse configurations
@@ -2726,6 +2804,8 @@ demonstration.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Mouse and mouse wheel behaviour
+(prot-emacs-configure
+  (:delay 5)
   (setq mouse-autoselect-window t) ; complements the auto-selection of my tiling window manager
 
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
@@ -2746,7 +2826,7 @@ demonstration.
                 next-screen-context-lines 0)
 
   (mouse-wheel-mode 1)
-  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window)
+  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for ~repeat-mode~
@@ -2771,6 +2851,8 @@ you can probably use Emacs just fine without it.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Repeatable key chords (repeat-mode)
+(prot-emacs-configure
+  (:delay 5)
   (setq repeat-on-final-keystroke t
         repeat-exit-timeout 5
         repeat-exit-key "<escape>"
@@ -2780,7 +2862,7 @@ you can probably use Emacs just fine without it.
         ;; Technically, this is not in repeal.el, though it is the
         ;; same idea.
         set-mark-command-repeat-pop t)
-  (repeat-mode 1)
+  (repeat-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for bookmarks
@@ -2800,6 +2882,8 @@ Also see [[#h:5685df62-4484-42ad-a062-d55ab19022e3][the =prot-emacs-essentials.e
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Built-in bookmarking framework (bookmark.el)
+(prot-emacs-configure
+  (:delay 1)
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations nil)
   (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon
@@ -2809,7 +2893,7 @@ Also see [[#h:5685df62-4484-42ad-a062-d55ab19022e3][the =prot-emacs-essentials.e
   ;; (e.g. power failure).
   (setq bookmark-save-flag 1)
 
-  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for registers
@@ -2834,8 +2918,10 @@ with ~savehist-mode~ ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Registers (registers.el)
-(setq register-preview-delay 0.8
-        register-preview-function #'register-preview-default)
+(prot-emacs-configure
+  (:delay 5)
+  (setq register-preview-delay 0.8
+        register-preview-function #'register-preview-default))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for auto revert
@@ -2851,8 +2937,10 @@ reflect the new file contents.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Auto revert mode
+(prot-emacs-configure
+  (:delay 5)
   (setq auto-revert-verbose t)
-  (global-auto-revert-mode 1)
+  (global-auto-revert-mode 1))
 #+end_src
 
 *** COMMENT The =prot-emacs-essentials.el= settings for auto saving files (~auto-save-visited-mode~)
@@ -2877,6 +2965,8 @@ there are cases where I do not want auto-saving to happen.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Auto save buffers visiting files
+(prot-emacs-configure
+  (:delay 5)
   (setq auto-save-visited-interval 2)
   (setq remote-file-name-inhibit-auto-save-visited t)
 
@@ -2894,7 +2984,7 @@ there are cases where I do not want auto-saving to happen.
 
   (setq auto-save-visited-predicate #'prot/auto-save-visited-p)
 
-  (auto-save-visited-mode 1)
+  (auto-save-visited-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section for ~delete-selection-mode~
@@ -2908,7 +2998,9 @@ default. With ~delete-selection-mode~ we get it.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Delete selection
-  (delete-selection-mode 1)
+(prot-emacs-configure
+  (:delay 5)
+  (delete-selection-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for tooltips
@@ -2923,9 +3015,11 @@ messages (e.g. a different colour or a slant).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Tooltips (tooltip-mode)
+(prot-emacs-configure
+  (:delay 5)
   (setq tooltip-delay 0.5
         tooltip-short-delay 0.5
-        x-gtk-use-system-tooltips nil
+        x-gtk-use-system-tooltips t
         tooltip-frame-parameters
         '((name . "tooltip")
           (internal-border-width . 10)
@@ -2933,7 +3027,7 @@ messages (e.g. a different colour or a slant).
           (no-special-glyphs . t)))
 
   (autoload #'tooltip-mode "tooltip")
-  (tooltip-mode 1)
+  (tooltip-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= configurations for the date and time (~display-time-mode~)
@@ -2954,6 +3048,8 @@ are best handled by my ~notmuch-indicator~ package
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Display current time
+(prot-emacs-configure
+  (:delay 1)
   (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
@@ -2978,7 +3074,7 @@ are best handled by my ~notmuch-indicator~ package
            'help-echo (format-time-string "%a %b %e, %Y" now))
           " "))
 
-  (display-time-mode 1)
+  (display-time-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for the ~world-clock~
@@ -2996,6 +3092,8 @@ these and many other buffers by configuring the ~display-buffer-alist~
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; World clock (M-x world-clock)
+(prot-emacs-configure
+  (:delay 5)
   (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
         '(("America/Los_Angeles" "Los Angeles")
@@ -3029,7 +3127,7 @@ these and many other buffers by configuring the ~display-buffer-alist~
   (setq world-clock-time-format "%R %z (%Z)	%A %d %B")
   (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
   (setq world-clock-timer-enable t)
-  (setq world-clock-timer-second 60)
+  (setq world-clock-timer-second 60))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for manpages
@@ -3047,7 +3145,9 @@ conform with the newer ~display-buffer-alist~...
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; `man' (manpages)
-  (setq Man-notify-method 'pushy) ; does not obey `display-buffer-alist'
+(prot-emacs-configure
+  (:delay 10)
+  (setq Man-notify-method 'pushy)) ; does not obey `display-buffer-alist'
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for ~proced~
@@ -3063,11 +3163,13 @@ use this interface to check if some process is doing more than it should.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; `proced' (process monitor, similar to `top')
+(prot-emacs-configure
+  (:delay 10)
   (setq proced-auto-update-flag t)
   (setq proced-enable-color-flag t) ; Emacs 29
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
-  (setq proced-filter 'user)
+  (setq proced-filter 'user))
 #+end_src
 
 *** The =prot-emacs-essentials.el= arrangement to run Emacs as a server
@@ -3095,6 +3197,8 @@ One is enough.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Emacs server (allow emacsclient to connect to running session)
+(prot-emacs-configure
+  (:delay 1)
   (require 'server)
   (setq server-client-instructions nil)
   (unless (server-running-p)
