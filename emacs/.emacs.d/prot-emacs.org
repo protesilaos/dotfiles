@@ -3303,7 +3303,7 @@ about mark and register basics:
 
 If tree-sitter functionality is not available, then the =C-M-SPC=
 binding is taken by ~prot-simple-mark-sexp~ which is similar in spirit
-([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
+([[#h:f15bc843-2dd1-4792-95ec-9b7b6e561804][The =prot-emacs-essentials.el= section about =prot-simple.el= (custom basic commands)]]).
 
 For me, ~expreg~ is mostly an investment into the future, as I am
 monitoring developments on the tree-sitter front. My setup provides a
@@ -7671,7 +7671,7 @@ have to delete back to the beginning of a line if you want to "escape"
 from the indentation of a list or something.
 
 If I need to manually wrap the symbol at point or a region in a pair
-of characters, I use my ~prot-pair-insert~ command ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
+of characters, I use my ~prot-pair-insert~ command ([[#h:48d2bab5-241f-49dd-9554-8a4dcedce75e][The =prot-emacs-essentials.el= section about =prot-pair.el= (insert character pairs)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Disable "electric" behaviour
@@ -7741,7 +7741,7 @@ to operate on the current paragraph without marking it. Depending on
 the major mode you are in, this key binding calls a different command.
 The generic one is ~fill-paragraph~. I use =M-Q= to "unfill" text,
 which corresponds to the ~prot-simple-unfill-region-or-paragraph~
-command ([[#h:a7edbb23-2daa-4d8f-bcdd-8c26829d7bb7][The =prot-emacs-essentials.el= section with key bindings]]).
+command ([[#h:f15bc843-2dd1-4792-95ec-9b7b6e561804][The =prot-emacs-essentials.el= section about =prot-simple.el= (custom basic commands)]]).
 
 Finally, notice how I am adding an association to the ~auto-mode-alist~.
 The file names specified in that regular expression will be using
