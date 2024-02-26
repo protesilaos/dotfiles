@@ -7168,7 +7168,7 @@ Org is far more capable, so I switched to it completely.
   ;; TODO 2021-10-15 org-link-make-description-function
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org capture templates
+*** TODO The =prot-emacs-org.el= Org capture templates (~org-capture~)
 :PROPERTIES:
 :CUSTOM_ID: h:f8f06938-0dfe-45c3-b4cf-996d36cba82d
 :END:
