@@ -588,6 +588,19 @@ paragraph.  The idea is to produce the opposite effect of both
 ;;;; Commands for windows and pages
 
 ;;;###autoload
+(defun prot-simple-other-window ()
+  "Wrapper for `other-window' and `next-multiframe-window'.
+If there is only one window and multiple frames, call
+`next-multiframe-window'.  Otherwise, call `other-window'."
+  (interactive)
+  (if (and (one-window-p) (length> (frame-list) 1))
+      (progn
+        (call-interactively #'next-multiframe-window)
+        (setq this-command #'next-multiframe-window))
+    (call-interactively #'other-window)
+    (setq this-command #'other-window)))
+
+;;;###autoload
 (defun prot-simple-narrow-visible-window ()
   "Narrow buffer to wisible window area.
 Also check `prot-simple-narrow-dwim'."
