@@ -2522,7 +2522,7 @@ In every section, I start with a call to the ~prot-emacs-configure~
 macro. I wrap all sorts of related calls and introduce a one second
 delay to their evaluation. This helps speed up startup time ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
-*** The =prot-emacs-essentials.el= block that loads my custom libraries
+*** The =prot-emacs-essentials.el= block with basic configurations
 :PROPERTIES:
 :CUSTOM_ID: h:713ede33-3802-40c6-a8e3-7e1fc0d0a924
 :END:
