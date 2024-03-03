@@ -19,6 +19,8 @@
   (setq duplicate-line-final-position -1 ; both are Emacs 29
         duplicate-region-final-position -1)
   (setq scroll-error-top-bottom t)
+  (setq echo-keystrokes-help nil) ; Emacs 30
+  (setq epa-keys-select-method 'minibuffer) ; Emacs 30
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
