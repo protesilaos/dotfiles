@@ -1,5 +1,4 @@
-(defvar prot-emacs-tiling-window-manager-regexp
-  (regexp-opt '("bspwm" "herbstluftwm" "i3"))
+(defvar prot-emacs-tiling-window-manager-regexp "bspwm\\|herbstluftwm\\|i3"
   "Regular expression to  tiling window managers.
 See definition of `prot-emacs-with-desktop-session'.")
 
