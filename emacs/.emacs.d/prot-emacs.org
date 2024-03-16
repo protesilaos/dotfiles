@@ -7054,10 +7054,42 @@ done at a specific time, such as coaching sessions ([[#h:f8f06938-0dfe-45c3-b4cf
     (org-agenda-to-appt))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= section with basic Org settings
+*** The =prot-emacs-org.el= section with basic Org settings
 :PROPERTIES:
 :CUSTOM_ID: h:e03df1e0-b43e-49b5-978e-6a511165617c
 :END:
+
+Org, also known as "Org mode", is one of the potentially most useful
+feature sets available to every Emacs user. At its core, Org is a
+lightweight markup language: you can have headings and paragraphs,
+mark a portion of text with emphasis, produce bullet lists, include
+code blocks, and the like. Though what really sets Org apart from
+other markup languages is the rich corpus of Emacs Lisp written around
+it to do all sorts of tasks with this otherwise plain text format.
+
+With Org you can write technical documents (e.g. the manuals of all my
+Emacs packages), maintain a simple or highly sophisticated system for
+task management, organise your life using the agenda, write tables
+that can evaluate formulas to have spreadsheet functionality, have
+embedded LaTeX, evaluate code blocks in a wide range of programming
+languages and reuse their results for literate programming, include
+the contents of other files into a singular file, use one file to
+generate other files/directories with all their contents, and export
+the Org document to a variety of formats like =.pdf= and =.odt=.
+Furthermore, Org can be used as a lightweight, plain text database, as
+each heading can have its own metadata. This has practical
+applications in most of the aforementioned.
+
+In short, if something can be done with plain text, Org probably does
+it already or has all the elements for piecing it together. This
+document, among many of my published works, is testament to Org's
+sheer power, which I explained at greater length in a video
+demonstration: [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18).
+
+This being Emacs, everything is customisable and Org is a good example
+of this. There are a lot of user options for us to tweak things to our
+liking. I do as much, though know that Org is perfectly usable without
+any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Org-mode (personal information manager)
