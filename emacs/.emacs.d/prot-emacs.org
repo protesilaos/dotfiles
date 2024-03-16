@@ -2,7 +2,7 @@
 #+author: Protesilaos Stavrou
 #+email: public@protesilaos.com
 #+language: en
-#+options: ':t toc:nil author:t email:t num:t
+#+options: ':t toc:nil num:t author:t email:t
 #+startup: content indent
 #+macro: latest-export-date (eval (format-time-string "%F %T %z"))
 #+macro: word-count (eval (count-words (point-min) (point-max)))
@@ -358,8 +358,8 @@ once Emacs is done loading.
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (setq gc-cons-threshold (* 1024 1024 20)
-                  gc-cons-percentage 0.2
+            (setq gc-cons-threshold (* 1000 1000 8)
+                  gc-cons-percentage 0.1
                   file-name-handler-alist prot-emacs--file-name-handler-alist
                   vc-handled-backends prot-emacs--vc-handled-backends)))
 #+end_src
@@ -1614,7 +1614,6 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
         modus-themes-variable-pitch-ui t
         modus-themes-italic-constructs t
         modus-themes-bold-constructs nil
-        modus-themes-org-blocks nil
         modus-themes-completions '((t . (extrabold)))
         modus-themes-prompts '(extrabold)
         modus-themes-headings
@@ -1652,7 +1651,6 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
           modus-themes-variable-pitch-ui nil
           modus-themes-italic-constructs t
           modus-themes-bold-constructs t
-          modus-themes-org-blocks nil
           modus-themes-completions '((t . (extrabold)))
           modus-themes-prompts nil
           modus-themes-headings
@@ -2524,7 +2522,7 @@ In every section, I start with a call to the ~prot-emacs-configure~
 macro. I wrap all sorts of related calls and introduce a one second
 delay to their evaluation. This helps speed up startup time ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
 
-*** The =prot-emacs-essentials.el= block that loads my custom libraries
+*** The =prot-emacs-essentials.el= block with basic configurations
 :PROPERTIES:
 :CUSTOM_ID: h:713ede33-3802-40c6-a8e3-7e1fc0d0a924
 :END:
@@ -2560,6 +2558,8 @@ how we type multiple ~define-key~ calls ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891
   (setq duplicate-line-final-position -1 ; both are Emacs 29
         duplicate-region-final-position -1)
   (setq scroll-error-top-bottom t)
+  (setq echo-keystrokes-help nil) ; Emacs 30
+  (setq epa-keys-select-method 'minibuffer) ; Emacs 30
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
@@ -2680,6 +2680,7 @@ keys.
     ;; Commands for paragraphs
     "M-Q" #'prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
+    "C-x o" #'prot-simple-other-window
     "C-x n k" #'prot-simple-delete-page-delimiters
     "C-x M-r" #'prot-simple-swap-window-buffers
     ;; Commands for buffers
@@ -4098,23 +4099,25 @@ experience.
 
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-  ;; Add prompt indicator to `completing-read-multiple'.  We display
-  ;; [`completing-read-multiple': <separator>], e.g.,
-  ;; [`completing-read-multiple': ,] if the separator is a comma.  This
-  ;; is adapted from the README of the `vertico' package by Daniel
-  ;; Mendler.  I made some small tweaks to propertize the segments of
-  ;; the prompt.
-  (defun crm-indicator (args)
-    (cons (format "[`completing-read-multiple': %s]  %s"
-                  (propertize
-                   (replace-regexp-in-string
-                    "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                    crm-separator)
-                   'face 'error)
-                  (car args))
-          (cdr args)))
+  ;; MCT has a variant of this built-in.
+  (unless (eq prot-emacs-completion-ui 'mct)
+    ;; Add prompt indicator to `completing-read-multiple'.  We display
+    ;; [`completing-read-multiple': <separator>], e.g.,
+    ;; [`completing-read-multiple': ,] if the separator is a comma.  This
+    ;; is adapted from the README of the `vertico' package by Daniel
+    ;; Mendler.  I made some small tweaks to propertize the segments of
+    ;; the prompt.
+    (defun crm-indicator (args)
+      (cons (format "[`completing-read-multiple': %s]  %s"
+                    (propertize
+                     (replace-regexp-in-string
+                      "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                      crm-separator)
+                     'face 'error)
+                    (car args))
+            (cdr args)))
 
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
   (file-name-shadow-mode 1)
 #+end_src
@@ -4859,6 +4862,7 @@ pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =p
   (:install t)
   (:delay 1)
   (setq mct-hide-completion-mode-line t)
+  (setq mct-completing-read-multiple-indicator t)
   ;; The blocklist and passlist accept either commands/functions or
   ;; completion categories.
   (setq mct-completion-blocklist '(notmuch-mua-new-mail notmuch-mua-prompt-for-sender))
@@ -5826,6 +5830,7 @@ the ~prot-emacs-package~ is actually installing the file from source
   (setq mandoura-saved-playlist-directory "~/Music/playlists/")
 
   (define-key dired-mode-map (kbd "M-<return>") #'mandoura-play-files)
+  (define-key dired-mode-map (kbd "M-RET") #'mandoura-play-files)
   (define-key global-map (kbd "M-<AudioPlay>") #'mandoura-return-track-title-and-time)
   (define-key global-map (kbd "M-<XF86AudioPlay>") #'mandoura-return-track-title-and-time))
 #+end_src
@@ -9330,7 +9335,7 @@ Finally, we ~provide~ the submodule. This is the mirror function of
 
   (setq mu4e-notification-support t
         ;; TODO 2024-02-26: Write custom mu4e notification function.
-        mu4e-notification-filter #'mu4e--default-notification-filter) 
+        mu4e-notification-filter #'mu4e--default-notification-filter)
 
   (setq mu4e-headers-advance-after-mark nil)
   (setq mu4e-headers-auto-update t)
@@ -9368,7 +9373,7 @@ Finally, we ~provide~ the submodule. This is the mirror function of
   (setq mu4e-view-show-images nil)
   (setq mu4e-headers-include-related nil)
   (setq mu4e-view-auto-mark-as-read t)
-  
+
   (setq mu4e-compose-complete-addresses nil
         mu4e-compose-complete-only-personal t)
 
@@ -13184,7 +13189,7 @@ Cut off the middle of STR by counting half of
 and end."
   (let ((half (floor prot-modeline-string-truncate-length 2)))
     (if (prot-modeline--string-truncate-p str)
-        (concat (substring str 0 half) "..." (substring str (- (+ 4 half))))
+        (concat (substring str 0 half) "..." (substring str (- half)))
       str)))
 
 (defun prot-modeline--first-char (str)
@@ -16628,6 +16633,19 @@ paragraph.  The idea is to produce the opposite effect of both
       (fill-paragraph))))
 
 ;;;; Commands for windows and pages
+
+;;;###autoload
+(defun prot-simple-other-window ()
+  "Wrapper for `other-window' and `next-multiframe-window'.
+If there is only one window and multiple frames, call
+`next-multiframe-window'.  Otherwise, call `other-window'."
+  (interactive)
+  (if (and (one-window-p) (length> (frame-list) 1))
+      (progn
+        (call-interactively #'next-multiframe-window)
+        (setq this-command #'next-multiframe-window))
+    (call-interactively #'other-window)
+    (setq this-command #'other-window)))
 
 ;;;###autoload
 (defun prot-simple-narrow-visible-window ()

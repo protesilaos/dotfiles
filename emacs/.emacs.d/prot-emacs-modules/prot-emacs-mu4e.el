@@ -106,7 +106,7 @@
 
   (setq mu4e-notification-support t
         ;; TODO 2024-02-26: Write custom mu4e notification function.
-        mu4e-notification-filter #'mu4e--default-notification-filter) 
+        mu4e-notification-filter #'mu4e--default-notification-filter)
 
   (setq mu4e-headers-advance-after-mark nil)
   (setq mu4e-headers-auto-update t)
@@ -144,7 +144,7 @@
   (setq mu4e-view-show-images nil)
   (setq mu4e-headers-include-related nil)
   (setq mu4e-view-auto-mark-as-read t)
-  
+
   (setq mu4e-compose-complete-addresses nil
         mu4e-compose-complete-only-personal t)
 

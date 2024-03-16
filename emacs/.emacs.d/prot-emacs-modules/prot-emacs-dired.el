@@ -134,6 +134,7 @@
   (setq mandoura-saved-playlist-directory "~/Music/playlists/")
 
   (define-key dired-mode-map (kbd "M-<return>") #'mandoura-play-files)
+  (define-key dired-mode-map (kbd "M-RET") #'mandoura-play-files)
   (define-key global-map (kbd "M-<AudioPlay>") #'mandoura-return-track-title-and-time)
   (define-key global-map (kbd "M-<XF86AudioPlay>") #'mandoura-return-track-title-and-time))
 

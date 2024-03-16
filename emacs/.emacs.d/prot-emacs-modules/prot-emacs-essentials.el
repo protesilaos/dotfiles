@@ -19,6 +19,8 @@
   (setq duplicate-line-final-position -1 ; both are Emacs 29
         duplicate-region-final-position -1)
   (setq scroll-error-top-bottom t)
+  (setq echo-keystrokes-help nil) ; Emacs 30
+  (setq epa-keys-select-method 'minibuffer) ; Emacs 30
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
@@ -100,6 +102,7 @@
     ;; Commands for paragraphs
     "M-Q" #'prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
+    "C-x o" #'prot-simple-other-window
     "C-x n k" #'prot-simple-delete-page-delimiters
     "C-x M-r" #'prot-simple-swap-window-buffers
     ;; Commands for buffers

@@ -228,7 +228,7 @@ Cut off the middle of STR by counting half of
 and end."
   (let ((half (floor prot-modeline-string-truncate-length 2)))
     (if (prot-modeline--string-truncate-p str)
-        (concat (substring str 0 half) "..." (substring str (- (+ 4 half))))
+        (concat (substring str 0 half) "..." (substring str (- half)))
       str)))
 
 (defun prot-modeline--first-char (str)
