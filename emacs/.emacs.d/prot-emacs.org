@@ -7009,10 +7009,30 @@ Org is far more capable, so I switched to it completely.
   (setq calendar-daylight-time-zone-name "+0300")
 #+end_src
 
-*** TODO The =prot-emacs-org.el= section about appointment reminders
+*** The =prot-emacs-org.el= section about appointment reminders (=appt.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:bd4b0dcb-a925-4bd7-90db-6379a7ca6f5e
 :END:
+
+The built in =appt.el= defines functionality for handling
+notifications about appointments. It is originally designed to work
+with the generic diary feature (the =M-x diary= one, I mean), which I
+do not use anymore, but also integrates nicely with the Org agenda
+([[#h:7fe87b83-2815-4617-a5f9-d3417dd9d248][The =prot-emacs-org.el= Org agenda settings]]). I deepen this
+integration further, such that after adding a task or changing its
+state, the appointments mechanism re-reads my data to register new
+notifications. This is done via a series of hooks and with the use of
+the advice feature of Emacs Lisp ([[#h:62055c1b-5356-4639-9c52-b6b77b41ad9f][The =prot-emacs-org.el= custom Org extensions (=prot-org.el=)]]).
+
+Here I am setting some simple settings to keep appointment notifations
+minimal. I do not need them to inform me about the contents of my next
+entry on the agenda: just show text on the mode line telling me how
+many minutes are left until the event.
+
+In Org files, every heading can have an =APPT_WARNTIME= property: it takes
+a numeric value representing minutes for a forewarning from =appt.el=.
+I use this in tandem with ~org-capture~ for tasks that need to be
+done at a specific time, such as coaching sessions ([[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Appt (appointment reminders which also integrate with Org agenda)
@@ -7025,7 +7045,13 @@ Org is far more capable, so I switched to it completely.
         appt-message-warning-time 6)
 
   (with-eval-after-load 'org-agenda
-    (appt-activate 1))
+    (appt-activate 1)
+
+    ;; NOTE 2021-12-07: In my `prot-org.el' (see further below), I add
+    ;; `org-agenda-to-appt' to various relevant hooks.
+    ;;
+    ;; Create reminders for tasks with a due date when this file is read.
+    (org-agenda-to-appt))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= section with basic Org settings
@@ -7270,12 +7296,6 @@ Org is far more capable, so I switched to it completely.
   (setq org-agenda-max-todos nil)
   (setq org-agenda-max-tags nil)
   (setq org-agenda-max-effort nil)
-
-  ;; NOTE 2021-12-07: In my `prot-org.el' (see further below), I add
-  ;; `org-agenda-to-appt' to various relevant hooks.
-  ;;
-  ;; Create reminders for tasks with a due date when this file is read.
-  (run-at-time (* 60 5) nil #'org-agenda-to-appt)
 
 ;;;;; General agenda view options
   ;; NOTE 2021-12-07: Check further below my `org-agenda-custom-commands'

@@ -30,7 +30,13 @@
         appt-message-warning-time 6)
 
   (with-eval-after-load 'org-agenda
-    (appt-activate 1))
+    (appt-activate 1)
+
+    ;; NOTE 2021-12-07: In my `prot-org.el' (see further below), I add
+    ;; `org-agenda-to-appt' to various relevant hooks.
+    ;;
+    ;; Create reminders for tasks with a due date when this file is read.
+    (org-agenda-to-appt))
 
 ;;; Org-mode (personal information manager)
   ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
@@ -226,12 +232,6 @@
   (setq org-agenda-max-todos nil)
   (setq org-agenda-max-tags nil)
   (setq org-agenda-max-effort nil)
-
-  ;; NOTE 2021-12-07: In my `prot-org.el' (see further below), I add
-  ;; `org-agenda-to-appt' to various relevant hooks.
-  ;;
-  ;; Create reminders for tasks with a due date when this file is read.
-  (run-at-time (* 60 5) nil #'org-agenda-to-appt)
 
 ;;;;; General agenda view options
   ;; NOTE 2021-12-07: Check further below my `org-agenda-custom-commands'
