@@ -3822,15 +3822,10 @@ candidates. Because we use the minibuffer for most common
 interactions, completion is an integral part of any setup.
 
 I start configuring this setion with some built-in options about the
-underlying framework. Since there is no specific package I am
+underlying framework. Wehn there is no specific package I am
 targeting, I use the ~prot-emacs-configure~ macro
 ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
-;;; General minibuffer settings
-(prot-emacs-configure
-  (:delay 1)
-#+end_src
+Else I use ~prot-emacs-package~ ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
 
 *** The =prot-emacs-completion.el= settings for completion styles
 :PROPERTIES:
@@ -3884,25 +3879,63 @@ widen the scope of the search as I need to. This is easy to do because
 none of the built-in completion styles parses the empty space, so as
 soon as I type a space after some characters I am using ~orderless~.
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+Notice that this is not all, as we still have to consider what happens
+when the minibuffer prompt we are using defines a specific completion
+category whose pattern matching styles differ from what we have in the
+~completion-styles~. In the next section, we will set up a more
+fine-grained set of completion styles on a per-category basis
+([[#h:d178548f-affe-41cc-a92a-d8a255dbe86c][The =prot-emacs-completion.el= settings for completion category overrides]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
+;;; General minibuffer settings
+(prot-emacs-configure
+  (:delay 1)
 ;;;; Minibuffer configurations
-  (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
-  (setq completion-category-defaults nil)
+  (setq completion-styles '(basic substring initials flex orderless))) ; also see `completion-category-overrides'
 #+end_src
 
-The ~completion-styles~ is the default. Though there are plenty of
-completion categories where we may want a deviation from the rule. To
-this end, we configure the user option ~completion-category-overrides~.
-Notice, for example, how I arrange for ~partial-completion~ to be set
-only for the =file= completion category, as I only ever need it there.
-Also bear in mind what I described above about why ~orderless~ is
-placed last on the list: Emacs uses the completion styles from left to
-right until something matches the given input. So I do not need to
-have ~partial-completion~ first as ~basic~ will never match something
-like =~/.l/s/fo= for =~/.local/share/fonts=.
+*** The =prot-emacs-completion.el= settings for completion category overrides
+:PROPERTIES:
+:CUSTOM_ID: h:d178548f-affe-41cc-a92a-d8a255dbe86c
+:END:
+
+The ~completion-styles~ is the fallback option in case there is no
+provision for the given completion category ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
+The completion category is a piece of metadata that is associated with
+the completion table we are matching against while using the
+minibuffer. For example, the ~find-file~ command has the =file=
+category, while the ~switch-to-buffer~ command uses the =buffer=
+category. The defaults for those are specified in the variable
+~completion-category-defaults~, while overrides for them can be set in
+the ~completion-category-overrides~.
+
+While we can override only the categories we care about, the presence
+of those ~completion-category-defaults~ will surprise us in some cases
+because we will not be using what we specified in the ~completion-styles~.
+As such, I set ~completion-category-defaults~ to nil, to always fall
+back to my preferred ~completion-styles~ and then I further configure
+overrides where those make sense to me.
+
+We can opt for per-category styles by configuring the user option
+~completion-category-overrides~. Notice, for example, how I arrange
+for ~partial-completion~ to be set only for the =file= completion
+category, as I only ever need it there. Also bear in mind what I
+described above about why ~orderless~ is placed last on the list:
+Emacs uses the completion styles from left to right until something
+matches the given input. So I do not need to have ~partial-completion~
+first as ~basic~ will never match something like =~/.l/s/fo= for
+=~/.local/share/fonts=.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-  ;; A list of known completion categories:
+(prot-emacs-configure
+  (:delay 5)
+  ;; Reset all the per-category defaults so that (i) we use the
+  ;; standard `completion-styles' and (ii) can specify our own styles
+  ;; in the `completion-category-overrides' without having to
+  ;; explicitly override everything.
+  (setq completion-category-defaults nil)
+
+  ;; A non-exhaustve list of known completion categories:
   ;;
   ;; - `bookmark'
   ;; - `buffer'
@@ -3954,7 +3987,7 @@ like =~/.l/s/fo= for =~/.local/share/fonts=.
           (imenu (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))
           (kill-ring (styles . (emacs22 orderless)))
-          (eglot (styles . (emacs22 substring orderless)))))
+          (eglot (styles . (emacs22 substring orderless))))))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings to ignore letter casing
@@ -3970,10 +4003,12 @@ minibuffer. Let's have everything ignore casing by default.
   the exceptions. ]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t)
-  (setq read-file-name-completion-ignore-case t)
   (setq-default case-fold-search t)   ; For general regexp
+  (setq read-file-name-completion-ignore-case t))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for recursive minibuffers
@@ -4001,9 +4036,11 @@ minibuffer prompt, indicating the level of depth in the recursion,
 starting with =2=.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq enable-recursive-minibuffers t)
   (setq read-minibuffer-restore-windows nil) ; Emacs 28
-  (minibuffer-depth-indicate-mode 1)
+  (minibuffer-depth-indicate-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for default values
@@ -4026,8 +4063,10 @@ applicable. Without this mode, the indicator stays there at all times,
 which can be confusing or distracting.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq minibuffer-default-prompt-format " [%s]") ; Emacs 29
-  (minibuffer-electric-default-mode 1)
+  (minibuffer-electric-default-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for common interactions
@@ -4085,6 +4124,8 @@ experience.
   ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq echo-keystrokes 0.25)
@@ -4118,7 +4159,7 @@ experience.
 
     (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
-  (file-name-shadow-mode 1)
+  (file-name-shadow-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= generic minibuffer UI settings
@@ -4136,6 +4177,8 @@ completion (such as the ~corfu~ package).
 - [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 1)
   (setq completions-format 'one-column)
   (setq completion-show-help nil)
   (setq completion-auto-help 'always)
@@ -4154,7 +4197,7 @@ completion (such as the ~corfu~ package).
       "<up>" #'minibuffer-previous-line-completion
       "<down>" #'minibuffer-next-line-completion)
 
-    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently))
+    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently)))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)
@@ -4188,12 +4231,14 @@ basis.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `savehist' (minibuffer and related histories)
+(prot-emacs-package savehist
+  (:delay 1)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (setq savehist-additional-variables '(register-alist kill-ring))
-  (savehist-mode 1)
+  (savehist-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for dynamic text expansion (~dabbrev~)
@@ -4227,6 +4272,8 @@ The term "dabbrev" stands for "dynamic abbreviation". Emacs also has
 static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-package dabbrev
+  (:delay 5)
 ;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
@@ -4238,7 +4285,7 @@ static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][T
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
   (setq dabbrev-ignored-buffer-modes
-        '(archive-mode image-mode docview-mode pdf-view-mode))
+        '(archive-mode image-mode docview-mode pdf-view-mode)))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)
@@ -4288,6 +4335,8 @@ templates to have a real need for it---but it works).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
+(prot-emacs-package abbrev
+  (:delay 5)
   (setq only-global-abbrevs nil)
 
   (prot-emacs-abbrev global-abbrev-table
@@ -4421,7 +4470,7 @@ Still, they do have their uses.
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
   (setq orderless-matching-styles
-        '(orderless-prefixes orderless-regexp))
+        '(orderless-prefixes orderless-regexp orderless-flex orderless-initialism))
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
@@ -4855,7 +4904,7 @@ behave similar to what I have here for ~mct~, meaning that it does not
 pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mct.el" :mkdirp yes
-;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended
+;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended (mct)
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
   (:install t)
@@ -4910,7 +4959,7 @@ predictable scheme.
 The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e950927d][the =prot-vertico.el= library]].
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-vertico.el" :mkdirp yes
-;;; Vertical completion layout
+;;; Vertical completion layout (vertico)
 (prot-emacs-package vertico
   (:install t)
   (:delay 1)
@@ -6970,15 +7019,6 @@ This section covers the relevant configurations. You will notice that
 it is not limited to Org, as some other built-in features are also
 relevant here.
 
-Given that I am setting up lots of built-in symbols, I do not need the
-~prot-emacs-package~ macro at this stage, switching to its simplified
-~prot-emacs-configure~ counterpart ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
-(prot-emacs-configure
-  (:delay 5)
-#+end_src
-
 *** The =prot-emacs-org.el= section on the ~calendar~
 :PROPERTIES:
 :CUSTOM_ID: h:94d48381-1711-4d6b-8449-918bc1e3836c
@@ -6992,8 +7032,10 @@ heading. All I do here is set some stylistic preferences.
 Note that Emacs also has a ~diary~ command. I used it for a while, but
 Org is far more capable, so I switched to it completely.
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
 ;;; Calendar
+(prot-emacs-package calendar
+  (:delay 5)
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)
   (setq calendar-mode-line-format nil)
@@ -7010,7 +7052,7 @@ Org is far more capable, so I switched to it completely.
 
   (require 'cal-dst)
   (setq calendar-standard-time-zone-name "+0200")
-  (setq calendar-daylight-time-zone-name "+0300")
+  (setq calendar-daylight-time-zone-name "+0300"))
 #+end_src
 
 *** The =prot-emacs-org.el= section about appointment reminders (=appt.el=)
@@ -7040,6 +7082,8 @@ done at a specific time, such as coaching sessions ([[#h:f8f06938-0dfe-45c3-b4cf
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Appt (appointment reminders which also integrate with Org agenda)
+(prot-emacs-package appt
+  (:delay 5)
   (setq appt-display-diary nil
         appt-display-format nil
         appt-display-mode-line t
@@ -7055,7 +7099,7 @@ done at a specific time, such as coaching sessions ([[#h:f8f06938-0dfe-45c3-b4cf
     ;; `org-agenda-to-appt' to various relevant hooks.
     ;;
     ;; Create reminders for tasks with a due date when this file is read.
-    (org-agenda-to-appt))
+    (org-agenda-to-appt)))
 #+end_src
 
 *** The =prot-emacs-org.el= section with basic Org settings
@@ -7097,6 +7141,11 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Org-mode (personal information manager)
+;; Some of these settings need to be eva;uated before the `org'
+;; feature is loaded, so I am using `prot-emacs-configure' and then
+;; simply `require' the feature at the right spot.
+(prot-emacs-configure
+  (:delay 5)
   ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
   ;; otherwise we have to use the Custom UI.  No thanks!
   (setq org-export-backends '(html texinfo md))
@@ -7124,6 +7173,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
           ("t" . "src emacs-lisp :tangle FILENAME")
           ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
           ("x" . "example")
+          ("X" . "export")
           ("q" . "quote")))
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
@@ -7131,7 +7181,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
-  (setq org-read-date-prefer-future 'time)
+  (setq org-read-date-prefer-future 'time))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org to-do and refile settings
@@ -7141,6 +7191,8 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; refile, todo
+(prot-emacs-configure
+  (:delay 5)
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 2))
           (nil . (:maxlevel . 2))))
@@ -7175,7 +7227,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (setq org-track-ordered-property-with-tag t)
   (setq org-highest-priority ?A)
   (setq org-lowest-priority ?C)
-  (setq org-default-priority ?A)
+  (setq org-default-priority ?A))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org heading tags
@@ -7185,6 +7237,8 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; tags
+(prot-emacs-configure
+  (:delay 5)
   (setq org-tag-alist ; I don't really use those, but whatever
         '(("meeting")
           ("admin")
@@ -7202,7 +7256,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
           ("website")))
 
   (setq org-auto-align-tags nil)
-  (setq org-tags-column 0)
+  (setq org-tags-column 0))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org time/state logging
@@ -7212,11 +7266,13 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; log
+(prot-emacs-configure
+  (:delay 5)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-log-note-clock-out nil)
   (setq org-log-redeadline 'time)
-  (setq org-log-reschedule 'time)
+  (setq org-log-reschedule 'time))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org link settings
@@ -7226,7 +7282,9 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; links
-  (setq org-link-keep-stored-after-insertion nil)
+(prot-emacs-configure
+  (:delay 5)
+  (setq org-link-keep-stored-after-insertion nil))
   ;; TODO 2021-10-15 org-link-make-description-function
 #+end_src
 
@@ -7237,6 +7295,8 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; capture
+(prot-emacs-configure
+  (:delay 5)
   (setq org-capture-templates
         `(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
@@ -7304,7 +7364,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (setq org-capture-templates-contexts
         '(("e" ((in-mode . "notmuch-search-mode")
                 (in-mode . "notmuch-show-mode")
-                (in-mode . "notmuch-tree-mode")))))
+                (in-mode . "notmuch-tree-mode"))))))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org agenda settings
@@ -7314,6 +7374,8 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; agenda
+(prot-emacs-configure
+  (:delay 5)
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
   (setq org-agenda-files `(,org-directory))
@@ -7483,6 +7545,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   ;; ;; Always show the habit graph, even if there are no habits for
   ;; ;; today.
   ;; (setq org-habit-show-all-today t)
+  )
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org code block settings
@@ -7492,13 +7555,15 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; code blocks
+(prot-emacs-configure
+  (:delay 5)
   (setq org-confirm-babel-evaluate nil)
   (setq org-src-window-setup 'current-window)
   (setq org-edit-src-persistent-message nil)
   (setq org-src-fontify-natively t)
   (setq org-src-preserve-indentation t)
   (setq org-src-tab-acts-natively t)
-  (setq org-edit-src-content-indentation 0)
+  (setq org-edit-src-content-indentation 0))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org export settings
@@ -7508,14 +7573,14 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; export
+(prot-emacs-configure
+  (:delay 5)
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
   (setq org-export-dispatch-use-expert-ui nil)
   (setq org-html-htmlize-output-type nil)
   (setq org-html-head-include-default-style nil)
-  (setq org-html-head-include-scripts nil)
-  ;; (require 'ox-texinfo)
-  ;; (require 'ox-md)
+  (setq org-html-head-include-scripts nil))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org ID settings
@@ -7525,7 +7590,9 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; IDs
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+(prot-emacs-configure
+  (:delay 5)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= section about Org hooks and key bindings
@@ -7535,7 +7602,8 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; Hooks and key bindings
-
+(prot-emacs-configure
+  (:delay 5)
   ;; See my `pulsar' package, defined elsewhere in this setup.
   (with-eval-after-load 'pulsar
     (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
@@ -7548,6 +7616,8 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
     "C-c l" #'org-store-link
     "C-c o" #'org-open-at-point-global)
 
+  ;; Notice it is down here where the feature is actually loaded.
+  ;; This is because some settings need to be set before this call.
   (require 'org)
 
   (prot-emacs-keybind org-mode-map
@@ -7570,7 +7640,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (prot-emacs-keybind narrow-map
     "b" #'org-narrow-to-block
     "e" #'org-narrow-to-element
-    "s" #'org-narrow-to-subtree)
+    "s" #'org-narrow-to-subtree))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= custom Org extensions (=prot-org.el=)
@@ -7585,7 +7655,8 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Custom extensions (prot-org.el)
-  (require 'prot-org)
+(prot-emacs-package prot-org
+  (:delay 5)
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el

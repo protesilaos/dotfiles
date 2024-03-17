@@ -1,7 +1,6 @@
-(prot-emacs-configure
-  (:delay 5)
-
 ;;; Calendar
+(prot-emacs-package calendar
+  (:delay 5)
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)
   (setq calendar-mode-line-format nil)
@@ -18,9 +17,11 @@
 
   (require 'cal-dst)
   (setq calendar-standard-time-zone-name "+0200")
-  (setq calendar-daylight-time-zone-name "+0300")
+  (setq calendar-daylight-time-zone-name "+0300"))
 
 ;;; Appt (appointment reminders which also integrate with Org agenda)
+(prot-emacs-package appt
+  (:delay 5)
   (setq appt-display-diary nil
         appt-display-format nil
         appt-display-mode-line t
@@ -36,9 +37,14 @@
     ;; `org-agenda-to-appt' to various relevant hooks.
     ;;
     ;; Create reminders for tasks with a due date when this file is read.
-    (org-agenda-to-appt))
+    (org-agenda-to-appt)))
 
 ;;; Org-mode (personal information manager)
+;; Some of these settings need to be eva;uated before the `org'
+;; feature is loaded, so I am using `prot-emacs-configure' and then
+;; simply `require' the feature at the right spot.
+(prot-emacs-configure
+  (:delay 5)
   ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
   ;; otherwise we have to use the Custom UI.  No thanks!
   (setq org-export-backends '(html texinfo md))
@@ -66,6 +72,7 @@
           ("t" . "src emacs-lisp :tangle FILENAME")
           ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
           ("x" . "example")
+          ("X" . "export")
           ("q" . "quote")))
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
@@ -73,9 +80,11 @@
   (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
-  (setq org-read-date-prefer-future 'time)
+  (setq org-read-date-prefer-future 'time))
 
 ;;;; refile, todo
+(prot-emacs-configure
+  (:delay 5)
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 2))
           (nil . (:maxlevel . 2))))
@@ -110,9 +119,11 @@
   (setq org-track-ordered-property-with-tag t)
   (setq org-highest-priority ?A)
   (setq org-lowest-priority ?C)
-  (setq org-default-priority ?A)
+  (setq org-default-priority ?A))
 
 ;;;; tags
+(prot-emacs-configure
+  (:delay 5)
   (setq org-tag-alist ; I don't really use those, but whatever
         '(("meeting")
           ("admin")
@@ -130,20 +141,26 @@
           ("website")))
 
   (setq org-auto-align-tags nil)
-  (setq org-tags-column 0)
+  (setq org-tags-column 0))
 
 ;;;; log
+(prot-emacs-configure
+  (:delay 5)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-log-note-clock-out nil)
   (setq org-log-redeadline 'time)
-  (setq org-log-reschedule 'time)
+  (setq org-log-reschedule 'time))
 
 ;;;; links
-  (setq org-link-keep-stored-after-insertion nil)
+(prot-emacs-configure
+  (:delay 5)
+  (setq org-link-keep-stored-after-insertion nil))
   ;; TODO 2021-10-15 org-link-make-description-function
 
 ;;;; capture
+(prot-emacs-configure
+  (:delay 5)
   (setq org-capture-templates
         `(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
@@ -211,9 +228,11 @@
   (setq org-capture-templates-contexts
         '(("e" ((in-mode . "notmuch-search-mode")
                 (in-mode . "notmuch-show-mode")
-                (in-mode . "notmuch-tree-mode")))))
+                (in-mode . "notmuch-tree-mode"))))))
 
 ;;;; agenda
+(prot-emacs-configure
+  (:delay 5)
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
   (setq org-agenda-files `(,org-directory))
@@ -383,31 +402,37 @@
   ;; ;; Always show the habit graph, even if there are no habits for
   ;; ;; today.
   ;; (setq org-habit-show-all-today t)
+  )
 
 ;;;; code blocks
+(prot-emacs-configure
+  (:delay 5)
   (setq org-confirm-babel-evaluate nil)
   (setq org-src-window-setup 'current-window)
   (setq org-edit-src-persistent-message nil)
   (setq org-src-fontify-natively t)
   (setq org-src-preserve-indentation t)
   (setq org-src-tab-acts-natively t)
-  (setq org-edit-src-content-indentation 0)
+  (setq org-edit-src-content-indentation 0))
 
 ;;;; export
+(prot-emacs-configure
+  (:delay 5)
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
   (setq org-export-dispatch-use-expert-ui nil)
   (setq org-html-htmlize-output-type nil)
   (setq org-html-head-include-default-style nil)
-  (setq org-html-head-include-scripts nil)
-  ;; (require 'ox-texinfo)
-  ;; (require 'ox-md)
+  (setq org-html-head-include-scripts nil))
 
 ;;;; IDs
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+(prot-emacs-configure
+  (:delay 5)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 
 ;;;; Hooks and key bindings
-
+(prot-emacs-configure
+  (:delay 5)
   ;; See my `pulsar' package, defined elsewhere in this setup.
   (with-eval-after-load 'pulsar
     (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
@@ -420,6 +445,8 @@
     "C-c l" #'org-store-link
     "C-c o" #'org-open-at-point-global)
 
+  ;; Notice it is down here where the feature is actually loaded.
+  ;; This is because some settings need to be set before this call.
   (require 'org)
 
   (prot-emacs-keybind org-mode-map
@@ -442,10 +469,11 @@
   (prot-emacs-keybind narrow-map
     "b" #'org-narrow-to-block
     "e" #'org-narrow-to-element
-    "s" #'org-narrow-to-subtree)
+    "s" #'org-narrow-to-subtree))
 
 ;;; Custom extensions (prot-org.el)
-  (require 'prot-org)
+(prot-emacs-package prot-org
+  (:delay 5)
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el

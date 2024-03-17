@@ -1,4 +1,4 @@
-;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended
+;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended (mct)
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
   (:install t)
