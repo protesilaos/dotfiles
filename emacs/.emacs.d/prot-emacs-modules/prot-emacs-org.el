@@ -66,6 +66,7 @@
           ("t" . "src emacs-lisp :tangle FILENAME")
           ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
           ("x" . "example")
+          ("X" . "export")
           ("q" . "quote")))
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)

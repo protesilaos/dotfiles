@@ -7125,6 +7125,7 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
           ("t" . "src emacs-lisp :tangle FILENAME")
           ("T" . "src emacs-lisp :tangle FILENAME :mkdirp yes")
           ("x" . "example")
+          ("X" . "export")
           ("q" . "quote")))
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
