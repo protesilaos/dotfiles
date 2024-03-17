@@ -1,12 +1,13 @@
 ;;; General minibuffer settings
 (prot-emacs-configure
   (:delay 1)
-
 ;;;; Minibuffer configurations
   (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
-  (setq completion-category-defaults nil)
+  (setq completion-category-defaults nil))
 
-  ;; A list of known completion categories:
+(prot-emacs-configure
+  (:delay 5)
+  ;; A non-exhaustve list of known completion categories:
   ;;
   ;; - `bookmark'
   ;; - `buffer'
@@ -58,20 +59,28 @@
           (imenu (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))
           (kill-ring (styles . (emacs22 orderless)))
-          (eglot (styles . (emacs22 substring orderless)))))
+          (eglot (styles . (emacs22 substring orderless))))))
 
+(prot-emacs-configure
+  (:delay 5)
   (setq completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t)
-  (setq read-file-name-completion-ignore-case t)
   (setq-default case-fold-search t)   ; For general regexp
+  (setq read-file-name-completion-ignore-case t))
 
+(prot-emacs-configure
+  (:delay 5)
   (setq enable-recursive-minibuffers t)
   (setq read-minibuffer-restore-windows nil) ; Emacs 28
-  (minibuffer-depth-indicate-mode 1)
+  (minibuffer-depth-indicate-mode 1))
 
+(prot-emacs-configure
+  (:delay 5)
   (setq minibuffer-default-prompt-format " [%s]") ; Emacs 29
-  (minibuffer-electric-default-mode 1)
+  (minibuffer-electric-default-mode 1))
 
+(prot-emacs-configure
+  (:delay 5)
   (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq echo-keystrokes 0.25)
@@ -105,8 +114,10 @@
 
     (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
-  (file-name-shadow-mode 1)
+  (file-name-shadow-mode 1))
 
+(prot-emacs-configure
+  (:delay 1)
   (setq completions-format 'one-column)
   (setq completion-show-help nil)
   (setq completion-auto-help 'always)
@@ -125,16 +136,20 @@
       "<up>" #'minibuffer-previous-line-completion
       "<down>" #'minibuffer-next-line-completion)
 
-    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently))
+    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently)))
 
 ;;;; `savehist' (minibuffer and related histories)
+(prot-emacs-package savehist
+  (:delay 1)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (setq savehist-additional-variables '(register-alist kill-ring))
-  (savehist-mode 1)
+  (savehist-mode 1))
 
+(prot-emacs-package dabbrev
+  (:delay 5)
 ;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
@@ -146,9 +161,11 @@
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
   (setq dabbrev-ignored-buffer-modes
-        '(archive-mode image-mode docview-mode pdf-view-mode))
+        '(archive-mode image-mode docview-mode pdf-view-mode)))
 
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
+(prot-emacs-package abbrev
+  (:delay 5)
   (setq only-global-abbrevs nil)
 
   (prot-emacs-abbrev global-abbrev-table

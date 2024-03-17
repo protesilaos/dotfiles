@@ -1,4 +1,4 @@
-;;; Vertical completion layout
+;;; Vertical completion layout (vertico)
 (prot-emacs-package vertico
   (:install t)
   (:delay 1)

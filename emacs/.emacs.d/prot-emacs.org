@@ -3823,15 +3823,10 @@ candidates. Because we use the minibuffer for most common
 interactions, completion is an integral part of any setup.
 
 I start configuring this setion with some built-in options about the
-underlying framework. Since there is no specific package I am
+underlying framework. Wehn there is no specific package I am
 targeting, I use the ~prot-emacs-configure~ macro
 ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
-;;; General minibuffer settings
-(prot-emacs-configure
-  (:delay 1)
-#+end_src
+Else I use ~prot-emacs-package~ ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
 
 *** The =prot-emacs-completion.el= settings for completion styles
 :PROPERTIES:
@@ -3885,15 +3880,20 @@ widen the scope of the search as I need to. This is easy to do because
 none of the built-in completion styles parses the empty space, so as
 soon as I type a space after some characters I am using ~orderless~.
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
+;;; General minibuffer settings
+(prot-emacs-configure
+  (:delay 1)
 ;;;; Minibuffer configurations
   (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
-  (setq completion-category-defaults nil)
+  (setq completion-category-defaults nil))
 #+end_src
 
 The ~completion-styles~ is the default. Though there are plenty of
-completion categories where we may want a deviation from the rule. To
-this end, we configure the user option ~completion-category-overrides~.
+completion categories where we may want a deviation from the rule. For
+those, the defaults are declared in ~completion-category-defaults~,
+which I already set to nil in the previous block. We can opt for
+per-category styles by configuring the user option ~completion-category-overrides~.
 Notice, for example, how I arrange for ~partial-completion~ to be set
 only for the =file= completion category, as I only ever need it there.
 Also bear in mind what I described above about why ~orderless~ is
@@ -3903,7 +3903,9 @@ have ~partial-completion~ first as ~basic~ will never match something
 like =~/.l/s/fo= for =~/.local/share/fonts=.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-  ;; A list of known completion categories:
+(prot-emacs-configure
+  (:delay 5)
+  ;; A non-exhaustve list of known completion categories:
   ;;
   ;; - `bookmark'
   ;; - `buffer'
@@ -3955,7 +3957,7 @@ like =~/.l/s/fo= for =~/.local/share/fonts=.
           (imenu (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))
           (kill-ring (styles . (emacs22 orderless)))
-          (eglot (styles . (emacs22 substring orderless)))))
+          (eglot (styles . (emacs22 substring orderless))))))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings to ignore letter casing
@@ -3971,10 +3973,12 @@ minibuffer. Let's have everything ignore casing by default.
   the exceptions. ]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t)
-  (setq read-file-name-completion-ignore-case t)
   (setq-default case-fold-search t)   ; For general regexp
+  (setq read-file-name-completion-ignore-case t))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for recursive minibuffers
@@ -4002,9 +4006,11 @@ minibuffer prompt, indicating the level of depth in the recursion,
 starting with =2=.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq enable-recursive-minibuffers t)
   (setq read-minibuffer-restore-windows nil) ; Emacs 28
-  (minibuffer-depth-indicate-mode 1)
+  (minibuffer-depth-indicate-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for default values
@@ -4027,8 +4033,10 @@ applicable. Without this mode, the indicator stays there at all times,
 which can be confusing or distracting.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq minibuffer-default-prompt-format " [%s]") ; Emacs 29
-  (minibuffer-electric-default-mode 1)
+  (minibuffer-electric-default-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for common interactions
@@ -4086,6 +4094,8 @@ experience.
   ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 5)
   (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq echo-keystrokes 0.25)
@@ -4119,7 +4129,7 @@ experience.
 
     (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
-  (file-name-shadow-mode 1)
+  (file-name-shadow-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= generic minibuffer UI settings
@@ -4137,6 +4147,8 @@ completion (such as the ~corfu~ package).
 - [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (:delay 1)
   (setq completions-format 'one-column)
   (setq completion-show-help nil)
   (setq completion-auto-help 'always)
@@ -4155,7 +4167,7 @@ completion (such as the ~corfu~ package).
       "<up>" #'minibuffer-previous-line-completion
       "<down>" #'minibuffer-next-line-completion)
 
-    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently))
+    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently)))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)
@@ -4189,12 +4201,14 @@ basis.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `savehist' (minibuffer and related histories)
+(prot-emacs-package savehist
+  (:delay 1)
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (setq savehist-additional-variables '(register-alist kill-ring))
-  (savehist-mode 1)
+  (savehist-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for dynamic text expansion (~dabbrev~)
@@ -4228,6 +4242,8 @@ The term "dabbrev" stands for "dynamic abbreviation". Emacs also has
 static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-package dabbrev
+  (:delay 5)
 ;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
@@ -4239,7 +4255,7 @@ static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][T
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
   (setq dabbrev-ignored-buffer-modes
-        '(archive-mode image-mode docview-mode pdf-view-mode))
+        '(archive-mode image-mode docview-mode pdf-view-mode)))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)
@@ -4289,6 +4305,8 @@ templates to have a real need for it---but it works).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
+(prot-emacs-package abbrev
+  (:delay 5)
   (setq only-global-abbrevs nil)
 
   (prot-emacs-abbrev global-abbrev-table
@@ -4856,7 +4874,7 @@ behave similar to what I have here for ~mct~, meaning that it does not
 pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mct.el" :mkdirp yes
-;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended
+;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended (mct)
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-package mct
   (:install t)
@@ -4911,7 +4929,7 @@ predictable scheme.
 The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e950927d][the =prot-vertico.el= library]].
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-vertico.el" :mkdirp yes
-;;; Vertical completion layout
+;;; Vertical completion layout (vertico)
 (prot-emacs-package vertico
   (:install t)
   (:delay 1)
