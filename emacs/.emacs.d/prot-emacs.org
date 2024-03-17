@@ -3880,31 +3880,62 @@ widen the scope of the search as I need to. This is easy to do because
 none of the built-in completion styles parses the empty space, so as
 soon as I type a space after some characters I am using ~orderless~.
 
+Notice that this is not all, as we still have to consider what happens
+when the minibuffer prompt we are using defines a specific completion
+category whose pattern matching styles differ from what we have in the
+~completion-styles~. In the next section, we will set up a more
+fine-grained set of completion styles on a per-category basis
+([[#h:d178548f-affe-41cc-a92a-d8a255dbe86c][The =prot-emacs-completion.el= settings for completion category overrides]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
 ;;; General minibuffer settings
 (prot-emacs-configure
   (:delay 1)
 ;;;; Minibuffer configurations
-  (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
-  (setq completion-category-defaults nil))
+  (setq completion-styles '(basic substring initials flex orderless))) ; also see `completion-category-overrides'
 #+end_src
 
-The ~completion-styles~ is the default. Though there are plenty of
-completion categories where we may want a deviation from the rule. For
-those, the defaults are declared in ~completion-category-defaults~,
-which I already set to nil in the previous block. We can opt for
-per-category styles by configuring the user option ~completion-category-overrides~.
-Notice, for example, how I arrange for ~partial-completion~ to be set
-only for the =file= completion category, as I only ever need it there.
-Also bear in mind what I described above about why ~orderless~ is
-placed last on the list: Emacs uses the completion styles from left to
-right until something matches the given input. So I do not need to
-have ~partial-completion~ first as ~basic~ will never match something
-like =~/.l/s/fo= for =~/.local/share/fonts=.
+*** The =prot-emacs-completion.el= settings for completion category overrides
+:PROPERTIES:
+:CUSTOM_ID: h:d178548f-affe-41cc-a92a-d8a255dbe86c
+:END:
+
+The ~completion-styles~ is the fallback option in case there is no
+provision for the given completion category ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
+The completion category is a piece of metadata that is associated with
+the completion table we are matching against while using the
+minibuffer. For example, the ~find-file~ command has the =file=
+category, while the ~switch-to-buffer~ command uses the =buffer=
+category. The defaults for those are specified in the variable
+~completion-category-defaults~, while overrides for them can be set in
+the ~completion-category-overrides~.
+
+While we can override only the categories we care about, the presence
+of those ~completion-category-defaults~ will surprise us in some cases
+because we will not be using what we specified in the ~completion-styles~.
+As such, I set ~completion-category-defaults~ to nil, to always fall
+back to my preferred ~completion-styles~ and then I further configure
+overrides where those make sense to me.
+
+We can opt for per-category styles by configuring the user option
+~completion-category-overrides~. Notice, for example, how I arrange
+for ~partial-completion~ to be set only for the =file= completion
+category, as I only ever need it there. Also bear in mind what I
+described above about why ~orderless~ is placed last on the list:
+Emacs uses the completion styles from left to right until something
+matches the given input. So I do not need to have ~partial-completion~
+first as ~basic~ will never match something like =~/.l/s/fo= for
+=~/.local/share/fonts=.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 (prot-emacs-configure
   (:delay 5)
+  ;; Reset all the per-category defaults so that (i) we use the
+  ;; standard `completion-styles' and (ii) can specify our own styles
+  ;; in the `completion-category-overrides' without having to
+  ;; explicitly override everything.
+  (setq completion-category-defaults nil)
+
   ;; A non-exhaustve list of known completion categories:
   ;;
   ;; - `bookmark'
