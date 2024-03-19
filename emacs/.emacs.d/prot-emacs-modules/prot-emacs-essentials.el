@@ -62,7 +62,7 @@
   (mapc
    (lambda (hook)
      (add-hook hook #'prot-common-truncate-lines-silently))
-   '(fundamental-mode-hook text-mode-hook prog-mode-hook special-mode-hook))
+   '(fundamental-mode-hook text-mode-hook prog-mode-hook))
   ;; NEVER tell me which key can call a command that I specifically
   ;; invoked with M-x: I have a good reason to use it that way.
   (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore))
