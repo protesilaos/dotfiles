@@ -2,11 +2,16 @@
 (prot-emacs-configure
   (:delay 1)
 ;;;; Minibuffer configurations
-  (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
-  (setq completion-category-defaults nil))
+  (setq completion-styles '(basic substring initials flex orderless))) ; also see `completion-category-overrides'
 
 (prot-emacs-configure
   (:delay 5)
+  ;; Reset all the per-category defaults so that (i) we use the
+  ;; standard `completion-styles' and (ii) can specify our own styles
+  ;; in the `completion-category-overrides' without having to
+  ;; explicitly override everything.
+  (setq completion-category-defaults nil)
+
   ;; A non-exhaustve list of known completion categories:
   ;;
   ;; - `bookmark'
