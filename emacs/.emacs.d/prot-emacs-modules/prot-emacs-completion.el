@@ -269,8 +269,7 @@ Development continues on GitHub with GitLab as a mirror."))
   (:delay 5)
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
-  (setq orderless-matching-styles
-        '(orderless-prefixes orderless-regexp orderless-flex orderless-initialism))
+  (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
