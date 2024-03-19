@@ -342,7 +342,6 @@ Development continues on GitHub with GitLab as a mirror."))
       "M-s M-y" #'consult-yank-pop
       "M-s M-s" #'consult-outline)
     (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
-    (define-key minibuffer-local-map (kbd "C-s") #'consult-history)
 
     (with-eval-after-load 'pulsar
       ;; see my `pulsar' package: <https://protesilaos.com/emacs/pulsar>
