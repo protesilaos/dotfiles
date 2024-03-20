@@ -327,14 +327,13 @@
   (setq org-agenda-timegrid-use-ampm nil)
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-show-current-time-in-grid t)
-  (setq org-agenda-current-time-string
-        (concat "Now " (make-string 70 ?-)))
+  (setq org-agenda-current-time-string (concat "Now " (make-string 70 ?_)))
   (setq org-agenda-time-grid
         '((daily today require-timed)
           ( 0500 0600 0700 0800 0900 1000
             1100 1200 1300 1400 1500 1600
             1700 1800 1900 2000 2100 2200)
-          " ....." "-----------------"))
+          "" ""))
   (setq org-agenda-default-appointment-duration nil)
 
 ;;;;; Agenda global to-do list
@@ -481,6 +480,7 @@
         `(("A" "Daily agenda and top priority tasks"
            ,prot-org-custom-daily-agenda
            ((org-agenda-fontify-priorities nil)
+            (org-agenda-prefix-format "	 %t %s")
             (org-agenda-dim-blocked-tasks nil)))
           ("P" "Plain text daily agenda and top priorities"
            ,prot-org-custom-daily-agenda
