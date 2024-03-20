@@ -14245,13 +14245,14 @@ produces dates with a fixed length."
   ;; So we match everything and then skip entries with
   ;; `org-agenda-skip-function'.
   `((tags-todo "*"
-               ((org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
+               ((org-agenda-overriding-header "Important tasks without a date\n")
+                (org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
                 (org-agenda-skip-function
                  `(org-agenda-skip-entry-if
                    'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
-                (org-agenda-block-separator nil)
-                (org-agenda-overriding-header "Important tasks without a date\n")))
-    (agenda "" ((org-agenda-time-grid nil)
+                (org-agenda-block-separator nil)))
+    (agenda "" ((org-agenda-overriding-header "\nPending scheduled tasks")
+                (org-agenda-time-grid nil)
                 (org-agenda-start-on-weekday nil)
                 (org-agenda-span 1)
                 (org-agenda-show-all-dates nil)
@@ -14261,30 +14262,43 @@ produces dates with a fixed length."
                 (org-agenda-block-separator nil)
                 (org-agenda-entry-types '(:scheduled))
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "TRAIN"))
-                (org-agenda-category-filter "-habit")
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "ROUTINE"))
                 (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-                (org-agenda-format-date "")
-                (org-agenda-overriding-header "\nPending scheduled tasks")))
-    (agenda "" ((org-agenda-span 1)
+                (org-agenda-format-date "")))
+    (agenda "" ((org-agenda-overriding-header "\nToday's agenda\n")
+                (org-agenda-span 1)
                 (org-deadline-warning-days 0)
                 (org-agenda-block-separator nil)
                 (org-scheduled-past-days 0)
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "ROUTINE"))
                 ;; We don't need the `org-agenda-date-today'
                 ;; highlight because that only has a practical
                 ;; utility in multi-day views.
                 (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-                (org-agenda-format-date "%A %-e %B %Y")
-                (org-agenda-overriding-header "\nToday's agenda\n")))
-    (agenda "" ((org-agenda-start-on-weekday nil)
+                (org-agenda-format-date "%A %-e %B %Y")))
+    (agenda "" ((org-agenda-overriding-header "\nRoutine")
+                (org-agenda-time-grid nil)
+                (org-agenda-start-on-weekday nil)
+                (org-agenda-span 1)
+                (org-agenda-show-all-dates nil)
+                (org-scheduled-past-days 365)
+                ;; Excludes today's scheduled items
+                (org-scheduled-delay-days 1)
+                (org-agenda-block-separator nil)
+                (org-agenda-entry-types '(:scheduled))
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "ROUTINE"))
+                (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
+                (org-agenda-format-date "")))
+    (agenda "" ((org-agenda-overriding-header "\nNext three days\n")
+                (org-agenda-start-on-weekday nil)
                 (org-agenda-start-day nil)
                 (org-agenda-start-day "+1d")
                 (org-agenda-span 3)
                 (org-deadline-warning-days 0)
                 (org-agenda-block-separator nil)
-                (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                (org-agenda-overriding-header "\nNext three days\n")))
-    (agenda "" ((org-agenda-time-grid nil)
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
+    (agenda "" ((org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")
+                (org-agenda-time-grid nil)
                 (org-agenda-start-on-weekday nil)
                 ;; We don't want to replicate the previous section's
                 ;; three days, so we start counting from the day after.
@@ -14294,8 +14308,7 @@ produces dates with a fixed length."
                 (org-deadline-warning-days 0)
                 (org-agenda-block-separator nil)
                 (org-agenda-entry-types '(:deadline))
-                (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n"))))
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)))))
   "Custom agenda for use in `org-agenda-custom-commands'.")
 
 ;;;;; agenda appointments
