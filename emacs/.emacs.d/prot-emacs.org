@@ -7536,13 +7536,12 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (setq org-agenda-bulk-custom-functions nil)
 
 ;;;;; Agenda habits
-  ;; (require 'org-habit)
-  ;; (setq org-habit-graph-column 50)
-  ;; (setq org-habit-preceding-days 9)
-  ;; ;; Always show the habit graph, even if there are no habits for
-  ;; ;; today.
-  ;; (setq org-habit-show-all-today t)
-  )
+  (require 'org-habit)
+  (setq org-habit-graph-column 50)
+  (setq org-habit-preceding-days 9)
+  ;; Always show the habit graph, even if there are no habits for
+  ;; today.
+  (setq org-habit-show-all-today t))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org code block settings
