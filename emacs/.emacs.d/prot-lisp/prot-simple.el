@@ -709,6 +709,41 @@ Name the buffer after the defun's symbol."
 
 ;;;; Commands for buffers
 
+(defun prot-simple--display-unsaved-buffers (buffers buffer-menu-name)
+  "Produce buffer menu listing BUFFERS called BUFFER-MENU-NAME."
+  (let ((old-buf (current-buffer))
+        (buf (get-buffer-create buffer-menu-name)))
+    (with-current-buffer buf
+      (Buffer-menu-mode)
+      (setq-local Buffer-menu-files-only nil
+                  Buffer-menu-buffer-list buffers
+                  Buffer-menu-filter-predicate nil)
+      (list-buffers--refresh buffers old-buf)
+      (tabulated-list-print))
+    (display-buffer buf)))
+
+(defun prot-simple--get-unsaved-buffers ()
+  "Get list of unsaved buffers."
+  (seq-filter
+   (lambda (buffer)
+     (and (buffer-file-name buffer)
+          (buffer-modified-p buffer)))
+   (buffer-list)))
+
+;;;###autoload
+(defun prot-simple-display-unsaved-buffers ()
+  "Produce buffer menu listing unsaved file-visiting buffers."
+  (interactive)
+  (if-let ((unsaved-buffers (prot-simple--get-unsaved-buffers)))
+      (prot-simple--display-unsaved-buffers unsaved-buffers "*Unsaved buffers*")
+    (message "No unsaved buffers")))
+
+(defun prot-simple-display-unsaved-buffers-on-exit (&rest _)
+  "Produce buffer menu listing unsaved file-visiting buffers.
+Add this as :before advice to `save-buffers-kill-emacs'."
+  (when-let ((unsaved-buffers (prot-simple--get-unsaved-buffers)))
+    (prot-simple--display-unsaved-buffers unsaved-buffers "*Unsaved buffers*")))
+
 ;;;###autoload
 (defun prot-simple-copy-current-buffer-name ()
   "Add the current buffer's name to the `kill-ring'."

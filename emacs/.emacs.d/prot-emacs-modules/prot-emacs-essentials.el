@@ -73,6 +73,8 @@
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
 
+  (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
+
   (prot-emacs-keybind global-map
     "ESC ESC" #'prot-simple-keyboard-quit-dwim
     "C-g" #'prot-simple-keyboard-quit-dwim
