@@ -85,6 +85,14 @@ client.urgent            #a60000 #a60000 #ffffff #ffa200 #a60000
 # client.placeholder
 client.background #000000
 
+### Keyboard layouts
+
+# Check manpage of xkeyboard-config(7) for the details.
+input * {
+    xkb_layout "us,gr"
+    xkb_options "grp:win_space_toggle"
+}
+
 ### Key bindings
 
 # Start a terminal
@@ -175,7 +183,7 @@ bindsym $mod+t layout toggle tabbed split
 bindsym $mod+f fullscreen
 
 # Toggle the current focus between tiling and floating mode
-bindsym $mod+space floating toggle
+bindsym $mod+Shift+space floating toggle
 
 ### Status Bar:
 
