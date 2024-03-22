@@ -62,6 +62,20 @@ fi
 # something like ~/.profile.
 export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
 
+# Default editor.
+if pgrep -x emacs > /dev/null
+then
+    export VISUAL="emacsclient -c"
+    export EDITOR="emacsclient -t"
+elif _checkexec gvim
+then
+    export VISUAL="gvim"
+    export EDITOR=vim
+else
+    export VISUAL=vim
+    export EDITOR=$VISUAL
+fi
+
 # Default pager.  The check for the terminal is useful for Emacs with
 # M-x shell (which is how I usually interact with bash these days).
 #
@@ -80,20 +94,6 @@ else
 fi
 
 export MANPAGER="$PAGER"
-
-# Default editor.
-if pgrep -x emacs > /dev/null
-then
-    export VISUAL="emacsclient -c"
-    export EDITOR="emacsclient -t"
-elif _checkexec gvim
-then
-    export VISUAL="gvim"
-    export EDITOR=vim
-else
-    export VISUAL=vim
-    export EDITOR=$VISUAL
-fi
 
 # Default browser.  This leverages the MIME list.
 export BROWSER=/usr/bin/xdg-open
