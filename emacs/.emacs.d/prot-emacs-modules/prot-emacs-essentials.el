@@ -26,6 +26,7 @@
   ;; elsewhere later in the configuration.
   (prot-emacs-keybind global-map
     "<insert>" nil
+    "<menu>" nil
     "C-z" nil ; I have a window manager, thanks!
     "C-x C-z" nil ; same idea as above
     "C-x C-c" nil ; avoid accidentally exiting Emacs

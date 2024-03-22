@@ -2564,6 +2564,7 @@ how we type multiple ~define-key~ calls ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891
   ;; elsewhere later in the configuration.
   (prot-emacs-keybind global-map
     "<insert>" nil
+    "<menu>" nil
     "C-z" nil ; I have a window manager, thanks!
     "C-x C-z" nil ; same idea as above
     "C-x C-c" nil ; avoid accidentally exiting Emacs
