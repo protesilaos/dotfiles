@@ -90,6 +90,7 @@
     "<C-S-return>" #'prot-simple-new-line-above
     ;; Commands for text insertion or manipulation
     "C-=" #'prot-simple-insert-date
+    "C-<kp-equal>" #'prot-simple-insert-date
     "C-<" #'prot-simple-escape-url-dwim
     ;; "C->" #'prot-simple-insert-line-prefix-dwim
     "M-Z" #'prot-simple-zap-to-char-backward
