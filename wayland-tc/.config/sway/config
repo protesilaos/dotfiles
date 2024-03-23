@@ -68,7 +68,7 @@ gaps outer 0
 smart_gaps inverse_outer
 default_border pixel 3
 default_floating_border pixel 1
-hide_edge_borders both
+# hide_edge_borders both
 smart_borders on
 focus_follows_mouse yes
 workspace_auto_back_and_forth yes
