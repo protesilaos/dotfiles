@@ -69,6 +69,16 @@ the project in DIRECTORY using `project-dired'."
         (select-frame-by-name name)
       (prot-project--switch directory 'project-dired))))
 
+;;;; Produce a VC root log for the project
+
+(defun prot-project-rename-vc-root-log (&rest _)
+  "Rename the buffer of `vc-print-root-log' to mention the project."
+  (when-let ((root (vc-root-dir))
+             ((consp project--list))
+             ((member root (mapcar #'car project--list))))
+    (rename-buffer (format "*vc-root-log: %s*" root))))
+
+(advice-add #'vc-print-root-log :after #'prot-project-rename-vc-root-log)
 
 ;;;; One tab per project
 
