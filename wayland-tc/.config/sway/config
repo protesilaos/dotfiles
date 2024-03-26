@@ -23,6 +23,18 @@ set $menu wofi -G -I -i -n --show drun | xargs swaymsg exec --
 include /etc/sway/config.d/*
 include /etc/sway/config-vars.d/*
 
+# FIXME 2024-03-26: Screen sharing on sway is a pain to set up because
+# apparently the XDG_CURRENT_DESKTOP is not set by default and so the
+# `xdg-desktop-portal-wlr` does not work. I had other issues as well,
+# where Emacs does not read the environment variables specified by
+# environment.d. This is an issue I do not have on GNOME's Wayland
+# session. Of course, I can change the .desktop file or revise how I
+# start Sweay but I am not a fan of such workarounds: this should work
+# out-of-the-box. Back to Xorg or GNOME, I guess...
+
+# exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+# exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
