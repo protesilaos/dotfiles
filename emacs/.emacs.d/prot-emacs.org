@@ -15068,13 +15068,14 @@ If FRAME is nil, use the current frame."
   "Create new tab visiting DIRECTORY and named NAME."
   (tab-new)
   (find-file directory)
-  (prot-project--switch directory)
-  (tab-rename name)
-  ;; NOTE 2024-01-15 06:52 +0200: I am adding this because
-  ;; `tab-rename' is not persistent for some reason. Probably a bug...
-  (let* ((tabs (funcall tab-bar-tabs-function))
-         (tab-to-rename (nth (tab-bar--current-tab-index) tabs)))
-    (setf (alist-get 'explicit-name tab-to-rename) name)))
+  (unwind-protect
+      (prot-project--switch directory)
+    (tab-rename name)
+    ;; NOTE 2024-01-15 06:52 +0200: I am adding this because
+    ;; `tab-rename' is not persistent for some reason. Probably a bug...
+    (let* ((tabs (funcall tab-bar-tabs-function))
+           (tab-to-rename (nth (tab-bar--current-tab-index) tabs)))
+      (setf (alist-get 'explicit-name tab-to-rename) name))))
 
 ;;;###autoload
 (defun prot-project-in-tab (directory)
