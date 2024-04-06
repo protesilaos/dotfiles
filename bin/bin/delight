@@ -276,6 +276,8 @@ _i3 ()
 
 #### Gsettings
 
+#  TODO 2024-04-05: Remove those functions or, at least, make them easier to remember.
+
 _gsettings ()
 {
     gsettings "$1" "$2" "${@:3}"
