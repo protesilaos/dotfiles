@@ -29,6 +29,11 @@
 
 #### General
 
+gtk_theme_light="adw-gtk3"
+gtk_theme_dark="adw-gtk3-dark"
+icon_theme_light="Papirus-Light"
+icon_theme_dark="Papirus-Dark"
+
 _depcheck ()
 {
     command -v "$1" > /dev/null || { echo "Missing dependency: $1."; return 1; }
@@ -177,12 +182,12 @@ _xsettingsd ()
     case "$1"
     in
         light)
-            _gtk_common 'Adwaita' 'Adwaita'
-            _gtk_live 'Adwaita' 'Adwaita'
+            _gtk_common "$gtk_theme_light" "$icon_theme_light"
+            _gtk_live "$gtk_theme_light" "$icon_theme_light"
             ;;
         dark)
-            _gtk_common 'Adwaita-dark' 'Adwaita'
-            _gtk_live 'Adwaita-dark' 'Adwaita'
+            _gtk_common "$gtk_theme_dark" "$icon_theme_dark"
+            _gtk_live "$gtk_theme_dark" "$icon_theme_dark"
             ;;
     esac
 }
@@ -295,14 +300,19 @@ _gnome_theme ()
     _depcheck gsettings
 	interface="org.gnome.desktop.interface"
 
-    if [ "$(_gsettings_gtk_act 'get' $interface)" = "'Adwaita'" ]
+    if [ "$(_gsettings_gtk_act 'get' $interface)" = "$gtk_theme_light" ]
+    then
+        _gsettings_gtk_act 'set' $interface "$gtk_theme_dark"
+    else
+        _gsettings_gtk_act 'set' $interface "$gtk_theme_light"
+    fi
+
+    if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" = "'prefer-light'" ]
     then
         style=dark
-        _gsettings_gtk_act 'set' $interface 'Adwaita-dark'
         _gsettings_color_scheme_set 'prefer-dark'
     else
         style=light
-        _gsettings_gtk_act 'set' $interface 'Adwaita'
         _gsettings_color_scheme_set 'prefer-light'
     fi
 }
@@ -320,14 +330,19 @@ _mate_theme ()
     _depcheck gsettings
 	interface="org.mate.interface"
 
-    if [ "$(_gsettings_gtk_act 'get' $interface)" = "'Adwaita'" ]
+    if [ "$(_gsettings_gtk_act 'get' $interface)" = "$gtk_theme_light" ]
+    then
+        _gsettings_gtk_act 'set' $interface "$gtk_theme_dark"
+    else
+        _gsettings_gtk_act 'set' $interface "$gtk_theme_light"
+    fi
+
+    if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" = "'prefer-light'" ]
     then
         style=dark
-        _gsettings_gtk_act 'set' $interface 'Adwaita-dark'
         _gsettings_color_scheme_set 'prefer-dark'
     else
         style=light
-        _gsettings_gtk_act 'set' $interface 'Adwaita'
         _gsettings_color_scheme_set 'prefer-light'
     fi
 }
@@ -352,20 +367,27 @@ _xfquery_set ()
 
 _xfce ()
 {
-    if [ "$(_xfquery_get 'xsettings' '/Net/ThemeName')" = 'Adwaita' ]
+    _depcheck gsettings
+	interface="org.gnome.desktop.interface"
+
+    if [ "$(_xfquery_get 'xsettings' '/Net/ThemeName')" = "$gtk_theme_light" ]
     then
         style=dark
-        # _xfquery_set 'xfwm4' '/general/theme' 'Adwaita-dark'
-        _xfquery_set 'xsettings' '/Net/ThemeName' 'Adwaita-dark'
+        # _xfquery_set 'xfwm4' '/general/theme' 'adwaita-dark'
+        _gsettings_gtk_act 'set' $interface "$gtk_theme_dark"
+        _xfquery_set 'xsettings' '/Net/ThemeName' "$gtk_theme_dark"
+        _xfquery_set 'xsettings' '/Net/IconThemeName' "$icon_theme_dark"
+        _gsettings_color_scheme_set 'prefer-dark'
     else
         style=light
-        # _xfquery_set 'xfwm4' '/general/theme' 'Adwaita'
-        _xfquery_set 'xsettings' '/Net/ThemeName' 'Adwaita'
+        # _xfquery_set 'xfwm4' '/general/theme' 'adwaita'
+        _gsettings_gtk_act 'set' $interface "$gtk_theme_light"
+        _xfquery_set 'xsettings' '/Net/ThemeName' "$gtk_theme_light"
+        _xfquery_set 'xsettings' '/Net/IconThemeName' "$icon_theme_light"
+        _gsettings_color_scheme_set 'prefer-light'
     fi
 
-    _gnome_theme
     _emacs "$style"
-    _xterm "$style"
 }
 
 #### Sessions
