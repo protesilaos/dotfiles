@@ -323,36 +323,6 @@ _gnome ()
     _emacs "$style"
 }
 
-##### Mate
-
-_mate_theme ()
-{
-    _depcheck gsettings
-	interface="org.mate.interface"
-
-    if [ "$(_gsettings_gtk_act 'get' $interface)" = "$gtk_theme_light" ]
-    then
-        _gsettings_gtk_act 'set' $interface "$gtk_theme_dark"
-    else
-        _gsettings_gtk_act 'set' $interface "$gtk_theme_light"
-    fi
-
-    if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" = "'prefer-light'" ]
-    then
-        style=dark
-        _gsettings_color_scheme_set 'prefer-dark'
-    else
-        style=light
-        _gsettings_color_scheme_set 'prefer-light'
-    fi
-}
-
-_mate ()
-{
-    _mate_theme
-    _emacs "$style"
-}
-
 #### Xfce
 
 _xfquery_get ()
@@ -408,7 +378,6 @@ in
         ;;
     i3) _i3 ;;
     gnome) _gnome ;;
-    mate) _mate ;;
     xfce) _xfce ;;
 
 esac
