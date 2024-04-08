@@ -150,7 +150,7 @@
   (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
-  (setq savehist-additional-variables '(register-alist kill-ring))
+  (add-to-list 'savehist-additional-variables 'kill-ring)
   (savehist-mode 1))
 
 (prot-emacs-package dabbrev

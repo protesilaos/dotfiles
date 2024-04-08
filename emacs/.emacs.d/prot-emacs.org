@@ -2931,7 +2931,45 @@ with ~savehist-mode~ ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs
 (prot-emacs-configure
   (:delay 5)
   (setq register-preview-delay 0.8
-        register-preview-function #'register-preview-default))
+        register-preview-function #'register-preview-default)
+
+  ;; This is to handle registers.  We want to (i) save positions to
+  ;; files when closing Emacs and (ii) not be asked to restore the file
+  ;; as this is what we want anyway.
+  (cl-defmethod register-val-jump-to ((val cons) delete)
+    "Handle how to jump to a location register.
+This is like the default, but does not ask to visit a file: it does it
+outright."
+    (cond
+     ((frame-configuration-p (car val))
+      (set-frame-configuration (car val) (not delete))
+      (goto-char (cadr val)))
+     ((window-configuration-p (car val))
+      (set-window-configuration (car val))
+      (goto-char (cadr val)))
+     ((eq (car val) 'file)
+      (find-file (cdr val)))
+     ((eq (car val) 'buffer)
+      (switch-to-buffer (cdr val)))
+     ((eq (car val) 'file-query)
+      (find-file (nth 1 val))
+      (goto-char (nth 2 val)))
+     (t (cl-call-next-method val delete))))
+
+  (defun prot/register-swap-out-all (&rest args)
+    "Expand all location registers to their file equivalent.
+This must be done before closing Emacs, to persist registers across
+sessions."
+    (mapc
+     (lambda (buffer)
+       (with-current-buffer buffer
+         (register-swap-out)))
+     (buffer-list)))
+
+  (advice-add #'save-buffers-kill-terminal :before #'prot/register-swap-out-all)
+
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'register-alist)))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for auto revert
@@ -4231,7 +4269,12 @@ Histories are useful in two ways:
 
 Since we are already recording minibuffer histories, we can instruct
 ~savehist-mode~ to also keep track of additional variables and restore
-them next time we use Emacs. Hence ~savehist-additional-variables~.
+them next time we use Emacs. Hence ~savehist-additional-variables~. I
+do this in a few of places:
+
+- [[#h:804b858f-7913-47ef-aaf4-8eef5b59ecb4][The =prot-emacs-completion.el= for in-buffer completion popup and preview (~corfu~)]]
+- [[#h:5685df62-4484-42ad-a062-d55ab19022e3][The =prot-emacs-essentials.el= settings for registers]]
+- [[#h:32f6fe0f-23c4-44cc-97cc-3e5372bd484e][The =prot-shell.el= library]]
 
 Note that the user option ~history-length~ applies to each individual
 history variable: it is not about all histories combined.
@@ -4247,7 +4290,7 @@ basis.
   (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
-  (setq savehist-additional-variables '(register-alist kill-ring))
+  (add-to-list 'savehist-additional-variables 'kill-ring)
   (savehist-mode 1))
 #+end_src
 
