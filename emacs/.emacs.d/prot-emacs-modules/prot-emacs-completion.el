@@ -309,6 +309,13 @@ Development continues on GitHub with GitLab as a mirror."))
     (corfu-history-mode 1)
     (add-to-list 'savehist-additional-variables 'corfu-history)))
 
+;;; Completion preview for Emacs 30
+(prot-emacs-package completion-preview
+  (setq completion-preview-minimum-symbol-length 3)
+  (setq completion-preview-exact-match-only nil)
+  (setq completion-preview-sort-function #'minibuffer-sort-by-history)
+  (global-completion-preview-mode 1))
+
 ;;; Enhanced minibuffer commands (consult.el)
 (when prot-emacs-completion-extras
   (prot-emacs-package consult
