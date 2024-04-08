@@ -75,6 +75,9 @@
 
   (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
 
+  ;; Make the numpad equal the same as the regular one.
+  (add-to-list 'key-translation-map '("<kp-equal>" . "="))
+
   (prot-emacs-keybind global-map
     "ESC ESC" #'prot-simple-keyboard-quit-dwim
     "C-g" #'prot-simple-keyboard-quit-dwim
@@ -90,7 +93,6 @@
     "<C-S-return>" #'prot-simple-new-line-above
     ;; Commands for text insertion or manipulation
     "C-=" #'prot-simple-insert-date
-    "C-<kp-equal>" #'prot-simple-insert-date
     "C-<" #'prot-simple-escape-url-dwim
     ;; "C->" #'prot-simple-insert-line-prefix-dwim
     "M-Z" #'prot-simple-zap-to-char-backward
