@@ -7559,13 +7559,14 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (setq org-agenda-auto-exclude-function nil)
   (setq org-agenda-bulk-custom-functions nil)
 
-;;;;; Agenda habits
-  (require 'org-habit)
-  (setq org-habit-graph-column 50)
-  (setq org-habit-preceding-days 9)
-  ;; Always show the habit graph, even if there are no habits for
-  ;; today.
-  (setq org-habit-show-all-today t))
+;; ;;;;; Agenda habits
+;;   (require 'org-habit)
+;;   (setq org-habit-graph-column 50)
+;;   (setq org-habit-preceding-days 9)
+;;   ;; Always show the habit graph, even if there are no habits for
+;;   ;; today.
+;;   (setq org-habit-show-all-today t)
+  )
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org code block settings
@@ -14300,19 +14301,19 @@ produces dates with a fixed length."
                 ;; utility in multi-day views.
                 (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
                 (org-agenda-format-date "%A %-e %B %Y")))
-    (agenda "" ((org-agenda-overriding-header "\nRoutine")
-                (org-agenda-time-grid nil)
-                (org-agenda-start-on-weekday nil)
-                (org-agenda-span 1)
-                (org-agenda-show-all-dates nil)
-                (org-scheduled-past-days 365)
-                ;; Excludes today's scheduled items
-                (org-scheduled-delay-days 1)
-                (org-agenda-block-separator nil)
-                (org-agenda-entry-types '(:scheduled))
-                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "ROUTINE"))
-                (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-                (org-agenda-format-date "")))
+    ;; (agenda "" ((org-agenda-overriding-header "\nRoutine")
+    ;;             (org-agenda-time-grid nil)
+    ;;             (org-agenda-start-on-weekday nil)
+    ;;             (org-agenda-span 1)
+    ;;             (org-agenda-show-all-dates nil)
+    ;;             (org-scheduled-past-days 365)
+    ;;             ;; Excludes today's scheduled items
+    ;;             (org-scheduled-delay-days 1)
+    ;;             (org-agenda-block-separator nil)
+    ;;             (org-agenda-entry-types '(:scheduled))
+    ;;             (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "ROUTINE"))
+    ;;             (org-agenda-day-face-function (lambda (date) 'org-agenda-date))
+    ;;             (org-agenda-format-date "")))
     (agenda "" ((org-agenda-overriding-header "\nNext three days\n")
                 (org-agenda-start-on-weekday nil)
                 (org-agenda-start-day nil)

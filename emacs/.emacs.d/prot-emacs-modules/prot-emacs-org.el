@@ -394,13 +394,14 @@
   (setq org-agenda-auto-exclude-function nil)
   (setq org-agenda-bulk-custom-functions nil)
 
-;;;;; Agenda habits
-  (require 'org-habit)
-  (setq org-habit-graph-column 50)
-  (setq org-habit-preceding-days 9)
-  ;; Always show the habit graph, even if there are no habits for
-  ;; today.
-  (setq org-habit-show-all-today t))
+;; ;;;;; Agenda habits
+;;   (require 'org-habit)
+;;   (setq org-habit-graph-column 50)
+;;   (setq org-habit-preceding-days 9)
+;;   ;; Always show the habit graph, even if there are no habits for
+;;   ;; today.
+;;   (setq org-habit-show-all-today t)
+  )
 
 ;;;; code blocks
 (prot-emacs-configure
