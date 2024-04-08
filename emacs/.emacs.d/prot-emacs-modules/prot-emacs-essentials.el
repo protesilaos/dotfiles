@@ -355,7 +355,7 @@ sessions."
 ;;;; `proced' (process monitor, similar to `top')
 (prot-emacs-configure
   (:delay 10)
-  (setq proced-auto-update-flag t)
+  (setq proced-auto-update-flag t) ; Emacs 30 supports more than `t' value
   (setq proced-enable-color-flag t) ; Emacs 29
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
