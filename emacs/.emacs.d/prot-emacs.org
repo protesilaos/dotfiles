@@ -4539,7 +4539,7 @@ Still, they do have their uses.
           prot-orderless-beg-or-end)))
 #+end_src
 
-*** The =prot-emacs-completion.el= for in-buffer completion popup and preview (~corfu~)
+*** The =prot-emacs-completion.el= for in-buffer completion popup (~corfu~)
 :PROPERTIES:
 :CUSTOM_ID: h:804b858f-7913-47ef-aaf4-8eef5b59ecb4
 :END:
@@ -4578,20 +4578,6 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
   (with-eval-after-load 'savehist
     (corfu-history-mode 1)
     (add-to-list 'savehist-additional-variables 'corfu-history)))
-#+end_src
-
-What the handles the popup window, though we can enhance it by using a
-facility built into Emacs 30 that previews the first candidate. This
-can be helpful, as we may have already typed what matches the target,
-so we just follow it up with =TAB= to complete the operation.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-;;; Completion preview for Emacs 30
-(prot-emacs-package completion-preview
-  (setq completion-preview-minimum-symbol-length 3)
-  (setq completion-preview-exact-match-only nil)
-  (setq completion-preview-sort-function #'minibuffer-sort-by-history)
-  (global-completion-preview-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for ~consult~
