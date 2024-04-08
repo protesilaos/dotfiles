@@ -69,13 +69,14 @@ Used by `prot-simple-inset-date'."
 Repeat to extend the region forward to the next symbolic
 expression."
   (interactive)
-  (if (eq last-command this-command)
+  (if (and (region-active-p)
+           (eq last-command this-command))
       (ignore-errors (forward-sexp 1))
     (when-let ((thing (cond
                        ((thing-at-point 'url) 'url)
                        ((thing-at-point 'sexp) 'sexp)
                        ((thing-at-point 'string) 'string)
-                       (t 'word))))
+                       ((thing-at-point 'word) 'word))))
       (prot-simple--mark (bounds-of-thing-at-point thing)))))
 
 ;;;###autoload
