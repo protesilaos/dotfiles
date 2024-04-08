@@ -31,7 +31,7 @@
 
 gtk_theme_light="adw-gtk3"
 gtk_theme_dark="adw-gtk3-dark"
-icon_theme_light="Papirus-Light"
+icon_theme_light="Papirus"
 icon_theme_dark="Papirus-Dark"
 
 _depcheck ()
