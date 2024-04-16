@@ -2671,7 +2671,9 @@ this via some hook.
     "C-S-w" #'prot-simple-copy-line
     "C-S-y" #'prot-simple-yank-replace-line-or-region
     "C-v" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
+    "<next>" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
     "M-v" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
+    "<prior>" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
     "<C-return>" #'prot-simple-new-line-below
     "<C-S-return>" #'prot-simple-new-line-above
     ;; Commands for text insertion or manipulation
