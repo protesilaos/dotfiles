@@ -2,9 +2,11 @@
 
 ;; The themes are customisable.  Read the manual:
 ;; <https://protesilaos.com/emacs/ef-themes>.
-(prot-emacs-package ef-themes
-  (:install t)
-  (:delay 1)
+(use-package ef-themes
+  :ensure t
+  :demand t
+  :bind ("<f5>" . ef-themes-select)
+  :config
   (setq ef-themes-variable-pitch-ui t
         ef-themes-mixed-fonts t
         ef-themes-headings ; read the manual's entry of the doc string
@@ -27,9 +29,7 @@
   ;; a light or a dark theme.  Those functions are in my init.el.
   (if (prot-emacs-theme-environment-dark-p)
       (ef-themes-load-random 'dark)
-    (ef-themes-load-random 'light))
-
-  (define-key global-map (kbd "<f5>") #'ef-themes-select))
+    (ef-themes-load-random 'light)))
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment

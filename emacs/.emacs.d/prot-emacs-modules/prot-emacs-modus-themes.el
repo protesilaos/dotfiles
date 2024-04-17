@@ -2,9 +2,12 @@
 
 ;; The themes are highly customisable.  Read the manual:
 ;; <https://protesilaos.com/emacs/modus-themes>.
-(prot-emacs-package modus-themes
-  (:install t)
-  (:delay 1)
+(use-package modus-themes
+  :ensure t
+  :demand t
+  :bind (("<f5>" . modus-themes-toggle)
+         ("C-<f5>" . modus-themes-select))
+  :config
   (setq modus-themes-custom-auto-reload nil
         modus-themes-to-toggle '(modus-operandi modus-vivendi)
         ;; modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted)
@@ -22,15 +25,12 @@
           (t . (regular 1.15))))
 
   (setq modus-themes-common-palette-overrides nil)
-        ;; '((bg-mode-line-active bg-cyan-subtle)
-        ;;   (keybind yellow-warmer)))
+  ;; '((bg-mode-line-active bg-cyan-subtle)
+  ;;   (keybind yellow-warmer)))
 
   (if (prot-emacs-theme-environment-dark-p)
       (modus-themes-load-theme (cadr modus-themes-to-toggle))
-    (modus-themes-load-theme (car modus-themes-to-toggle)))
-
-  ;; Also check `modus-themes-select'.
-  (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
+    (modus-themes-load-theme (car modus-themes-to-toggle))))
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment
@@ -62,14 +62,14 @@
 
     (setq modus-themes-common-palette-overrides
           `((fringe unspecified)
-      ;; (bg-mode-line-active bg-lavender)
-      ;; (border-mode-line-active unspecified)
-      ;; (border-mode-line-inactive unspecified)
-      (bg-line-number-active bg-hl-line)
-      (bg-line-number-inactive unspecified)
-      (fg-line-number-active fg-main)
-      ;; ,@modus-themes-preset-overrides-warmer
-      ))
+            ;; (bg-mode-line-active bg-lavender)
+            ;; (border-mode-line-active unspecified)
+            ;; (border-mode-line-inactive unspecified)
+            (bg-line-number-active bg-hl-line)
+            (bg-line-number-inactive unspecified)
+            (fg-line-number-active fg-main)
+            ;; ,@modus-themes-preset-overrides-warmer
+            ))
 
     ;; ;; Make the active mode line have a pseudo 3D effect (this assumes
     ;; ;; you are using the default mode line and not an extra package).

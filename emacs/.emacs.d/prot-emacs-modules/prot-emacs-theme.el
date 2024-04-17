@@ -12,9 +12,9 @@
 
 ;;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
-(prot-emacs-package pulsar
-  (:install t)
-  (:delay 1)
+(use-package pulsar
+  :ensure t
+  :config
   (setopt pulsar-pulse t
           pulsar-delay 0.055
           pulsar-iterations 10
@@ -22,28 +22,24 @@
           pulsar-highlight-face 'pulsar-cyan)
 
   (pulsar-global-mode 1)
-
+  :hook
   ;; There are convenience functions/commands which pulse the line using
   ;; a specific colour: `pulsar-pulse-line-red' is one of them.
-  (add-hook 'next-error-hook #'pulsar-pulse-line-red)
-  (add-hook 'next-error-hook #'pulsar-recenter-top)
-  (add-hook 'next-error-hook #'pulsar-reveal-entry)
-
-  (add-hook 'minibuffer-setup-hook #'pulsar-pulse-line-red)
-
+  ((next-error . (pulsar-pulse-line-red pulsar-recenter-top pulsar-reveal-entry))
+   (minibuffer-setup . pulsar-pulse-line-red))
+  :bind
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
   ;;
   ;; (info "(elisp) Key Binding Conventions")
-  (prot-emacs-keybind global-map
-    "C-x l" #'pulsar-pulse-line ; override `count-lines-page'
-    "C-x L" #'pulsar-highlight-dwim)) ; or use `pulsar-highlight-line'
+  (("C-x l" . pulsar-pulse-line) ; override `count-lines-page'
+   ("C-x L" . pulsar-highlight-dwim))) ; or use `pulsar-highlight-line'
 
 ;;;; Lin
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
-(prot-emacs-package lin
-  (:install t)
-  (:delay 1)
+(use-package lin
+  :ensure t
+  :init
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
@@ -52,16 +48,17 @@
   ;;
   ;; I still prefer `setq' for consistency.
   (setq lin-face 'lin-magenta)
-
-  (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
+  :hook (after-init . lin-global-mode)) ; applies to all `lin-mode-hooks'
 
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:
 ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
-(prot-emacs-package spacious-padding
-  (:install t)
-  (:delay 1)
-
+(use-package spacious-padding
+  :ensure t
+  :if (display-graphic-p)
+  :hook (after-init . spacious-padding-mode)
+  :bind ("<f8>" . spacious-padding-mode)
+  :init
   ;; These are the defaults, but I keep it here for visiibility.
   (setq spacious-padding-widths
         '( :internal-border-width 15
@@ -83,16 +80,12 @@
   ;;                               'help-key-binding)
   ;;          :mode-line-inactive vertical-border))
 
-  (setq spacious-padding-subtle-mode-line nil)
-
-  (spacious-padding-mode 1)
-
-  (define-key global-map (kbd "<f8>") #'spacious-padding-mode))
+  (setq spacious-padding-subtle-mode-line nil))
 
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
-(prot-emacs-package rainbow-mode
-  (:install t)
-  (:delay 10)
+(use-package rainbow-mode
+  :ensure t
+  :init
   (setq rainbow-ansi-colors nil)
   (setq rainbow-x-colors nil)
 
@@ -101,16 +94,16 @@
                ((derived-mode-p 'emacs-lisp-mode))
                ((string-match-p "-theme" file)))
       (rainbow-mode 1)))
-
-  (add-hook 'emacs-lisp-mode-hook #'prot/rainbow-mode-in-themes)
-
-  (define-key ctl-x-x-map "c" #'rainbow-mode)) ; C-x x c
+  :bind ( :map ctl-x-x-map
+          ("c" . rainbow-mode)) ; C-x x c
+  :hook (emacs-lisp-mode . prot/rainbow-mode-in-themes))
 
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
-(prot-emacs-package cursory
-  (:install t)
-  (:delay 1)
+(use-package cursory
+  :ensure t
+  :demand t
+  :config
   (setq cursory-presets
         '((box
            :blink-cursor-interval 1.2)
@@ -149,18 +142,18 @@
 
   ;; Set last preset or fall back to desired style from `cursory-presets'.
   (cursory-set-preset (or (cursory-restore-latest-preset) 'box))
-
+  :hook
   ;; The other side of `cursory-restore-latest-preset'.
-  (add-hook 'kill-emacs-hook #'cursory-store-latest-preset)
-
+  (kill-emacs . cursory-store-latest-preset)
+  :bind
   ;; We have to use the "point" mnemonic, because C-c c is often the
   ;; suggested binding for `org-capture' and is the one I use as well.
-  (define-key global-map (kbd "C-c p") #'cursory-set-preset))
+  ("C-c p" . cursory-set-preset))
 
 ;;;; Theme buffet
-(prot-emacs-package theme-buffet
-  (:install t)
-  (:delay 1)
+(use-package theme-buffet
+  :ensure t
+  :config
   (setq theme-buffet-menu 'end-user)
   (setq theme-buffet--end-user
         '( :night     (modus-vivendi ef-dark ef-winter ef-autumn ef-night ef-duo-dark ef-symbiosis)
@@ -172,9 +165,11 @@
 
 ;;;; Fontaine (font configurations)
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
-(prot-emacs-package fontaine
-  (:install t)
-  (:delay 1)
+(use-package fontaine
+  :ensure t
+  :demand t
+  :bind ("C-c f" . fontaine-set-preset)
+  :config
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line nil)
 
@@ -281,41 +276,29 @@
   (fontaine-mode 1)
 
   (with-eval-after-load 'pulsar
-    (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line))
+    (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
-  (define-key global-map (kbd "C-c f") #'fontaine-set-preset))
-
-(prot-emacs-configure
-  (:delay 5)
 ;;;;; `variable-pitch-mode' setup
-  (define-key ctl-x-x-map (kbd "v") #'variable-pitch-mode)
-
+(use-package face-remap
+  :ensure nil
+  :functions prot/enable-variable-pitch
+  :bind ( :map ctl-x-x-map
+          ("v" . variable-pitch-mode))
+  :hook ((text-mode notmuch-show-mode elfeed-show-mode) . prot/enable-variable-pitch)
+  :config
   ;; NOTE 2022-11-20: This may not cover every case, though it works
   ;; fine in my workflow.  I am still undecided by EWW.
   (defun prot/enable-variable-pitch ()
     (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
       (variable-pitch-mode 1)))
-
-  (defvar prot/enable-variable-pitch-in-hooks
-    '(text-mode-hook
-      notmuch-show-mode-hook
-      elfeed-show-mode-hook)
-    "List of hook symbols to add `prot/enable-variable-pitch' to.")
-
-  (mapc
-   (lambda (hook)
-    (add-hook hook #'prot/enable-variable-pitch))
-   prot/enable-variable-pitch-in-hooks)
-
 ;;;;; Resize keys with global effect
-
+  :bind
   ;; Emacs 29 introduces commands that resize the font across all
   ;; buffers (including the minibuffer), which is what I want, as
   ;; opposed to doing it only in the current buffer.  The keys are the
   ;; same as the defaults.
-  (prot-emacs-keybind global-map
-    "C-x C-=" #'global-text-scale-adjust
-    "C-x C-+" #'global-text-scale-adjust
-    "C-x C-0" #'global-text-scale-adjust))
+  (("C-x C-=" . global-text-scale-adjust)
+   ("C-x C-+" . global-text-scale-adjust)
+   ("C-x C-0" . global-text-scale-adjust)))
 
 (provide 'prot-emacs-theme)
