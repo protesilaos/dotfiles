@@ -1,7 +1,8 @@
 ;;; Essential configurations
-(prot-emacs-configure
-  (:delay 1)
-
+(use-package emacs
+  :ensure nil
+  :demand t
+  :config
 ;;;; General settings and common custom functions (prot-simple.el)
   (setq blink-matching-paren nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
@@ -24,119 +25,117 @@
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
-  (prot-emacs-keybind global-map
-    "<insert>" nil
-    "<menu>" nil
-    "C-z" nil ; I have a window manager, thanks!
-    "C-x C-z" nil ; same idea as above
-    "C-x C-c" nil ; avoid accidentally exiting Emacs
-    "C-x C-c C-c" #'save-buffers-kill-emacs ; more cumbersome, less error-prone
-    "C-h h" nil ; Never show that "hello" file
-    "M-`" nil
-    "M-o" #'delete-blank-lines ; alias for C-x C-o
-    "M-SPC" #'cycle-spacing
-    "M-z" #'zap-up-to-char ; NOT `zap-to-char'
-    "M-c" #'capitalize-dwim
-    "M-l" #'downcase-dwim ; "lower" case
-    "M-u" #'upcase-dwim
-    "M-=" #'count-words
-    "C-x O" #'next-multiframe-window
-    "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
-    "C-h u" #'apropos-user-option
-    "C-h F" #'apropos-function ; lower case is `describe-function'
-    "C-h V" #'apropos-variable ; lower case is `describe-variable'
-    "C-h L" #'apropos-library ; lower case is `view-lossage'
-    "C-h c" #'describe-char) ; overrides `describe-key-briefly'
+  :bind
+  ( :map global-map
+    ("<insert>" . nil)
+    ("<menu>" . nil)
+    ("C-z" . nil) ; I have a window manager, thanks!
+    ("C-x C-z" . nil) ; same idea as above
+    ("C-x C-c" . nil) ; avoid accidentally exiting Emacs
+    ("C-x C-c C-c" . save-buffers-kill-emacs) ; more cumbersome, less error-prone
+    ("C-h h" . nil) ; Never show that "hello" file
+    ("M-`" . nil)
+    ("M-o" . delete-blank-lines) ; alias for C-x C-o
+    ("M-SPC" . cycle-spacing)
+    ("M-z" . zap-up-to-char) ; NOT `zap-to-char'
+    ("M-c" . capitalize-dwim)
+    ("M-l" . downcase-dwim) ; "lower" case
+    ("M-u" . upcase-dwim)
+    ("M-=" . count-words)
+    ("C-x O" . next-multiframe-window)
+    ("C-h K" . describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
+    ("C-h u" . apropos-user-option)
+    ("C-h F" . apropos-function) ; lower case is `describe-function'
+    ("C-h V" . apropos-variable) ; lower case is `describe-variable'
+    ("C-h L" . apropos-library) ; lower case is `view-lossage'
+    ("C-h c" . describe-char) ; overrides `describe-key-briefly'
 
-  (prot-emacs-keybind prog-mode-map
-    "C-M-d" #'up-list ; confusing name for what looks like "down" to me
-    "<C-M-backspace>" #'backward-kill-sexp)
+    :map prog-mode-map
+    ("C-M-d" . up-list) ; confusing name for what looks like "down" to me
+    ("<C-M-backspace>" . backward-kill-sexp)
 
-  ;; Keymap for buffers (Emacs28)
-  (prot-emacs-keybind ctl-x-x-map
-    "f" #'follow-mode  ; override `font-lock-update'
-    "r" #'rename-uniquely
-    "l" #'visual-line-mode))
+    ;; Keymap for buffers (Emacs28)
+    :map ctl-x-x-map
+    ("f" . follow-mode)  ; override `font-lock-update'
+    ("r" . rename-uniquely)
+    ("l" . visual-line-mode)))
 
-(prot-emacs-package prot-common
-  (:delay 1)
-  (mapc
-   (lambda (hook)
-     (add-hook hook #'prot-common-truncate-lines-silently))
-   '(fundamental-mode-hook text-mode-hook prog-mode-hook))
+(use-package prot-common
+  :ensure nil
+  :hook ((fundamental-mode text-mode prog-mode) . prot-common-truncate-lines-silently)
+  :config
   ;; NEVER tell me which key can call a command that I specifically
   ;; invoked with M-x: I have a good reason to use it that way.
   (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore))
 
-(prot-emacs-package prot-simple
-  (:delay 1)
+(use-package prot-simple
+  :ensure nil
+  :config
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
 
   (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
-
-  ;; Make the numpad equal the same as the regular one.
-  (add-to-list 'key-translation-map '("<kp-equal>" . "="))
-
-  (prot-emacs-keybind global-map
-    "ESC ESC" #'prot-simple-keyboard-quit-dwim
-    "C-g" #'prot-simple-keyboard-quit-dwim
-    "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
+  :bind
+  ( ("ESC ESC" . prot-simple-keyboard-quit-dwim)
+    ("C-g" . prot-simple-keyboard-quit-dwim)
+    ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
-    "M-k" #'prot-simple-kill-line-backward
-    "C-S-d" #'prot-simple-duplicate-line-or-region
-    "C-S-w" #'prot-simple-copy-line
-    "C-S-y" #'prot-simple-yank-replace-line-or-region
-    "C-v" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
-    "<next>" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
-    "M-v" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
-    "<prior>" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
-    "<C-return>" #'prot-simple-new-line-below
-    "<C-S-return>" #'prot-simple-new-line-above
+    ("M-k" . prot-simple-kill-line-backward)
+    ("C-S-d" . prot-simple-duplicate-line-or-region)
+    ("C-S-w" . prot-simple-copy-line)
+    ("C-S-y" . prot-simple-yank-replace-line-or-region)
+    ("C-v" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
+    ("<next>" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
+    ("M-v" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
+    ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
+    ("<C-return>" . prot-simple-new-line-below)
+    ("<C-S-return>" . prot-simple-new-line-above)
     ;; Commands for text insertion or manipulation
-    "C-=" #'prot-simple-insert-date
-    "C-<" #'prot-simple-escape-url-dwim
-    ;; "C->" #'prot-simple-insert-line-prefix-dwim
-    "M-Z" #'prot-simple-zap-to-char-backward
+    ("C-=" . prot-simple-insert-date)
+    ("C-<" . prot-simple-escape-url-dwim)
+    ;; "C->" prot-simple-insert-line-prefix-dwim
+    ("M-Z" . prot-simple-zap-to-char-backward)
     ;; Commands for object transposition
-    "C-S-p" #'prot-simple-move-above-dwim
-    "C-S-n" #'prot-simple-move-below-dwim
-    "C-t" #'prot-simple-transpose-chars
-    "C-x C-t" #'prot-simple-transpose-lines
-    "C-S-t" #'prot-simple-transpose-paragraphs
-    "C-x M-t" #'prot-simple-transpose-sentences
-    "C-M-t" #'prot-simple-transpose-sexps
-    "M-t" #'prot-simple-transpose-words
+    ("C-S-p" . prot-simple-move-above-dwim)
+    ("C-S-n" . prot-simple-move-below-dwim)
+    ("C-t" . prot-simple-transpose-chars)
+    ("C-x C-t" . prot-simple-transpose-lines)
+    ("C-S-t" . prot-simple-transpose-paragraphs)
+    ("C-x M-t" . prot-simple-transpose-sentences)
+    ("C-M-t" . prot-simple-transpose-sexps)
+    ("M-t" . prot-simple-transpose-words)
     ;; Commands for paragraphs
-    "M-Q" #'prot-simple-unfill-region-or-paragraph
+    ("M-Q" . prot-simple-unfill-region-or-paragraph)
     ;; Commands for windows and pages
-    "C-x o" #'prot-simple-other-window
-    "C-x n k" #'prot-simple-delete-page-delimiters
-    "C-x M-r" #'prot-simple-swap-window-buffers
+    ("C-x o" . prot-simple-other-window)
+    ("C-x n k" . prot-simple-delete-page-delimiters)
+    ("C-x M-r" . prot-simple-swap-window-buffers)
     ;; Commands for buffers
-    "<C-f2>" #'prot-simple-rename-file-and-buffer
-    "C-x k" #'prot-simple-kill-buffer-current
-    "C-x K" #'kill-buffer ; leaving this here to contrast with the above
-    "M-s b" #'prot-simple-buffers-major-mode
-    "M-s v" #'prot-simple-buffers-vc-root))
+    ("<C-f2>" . prot-simple-rename-file-and-buffer)
+    ("C-x k" . prot-simple-kill-buffer-current)
+    ("C-x K" . kill-buffer) ; leaving this here to contrast with the above
+    ("M-s b" . prot-simple-buffers-major-mode)
+    ("M-s v" . prot-simple-buffers-vc-root)))
 
 ;;;; Scratch buffers per major mode (prot-scratch.el)
-(prot-emacs-package prot-scratch
-  (:delay 5)
-  (setq prot-scratch-default-mode 'text-mode)
-  (define-key global-map (kbd "C-c s") #'prot-scratch-buffer))
+(use-package prot-scratch
+  :ensure nil
+  :bind ("C-c s" . prot-scratch-buffer)
+  :config
+  (setq prot-scratch-default-mode 'text-mode))
 
 ;;;; Insert character pairs (prot-pair.el)
-(prot-emacs-package prot-pair
-  (:delay 5)
-  (prot-emacs-keybind global-map
-    "C-'" #'prot-pair-insert
-    "M-'" #'prot-pair-insert
-    "M-\\" #'prot-pair-delete))
+(use-package prot-pair
+  :ensure nil
+  :bind
+  (("C-'" . prot-pair-insert)
+   ("M-'" . prot-pair-insert)
+   ("M-\\" . prot-pair-delete)))
 
 ;;;; Comments (prot-comment.el)
-(prot-emacs-package prot-comment
-  (:delay 5)
+(use-package prot-comment
+  :ensure nil
+  :init
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
@@ -146,22 +145,26 @@
   (setq prot-comment-comment-keywords '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
-
-  (prot-emacs-keybind global-map
-    "C-;" #'prot-comment
-    "C-x C-;" #'prot-comment-timestamp-keyword))
+  :bind
+  (("C-;" . prot-comment)
+   ("C-x C-;" . prot-comment-timestamp-keyword)))
 
 ;;;; Prefix keymap (prot-prefix.el)
-(prot-emacs-package prot-prefix
-  (:delay 1)
-  (prot-emacs-keybind global-map
-    "<insert>" 'prot-prefix
-    "<f2>" 'prot-prefix ; override that two-column gimmick
-    "C-z" 'prot-prefix))
+(use-package prot-prefix
+  :ensure nil
+  :bind-keymap
+  ;; F2 overrides that two-column gimmick.  Sorry, but no.
+  (("<insert>" . prot-prefix)
+   ("<f2>" . prot-prefix)
+   ("C-z" . prot-prefix)))
 
 ;;;; Mouse and mouse wheel behaviour
-(prot-emacs-configure
-  (:delay 5)
+(use-package mouse
+  :ensure nil
+  :hook (after-init . mouse-wheel-mode)
+  :config
+  ;; Some of these variables are defined in places other than
+  ;; mouse.el, but this is fine.
   (setq mouse-autoselect-window t) ; complements the auto-selection of my tiling window manager
 
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
@@ -179,14 +182,13 @@
   (setq-default scroll-preserve-screen-position t
                 scroll-conservatively 1 ; affects `scroll-step'
                 scroll-margin 0
-                next-screen-context-lines 0)
-
-  (mouse-wheel-mode 1)
-  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window))
+                next-screen-context-lines 0))
 
 ;;;; Repeatable key chords (repeat-mode)
-(prot-emacs-configure
-  (:delay 5)
+(use-package repeat
+  :ensure nil
+  :hook (after-init . repeat-mode)
+  :config
   (setq repeat-on-final-keystroke t
         repeat-exit-timeout 5
         repeat-exit-key "<escape>"
@@ -195,12 +197,14 @@
         repeat-echo-function 'ignore
         ;; Technically, this is not in repeal.el, though it is the
         ;; same idea.
-        set-mark-command-repeat-pop t)
-  (repeat-mode 1))
+        set-mark-command-repeat-pop t))
 
 ;;;; Built-in bookmarking framework (bookmark.el)
-(prot-emacs-configure
-  (:delay 1)
+(use-package bookmark
+  :ensure nil
+  :commands (bookmark-set bookmark-jump bookmark-bmenu-list)
+  :hook (bookmark-bmenu-mode . hl-line-mode)
+  :config
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations nil)
   (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon
@@ -208,13 +212,13 @@
   ;; made (addition or deletion).  Otherwise Emacs will only save the
   ;; bookmarks when it closes, which may never happen properly
   ;; (e.g. power failure).
-  (setq bookmark-save-flag 1)
+  (setq bookmark-save-flag 1))
 
-  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
-
-;;;; Registers (registers.el)
-(prot-emacs-configure
-  (:delay 5)
+;;;; Registers (register.el)
+(use-package register
+  :ensure nil
+  :defer t ; its commands are autoloaded, so this will be loaded then
+  :config
   (setq register-preview-delay 0.8
         register-preview-function #'register-preview-default)
 
@@ -257,19 +261,22 @@ sessions."
     (add-to-list 'savehist-additional-variables 'register-alist)))
 
 ;;;; Auto revert mode
-(prot-emacs-configure
-  (:delay 5)
-  (setq auto-revert-verbose t)
-  (global-auto-revert-mode 1))
+(use-package autorevert
+  :ensure nil
+  :hook (after-init . global-auto-revert-mode)
+  :config
+  (setq auto-revert-verbose t))
 
 ;;;; Delete selection
-(prot-emacs-configure
-  (:delay 5)
-  (delete-selection-mode 1))
+(use-package delsel
+  :ensure nil
+  :hook (after-init . delete-selection-mode))
 
 ;;;; Tooltips (tooltip-mode)
-(prot-emacs-configure
-  (:delay 5)
+(use-package tooltip
+  :ensure nil
+  :hook (after-init . tooltip-mode)
+  :config
   (setq tooltip-delay 0.5
         tooltip-short-delay 0.5
         x-gtk-use-system-tooltips t
@@ -277,14 +284,13 @@ sessions."
         '((name . "tooltip")
           (internal-border-width . 10)
           (border-width . 0)
-          (no-special-glyphs . t)))
-
-  (autoload #'tooltip-mode "tooltip")
-  (tooltip-mode 1))
+          (no-special-glyphs . t))))
 
 ;;;; Display current time
-(prot-emacs-configure
-  (:delay 1)
+(use-package time
+  :ensure nil
+  :hook (after-init . display-time-mode)
+  :config
   (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
@@ -307,13 +313,13 @@ sessions."
            (format-time-string display-time-format now)
            'face 'display-time-date-and-time
            'help-echo (format-time-string "%a %b %e, %Y" now))
-          " "))
-
-  (display-time-mode 1))
+          " ")))
 
 ;;;; World clock (M-x world-clock)
-(prot-emacs-configure
-  (:delay 5)
+(use-package time
+  :ensure nil
+  :commands (world-clock)
+  :config
   (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
         '(("America/Los_Angeles" "Los Angeles")
@@ -350,23 +356,28 @@ sessions."
   (setq world-clock-timer-second 60))
 
 ;;;; `man' (manpages)
-(prot-emacs-configure
-  (:delay 10)
+(use-package man
+  :ensure nil
+  :commands (man)
+  :config
   (setq Man-notify-method 'pushy)) ; does not obey `display-buffer-alist'
 
 ;;;; `proced' (process monitor, similar to `top')
-(prot-emacs-configure
-  (:delay 10)
-  (setq proced-auto-update-flag t) ; Emacs 30 supports more than `t' value
+(use-package proced
+  :ensure nil
+  :commands (proced)
+  :config
+  (setq proced-auto-update-flag 'visible) ; Emacs 30 supports more the `visible' value
   (setq proced-enable-color-flag t) ; Emacs 29
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
   (setq proced-filter 'user))
 
 ;;;; Emacs server (allow emacsclient to connect to running session)
-(prot-emacs-configure
-  (:delay 1)
-  (require 'server)
+(use-package server
+  :ensure nil
+  :defer 1
+  :config
   (setq server-client-instructions nil)
   (unless (server-running-p)
     (server-start)))
@@ -374,9 +385,20 @@ sessions."
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
-(prot-emacs-package substitute
-  (:install t)
-  (:delay 10)
+(use-package substitute
+  :ensure t
+  ;; Produce a message after the substitution that reports on what
+  ;; happened.  It is a single line, like "Substituted `TARGET' with
+  ;; `SUBSTITUTE' N times across the buffer.
+  :hook (substitute-post-replace . substitute-report-operation)
+  :bind
+  ;; The mnemonic for the prefix is that M-# (or M-S-3) is close to
+  ;; M-% (or M-S-5).
+  (("M-# s" . substitute-target-below-point) ; Forward motion like isearch (C-s)
+   ("M-# r" . substitute-target-above-point) ; Backward motion like isearch (C-r)
+   ("M-# d" . substitute-target-in-defun)    ; "defun" mnemonic
+   ("M-# b" . substitute-target-in-buffer)) ; "buffer" mnemonic
+  :config
   ;; Set this to non-nil to highlight all occurrences of the current
   ;; target.
   (setopt substitute-highlight t)
@@ -384,33 +406,22 @@ sessions."
   ;; Set this to t if you want to always treat the letter casing
   ;; literally.  Otherwise each command accepts a `C-u' prefix
   ;; argument to do this on-demand.
-  (setq substitute-fixed-letter-case nil)
+  (setq substitute-fixed-letter-case nil))
 
-  ;; Produce a message after the substitution that reports on what
-  ;; happened.  It is a single line, like "Substituted `TARGET' with
-  ;; `SUBSTITUTE' N times across the buffer.
-  (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
-
-  ;; The mnemonic for the prefix is that M-# (or M-S-3) is close to
-  ;; M-% (or M-S-5).
-  (prot-emacs-keybind global-map
-    "M-# s" #'substitute-target-below-point ; Forward motion like isearch (C-s)
-    "M-# r" #'substitute-target-above-point ; Backward motion like isearch (C-r)
-    "M-# d" #'substitute-target-in-defun    ; "defun" mnemonic
-    "M-# b" #'substitute-target-in-buffer)) ; "buffer" mnemonic
-
-(prot-emacs-package goto-chg
-  (:install t)
-  (:delay 1)
-  (prot-emacs-keybind global-map
-    "C-(" #'goto-last-change
-    "C-)" #'goto-last-change-reverse))
+(use-package goto-chg
+  :ensure t
+  :bind
+  (("C-(" . goto-last-change)
+   ("C-)" . goto-last-change-reverse)))
 
 ;;; Mark syntactic constructs efficiently if tree-sitter is available (expreg)
 (when (and (treesit-available-p) prot-emacs-treesitter-extras)
-  (prot-emacs-package expreg
-    (:install t)
-    (:delay 10)
+  (use-package expreg
+    :ensure t
+    :functions (prot/expreg-expand prot/expreg-expand-dwim)
+    ;; There is also an `expreg-contract' command, though I have no use for it.
+    :bind ("C-M-SPC" . prot/expreg-expand-dwim) ; overrides `mark-sexp'
+    :config
     (defun prot/expreg-expand (n)
       "Expand to N syntactic units, defaulting to 1 if none is provided interactively."
       (interactive "p")
@@ -427,15 +438,25 @@ word.  Fall back to regular `expreg-expand'."
          ((equal (bounds-of-thing-at-point 'word) symbol)
           (prot/expreg-expand 1))
          (symbol (prot/expreg-expand 2))
-         (t (expreg-expand)))))
-
-    ;; There is also an `expreg-contract' command, though I have no use for it.
-    (define-key global-map (kbd "C-M-SPC") #'prot/expreg-expand-dwim))) ; overrides `mark-sexp'
+         (t (expreg-expand)))))))
 
 ;;; Visualise undo ring (`vundo')
-(prot-emacs-package vundo
-  (:install t)
-  (:delay 1)
+(use-package vundo
+  :ensure t
+  :defer 1
+  :bind
+  ( :map vundo-mode-map
+    ("C-/" . vundo-backward)
+    ("C-?" . vundo-forward)
+    ("u" . vundo-backward)
+    ("U" . vundo-forward)
+    ("g" . vundo-goto-last-saved)
+    ("." . vundo-goto-last-saved)
+    ("h" . vundo-backward)
+    ("j" . vundo-next)
+    ("k" . vundo-previous)
+    ("l" . vundo-forward))
+  :config
   (setq vundo-glyph-alist vundo-unicode-symbols)
 
   (defvar prot/vundo-undo-functions '(undo undo-only undo-redo)
@@ -459,56 +480,51 @@ to be cycling through the edits."
      (advice-add fn :around #'prot/vundo-if-repeat-undo))
    prot/vundo-undo-functions)
 
-  (prot-emacs-keybind vundo-mode-map
-    "C-/" #'vundo-backward
-    "C-?" #'vundo-forward
-    "u" #'vundo-backward
-    "U" #'vundo-forward
-    "g" #'vundo-goto-last-saved
-    "." #'vundo-goto-last-saved
-    "h" #'vundo-backward
-    "j" #'vundo-next
-    "k" #'vundo-previous
-    "l" #'vundo-forward)
-
   (with-eval-after-load 'pulsar
     (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
-(prot-emacs-package tmr
-  (:install t)
-  (:delay 15)
+(use-package tmr
+  :ensure t
+  :bind
+  (("C-c t t" . tmr)
+   ("C-c t T" . tmr-with-description)
+   ("C-c t l" . tmr-tabulated-view) ; "list timers" mnemonic
+   ("C-c t c" . tmr-clone)
+   ("C-c t k" . tmr-cancel)
+   ("C-c t s" . tmr-reschedule)
+   ("C-c t e" . tmr-edit-description)
+   ("C-c t r" . tmr-remove)
+   ("C-c t R" . tmr-remove-finished))
+  :config
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
         tmr-notification-urgency 'normal
-        tmr-description-list 'tmr-description-history)
-
-  (prot-emacs-keybind global-map
-    "C-c t t" #'tmr
-    "C-c t T" #'tmr-with-description
-    "C-c t l" #'tmr-tabulated-view ; "list timers" mnemonic
-    "C-c t c" #'tmr-clone
-    "C-c t k" #'tmr-cancel
-    "C-c t s" #'tmr-reschedule
-    "C-c t e" #'tmr-edit-description
-    "C-c t r" #'tmr-remove
-    "C-c t R" #'tmr-remove-finished))
+        tmr-description-list 'tmr-description-history))
 
 ;;; Pass interface (password-store)
-(prot-emacs-package password-store
-  (:install t)
-  (:delay 5)
-  (setq password-store-time-before-clipboard-restore 30)
+(use-package password-store
+  :ensure t
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
-  (define-key global-map (kbd "C-c k") #'password-store-copy))
+  :bind ("C-c k" . password-store-copy)
+  :config
+  (setq password-store-time-before-clipboard-restore 30))
 
-(prot-emacs-package pass (:install t) (:delay 5))
+(use-package pass
+ :ensure t
+ :commands (pass))
 
 ;;; Shell (M-x shell)
-(prot-emacs-package shell
-  (:delay 15)
-
+(use-package shell
+  :ensure nil
+  :bind
+  ( :map global-map 
+    ("<f1>" . shell) ; I don't use F1 for help commands
+    :map shell-mode-map
+    ("C-c C-k" . comint-clear-buffer)
+    ("C-c C-w" . comint-write-output))
+  :config
   ;; Check my .bashrc which handles `comint-terminfo-terminal':
   ;;
   ;; # Default pager.  The check for the terminal is useful for Emacs with
@@ -553,34 +569,27 @@ to be cycling through the edits."
   ;; Support for OS-specific escape sequences such as what `ls
   ;; --hyperlink' uses.  I normally don't use those, but I am checking
   ;; this to see if there are any obvious advantages/disadvantages.
-  (add-hook 'comint-output-filter-functions 'comint-osc-process-output)
+  (add-hook 'comint-output-filter-functions 'comint-osc-process-output))
 
-  (define-key global-map (kbd "<f1>") #'shell) ; I don't use F1 for help commands
-
-  (prot-emacs-keybind shell-mode-map
-    "C-c C-k" #'comint-clear-buffer
-    "C-c C-w" #'comint-write-output))
-
-(prot-emacs-package prot-shell
-  (:delay 15)
-  (add-hook 'shell-mode-hook #'prot-shell-mode))
+(use-package prot-shell
+  :ensure nil
+  :hook (shell-mode . prot-shell-mode))
 
 ;;; Laptop settings
 (unless (directory-empty-p "/sys/class/power_supply/")
   (add-to-list 'default-frame-alist '(width . (text-pixels . 800)))
   (add-to-list 'default-frame-alist '(height . (text-pixels . 600)))
 
-  (prot-emacs-configure
-    (:delay 10)
-;;;; Show battery status on the mode line (battery.el
-    (require 'battery)
+  (use-package battery
+    :ensure nil
+    :hook (after-init . display-battery-mode)
+    :config
+;;;; Show battery status on the mode line (battery.el)
     (setq battery-mode-line-format
           (cond
            ((eq battery-status-function #'battery-linux-proc-acpi)
 	        "⏻%b%p%%,%d°C ")
 	       (battery-status-function
-	        "⏻%b%p%% ")))
-
-    (display-battery-mode 1)))
+	        "⏻%b%p%% ")))))
 
 (provide 'prot-emacs-essentials)

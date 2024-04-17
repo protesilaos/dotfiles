@@ -103,6 +103,7 @@
 (use-package cursory
   :ensure t
   :demand t
+  :if (display-graphic-p)
   :config
   (setq cursory-presets
         '((box
@@ -168,6 +169,7 @@
 (use-package fontaine
   :ensure t
   :demand t
+  :if (display-graphic-p)
   :bind ("C-c f" . fontaine-set-preset)
   :config
   ;; This is defined in Emacs C code: it belongs to font settings.
