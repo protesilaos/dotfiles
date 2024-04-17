@@ -276,13 +276,12 @@
   ;; Set last preset or fall back to desired style from `fontaine-presets'.
   (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
 
-  ;; The other side of `fontaine-restore-latest-preset'.
-  (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
-  (add-hook 'fontaine-set-preset-hook #'fontaine-store-latest-preset)
+  ;; Persist the latest font preset when closing/starting Emacs and
+  ;; while switching between themes.
+  (fontaine-mode 1)
 
-  ;; Persist font configurations while switching themes.  The
-  ;; `enable-theme-functions' is from Emacs 29.
-  (add-hook 'enable-theme-functions #'fontaine-apply-current-preset)
+  (with-eval-after-load 'pulsar
+    (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line))
 
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset))
 
