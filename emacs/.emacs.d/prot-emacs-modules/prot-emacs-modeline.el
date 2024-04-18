@@ -1,6 +1,7 @@
 ;;; Mode line
-(prot-emacs-package prot-modeline
-  (:delay 1)
+(use-package prot-modeline
+  :ensure nil
+  :config
   (setq mode-line-compact nil) ; Emacs 28
   (setq mode-line-right-align-edge 'right-margin) ; Emacs 30
   (setq-default mode-line-format
@@ -41,14 +42,16 @@
     (add-hook 'spacious-padding-mode-hook #'prot/modeline-spacious-indicators)))
 
 ;;; Keycast mode
-(prot-emacs-package keycast
-  (:install t)
-  (:delay 5)
+(use-package keycast
+  :ensure t
+  :after prot-modeline
+  :commands (keycast-mode-line-mode keycast-header-line-mode keycast-tab-bar-mode keycast-log-mode)
+  :init
   (setq keycast-mode-line-format "%2s%k%c%R")
   (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
   (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
   (setq keycast-mode-line-remove-tail-elements nil)
-
+  :config
   (dolist (input '(self-insert-command org-self-insert-command))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
