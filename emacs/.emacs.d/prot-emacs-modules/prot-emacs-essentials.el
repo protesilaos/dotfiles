@@ -519,7 +519,7 @@ to be cycling through the edits."
 (use-package shell
   :ensure nil
   :bind
-  ( :map global-map 
+  ( :map global-map
     ("<f1>" . shell) ; I don't use F1 for help commands
     :map shell-mode-map
     ("C-c C-k" . comint-clear-buffer)
