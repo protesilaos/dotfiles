@@ -1,6 +1,8 @@
 ;;; Calendar
-(prot-emacs-package calendar
-  (:delay 5)
+(use-package calendar
+  :ensure nil
+  :commands (calendar)
+  :config
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-mark-holidays-flag t)
   (setq calendar-mode-line-format nil)
@@ -20,8 +22,10 @@
   (setq calendar-daylight-time-zone-name "+0300"))
 
 ;;; Appt (appointment reminders which also integrate with Org agenda)
-(prot-emacs-package appt
-  (:delay 5)
+(use-package appt
+  :ensure nil
+  :commands (appt-activate)
+  :config
   (setq appt-display-diary nil
         appt-display-format nil
         appt-display-mode-line t
@@ -40,11 +44,9 @@
     (org-agenda-to-appt)))
 
 ;;; Org-mode (personal information manager)
-;; Some of these settings need to be eva;uated before the `org'
-;; feature is loaded, so I am using `prot-emacs-configure' and then
-;; simply `require' the feature at the right spot.
-(prot-emacs-configure
-  (:delay 5)
+(use-package org
+  :ensure nil
+  :init
   ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
   ;; otherwise we have to use the Custom UI.  No thanks!
   (setq org-export-backends '(html texinfo md))
@@ -54,7 +56,31 @@
 
   (add-to-list 'safe-local-variable-values '(org-hide-leading-stars . t))
   (add-to-list 'safe-local-variable-values '(org-hide-macro-markers . t))
-
+  :bind
+  ( :map global-map
+    ("C-c l" . org-store-link)
+    ("C-c o" . org-open-at-point-global)
+    :map org-mode-map
+    ;; I don't like that Org binds one zillion keys, so if I want one
+    ;; for something more important, I disable it from here.
+    ("C-'" . nil)
+    ("C-," . nil)
+    ("M-;" . nil)
+    ("<C-return>" . nil)
+    ("<C-S-return>" . nil)
+    ("C-M-S-<right>" . nil)
+    ("C-M-S-<left>" . nil)
+    ("C-c ;" . nil)
+    ("C-c M-l" . org-insert-last-stored-link)
+    ("C-c C-M-l" . org-toggle-link-display)
+    ("M-." . org-edit-special) ; alias for C-c ' (mnenomic is global M-. that goes to source)
+    :map org-src-mode-map
+    ("M-," . org-edit-src-exit) ; see M-. above
+    :map narrow-map
+    ("b" . org-narrow-to-block)
+    ("e" . org-narrow-to-element)
+    ("s" . org-narrow-to-subtree))
+  :config
 ;;;; general settings
   (setq org-ellipsis "⮧")
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
@@ -80,11 +106,18 @@
   (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
-  (setq org-read-date-prefer-future 'time))
+  (setq org-read-date-prefer-future 'time)
+
+  ;; See my `pulsar' package, defined elsewhere in this setup.
+  (with-eval-after-load 'pulsar
+    (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
+      (add-hook hook #'pulsar-recenter-center)
+      (add-hook hook #'pulsar-reveal-entry))))
 
 ;;;; refile, todo
-(prot-emacs-configure
-  (:delay 5)
+(use-package org
+  :ensure nil
+  :config
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 2))
           (nil . (:maxlevel . 2))))
@@ -122,8 +155,9 @@
   (setq org-default-priority ?A))
 
 ;;;; tags
-(prot-emacs-configure
-  (:delay 5)
+(use-package org
+  :ensure nil
+  :config
   (setq org-tag-alist ; I don't really use those, but whatever
         '(("meeting")
           ("admin")
@@ -144,8 +178,9 @@
   (setq org-tags-column 0))
 
 ;;;; log
-(prot-emacs-configure
-  (:delay 5)
+(use-package org
+  :ensure nil
+  :config
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-log-note-clock-out nil)
@@ -153,14 +188,48 @@
   (setq org-log-reschedule 'time))
 
 ;;;; links
-(prot-emacs-configure
-  (:delay 5)
+(use-package org
+  :ensure nil
+  :config
   (setq org-link-keep-stored-after-insertion nil))
   ;; TODO 2021-10-15 org-link-make-description-function
 
+;;;; code blocks
+(use-package org
+  :ensure nil
+  :config
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-src-window-setup 'current-window)
+  (setq org-edit-src-persistent-message nil)
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-edit-src-content-indentation 0))
+
+;;;; export
+(use-package org
+  :ensure nil
+  :config
+  (setq org-export-with-toc t)
+  (setq org-export-headline-levels 8)
+  (setq org-export-dispatch-use-expert-ui nil)
+  (setq org-html-htmlize-output-type nil)
+  (setq org-html-head-include-default-style nil)
+  (setq org-html-head-include-scripts nil))
+
+;;;; IDs
+(use-package org
+  :ensure nil
+  :config
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+
 ;;;; capture
-(prot-emacs-configure
-  (:delay 5)
+(use-package org-capture
+  :ensure nil
+  :bind ("C-c c" . org-capture)
+  :config
+  (require 'prot-org)
+
   (setq org-capture-templates
         `(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
@@ -207,23 +276,19 @@
                     ":END:\n\n"
                     "%a\n%i%?")
            :empty-lines-after 1)
-          ;; ;; NOTE 2023-01-29: See improved version in the
-          ;; ;; prot-org.el further below.  It runs a custom function
-          ;; ;; of mine that produces a more personalised template
-          ;; ;; than what the built-in options support.
-          ;;
-          ;; ("p" "Private lesson or service" entry
-          ;;  (file "coach.org")
-          ;;  ,(concat "* COACH %^{Title} %^g\n"
-          ;;           "%(prot/org-date-prompt-range-increment)"
-          ;;           ":PROPERTIES:\n"
-          ;;           ":CAPTURED: %U\n"
-          ;;           ":APPT_WARNTIME: 20\n"
-          ;;           ":END:\n\n"
-          ;;           "%a\n%i%?")
-          ;;  :prepend t
-          ;;  :empty-lines 1)
-          ))
+          ("p" "Private lesson or service" entry
+           (file "coach.org")
+           #'prot-org-capture-coach
+           :prepend t
+           :empty-lines 1)
+          ("P" "Private service clocked" entry
+           (file+headline "coach.org" "Clocked services")
+           #'prot-org-capture-coach-clock
+           :prepend t
+           :clock-in t
+           :clock-keep t
+           :immediate-finish t
+           :empty-lines 1)))
 
   (setq org-capture-templates-contexts
         '(("e" ((in-mode . "notmuch-search-mode")
@@ -231,8 +296,43 @@
                 (in-mode . "notmuch-tree-mode"))))))
 
 ;;;; agenda
-(prot-emacs-configure
-  (:delay 5)
+(use-package org-agenda
+  :ensure nil
+  :bind
+  ;; I bind `org-agenda' to C-c A, so this one puts me straight into my
+  ;; custom block agenda.
+  ( :map global-map
+    ("C-c A" . org-agenda)
+    ("C-c a" . (lambda ()
+                 "Call Org agenda with `prot-org-custom-daily-agenda' configuration."
+                 (interactive)
+                 (org-agenda nil "A")))
+    :map ctl-x-x-map
+    ("i" . prot-org-id-headlines)
+    ("h" . prot-org-ox-html))
+  :config
+;;;;; Custom agenda blocks
+
+  (require 'prot-org)
+
+  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
+
+  ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
+  (setq org-agenda-custom-commands
+        `(("A" "Daily agenda and top priority tasks"
+           ,prot-org-custom-daily-agenda
+           ((org-agenda-fontify-priorities nil)
+            (org-agenda-prefix-format "	 %t %s")
+            (org-agenda-dim-blocked-tasks nil)))
+          ("P" "Plain text daily agenda and top priorities"
+           ,prot-org-custom-daily-agenda
+           ((org-agenda-with-colors nil)
+            (org-agenda-prefix-format "%t %s")
+            (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
+            (org-agenda-fontify-priorities nil)
+            (org-agenda-remove-tags t))
+           ("agenda.txt"))))
+
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
   (setq org-agenda-files `(,org-directory))
@@ -394,135 +494,13 @@
   (setq org-agenda-auto-exclude-function nil)
   (setq org-agenda-bulk-custom-functions nil)
 
-;; ;;;;; Agenda habits
-;;   (require 'org-habit)
-;;   (setq org-habit-graph-column 50)
-;;   (setq org-habit-preceding-days 9)
-;;   ;; Always show the habit graph, even if there are no habits for
-;;   ;; today.
-;;   (setq org-habit-show-all-today t)
+  ;; ;;;;; Agenda habits
+  ;;   (require 'org-habit)
+  ;;   (setq org-habit-graph-column 50)
+  ;;   (setq org-habit-preceding-days 9)
+  ;;   ;; Always show the habit graph, even if there are no habits for
+  ;;   ;; today.
+  ;;   (setq org-habit-show-all-today t)
   )
-
-;;;; code blocks
-(prot-emacs-configure
-  (:delay 5)
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-src-window-setup 'current-window)
-  (setq org-edit-src-persistent-message nil)
-  (setq org-src-fontify-natively t)
-  (setq org-src-preserve-indentation t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-edit-src-content-indentation 0))
-
-;;;; export
-(prot-emacs-configure
-  (:delay 5)
-  (setq org-export-with-toc t)
-  (setq org-export-headline-levels 8)
-  (setq org-export-dispatch-use-expert-ui nil)
-  (setq org-html-htmlize-output-type nil)
-  (setq org-html-head-include-default-style nil)
-  (setq org-html-head-include-scripts nil))
-
-;;;; IDs
-(prot-emacs-configure
-  (:delay 5)
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
-
-;;;; Hooks and key bindings
-(prot-emacs-configure
-  (:delay 5)
-  ;; See my `pulsar' package, defined elsewhere in this setup.
-  (with-eval-after-load 'pulsar
-    (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
-      (add-hook hook #'pulsar-recenter-center)
-      (add-hook hook #'pulsar-reveal-entry)))
-
-  (prot-emacs-keybind global-map
-    "C-c A" #'org-agenda ; see the `prot-org' section for C-c a
-    "C-c c" #'org-capture
-    "C-c l" #'org-store-link
-    "C-c o" #'org-open-at-point-global)
-
-  ;; Notice it is down here where the feature is actually loaded.
-  ;; This is because some settings need to be set before this call.
-  (require 'org)
-
-  (prot-emacs-keybind org-mode-map
-    ;; I don't like that Org binds one zillion keys, so if I want one
-    ;; for something more important, I disable it from here.
-    "C-'" nil
-    "C-," nil
-    "M-;" nil
-    "<C-return>" nil
-    "<C-S-return>" nil
-    "C-M-S-<right>" nil
-    "C-M-S-<left>" nil
-    "C-c ;" nil
-    "M-." #'org-edit-special ; alias for C-c ' (mnenomic is global M-. that goes to source)
-    "C-c M-l" #'org-insert-last-stored-link
-    "C-c C-M-l" #'org-toggle-link-display)
-
-  (define-key org-src-mode-map (kbd "M-,") #'org-edit-src-exit)
-
-  (prot-emacs-keybind narrow-map
-    "b" #'org-narrow-to-block
-    "e" #'org-narrow-to-element
-    "s" #'org-narrow-to-subtree))
-
-;;; Custom extensions (prot-org.el)
-(prot-emacs-package prot-org
-  (:delay 5)
-  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
-
-  ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
-  (setq org-agenda-custom-commands
-        `(("A" "Daily agenda and top priority tasks"
-           ,prot-org-custom-daily-agenda
-           ((org-agenda-fontify-priorities nil)
-            (org-agenda-prefix-format "	 %t %s")
-            (org-agenda-dim-blocked-tasks nil)))
-          ("P" "Plain text daily agenda and top priorities"
-           ,prot-org-custom-daily-agenda
-           ((org-agenda-with-colors nil)
-            (org-agenda-prefix-format "%t %s")
-            (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
-            (org-agenda-fontify-priorities nil)
-            (org-agenda-remove-tags t))
-           ("agenda.txt"))))
-
-  (defun prot/org-agenda ()
-    "Call Org agenda with `prot-org-custom-daily-agenda' configuration."
-    (interactive)
-    (org-agenda nil "A"))
-
-  ;; I bind `org-agenda' to C-c A, so this one puts me straight into my
-  ;; custom block agenda.
-  (define-key global-map (kbd "C-c a") #'prot/org-agenda)
-
-  (prot-emacs-keybind ctl-x-x-map
-    "i" #'prot-org-id-headlines
-    "h" #'prot-org-ox-html)
-
-  (add-to-list 'org-capture-templates
-               '("p" "Private lesson or service" entry
-                 (file "coach.org")
-                 #'prot-org-capture-coach
-                 :prepend t
-                 :empty-lines 1))
-
-  (add-to-list 'org-capture-templates
-               '("P" "Private service clocked" entry
-                 (file+headline "coach.org" "Clocked services")
-                 #'prot-org-capture-coach-clock
-                 :prepend t
-                 :clock-in t
-                 :clock-keep t
-                 :immediate-finish t
-                 :empty-lines 1)))
-
-(prot-emacs-package prot-coach
-  (:delay 10)
-  (define-key global-map (kbd "C-c j") #'prot-coach-jitsi-link))
 
 (provide 'prot-emacs-org)
