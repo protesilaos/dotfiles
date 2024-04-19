@@ -1,22 +1,38 @@
-;;; Client-agnostic email settings
-(prot-emacs-configure
-  (:delay 1)
-
 ;;;; File with authentication credentials (`auth-source')
+(use-package auth-source
+  :ensure nil
+  :defer t
+  :config
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
-        user-mail-address "public@protesilaos.com")
+        user-mail-address "public@protesilaos.com"))
 
 ;;;; Encryption settings (`mm-encode' and `mml-sec')
-  (setq mm-encrypt-option nil ; use 'guided for both if you need more control
-        mm-sign-option nil)
 
+(use-package mm-encode
+  :ensure nil
+  :defer t
+  :config
+  (setq mm-encrypt-option nil ; use 'guided for both if you need more control
+        mm-sign-option nil))
+
+(use-package mml-sec
+  :ensure nil
+  :defer t
+  :config
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
-        mml-secure-smime-sign-with-sender t)
+        mml-secure-smime-sign-with-sender t))
 
 ;;;; Message composition (`message')
+
+(use-package message
+  :ensure nil
+  :defer t
+  :hook
+  (message-setup . message-sort-headers)
+  :config
   (setq mail-user-agent 'message-user-agent
         message-mail-user-agent t) ; use `mail-user-agent'
   (setq mail-header-separator "--text follows this line--")
@@ -31,15 +47,21 @@
         message-ignored-cited-headers "") ; default is "." for all headers
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
-  (setq message-wide-reply-confirm-recipients nil)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
-
-  (add-hook 'message-setup-hook #'message-sort-headers)
+  (setq message-wide-reply-confirm-recipients nil))
 
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
-  (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode)
+(use-package gnus-dired
+  :ensure nil
+  :after message
+  :hook
+  (dired-mode . turn-on-gnus-dired-mode))
 
 ;;;; `sendmail' (mail transfer agent)
+(use-package sendmail
+  :ensure nil
+  :after message
+  :config
   (setq send-mail-function 'sendmail-send-it
         ;; ;; NOTE 2023-08-08: We do not need this if we have the Arch
         ;; ;; Linux `msmtp-mta' package installed: it replaces the

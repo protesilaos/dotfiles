@@ -2,13 +2,12 @@
 ;; keep it here for when I need to test it for my themes (`ef-themes',
 ;; `modus-themes', `standard-themes').
 
-
-
-;; This is an exception because I install it from the system
-;; distribution's package archives (depends on non-Emacs code)
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/elpa/mu4e-1.8.14")
-(prot-emacs-package mu4e
-  (:delay 1)
+(use-package mu4e
+  :ensure nil
+  ;; This is an exception because I install it from the system
+  ;; distribution's package archives (depends on non-Emacs code)
+  :load-path "/usr/share/emacs/site-lisp/elpa/mu4e-1.8.14"
+  :config
   (setq mu4e-maildir "~/.20240226-mail-mu4e")
   (setq mu4e-attachment-dir (expand-file-name "~/Downloads/mail-attachments/"))
   (setq mu4e-confirm-quit nil)

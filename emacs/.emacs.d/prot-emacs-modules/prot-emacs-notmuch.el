@@ -3,11 +3,15 @@
 ;; I install notmuch from the distro's repos because the CLI program is
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/")
-(prot-emacs-package notmuch
-  (:delay 1)
+(use-package notmuch
+  :load-path "/usr/share/emacs/site-lisp/"
+  :defer t
+  :commands (notmuch notmuch-mua-new-mail))
 
 ;;; Account settings
+(use-package notmuch
+  :defer t
+  :config
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
         (inf (prot-common-auth-get-field "inf" :user)))
@@ -18,18 +22,24 @@
           notmuch-fcc-dirs
           `((,prv . "prv/Sent")
             (,inf . "inf/Sent")
-            (,pub . "pub/Sent"))))
+            (,pub . "pub/Sent")))))
 
 ;;;; General UI
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-show-logo nil
         notmuch-column-control 1.0
         notmuch-hello-auto-refresh t
         notmuch-hello-recent-searches-max 20
         notmuch-hello-thousands-separator ""
         notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
-        notmuch-show-all-tags-list t)
+        notmuch-show-all-tags-list t))
 
 ;;;; Search
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-search-oldest-first nil)
   (setq notmuch-search-result-format
         '(("date" . "%12s  ")
@@ -89,9 +99,12 @@
             :key ,(kbd "e o"))
           ( :name "🐛 emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
-            :sort-order newest-first :key ,(kbd "e b"))))
+            :sort-order newest-first :key ,(kbd "e b")))))
 
 ;;;; Tags
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-archive-tags nil ; I do not archive email
         notmuch-message-replied-tags '("+replied")
         notmuch-message-forwarded-tags '("+forwarded")
@@ -117,9 +130,12 @@
         '(("del" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "💥" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-added)
-           (concat "🏷️" tag))))
+           (concat "🏷️" tag)))))
 
 ;;;; Email composition
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-mua-compose-in 'current-window)
   (setq notmuch-mua-hidden-headers nil)
   (setq notmuch-address-command 'internal) ; NOTE 2024-01-09: I am not using this and must review it.
@@ -133,9 +149,12 @@
   (setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
         (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
                 "pi[èe]ce\s+jointe?\\|"
-                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
+                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b")))
 
 ;;;; Reading messages
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-show-relative-dates t)
   (setq notmuch-show-all-multipart/alternative-parts nil)
   (setq notmuch-show-indent-messages-width 0)
@@ -149,29 +168,49 @@
 
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
     (setq notmuch-wash-citation-lines-prefix count
-          notmuch-wash-citation-lines-suffix count))
+          notmuch-wash-citation-lines-suffix count)))
 
 ;;;; Hooks and key bindings
-  (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
+(use-package notmuch
+  :hook
+  (notmuch-mua-send . notmuch-mua-attachment-check)
+  (notmuch-show . (lambda () (setq-local header-line-format nil)))
+  :config
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode) ; Check my `lin' package
-  (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
-
-  (prot-emacs-keybind global-map
-    "C-c m" #'notmuch
-    "C-x m" #'notmuch-mua-new-mail) ; override `compose-mail'
-  (prot-emacs-keybind notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
-    "/" #'notmuch-search-filter ; alias for l
-    "r" #'notmuch-search-reply-to-thread ; easier to reply to all by default
-    "R" #'notmuch-search-reply-to-thread-sender)
-  (prot-emacs-keybind notmuch-show-mode-map
-    "r" #'notmuch-show-reply ; easier to reply to all by default
-    "R" #'notmuch-show-reply-sender)
-  (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
+  :bind
+  ( :map global-map
+    ("C-c m" . notmuch)
+    ("C-x m" . notmuch-mua-new-mail) ; override `compose-mail'
+    :map notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+    ("/" . notmuch-search-filter) ; alias for l
+    ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
+    ("R" . notmuch-search-reply-to-thread-sender)
+    :map notmuch-show-mode-map
+    ("r" . notmuch-show-reply) ; easier to reply to all by default
+    ("R" . notmuch-show-reply-sender)
+    :map notmuch-hello-mode-map
+    ("C-<tab>" . nil)))
 
 ;;; My own tweaks for notmuch (prot-notmuch.el)
-(prot-emacs-package prot-notmuch
-  (:delay 1)
+(use-package prot-notmuch
+  :ensure nil
+  :after notmuch
+  :bind
+  ( :map notmuch-search-mode-map
+    ("a" . nil) ; the default is too easy to hit accidentally
+    ("A" . nil)
+    ("D" . prot-notmuch-search-delete-thread)
+    ("S" . prot-notmuch-search-spam-thread)
+    ("g" . prot-notmuch-refresh-buffer)
+    :map notmuch-show-mode-map
+    ("a" . nil) ; the default is too easy to hit accidentally
+    ("A" . nil)
+    ("D" . prot-notmuch-show-delete-message)
+    ("S" . prot-notmuch-show-spam-message)
+    :map notmuch-show-stash-map
+    ("S" . prot-notmuch-stash-sourcehut-link))
+  :config
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
@@ -187,35 +226,18 @@
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
   (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🏆")))
-  (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️")))
-
-  (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
-                prot-notmuch-ask-sourcehut-control-code))
-    (add-hook 'notmuch-mua-send-hook fn))
-
-  (prot-emacs-keybind notmuch-search-mode-map
-    "a" nil ; the default is too easy to hit accidentally
-    "A" nil
-    "D" #'prot-notmuch-search-delete-thread
-    "S" #'prot-notmuch-search-spam-thread
-    "g" #'prot-notmuch-refresh-buffer)
-  (prot-emacs-keybind notmuch-show-mode-map
-    "a" nil ; the default is too easy to hit accidentally
-    "A" nil
-    "D" #'prot-notmuch-show-delete-message
-    "S" #'prot-notmuch-show-spam-message)
-  (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
-  ;; Like C-c M-h for `message-insert-headers'
-  (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
+  (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️"))))
 
 ;;; Glue code for notmuch and org-link (ol-notmuch.el)
-(prot-emacs-package ol-notmuch (:install t) (:delay 5))
+(use-package ol-notmuch
+  :ensure t
+  :after notmuch)
 
 ;;; notmuch-indicator (another package of mine)
-(prot-emacs-package notmuch-indicator
-  (:install t)
-  (:delay 5)
-
+(use-package notmuch-indicator
+  :ensure t
+  :after notmuch
+  :config
   (setq notmuch-indicator-args
         '((:terms "tag:unread and tag:inbox" :label "[A] " :face prot-modeline-indicator-green)
           (:terms "tag:unread and tag:inbox and not tag:package and not tag:coach" :label "[U] " :face prot-modeline-indicator-cyan)

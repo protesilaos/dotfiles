@@ -8716,16 +8716,6 @@ And there is also the seamless connection between Emacs and GPG, so any
 encrypted file/email is decrypted behind the scenes with us
 experiencing it as every other regular file. Fantastic stuff!
 
-In this portion of the configuration, I am configuring several
-built-in variables, so I use the ~prot-emacs-configure~ macro to do so
-with a short delay post startup ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el" :mkdirp yes
-;;; Client-agnostic email settings
-(prot-emacs-configure
-  (:delay 1)
-#+end_src
-
 *** The =prot-emacs-email.el= basic settings (including =authinfo=)
 :PROPERTIES:
 :CUSTOM_ID: h:24f17614-ee3d-4cd1-bbe3-f53e4f39c281
@@ -8764,11 +8754,15 @@ programs include ~mbsync~ and ~msmtp~ ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c
 Other than that, all I do in this snippet is set the default name and
 email, which are consulted by miscellaneous pieces Emacs functionality.
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el" :mkdirp yes
 ;;;; File with authentication credentials (`auth-source')
+(use-package auth-source
+  :ensure nil
+  :defer t
+  :config
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
-        user-mail-address "public@protesilaos.com")
+        user-mail-address "public@protesilaos.com"))
 #+end_src
 
 *** The =prot-emacs-email.el= message composition and encryption settings (=message.el=)
@@ -8856,15 +8850,31 @@ most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overvie
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; Encryption settings (`mm-encode' and `mml-sec')
-  (setq mm-encrypt-option nil ; use 'guided for both if you need more control
-        mm-sign-option nil)
 
+(use-package mm-encode
+  :ensure nil
+  :defer t
+  :config
+  (setq mm-encrypt-option nil ; use 'guided for both if you need more control
+        mm-sign-option nil))
+
+(use-package mml-sec
+  :ensure nil
+  :defer t
+  :config
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
-        mml-secure-smime-sign-with-sender t)
+        mml-secure-smime-sign-with-sender t))
 
 ;;;; Message composition (`message')
+
+(use-package message
+  :ensure nil
+  :defer t
+  :hook
+  (message-setup . message-sort-headers)
+  :config
   (setq mail-user-agent 'message-user-agent
         message-mail-user-agent t) ; use `mail-user-agent'
   (setq mail-header-separator "--text follows this line--")
@@ -8879,10 +8889,8 @@ most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overvie
         message-ignored-cited-headers "") ; default is "." for all headers
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
-  (setq message-wide-reply-confirm-recipients nil)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
-
-  (add-hook 'message-setup-hook #'message-sort-headers)
+  (setq message-wide-reply-confirm-recipients nil))
 #+end_src
 
 *** The =prot-emacs-email.el= integration with Dired for email attachments (~gnus-dired-mode~)
@@ -8906,7 +8914,11 @@ numerous accoutrements.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
-  (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode)
+(use-package gnus-dired
+  :ensure nil
+  :after message
+  :hook
+  (dired-mode . turn-on-gnus-dired-mode))
 #+end_src
 
 *** The =prot-emacs-email.el= settings for ~sendmail~
@@ -8930,6 +8942,10 @@ server.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; `sendmail' (mail transfer agent)
+(use-package sendmail
+  :ensure nil
+  :after message
+  :config
   (setq send-mail-function 'sendmail-send-it
         ;; ;; NOTE 2023-08-08: We do not need this if we have the Arch
         ;; ;; Linux `msmtp-mta' package installed: it replaces the
@@ -8991,18 +9007,16 @@ Emacs ~load-path~. The ~load-path~ is where Emacs checks to find Elisp
 programs (when we ~require~ some feature, it works because of its
 directory being part of the ~load-path~).
 
-To this end, you will notice that while I use the ~prot-emacs-package~
-macro, I do not set up its =:install= directive ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
-
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Notmuch (mail indexer and mail user agent (MUA))
 
 ;; I install notmuch from the distro's repos because the CLI program is
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/")
-(prot-emacs-package notmuch
-  (:delay 1)
+(use-package notmuch
+  :load-path "/usr/share/emacs/site-lisp/"
+  :defer t
+  :commands (notmuch notmuch-mua-new-mail))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about the acount settings
@@ -9024,6 +9038,9 @@ the accounts I set.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Account settings
+(use-package notmuch
+  :defer t
+  :config
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
         (inf (prot-common-auth-get-field "inf" :user)))
@@ -9034,7 +9051,7 @@ the accounts I set.
           notmuch-fcc-dirs
           `((,prv . "prv/Sent")
             (,inf . "inf/Sent")
-            (,pub . "pub/Sent"))))
+            (,pub . "pub/Sent")))))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about the general user interface
@@ -9062,13 +9079,16 @@ are not relevant.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; General UI
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-show-logo nil
         notmuch-column-control 1.0
         notmuch-hello-auto-refresh t
         notmuch-hello-recent-searches-max 20
         notmuch-hello-thousands-separator ""
         notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
-        notmuch-show-all-tags-list t)
+        notmuch-show-all-tags-list t))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about the presentation of search buffers
@@ -9092,6 +9112,9 @@ form part of the search terms or tags.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Search
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-search-oldest-first nil)
   (setq notmuch-search-result-format
         '(("date" . "%12s  ")
@@ -9151,7 +9174,7 @@ form part of the search terms or tags.
             :key ,(kbd "e o"))
           ( :name "🐛 emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
-            :sort-order newest-first :key ,(kbd "e b"))))
+            :sort-order newest-first :key ,(kbd "e b")))))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about tag settings
@@ -9180,6 +9203,9 @@ incorporation in the subsequent section about setting up
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Tags
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-archive-tags nil ; I do not archive email
         notmuch-message-replied-tags '("+replied")
         notmuch-message-forwarded-tags '("+forwarded")
@@ -9205,7 +9231,7 @@ incorporation in the subsequent section about setting up
         '(("del" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "💥" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-added)
-           (concat "🏷️" tag))))
+           (concat "🏷️" tag)))))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about email composition settings
@@ -9225,6 +9251,9 @@ confirmation where needed.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Email composition
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-mua-compose-in 'current-window)
   (setq notmuch-mua-hidden-headers nil)
   (setq notmuch-address-command 'internal) ; NOTE 2024-01-09: I am not using this and must review it.
@@ -9238,7 +9267,7 @@ confirmation where needed.
   (setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
         (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
                 "pi[èe]ce\s+jointe?\\|"
-                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
+                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b")))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about reading messages
@@ -9263,6 +9292,9 @@ nicer.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Reading messages
+(use-package notmuch
+  :defer t
+  :config
   (setq notmuch-show-relative-dates t)
   (setq notmuch-show-all-multipart/alternative-parts nil)
   (setq notmuch-show-indent-messages-width 0)
@@ -9276,7 +9308,7 @@ nicer.
 
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
     (setq notmuch-wash-citation-lines-prefix count
-          notmuch-wash-citation-lines-suffix count))
+          notmuch-wash-citation-lines-suffix count)))
 #+end_src
 
 **** TODO The =prot-emacs-notmuch.el= section about hooks and key bindings
@@ -9286,22 +9318,26 @@ nicer.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Hooks and key bindings
-  (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
+(use-package notmuch
+  :hook
+  (notmuch-mua-send . notmuch-mua-attachment-check)
+  (notmuch-show . (lambda () (setq-local header-line-format nil)))
+  :config
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode) ; Check my `lin' package
-  (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
-
-  (prot-emacs-keybind global-map
-    "C-c m" #'notmuch
-    "C-x m" #'notmuch-mua-new-mail) ; override `compose-mail'
-  (prot-emacs-keybind notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
-    "/" #'notmuch-search-filter ; alias for l
-    "r" #'notmuch-search-reply-to-thread ; easier to reply to all by default
-    "R" #'notmuch-search-reply-to-thread-sender)
-  (prot-emacs-keybind notmuch-show-mode-map
-    "r" #'notmuch-show-reply ; easier to reply to all by default
-    "R" #'notmuch-show-reply-sender)
-  (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
+  :bind
+  ( :map global-map
+    ("C-c m" . notmuch)
+    ("C-x m" . notmuch-mua-new-mail) ; override `compose-mail'
+    :map notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+    ("/" . notmuch-search-filter) ; alias for l
+    ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
+    ("R" . notmuch-search-reply-to-thread-sender)
+    :map notmuch-show-mode-map
+    ("r" . notmuch-show-reply) ; easier to reply to all by default
+    ("R" . notmuch-show-reply-sender)
+    :map notmuch-hello-mode-map
+    ("C-<tab>" . nil)))
 #+end_src
 
 **** TODO The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)
@@ -9311,8 +9347,24 @@ nicer.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; My own tweaks for notmuch (prot-notmuch.el)
-(prot-emacs-package prot-notmuch
-  (:delay 1)
+(use-package prot-notmuch
+  :ensure nil
+  :after notmuch
+  :bind
+  ( :map notmuch-search-mode-map
+    ("a" . nil) ; the default is too easy to hit accidentally
+    ("A" . nil)
+    ("D" . prot-notmuch-search-delete-thread)
+    ("S" . prot-notmuch-search-spam-thread)
+    ("g" . prot-notmuch-refresh-buffer)
+    :map notmuch-show-mode-map
+    ("a" . nil) ; the default is too easy to hit accidentally
+    ("A" . nil)
+    ("D" . prot-notmuch-show-delete-message)
+    ("S" . prot-notmuch-show-spam-message)
+    :map notmuch-show-stash-map
+    ("S" . prot-notmuch-stash-sourcehut-link))
+  :config
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
@@ -9328,26 +9380,7 @@ nicer.
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
   (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🏆")))
-  (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️")))
-
-  (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
-                prot-notmuch-ask-sourcehut-control-code))
-    (add-hook 'notmuch-mua-send-hook fn))
-
-  (prot-emacs-keybind notmuch-search-mode-map
-    "a" nil ; the default is too easy to hit accidentally
-    "A" nil
-    "D" #'prot-notmuch-search-delete-thread
-    "S" #'prot-notmuch-search-spam-thread
-    "g" #'prot-notmuch-refresh-buffer)
-  (prot-emacs-keybind notmuch-show-mode-map
-    "a" nil ; the default is too easy to hit accidentally
-    "A" nil
-    "D" #'prot-notmuch-show-delete-message
-    "S" #'prot-notmuch-show-spam-message)
-  (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
-  ;; Like C-c M-h for `message-insert-headers'
-  (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
+  (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️"))))
 #+end_src
 
 **** TODO The =prot-emacs-notmuch.el= glue code for ~org-capture~ (=ol-notmuch.el=)
@@ -9357,7 +9390,9 @@ nicer.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; Glue code for notmuch and org-link (ol-notmuch.el)
-(prot-emacs-package ol-notmuch (:install t) (:delay 5))
+(use-package ol-notmuch
+  :ensure t
+  :after notmuch)
 #+end_src
 
 **** TODO The =prot-emacs-notmuch.el= section about the ~notmuch-indicator~
@@ -9384,10 +9419,10 @@ love letters, respectively.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; notmuch-indicator (another package of mine)
-(prot-emacs-package notmuch-indicator
-  (:install t)
-  (:delay 5)
-
+(use-package notmuch-indicator
+  :ensure t
+  :after notmuch
+  :config
   (setq notmuch-indicator-args
         '((:terms "tag:unread and tag:inbox" :label "[A] " :face prot-modeline-indicator-green)
           (:terms "tag:unread and tag:inbox and not tag:package and not tag:coach" :label "[U] " :face prot-modeline-indicator-cyan)
@@ -9427,13 +9462,12 @@ Finally, we ~provide~ the submodule. This is the mirror function of
 ;; keep it here for when I need to test it for my themes (`ef-themes',
 ;; `modus-themes', `standard-themes').
 
-
-
-;; This is an exception because I install it from the system
-;; distribution's package archives (depends on non-Emacs code)
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/elpa/mu4e-1.8.14")
-(prot-emacs-package mu4e
-  (:delay 1)
+(use-package mu4e
+  :ensure nil
+  ;; This is an exception because I install it from the system
+  ;; distribution's package archives (depends on non-Emacs code)
+  :load-path "/usr/share/emacs/site-lisp/elpa/mu4e-1.8.14"
+  :config
   (setq mu4e-maildir "~/.20240226-mail-mu4e")
   (setq mu4e-attachment-dir (expand-file-name "~/Downloads/mail-attachments/"))
   (setq mu4e-confirm-quit nil)
@@ -9671,7 +9705,9 @@ Finally, we ~provide~ the submodule. This is the mirror function of
 ;; `modus-themes', `standard-themes').
 
 
-(prot-emacs-package gnus
+(use-package gnus
+  :ensure nil
+  :config
   (require 'gnus-sum)
   (require 'gnus-dired)
   (require 'gnus-topic)

@@ -3,7 +3,9 @@
 ;; `modus-themes', `standard-themes').
 
 
-(prot-emacs-package gnus
+(use-package gnus
+  :ensure nil
+  :config
   (require 'gnus-sum)
   (require 'gnus-dired)
   (require 'gnus-topic)
