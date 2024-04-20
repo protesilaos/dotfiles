@@ -8,14 +8,6 @@ prot-emacs-pre-custom.el.  This file must be in the same
 directory as the init.el."
   :group 'file)
 
-(defcustom prot-emacs-load-super-keys nil
-  "When non-nil load the `prot-emacs-super-keys-map'.
-This key map defines bindings involving the Super key for common
-commands.  The original key binding of each of those commands is
-still available."
-  :group 'prot-emacs
-  :type 'boolean)
-
 (defcustom prot-emacs-load-theme-family 'modus
   "Set of themes to load.
 Valid values are the symbols `ef', `modus', and `standard', which
@@ -59,14 +51,6 @@ These include packages such as `consult' and `embark'."
   "When non-nil load extras for tree-sitter integration
 These include packages such as `expreg' and generally anything
 that adds functionality on top of what the major mode provides."
-  :group 'prot-emacs
-  :type 'boolean)
-
-(defcustom prot-emacs-load-evil nil
-  "When non-nil, load Vim style key bindings as well as `devil-mode'.
-This user option must be set in the `prot-emacs-pre-custom.el'
-file.  If that file exists in the Emacs directory, it is loaded
-before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
@@ -468,14 +452,6 @@ that is expanded with the `prot-emacs-package' macro."
   (require 'prot-emacs-which-key))
 (when prot-emacs-load-icons
   (require 'prot-emacs-icons))
-;; We load it last to override any other keys.
-(when prot-emacs-load-evil
-  (require 'prot-emacs-evil))
-;; This one comes after Evil mode because it is the only one that uses
-;; the Super key for key bindings, so we do not worry about overriding
-;; anything.
-(when prot-emacs-load-super-keys
-  (require 'prot-emacs-super-keys))
 
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at

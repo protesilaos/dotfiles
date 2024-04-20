@@ -42,9 +42,7 @@
   :bind
   ("<f7>" . display-line-numbers-mode)
   :config
-  ;; Set absolute line numbers, unless evil mode is loaded, in which
-  ;; case we prefer relative numbers.
-  (setq-default display-line-numbers-type (if prot-emacs-load-evil 'relative t))
+  (setq-default display-line-numbers-type t)
   ;; Those two variables were introduced in Emacs 27.1
   (setq display-line-numbers-major-tick 0)
   (setq display-line-numbers-minor-tick 0)
