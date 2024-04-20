@@ -10123,21 +10123,19 @@ account default : pub
 :CUSTOM_ID: h:f23d9cef-ab7b-4486-a070-9c7ae664eadf
 :END:
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el" :mkdirp yes
-;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
-(prot-emacs-configure
-  (:delay 60)
-#+end_src
-
 *** TODO The =prot-emacs-web.el= settings about following links (~browse-url~)
 :PROPERTIES:
 :CUSTOM_ID: h:edb70963-d590-4959-bc59-1e5435c8e78a
 :END:
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el" :mkdirp yes
 ;;;; `browse-url'
+(use-package browse-url
+  :ensure nil
+  :defer t
+  :config
   (setq browse-url-browser-function 'eww-browse-url)
-  (setq browse-url-secondary-browser-function 'browse-url-default-browser)
+  (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 #+end_src
 
 *** TODO The =prot-emacs-web.el= settings about buttonising links (~goto-addr~)
@@ -10147,10 +10145,14 @@ account default : pub
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `goto-addr'
+(use-package goto-addr
+  :ensure nil
+  :defer t
+  :config
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
   (setq goto-address-mail-face nil)
-  (setq goto-address-mail-mouse-face 'highlight)
+  (setq goto-address-mail-mouse-face 'highlight))
 #+end_src
 
 *** TODO The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)
@@ -10160,6 +10162,10 @@ account default : pub
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `shr' (Simple HTML Renderer)
+(use-package shr
+  :ensure nil
+  :defer t
+  :config
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
@@ -10167,7 +10173,7 @@ account default : pub
   (setq shr-width fill-column)          ; check `prot-eww-readable'
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
-  (setq shr-cookie-policy nil)
+  (setq shr-cookie-policy nil))
 #+end_src
 
 *** TODO The =prot-emacs-web.el= settings about browser cookies
@@ -10177,6 +10183,10 @@ account default : pub
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `url-cookie'
+(use-package url-cookie
+  :ensure nil
+  :defer t
+  :config
   (setq url-cookie-untrusted-urls '(".*")))
 #+end_src
 
@@ -10187,8 +10197,21 @@ account default : pub
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `eww' (Emacs Web Wowser)
-(prot-emacs-package eww
-  (:delay 60)
+(use-package eww
+  :ensure nil
+  :commands (eww)
+  :bind
+  ( :map eww-link-keymap
+    ("v" . nil) ; stop overriding `eww-view-source'
+    :map eww-mode-map
+    ("L" . eww-list-bookmarks)
+    :map dired-mode-map
+    ("E" . eww-open-file) ; to render local HTML files
+    :map eww-buffers-mode-map
+    ("d" . eww-bookmark-kill)   ; it actually deletes
+    :map eww-bookmark-mode-map
+    ("d" . eww-bookmark-kill)) ; same
+  :config
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format nil)
@@ -10214,13 +10237,7 @@ account default : pub
   ;;
   ;; '("wget" "--quiet" "--output-document=-")
   ;; '("chromium" "--headless" "--dump-dom")
-  (setq eww-retrieve-command nil)
-
-  (define-key eww-link-keymap (kbd "v") nil) ; stop overriding `eww-view-source'
-  (define-key eww-mode-map (kbd "L") #'eww-list-bookmarks)
-  (define-key dired-mode-map (kbd "E") #'eww-open-file) ; to render local HTML files
-  (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
-  (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
+  (setq eww-retrieve-command nil))
 #+end_src
 
 *** TODO The =prot-emacs-web.el= extras for ~eww~ (=prot-eww.el=)
@@ -10230,8 +10247,10 @@ account default : pub
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `prot-eww' extras
-(prot-emacs-package prot-eww
-  (:delay 60)
+(use-package prot-eww
+  :ensure nil
+  :after eww
+  :config
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)
@@ -10266,9 +10285,11 @@ account default : pub
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;; Elfeed feed/RSS reader
-(prot-emacs-package elfeed
-  (:install t)
-  (:delay 60)
+(use-package elfeed
+  :ensure t
+  :bind
+  ("C-c e" . elfeed)
+  :config
   (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
   (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))
@@ -10287,8 +10308,6 @@ account default : pub
   ;; `shr-width' there.
   (add-hook 'elfeed-show-mode-hook
             (lambda () (setq-local shr-width (current-fill-column))))
-
-  (define-key global-map (kbd "C-c e") #'elfeed)
 
   (prot-emacs-keybind elfeed-search-mode-map
     "w" #'elfeed-search-yank
@@ -10371,18 +10390,17 @@ they are invoking.
 I personally do not use this, except when I need to do a demonstration.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-which-key.el" :mkdirp yes
-(prot-emacs-package which-key
-  (:install t)
-  (:delay 1)
+(use-package which-key
+  :ensure t
+  :hook (after-init . which-key-mode)
+  :config
   (setq which-key-separator "  ")
   (setq which-key-prefix-prefix "... ")
   (setq which-key-max-display-columns 3)
   (setq which-key-idle-delay 1.5)
   (setq which-key-idle-secondary-delay 0.25)
   (setq which-key-add-column-padding 1)
-  (setq which-key-max-description-length 40)
-
-  (which-key-mode 1))
+  (setq which-key-max-description-length 40))
 
 (provide 'prot-emacs-which-key)
 #+end_src
@@ -10404,25 +10422,26 @@ files. The user must handle this step by invoking the command
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-icons.el" :mkdirp yes
 ;;; Icons
-(prot-emacs-package nerd-icons
-  (:install t)
-  (:delay 5))
+(use-package nerd-icons
+  :ensure t)
 
-(prot-emacs-package nerd-icons-completion
-  (:install t)
-  (:delay 5)
+(use-package nerd-icons-completion
+  :ensure t
+  :after marginalia
+  :config
   (nerd-icons-completion-marginalia-setup)
   (nerd-icons-completion-mode 1))
 
-(prot-emacs-package nerd-icons-corfu
-  (:install t)
-  (:delay 5)
+(use-package nerd-icons-corfu
+  :ensure t
+  :after corfu
+  :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
-(prot-emacs-package nerd-icons-dired
-  (:install t)
-  (:delay 5)
-  (add-hook 'dired-mode-hook #'nerd-icons-dired-mode))
+(use-package nerd-icons-dired
+  :ensure t
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
 (provide 'prot-emacs-icons)
 #+end_src

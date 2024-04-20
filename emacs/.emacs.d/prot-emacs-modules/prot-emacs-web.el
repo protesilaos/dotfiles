@@ -1,18 +1,26 @@
-;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
-(prot-emacs-configure
-  (:delay 60)
-
 ;;;; `browse-url'
+(use-package browse-url
+  :ensure nil
+  :defer t
+  :config
   (setq browse-url-browser-function 'eww-browse-url)
-  (setq browse-url-secondary-browser-function 'browse-url-default-browser)
+  (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 
 ;;;; `goto-addr'
+(use-package goto-addr
+  :ensure nil
+  :defer t
+  :config
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
   (setq goto-address-mail-face nil)
-  (setq goto-address-mail-mouse-face 'highlight)
+  (setq goto-address-mail-mouse-face 'highlight))
 
 ;;;; `shr' (Simple HTML Renderer)
+(use-package shr
+  :ensure nil
+  :defer t
+  :config
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
@@ -20,14 +28,31 @@
   (setq shr-width fill-column)          ; check `prot-eww-readable'
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
-  (setq shr-cookie-policy nil)
+  (setq shr-cookie-policy nil))
 
 ;;;; `url-cookie'
+(use-package url-cookie
+  :ensure nil
+  :defer t
+  :config
   (setq url-cookie-untrusted-urls '(".*")))
 
 ;;;; `eww' (Emacs Web Wowser)
-(prot-emacs-package eww
-  (:delay 60)
+(use-package eww
+  :ensure nil
+  :commands (eww)
+  :bind
+  ( :map eww-link-keymap
+    ("v" . nil) ; stop overriding `eww-view-source'
+    :map eww-mode-map
+    ("L" . eww-list-bookmarks)
+    :map dired-mode-map
+    ("E" . eww-open-file) ; to render local HTML files
+    :map eww-buffers-mode-map
+    ("d" . eww-bookmark-kill)   ; it actually deletes
+    :map eww-bookmark-mode-map
+    ("d" . eww-bookmark-kill)) ; same
+  :config
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format nil)
@@ -53,17 +78,13 @@
   ;;
   ;; '("wget" "--quiet" "--output-document=-")
   ;; '("chromium" "--headless" "--dump-dom")
-  (setq eww-retrieve-command nil)
-
-  (define-key eww-link-keymap (kbd "v") nil) ; stop overriding `eww-view-source'
-  (define-key eww-mode-map (kbd "L") #'eww-list-bookmarks)
-  (define-key dired-mode-map (kbd "E") #'eww-open-file) ; to render local HTML files
-  (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
-  (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
+  (setq eww-retrieve-command nil))
 
 ;;;; `prot-eww' extras
-(prot-emacs-package prot-eww
-  (:delay 60)
+(use-package prot-eww
+  :ensure nil
+  :after eww
+  :config
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)
@@ -91,9 +112,11 @@
     "Q" #'prot-eww-quit))
 
 ;;; Elfeed feed/RSS reader
-(prot-emacs-package elfeed
-  (:install t)
-  (:delay 60)
+(use-package elfeed
+  :ensure t
+  :bind
+  ("C-c e" . elfeed)
+  :config
   (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
   (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))
@@ -112,8 +135,6 @@
   ;; `shr-width' there.
   (add-hook 'elfeed-show-mode-hook
             (lambda () (setq-local shr-width (current-fill-column))))
-
-  (define-key global-map (kbd "C-c e") #'elfeed)
 
   (prot-emacs-keybind elfeed-search-mode-map
     "w" #'elfeed-search-yank
