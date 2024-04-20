@@ -672,7 +672,7 @@ that adds functionality on top of what the major mode provides."
   :type 'boolean)
 #+end_src
 
-*** The =init.el= user option to load Vim keys (=evil.el= and =devil.el=)
+*** COMMENT The =init.el= user option to load Vim keys (=evil.el= and =devil.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:d32718d6-c678-483e-8cdf-02d77053c960
 :END:
@@ -2072,7 +2072,7 @@ and [[https://github.com/minad/org-modern][Daniel Mendler's ~org-modern~ package
   Desktop Divider Internals Neatly Generated.
 
 I also take care to make it work with my customised mode line
-([[#h:30bfbf81-a5ad-44af-a91b-6b8dd37ff789][The =prot-emacs-modeline.el= integration with ~spacious-padding~]]).
+([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =prot-emacs-modeline.el= module]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Increase padding of windows/frames
@@ -6125,10 +6125,6 @@ help me navigate a buffer, nor are they relevant in most cases. I
 enable the mode only when I need to compare buffers or to get a sense
 of how far apart two relevant sections are in a file.
 
-You will notice that I use absolute numbers even for narrowed buffers,
-while I set a relative count for contextual lines when ~prot-emacs-load-evil~
-is true ([[#h:0d6763f3-56d6-44be-b10d-bfb8cc96b442][The =prot-emacs-evil.el= module]]).
-
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Line numbers on the side of the window
 (use-package display-line-numbers
@@ -7191,7 +7187,7 @@ do not use anymore, but also integrates nicely with the Org agenda
 integration further, such that after adding a task or changing its
 state, the appointments mechanism re-reads my data to register new
 notifications. This is done via a series of hooks and with the use of
-the advice feature of Emacs Lisp ([[#h:62055c1b-5356-4639-9c52-b6b77b41ad9f][The =prot-emacs-org.el= custom Org extensions (=prot-org.el=)]]).
+the advice feature of Emacs Lisp.
 
 Here I am setting some simple settings to keep appointment notifations
 minimal. I do not need them to inform me about the contents of my next
@@ -10418,7 +10414,7 @@ files. The user must handle this step by invoking the command
 (provide 'prot-emacs-icons)
 #+end_src
 
-** TODO The =prot-emacs-evil.el= module
+** COMMENT TODO The =prot-emacs-evil.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:0d6763f3-56d6-44be-b10d-bfb8cc96b442
 :END:
@@ -12222,7 +12218,7 @@ minibuffer with something like `exit-minibuffer'."
 ;;; prot-embark.el ends here
 #+end_src
 
-** The =prot-evil.el= library
+** COMMENT The =prot-evil.el= library
 :PROPERTIES:
 :CUSTOM_ID: h:a78d30dd-3724-462b-998a-212879293561
 :END:
