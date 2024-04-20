@@ -65,8 +65,15 @@ Emacs.
 :END:
 
 I track the emacs.git trunk, as I am the maintainer of several Emacs
-packages and a contributor to Emacs core. Users of Arch Linux can
-refer to this =PKGBUILD= I maintain for my purposes:
+packages and a contributor to Emacs core. Here are my current settings
+({{{latest-export-date}}}):
+
+#+begin_src emacs-lisp :exports both
+system-configuration-options
+#+end_src
+
+Users of Arch Linux can refer to this =PKGBUILD= I maintain for my
+purposes:
 
 + Git repositories:
   - GitHub: <https://github.com/protesilaos/emacs-arch-linux-pkgbuild>
@@ -132,15 +139,12 @@ shown here may not reflect the latest state of the project):
 ./
 ├── early-init.el
 ├── init.el
-├── prot-emacs-pre-custom.el
-├── prot-emacs-post-custom.el
 ├── prot-emacs-modules/
 │   ├── prot-emacs-completion.el
 │   ├── prot-emacs-dired.el
 │   ├── prot-emacs-ef-themes.el
 │   ├── prot-emacs-email.el
 │   ├── prot-emacs-essentials.el
-│   ├── prot-emacs-evil.el
 │   ├── prot-emacs-git.el
 │   ├── prot-emacs-gnus.el
 │   ├── prot-emacs-icons.el
@@ -159,14 +163,16 @@ shown here may not reflect the latest state of the project):
 │   ├── prot-emacs-which-key.el
 │   └── prot-emacs-window.el
 ├── prot-emacs.org
+├── prot-emacs-post-custom.el
+├── prot-emacs-pre-custom.el
 └── prot-lisp/
+    ├── prot-abbrev.el
     ├── prot-coach.el
     ├── prot-comment.el
     ├── prot-common.el
     ├── prot-dired.el
     ├── prot-elfeed.el
     ├── prot-embark.el
-    ├── prot-evil.el
     ├── prot-eww.el
     ├── prot-marginalia.el
     ├── prot-modeline.el
@@ -175,6 +181,7 @@ shown here may not reflect the latest state of the project):
     ├── prot-org.el
     ├── prot-pair.el
     ├── prot-prefix.el
+    ├── prot-project.el
     ├── prot-scratch.el
     ├── prot-search.el
     ├── prot-shell.el
@@ -651,33 +658,6 @@ that adds functionality on top of what the major mode provides."
   :type 'boolean)
 #+end_src
 
-*** COMMENT The =init.el= user option to load Vim keys (=evil.el= and =devil.el=)
-:PROPERTIES:
-:CUSTOM_ID: h:d32718d6-c678-483e-8cdf-02d77053c960
-:END:
-
-I was a Vim user for three years before eventually switching to Emacs.
-As part of that transition, I also converted to the Emacs style key
-bindings. They have stronger mnemonics and scale better as a result.
-
-Nevertheless, I provide this option for those who need Vim keys in
-Emacs: I was using it myself for a few weeks while my left wrist was
-in pain (([[#h:0d6763f3-56d6-44be-b10d-bfb8cc96b442][The =prot-emacs-evil.el= module]])). This was in part due to
-the cheap/bad keyboard I am using but also because of the hard manual
-work I do around the hut.
-
-Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
-
-#+begin_src emacs-lisp :tangle "init.el"
-(defcustom prot-emacs-load-evil nil
-  "When non-nil, load Vim style key bindings as well as `devil-mode'.
-This user option must be set in the `prot-emacs-pre-custom.el'
-file.  If that file exists in the Emacs directory, it is loaded
-before all other modules of my setup."
-  :group 'prot-emacs
-  :type 'boolean)
-#+end_src
-
 *** The =init.el= user option to enable ~which-key~
 :PROPERTIES:
 :CUSTOM_ID: h:24324854-1f8c-4d8b-aa7c-291de968cbf4
@@ -731,28 +711,6 @@ file.  If that file exists in the Emacs directory, it is loaded
 before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
-#+end_src
-
-*** The =init.el= user option to omit packages at startup
-:PROPERTIES:
-:CUSTOM_ID: h:1547dde9-6a79-4f58-8160-3ece9d1b8b8b
-:END:
-
-Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
-
-#+begin_src emacs-lisp :tangle "init.el"
-(defcustom prot-emacs-omit-packages nil
-  "List of package names to not load.
-This instructs the relevant macros to not `require' the given
-package.  In the case of `prot-emacs-elpa-package', the package
-will not be installed if it is not already available on the
-system.
-
-This user option must be set in the `prot-emacs-pre-custom.el'
-file.  If that file exists in the Emacs directory, it is loaded
-before all other modules of my setup."
-  :group 'prot-emacs
-  :type '(repeat symbol))
 #+end_src
 
 ** The =init.el= basic configurations to disable backups and lockfiles
@@ -1102,196 +1060,6 @@ then a Do-What-I-Mean wrapper to switch between the two):
       (user-error "No active region; will not insert `prot-emacs-comment' here"))))
 #+end_src
 
-** The =init.el= macro to install and configure packages (~prot-emacs-package~)
-:PROPERTIES:
-:CUSTOM_ID: h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e
-:END:
-
-The de facto standard for configuring packages is ~use-package~. It is
-even built into Emacs, starting with version 29. I have used it before,
-but do not like parts of its design, such as how =:demand= is
-something needed because =:bind= autoloads commands, or how =:hook=
-entries do not have a =-hook= suffix by default whereas =:map= do have
-the =-map= suffix. My package requirements are fairly simple and I do
-not like magic happening behind the scenes (so if I really want to
-autoload something, I just do it instead of conflating this
-functionality with key bindings). I also prefer to write my own code
-as a means of practicing my programming skills...
-
-Hence my ~prot-emacs-package~. It is a macro that does the following:
-
-1. Automatically installs the package if missing and if this is
-   requested. See the ~prot-emacs-package-install~ for how this is
-   done, but also check the examples I provide in comment form further
-   below.
-2. Delays the loading of the package, if specified.
-3. Evaluates any other piece of code the user provides. There is no
-   separation here into =:custom=, =:init=, =:bind=, etc. that
-   ~use-package~ is all about. This is ordinary Elisp.
-
-I will not try to document the technicalities of the macro here,
-though I am happy to do this with anyone who is interested in learning
-such advanced topics (<https://protesilaos.com/coach>).
-
-The samples below the macro use the ~prot-emacs-comment~ macro
-([[#h:3b14faa6-83fd-4d5f-b3bc-85f72fd572d4][The =init.el= macro to do nothing with Elisp code (~prot-emacs-comment~)]])
-to not run anything while keeping syntax highlighting on.
-
-#+begin_src emacs-lisp :tangle "init.el"
-(defun prot-emacs-package-install (package &optional method)
-  "Install PACKAGE with optional METHOD.
-
-If METHOD is nil or the `builtin' symbol, PACKAGE is not
-installed as it is considered part of Emacs.
-
-If METHOD is a string, it must be a URL pointing to the version
-controlled repository of PACKAGE.  Installation is done with
-`package-vc-install'.
-
-If METHOD is a quoted list, it must have a form accepted by
-`package-vc-install' such as:
-
-\\='(denote :url \"https://github.com/protesilaos/denote\" :branch \"main\")
-
-If METHOD is any other non-nil value, install PACKAGE using
-`package-install'."
-  (unless (or (eq method 'builtin) (null method))
-    (unless (package-installed-p package)
-      (when (or (stringp method) (listp method))
-        (package-vc-install method))
-      (unless package-archive-contents
-        (package-refresh-contents))
-      (package-install package))))
-
-(defvar prot-emacs-loaded-packages nil)
-
-(defmacro prot-emacs-package (package &rest body)
-  "Require PACKAGE with BODY configurations.
-
-PACKAGE is an unquoted symbol that is passed to `require'.  It
-thus conforms with `featurep'.
-
-BODY consists of ordinary Lisp expressions.  There are,
-nevertheless, two unquoted plists that are treated specially:
-
-1. (:install METHOD)
-2. (:delay NUMBER)
-
-These plists can be anywhere in BODY and are not part of its
-final expansion.
-
-The :install property is the argument passed to
-`prot-emacs-package-install' and has the meaning of METHOD
-described therein.
-
-The :delay property makes the evaluation of PACKAGE with the
-expanded BODY happen with `run-with-timer'.
-
-Also see `prot-emacs-configure'."
-  (declare (indent defun))
-  (unless (memq package prot-emacs-omit-packages)
-    (let (install delay)
-      (dolist (element body)
-        (when (plistp element)
-          (pcase (car element)
-            (:install (setq install (cdr element)
-                            body (delq element body)))
-            (:delay (setq delay (cadr element)
-                          body (delq element body))))))
-      (let ((common `(,(when install
-                         `(prot-emacs-package-install ',package ,@install))
-                      (require ',package)
-                      (add-to-list 'prot-emacs-loaded-packages ',package)
-                      ,@body
-                      ;; (message "Prot Emacs loaded package: %s" ',package)
-                      )))
-        (cond
-         ((featurep package)
-          `(progn ,@body))
-         (delay
-          `(run-with-timer ,delay nil (lambda () ,@(delq nil common))))
-         (t
-          `(progn ,@(delq nil common))))))))
-
-;; Samples of `prot-emacs-package' (expand them with `pp-macroexpand-last-sexp').
-
-(prot-emacs-comment
-  (prot-emacs-package denote
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (:install '(denote . (:url "https://github.com/protesilaos/denote" :branch "main")))
-    (:delay 5)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://github.com/protesilaos/denote")
-    (:delay 5)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (:delay 5)
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://github.com/protesilaos/denote")
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (:install "https://github.com/protesilaos/denote")
-    (:delay 5)
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (:delay 5)
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (setq denote-file-type nil)))
-#+end_src
-
-** The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)
-:PROPERTIES:
-:CUSTOM_ID: h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200
-:END:
-
-The ~prot-emacs-configure~ is a simplified version of the
-~prot-emacs-package~ ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The init.el macro to install and configure packages (~prot-emacs-package~)]]).
-It basically evaluates the given Elisp with an optional delay.
-I don't use this frequently, though it is a nice option to have for
-those cases where some code does not belong to a specific package (or
-I simply want to group many packages as a single block and have a
-single delay for all of them).
-
-#+begin_src emacs-lisp :tangle "init.el"
-(defmacro prot-emacs-configure (&rest body)
-  "Evaluate BODY as a `progn'.
-BODY consists of ordinary Lisp expressions.  The sole exception
-is an unquoted plist of the form (:delay NUMBER) which evaluates
-BODY with NUMBER seconds of `run-with-timer'.
-
-Note that `prot-emacs-configure' does not try to autoload
-anything.  Use it only for forms that evaluate regardless.
-
-Also see `prot-emacs-package'."
-  (declare (indent 0))
-  (let (delay)
-    (dolist (element body)
-      (when (plistp element)
-        (pcase (car element)
-          (:delay (setq delay (cadr element)
-                        body (delq element body))))))
-    (if delay
-        `(run-with-timer ,delay nil (lambda () ,@body))
-      `(progn ,@body))))
-#+end_src
-
 ** The =init.el= macro to bind keys (~prot-emacs-keybind~)
 :PROPERTIES:
 :CUSTOM_ID: h:d3684ec0-a972-4033-a4d6-41ee16e891d9
@@ -1374,28 +1142,6 @@ making an abbreviation to a function."
      (error "%s is not an abbrev table" ,table)))
 #+end_src
 
-** The =init.el= to find which packages have been loaded
-:PROPERTIES:
-:CUSTOM_ID: h:23c343cf-6b9b-4b35-b2af-858fb5b75163
-:END:
-
-Once in a blue moon, I need to check which packages have been loaded
-by my Emacs. This is what ~prot-emacs-return-loaded-packages~ does by
-reading the value of ~package-activated-list~ as well as
-~prot-emacs-loaded-packages~. The ~prot-emacs-package~ is responsible
-for updating the latter
-([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
-
-#+begin_src emacs-lisp :tangle "init.el"
-(defun prot-emacs-return-loaded-packages ()
-  "Return a list of all loaded packages.
-Here packages include both `prot-emacs-loaded-packages' and
-`package-activated-list'.  The latter only covers what is found
-in the `package-archives', whereas the former is for anything
-that is expanded with the `prot-emacs-package' macro."
-  (delete-dups (append prot-emacs-loaded-packages package-activated-list)))
-#+end_src
-
 ** The =init.el= addition of highlighting for my macros
 :PROPERTIES:
 :CUSTOM_ID: h:d168edaa-426f-4bd0-8275-3ec3d66bf126
@@ -1407,7 +1153,7 @@ specifies how they should be colourised.
 
 #+begin_src emacs-lisp :tangle "init.el"
 (defvar prot-emacs-package-form-regexp
-  "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|prot-emacs-abbrev\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
+  "^(\\(prot-emacs-keybind\\|prot-emacs-abbrev\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
 
 (eval-after-load 'lisp-mode
@@ -1415,9 +1161,7 @@ specifies how they should be colourised.
                 (list "Packages" ,prot-emacs-package-form-regexp 2)))
 
 (defconst prot-emacs-font-lock-keywords
-  '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
-     (2 font-lock-constant-face nil t))
-    ("(\\(prot-emacs-\\(keybind\\|abbrev\\|abbrev-function\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
+  '(("(\\(prot-emacs-\\(keybind\\|abbrev\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
      (3 font-lock-variable-name-face nil t))
     ("(\\(prot-emacs-comment\\)\\_>[ \t']*"
      (1 font-lock-preprocessor-face nil t))))
@@ -1450,10 +1194,7 @@ The individual modules are documented in a section of their own under
 ;; ~/.emacs.d/prot-emacs-pre-custom.el
 ;;
 ;; The purpose of this file is for the user to define their
-;; preferences BEFORE loading any of the modules.  For example, the
-;; user option `prot-emacs-omit-packages' lets the user specify which
-;; packages not to load.  Search for all `defcustom' forms in this
-;; file for other obvious customisations.
+;; preferences BEFORE loading any of the modules.
 (load (locate-user-emacs-file "prot-emacs-pre-custom.el") :no-error :no-message)
 
 (require 'prot-emacs-theme)
@@ -2004,7 +1745,8 @@ vertical axis.
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
 (use-package lin
   :ensure t
-  :init
+  :hook (after-init . lin-global-mode) ; applies to all `lin-mode-hooks'
+  :config
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
@@ -2012,8 +1754,7 @@ vertical axis.
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
   ;;
   ;; I still prefer `setq' for consistency.
-  (setq lin-face 'lin-magenta)
-  :hook (after-init . lin-global-mode)) ; applies to all `lin-mode-hooks'
+  (setq lin-face 'lin-magenta))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~spacious-padding~
@@ -2472,23 +2213,14 @@ This module load basic configurations that apply to most facets of
 Emacs. Many of my own custom libraries are loaded here
 ([[#h:e289a614-4f17-4d6c-a028-42fe45aebe66][The init.el arrangements for my own modules and custom libraries]]).
 
-In every section, I start with a call to the ~prot-emacs-configure~
-macro. I wrap all sorts of related calls and introduce a one second
-delay to their evaluation. This helps speed up startup time ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
-
 *** The =prot-emacs-essentials.el= block with basic configurations
 :PROPERTIES:
 :CUSTOM_ID: h:713ede33-3802-40c6-a8e3-7e1fc0d0a924
 :END:
 
-At the first line of this module, I call ~prot-emacs-configure~ ([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
-Then I set all sorts of basic yet not necessarily related settings.
 Better use =C-h v= (=M-x describe-variable=) to learn about each of
-these. Since I am here, I also unbind or repurpose some of the default
+these variables. Since I am here, I also unbind or repurpose some of the default
 key bindings.
-
-Remember that ~prot-emacs-keybind~ is a macro of mine that simplifies
-how we type multiple ~define-key~ calls ([[#h:d3684ec0-a972-4033-a4d6-41ee16e891d9][The init.el macro to bind keys (~prot-emacs-keybind~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el" :mkdirp yes
 ;;; Essential configurations
@@ -2926,50 +2658,6 @@ reflect the new file contents.
   :hook (after-init . global-auto-revert-mode)
   :config
   (setq auto-revert-verbose t))
-#+end_src
-
-*** COMMENT The =prot-emacs-essentials.el= settings for auto saving files (~auto-save-visited-mode~)
-:PROPERTIES:
-:CUSTOM_ID: h:4a8caede-80b0-4195-8b5d-7f60ab64a3d4
-:END:
-
-[ NOTE 2024-02-23: I stopped using this because it was messing up my
-undo history, in the sense that I no longer knew which was the last
-"okay" state. Keeping this here for posterity. ]
-
-When this mode is enabled, file-visiting buffers are automatically
-saved to their files after ~auto-save-visited-interval~ of idleness.
-This is in contrast to the ~auto-save-mode~, which automatically saves such
-buffers to a separate file, leaving the original file intact. We can
-then recover the auto-saved alternative file, if we want, but I prefer
-to just write directly to disk.
-
-The ~prot/auto-save-visited-p~ and ~prot/auto-save-visited-blocklist~
-are set up for future review as I continue using this mode. Basically,
-there are cases where I do not want auto-saving to happen.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-;;;; Auto save buffers visiting files
-(prot-emacs-configure
-  (:delay 5)
-  (setq auto-save-visited-interval 2)
-  (setq remote-file-name-inhibit-auto-save-visited t)
-
-  (defvar prot/auto-save-visited-blocklist
-    '(message-mode)
-    "List of major modes where files should not be auto-saved.")
-
-  (defun prot/auto-save-visited-p ()
-    "Predicate function for `auto-save-visited-predicate'.
-    Do not save the buffer if its major mode parent is among those
-    specified in `prot/auto-save-visited-blocklist'."
-    (when (derived-mode-p 'text-mode 'prog-mode)
-      (not (or (memq major-mode prot/auto-save-visited-blocklist)
-               (memq (get major-mode 'derived-mode-parent) prot/auto-save-visited-blocklist)))))
-
-  (setq auto-save-visited-predicate #'prot/auto-save-visited-p)
-
-  (auto-save-visited-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section for ~delete-selection-mode~
@@ -3717,7 +3405,7 @@ as soon as the given package/feature is loaded.
                   prot-modeline-buffer-status
                   prot-modeline-window-dedicated-status
                   prot-modeline-input-method
-                  prot-modeline-evil
+                  "  "
                   prot-modeline-buffer-identification
                   "  "
                   prot-modeline-major-mode
@@ -3814,12 +3502,6 @@ inputs, displaying helpful annotations next to each candidate, and
 "completion styles" to control how user input is matched to
 candidates. Because we use the minibuffer for most common
 interactions, completion is an integral part of any setup.
-
-I start configuring this setion with some built-in options about the
-underlying framework. Wehn there is no specific package I am
-targeting, I use the ~prot-emacs-configure~ macro
-([[#h:54a4cb92-e7f8-4291-abe6-6e7dfdfd6200][The =init.el= macro to evaluate arbitrary Elisp (~prot-emacs-configure~)]]).
-Else I use ~prot-emacs-package~ ([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
 
 *** The =prot-emacs-completion.el= settings for completion styles
 :PROPERTIES:
@@ -5386,12 +5068,17 @@ by visiting individual files or by using a grep buffer as an index.
 :CUSTOM_ID: h:ceb286c5-a5f7-4cc8-b883-89d20a75ea02
 :END:
 
-These are some configurations for built-in tools. I wrap them in a
-~prot-emacs-configure~ call, as I do not need to call (i.e. ~require~)
-their respective packages at this point.
+The =xref.el= provides the infrastructure to jump to and from a
+definition. For example, with point over a function call,
+~xref-find-definitions~ will jump to the file and location where the
+function is defined or provide an option to pick one among multiple
+definitions, where applicable. The =grep.el= is a wrapper for the Unix
+program of the same name. Not much to add there. While =re-builder.el=
+defines a command that lets us write a regexp that matches against the
+current buffer, allowing us to test it live.
 
-The changes here are minor tweaks. Note the use of the ~let~ to decide
-whether I use the ~grep~ or ~rg~ (~ripgrep~) program.
+Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
+(~ripgrep~) program: this covers Xref as well.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 ;;; grep and xref
@@ -5499,10 +5186,7 @@ fully fledged, graphical file managers.
 :CUSTOM_ID: h:39fb0eab-54bb-4e5b-8e38-9443dbe5c5ee
 :END:
 
-I start with the now-familiar ~prot-emacs-package~ macro to ~require~
-the ~dired~ feature with a slight delay and then start tweaking it
-([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
-Then I add two settings which make all copy, rename/move, and delete
+I add two settings which make all copy, rename/move, and delete
 operations more intuitive. I always want to perform those actions in a
 recursive manner, as this is the intent I have when I am targeting
 directories.
@@ -5715,15 +5399,6 @@ are:
   (setq dired-vc-rename-file t)             ; Emacs 27
   (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir)))) ; Emacs 28
   (setq dired-create-destination-dirs-on-trailing-dirsep t)) ; Emacs 29
-
-;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
-;; ;; because there are other tools that offer a better interface, such
-;; ;; as `consult-find', `consult-grep', `project-find-file',
-;; ;; `project-find-regexp', `prot-vc-git-grep'.
-;; (prot-emacs-package find-dired
-;;   (setq find-ls-option
-;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
-;;   (setq find-name-arg "-iname"))
 
 (use-package dired-x
   :ensure nil
@@ -5938,8 +5613,9 @@ starting point to play back some media files (or directory containing
 such files) using the ~mpv~ program. I use it daily and it works fine
 for just playback, but I do need/want to develop it further as it
 really is nothing but a prototype right now. You will thus notice that
-the ~prot-emacs-package~ is actually installing the file from source
-([[#h:1457099d-fb05-4e38-9f8f-cfa4cc46b98e][The =init.el= macro to install and configure packages (~prot-emacs-package~)]]).
+the package declaration is actually installing the file from source:
+this is a feature built into Emacs 30, though it also is available as
+a package for Emacs 29.
 
 + Package name (GNU ELPA): ~mandoura~ (⛔ not available yet)
 + Git repositories:
@@ -7849,8 +7525,7 @@ of characters, I use my ~prot-pair-insert~ command ([[#h:48d2bab5-241f-49dd-9554
 (use-package electric
   :ensure nil
   :hook
-  ((prog-mode . electric-indent-local-mode)
-   (text-mode . electric-pair-local-mode))
+  (prog-mode . electric-indent-local-mode)
   :config
   ;; I don't like auto indents in Org and related.  They are okay for
   ;; programming.
@@ -8123,17 +7798,8 @@ commands. For the technicalities, read the man page ~sxhkd(1)~.
 :CUSTOM_ID: h:115806c4-88b0-43c1-8db2-d9d8d20a5c17
 :END:
 
-The ~jinx~ package by Daniel Mendler handles spell checking as you
-type. It does it in an efficient way that does not block other Emacs
-processes. On top of that, ~jinx~ works with multiple languages, so
-any mixed language document will not be a problem for it. All you need
-is to activate ~jinx-mode~ in the current buffer or enable its global
-counterpart, ~global-jinx-mode~, at startup.
-
-I had a problem using ~jinx~ on my laptop and have not tried to make
-it work ever since. I plan to do it at some point. In the meantime, I
-rely on the built-in ~flyspell~ feature that I complement with some
-small extras ([[#h:551718b7-fb2d-4a4a-804e-3118001b96ec][The =prot-spell.el= library]]).
+For spell checking on-demand, I rely on the built-in ~flyspell~
+feature that I complement with some small extras ([[#h:551718b7-fb2d-4a4a-804e-3118001b96ec][The =prot-spell.el= library]]).
 
 In terms of workflow, I do not like to see any spell checking while I
 type. I prefer to write out the entire draft and then do a spell check
@@ -8143,38 +7809,7 @@ harder to set up multilingual spell checking with ~flyspell~ and I do
 not even bother trying as I seldom have that need.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
-;; FIXME 2023-08-28: The laptop I use now that I do not have
-;; electricity/Internet at home does not build the Jinx C module.  I
-;; am not sure what is happening.  Commenting out for the time being,
-;; as I need to have Emacs up and running.
-
-;;; Jinx (highly performant spell checker)
-;; (if (executable-find "enchant-2")
-;;   (prot-emacs-package jinx
-;;     (:install t)
-;;     (:delay 10)
-;;     (setq jinx-languages "en_GB el_GR fr_FR es_ES pt_PT-preao")
-;;     (setq jinx-include-modes '(text-mode prog-mode))
-;;     (setq jinx-include-faces
-;;           '((prog-mode font-lock-doc-face)
-;;             (conf-mode font-lock-comment-face)))
-;;     (setq jinx-exclude-regexps
-;;           '((t "[A-Z]+\\>"
-;;                "\\<[[:upper:]][[:lower:]]+\\>"
-;;                "\\w*?[0-9\.'\"-]\\w*"
-;;                "[a-z]+://\\S-+"
-;;                "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?")))
-;;
-;;     (define-key ctl-x-x-map "j" #'jinx-mode) ; C-x x j
-;;
-;;     (prot-emacs-keybind global-map
-;;       "M-$" jinx-correct
-;;       "C-M-$" jinx-languages))
-;;   ;; I would use an `error' but I do not want it to interrupt startup.
-;;   (message "libenchant is not available"))
-
 ;;; Flyspell and prot-spell.el (spell check)
-;; See FIXME for `jinx'.
 (use-package flyspell
   :ensure nil
   :bind
@@ -9811,7 +9446,9 @@ Finally, we ~provide~ the submodule. This is the mirror function of
     (define-key map (kbd "C-M-p") #'gnus-summary-prev-group)
     (define-key map (kbd "C-M-^") #'gnus-summary-refer-thread)))
 
-(prot-emacs-package nnmail
+(use-package nnmail
+  :ensure nil
+  :config
   (setq nnmail-expiry-wait 30))         ; careful with this
 
 (provide 'prot-emacs-gnus)
@@ -10253,18 +9890,20 @@ account default : pub
 
   (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank))
 
-(with-eval-after-load 'elfeed
-  (prot-emacs-package prot-elfeed
-    (setq prot-elfeed-tag-faces t)
-    (prot-elfeed-fontify-tags)
-
-    (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
-
-    (prot-emacs-keybind elfeed-search-mode-map
-      "s" #'prot-elfeed-search-tag-filter
-      "+" #'prot-elfeed-toggle-tag)
-
-    (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
+(use-package prot-elfeed
+  :ensure nil
+  :after elfeed
+  :bind
+  ( :map elfeed-search-mode-map
+    ("s" . prot-elfeed-search-tag-filter)
+    ("+" . prot-elfeed-toggle-tag)
+    :map elfeed-show-mode-map
+    ("+" . prot-elfeed-toggle-tag))
+  :hook
+  (elfeed-search-mode . prot-elfeed-load-feeds)
+  :config
+  (setq prot-elfeed-tag-faces t)
+  (prot-elfeed-fontify-tags))
 #+end_src
 
 *** TODO The =prot-emacs-web.el= settings for the IRC client
@@ -10274,37 +9913,31 @@ account default : pub
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;; Rcirc (IRC client)
+(use-package rcirc
+  :ensure nil
+  :bind ("C-c i" . irc)
+  :config
+  (setq rcirc-server-alist
+        `(("irc.libera.chat"
+           :channels ("#emacs" "#rcirc")
+           :port 6697
+           :encryption tls
+           :password ,(prot-common-auth-get-field "libera" :secret))))
 
-;; NOTE 2023-04-24: I seldom use IRC.  When I have to, I simply
-;; evaluate the following.  Otherwise I do not need to load it each
-;; time.
+  (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
 
-;; (prot-emacs-package rcirc
-;;   (:delay 10)
-;;
-;;   (setq rcirc-server-alist
-;;         `(("irc.libera.chat"
-;;            :channels ("#emacs" "#tropin" "#rcirc")
-;;            :port 6697
-;;            :encryption tls
-;;            :password ,(prot-common-auth-get-field "libera" :secret))))
-;;
-;;   (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
-;;
-;;   (setq rcirc-default-nick "protesilaos"
-;;         rcirc-default-user-name rcirc-default-nick
-;;         rcirc-default-full-name "Protesilaos Stavrou")
-;;
-;;   ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
-;;   ;; ;; actually need this.
-;;   ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
-;;
-;;   ;; NOTE 2021-11-28: Is there a canonical way to disable this?
-;;   (setq rcirc-timeout-seconds most-positive-fixnum)
-;;
-;;   (rcirc-track-minor-mode 1)
-;;
-;;   (define-key global-map (kbd "C-c i") #'irc))
+  (setq rcirc-default-nick "protesilaos"
+        rcirc-default-user-name rcirc-default-nick
+        rcirc-default-full-name "Protesilaos Stavrou")
+
+  ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
+  ;; ;; actually need this.
+  ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
+
+  ;; NOTE 2021-11-28: Is there a canonical way to disable this?
+  (setq rcirc-timeout-seconds most-positive-fixnum)
+
+  (rcirc-track-minor-mode 1))
 #+end_src
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
@@ -10381,260 +10014,6 @@ files. The user must handle this step by invoking the command
   (dired-mode . nerd-icons-dired-mode))
 
 (provide 'prot-emacs-icons)
-#+end_src
-
-** COMMENT TODO The =prot-emacs-evil.el= module
-:PROPERTIES:
-:CUSTOM_ID: h:0d6763f3-56d6-44be-b10d-bfb8cc96b442
-:END:
-
-([[#h:d32718d6-c678-483e-8cdf-02d77053c960][The =init.el= option to load Vim keys (=evil.el= and =devil.el=)]]).
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-evil.el" :mkdirp yes
-(prot-emacs-configure
-  (:delay 1)
-
-;;;; General settings
-
-  (setq evil-want-C-u-delete nil)
-  (setq evil-want-C-w-delete nil)
-  (setq evil-want-C-h-delete nil)
-  (setq evil-want-C-w-in-emacs-state nil)
-  (setq evil-want-abbrev-expand-on-insert-exit nil)
-  (setq evil-disable-insert-state-bindings t)
-
-  (setq evil-want-change-word-to-end t)
-  (setq evil-want-C-i-jump t)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-d-scroll t)
-  (setq evil-want-C-g-bindings nil)
-  (setq evil-want-Y-yank-to-eol t) ; consistent with D
-  (setq evil-want-empty-ex-last-command t)
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-minibuffer nil)
-
-  (setq evil-toggle-key "<f12>") ; I seldom need this, so putting it somewhere far
-  (setq evil-default-state 'normal) ; check `evil-set-initial-state'
-  (setq evil-echo-state nil)
-  (setq evil-mode-line-format nil) ; see `prot-modeline.el' and its implementation in `prot-emacs-modeline.el'
-  (setq evil-want-fine-undo t)
-  (setq evil-esc-delay 0.01)
-  (setq evil-intercept-esc 'always)
-  (setq evil-highlight-closing-paren-at-point-states '(not emacs insert replace))
-  (setq evil-kill-on-visual-paste nil) ; Does not work, see `prot-evil-visual-paste-no-kill'
-  (setq evil-auto-indent t)
-
-  (setq evil-undo-system 'undo-redo) ; Emacs 28
-  (setq evil-visual-update-x-selection-p t)
-
-  (setq evil-repeat-move-cursor t)
-  (setq evil-repeat-find-to-skip-next t)
-  (setq evil-kbd-macro-suppress-motion-error nil) ; never suppress errors in kmacros, Emacs-style
-
-  ;; ;; I disable K anyway
-  ;; (setq evil-lookup-func #'ignore)
-
-  ;; I only use the standard commands for window splitting...
-  (setq evil-auto-balance-windows window-combination-resize)
-  (setq evil-split-window-below nil)
-  (setq evil-vsplit-window-right nil)
-
-  (setq evil-mouse-word 'evil-word)
-  (setq evil-bigword "^ \t\r\n")
-
-  ;; evil-complete-all-buffer
-  ;; evil-buffer-regexps
-  ;; evil-intercept-maps
-  ;; evil-motions
-  ;; evil-visual-newline-commands
-  ;; evil-text-object-change-visual-type
-  ;; evil-command-window-height
-  ;; evil-display-shell-error-in-message
-
-;;;; Evil search setup
-
-  ;; NOTE 2023-11-06: These settings do not give me the same isearch
-  ;; experience as core Emacs.  I only want that, but to use it with
-  ;; Vim keys.
-
-  (setq evil-search-module 'isearch)
-  (setq evil-symbol-word-search t)
-  (setq evil-flash-delay 0.5)
-  (setq evil-ex-hl-update-delay lazy-highlight-initial-delay)
-  (setq evil-regexp-search nil)
-  (setq evil-search-wrap t)
-  (setq evil-search-wrap-ring-bell t) ; TODO does this quit keyboard macros, specifically with C-u 0?
-  (setq evil-magic nil) ; not applicable for `evil-search-module' isearch module
-  (setq evil-ex-search-vim-style-regexp nil) ; not for isearch
-
-  ;; NOTE 2023-11-06: I have not tested all of the following and am
-  ;; not sure which ones are relevant for my use-case.
-
-;;;; Ex commands
-
-  ;; NOTE 2023-11-06: I have not used any of these...
-  (setq evil-ex-interactive-search-highlight 'selected-window)
-  (setq evil-ex-search-persistent-highlight t)
-  (setq evil-ex-search-case 'smart)
-  (setq evil-ex-substitute-case nil) ; use `evil-ex-search-case'
-  (setq evil-ex-search-incremental t)
-  (setq evil-ex-search-highlight-all t)
-  (setq evil-ex-substitute-highlight-all t)
-  (setq evil-ex-substitute-interactive-replace t)
-  (setq evil-ex-substitute-global nil)
-  ;; evil-ex-complete-emacs-commands 'in-turn
-  ;; evil-ex-visual-char-range nil
-
-;;;; Evil cursors
-
-  ;; TODO 2023-11-06: integrate with `cursory'
-  (setq evil-default-cursor t)
-
-;;;; How lines are treated
-
-  (setq evil-respect-visual-line-mode nil)
-
-  (setq evil-shift-width tab-width)
-  (setq evil-start-of-line t)
-  (setq evil-backspace-join-lines t)
-  (setq evil-cross-lines t)
-  (setq evil-move-cursor-back nil) ; my "insert" mode is "emacs", so not relevant
-  (setq evil-move-beyond-eol nil)
-  (setq evil-show-paren-range 0)
-  (setq evil-track-eol t)
-  (setq evil-v$-excludes-newline nil)
-
-;;;; Compatibility with other modes
-
-  ;; I load the `evil' feature here because some functions/macros of
-  ;; it are needed from this point on.  Evil is one of those few
-  ;; packages that requires certain variables to be evaluated before
-  ;; it is `require'd.  This is why I place most of the `setq' calls
-  ;; above.
-  (prot-emacs-package evil (:install t))
-
-  ;; The `prot-evil' library defines a new state for better
-  ;; compatibility with most (all?) major modes.  It also introduces a
-  ;; new "erase" operator.  These are configured from this point on.
-  (prot-emacs-package prot-evil)
-
-  (setq evil-overriding-maps nil)
-  (setq evil-motion-state-modes nil)
-  (setq evil-insert-state-modes nil)
-  (setq evil-emacs-state-modes
-        '(comint-mode
-          rcirc-mode
-          eshell-mode
-          inferior-emacs-lisp-mode
-          reb-mode
-          shell-mode
-          term-mode
-          wdired-mode
-          log-edit-mode
-          git-commit-mode))
-  (setq evil-prot-basic-state-modes
-        '(completion-list-mode
-          Buffer-menu-mode
-          Custom-mode
-          edebug-mode
-          Info-mode
-          help-mode
-          diff-mode
-          ediff-mode
-          log-view-mode
-          org-agenda-mode
-          dired-mode
-          magit-status-mode
-          magit-diff-mode
-          magit-log-mode
-          notmuch-hello-mode
-          notmuch-search-mode
-          notmuch-show-mode
-          notmuch-tree-mode
-          special-mode
-          tabulated-list-mode
-          world-clock-mode))
-
-  (with-eval-after-load 'info
-    (evil-define-key 'prot-basic Info-mode-map (kbd "L") #'Info-history-back))
-
-  (with-eval-after-load 'help-mode
-    (evil-define-key 'prot-basic help-mode-map (kbd "L") #'help-go-back))
-
-  (with-eval-after-load 'dired
-    (evil-define-key 'prot-basic dired-mode-map (kbd "J") #'dired-goto-file)
-    (evil-define-key 'prot-basic dired-mode-map (kbd "K") #'dired-do-kill-lines))
-
-  (with-eval-after-load 'notmuch
-    (evil-define-key 'prot-basic notmuch-hello-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "J") #'notmuch-jump-search)
-    (evil-define-key 'prot-basic notmuch-show-mode-map (kbd "K") #'notmuch-tag-jump)
-    (evil-define-key 'prot-basic notmuch-search-mode-map (kbd "K") #'notmuch-tag-jump)
-    (evil-define-key 'prot-basic notmuch-tree-mode-map (kbd "K") #'notmuch-tag-jump))
-
-  ;; See TODO above about the visual state.
-  (with-eval-after-load 'magit
-    (evil-define-key '(visual prot-basic) magit-status-mode-map (kbd "K") #'magit-discard)
-    (evil-define-key 'prot-basic magit-status-mode-map (kbd "l") #'magit-log)
-    (evil-define-key 'visual magit-status-mode-map (kbd "s") #'magit-stage)
-    (evil-define-key 'visual magit-status-mode-map (kbd "u") #'magit-unstage))
-
-  (with-eval-after-load 'embark
-    (defun prot-evil-embark-act-or-repeat-pop ()
-      "Call `evil-repeat-pop' if relevant, else `prot/embark-act-no-quit'."
-      (interactive)
-      (call-interactively
-       (if (memq last-command '(evil-repeat evil-repeat-pop evil-repeat-pop-next))
-           #'evil-repeat-pop
-         #'prot/embark-act-no-quit)))
-
-    (evil-define-key '(normal visual motion) global-map (kbd "C-.") #'prot-evil-embark-act-or-repeat-pop))
-
-  (with-eval-after-load 'org
-    (evil-define-key '(normal visual motion) org-mode-map
-      (kbd "<tab>") #'org-cycle
-      (kbd "<return>") #'org-ctrl-c-ctrl-c))
-
-;;;; Make Emacs the Insert state
-
-  (defalias 'evil-insert-state 'evil-emacs-state)
-  (evil-define-key 'emacs global-map (kbd "<escape>") #'prot-evil-normal-or-basic-state)
-  (setq evil-emacs-state-cursor evil-insert-state-cursor)
-
-;;;; Custom Evil keys
-
-  ;; The `prot-evil' library defines an "erase" operator.
-
-  (evil-define-key '(normal visual motion) global-map
-    (kbd "U") #'evil-redo
-    (kbd "C-r") #'isearch-backward
-    (kbd "K") #'prot-evil-erase
-    (kbd "g d") #'xref-find-definitions
-    (kbd "g D") #'xref-go-back
-    (kbd "<") #'prot-evil-shift-left
-    (kbd ">") #'prot-evil-shift-right)
-
-;;;; Set up `devil-mode' to reduce modifier key usage
-
-  (prot-emacs-package devil (:install t))
-
-  (evil-define-key '(normal visual motion prot-basic) global-map (kbd ",") #'devil)
-
-  ;; This one affects the emacs/insert state.
-  (global-devil-mode 1)
-
-;;;; Set up my prefix keymap
-
-  (evil-define-key '(emacs insert) global-map (kbd "SPC") #'prot-evil-prefix-or-self-insert)
-  (evil-define-key '(normal motion prot-basic) global-map (kbd "SPC") prot-prefix-map)
-
-;;;; Activate `evil-mode'
-  (evil-mode 1))
-
-(provide 'prot-emacs-evil)
 #+end_src
 
 * The custom libraries of my configuration
@@ -12129,186 +11508,6 @@ minibuffer with something like `exit-minibuffer'."
 ;;; prot-embark.el ends here
 #+end_src
 
-** COMMENT The =prot-evil.el= library
-:PROPERTIES:
-:CUSTOM_ID: h:a78d30dd-3724-462b-998a-212879293561
-:END:
-
-#+begin_src emacs-lisp :tangle "prot-lisp/prot-evil.el" :mkdirp yes
-;;; prot-evil.el --- Extras for Evil mode -*- lexical-binding: t -*-
-
-;; Copyright (C) 2023  Protesilaos Stavrou
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "30.1") (evil "1.15.0"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or (at
-;; your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-;;; Commentary:
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
-
-;;; Code:
-
-(require 'evil)
-
-;;;; The "basic" state
-
-(defvar prot-evil-basic-tag " <PB> "
-  "Mode line tag for the prot-basic state.")
-
-(defvar prot-evil-basic-message "-- PROT BASIC --"
-  "Echo area message when entering the prot basic state.")
-
-(evil-define-state prot-basic
-  "Basic Vim keys to work in most (?) read-only major modes."
-  :tag 'prot-evil-basic-tag
-  :message 'prot-evil-basic-message)
-
-(evil-define-command evil-force-prot-basic-state ()
-  "Switch to  state without recording current command."
-  :repeat abort
-  :suppress-operator t
-  (evil-prot-basic-state))
-
-(evil-define-key 'prot-basic global-map
-  "0" #'evil-beginning-of-line
-  "$" #'evil-end-of-line
-  "h" #'evil-backward-char
-  "j" #'evil-next-line
-  "k" #'evil-previous-line
-  "l" #'evil-forward-char
-  "i" #'evil-insert
-  "v" #'evil-visual-char
-  "V" #'evil-visual-line)
-
-(defun prot-evil-need-basic-p ()
-  "Return non-nil if the basic state should be used."
-  (or buffer-read-only
-      (memq major-mode evil-prot-basic-state-modes)))
-
-(defun prot-evil-normal-or-basic-state ()
-  "Return to normal or basic state per `prot-evil-need-basic-p'."
-  (interactive)
-  (if (prot-evil-need-basic-p)
-      (evil-force-prot-basic-state)
-    (evil-force-normal-state)))
-
-;;;; Basic commands
-
-;; FIXME 2024-02-18: Make sure that v does the same thing as V.
-(defun prot-evil-shift-left (&optional beg end)
-  "Left shift the region and keep it highlighted.
-The region is between BEG and END, if it is active.  Otherwise,
-it is retrieved interactively with regular Evil motions."
-  (interactive "r")
-  (if (region-active-p)
-      (progn
-        (evil-shift-left beg end)
-        (evil-active-region 1))
-    (call-interactively #'evil-shift-left)))
-
-(defun prot-evil-shift-right (&optional beg end)
-  "Right shift the region and keep it highlighted.
-The region is between BEG and END, if it is active.  Otherwise,
-it is retrieved interactively with regular Evil motions."
-  (interactive "r")
-  (if (region-active-p)
-      (progn
-        (evil-shift-right beg end)
-        (evil-active-region 1))
-    (call-interactively #'evil-shift-right)))
-
-;;;; The "erase" operator
-
-(evil-define-operator prot-evil-erase (beg end type &rest _)
-  "Erase text from BEG to END with TYPE.
-Unlike the delete operator, do not store the erased text anywhere."
-  (interactive "<R><x><y>")
-  (when (and (memq type '(inclusive exclusive))
-             (not (evil-visual-state-p))
-             (eq 'prot-evil-erase evil-this-operator)
-             (save-excursion (goto-char beg) (bolp))
-             (save-excursion (goto-char end) (eolp))
-             (<= 1 (evil-count-lines beg end)))
-    ;; Imitate Vi strangeness: if motion meets above criteria,
-    ;; delete linewise. Not for change operator or visual state.
-    (let ((new-range (evil-line-expand beg end)))
-      (setq beg (car new-range)
-            end (cadr new-range)
-            type 'line)))
-  (cond
-   ((eq type 'block)
-    (evil-apply-on-block #'delete-region beg end nil))
-   ((and (eq type 'line)
-         (= end (point-max))
-         (or (= beg end)
-             (/= (char-before end) ?\n))
-         (/= beg (point-min))
-         (= (char-before beg) ?\n))
-    (delete-region (1- beg) end))
-   (t (delete-region beg end)))
-  (when (and (eq type 'line)
-             (called-interactively-p 'any))
-    (evil-first-non-blank)
-    (when (and (not evil-start-of-line)
-               evil-operator-start-col
-               ;; Special exceptions to ever saving column:
-               (not (memq evil-this-motion '(evil-forward-word-begin
-                                             evil-forward-WORD-begin))))
-      (move-to-column evil-operator-start-col))))
-
-;;;; Integration with `prot-prefix' (leader key)
-
-;; The `prot-prefix' feature is loaded by the `prot-emacs-essentials'
-;; module.
-
-(defun prot-evil-prefix-or-self-insert ()
-  "Self-insert key or return `prot-prefix-map'.
-For use as a leader key in the emacs/insert evil state when the
-buffer is not writable."
-  (interactive)
-  (if (prot-evil-need-basic-p)
-      (set-transient-map prot-prefix-map)
-    (self-insert-command 1)))
-
-;;;; Do not pollute the kill-ring in visual state
-
-(defun prot-evil-visual-paste-no-kill (&rest args)
-  "Do not add visual selection to the `kill-ring' while pasting.
-Add as :around advice to `evil-paste-after' and `evil-paste-before',
-applying its ARGS."
-  (if (evil-visual-state-p)
-      (cl-letf (((symbol-function 'evil-yank) #'ignore))
-        (apply args)
-        (setq evil-last-paste nil))
-    (apply args)))
-
-(advice-add #'evil-paste-after :around #'prot-evil-visual-paste-no-kill)
-(advice-add #'evil-paste-before :around #'prot-evil-visual-paste-no-kill)
-
-(provide 'prot-evil)
-;;; prot-evil.el ends here
-#+end_src
-
 ** The =prot-eww.el= library
 :PROPERTIES:
 :CUSTOM_ID: h:abc20037-7a4f-4555-809a-dc4165c5db6a
@@ -13398,77 +12597,6 @@ Specific to the current window's mode line.")
                     'mouse-face 'mode-line-highlight)))
   "Mode line construct for dedicated window indicator.")
 
-;;;; Evil state
-
-(defvar evil-state)
-(defvar evil-visual-selection)
-
-(defconst prot-modeline-evil-state-tags
-  '((normal     :short "<N>"   :long "NORMAL")
-    (insert     :short "<I>"   :long "INSERT")
-    (visual     :short "<V>"   :long "VISUAL")
-    (vblock     :short "<Vb>"  :long "VBLOCK")
-    (vline      :short "<Vl>"  :long "VLINE")
-    (vsline     :short "<Vsl>" :long "VSLINE")
-    (motion     :short "<M>"   :long "MOTION")
-    (emacs      :short "<E>"   :long "EMACS")
-    (operator   :short "<O>"   :long "OPERATE")
-    (replace    :short "<R>"   :long "REPLACE")
-    (prot-basic :short "<B>"   :long "BASIC"))
-  "Short and long tags for Evil states.")
-
-(defun prot-modeline--evil-get-tag (state variant)
-  "Get Evil STATE tag of VARIANT :short or :long.
-VARIANT of the state tag is either :short or :long, as defined in
-`prot-modeline-evil-state-tags'."
-  (let ((tags (alist-get state prot-modeline-evil-state-tags)))
-    (plist-get tags (or variant :short))))
-
-(defun prot-modeline--evil-get-format-specifier (variant)
-  "Return a `format' specifier for VARIANT.
-VARIANT of the state tag is either :short or :long, as defined in
-`prot-modeline-evil-state-tags'."
-  (if (eq variant :short)
-      " %-5s"
-    " %-8s"))
-
-(defun prot-modeline--evil-propertize-tag (state variant &optional face)
-  "Propertize STATE tag of VARIANT with optional FACE.
-VARIANT of the state tag is either :short or :long, as defined in
-`prot-modeline-evil-state-tags'.  If FACE is nil, fall back to
-`default'."
-  (propertize
-   (format (prot-modeline--evil-get-format-specifier variant) (prot-modeline--evil-get-tag state variant))
-   'face (or face 'mode-line)
-   'mouse-face 'mode-line-highlight
-   'help-echo (format "Evil `%s' state" state)))
-
-(defun prot-modeline-evil-state-tag (variant)
-  "Return mode line tag VARIANT depending on the Evil state.
-VARIANT of the state tag is either :short or :long, as defined in
-`prot-modeline-evil-state-tags'."
-  (pcase evil-state
-    ('normal (prot-modeline--evil-propertize-tag 'normal variant 'prot-modeline-indicator-blue))
-    ('insert (prot-modeline--evil-propertize-tag 'insert variant))  ; I don't actually use an "insert" state: it switches to "emacs"
-    ('visual (pcase evil-visual-selection
-               ('line (prot-modeline--evil-propertize-tag 'vline variant 'prot-modeline-indicator-yellow))
-               ('screen-line (prot-modeline--evil-propertize-tag 'vsline variant 'prot-modeline-indicator-yellow))
-               ('block (prot-modeline--evil-propertize-tag 'vblock variant 'prot-modeline-indicator-yellow))
-               (_ (prot-modeline--evil-propertize-tag 'visual variant 'prot-modeline-indicator-yellow))))
-    ('motion (prot-modeline--evil-propertize-tag 'motion variant 'prot-modeline-indicator-yellow))
-    ('emacs (prot-modeline--evil-propertize-tag 'emacs variant 'prot-modeline-indicator-magenta))
-    ('operator (prot-modeline--evil-propertize-tag 'operator variant 'prot-modeline-indicator-red))
-    ('replace (prot-modeline--evil-propertize-tag 'replace variant 'prot-modeline-indicator-red))
-    ('prot-basic (prot-modeline--evil-propertize-tag 'prot-basic variant 'prot-modeline-indicator-green))))
-
-(defvar-local prot-modeline-evil
-    '(:eval
-      (if (and (mode-line-window-selected-p) (bound-and-true-p evil-mode))
-        (let ((variant (if (prot-modeline--truncate-p) :short :long)))
-          (prot-modeline-evil-state-tag variant))
-        " "))
-  "Mode line construct to display the Evil state.")
-
 ;;;; Buffer name and modified status
 
 (defun prot-modeline-buffer-identification-face ()
@@ -13749,7 +12877,6 @@ Specific to the current window's mode line.")
                      prot-modeline-input-method
                      prot-modeline-buffer-status
                      prot-modeline-window-dedicated-status
-                     prot-modeline-evil
                      prot-modeline-buffer-identification
                      prot-modeline-major-mode
                      prot-modeline-process

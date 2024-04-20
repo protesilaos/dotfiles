@@ -39,7 +39,8 @@
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
 (use-package lin
   :ensure t
-  :init
+  :hook (after-init . lin-global-mode) ; applies to all `lin-mode-hooks'
+  :config
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
@@ -47,8 +48,7 @@
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
   ;;
   ;; I still prefer `setq' for consistency.
-  (setq lin-face 'lin-magenta)
-  :hook (after-init . lin-global-mode)) ; applies to all `lin-mode-hooks'
+  (setq lin-face 'lin-magenta))
 
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:

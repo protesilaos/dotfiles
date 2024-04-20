@@ -172,7 +172,9 @@
     (define-key map (kbd "C-M-p") #'gnus-summary-prev-group)
     (define-key map (kbd "C-M-^") #'gnus-summary-refer-thread)))
 
-(prot-emacs-package nnmail
+(use-package nnmail
+  :ensure nil
+  :config
   (setq nnmail-expiry-wait 30))         ; careful with this
 
 (provide 'prot-emacs-gnus)

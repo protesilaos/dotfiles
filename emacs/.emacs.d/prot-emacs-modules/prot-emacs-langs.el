@@ -12,8 +12,7 @@
 (use-package electric
   :ensure nil
   :hook
-  ((prog-mode . electric-indent-local-mode)
-   (text-mode . electric-pair-local-mode))
+  (prog-mode . electric-indent-local-mode)
   :config
   ;; I don't like auto indents in Org and related.  They are okay for
   ;; programming.
@@ -91,38 +90,7 @@
   ;; modules and load only what I need.
   :mode "sxhkdrc_.*")
 
-;; FIXME 2023-08-28: The laptop I use now that I do not have
-;; electricity/Internet at home does not build the Jinx C module.  I
-;; am not sure what is happening.  Commenting out for the time being,
-;; as I need to have Emacs up and running.
-
-;;; Jinx (highly performant spell checker)
-;; (if (executable-find "enchant-2")
-;;   (prot-emacs-package jinx
-;;     (:install t)
-;;     (:delay 10)
-;;     (setq jinx-languages "en_GB el_GR fr_FR es_ES pt_PT-preao")
-;;     (setq jinx-include-modes '(text-mode prog-mode))
-;;     (setq jinx-include-faces
-;;           '((prog-mode font-lock-doc-face)
-;;             (conf-mode font-lock-comment-face)))
-;;     (setq jinx-exclude-regexps
-;;           '((t "[A-Z]+\\>"
-;;                "\\<[[:upper:]][[:lower:]]+\\>"
-;;                "\\w*?[0-9\.'\"-]\\w*"
-;;                "[a-z]+://\\S-+"
-;;                "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?")))
-;;
-;;     (define-key ctl-x-x-map "j" #'jinx-mode) ; C-x x j
-;;
-;;     (prot-emacs-keybind global-map
-;;       "M-$" jinx-correct
-;;       "C-M-$" jinx-languages))
-;;   ;; I would use an `error' but I do not want it to interrupt startup.
-;;   (message "libenchant is not available"))
-
 ;;; Flyspell and prot-spell.el (spell check)
-;; See FIXME for `jinx'.
 (use-package flyspell
   :ensure nil
   :bind

@@ -74,19 +74,6 @@ before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
-(defcustom prot-emacs-omit-packages nil
-  "List of package names to not load.
-This instructs the relevant macros to not `require' the given
-package.  In the case of `prot-emacs-elpa-package', the package
-will not be installed if it is not already available on the
-system.
-
-This user option must be set in the `prot-emacs-pre-custom.el'
-file.  If that file exists in the Emacs directory, it is loaded
-before all other modules of my setup."
-  :group 'prot-emacs
-  :type '(repeat symbol))
-
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
@@ -212,144 +199,6 @@ effects."
           (indent-region beg end))
       (user-error "No active region; will not insert `prot-emacs-comment' here"))))
 
-(defun prot-emacs-package-install (package &optional method)
-  "Install PACKAGE with optional METHOD.
-
-If METHOD is nil or the `builtin' symbol, PACKAGE is not
-installed as it is considered part of Emacs.
-
-If METHOD is a string, it must be a URL pointing to the version
-controlled repository of PACKAGE.  Installation is done with
-`package-vc-install'.
-
-If METHOD is a quoted list, it must have a form accepted by
-`package-vc-install' such as:
-
-\\='(denote :url \"https://github.com/protesilaos/denote\" :branch \"main\")
-
-If METHOD is any other non-nil value, install PACKAGE using
-`package-install'."
-  (unless (or (eq method 'builtin) (null method))
-    (unless (package-installed-p package)
-      (when (or (stringp method) (listp method))
-        (package-vc-install method))
-      (unless package-archive-contents
-        (package-refresh-contents))
-      (package-install package))))
-
-(defvar prot-emacs-loaded-packages nil)
-
-(defmacro prot-emacs-package (package &rest body)
-  "Require PACKAGE with BODY configurations.
-
-PACKAGE is an unquoted symbol that is passed to `require'.  It
-thus conforms with `featurep'.
-
-BODY consists of ordinary Lisp expressions.  There are,
-nevertheless, two unquoted plists that are treated specially:
-
-1. (:install METHOD)
-2. (:delay NUMBER)
-
-These plists can be anywhere in BODY and are not part of its
-final expansion.
-
-The :install property is the argument passed to
-`prot-emacs-package-install' and has the meaning of METHOD
-described therein.
-
-The :delay property makes the evaluation of PACKAGE with the
-expanded BODY happen with `run-with-timer'.
-
-Also see `prot-emacs-configure'."
-  (declare (indent defun))
-  (unless (memq package prot-emacs-omit-packages)
-    (let (install delay)
-      (dolist (element body)
-        (when (plistp element)
-          (pcase (car element)
-            (:install (setq install (cdr element)
-                            body (delq element body)))
-            (:delay (setq delay (cadr element)
-                          body (delq element body))))))
-      (let ((common `(,(when install
-                         `(prot-emacs-package-install ',package ,@install))
-                      (require ',package)
-                      (add-to-list 'prot-emacs-loaded-packages ',package)
-                      ,@body
-                      ;; (message "Prot Emacs loaded package: %s" ',package)
-                      )))
-        (cond
-         ((featurep package)
-          `(progn ,@body))
-         (delay
-          `(run-with-timer ,delay nil (lambda () ,@(delq nil common))))
-         (t
-          `(progn ,@(delq nil common))))))))
-
-;; Samples of `prot-emacs-package' (expand them with `pp-macroexpand-last-sexp').
-
-(prot-emacs-comment
-  (prot-emacs-package denote
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (:install '(denote . (:url "https://github.com/protesilaos/denote" :branch "main")))
-    (:delay 5)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://github.com/protesilaos/denote")
-    (:delay 5)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (:delay 5)
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (:install "https://github.com/protesilaos/denote")
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (:install "https://github.com/protesilaos/denote")
-    (:delay 5)
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (:delay 5)
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (setq denote-file-type nil))
-
-  (prot-emacs-package denote
-    (setq denote-directory "path/to/dir")
-    (define-key global-map (kbd "C-c n") #'denote)
-    (setq denote-file-type nil)))
-
-(defmacro prot-emacs-configure (&rest body)
-  "Evaluate BODY as a `progn'.
-BODY consists of ordinary Lisp expressions.  The sole exception
-is an unquoted plist of the form (:delay NUMBER) which evaluates
-BODY with NUMBER seconds of `run-with-timer'.
-
-Note that `prot-emacs-configure' does not try to autoload
-anything.  Use it only for forms that evaluate regardless.
-
-Also see `prot-emacs-package'."
-  (declare (indent 0))
-  (let (delay)
-    (dolist (element body)
-      (when (plistp element)
-        (pcase (car element)
-          (:delay (setq delay (cadr element)
-                        body (delq element body))))))
-    (if delay
-        `(run-with-timer ,delay nil (lambda () ,@body))
-      `(progn ,@body))))
-
 (defmacro prot-emacs-keybind (keymap &rest definitions)
   "Expand key binding DEFINITIONS for the given KEYMAP.
 DEFINITIONS is a sequence of string and command pairs."
@@ -399,16 +248,8 @@ making an abbreviation to a function."
             (seq-split definitions 2)))
      (error "%s is not an abbrev table" ,table)))
 
-(defun prot-emacs-return-loaded-packages ()
-  "Return a list of all loaded packages.
-Here packages include both `prot-emacs-loaded-packages' and
-`package-activated-list'.  The latter only covers what is found
-in the `package-archives', whereas the former is for anything
-that is expanded with the `prot-emacs-package' macro."
-  (delete-dups (append prot-emacs-loaded-packages package-activated-list)))
-
 (defvar prot-emacs-package-form-regexp
-  "^(\\(prot-emacs-package\\|prot-emacs-keybind\\|prot-emacs-abbrev\\|require\\) +'?\\([0-9a-zA-Z-]+\\)"
+  "^(\\(prot-emacs-keybind\\|prot-emacs-abbrev\\) +'?\\([0-9a-zA-Z-]+\\)"
   "Regexp to add packages to `lisp-imenu-generic-expression'.")
 
 (eval-after-load 'lisp-mode
@@ -416,9 +257,7 @@ that is expanded with the `prot-emacs-package' macro."
                 (list "Packages" ,prot-emacs-package-form-regexp 2)))
 
 (defconst prot-emacs-font-lock-keywords
-  '(("(\\(prot-emacs-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
-     (2 font-lock-constant-face nil t))
-    ("(\\(prot-emacs-\\(keybind\\|abbrev\\|abbrev-function\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
+  '(("(\\(prot-emacs-\\(keybind\\|abbrev\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
      (3 font-lock-variable-name-face nil t))
     ("(\\(prot-emacs-comment\\)\\_>[ \t']*"
      (1 font-lock-preprocessor-face nil t))))
@@ -430,10 +269,7 @@ that is expanded with the `prot-emacs-package' macro."
 ;; ~/.emacs.d/prot-emacs-pre-custom.el
 ;;
 ;; The purpose of this file is for the user to define their
-;; preferences BEFORE loading any of the modules.  For example, the
-;; user option `prot-emacs-omit-packages' lets the user specify which
-;; packages not to load.  Search for all `defcustom' forms in this
-;; file for other obvious customisations.
+;; preferences BEFORE loading any of the modules.
 (load (locate-user-emacs-file "prot-emacs-pre-custom.el") :no-error :no-message)
 
 (require 'prot-emacs-theme)

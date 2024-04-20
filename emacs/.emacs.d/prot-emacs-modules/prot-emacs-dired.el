@@ -62,15 +62,6 @@
   (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir)))) ; Emacs 28
   (setq dired-create-destination-dirs-on-trailing-dirsep t)) ; Emacs 29
 
-;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
-;; ;; because there are other tools that offer a better interface, such
-;; ;; as `consult-find', `consult-grep', `project-find-file',
-;; ;; `project-find-regexp', `prot-vc-git-grep'.
-;; (prot-emacs-package find-dired
-;;   (setq find-ls-option
-;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
-;;   (setq find-name-arg "-iname"))
-
 (use-package dired-x
   :ensure nil
   :after dired

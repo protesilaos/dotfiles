@@ -143,50 +143,46 @@
 
   (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank))
 
-(with-eval-after-load 'elfeed
-  (prot-emacs-package prot-elfeed
-    (setq prot-elfeed-tag-faces t)
-    (prot-elfeed-fontify-tags)
-
-    (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
-
-    (prot-emacs-keybind elfeed-search-mode-map
-      "s" #'prot-elfeed-search-tag-filter
-      "+" #'prot-elfeed-toggle-tag)
-
-    (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
+(use-package prot-elfeed
+  :ensure nil
+  :after elfeed
+  :bind
+  ( :map elfeed-search-mode-map
+    ("s" . prot-elfeed-search-tag-filter)
+    ("+" . prot-elfeed-toggle-tag)
+    :map elfeed-show-mode-map
+    ("+" . prot-elfeed-toggle-tag))
+  :hook
+  (elfeed-search-mode . prot-elfeed-load-feeds)
+  :config
+  (setq prot-elfeed-tag-faces t)
+  (prot-elfeed-fontify-tags))
 
 ;;; Rcirc (IRC client)
+(use-package rcirc
+  :ensure nil
+  :bind ("C-c i" . irc)
+  :config
+  (setq rcirc-server-alist
+        `(("irc.libera.chat"
+           :channels ("#emacs" "#rcirc")
+           :port 6697
+           :encryption tls
+           :password ,(prot-common-auth-get-field "libera" :secret))))
 
-;; NOTE 2023-04-24: I seldom use IRC.  When I have to, I simply
-;; evaluate the following.  Otherwise I do not need to load it each
-;; time.
+  (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
 
-;; (prot-emacs-package rcirc
-;;   (:delay 10)
-;;
-;;   (setq rcirc-server-alist
-;;         `(("irc.libera.chat"
-;;            :channels ("#emacs" "#tropin" "#rcirc")
-;;            :port 6697
-;;            :encryption tls
-;;            :password ,(prot-common-auth-get-field "libera" :secret))))
-;;
-;;   (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
-;;
-;;   (setq rcirc-default-nick "protesilaos"
-;;         rcirc-default-user-name rcirc-default-nick
-;;         rcirc-default-full-name "Protesilaos Stavrou")
-;;
-;;   ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
-;;   ;; ;; actually need this.
-;;   ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
-;;
-;;   ;; NOTE 2021-11-28: Is there a canonical way to disable this?
-;;   (setq rcirc-timeout-seconds most-positive-fixnum)
-;;
-;;   (rcirc-track-minor-mode 1)
-;;
-;;   (define-key global-map (kbd "C-c i") #'irc))
+  (setq rcirc-default-nick "protesilaos"
+        rcirc-default-user-name rcirc-default-nick
+        rcirc-default-full-name "Protesilaos Stavrou")
+
+  ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
+  ;; ;; actually need this.
+  ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
+
+  ;; NOTE 2021-11-28: Is there a canonical way to disable this?
+  (setq rcirc-timeout-seconds most-positive-fixnum)
+
+  (rcirc-track-minor-mode 1))
 
 (provide 'prot-emacs-web)
