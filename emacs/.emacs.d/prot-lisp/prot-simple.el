@@ -849,6 +849,38 @@ counter-clockwise."
     (dotimes (i (- wincount 1))
       (window-swap-states (elt winlist i) (elt winlist (+ i 1))))))
 
+;;;; Commands for files
+
+(cl-defmethod register--type ((_regval vector)) 'vector)
+
+(cl-defmethod register-val-describe ((val vector) _verbose)
+  (if-let ((pos (aref val 2))
+           (file (aref val 1)))
+      (princ (format "%s at position %s" file pos))
+    (princ "Garbage data")))
+
+;;;###autoload
+(defun prot-simple-file-to-register (register)
+  "Store current location of file's point in REGISTER."
+  (interactive (list (register-read-with-preview "File with point to register: ")))
+  (set-register register (vector 'file-with-point (buffer-file-name) (point))))
+
+(defvar prot-simple-file-to-register-jump-hook nil
+  "Normal hook called after jumping to a file register.
+See `prot-simple-file-to-register'.")
+
+;;;###autoload
+(cl-defmethod register-val-jump-to ((val vector) delete)
+  "Handle how to jump to a location register.
+This is like the default, but does not ask to visit a file: it does it
+outright."
+  (cond
+   ((eq (aref val 0) 'file-with-point)
+    (find-file (aref val 1))
+    (goto-char (aref val 2))
+    (run-hooks 'prot-simple-file-to-register-jump-hook))
+   (t (cl-call-next-method val delete))))
+
 ;;;; Commands of a general nature
 
 (autoload 'color-rgb-to-hex "color")

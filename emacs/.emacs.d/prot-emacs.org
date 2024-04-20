@@ -2638,11 +2638,16 @@ this via some hook.
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 (use-package prot-simple
   :ensure nil
+  :demand t
   :config
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
 
   (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
+
+  (with-eval-after-load 'pulsar
+    (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-recenter-center)
+    (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-reveal-entry))
   :bind
   ( ("ESC ESC" . prot-simple-keyboard-quit-dwim)
     ("C-g" . prot-simple-keyboard-quit-dwim)
@@ -2683,7 +2688,9 @@ this via some hook.
     ("C-x k" . prot-simple-kill-buffer-current)
     ("C-x K" . kill-buffer) ; leaving this here to contrast with the above
     ("M-s b" . prot-simple-buffers-major-mode)
-    ("M-s v" . prot-simple-buffers-vc-root)))
+    ("M-s v" . prot-simple-buffers-vc-root)
+    ;; Commands for files
+    ("C-x r ." . prot-simple-file-to-register)))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section about =prot-scratch.el= (scratch buffer per major mode)
@@ -2925,41 +2932,6 @@ with ~savehist-mode~ ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs
   :config
   (setq register-preview-delay 0.8
         register-preview-function #'register-preview-default)
-
-  ;; This is to handle registers.  We want to (i) save positions to
-  ;; files when closing Emacs and (ii) not be asked to restore the file
-  ;; as this is what we want anyway.
-  (cl-defmethod register-val-jump-to ((val cons) delete)
-    "Handle how to jump to a location register.
-This is like the default, but does not ask to visit a file: it does it
-outright."
-    (cond
-     ((frame-configuration-p (car val))
-      (set-frame-configuration (car val) (not delete))
-      (goto-char (cadr val)))
-     ((window-configuration-p (car val))
-      (set-window-configuration (car val))
-      (goto-char (cadr val)))
-     ((eq (car val) 'file)
-      (find-file (cdr val)))
-     ((eq (car val) 'buffer)
-      (switch-to-buffer (cdr val)))
-     ((eq (car val) 'file-query)
-      (find-file (nth 1 val))
-      (goto-char (nth 2 val)))
-     (t (cl-call-next-method val delete))))
-
-  (defun prot/register-swap-out-all (&rest args)
-    "Expand all location registers to their file equivalent.
-This must be done before closing Emacs, to persist registers across
-sessions."
-    (mapc
-     (lambda (buffer)
-       (with-current-buffer buffer
-         (register-swap-out)))
-     (buffer-list)))
-
-  (advice-add #'save-buffers-kill-terminal :before #'prot/register-swap-out-all)
 
   (with-eval-after-load 'savehist
     (add-to-list 'savehist-additional-variables 'register-alist)))
@@ -17177,6 +17149,38 @@ counter-clockwise."
               ((> wincount 1)))
     (dotimes (i (- wincount 1))
       (window-swap-states (elt winlist i) (elt winlist (+ i 1))))))
+
+;;;; Commands for files
+
+(cl-defmethod register--type ((_regval vector)) 'vector)
+
+(cl-defmethod register-val-describe ((val vector) _verbose)
+  (if-let ((pos (aref val 2))
+           (file (aref val 1)))
+      (princ (format "%s at position %s" file pos))
+    (princ "Garbage data")))
+
+;;;###autoload
+(defun prot-simple-file-to-register (register)
+  "Store current location of file's point in REGISTER."
+  (interactive (list (register-read-with-preview "File with point to register: ")))
+  (set-register register (vector 'file-with-point (buffer-file-name) (point))))
+
+(defvar prot-simple-file-to-register-jump-hook nil
+  "Normal hook called after jumping to a file register.
+See `prot-simple-file-to-register'.")
+
+;;;###autoload
+(cl-defmethod register-val-jump-to ((val vector) delete)
+  "Handle how to jump to a location register.
+This is like the default, but does not ask to visit a file: it does it
+outright."
+  (cond
+   ((eq (aref val 0) 'file-with-point)
+    (find-file (aref val 1))
+    (goto-char (aref val 2))
+    (run-hooks 'prot-simple-file-to-register-jump-hook))
+   (t (cl-call-next-method val delete))))
 
 ;;;; Commands of a general nature
 
