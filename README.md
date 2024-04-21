@@ -26,12 +26,10 @@ or contribute any fixes, if you will.
 
 ## Emacs setup
 
-I do not recommend you reproduce my Emacs setup because I do not use
-the de facto standard of `use-package` to configure packages.  I
-prefer a simpler approach.
-
-If you insist though, the files are in the `emacs` directory.  Add them
-to your home directory with:
+I do not recommend you reproduce my Emacs setup because I do not
+design it as a distribution for other people. If you insist though,
+the files are in the `emacs` directory. Add them to your home
+directory with:
 
 ```sh
 /path/to/prot-dotfiles $ stow -t "$HOME" emacs
@@ -58,11 +56,11 @@ run stow again with the `-R` flag:
 
 ## Window managers
 
-My tiling window managers are bspwm, herbstluftwm, and i3 (in no
-particular order).  They are all configured to be almost the same:
+My tiling window managers for Xorg are bspwm, herbstluftwm, and i3 (in
+no particular order). They are all configured to be almost the same:
 they share settings for the wallpaper, system panel, theme, keyboard
-layout, and display compositor.  All settings are in the `xorg-twm`
-directory ("twm" stands for "tiling window manager").  What
+layout, and display compositor. All settings are in the `xorg-twm`
+directory ("twm" stands for "tiling window manager"). What
 differentiates the window managers is their individual features.
 
 + **bspwm:** I have been using it for years and consider it top-notch.
@@ -100,9 +98,13 @@ always use herbstluftwm because of its ability to support virtual
 monitors.  Otherwise I oscillate between bspwm and i3, depending on
 the machine I am using.
 
-What about Wayland?  It is not ready yet: I am missing something like
-sxhkd and certain applications do not work properly on it.  I may
-check again in a few years.
+What about Wayland? I have experimented with it on GNOME where it
+works fine. I even have some configurations for tiling compositors,
+but am not happy with those. The Wayland ecosystem is not ready yet
+for my use-case: I am missing something like sxhkd and certain
+applications do not work properly on it, such screen sharing. I will
+check again some time over the medium term, as Wayland seems
+inevitable.
 
 ## Copying
 
