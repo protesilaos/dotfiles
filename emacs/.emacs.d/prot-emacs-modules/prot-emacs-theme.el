@@ -154,6 +154,7 @@
 ;;;; Theme buffet
 (use-package theme-buffet
   :ensure t
+  :defer 1
   :config
   (setq theme-buffet-menu 'end-user)
   (setq theme-buffet--end-user
