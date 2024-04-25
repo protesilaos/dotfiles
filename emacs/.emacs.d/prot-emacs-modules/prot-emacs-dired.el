@@ -94,7 +94,9 @@
   :bind
   ( :map dired-mode-map
     ("<tab>" . dired-subtree-toggle)
-    ("<backtab>" . dired-subtree-remove)) ; S-TAB
+    ("TAB" . dired-subtree-toggle)
+    ("<backtab>" . dired-subtree-remove)
+    ("S-TAB" . dired-subtree-remove))
   :config
   (setq dired-subtree-use-backgrounds nil))
 
