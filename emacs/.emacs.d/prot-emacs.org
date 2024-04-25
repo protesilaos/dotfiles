@@ -6903,7 +6903,8 @@ demonstration: [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-l
 This being Emacs, everything is customisable and Org is a good example
 of this. There are a lot of user options for us to tweak things to our
 liking. I do as much, though know that Org is perfectly usable without
-any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
+any configuration. The following sections contain further commentary
+on how I use Org.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Org-mode (personal information manager)
