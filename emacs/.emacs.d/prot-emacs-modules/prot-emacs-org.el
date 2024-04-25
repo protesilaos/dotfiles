@@ -47,10 +47,6 @@
 (use-package org
   :ensure nil
   :init
-  ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
-  ;; otherwise we have to use the Custom UI.  No thanks!
-  (setq org-export-backends '(html texinfo md))
-
   (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
 
@@ -195,6 +191,10 @@
 ;;;; export
 (use-package org
   :ensure nil
+  :init
+  ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
+  ;; otherwise we have to use the Custom UI.  No thanks!
+  (setq org-export-backends '(html texinfo md))
   :config
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)

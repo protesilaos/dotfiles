@@ -6910,10 +6910,6 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
 (use-package org
   :ensure nil
   :init
-  ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
-  ;; otherwise we have to use the Custom UI.  No thanks!
-  (setq org-export-backends '(html texinfo md))
-
   (setq org-directory (expand-file-name "~/Documents/org/"))
   (setq org-imenu-depth 7)
 
@@ -7201,10 +7197,70 @@ I bind ~org-store-link~ in main section of the Org configuration:
   (setq org-link-keep-stored-after-insertion nil))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org code block settings
+*** The =prot-emacs-org.el= Org code block settings
 :PROPERTIES:
 :CUSTOM_ID: h:1f5a0d46-5202-48dd-8048-b48ce17f3df8
 :END:
+
+This document benefits from Org's ability to combine prose with code,
+by placing the latter inside of a block that is delimited by
+=#+BEGIN_SRC= and =#+END_SRC= lines.
+
+Code blocks can use the syntax highlighting ("fontification" in Emacs
+parlance) of a given major mode. They can also have optional
+parameters passed to their header, which expand the capabilities of
+the block. For instance, the following code block with my actual
+configuration uses the fontification of the ~emacs-lisp-mode~ and has
+a =:tangle= parameter with a value of a file system path. When I
+invoke the command ~org-babel-tangle~, the contents of this block will
+be added to that file, creating the file if necessary.
+
+More generally, Org is capable of evaluating code blocks and passing
+their return value to other code blocks. It is thus possible to write
+a fully fledged program as an Org document. This paradigm is known as
+"literate programming". In the case of an Emacs configuration, such as
+mine, it is called a "literate configuration" or variants thereof. I
+did a video about my setup: [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18).
+
+Org can evaluate code blocks in many languages. This is known as "Org
+Babel" and the files which implement support for a given language are
+typically named =ob-LANG.el= where =LANG= is the name of the language.
+We can load the requisite code for the languages we care about with
+something like the following:
+
+#+begin_example emacs-lisp
+(require 'ob-python)
+
+;; OR
+
+(use-package ob-python)
+
+;; OR for more control
+
+(use-package ob-python
+  :after org
+  :config
+  ;; Settings here
+  )
+#+end_example
+
+I seldom need to work with Org Babel, so I do not load any language
+automatically. Note that Emacs Lisp is loaded by default.
+
+To evaluate a code block, we type Org's omnipotent =C-c C-c=. The
+results will be produced below the code block. There is an optional
+parameter that controls how---or even if---the results are displayed.
+
+There are many other types of block apart from =SRC=. Those do
+different things, such as:
+
+- =#+BEGIN_QUOTE= :: Treat the contents as a block quote or equivalent.
+- =#+BEGIN_VERSE= :: Do not reflow any like breaks (for poetry and such).
+- =#+BEGIN_EXPORT= :: Evaluate the code for the given export target
+  (like =html= or =latex=), optionally replacing it with its results
+  or keeping both of them ([[#h:bd11d4d8-6e9f-4536-87a4-4018783bf8f5][The =prot-emacs-org.el= Org export settings]]).
+
+This is a wonderful world of possibilities!
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; code blocks
@@ -7220,15 +7276,33 @@ I bind ~org-store-link~ in main section of the Org configuration:
   (setq org-edit-src-content-indentation 0))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org export settings
+*** The =prot-emacs-org.el= Org export settings
 :PROPERTIES:
 :CUSTOM_ID: h:bd11d4d8-6e9f-4536-87a4-4018783bf8f5
 :END:
+
+Org is a capable authoring tool in no small part because it can be
+converted to other file formats. A typical example is to write a
+technical document in Org and then export it to a PDF. Another
+use-case is what I commonly do with the Emacs packages I maintain,
+which I export to an Info manual (texinfo format) and an HTML web
+page.
+
+The default set of export targets is specified in the value of the
+user option ~org-export-backends~. It is one of those rare cases where
+it has to be evaluated before the package is loaded. Other than that,
+we can load an export backend by finding the correspond =ox-FORMAT.el=
+file and either ~require~ it or load it with ~use-package~, like what
+I showed for Org Babel ([[#h:1f5a0d46-5202-48dd-8048-b48ce17f3df8][The =prot-emacs-org.el= Org code block settings]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; export
 (use-package org
   :ensure nil
+  :init
+  ;; NOTE 2023-05-20: Must be evaluated before Org is loaded,
+  ;; otherwise we have to use the Custom UI.  No thanks!
+  (setq org-export-backends '(html texinfo md))
   :config
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
