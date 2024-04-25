@@ -7123,7 +7123,7 @@ it.
   (setq org-tags-column 0))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org time/state logging
+*** The =prot-emacs-org.el= Org time/state logging
 :PROPERTIES:
 :CUSTOM_ID: h:0884658e-9eb5-47e3-9338-66e09004a1a0
 :END:
