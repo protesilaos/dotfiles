@@ -6939,8 +6939,14 @@ on how I use Org.
     :map narrow-map
     ("b" . org-narrow-to-block)
     ("e" . org-narrow-to-element)
-    ("s" . org-narrow-to-subtree))
+    ("s" . org-narrow-to-subtree)
+    :map ctl-x-x-map
+    ("i" . prot-org-id-headlines)
+    ("h" . prot-org-ox-html))
   :config
+  ;; My custom extras, which I use for the agenda and a few other Org features.
+  (require 'prot-org)
+
 ;;;; general settings
   (setq org-ellipsis "⮧")
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
@@ -7194,8 +7200,11 @@ I bind ~org-store-link~ in main section of the Org configuration:
 (use-package org
   :ensure nil
   :config
+  (require 'prot-org) ; for the above commands
+
   (setq org-link-context-for-files t)
-  (setq org-link-keep-stored-after-insertion nil))
+  (setq org-link-keep-stored-after-insertion nil)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 #+end_src
 
 *** The =prot-emacs-org.el= Org code block settings
@@ -7313,19 +7322,6 @@ I showed for Org Babel ([[#h:1f5a0d46-5202-48dd-8048-b48ce17f3df8][The =prot-ema
   (setq org-html-head-include-scripts nil))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org ID settings
-:PROPERTIES:
-:CUSTOM_ID: h:ffb2ebcf-9f41-4ec0-892c-2e5789ebb437
-:END:
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
-;;;; IDs
-(use-package org
-  :ensure nil
-  :config
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
-#+end_src
-
 *** TODO The =prot-emacs-org.el= Org capture templates (~org-capture~)
 :PROPERTIES:
 :CUSTOM_ID: h:f8f06938-0dfe-45c3-b4cf-996d36cba82d
@@ -7427,14 +7423,9 @@ I showed for Org Babel ([[#h:1f5a0d46-5202-48dd-8048-b48ce17f3df8][The =prot-ema
     ("C-c a" . (lambda ()
                  "Call Org agenda with `prot-org-custom-daily-agenda' configuration."
                  (interactive)
-                 (org-agenda nil "A")))
-    :map ctl-x-x-map
-    ("i" . prot-org-id-headlines)
-    ("h" . prot-org-ox-html))
+                 (org-agenda nil "A"))))
   :config
 ;;;;; Custom agenda blocks
-
-  (require 'prot-org)
 
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 

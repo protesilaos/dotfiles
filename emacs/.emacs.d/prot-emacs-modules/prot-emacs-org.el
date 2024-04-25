@@ -75,8 +75,14 @@
     :map narrow-map
     ("b" . org-narrow-to-block)
     ("e" . org-narrow-to-element)
-    ("s" . org-narrow-to-subtree))
+    ("s" . org-narrow-to-subtree)
+    :map ctl-x-x-map
+    ("i" . prot-org-id-headlines)
+    ("h" . prot-org-ox-html))
   :config
+  ;; My custom extras, which I use for the agenda and a few other Org features.
+  (require 'prot-org)
+
 ;;;; general settings
   (setq org-ellipsis "⮧")
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
@@ -173,8 +179,11 @@
 (use-package org
   :ensure nil
   :config
+  (require 'prot-org) ; for the above commands
+
   (setq org-link-context-for-files t)
-  (setq org-link-keep-stored-after-insertion nil))
+  (setq org-link-keep-stored-after-insertion nil)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 
 ;;;; code blocks
 (use-package org
@@ -202,12 +211,6 @@
   (setq org-html-htmlize-output-type nil)
   (setq org-html-head-include-default-style nil)
   (setq org-html-head-include-scripts nil))
-
-;;;; IDs
-(use-package org
-  :ensure nil
-  :config
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 
 ;;;; capture
 (use-package org-capture
@@ -292,14 +295,9 @@
     ("C-c a" . (lambda ()
                  "Call Org agenda with `prot-org-custom-daily-agenda' configuration."
                  (interactive)
-                 (org-agenda nil "A")))
-    :map ctl-x-x-map
-    ("i" . prot-org-id-headlines)
-    ("h" . prot-org-ox-html))
+                 (org-agenda nil "A"))))
   :config
 ;;;;; Custom agenda blocks
-
-  (require 'prot-org)
 
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
