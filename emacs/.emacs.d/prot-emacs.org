@@ -7084,32 +7084,41 @@ the capture phase ([[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-or
   (setq org-enforce-todo-checkbox-dependencies t))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org heading tags
+*** The =prot-emacs-org.el= Org heading tags
 :PROPERTIES:
 :CUSTOM_ID: h:81de4e32-a1af-4e1f-9e10-90eb0c90afa2
 :END:
+
+Each Org heading can have one or more tags associated with it, while
+all headings inherit any potential =#+FILETAGS=. We can add tags to a
+heading when the cursor is over it by typing the ever flexible =C-c C-c=.
+Though the more specific ~org-set-tags-command~ also gets the job
+done, plus it does not require that the cursor is positioned on the
+heading text.
+
+Tagging is useful for searching and retrieving the data we store. The
+Org agenda, in particular, provides commands to filter tasks by tag:
+
+- [[#h:024dd541-0061-4a10-b10b-b17dcd4794b9][The =prot-emacs-org.el= Org to-do and refile settings]]
+- [[#h:7fe87b83-2815-4617-a5f9-d3417dd9d248][The =prot-emacs-org.el= Org agenda settings]]
+
+The user option ~org-tag-alist~ lets us specify tags we always want to
+use, though we can write tags per file as well by using the =#+TAGS=
+keyword. I do the latter as a global list of tags is not useful in my
+case. For example, when I wan checking my =coach.org= file for the
+coaching sessions I provide, I do not need to see any of the tags that
+make sense in my general =tasks.org=.
+
+Note that in the settings below I disable the auto-alignment that Org
+does where it shifts tags to the right of the heading. I do not like
+it.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; tags
 (use-package org
   :ensure nil
   :config
-  (setq org-tag-alist ; I don't really use those, but whatever
-        '(("meeting")
-          ("admin")
-          ("emacs")
-          ("modus")
-          ("politics")
-          ("economics")
-          ("philosophy")
-          ("book")
-          ("essay")
-          ("mail")
-          ("purchase")
-          ("hardware")
-          ("software")
-          ("website")))
-
+  (setq org-tag-alist nil)
   (setq org-auto-align-tags nil)
   (setq org-tags-column 0))
 #+end_src

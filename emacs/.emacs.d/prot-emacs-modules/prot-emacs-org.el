@@ -159,22 +159,7 @@
 (use-package org
   :ensure nil
   :config
-  (setq org-tag-alist ; I don't really use those, but whatever
-        '(("meeting")
-          ("admin")
-          ("emacs")
-          ("modus")
-          ("politics")
-          ("economics")
-          ("philosophy")
-          ("book")
-          ("essay")
-          ("mail")
-          ("purchase")
-          ("hardware")
-          ("software")
-          ("website")))
-
+  (setq org-tag-alist nil)
   (setq org-auto-align-tags nil)
   (setq org-tags-column 0))
 
