@@ -6970,6 +6970,14 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
   (setq org-read-date-prefer-future 'time)
+  (setq org-highlight-latex-and-related nil) ; other options affect elisp regexp in src blocks
+  (setq org-fontify-quote-and-verse-blocks t)
+  (setq org-fontify-whole-block-delimiter-line t)
+  (setq org-track-ordered-property-with-tag t)
+  (setq org-highest-priority ?A)
+  (setq org-lowest-priority ?C)
+  (setq org-default-priority ?A)
+  (setq org-priority-faces nil)
 
   ;; See my `pulsar' package, defined elsewhere in this setup.
   (with-eval-after-load 'pulsar
@@ -6978,10 +6986,68 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
       (add-hook hook #'pulsar-reveal-entry))))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org to-do and refile settings
+*** The =prot-emacs-org.el= Org to-do and refile settings
 :PROPERTIES:
 :CUSTOM_ID: h:024dd541-0061-4a10-b10b-b17dcd4794b9
 :END:
+
+One of the many use-cases for Org is to maintain a plain text to-do
+list. A heading that starts with a to-do keyword, such as =TODO= is
+treated as a task and its state is considered not completed.
+
+We can switch between the task states with shift and the left or right
+arrow keys. Or we can select a keyword directly with =C-c C-t=, which
+calls ~org-todo~ by default. I personally prefer the latter approach,
+as it is more precise.
+
+Whenever a task state changes, we can log that event in a special
+=LOGBOOK= drawer. This is automatically placed right below the
+heading, before any paragraph text. Logging data is an opt-in feature,
+which I consider helpful ([[#h:0884658e-9eb5-47e3-9338-66e09004a1a0][The =prot-emacs-org.el= Org time/state logging]]).
+
+Tasks can be associated with timestamps, typically a scheduled
+date+time or a deadline+time. This can be helpful when we are
+reviewing the source Org file, though it really shines in tandem with
+the agenda. Any heading that has a timestamp and which belongs to a
+file in the ~org-agenda-files~ will show up on the agenda in the given
+date ([[#h:7fe87b83-2815-4617-a5f9-d3417dd9d248][The =prot-emacs-org.el= Org agenda settings]]).
+
+By default, the ~org-todo-keywords~ are =TODO= and =DONE=. We can
+write more keywords if we wish to implement a descriptive workflow.
+For example, we can have a =WAIT= keyword for something that is to be
+done but is not actionable yet. While the number of keywords is not
+limited, the binary model is the same: we have words that represent
+the incomplete state and those that count as the completion of the
+task. For instance, both =CANCEL= and =DONE= mean that the task is not
+actionable anymore and we move on to other things. As such, the extra
+keywords are a way for the user to make tasks more descriptive and
+easy to find. In the value of the ~org-todo-keywords~, we use the bar
+character to separate the incomplete state to the left from the
+completed one to the right.
+
+One of the agenda's headiline features is the ability to produce a
+view that lists headings with the given keyword. So having the right
+terms can make search and retrieval of data more easy. On the
+flip-side, too many keywords add cognitive load and require more
+explicit search terms to yield the desired results. I used to work
+with a more descriptive set of keywords, but ultimately decided to
+keep things simple.
+
+The refile mechanism is how we can reparent a heading, by moving it
+from one place to another. We do this with the command ~org-refile~,
+bound to =C-c C-w= by default. A common workflow where refiling is
+essential is to have an "inbox" file or heading, where unprocessed
+information is stored at, and periodically process its contents to
+move the data where it belongs. Though it can also work fine without
+any such inbox, in those cases where a heading should be stored
+someplace else. The ~org-refile-targets~ specifies the files that are
+available when we try to refile the current heading. With how I set it
+up, all the agenda files plus the current file's headings up to level
+2 are included as possible targets.
+
+In terms of workflow, I have not done a refile in a very long time,
+because my entries always stay in the same place as I had envisaged at
+the capture phase ([[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; refile, todo
@@ -7010,19 +7076,12 @@ any configuration. *NOTE 2024-03-16 06:55 +0200:* To be continued.
   (setq org-todo-keyword-faces
         '(("CANCEL" . prot/org-bold-done)))
   (setq org-use-fast-todo-selection 'expert)
-  (setq org-priority-faces nil)
+
   (setq org-fontify-done-headline nil)
   (setq org-fontify-todo-headline nil)
-  (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
-  (setq org-fontify-whole-block-delimiter-line t)
-  (setq org-highlight-latex-and-related nil) ; other options affect elisp regexp in src blocks
   (setq org-enforce-todo-dependencies t)
-  (setq org-enforce-todo-checkbox-dependencies t)
-  (setq org-track-ordered-property-with-tag t)
-  (setq org-highest-priority ?A)
-  (setq org-lowest-priority ?C)
-  (setq org-default-priority ?A))
+  (setq org-enforce-todo-checkbox-dependencies t))
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org heading tags
