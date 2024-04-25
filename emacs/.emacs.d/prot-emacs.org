@@ -7148,18 +7148,57 @@ mistakes or figure out intent in the absence of further clarification
   (setq org-log-reschedule 'time))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org link settings
+*** The =prot-emacs-org.el= Org link settings
 :PROPERTIES:
 :CUSTOM_ID: h:da8ce883-7f21-4a6e-a41f-d668ad762b41
 :END:
+
+One of the nice things about Org is its flexible linking mechanism. It
+can produce links to a variety of file types or buffers and even
+navigate to a section therein.
+
+At its simplest form, we have the =file= link type, which points to a
+file system path, with an optional extension for a match inside the
+file, as documented in the manual. Evaluate this inside of Emacs:
+
+#+begin_example emacs-lisp
+(info "(org) Search Options")
+#+end_example
+
+Links to buffers are also common and valuable. For example, we can
+have a link to a page produced by the ~man~ command, which gives us
+quick access to the documentation of some program. When Org follows
+that link, it opens the buffer in the appropriate major mode. For me,
+the most common scenario is a link to an email, which I typically
+associate with a task that shows up in my agenda:
+
+- [[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]]
+- [[#h:49890997-448e-408d-bebe-2003259bb125][The =prot-emacs-notmuch.el= glue code for ~org-capture~ (=ol-notmuch.el=)]]
+
+Org supports lots of link types out-of-the-box, though more can be
+added by packages. My Denote does this: it defines a =denote= link
+type which behaves the same way as the =file= type except that it uses
+the identifier of the file instead of its full path (so eve if the
+file is renamed, the link will work for as long as the identifier
+remains the same).
+
+Links can be generated automatically as part of an ~org-capture~
+template. The command ~org-store-link~ produces one manually, storing
+it to a special data structure from which it can be retrieved later
+for insertion with the command ~org-insert-link~. The latter command
+can also create new links, simply by receiving data that is different
+from what was already stored.
+
+I bind ~org-store-link~ in main section of the Org configuration:
+[[#h:e03df1e0-b43e-49b5-978e-6a511165617c][The =prot-emacs-org.el= section with basic Org settings]].
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; links
 (use-package org
   :ensure nil
   :config
+  (setq org-link-context-for-files t)
   (setq org-link-keep-stored-after-insertion nil))
-  ;; TODO 2021-10-15 org-link-make-description-function
 #+end_src
 
 *** TODO The =prot-emacs-org.el= Org code block settings

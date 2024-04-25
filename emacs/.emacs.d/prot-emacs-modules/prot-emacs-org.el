@@ -177,8 +177,8 @@
 (use-package org
   :ensure nil
   :config
+  (setq org-link-context-for-files t)
   (setq org-link-keep-stored-after-insertion nil))
-  ;; TODO 2021-10-15 org-link-make-description-function
 
 ;;;; code blocks
 (use-package org
