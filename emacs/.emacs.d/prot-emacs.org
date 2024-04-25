@@ -7128,6 +7128,14 @@ it.
 :CUSTOM_ID: h:0884658e-9eb5-47e3-9338-66e09004a1a0
 :END:
 
+Org can keep a record of state changes, such as when we set an entry
+marked with the =TODO= keyword as =DONE= or when we reschedule an
+appointment ([[#h:7fe87b83-2815-4617-a5f9-d3417dd9d248][The =prot-emacs-org.el= Org agenda settings]]). This data
+is stored in a =LOGBOOK= drawer right below the heading. I choose to
+keep track of this information, as it is sometimes useful to capture
+mistakes or figure out intent in the absence of further clarification
+(though I do tend to write why something happened).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; log
 (use-package org
