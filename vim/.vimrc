@@ -77,7 +77,7 @@ set listchars=tab:›\ ,nbsp:␣,trail:•,precedes:«,extends:»
 " abbreviations (try not to use common words)
 iab medate <c-r>=strftime('%Y-%m-%d')<cr>
 iab meweb https://protesilaos.com/
-iab megit https://git.sr.ht/~protesilaos
+iab megit https://github.com/protesilaos
 iab medot https://github.com/protesilaos/dotfiles
 
 " Theme settings

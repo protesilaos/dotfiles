@@ -62,7 +62,7 @@ _emacs ()
     dark_theme="modus-vivendi"
 
     # Just switch to the appropriate theme for Emacs:
-    # https://git.sr.ht/~protesilaos/modus-themes
+    # https://github.com/protesilaos/modus-themes
     case "$1"
     in
         # TODO 2023-03-01: Define a function to load appropriate Emacs
