@@ -4981,7 +4981,7 @@ For isearch, I have:
 For variants of ~occur~ or ~grep~, which also benefit from the rules I have on
 where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]):
 
-- Type =M-s s= or =M-s M-s= (~prot-search-outline~) to use minibuffer completion
+- Type =M-s s= (~prot-search-outline~) to use minibuffer completion
   to match an entry across the buffer's outline. This is probably my
   most used command. What I like about it is that it benefits from the
   extensive customisations I make to the completion mechanism and the
@@ -4994,7 +4994,9 @@ where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][
   preview of the current match. I find previews disorienting when I
   type quickly and do not want to experience any motion sickness while
   using Emacs (this is not the fault of ~consult~, just me needing to
-  have a more static interface).
+  have a more static interface). Though there are times I am slowing
+  down the search and need the preview, at which point I call the
+  Consult command on =M-s M-s= ([[#h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d][The =prot-emacs-completion.el= settings for ~consult~]]).
 
 - Type =M-s M-o= (~prot-search-occur-outline~) to produce an outline
   of the given buffer. What constitutes an outline is defined in the
@@ -5039,7 +5041,6 @@ by visiting individual files or by using a grep buffer as an index.
     ("M-s M-t" . prot-search-grep-todo-keywords) ; With C-u it runs `prot-search-git-grep-todo-keywords'
     ("M-s M-T" . prot-search-git-grep-todo-keywords)
     ("M-s s" . prot-search-outline)
-    ("M-s M-s" . prot-search-outline)
     ("M-s M-o" . prot-search-occur-outline)
     ("M-s M-u" . prot-search-occur-browse-url)
     :map isearch-mode-map

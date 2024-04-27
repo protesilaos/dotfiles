@@ -64,7 +64,6 @@
     ("M-s M-t" . prot-search-grep-todo-keywords) ; With C-u it runs `prot-search-git-grep-todo-keywords'
     ("M-s M-T" . prot-search-git-grep-todo-keywords)
     ("M-s s" . prot-search-outline)
-    ("M-s M-s" . prot-search-outline)
     ("M-s M-o" . prot-search-occur-outline)
     ("M-s M-u" . prot-search-occur-browse-url)
     :map isearch-mode-map
