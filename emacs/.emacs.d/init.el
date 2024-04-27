@@ -111,8 +111,6 @@ before all other modules of my setup."
 
 ;;;; Packages
 
-(require 'package)
-
 (setq package-vc-register-as-project nil) ; Emacs 30
 
 (add-hook 'package-menu-mode-hook #'hl-line-mode)

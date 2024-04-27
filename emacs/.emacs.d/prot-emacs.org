@@ -905,15 +905,17 @@ files that are already placed where I need them to be.
 :END:
 
 The =package.el= is built into Emacs and is perfectly fine for my
-use-case. Here I am loading it and then setting up the package
-archives. Make sure to read my article about package archives, pinning
-packages, and setting priorities:
+use-case. We do not need to load it explicitly, as it will be called
+by ~use-package~ when it needs it. Since the introduction of the
+=early-init.el= file, we also do not need to initialise the packages
+at this point: we activate the cache instead ([[#h:7a037504-8a2f-4df0-8482-ce6476354440][The =early-init.el= initialises the package cache]]).
+
+With regard to the settings here, make sure to read my article about
+package archives, pinning packages, and setting priorities:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 #+begin_src emacs-lisp :tangle "init.el"
 ;;;; Packages
-
-(require 'package)
 
 (setq package-vc-register-as-project nil) ; Emacs 30
 
