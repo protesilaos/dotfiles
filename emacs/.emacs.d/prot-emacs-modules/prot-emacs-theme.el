@@ -175,8 +175,8 @@
            (modus-themes-p
             '( :night     (modus-vivendi modus-vivendi-tinted modus-vivendi-tritanopia modus-vivendi-deuteranopia)
                :morning   (modus-operandi modus-operandi-tinted modus-operandi-tritanopia modus-operandi-deuteranopia)
-               :afternoon (modus-vivendi modus-vivendi-tinted modus-vivendi-tritanopia modus-vivendi-deuteranopia)
-               :evening   (modus-operandi modus-operandi-tinted modus-operandi-tritanopia modus-operandi-deuteranopia)))))
+               :afternoon (modus-operandi modus-operandi-tinted modus-operandi-tritanopia modus-operandi-deuteranopia)
+               :evening   (modus-vivendi modus-vivendi-tinted modus-vivendi-tritanopia modus-vivendi-deuteranopia)))))
 
     (when (or modus-themes-p ef-themes-p)
       (theme-buffet-timer-hours 1))))
