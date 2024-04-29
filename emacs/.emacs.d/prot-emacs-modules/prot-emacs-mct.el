@@ -10,11 +10,25 @@
   ;; completion categories.
   (setq mct-completion-blocklist '(notmuch-mua-new-mail notmuch-mua-prompt-for-sender))
   (setq mct-completion-passlist
-        '( consult-buffer consult-location embark-keybinding
-           imenu prot-search-outline select-frame-by-name))
+        '(;; Some commands
+          prot-search-outline
+          select-frame-by-name
+          Info-goto-node
+          Info-index
+          Info-menu
+          vc-retrieve-tag
+          ;; Some completion categories
+          consult-buffer
+          consult-location
+          embark-keybinding
+          imenu
+          file
+          project-file
+          buffer
+          kill-ring
+          consult-location))
   (setq mct-remove-shadowed-file-names t)
   (setq mct-completion-window-size (cons #'mct-frame-height-third 1))
-  (setq mct-persist-dynamic-completion nil)
   (setq mct-live-completion 'visible)
   (setq completions-sort #'mct-sort-multi-category))
 
