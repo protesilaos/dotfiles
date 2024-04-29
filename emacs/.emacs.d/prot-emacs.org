@@ -1950,16 +1950,32 @@ Bruno Boal is the lead developer and I am a co-maintainer.
 ;;;; Theme buffet
 (use-package theme-buffet
   :ensure t
+  :after (:any modus-themes ef-themes)
   :defer 1
   :config
-  (setq theme-buffet-menu 'end-user)
-  (setq theme-buffet--end-user
-        '( :night     (modus-vivendi ef-dark ef-winter ef-autumn ef-night ef-duo-dark ef-symbiosis)
-           :morning   (modus-operandi ef-light ef-cyprus ef-spring ef-frost ef-duo-light)
-           :afternoon (modus-operandi-tinted ef-arbutus ef-day ef-kassio ef-summer ef-elea-light ef-maris-light ef-melissa-light ef-trio-light ef-reverie)
-           :evening   (modus-vivendi-tinted ef-rosa ef-elea-dark ef-maris-dark ef-melissa-dark ef-trio-dark ef-dream)))
+  (let ((modus-themes-p (featurep 'modus-themes))
+        (ef-themes-p (featurep 'ef-themes)))
+    (setq theme-buffet-menu 'end-user)
+    (setq theme-buffet-end-user
+          (cond
+           ((and modus-themes-p ef-themes-p)
+            '( :night     (modus-vivendi ef-dark ef-winter ef-autumn ef-night ef-duo-dark ef-symbiosis)
+               :morning   (modus-operandi ef-light ef-cyprus ef-spring ef-frost ef-duo-light)
+               :afternoon (modus-operandi-tinted ef-arbutus ef-day ef-kassio ef-summer ef-elea-light ef-maris-light ef-melissa-light ef-trio-light ef-reverie)
+               :evening   (modus-vivendi-tinted ef-rosa ef-elea-dark ef-maris-dark ef-melissa-dark ef-trio-dark ef-dream)))
+           (ef-themes-p
+            '( :night     (ef-dark ef-winter ef-autumn ef-night ef-duo-dark ef-symbiosis)
+               :morning   (ef-light ef-cyprus ef-spring ef-frost ef-duo-light)
+               :afternoon (ef-arbutus ef-day ef-kassio ef-summer ef-elea-light ef-maris-light ef-melissa-light ef-trio-light ef-reverie)
+               :evening   (ef-rosa ef-elea-dark ef-maris-dark ef-melissa-dark ef-trio-dark ef-dream)))
+           (modus-themes-p
+            '( :night     (modus-vivendi modus-vivendi-tinted modus-vivendi-tritanopia modus-vivendi-deuteranopia)
+               :morning   (modus-operandi modus-operandi-tinted modus-operandi-tritanopia modus-operandi-deuteranopia)
+               :afternoon (modus-vivendi modus-vivendi-tinted modus-vivendi-tritanopia modus-vivendi-deuteranopia)
+               :evening   (modus-operandi modus-operandi-tinted modus-operandi-tritanopia modus-operandi-deuteranopia)))))
 
-  (theme-buffet-timer-hours 1))
+    (when (or modus-themes-p ef-themes-p)
+      (theme-buffet-timer-hours 1))))
 #+end_src
 
 *** The =prot-emacs-theme.el= section about ~fontaine~
