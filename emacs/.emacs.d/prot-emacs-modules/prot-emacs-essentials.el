@@ -33,6 +33,7 @@
     ("C-x C-z" . nil) ; same idea as above
     ("C-x C-c" . nil) ; avoid accidentally exiting Emacs
     ("C-x C-c C-c" . save-buffers-kill-emacs) ; more cumbersome, less error-prone
+    ("C-x C-r" . restart-emacs) ; override `find-file-read-only'
     ("C-h h" . nil) ; Never show that "hello" file
     ("M-`" . nil)
     ("M-o" . delete-blank-lines) ; alias for C-x C-o
