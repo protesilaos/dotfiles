@@ -5508,6 +5508,7 @@ need it.
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (use-package dired-subtree
   :ensure t
+  :after dired
   :bind
   ( :map dired-mode-map
     ("<tab>" . dired-subtree-toggle)
