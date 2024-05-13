@@ -2521,6 +2521,41 @@ configurable amount of time ([[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][The =pro
    ("C-z" . prot-prefix)))
 #+end_src
 
+*** The =prot-emacs-essentials.el= configuration to track recently visited files
+:PROPERTIES:
+:CUSTOM_ID: h:f9aa7523-d88a-4080-add6-073f36cb8b9a
+:END:
+
+Emacs can keep track of recently visited files. Then we can revisit
+them with the command ~recent-open~, which provides minibuffer
+completion ([[#h:15edf2c3-4419-4101-928a-6e224958a741][The =prot-emacs-completion.el= module]]).
+
+Recent files are also available in the ~consult-buffer~ interface,
+which makes it a one-stop-shop for opening buffers, recent files, or
+bookmarks ([[#h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d][The =prot-emacs-completion.el= settings for ~consult~]]).
+This can be better than having to remember if something is a buffer or
+is stored by bookmarks/recentf. Same idea for using one command
+instead of three (or more).
+
+I generally do not rely on ~recentf-mode~, as most of my work is done
+in projects, which I switch to directly. Though I sometimes need to
+revisit a file that I do not need to keep track of.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+(use-package recentf
+  :ensure nil
+  :hook (after-init . recentf-mode)
+  :config
+  (setq recentf-max-saved-items 100)
+  (setq recentf-max-menu-items 25) ; I don't use the `menu-bar-mode', but this is good to know
+  (setq recentf-save-file-modes nil)
+  (setq recentf-keep nil)
+  (setq recentf-auto-cleanup nil)
+  (setq recentf-initialize-file-name-history nil)
+  (setq recentf-filename-handlers nil)
+  (setq recentf-show-file-shortcuts-flag nil))
+#+end_src
+
 *** The =prot-emacs-essentials.el= mouse configurations
 :PROPERTIES:
 :CUSTOM_ID: h:982ad7cd-01b9-4178-be58-0e24251d3608
