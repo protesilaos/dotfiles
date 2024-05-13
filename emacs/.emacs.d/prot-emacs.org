@@ -9215,10 +9215,22 @@ love letters, respectively.
   :after notmuch
   :config
   (setq notmuch-indicator-args
-        '((:terms "tag:unread and tag:inbox" :label "[A] " :face prot-modeline-indicator-green)
-          (:terms "tag:unread and tag:inbox and not tag:package and not tag:coach" :label "[U] " :face prot-modeline-indicator-cyan)
-          (:terms "tag:unread and tag:package" :label "[P] " :face prot-modeline-indicator-magenta)
-          (:terms "tag:unread and tag:coach" :label "[C] " :face prot-modeline-indicator-red))
+        '(( :terms "tag:unread and tag:inbox"
+            :label "[A] "
+            :label-face prot-modeline-indicator-green
+            :counter-face prot-modeline-indicator-green)
+          ( :terms "tag:unread and tag:inbox and not tag:package and not tag:coach"
+            :label "[U] "
+            :label-face prot-modeline-indicator-cyan
+            :counter-face prot-modeline-indicator-cyan)
+          ( :terms "tag:unread and tag:package"
+            :label "[P] "
+            :label-face prot-modeline-indicator-magenta
+            :counter-face prot-modeline-indicator-magenta)
+          ( :terms "tag:unread and tag:coach"
+            :label "[C] "
+            :label-face prot-modeline-indicator-red
+            :counter-face prot-modeline-indicator-red))
 
         notmuch-indicator-refresh-count (* 60 3)
         notmuch-indicator-hide-empty-counters t
