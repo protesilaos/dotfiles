@@ -157,13 +157,15 @@
 (use-package mandoura
   ;; The :vc keyword is part of Emacs 30.  Read the manual for what keywords it reads: (info "(emacs) Fetching Package Sources")
   :vc ( :url "https://github.com/protesilaos/mandoura")
+  :commands (mandoura-play-playlist)
+  :after dired
   :bind
   ( :map global-map
     ("M-<AudioPlay>" . mandoura-return-track-title-and-time)
     ("M-<XF86AudioPlay>" . mandoura-return-track-title-and-time)
     :map dired-mode-map
-    ("M-<return>" . mandoura-play-files)
-    ("M-RET" . mandoura-play-files))
+    ("M-<return>" . mandoura-play-playlist)
+    ("M-RET" . mandoura-play-playlist))
   :config
   (setq mandoura-saved-playlist-directory "~/Music/playlists/"))
 
