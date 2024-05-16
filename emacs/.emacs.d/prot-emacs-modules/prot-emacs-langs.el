@@ -96,6 +96,8 @@
   :bind
   ( :map flyspell-mode-map
     ("C-;" . nil)
+    :map flyspell-mouse-map
+    ("<mouse-3>" . flyspell-correct-word)
     :map ctl-x-x-map
     ("s" . flyspell-mode)) ; C-x x s
   :config
