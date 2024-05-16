@@ -1337,9 +1337,15 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
           (agenda-date . (variable-pitch regular 1.3))
           (t . (regular 1.15))))
 
-  (setq modus-themes-common-palette-overrides nil)
-  ;; '((bg-mode-line-active bg-cyan-subtle)
-  ;;   (keybind yellow-warmer)))
+  ;; (setq modus-themes-common-palette-overrides nil)
+
+  (setq modus-themes-common-palette-overrides
+        '((cursor blue-intense)
+          (keybind green-cooler)
+          (comment maroon)
+          (bg-paren-match unspecified)
+          (fg-paren-match magenta-intense)
+          (underline-paren-match magenta-intense)))
 
   (if (prot-emacs-theme-environment-dark-p)
       (modus-themes-load-theme (cadr modus-themes-to-toggle))
