@@ -77,9 +77,7 @@
                                       (eq prot-emacs-load-theme-family 'standard))
                                   'default
                                 'help-key-binding)
-           :mode-line-inactive vertical-border))
-
-  (setq spacious-padding-subtle-mode-line nil))
+           :mode-line-inactive vertical-border)))
 
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (use-package rainbow-mode
