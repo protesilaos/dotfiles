@@ -26,13 +26,16 @@
 
   ;; (setq modus-themes-common-palette-overrides nil)
 
-  (setq modus-themes-common-palette-overrides
-        '((cursor blue-intense)
-          (keybind green-cooler)
-          (comment maroon)
-          (bg-paren-match unspecified)
-          (fg-paren-match magenta-intense)
-          (underline-paren-match magenta-intense)))
+  ;; I only want the overrides for those two Modus themes.  The rest
+  ;; have their own styles already.
+  (let ((overrides '((cursor blue-intense)
+                     (keybind green-cooler)
+                     (comment red-faint)
+                     (bg-paren-match unspecified)
+                     (fg-paren-match magenta-intense)
+                     (underline-paren-match magenta-intense))))
+    (setq modus-operandi-palette-overrides overrides
+          modus-vivendi-palette-overrides overrides))
 
   (if (prot-emacs-theme-environment-dark-p)
       (modus-themes-load-theme (cadr modus-themes-to-toggle))
