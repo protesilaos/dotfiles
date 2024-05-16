@@ -4,10 +4,8 @@
 
 (use-package nerd-icons-completion
   :ensure t
-  :after marginalia
-  :config
-  (nerd-icons-completion-marginalia-setup)
-  (nerd-icons-completion-mode 1))
+  :hook
+  (marginalia-mode . nerd-icons-completion-mode))
 
 (use-package nerd-icons-corfu
   :ensure t
