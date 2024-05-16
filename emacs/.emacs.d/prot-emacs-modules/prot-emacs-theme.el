@@ -111,10 +111,13 @@
            :blink-cursor-mode -1)
           (bar
            :cursor-type (bar . 2)
-           :blink-cursor-interval 0.5)
+           :blink-cursor-interval 0.8)
           (bar-no-other-window
            :inherit bar
            :cursor-in-non-selected-windows nil)
+          (bar-no-blink
+           :cursor-type (bar . 2)
+           :blink-cursor-mode -1)
           (underscore
            :cursor-type (hbar . 3)
            :blink-cursor-blinks 50)
