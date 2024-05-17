@@ -1825,7 +1825,7 @@ I also take care to make it work with my customised mode line
                                       (eq prot-emacs-load-theme-family 'standard))
                                   'default
                                 'help-key-binding)
-           :mode-line-inactive vertical-border)))
+           :mode-line-inactive window-divider)))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~rainbow-mode~

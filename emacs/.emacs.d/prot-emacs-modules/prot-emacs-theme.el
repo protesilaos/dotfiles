@@ -77,7 +77,7 @@
                                       (eq prot-emacs-load-theme-family 'standard))
                                   'default
                                 'help-key-binding)
-           :mode-line-inactive vertical-border)))
+           :mode-line-inactive window-divider)))
 
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (use-package rainbow-mode
