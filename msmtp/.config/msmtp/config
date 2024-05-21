@@ -5,11 +5,9 @@ defaults
 auth on
 protocol smtp
 tls on
-# FIXME 2023-08-08: I cannot send the message if `tls_starttls' is on.
-# Why?
-tls_starttls off
+tls_starttls on
 host mail.gandi.net
-port 465
+port 587
 
 # pub
 account pub
