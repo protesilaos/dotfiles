@@ -2980,17 +2980,18 @@ the point. Better check the video I did on the matter:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
 (use-package substitute
   :ensure t
+  :init
+  ;; C-c s is occupied by `prot-scratch-buffer'.
+  (define-key global-map (kbd "C-c r") #'substitute-prefix-map)
   ;; Produce a message after the substitution that reports on what
   ;; happened.  It is a single line, like "Substituted `TARGET' with
   ;; `SUBSTITUTE' N times across the buffer.
   :hook (substitute-post-replace . substitute-report-operation)
-  :bind
-  ;; The mnemonic for the prefix is that M-# (or M-S-3) is close to
-  ;; M-% (or M-S-5).
-  (("M-# s" . substitute-target-below-point) ; Forward motion like isearch (C-s)
-   ("M-# r" . substitute-target-above-point) ; Backward motion like isearch (C-r)
-   ("M-# d" . substitute-target-in-defun)    ; "defun" mnemonic
-   ("M-# b" . substitute-target-in-buffer)) ; "buffer" mnemonic
+  :commands
+  (substitute-target-below-point ; Forward motion like isearch (C-s)
+   substitute-target-above-point ; Backward motion like isearch (C-r)
+   substitute-target-in-defun    ; inside of the current definition
+   substitute-target-in-buffer)  ; throughout the buffer
   :config
   ;; Set this to non-nil to highlight all occurrences of the current
   ;; target.
