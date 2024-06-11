@@ -220,15 +220,31 @@
   (require 'prot-org)
 
   (setq org-capture-templates
-        `(("b" "Basic task for future review" entry
-           (file+headline "tasks.org" "Tasks to be reviewed")
+        `(("u" "Unprocessed" entry
+           (file+headline "tasks.org" "Unprocessed")
            ,(concat "* %^{Title}\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%i %l")
+                    "%a\n%i%?")
            :empty-lines-after 1)
-          ("c" "Clock in to a task" entry
+          ("e" "Email note (unprocessed)" entry ; Also see `org-capture-templates-contexts'
+           (file+headline "tasks.org" "Unprocessed")
+           ,(concat "* TODO %:subject :mail:\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%a\n%i%?")
+           :empty-lines-after 1)
+          ("w" "Add to the wishlist (may do some day)" entry
+           (file+headline "tasks.org" "Wishlist")
+           ,(concat "* %^{Title}\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%?")
+           :empty-lines-after 1)
+          ("c" "Clock in and do immediately" entry
            (file+headline "tasks.org" "Clocked tasks")
            ,(concat "* TODO %^{Title}\n"
                     ":PROPERTIES:\n"
@@ -240,30 +256,14 @@
            :clock-keep t
            :immediate-finish t
            :empty-lines-after 1)
-          ("m" "Memorandum of conversation" entry
-           (file+headline "tasks.org" "Tasks to be reviewed")
-           ,(concat "* Memorandum of conversation with %^{Person}\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%i%?")
-           :empty-lines-after 1)
-          ("t" "Task with a due date" entry
+          ("t" "Time-sensitive task" entry
            (file+headline "tasks.org" "Tasks with a date")
            ,(concat "* TODO %^{Title} %^g\n"
-                    "SCHEDULED: %^t\n"
+                    "%^{How time sensitive it is|SCHEDULED|DEADLINE}: %^t\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%a\n%i%?")
-           :empty-lines-after 1)
-          ("e" "Email note" entry
-           (file+headline "tasks.org" "Tasks to be reviewed")
-           ,(concat "* TODO %:subject :mail:\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%a\n%i%?")
+                    "%?")
            :empty-lines-after 1)
           ("p" "Private lesson or service" entry
            (file "coach.org")

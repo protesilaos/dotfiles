@@ -7406,10 +7406,81 @@ I showed for Org Babel ([[#h:1f5a0d46-5202-48dd-8048-b48ce17f3df8][The =prot-ema
   (setq org-html-head-include-scripts nil))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org capture templates (~org-capture~)
+*** The =prot-emacs-org.el= Org capture templates (~org-capture~)
 :PROPERTIES:
 :CUSTOM_ID: h:f8f06938-0dfe-45c3-b4cf-996d36cba82d
 :END:
+
+The ~org-capture~ command allows us to quickly store data in some
+structured way. This is done with the help of a templating system
+where we can, for example, record the date the entry was recorded,
+prompt for user input, automatically use the email's subject as the
+title of the task, and the like. The documentation string of
+~org-capture-templates~ covers the technicalities.
+
+I use two Org files for my tasks. The one is =tasks.org=, which
+contains the bulk of my entries. The other is =coach.org=, which is
+specific to my coaching work: https://protesilaos.com/coach.
+
+The =tasks.org= consists of several top-level headings. Each contains
+subheadings I need to review. You will notice how most of my
+entries in ~org-capture-templates~ involve this file. With Org, it is
+perfectly fine to work in a single file because we can fold headings
+or narrow to them with ~org-narrow-to-subtree~. Furthermore, we can
+navigate directly to a heading using minibuffer completion, such as
+with the general purpose command ~prot-search-outline~
+([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-search.el= extras provided by the =prot-search.el= library]]).
+
+Despite the fact that Org copes well with large files, I still choose
+to keep my coaching work in a separate file as a contingency plan.
+Because =coach.org= includes information about appointments, I need to
+be able to read it with ease from anywhere. This includes different
+types of hardware, but also any kind of generic text editor or
+terminal pager. I do not want to depend on features like folding,
+narrowing, and the like, in times when something has gone awry.
+Granted, this has never happened, though the idea makes sense.
+Besides, two files are not hard to manage in this case. The
+=coach.org= has a simple structure: each appointment is stored as a
+top-level heading.
+
+As for my workflow, here is an overview:
+
+- When I want to capture data that I am not yet sure about, I add it
+  to the =tasks.org= "Unprocessed" heading. I periodically review
+  those to decide if I want to do something with them or not. If I do
+  not want them, I delete them. Otherwise, I file them under another
+  heading in the same file using the ~org-refile~ command ([[#h:024dd541-0061-4a10-b10b-b17dcd4794b9][The =prot-emacs-org.el= Org to-do and refile settings]]).
+  Not everything goes into the "Unprocessed" headings, as I often
+  known in advance what an item is about. This is just a fallback for
+  those cases when I need more information to decide on the
+  appropriate action.
+
+- Tasks that have an inherent time component are given a =SCHEDULED=
+  or =DEADLINE= timestamp (set those on demand with the commands
+  ~org-schedule~ and ~org-deadline~, respectively). These are the only
+  tasks I want to see on my daily agenda ([[#h:7fe87b83-2815-4617-a5f9-d3417dd9d248][The =prot-emacs-org.el= Org agenda settings]]).
+  The difference between =SCHEDULED= and =DEADLINE= is that the former
+  has no strict start or end time and so is flexible, while the latter
+  is more rigid. For example, "visit the vet today" does not have a
+  strict time associated with it because the doctor often deals with
+  emergency situations and thus their agenda is fluid. While a
+  coaching session of mine like "work on Emacs with PERSON" has to
+  start at the agreed upon time.
+
+- I do not arbitrarily assign timestamps to tasks. If something does
+  not have a scheduled date or a deadline, then it does not belong on
+  the agenda. Otherwise, those arbitrarily defined "events" accumulate
+  in the agenda and crowd out the actual time-sensitive tasks. As a
+  result, the cognitive load is heavier and things will not be done.
+  So when I want to do something at some point, but have no specific
+  plan for it, I add is to the =tasks.org= "Wishlist". When I have
+  free time, I review my wishlist and pick something to work on from
+  there depending on my available time and mood. This keeps my
+  workflow both focused and stress-free.
+
+- Finally, my =coach.org= only has time-sensitive appointments with a
+  =DEADLINE= associated with them. I organise the rest of my
+  activities in the given day based on those.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; capture
@@ -7420,15 +7491,31 @@ I showed for Org Babel ([[#h:1f5a0d46-5202-48dd-8048-b48ce17f3df8][The =prot-ema
   (require 'prot-org)
 
   (setq org-capture-templates
-        `(("b" "Basic task for future review" entry
-           (file+headline "tasks.org" "Tasks to be reviewed")
+        `(("u" "Unprocessed" entry
+           (file+headline "tasks.org" "Unprocessed")
            ,(concat "* %^{Title}\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%i %l")
+                    "%a\n%i%?")
            :empty-lines-after 1)
-          ("c" "Clock in to a task" entry
+          ("e" "Email note (unprocessed)" entry ; Also see `org-capture-templates-contexts'
+           (file+headline "tasks.org" "Unprocessed")
+           ,(concat "* TODO %:subject :mail:\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%a\n%i%?")
+           :empty-lines-after 1)
+          ("w" "Add to the wishlist (may do some day)" entry
+           (file+headline "tasks.org" "Wishlist")
+           ,(concat "* %^{Title}\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%?")
+           :empty-lines-after 1)
+          ("c" "Clock in and do immediately" entry
            (file+headline "tasks.org" "Clocked tasks")
            ,(concat "* TODO %^{Title}\n"
                     ":PROPERTIES:\n"
@@ -7440,30 +7527,14 @@ I showed for Org Babel ([[#h:1f5a0d46-5202-48dd-8048-b48ce17f3df8][The =prot-ema
            :clock-keep t
            :immediate-finish t
            :empty-lines-after 1)
-          ("m" "Memorandum of conversation" entry
-           (file+headline "tasks.org" "Tasks to be reviewed")
-           ,(concat "* Memorandum of conversation with %^{Person}\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%i%?")
-           :empty-lines-after 1)
-          ("t" "Task with a due date" entry
+          ("t" "Time-sensitive task" entry
            (file+headline "tasks.org" "Tasks with a date")
            ,(concat "* TODO %^{Title} %^g\n"
-                    "SCHEDULED: %^t\n"
+                    "%^{How time sensitive it is|SCHEDULED|DEADLINE}: %^t\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%a\n%i%?")
-           :empty-lines-after 1)
-          ("e" "Email note" entry
-           (file+headline "tasks.org" "Tasks to be reviewed")
-           ,(concat "* TODO %:subject :mail:\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%a\n%i%?")
+                    "%?")
            :empty-lines-after 1)
           ("p" "Private lesson or service" entry
            (file "coach.org")
