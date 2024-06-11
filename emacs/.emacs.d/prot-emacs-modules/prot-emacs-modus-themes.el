@@ -24,18 +24,7 @@
           (agenda-date . (variable-pitch regular 1.3))
           (t . (regular 1.15))))
 
-  ;; (setq modus-themes-common-palette-overrides nil)
-
-  ;; I only want the overrides for those two Modus themes.  The rest
-  ;; have their own styles already.
-  (let ((overrides '((cursor blue-intense)
-                     (keybind green-cooler)
-                     (comment red-faint)
-                     (bg-paren-match unspecified)
-                     (fg-paren-match magenta-intense)
-                     (underline-paren-match magenta-intense))))
-    (setq modus-operandi-palette-overrides overrides
-          modus-vivendi-palette-overrides overrides))
+  (setq modus-themes-common-palette-overrides nil)
 
   (if (prot-emacs-theme-environment-dark-p)
       (modus-themes-load-theme (cadr modus-themes-to-toggle))
@@ -79,6 +68,19 @@
             (fg-line-number-active fg-main)
             ;; ,@modus-themes-preset-overrides-warmer
             ))
+
+    ;; ;; For testing purposes I only want the overrides for those two
+    ;; ;; Modus themes.  The rest have their own styles already.
+    ;;
+    ;; (let ((overrides '((cursor blue-intense)
+    ;;                    (keybind green-cooler)
+    ;;                    (comment red-faint)
+    ;;                    (bg-paren-match unspecified)
+    ;;                    (fg-paren-match magenta-intense)
+    ;;                    (underline-paren-match magenta-intense))))
+    ;;   (setq modus-operandi-palette-overrides overrides
+    ;;         modus-vivendi-palette-overrides overrides))
+
 
     ;; ;; Make the active mode line have a pseudo 3D effect (this assumes
     ;; ;; you are using the default mode line and not an extra package).
