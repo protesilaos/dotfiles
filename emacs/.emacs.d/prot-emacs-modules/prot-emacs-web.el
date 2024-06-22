@@ -84,6 +84,7 @@
 (use-package prot-eww
   :ensure nil
   :after eww
+  :hook (eww-mode . prot-eww-set-bookmark-handler)
   :config
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
@@ -94,6 +95,7 @@
 
   (define-prefix-command 'prot-eww-map)
   (define-key global-map (kbd "C-c w") 'prot-eww-map)
+
   (prot-emacs-keybind prot-eww-map
     "b" #'prot-eww-visit-bookmark
     "e" #'prot-eww-browse-dwim

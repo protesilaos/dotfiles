@@ -656,5 +656,30 @@ As a final step, save `prot-eww-visited-history' to a file (see
     (when (yes-or-no-p "Are you sure you want to quit eww?")
       (run-hooks 'prot-eww-quit-hook))))
 
+;;;; Bookmark support
+
+(declare-function bookmark-prop-get "bookmark" (bookmark prop))
+
+(defun prot-eww-bookmark-name ()
+  "Return name of bookmark based on currect directory."
+  (buffer-name))
+
+(defun prot-eww-bookmark-make-record ()
+  "Create a bookmark for the current Shell buffer."
+  `(,(prot-eww-bookmark-name)
+    (url . ,(prot-eww--get-current-url))
+    (handler . prot-eww-bookmark-jump)))
+
+;;;###autoload
+(defun prot-eww-bookmark-jump (bookmark)
+  "Default BOOKMARK handler for Shell buffers."
+  (eww (bookmark-prop-get bookmark 'url)))
+
+(put 'prot-eww-bookmark-jump 'bookmark-handler-type "EWW")
+
+(defun prot-eww-set-bookmark-handler ()
+  "Set my EWW bookmark handler for integration with bookmark.el."
+  (setq-local bookmark-make-record-function #'prot-eww-bookmark-make-record))
+
 (provide 'prot-eww)
 ;;; prot-eww.el ends here
