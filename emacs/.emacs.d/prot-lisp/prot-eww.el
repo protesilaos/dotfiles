@@ -661,19 +661,20 @@ As a final step, save `prot-eww-visited-history' to a file (see
 (declare-function bookmark-prop-get "bookmark" (bookmark prop))
 
 (defun prot-eww-bookmark-name ()
-  "Return name of bookmark based on currect directory."
+  "Return name of bookmark based on the current buffer."
   (buffer-name))
 
 (defun prot-eww-bookmark-make-record ()
   "Create a bookmark for the current Shell buffer."
   `(,(prot-eww-bookmark-name)
-    (url . ,(prot-eww--get-current-url))
+    ,@(bookmark-make-record-default 'no-file)
+    (location . ,(prot-eww--get-current-url))
     (handler . prot-eww-bookmark-jump)))
 
 ;;;###autoload
 (defun prot-eww-bookmark-jump (bookmark)
   "Default BOOKMARK handler for Shell buffers."
-  (eww (bookmark-prop-get bookmark 'url)))
+  (eww (bookmark-prop-get bookmark 'location)))
 
 (put 'prot-eww-bookmark-jump 'bookmark-handler-type "EWW")
 

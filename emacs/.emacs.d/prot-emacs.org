@@ -12560,13 +12560,14 @@ As a final step, save `prot-eww-visited-history' to a file (see
 (defun prot-eww-bookmark-make-record ()
   "Create a bookmark for the current Shell buffer."
   `(,(prot-eww-bookmark-name)
-    (url . ,(prot-eww--get-current-url))
+    ,@(bookmark-make-record-default 'no-file)
+    (location . ,(prot-eww--get-current-url))
     (handler . prot-eww-bookmark-jump)))
 
 ;;;###autoload
 (defun prot-eww-bookmark-jump (bookmark)
   "Default BOOKMARK handler for Shell buffers."
-  (eww (bookmark-prop-get bookmark 'url)))
+  (eww (bookmark-prop-get bookmark 'location)))
 
 (put 'prot-eww-bookmark-jump 'bookmark-handler-type "EWW")
 
