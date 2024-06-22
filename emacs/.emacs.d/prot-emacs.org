@@ -2396,6 +2396,7 @@ this via some hook.
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("<C-return>" . prot-simple-new-line-below)
     ("<C-S-return>" . prot-simple-new-line-above)
+    ("C-x x a" . prot-simple-auto-fill-visual-line-mode) ; auto-fill/visual-line toggle
     ;; Commands for text insertion or manipulation
     ("C-=" . prot-simple-insert-date)
     ("C-<" . prot-simple-escape-url-dwim)
@@ -16001,6 +16002,17 @@ This command can then be followed by the standard
   "Kill from point to the beginning of the line."
   (interactive)
   (kill-line 0))
+
+;;;###autoload
+(define-minor-mode prot-simple-auto-fill-visual-line-mode
+  "Enable `visual-line-mode' and disable `auto-fill-mode' in the current buffer."
+  :global nil
+  (if prot-simple-auto-fill-visual-line-mode
+      (progn
+        (auto-fill-mode -1)
+        (visual-line-mode 1))
+    (auto-fill-mode 1)
+    (visual-line-mode -1)))
 
 ;;;; Commands for text insertion or manipulation
 

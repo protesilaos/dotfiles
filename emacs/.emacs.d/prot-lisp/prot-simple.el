@@ -271,6 +271,17 @@ This command can then be followed by the standard
   (interactive)
   (kill-line 0))
 
+;;;###autoload
+(define-minor-mode prot-simple-auto-fill-visual-line-mode
+  "Enable `visual-line-mode' and disable `auto-fill-mode' in the current buffer."
+  :global nil
+  (if prot-simple-auto-fill-visual-line-mode
+      (progn
+        (auto-fill-mode -1)
+        (visual-line-mode 1))
+    (auto-fill-mode 1)
+    (visual-line-mode -1)))
+
 ;;;; Commands for text insertion or manipulation
 
 ;;;###autoload

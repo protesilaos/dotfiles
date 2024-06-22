@@ -97,6 +97,7 @@
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("<C-return>" . prot-simple-new-line-below)
     ("<C-S-return>" . prot-simple-new-line-above)
+    ("C-x x a" . prot-simple-auto-fill-visual-line-mode) ; auto-fill/visual-line toggle
     ;; Commands for text insertion or manipulation
     ("C-=" . prot-simple-insert-date)
     ("C-<" . prot-simple-escape-url-dwim)
