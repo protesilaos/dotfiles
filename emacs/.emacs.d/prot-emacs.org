@@ -7793,6 +7793,12 @@ As for my workflow, here is an overview:
   )
 #+end_src
 
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
+(use-package prot-coach
+  :ensure nil
+  :commands (prot-coach-done-sessions-with-person))
+#+end_src
+
 *** The =prot-emacs-org.el= call to ~provide~
 :PROPERTIES:
 :CUSTOM_ID: h:62eb7ca3-2f79-45a6-a018-38238b486e98
