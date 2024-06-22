@@ -12554,7 +12554,7 @@ As a final step, save `prot-eww-visited-history' to a file (see
 (declare-function bookmark-prop-get "bookmark" (bookmark prop))
 
 (defun prot-eww-bookmark-name ()
-  "Return name of bookmark based on currect directory."
+  "Return name of bookmark based on the current buffer."
   (buffer-name))
 
 (defun prot-eww-bookmark-make-record ()
