@@ -129,8 +129,8 @@
   ;; :hook (dired-mode . (lambda ()
   ;;                       (when (string-match-p "Pictures" default-directory)
   ;;                         (dired-preview-mode 1))))
-
-  :hook (dired-mode . dired-preview-mode)
+  :defer 1
+  :hook (after-init . dired-preview-global-mode)
   :config
   ;; These are all set to their default values.  I keep them here for
   ;; reference.
