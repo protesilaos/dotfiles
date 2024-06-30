@@ -15562,60 +15562,60 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
 
 (put 'prot-shell-bookmark-jump 'bookmark-handler-type "Shell")
 
-;;;; Convert YouTube links to Invidious
-
-(defvar prot-shell-invidious-domains
-  '("invidious.io.lol"
-    "invidious.lunar.icu"
-    "iv.nboeck.de"
-    "vid.priv.au"
-    "invidious.tiekoetter.com"
-    "inv.in.projectsegfau.lt"
-    "onion.tube"
-    "yt.artemislena.eu"
-    "invidious.no-logs.com"
-    "yewtu.be"
-    "invidious.projectsegfau.lt"
-    "yt.oelrichsgarcia.de"
-    "invidious.0011.lt"
-    "inv.zzls.xyz"
-    "inv.bp.projectsegfau.lt"
-    "invidious.flokinet.to"
-    "iv.ggtyler.dev"
-    "invidious.slipfox.xyz"
-    "vid.puffyan.us"
-    "inv.pistasjis.net"
-    "inv.citw.lgbt"
-    "invidious.protokolla.fi"
-    "inv.makerlab.tech"
-    "inv.tux.pizza"
-    "invidious.privacydev.net")
-  "List of Invidious domains.")
-
-(defvar prot-shell-youtube-domains
-  '("www.youtube.com"
-    "youtu.be")
-  "List of YouTube domains.")
-
-(defvar prot-shell-yt-invidious-domains
-  (append prot-shell-youtube-domains
-          prot-shell-invidious-domains)
-  "List of YouTube and Invidious domains.")
-
-(defun prot-shell--get-random-invidious-instance ()
-  "Return `random' index from `prot-shell-invidious-domains'."
-  (nth
-   (random (length prot-shell-invidious-domains))
-   prot-shell-invidious-domains))
-
-;;;###autoload
-(defun prot-shell-invidious ()
-  "Convert `prot-shell-yt-invidious-domains' into a random Invidious instance."
-  (interactive)
-  (save-excursion
-    (goto-char (line-beginning-position))
-    (while (re-search-forward (regexp-opt prot-shell-yt-invidious-domains) (line-end-position) :no-error)
-      (replace-match (prot-shell--get-random-invidious-instance)))))
+;; ;;;; Convert YouTube links to Invidious
+;;
+;; (defvar prot-shell-invidious-domains
+;;   '("invidious.io.lol"
+;;     "invidious.lunar.icu"
+;;     "iv.nboeck.de"
+;;     "vid.priv.au"
+;;     "invidious.tiekoetter.com"
+;;     "inv.in.projectsegfau.lt"
+;;     "onion.tube"
+;;     "yt.artemislena.eu"
+;;     "invidious.no-logs.com"
+;;     "yewtu.be"
+;;     "invidious.projectsegfau.lt"
+;;     "yt.oelrichsgarcia.de"
+;;     "invidious.0011.lt"
+;;     "inv.zzls.xyz"
+;;     "inv.bp.projectsegfau.lt"
+;;     "invidious.flokinet.to"
+;;     "iv.ggtyler.dev"
+;;     "invidious.slipfox.xyz"
+;;     "vid.puffyan.us"
+;;     "inv.pistasjis.net"
+;;     "inv.citw.lgbt"
+;;     "invidious.protokolla.fi"
+;;     "inv.makerlab.tech"
+;;     "inv.tux.pizza"
+;;     "invidious.privacydev.net")
+;;   "List of Invidious domains.")
+;;
+;; (defvar prot-shell-youtube-domains
+;;   '("www.youtube.com"
+;;     "youtu.be")
+;;   "List of YouTube domains.")
+;;
+;; (defvar prot-shell-yt-invidious-domains
+;;   (append prot-shell-youtube-domains
+;;           prot-shell-invidious-domains)
+;;   "List of YouTube and Invidious domains.")
+;;
+;; (defun prot-shell--get-random-invidious-instance ()
+;;   "Return `random' index from `prot-shell-invidious-domains'."
+;;   (nth
+;;    (random (length prot-shell-invidious-domains))
+;;    prot-shell-invidious-domains))
+;;
+;; ;;;###autoload
+;; (defun prot-shell-invidious ()
+;;   "Convert `prot-shell-yt-invidious-domains' into a random Invidious instance."
+;;   (interactive)
+;;   (save-excursion
+;;     (goto-char (line-beginning-position))
+;;     (while (re-search-forward (regexp-opt prot-shell-yt-invidious-domains) (line-end-position) :no-error)
+;;       (replace-match (prot-shell--get-random-invidious-instance)))))
 
 ;;;; Built-in Emacs commands
 
@@ -15680,7 +15680,7 @@ input, otherwise perform buffer motion."
   "<up>" #'prot-shell-up-dwim
   "<down>" #'prot-shell-down-dwim
   "C-c C-d" #'prot-shell-cd
-  "C-c C-i" #'prot-shell-invidious
+  ;; "C-c C-i" #'prot-shell-invidious
   "C-c C-j" #'prot-shell-input-from-history
   "C-c C-." #'prot-shell-cd-vc-root-dir
   "C-c C-r" #'prot-shell-cd-vc-root-dir)
