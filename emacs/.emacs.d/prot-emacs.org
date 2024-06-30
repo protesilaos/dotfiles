@@ -8445,7 +8445,7 @@ facilities to rename files, regardless of file type.
   :hook
   ;; If you use Markdown or plain text files you want to fontify links
   ;; upon visiting the file (Org renders links as buttons right away).
-  ;; ((text-mode . denote-fontify-links-mode)
+  ((text-mode . denote-fontify-links-mode-maybe)
 
    ;; Highlight Denote file names in Dired buffers.  Below is the
    ;; generic approach, which is great if you rename files Denote-style
