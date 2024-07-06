@@ -8456,7 +8456,7 @@ facilities to rename files, regardless of file type.
    ;; following instead:
    ;;
    ;;  (dired-mode . denote-dired-mode-in-directories)
-   ((dired-mode . denote-dired-mode))
+   (dired-mode . denote-dired-mode))
   :bind
   ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
@@ -8551,6 +8551,16 @@ facilities to rename files, regardless of file type.
                    :immediate-finish nil
                    :kill-buffer t
                    :jump-to-captured t))))
+#+end_src
+
+**** TODO The =prot-emacs-langs.el= integration between Consult and Denote (~consult-denote~)
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+(use-package consult-denote
+  :ensure t
+  :after denote
+  :config
+  (consult-denote-mode 1)
 #+end_src
 
 *** TODO The =prot-emacs-langs.el= settings for ~logos~ (writing extras and file navigation)

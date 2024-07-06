@@ -231,7 +231,7 @@
    ;; following instead:
    ;;
    ;;  (dired-mode . denote-dired-mode-in-directories)
-   ((dired-mode . denote-dired-mode))
+   (dired-mode . denote-dired-mode))
   :bind
   ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
@@ -326,6 +326,12 @@
                    :immediate-finish nil
                    :kill-buffer t
                    :jump-to-captured t))))
+
+(use-package consult-denote
+  :ensure t
+  :after denote
+  :config
+  (consult-denote-mode 1)
 
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
