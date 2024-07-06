@@ -7578,7 +7578,7 @@ As for my workflow, here is an overview:
                 (in-mode . "notmuch-tree-mode"))))))
 #+end_src
 
-*** TODO The =prot-emacs-org.el= Org agenda settings
+*** The =prot-emacs-org.el= Org agenda settings
 :PROPERTIES:
 :CUSTOM_ID: h:7fe87b83-2815-4617-a5f9-d3417dd9d248
 :END:
@@ -7586,7 +7586,43 @@ As for my workflow, here is an overview:
 [ Watch: [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09). It has
   changed a bit since then, but the idea is the same. ]
 
-([[#h:9974eac8-2167-45c4-90e0-12dd877403da][The =prot-org.el= library]]).
+With the Org agenda, we can visualise the tasks we have collected in
+our Org files or, more specifically, in the list of files specified in
+the user option ~org-agenda-files~. In my workflow, only the files in
+the ~org-directory~ can feed data into the agenda. Though Org provides
+commands to add/remove the current file on demand: ~org-remove-file~,
+and ~org-agenda-file-to-front~. If I ever need to write a task that is
+specific to a certain file or buffer, then I use Org's linking
+mechanism to point to the relevant context, but otherwise store my
+task in the usual place ([[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]]).
+
+By default, Org provides many so-called "views" for the agenda. One of
+the them is the daily/weekly agenda. Others show only the headings
+with =TODO= keywords, or some other kind of search criteria. I
+personally never use those views. I have my own custom agenda view,
+which consolidates in a single buffer the following blocks on data, in
+this order ([[#h:9974eac8-2167-45c4-90e0-12dd877403da][The =prot-org.el= library]]).:
+
+- Important tasks without a date :: When I add a top priority to
+  something, but there is no inherent deadline to it.
+
+- Pending scheduled tasks :: Tasks with a =SCHEDULED= date may
+  sometimes not be done when they ought to. So they need to be closer
+  to the top for me to do them as soon as I can.
+
+- Today's agenda :: What I am actually working on. Because I only
+  assign a timestamp to tasks that are indeed time-sensitive, this
+  always reflects the commitments I have for the day.
+
+- Next three days :: Like the above, but for the near future.
+
+- Upcoming deadlines (+14d) :: These are the deadlines I need to be
+  aware of for the 14 days after the next three days I am only
+  informed about.
+
+The Org agenda has lots of other extras, such as to filter the view.
+Though I never use them. My custom agenda does exactly what I need
+from it and thus keeps me focused.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;;; agenda
