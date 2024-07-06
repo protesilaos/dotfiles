@@ -8596,7 +8596,7 @@ facilities to rename files, regardless of file type.
   :ensure t
   :after denote
   :config
-  (consult-denote-mode 1)
+  (consult-denote-mode 1))
 #+end_src
 
 *** TODO The =prot-emacs-langs.el= settings for ~logos~ (writing extras and file navigation)

@@ -331,7 +331,7 @@
   :ensure t
   :after denote
   :config
-  (consult-denote-mode 1)
+  (consult-denote-mode 1))
 
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
