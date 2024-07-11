@@ -1,5 +1,5 @@
 (use-package which-key
-  :ensure t
+  :ensure nil ; built into Emacs 30
   :hook (after-init . which-key-mode)
   :config
   (setq which-key-separator "  ")

@@ -10381,11 +10381,15 @@ produce a popup at the lower part of the Emacs frame showing keys that
 complete the current sequence together with the name of the command
 they are invoking.
 
-I personally do not use this, except when I need to do a demonstration.
+I personally do not use this, except when I need to do a
+demonstration.
+
+Note that ~which-key~ is built into Emacs 30. If you are on a previous
+version, use =:ensure t= to install it from a package archive.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-which-key.el" :mkdirp yes
 (use-package which-key
-  :ensure t
+  :ensure nil ; built into Emacs 30
   :hook (after-init . which-key-mode)
   :config
   (setq which-key-separator "  ")
