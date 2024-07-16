@@ -8165,6 +8165,25 @@ basic text editing.
   (setq markdown-fontify-code-blocks-natively t))
 #+end_src
 
+*** The =prot-emacs-langs.el= settings for ~csv-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:bae58479-86c1-410f-867e-c548def65b1c
+:END:
+
+The package ~csv-mode~ provides support for =.csv= files. I do need
+this on occasion, even though my use-case is pretty basic. For me, the
+killer feature is the ability to create a virtual tabulated listing
+with the command ~csv-align-mode~: it hides the field delimiter (comma
+or space) and shows a tab stop in its stead.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;; csv-mode
+(use-package csv-mode
+  :ensure t
+  :commands (csv-align-mode))
+#+end_src
+
+
 *** The =prot-emacs-langs.el= settings for ~sxhkdrc-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:88e36f15-4c74-4b7c-9ba6-cf5fb112ffd9

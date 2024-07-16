@@ -82,6 +82,11 @@
   :config
   (setq markdown-fontify-code-blocks-natively t))
 
+;;; csv-mode
+(use-package csv-mode
+  :ensure t
+  :commands (csv-align-mode))
+
 ;;; SXHKDRC mode (one of my many packages)
 (use-package sxhkdrc-mode
   :ensure t
