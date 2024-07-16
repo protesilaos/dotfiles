@@ -8590,6 +8590,9 @@ facilities to rename files, regardless of file type.
 #+end_src
 
 **** TODO The =prot-emacs-langs.el= integration between Consult and Denote (~consult-denote~)
+:PROPERTIES:
+:CUSTOM_ID: h:ee82e629-fb05-4c75-9175-48a760a25691
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 (use-package consult-denote
