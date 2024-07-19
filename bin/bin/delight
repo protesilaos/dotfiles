@@ -302,7 +302,7 @@ _gnome_theme ()
     _depcheck gsettings
 	interface="org.gnome.desktop.interface"
 
-    if [ "$(_gsettings_gtk_act 'get' $interface)" = "$gtk_theme_light" ]
+    if [ "$(_gsettings_gtk_act 'get' $interface)" = "'$gtk_theme_light'" ]
     then
         _gsettings_gtk_act 'set' $interface "$gtk_theme_dark"
     else
