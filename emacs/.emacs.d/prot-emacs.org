@@ -4357,6 +4357,7 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
                   "-path */.git* -prune "
                   "-or -path */.cache* -prune )"))
     (setq consult-preview-key 'any)
+    (setq consult-project-function nil) ; always work from the current directory
 
     (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
 
