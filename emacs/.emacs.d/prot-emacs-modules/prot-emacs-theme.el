@@ -229,6 +229,8 @@
            :bold-weight extrabold)
           (presentation
            :default-height 180)
+          (jumbo
+           :default-height 260)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
