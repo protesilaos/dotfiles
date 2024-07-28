@@ -105,21 +105,21 @@ purpose and function:
   system, i.e. Lisp macros I define, and loads the individual
   configuration modules.
 
-- The custom =prot-emacs-modules= directory :: It includes all my
+- The =prot-emacs-modules= directory :: It includes all my
   configuration modules. Each module is about a specific type of
   functionality, such a =prot-emacs-theme.el= for themes and
   =prot-emacs-essentials.el= for basic tools. These configuration
   modules tweak packages and are not meant to define extra
   functionality.
 
-- The custom =prot-lisp= directory :: Here are the custom libraries I
+- The =prot-lisp= directory :: Here are the custom libraries I
   maintain as part of my Emacs setup. They are written in accordance
   with the best practices for packaging Emacs Lisp, though are only
   meant to be used as part of my setup. As such, they are not
   necessarily up to par with the public-facing packages I maintain for
   Emacs: <https://protesilaos.com/emacs>.
 
-- The custom =prot-emacs-pre-custom= file :: It is evaluated /before/
+- The =prot-emacs-pre-custom= file :: It is evaluated /before/
   the modules are loaded. It is intended for users of my configuration
   who want to make use of the options I provide ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
 
