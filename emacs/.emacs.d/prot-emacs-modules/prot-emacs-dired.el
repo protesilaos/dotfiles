@@ -138,9 +138,15 @@
   (setq dired-preview-delay 0.5)
   (setq dired-preview-ignored-extensions-regexp
         (concat "\\."
-                "\\(mkv\\|" "webm\\|" "mp4\\|" "mp3\\|" "ogg\\|" "m4a\\|"
-                "gz\\|" "zst\\|" "tar\\|" "xz\\|" "rar\\|" "zip\\|"
-                "iso\\|" "epub\\|" "\\)")))
+                "\\(gz\\|"
+                "zst\\|"
+                "tar\\|"
+                "xz\\|"
+                "rar\\|"
+                "zip\\|"
+                "iso\\|"
+                "epub\\|"
+                "\\)")))
 
 ;;; dired-like mode for the trash (trashed.el)
 (use-package trashed

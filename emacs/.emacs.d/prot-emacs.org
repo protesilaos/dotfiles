@@ -5687,9 +5687,16 @@ are where we need to be.
   (setq dired-preview-delay 0.5)
   (setq dired-preview-ignored-extensions-regexp
         (concat "\\."
-                "\\(mkv\\|" "webm\\|" "mp4\\|" "mp3\\|" "ogg\\|" "m4a\\|"
-                "gz\\|" "zst\\|" "tar\\|" "xz\\|" "rar\\|" "zip\\|"
-                "iso\\|" "epub\\|" "\\)")))
+                "\\(gz\\|"
+                "zst\\|"
+                "tar\\|"
+                "xz\\|"
+                "rar\\|"
+                "zip\\|"
+                "iso\\|"
+                "epub\\|"
+                "\\)")))
+#+end_src
 #+end_src
 
 *** The =prot-emacs-dired.el= section about =trashed.el=
