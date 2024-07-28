@@ -5697,6 +5697,27 @@ are where we need to be.
                 "epub\\|"
                 "\\)")))
 #+end_src
+
+*** The =prot-emacs-dired.el= section about multimedia previews (~ready-player~)
+:PROPERTIES:
+:CUSTOM_ID: h:8a92d9db-b35a-4ec3-8b37-f42a80a67854
+:END:
+
+This is a neat package by Alvaro Ramirez which produces a previewable
+representation of multimedia file when we try to visit them in an
+Emacs buffer. Without ~ready-player-mode~, we get a bunch of gibberish
+from the binary data.
+
+While this is a standalone package, it synergises with my
+~dired-preview~ without the need to add any glue code between the two
+packages. When I move the cursor over a multimedia file, the Dired
+preview buffer tries to visit the file at point, which is in turn
+rendered using ~ready-player~.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
+(use-package ready-player
+  :ensure t
+  :hook (dired-mode . ready-player-mode))
 #+end_src
 
 *** The =prot-emacs-dired.el= section about =trashed.el=

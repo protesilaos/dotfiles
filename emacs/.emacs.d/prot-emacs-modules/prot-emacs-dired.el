@@ -148,6 +148,10 @@
                 "epub\\|"
                 "\\)")))
 
+(use-package ready-player
+  :ensure t
+  :hook (dired-mode . ready-player-mode))
+
 ;;; dired-like mode for the trash (trashed.el)
 (use-package trashed
   :ensure t
