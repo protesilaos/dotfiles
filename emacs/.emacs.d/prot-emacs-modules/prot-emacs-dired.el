@@ -165,7 +165,20 @@
 
 (use-package ready-player
   :ensure t
-  :hook (dired-mode . ready-player-mode))
+  :hook (dired-mode . ready-player-mode)
+  :after dired-preview
+  :commands (prot/ready-player-dired-preview-play-toggle)
+  :bind (:map dired-preview-mode-map ("C-c C-p" . prot/ready-player-dired-preview-play-toggle))
+  :config
+  (defun prot/ready-player-dired-preview-play-toggle ()
+    "Call `ready-player-toggle-play-stop' on the currently previewed media file."
+    (interactive)
+    (dired-preview-with-window
+     (if-let ((file buffer-file-name)
+              (media (concat "\\." (regexp-opt ready-player-supported-media t) "\\'"))
+              (_ (string-match-p media file)))
+         (call-interactively #'ready-player-toggle-play-stop)
+       (user-error "Cannot do something useful with `ready-player' here")))))
 
 ;;; dired-like mode for the trash (trashed.el)
 (use-package trashed
