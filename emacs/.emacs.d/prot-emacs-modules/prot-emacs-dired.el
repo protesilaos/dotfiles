@@ -131,6 +131,8 @@
   ;;                         (dired-preview-mode 1))))
   :defer 1
   :hook (after-init . dired-preview-global-mode)
+  :bind (:map dired-preview-mode-map ("C-c C-o" . prot/dired-preview-open))
+  :commands (prot/dired-preview-open)
   :config
   ;; These are all set to their default values.  I keep them here for
   ;; reference.
@@ -146,7 +148,20 @@
                 "zip\\|"
                 "iso\\|"
                 "epub\\|"
-                "\\)")))
+                "\\)"))
+
+  (defun prot/dired-preview-open ()
+    (interactive)
+    (dired-preview-with-window
+     (when-let ((file buffer-file-name))
+       (cond
+        ((or (and ready-player-supported-media
+                  (string-match-p (concat "\\." (regexp-opt ready-player-supported-media t) "\\'") file))
+             (string-match-p dired-preview-ignored-extensions-regexp file)
+             (string-match-p dired-preview-image-extensions-regexp file))
+         (call-process "open" nil 0 nil file))
+        (t
+         (find-file file)))))))
 
 (use-package ready-player
   :ensure t
