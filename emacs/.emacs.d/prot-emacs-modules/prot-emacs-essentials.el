@@ -64,7 +64,7 @@
 (use-package prot-common
   :ensure nil
   :functions (prot-common-truncate-lines-silently)
-  :hook ((fundamental-mode text-mode prog-mode) . prot-common-truncate-lines-silently)
+  :hook ((fundamental-mode text-mode prog-mode dired-mode) . prot-common-truncate-lines-silently)
   :config
   ;; NEVER tell me which key can call a command that I specifically
   ;; invoked with M-x: I have a good reason to use it that way.
