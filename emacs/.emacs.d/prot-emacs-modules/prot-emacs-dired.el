@@ -147,7 +147,7 @@
                 "rar\\|"
                 "zip\\|"
                 "iso\\|"
-                "epub\\|"
+                "epub"
                 "\\)"))
 
   (defun prot/dired-preview-open ()

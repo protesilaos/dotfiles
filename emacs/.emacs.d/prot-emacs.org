@@ -5696,7 +5696,7 @@ are where we need to be.
                 "rar\\|"
                 "zip\\|"
                 "iso\\|"
-                "epub\\|"
+                "epub"
                 "\\)"))
 
   (defun prot/dired-preview-open ()
