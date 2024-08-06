@@ -146,15 +146,13 @@
                 "epub"
                 "\\)"))
 
-  (defun prot/dired-preview-display-buffer ()
-    `((display-buffer-in-side-window)
-      (side . bottom)
-      (window-height . 0.2)
-      (preserve-size . (t . t))
-      (window-parameters . ((mode-line-format . none)))))
-
-  (setq dired-preview-display-action-alist-function
-        #'prot/dired-preview-display-buffer))
+  (setq dired-preview-display-action-alist
+        '((display-buffer-in-side-window)
+          (side . bottom)
+          (window-height . 0.2)
+          (preserve-size . (t . t))
+          (window-parameters . ((mode-line-format . none)
+                                (header-line-format . none))))))
 
 (use-package ready-player
   :ensure t
