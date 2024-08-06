@@ -9464,10 +9464,21 @@ those that are for the base Notmuch package ([[#h:6148eea6-7859-4b53-95ce-7e198f
   (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️"))))
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= glue code for ~org-capture~ (=ol-notmuch.el=)
+**** The =prot-emacs-notmuch.el= glue code for ~org-capture~ (=ol-notmuch.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:49890997-448e-408d-bebe-2003259bb125
 :END:
+
+This package provides the glue code between Notmuch and Org capture:
+
+- [[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]].
+- [[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]].
+
+In simple terms, I can create links that point to emails. When I
+follow the link, it opens in a fully fledged Notmuch buffer. This is
+how I build up my agenda of appointments. It highlights the power of
+Emacs' interconnectedness, as I go from my email to the agenda, to
+editing, file management, and related.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; Glue code for notmuch and org-link (ol-notmuch.el)
