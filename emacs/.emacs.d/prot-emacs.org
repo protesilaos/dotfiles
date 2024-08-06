@@ -8670,7 +8670,7 @@ preview of the file-to-linked/opened and by adding more sources to the
   (consult-denote-mode 1))
 #+end_src
 
-*** TODO The =prot-emacs-langs.el= settings for ~logos~ (writing extras and file navigation)
+*** The =prot-emacs-langs.el= settings for ~logos~ (writing extras and file navigation)
 :PROPERTIES:
 :CUSTOM_ID: h:137c67f1-b112-42b7-aec9-c44ef4a6241a
 :END:
@@ -8682,7 +8682,8 @@ or not. It also provides some optional aesthetic tweaks which come into
 effect when the buffer-local ~logos-focus-mode~ is enabled. The manual
 shows how to extend the code to achieve the desired result.
 
-(all my videos since early 2022 use ~logos~).
+I use ~logos~ to do video presentations that involve "slides". Each
+heading/section becomes its own "slide" simply by narrowing to it.
 
 + Package name (GNU ELPA): ~logos~
 + Official manual: <https://protesilaos.com/emacs/logos>
