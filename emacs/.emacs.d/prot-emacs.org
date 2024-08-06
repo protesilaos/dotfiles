@@ -9366,16 +9366,35 @@ nicer.
           notmuch-wash-citation-lines-suffix count)))
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= section about hooks and key bindings
+**** The =prot-emacs-notmuch.el= section about hooks and key bindings
 :PROPERTIES:
 :CUSTOM_ID: h:6148eea6-7859-4b53-95ce-7e198fc831e0
 :END:
+
+Here I set up the following:
+
+- Remind me when I am mentioning an attachment but do not include one.
+  This is done by reading the contents of the message in search for
+  the ~notmuch-mua-attachment-regexp~ ([[#h:b91c062d-add7-42e6-b425-4fa287763b1b][The =prot-emacs-notmuch.el= section about email composition settings]]).
+
+- Do not use a ~header-line~ when showing a message. It adds visual
+  clutter.
+
+- Do not activate the ~notmuch-hl-line-mode~ because I want the
+  generic ~hl-line-mode~ to take effect instead. This is because I use
+  my ~lin~ package to remap buffer-locally the line highlight to be a
+  bit more noticeable in major modes where line selection is the main
+  action ([[#h:bf5b4d08-8f33-4a8c-8ecd-fca19bf2497a][The =prot-emacs-theme.el= section for ~lin~]]).
+
+- Define key bindings that make sense to me. The most important change
+  here is the flipped meaning of the =r= and =R= keys, as I want to
+  reply to all recipients by default.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Hooks and key bindings
 (use-package notmuch
   :hook
-  (notmuch-mua-send . notmuch-mua-attachment-check)
+  (notmuch-mua-send . notmuch-mua-attachment-check) ; also see `notmuch-mua-attachment-regexp'
   (notmuch-show . (lambda () (setq-local header-line-format nil)))
   :config
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
