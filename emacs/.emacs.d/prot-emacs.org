@@ -9388,7 +9388,8 @@ Here I set up the following:
 
 - Define key bindings that make sense to me. The most important change
   here is the flipped meaning of the =r= and =R= keys, as I want to
-  reply to all recipients by default.
+  reply to all recipients by default. I define some more key bindings
+  in the section about my custom extensions for Notmuch ([[#h:dbd2b775-8f51-451a-8e24-9c8424fd2e89][The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;;; Hooks and key bindings
@@ -9404,20 +9405,30 @@ Here I set up the following:
     ("C-c m" . notmuch)
     ("C-x m" . notmuch-mua-new-mail) ; override `compose-mail'
     :map notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+    ("a" . nil) ; the default is too easy to hit accidentally and I do not archive stuff
+    ("A" . nil)
     ("/" . notmuch-search-filter) ; alias for l
     ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
     ("R" . notmuch-search-reply-to-thread-sender)
     :map notmuch-show-mode-map
+    ("a" . nil) ; the default is too easy to hit accidentally and I do not archive stuff
+    ("A" . nil)
     ("r" . notmuch-show-reply) ; easier to reply to all by default
     ("R" . notmuch-show-reply-sender)
     :map notmuch-hello-mode-map
     ("C-<tab>" . nil)))
 #+end_src
 
-**** TODO The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)
+**** The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:dbd2b775-8f51-451a-8e24-9c8424fd2e89
 :END:
+
+My =prot-notmuch.el= extension defines a few useful extras for my
+email setup ([[#h:92ee86b8-0ead-4080-963f-3fbc9f931e3e][The =prot-notmuch.el= library]]). These are commands to
+quickly perform a tagging operation, such as to mark a messge for
+deletion and remove it from the inbox. The key bindings here extend
+those that are for the base Notmuch package ([[#h:6148eea6-7859-4b53-95ce-7e198fc831e0][The =prot-emacs-notmuch.el= section about hooks and key bindings]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el"
 ;;; My own tweaks for notmuch (prot-notmuch.el)
@@ -9426,14 +9437,10 @@ Here I set up the following:
   :after notmuch
   :bind
   ( :map notmuch-search-mode-map
-    ("a" . nil) ; the default is too easy to hit accidentally
-    ("A" . nil)
     ("D" . prot-notmuch-search-delete-thread)
     ("S" . prot-notmuch-search-spam-thread)
     ("g" . prot-notmuch-refresh-buffer)
     :map notmuch-show-mode-map
-    ("a" . nil) ; the default is too easy to hit accidentally
-    ("A" . nil)
     ("D" . prot-notmuch-show-delete-message)
     ("S" . prot-notmuch-show-spam-message)
     :map notmuch-show-stash-map

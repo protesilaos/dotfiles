@@ -173,7 +173,7 @@
 ;;;; Hooks and key bindings
 (use-package notmuch
   :hook
-  (notmuch-mua-send . notmuch-mua-attachment-check)
+  (notmuch-mua-send . notmuch-mua-attachment-check) ; also see `notmuch-mua-attachment-regexp'
   (notmuch-show . (lambda () (setq-local header-line-format nil)))
   :config
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
@@ -183,10 +183,14 @@
     ("C-c m" . notmuch)
     ("C-x m" . notmuch-mua-new-mail) ; override `compose-mail'
     :map notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+    ("a" . nil) ; the default is too easy to hit accidentally and I do not archive stuff
+    ("A" . nil)
     ("/" . notmuch-search-filter) ; alias for l
     ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
     ("R" . notmuch-search-reply-to-thread-sender)
     :map notmuch-show-mode-map
+    ("a" . nil) ; the default is too easy to hit accidentally and I do not archive stuff
+    ("A" . nil)
     ("r" . notmuch-show-reply) ; easier to reply to all by default
     ("R" . notmuch-show-reply-sender)
     :map notmuch-hello-mode-map
@@ -198,14 +202,10 @@
   :after notmuch
   :bind
   ( :map notmuch-search-mode-map
-    ("a" . nil) ; the default is too easy to hit accidentally
-    ("A" . nil)
     ("D" . prot-notmuch-search-delete-thread)
     ("S" . prot-notmuch-search-spam-thread)
     ("g" . prot-notmuch-refresh-buffer)
     :map notmuch-show-mode-map
-    ("a" . nil) ; the default is too easy to hit accidentally
-    ("A" . nil)
     ("D" . prot-notmuch-show-delete-message)
     ("S" . prot-notmuch-show-spam-message)
     :map notmuch-show-stash-map
