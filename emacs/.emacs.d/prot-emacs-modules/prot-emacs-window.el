@@ -240,7 +240,7 @@
 ;;; Header line context of symbol/heading (breadcrumb.el)
 (use-package breadcrumb
   :ensure t
-  :functions (breadcrumb-local-mode)
+  :functions (prot/breadcrumb-local-mode)
   :hook ((text-mode prog-mode) . prot/breadcrumb-local-mode)
   :config
   (setq breadcrumb-project-max-length 0.5)
