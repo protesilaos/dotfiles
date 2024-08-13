@@ -9557,10 +9557,24 @@ Finally, we ~provide~ the submodule. This is the mirror function of
 (provide 'prot-emacs-notmuch)
 #+end_src
 
-*** TODO The deprecated =prot-emacs-mail.el= submodule for ~mu4e~ (=prot-emacs-mu4e.el=)
+*** The deprecated =prot-emacs-mail.el= submodule for ~mu4e~ (=prot-emacs-mu4e.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:97282c11-475c-4ad3-9399-cb2cd12f93b7
 :END:
+
+I did use Mu4e in the past as my email client. Its setup is similar to
+the one I have now with Notmuch ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]]).
+The ~mu4e~ package is the Emacs interface, or "Mail User Agent", for
+the user's email: this is where one reads messages and responds to
+them, moves files to different folders, changes email tags, and so on.
+All email is indexed by the the external ~mu~ executable: it is an
+indexer of one's local copy of their email. The indexer maintains a
+database that the user can query. This search facility can be accessed
+both from the command line and insider Emacs via ~mu4e~.
+
+I prefer Notmuch over Mu4e due to stylistic choices and the overall
+workflow. I keep this setup around for two reasons: (i) to be able to
+test it for my themes and (ii) help others who are using it.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mu4e.el" :mkdirp yes
 ;; This is deprecated code as I stopped using mu4e a long time ago.  I
@@ -9799,10 +9813,13 @@ Finally, we ~provide~ the submodule. This is the mirror function of
 (provide 'prot-emacs-mu4e)
 #+end_src
 
-*** TODO The deprecated =prot-emacs-mail.el= submodule for Gnus (=prot-emacs-gnus.el=)
+*** The deprecated =prot-emacs-mail.el= submodule for Gnus (=prot-emacs-gnus.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:ae0a1c85-8412-48d3-94a9-7d6dbd801126
 :END:
+
+I have long now stopped using Gnus ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]]).
+I keep this here in case I need to test the setup.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-gnus.el" :mkdirp yes
 ;; This is deprecated code as I stopped using Gnus a long time ago.  I
