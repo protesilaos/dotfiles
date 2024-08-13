@@ -349,7 +349,7 @@ Development continues on GitHub with GitLab as a mirror."))
                   "-path */.git* -prune "
                   "-or -path */.cache* -prune )"))
     (setq consult-preview-key 'any)
-    (setq consult-project-function nil) ; always work from the current directory
+    (setq consult-project-function nil) ; always work from the current directory (use `cd' to switch directory)
 
     (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
 
