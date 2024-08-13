@@ -411,7 +411,7 @@
   (setq org-agenda-timegrid-use-ampm nil)
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-show-current-time-in-grid t)
-  (setq org-agenda-current-time-string (concat "Now " (make-string 70 ?_)))
+  (setq org-agenda-current-time-string (concat "Now " (make-string 70 ?.)))
   (setq org-agenda-time-grid
         '((daily today require-timed)
           ( 0500 0600 0700 0800 0900 1000
