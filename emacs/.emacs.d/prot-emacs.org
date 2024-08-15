@@ -5728,6 +5728,9 @@ rendered using ~ready-player~.
   :commands (prot/ready-player-dired-preview-play-toggle)
   :bind (:map dired-preview-mode-map ("C-c C-p" . prot/ready-player-dired-preview-play-toggle))
   :config
+  (setq ready-player-autoplay nil)
+  (setq ready-player-repeat nil)
+
   (defun prot/ready-player-dired-preview-play-toggle ()
     "Call `ready-player-toggle-play-stop' on the currently previewed media file."
     (interactive)
