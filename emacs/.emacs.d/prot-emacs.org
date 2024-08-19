@@ -2285,6 +2285,7 @@ key bindings.
   ;; elsewhere later in the configuration.
   :bind
   ( :map global-map
+    ("<f2>" . toggle-input-method)  ; F2 overrides that two-column gimmick.  Sorry, but no!
     ("<insert>" . nil)
     ("<menu>" . nil)
     ("C-z" . nil) ; I have a window manager, thanks!
@@ -2531,9 +2532,7 @@ configurable amount of time ([[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][The =pro
 (use-package prot-prefix
   :ensure nil
   :bind-keymap
-  ;; F2 overrides that two-column gimmick.  Sorry, but no.
   (("<insert>" . prot-prefix)
-   ("<f2>" . prot-prefix)
    ("C-z" . prot-prefix)))
 #+end_src
 

@@ -27,6 +27,7 @@
   ;; elsewhere later in the configuration.
   :bind
   ( :map global-map
+    ("<f2>" . toggle-input-method)  ; F2 overrides that two-column gimmick.  Sorry, but no!
     ("<insert>" . nil)
     ("<menu>" . nil)
     ("C-z" . nil) ; I have a window manager, thanks!
@@ -163,9 +164,7 @@
 (use-package prot-prefix
   :ensure nil
   :bind-keymap
-  ;; F2 overrides that two-column gimmick.  Sorry, but no.
   (("<insert>" . prot-prefix)
-   ("<f2>" . prot-prefix)
    ("C-z" . prot-prefix)))
 
 (use-package recentf
