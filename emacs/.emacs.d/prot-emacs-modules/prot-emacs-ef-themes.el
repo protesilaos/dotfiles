@@ -51,12 +51,14 @@
     (load-theme 'ef-deuteranopia-light t t)
     (load-theme 'ef-duo-dark t t)
     (load-theme 'ef-duo-light t t)
+    (load-theme 'ef-eagle t t)
     (load-theme 'ef-frost t t)
     (load-theme 'ef-kassio t t)
     (load-theme 'ef-light t t)
     (load-theme 'ef-melissa-dark t t)
     (load-theme 'ef-melissa-light t t)
     (load-theme 'ef-night t t)
+    (load-theme 'ef-owl t t)
     (load-theme 'ef-rosa t t)
     (load-theme 'ef-spring t t)
     (load-theme 'ef-summer t t)
@@ -75,10 +77,10 @@
             (4 . (variable-pitch semilight 1.5))
             (5 . (variable-pitch regular 1.4))
             (6 . (variable-pitch regular 1.3))
-            (7 . (variable-pitch 1.2))    ; absence of weight means `bold'
+            (7 . (variable-pitch regular 1.2))    ; absence of weight means `bold'
             (agenda-date . (semilight 1.5))
             (agenda-structure . (variable-pitch light 1.9))
-            (t . (variable-pitch 1.1))))
+            (t . (variable-pitch regular 1.1))))
 
     ;; They are nil by default...
     (setq ef-themes-mixed-fonts t

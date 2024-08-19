@@ -170,8 +170,8 @@
                :afternoon (modus-operandi-tinted ef-arbutus ef-day ef-kassio ef-summer ef-elea-light ef-maris-light ef-melissa-light ef-trio-light ef-reverie)
                :evening   (modus-vivendi-tinted ef-rosa ef-elea-dark ef-maris-dark ef-melissa-dark ef-trio-dark ef-dream)))
            (ef-themes-p
-            '( :night     (ef-dark ef-winter ef-autumn ef-night ef-duo-dark ef-symbiosis)
-               :morning   (ef-light ef-cyprus ef-spring ef-frost ef-duo-light)
+            '( :night     (ef-dark ef-winter ef-autumn ef-night ef-duo-dark ef-symbiosis ef-owl)
+               :morning   (ef-light ef-cyprus ef-spring ef-frost ef-duo-light ef-eagle)
                :afternoon (ef-arbutus ef-day ef-kassio ef-summer ef-elea-light ef-maris-light ef-melissa-light ef-trio-light ef-reverie)
                :evening   (ef-rosa ef-elea-dark ef-maris-dark ef-melissa-dark ef-trio-dark ef-dream)))
            (modus-themes-p
