@@ -28,6 +28,7 @@
   (setq shr-width fill-column)          ; check `prot-eww-readable'
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
+  (setq shr-fill-text nil)              ; Emacs 31
   (setq shr-cookie-policy nil))
 
 ;;;; `url-cookie'
