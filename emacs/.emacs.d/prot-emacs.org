@@ -8665,14 +8665,14 @@ preview of the file-to-linked/opened and by adding more sources to the
   Unambiguous Targets...denote.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
-(use-package consult-denote
-  :ensure t
-  :after denote
-  :bind
-  (("C-c n f" . consult-denote-find)
-   ("C-c n g" . consult-denote-grep))
-  :config
-  (consult-denote-mode 1))
+(when prot-emacs-completion-extras
+  (use-package consult-denote
+    :ensure t
+    :bind
+    (("C-c n f" . consult-denote-find)
+     ("C-c n g" . consult-denote-grep))
+    :config
+    (consult-denote-mode 1)))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for ~logos~ (writing extras and file navigation)

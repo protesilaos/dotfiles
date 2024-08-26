@@ -300,14 +300,14 @@
   ;; `denote-rename-buffer-format' for how to modify this.
   (denote-rename-buffer-mode 1))
 
-(use-package consult-denote
-  :ensure t
-  :after denote
-  :bind
-  (("C-c n f" . consult-denote-find)
-   ("C-c n g" . consult-denote-grep))
-  :config
-  (consult-denote-mode 1))
+(when prot-emacs-completion-extras
+  (use-package consult-denote
+    :ensure t
+    :bind
+    (("C-c n f" . consult-denote-find)
+     ("C-c n g" . consult-denote-grep))
+    :config
+    (consult-denote-mode 1)))
 
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
