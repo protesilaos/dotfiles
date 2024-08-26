@@ -314,6 +314,7 @@
           ("Canada/Pacific" "Canada/Pacific")
           ("America/Chicago" "Chicago")
           ("Brazil/Acre" "Rio Branco")
+          ("America/Toronto" "Toronto")
           ("America/New_York" "New York")
           ("Canada/Atlantic" "Canada/Atlantic")
           ("Brazil/East" "Brasília")
