@@ -116,6 +116,8 @@
 ;;; Elfeed feed/RSS reader
 (use-package elfeed
   :ensure t
+  :hook
+  (elfeed-show-mode . visual-line-mode)
   :bind
   ("C-c e" . elfeed)
   :config
@@ -132,11 +134,6 @@
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
   (setq elfeed-search-date-format '("%F %R" 16 :left))
-
-  ;; Make sure to also check the section on shr and eww for how I handle
-  ;; `shr-width' there.
-  (add-hook 'elfeed-show-mode-hook
-            (lambda () (setq-local shr-width (current-fill-column))))
 
   (prot-emacs-keybind elfeed-search-mode-map
     "w" #'elfeed-search-yank
