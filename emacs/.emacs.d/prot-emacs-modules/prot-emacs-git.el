@@ -211,8 +211,12 @@
   ;; reason.
   (setq git-commit-style-convention-checks '(non-empty-second-line))
 
-  (setq magit-diff-refine-hunk t)
+  (setq magit-diff-refine-hunk t))
 
+(use-package magit-repos
+  :ensure nil ; part of `magit'
+  :commands (magit-list-repositories)
+  :init
   (setq magit-repository-directories
         '(("~/Git/Projects" . 1))))
 
