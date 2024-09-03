@@ -193,9 +193,10 @@
   ;; while switching between themes.
   ((after-init . fontaine-mode)
    (after-init . (lambda ()
-                        ;; Set last preset or fall back to desired style from `fontaine-presets'.
-                        (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular)))))
-  :bind ("C-c f" . fontaine-set-preset)
+                   ;; Set last preset or fall back to desired style from `fontaine-presets'.
+                   (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular)))))
+  :bind (("C-c f" . fontaine-set-preset)
+         ("C-c F" . fontaine-toggle-preset))
   :config
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line nil)
@@ -238,61 +239,73 @@
            :default-family "Iosevka Comfy"
            :default-weight regular
            :default-slant normal
+           :default-width normal
            :default-height 100
 
            :fixed-pitch-family "Iosevka Comfy"
            :fixed-pitch-weight nil
            :fixed-pitch-slant nil
+           :fixed-pitch-width nil
            :fixed-pitch-height 1.0
 
            :fixed-pitch-serif-family nil
            :fixed-pitch-serif-weight nil
            :fixed-pitch-serif-slant nil
+           :fixed-pitch-serif-width nil
            :fixed-pitch-serif-height 1.0
 
            :variable-pitch-family "Iosevka Comfy Motion Duo"
            :variable-pitch-weight nil
            :variable-pitch-slant nil
+           :variable-pitch-width nil
            :variable-pitch-height 1.0
 
            :mode-line-active-family nil
            :mode-line-active-weight nil
            :mode-line-active-slant nil
+           :mode-line-active-width nil
            :mode-line-active-height 1.0
 
            :mode-line-inactive-family nil
            :mode-line-inactive-weight nil
            :mode-line-inactive-slant nil
+           :mode-line-inactive-width nil
            :mode-line-inactive-height 1.0
 
            :header-line-family nil
            :header-line-weight nil
            :header-line-slant nil
+           :header-line-width nil
            :header-line-height 1.0
 
            :line-number-family nil
            :line-number-weight nil
            :line-number-slant nil
+           :line-number-width nil
            :line-number-height 1.0
 
            :tab-bar-family nil
            :tab-bar-weight nil
            :tab-bar-slant nil
+           :tab-bar-width nil
            :tab-bar-height 1.0
 
            :tab-line-family nil
            :tab-line-weight nil
            :tab-line-slant nil
+           :tab-line-width nil
            :tab-line-height 1.0
 
            :bold-family nil
-           :bold-weight bold
            :bold-slant nil
+           :bold-weight bold
+           :bold-width nil
            :bold-height 1.0
 
            :italic-family nil
            :italic-weight nil
            :italic-slant italic
+           :italic-width nil
            :italic-height 1.0
 
            :line-spacing nil)))
