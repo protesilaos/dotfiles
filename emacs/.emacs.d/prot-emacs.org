@@ -5727,35 +5727,24 @@ are where we need to be.
 
 This is a neat package by Alvaro Ramirez which produces a previewable
 representation of multimedia file when we try to visit them in an
-Emacs buffer. Without ~ready-player-mode~, we get a bunch of gibberish
-from the binary data.
+Emacs buffer. Without ~ready-player-major-mode~, we get a bunch of
+gibberish from the binary data.
 
 While this is a standalone package, it synergises with my
 ~dired-preview~ without the need to add any glue code between the two
-packages. When I move the cursor over a multimedia file, the Dired
-preview buffer tries to visit the file at point, which is in turn
-rendered using ~ready-player~.
+packages ([[#h:c345ff72-d905-482a-a885-fc111252aacf][The =prot-emacs-dired.el= section about ~dired-preview~]]).
+When I move the cursor over a multimedia file, the Dired preview
+buffer tries to visit the file at point, which is in turn rendered
+using ~ready-player~.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (use-package ready-player
   :ensure t
-  :hook (dired-mode . ready-player-mode)
-  :after dired-preview
-  :commands (prot/ready-player-dired-preview-play-toggle)
-  :bind (:map dired-preview-mode-map ("C-c C-p" . prot/ready-player-dired-preview-play-toggle))
+  :mode
+  ("\\.\\(mp3\\|m4a\\|mp4\\|mkv\\|webm\\)\\'" . ready-player-major-mode)
   :config
   (setq ready-player-autoplay nil)
-  (setq ready-player-repeat nil)
-
-  (defun prot/ready-player-dired-preview-play-toggle ()
-    "Call `ready-player-toggle-play-stop' on the currently previewed media file."
-    (interactive)
-    (dired-preview-with-window
-     (if-let ((file buffer-file-name)
-              (media (concat "\\." (regexp-opt ready-player-supported-media t) "\\'"))
-              (_ (string-match-p media file)))
-         (call-interactively #'ready-player-toggle-play-stop)
-       (user-error "Cannot do something useful with `ready-player' here")))))
+  (setq ready-player-repeat nil))
 #+end_src
 
 *** The =prot-emacs-dired.el= section about =trashed.el=
