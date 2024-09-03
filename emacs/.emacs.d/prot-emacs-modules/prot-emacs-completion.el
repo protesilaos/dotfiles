@@ -447,10 +447,9 @@ Development continues on GitHub with GitLab as a mirror."))
 ;;; Detailed completion annotations (marginalia.el)
 (use-package marginalia
   :ensure t
-  :defer 1
+  :hook (after-init . marginalia-mode)
   :config
-  (setq marginalia-max-relative-age 0) ; absolute time
-  (marginalia-mode 1))
+  (setq marginalia-max-relative-age 0)) ; absolute time
 
 ;;;; Custom completion annotations
 (use-package prot-marginalia
