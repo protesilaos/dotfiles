@@ -102,7 +102,7 @@
           ("x" . "example")
           ("X" . "export")
           ("q" . "quote")))
-  (setq org-catch-invisible-edits 'show)
+  (setq org-fold-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
   (setq org-modules '(ol-info ol-eww))
