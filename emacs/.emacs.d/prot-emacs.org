@@ -6869,6 +6869,11 @@ cases, a combination of =vc= and the command-line will suffice
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
+(use-package transient
+  :defer t
+  :config
+  (setq transient-show-popup 0.5))
+
 (use-package magit
   :ensure t
   :bind ("C-c g" . magit-status)
