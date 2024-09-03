@@ -82,7 +82,7 @@ fi
 # The COLORTERM is documented in (info "(emacs) General Variables").
 # I found the reference to `dumb-emacs-ansi' in (info "(emacs)
 # Connection Variables").
-if [ "$TERM" = "dumb-emacs-ansi" ] && [ "$INSIDE_EMACS" ]
+if [ "$TERM" = "dumb" ] && [ "$INSIDE_EMACS" ] || [ "$TERM" = "dumb-emacs-ansi" ] && [ "$INSIDE_EMACS" ]
 then
     PAGER="cat"
     alias less="cat"
