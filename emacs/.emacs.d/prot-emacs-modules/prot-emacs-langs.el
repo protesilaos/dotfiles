@@ -291,8 +291,8 @@
 
   (setq denote-backlinks-show-context nil)
 
-  (setq denote-rename-buffer-format "[D] %t %b")
-  (setq denote-buffer-has-backlinks-string "(<--->)")
+  (setq denote-rename-buffer-format "[D] %t%b")
+  (setq denote-buffer-has-backlinks-string " (<--->)")
 
   ;; Automatically rename Denote buffers when opening them so that
   ;; instead of their long file name they have a literal "[D]"
