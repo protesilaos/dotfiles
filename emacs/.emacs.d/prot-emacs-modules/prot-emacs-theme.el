@@ -48,7 +48,7 @@
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
   ;;
   ;; I still prefer `setq' for consistency.
-  (setq lin-face 'lin-magenta))
+  (setq lin-face 'lin-blue))
 
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:

@@ -1769,7 +1769,7 @@ vertical axis.
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
   ;;
   ;; I still prefer `setq' for consistency.
-  (setq lin-face 'lin-magenta))
+  (setq lin-face 'lin-blue))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~spacious-padding~
