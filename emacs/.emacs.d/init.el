@@ -101,8 +101,9 @@ before all other modules of my setup."
    (put command 'disabled t))
  '(eshell project-eshell overwrite-mode iconify-frame diary))
 
-;; Always start with *scratch*
 (setq initial-buffer-choice t)
+(setq initial-major-mode 'lisp-interaction-mode)
+(setq initial-scratch-message nil)
 
 (mapc
  (lambda (string)

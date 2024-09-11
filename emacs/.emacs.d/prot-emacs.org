@@ -833,8 +833,9 @@ specify a dashboard or an Org agenda view, but I prefer to keep things
 generic in this regard.
 
 #+begin_src emacs-lisp :tangle "init.el"
-;; Always start with *scratch*
 (setq initial-buffer-choice t)
+(setq initial-major-mode 'lisp-interaction-mode)
+(setq initial-scratch-message nil)
 #+end_src
 
 ** The =init.el= arrangements for my own modules and custom libraries
