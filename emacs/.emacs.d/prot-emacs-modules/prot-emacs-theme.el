@@ -314,6 +314,26 @@
   (with-eval-after-load 'pulsar
     (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 
+;;;; Show Font (preview fonts)
+;; Read the manual: <https://protesilaos.com/emacs/show-font>
+(use-package show-font
+  :ensure t
+  :commands (show-font-select-preview show-font-list)
+  :config
+  ;; These are the defaults, but I keep them here for easier access.
+  (setq show-font-pangram 'prot)
+  (setq show-font-character-sample
+        "
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+0123456789   !@#$¢%^&*~|
+`'\"‘’“”.,;:  ()[]{}—-_+=<>
+
+()[]{}<>«»‹› 6bB8&0ODdoa 1tiIlL|\/
+!ij c¢ 5$Ss 7Z2z 9gqp nmMNNMW uvvwWuuw
+x×X .,·°;:¡!¿?`'‘’   ÄAÃÀ TODO
+"))
+
 ;;;;; `variable-pitch-mode' setup
 (use-package face-remap
   :ensure nil

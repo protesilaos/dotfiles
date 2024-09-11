@@ -963,6 +963,7 @@ packages will rely on ~package-archive-priorities~.
     modus-themes
     notmuch-indicator
     pulsar
+    show-font
     spacious-padding
     standard-themes
     substitute
@@ -2020,8 +2021,10 @@ that are pleasant to read at comfortable point sizes.
 You will notice that all my fonts are Iosevka Comfy variants. I
 explain what this is about ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Information about my Iosevka Comfy fonts]]).
 
-The next section defines some complementary functionality
+Another section defines some complementary functionality
 ([[#h:60d6aae2-6e4b-402c-b6a8-411fc49a6857][The =prot-emacs-theme.el= section about ~variable-pitch-mode~ and font resizing]]).
+
+Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][The =prot-emacs-theme.el= section about ~show-font~]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Fontaine (font configurations)
@@ -2154,6 +2157,52 @@ The next section defines some complementary functionality
 
   (with-eval-after-load 'pulsar
     (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
+#+end_src
+
+*** The =prot-emacs-theme.el= section about ~show-font~
+:PROPERTIES:
+:CUSTOM_ID: h:60a005be-77bd-49f1-a865-78d7cf75bd2a
+:END:
+
+This is yet another package of mine. It lets you preview a font inside
+of Emacs. It does so in three ways:
+
+- Prompt for a font on the system and display it in a buffer.
+- List all known fonts in a buffer, with a short preview for each.
+- Provide a major mode to preview a font whose file is among the
+  installed ones.
+
+Check out its sources:
+
++ Package name (GNU ELPA): ~show-font~
++ Official manual: <https://protesilaos.com/emacs/show-font>
++ Change log: <https://protesilaos.com/emacs/show-font-changelog>
++ Git repository: <https://github.com/protesilaos/show-font>
++ Sample pictures: <https://protesilaos.com/codelog/2024-09-10-emacs-show-font-0-1-0/>
++ Backronym: Show How Outlines Will Feature Only in Non-TTY.
+
+To actually set fonts, I use my ~fontaine~ package ([[#h:cb41fef0-41a5-4a85-9552-496d96290258][The =prot-emacs-theme.el= section about ~fontaine~]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
+;;;; Show Font (preview fonts)
+;; Read the manual: <https://protesilaos.com/emacs/show-font>
+(use-package show-font
+  :ensure t
+  :commands (show-font-select-preview show-font-list)
+  :config
+  ;; These are the defaults, but I keep them here for easier access.
+  (setq show-font-pangram 'prot)
+  (setq show-font-character-sample
+        "
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+0123456789   !@#$¢%^&*~|
+`'\"‘’“”.,;:  ()[]{}—-_+=<>
+
+()[]{}<>«»‹› 6bB8&0ODdoa 1tiIlL|\/
+!ij c¢ 5$Ss 7Z2z 9gqp nmMNNMW uvvwWuuw
+x×X .,·°;:¡!¿?`'‘’   ÄAÃÀ TODO
+"))
 #+end_src
 
 *** The =prot-emacs-theme.el= section about ~variable-pitch-mode~ and font resizing
