@@ -120,10 +120,11 @@
            :blink-cursor-mode -1)
           (underscore
            :cursor-type (hbar . 3)
+           :blink-cursor-interval 0.3
            :blink-cursor-blinks 50)
-          (underscore-thin-other-window
+          (underscore-no-other-window
            :inherit underscore
-           :cursor-in-non-selected-windows (hbar . 1))
+           :cursor-in-non-selected-windows nil)
           (underscore-thick
            :cursor-type (hbar . 8)
            :blink-cursor-interval 0.3
@@ -145,9 +146,8 @@
 
   ;; Set last preset or fall back to desired style from `cursory-presets'.
   (cursory-set-preset (or (cursory-restore-latest-preset) 'box))
-  :hook
-  ;; The other side of `cursory-restore-latest-preset'.
-  (kill-emacs . cursory-store-latest-preset)
+
+  (cursory-mode 1)
   :bind
   ;; We have to use the "point" mnemonic, because C-c c is often the
   ;; suggested binding for `org-capture' and is the one I use as well.
