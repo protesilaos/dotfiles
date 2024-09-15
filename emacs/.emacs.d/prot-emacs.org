@@ -835,7 +835,9 @@ generic in this regard.
 #+begin_src emacs-lisp :tangle "init.el"
 (setq initial-buffer-choice t)
 (setq initial-major-mode 'lisp-interaction-mode)
-(setq initial-scratch-message nil)
+(setq initial-scratch-message
+      (format ";; Use %s to evaluate and print results\n\n"
+              (substitute-command-keys "\\<lisp-interaction-mode-map>\\[eval-print-last-sexp]")))
 #+end_src
 
 ** The =init.el= arrangements for my own modules and custom libraries
