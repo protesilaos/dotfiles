@@ -1,6 +1,6 @@
 ;;; prot-modeline.el --- Code for my custom mode line -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023  Protesilaos Stavrou
+;; Copyright (C) 2023-2024  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

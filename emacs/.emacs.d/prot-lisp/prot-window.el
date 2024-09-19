@@ -1,6 +1,6 @@
 ;;; prot-window.el --- Display-buffer and window-related extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023  Protesilaos Stavrou
+;; Copyright (C) 2023-2024  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
