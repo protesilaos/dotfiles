@@ -120,16 +120,18 @@
     (setq xref-search-program (if rgp 'ripgrep 'grep))))
 
 ;;; wgrep (writable grep)
-(use-package wgrep
-  :ensure t
-  :after grep
-  :bind
-  ( :map grep-mode-map
-    ("e" . wgrep-change-to-wgrep-mode)
-    ("C-x C-q" . wgrep-change-to-wgrep-mode)
-    ("C-c C-c" . wgrep-finish-edit))
-  :config
-  (setq wgrep-auto-save-buffer t)
-  (setq wgrep-change-readonly-file t))
+;; See the `grep-edit-mode' for the new built-in feature.
+(unless (>= emacs-major-version 31)
+  (use-package wgrep
+    :ensure t
+    :after grep
+    :bind
+    ( :map grep-mode-map
+      ("e" . wgrep-change-to-wgrep-mode)
+      ("C-x C-q" . wgrep-change-to-wgrep-mode)
+      ("C-c C-c" . wgrep-finish-edit))
+    :config
+    (setq wgrep-auto-save-buffer t)
+    (setq wgrep-change-readonly-file t)))
 
 (provide 'prot-emacs-search)

@@ -5291,35 +5291,37 @@ Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
     (setq xref-search-program (if rgp 'ripgrep 'grep))))
 #+end_src
 
-*** The =prot-emacs-search.el= setup for editable grep buffers (~wgrep~)
+*** The =prot-emacs-search.el= setup for editable grep buffers (~grep-edit-mode~ or ~wgrep~)
 :PROPERTIES:
 :CUSTOM_ID: h:9a3581df-ab18-4266-815e-2edd7f7e4852
 :END:
 
-The ~wgrep~ package by Masahiro Hayashi lets us make ~grep~ buffers
-editable ([[#h:ceb286c5-a5f7-4cc8-b883-89d20a75ea02][The =prot-emacs-search.el= tweaks to ~xref~, ~re-builder~ and ~grep~]]).
+Starting with Emacs 31, buffers using ~grep-mode~ can now be edited
+directly. The idea is to collect the results of a search in one place
+and quickly apply a change across all or some of them. We have the
+same concept with occur (=M-x occur=) as well as with Dired buffers
+([[#h:1b53bc10-8b1b-4f68-bbec-165909761e43][The =prot-emacs-dired.el= section about ~wdired~ (writable Dired)]]).
 I use this in tandem with my ~prot-search-grep~ command.
 
-The idea of an editable buffer is neat, because we can employ all the
-text-editing capabilities of Emacs to quickly produce a large number
-of replacements across many files. We have the same concept with occur
-(=M-x occur=) as well as with Dired buffers ([[#h:1b53bc10-8b1b-4f68-bbec-165909761e43][The =prot-emacs-dired.el= section about ~wdired~ (writable Dired)]]).
-The key bindings I define for the ~wgrep~ actions are consistent with
-those we find in the other "editable/writable buffer" interfaces.
+For older versions of Emacs, we have the ~wgrep~ package by Masahiro
+Hayashi. I configure it to have key bindings like those of the ~occur~
+edit mode, which ~grep-edit-mode~ also uses.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 ;;; wgrep (writable grep)
-(use-package wgrep
-  :ensure t
-  :after grep
-  :bind
-  ( :map grep-mode-map
-    ("e" . wgrep-change-to-wgrep-mode)
-    ("C-x C-q" . wgrep-change-to-wgrep-mode)
-    ("C-c C-c" . wgrep-finish-edit))
-  :config
-  (setq wgrep-auto-save-buffer t)
-  (setq wgrep-change-readonly-file t))
+;; See the `grep-edit-mode' for the new built-in feature.
+(unless (>= emacs-major-version 31)
+  (use-package wgrep
+    :ensure t
+    :after grep
+    :bind
+    ( :map grep-mode-map
+      ("e" . wgrep-change-to-wgrep-mode)
+      ("C-x C-q" . wgrep-change-to-wgrep-mode)
+      ("C-c C-c" . wgrep-finish-edit))
+    :config
+    (setq wgrep-auto-save-buffer t)
+    (setq wgrep-change-readonly-file t)))
 #+end_src
 
 *** The =prot-emacs-search.el= call to ~provide~
