@@ -5888,6 +5888,54 @@ Finally, we ~provide~ the module. This is the mirror function of
 This module is all about buffers and windows. How they are managed and
 displayed.
 
+*** The =prot-emacs-window.el= section about running commands in popup frames
+:PROPERTIES:
+:CUSTOM_ID: h:bf93a881-e885-4b83-bd30-35bd888fe199
+:END:
+
+Sometimes we want to call a command from outside Emacs. I have
+arranged for this to happen so that a new frame pops up, I do the
+command, and then the frame is deleted. This requires that we use the
+Emacs daemon process or ~server-mode~ ([[#h:7709b7e9-844f-49f3-badf-784aacec4bca][The =prot-emacs-essentials.el= arrangement to run Emacs as a server]]).
+We can thus call ~emacsclient~ from outside Emacs and instruct it to
+run any arbitrary Emacs Lisp code.
+
+My =prot-window.el= provides the ~prot-window-define-with-popup-frame~
+macro which streamlines the creation of commands that have the desired
+behaviour ([[#h:35b8a0a5-c447-4301-a404-bc274596238d][The =prot-window.el= library]]). All we need is to call the
+macro and tell it which command should be empowered to run in such a
+popup frame. I did a video demonstrating this functionality: [[https://protesilaos.com/codelog/2024-09-19-emacs-command-popup-frame-emacsclient/][Emacs: commands in popup frames with ~emacsclient~]]
+(2024-09-19).
+
+All we need here is the hooks that close the frame after the commands
+run succesfully. The commands I configure are for ~org-capture~ and
+~tmr~:
+
+- [[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]]
+- [[#h:6dce278e-86c7-4620-9271-d5af5499f0cc][The =prot-emacs-essentials.el= section about ~tmr~ (set timers)]]
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp yes
+(with-eval-after-load 'org-capture
+  (add-hook 'org-capture-after-finalize-hook #'prot-window-delete-popup-frame))
+
+(with-eval-after-load 'tmr
+  (add-hook 'tmr-timer-created-functions #'prot-window-delete-popup-frame))
+#+end_src
+
+At my system level I also have keybindings bound to call the following
+(you can try those on the command line---remember they depend on the
+daemon or ~server-mode~):
+
+#+begin_example sh
+# Run `org-capture` in a popup frame that is deleted after you are done.
+emacsclient -e '(prot-window-popup-org-capture)'
+#+end_example
+
+#+begin_example sh
+# Same idea for the `tmr` command.
+emacsclient -e '(prot-window-popup-tmr)'
+#+end_example
+
 *** The =prot-emacs-window.el= section about uniquifying buffer names
 :PROPERTIES:
 :CUSTOM_ID: h:cfbea29c-3290-4fd1-a02a-d7e887c15674
@@ -5912,7 +5960,7 @@ would have the following buffer names in the various styles:
 I use the =forward= style, which is the closest to the actual file
 name.
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; General window and buffer configurations
 (use-package uniquify
   :ensure nil
@@ -17328,6 +17376,41 @@ call NAME as a function."
   (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent))
 
 (add-hook 'after-make-frame-functions 'prot-window-no-minibuffer-scroll-bar)
+
+;;;; Run commands in a popup frame (via emacsclient)
+
+(defun prot-window-delete-popup-frame (&rest _)
+  "Kill selected selected frame if it has parameter `prot-window-popup-frame'.
+Use this function via a hook."
+  (when (frame-parameter nil 'prot-window-popup-frame)
+    (delete-frame)))
+
+(defmacro prot-window-define-with-popup-frame (command)
+  "Define function which calls COMMAND in a new frame.
+Make the new frame have the `prot-window-popup-frame' parameter."
+  `(defun ,(intern (format "prot-window-popup-%s" command)) ()
+     ,(format "Run `%s' in a popup frame with `prot-window-popup-frame' parameter.
+Also see `prot-window-delete-popup-frame'." command)
+     (interactive)
+     (let ((frame (make-frame '((prot-window-popup-frame . t)))))
+       (select-frame frame)
+       (switch-to-buffer " prot-window-hidden-buffer-for-popup-frame")
+       (condition-case nil
+           (call-interactively ',command)
+         ((quit error user-error)
+          (delete-frame frame))))))
+
+(declare-function org-capture "org-capture" (&optional goto keys))
+(defvar org-capture-after-finalize-hook)
+
+;;;###autoload (autoload 'prot-window-popup-org-capture "prot-window")
+(prot-window-define-with-popup-frame org-capture)
+
+(declare-function tmr "tmr" (time &optional description acknowledgep))
+(defvar tmr-timer-created-functions)
+
+;;;###autoload (autoload 'prot-window-popup-tmr "prot-window")
+(prot-window-define-with-popup-frame tmr)
 
 (provide 'prot-window)
 ;;; prot-window.el ends here

@@ -1,3 +1,9 @@
+(with-eval-after-load 'org-capture
+  (add-hook 'org-capture-after-finalize-hook #'prot-window-delete-popup-frame))
+
+(with-eval-after-load 'tmr
+  (add-hook 'tmr-timer-created-functions #'prot-window-delete-popup-frame))
+
 ;;; General window and buffer configurations
 (use-package uniquify
   :ensure nil
