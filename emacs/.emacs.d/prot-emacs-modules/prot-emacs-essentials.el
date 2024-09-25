@@ -6,6 +6,7 @@
 ;;;; General settings and common custom functions (prot-simple.el)
   (setq blink-matching-paren nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
+  (setq delete-pair-push-mark t) ; Emacs 31
   (setq help-window-select t)
   (setq next-error-recenter '(4)) ; center of the window
   (setq find-library-include-other-files nil) ; Emacs 29
