@@ -10945,7 +10945,7 @@ Omit entries with a CANCEL state."
       (erase-buffer)
       (goto-char (point-min))
       (insert "# Type C-c C-c in the TBLFM line to produce the table\n\n")
-      (insert "* Cost counting without counting minutes\n")
+      (insert "* Cost without counting minutes\n")
       (insert (concat
                "\n"
                "| Description | Started | Closed | Days | Hours | Cost (EUR) |" "\n"
