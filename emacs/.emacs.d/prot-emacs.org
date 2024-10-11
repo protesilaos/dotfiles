@@ -4256,6 +4256,7 @@ templates to have a real need for it---but it works).
     "texmacs"        "TeXmacs"
     "typescript"     "TypeScript"
     "visavis"        "vis-à-vis"
+    "deja"           "déjà"
     "youtube"        "YouTube"
     ";up"            "🙃"
     ";uni"           "🦄"

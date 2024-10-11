@@ -240,6 +240,7 @@
     "texmacs"        "TeXmacs"
     "typescript"     "TypeScript"
     "visavis"        "vis-à-vis"
+    "deja"           "déjà"
     "youtube"        "YouTube"
     ";up"            "🙃"
     ";uni"           "🦄"
