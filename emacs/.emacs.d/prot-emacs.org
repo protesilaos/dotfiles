@@ -5617,6 +5617,10 @@ to do this in standard Dired:
 All this is fine, but with ~prot-dired-limit-regexp~ I simply provide
 the regexp I want to see.
 
+Another common use-case for me is to create a flat listing of all
+files that match a regular expression, found recursively from the
+current directory. I do this with ~prot-dired-search-flat-list~.
+
 The other commands have situational uses. For example, the
 ~prot-dired-grep-marked-files~ is something I have only used a few
 times where ~prot-search-grep~ would produce too many results in a
@@ -5632,6 +5636,7 @@ given directory ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-sear
     ("/" . prot-dired-limit-regexp)
     ("C-c C-l" . prot-dired-limit-regexp)
     ("M-n" . prot-dired-subdirectory-next)
+    ("C-c C-s" . prot-dired-search-flat-list)
     ("C-c C-n" . prot-dired-subdirectory-next)
     ("C-c C-p" . prot-dired-subdirectory-previous)
     ("M-s G" . prot-dired-grep-marked-files) ; M-s g is `prot-search-grep'
@@ -11628,6 +11633,31 @@ belong to the given subset of CONSEQUENCES.
 (defgroup prot-dired ()
   "Extensions for Dired."
   :group 'dired)
+
+;;;; Flat Dired listing
+
+(defvar prot-dired-regexp-history nil
+  "Minibuffer history of `prot-dired-regexp-prompt'.")
+
+(defun prot-dired-regexp-prompt ()
+  (let ((default (car prot-dired-regexp-history)))
+    (read-regexp
+     (format-prompt "Files matching REGEXP" default)
+     default 'prot-dired-regexp-history)))
+
+(defun prot-dired--get-files (regexp)
+  "Return files matching REGEXP, recursively from `default-directory'."
+  (directory-files-recursively default-directory regexp nil))
+
+;;;###autoload
+(defun prot-dired-search-flat-list (regexp)
+  "Return a Dired buffer for files matching REGEXP.
+Perform the search recursively from the current directory."
+  (interactive (list (prot-dired-regexp-prompt)))
+  (if-let ((files (prot-dired--get-files regexp))
+           (relative-paths (mapcar #'file-relative-name files)))
+      (dired (cons (format "prot-flat-dired for `%s'" regexp) relative-paths))
+    (error "No files matching `%s'" regexp)))
 
 ;;;; General commands
 

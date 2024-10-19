@@ -42,6 +42,31 @@
   "Extensions for Dired."
   :group 'dired)
 
+;;;; Flat Dired listing
+
+(defvar prot-dired-regexp-history nil
+  "Minibuffer history of `prot-dired-regexp-prompt'.")
+
+(defun prot-dired-regexp-prompt ()
+  (let ((default (car prot-dired-regexp-history)))
+    (read-regexp
+     (format-prompt "Files matching REGEXP" default)
+     default 'prot-dired-regexp-history)))
+
+(defun prot-dired--get-files (regexp)
+  "Return files matching REGEXP, recursively from `default-directory'."
+  (directory-files-recursively default-directory regexp nil))
+
+;;;###autoload
+(defun prot-dired-search-flat-list (regexp)
+  "Return a Dired buffer for files matching REGEXP.
+Perform the search recursively from the current directory."
+  (interactive (list (prot-dired-regexp-prompt)))
+  (if-let ((files (prot-dired--get-files regexp))
+           (relative-paths (mapcar #'file-relative-name files)))
+      (dired (cons (format "prot-flat-dired for `%s'" regexp) relative-paths))
+    (error "No files matching `%s'" regexp)))
+
 ;;;; General commands
 
 ;; NOTE 2023-06-27: This user option is quick-and-dirty.  I prefer not

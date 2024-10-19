@@ -84,6 +84,7 @@
     ("/" . prot-dired-limit-regexp)
     ("C-c C-l" . prot-dired-limit-regexp)
     ("M-n" . prot-dired-subdirectory-next)
+    ("C-c C-s" . prot-dired-search-flat-list)
     ("C-c C-n" . prot-dired-subdirectory-next)
     ("C-c C-p" . prot-dired-subdirectory-previous)
     ("M-s G" . prot-dired-grep-marked-files) ; M-s g is `prot-search-grep'
