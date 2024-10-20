@@ -1715,7 +1715,7 @@ are called. The pulse effect is added there (~pulsar-after-function-hook~).
   (setopt pulsar-pulse t
           pulsar-delay 0.055
           pulsar-iterations 10
-          pulsar-face 'pulsar-cyan
+          pulsar-face 'pulsar-green
           pulsar-highlight-face 'pulsar-magenta)
 
   (pulsar-global-mode 1)
@@ -1776,7 +1776,7 @@ vertical axis.
   ;; Or `setopt' on Emacs 29: (setopt lin-face 'lin-yellow)
   ;;
   ;; I still prefer `setq' for consistency.
-  (setq lin-face 'lin-blue))
+  (setq lin-face 'lin-cyan))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~spacious-padding~
