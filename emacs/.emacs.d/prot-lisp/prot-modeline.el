@@ -325,7 +325,7 @@ Specific to the current window's mode line.")
 (defun prot-modeline--buffer-name ()
   "Return `buffer-name', truncating it if necessary.
 See `prot-modeline-string-cut-middle'."
-  (when-let ((name (buffer-name)))
+  (when-let* ((name (buffer-name)))
     (prot-modeline-string-cut-middle name)))
 
 (defun prot-modeline-buffer-name ()
@@ -372,7 +372,7 @@ face.  Let other buffers have no face.")
 
 (defun prot-modeline-major-mode-help-echo ()
   "Return `help-echo' value for `prot-modeline-major-mode'."
-  (if-let ((parent (get major-mode 'derived-mode-parent)))
+  (if-let* ((parent (get major-mode 'derived-mode-parent)))
       (format "Symbol: `%s'.  Derived from: `%s'" major-mode parent)
     (format "Symbol: `%s'." major-mode)))
 
@@ -402,9 +402,9 @@ face.  Let other buffers have no face.")
 
 (defun prot-modeline--vc-branch-name (file backend)
   "Return capitalized VC branch name for FILE with BACKEND."
-  (when-let ((rev (vc-working-revision file backend))
-             (branch (or (vc-git--symbolic-ref file)
-                         (substring rev 0 7))))
+  (when-let* ((rev (vc-working-revision file backend))
+              (branch (or (vc-git--symbolic-ref file)
+                          (substring rev 0 7))))
     (capitalize branch)))
 
 ;; NOTE 2023-07-27: This is a good idea, but it hardcodes Git, whereas
@@ -475,7 +475,7 @@ than `split-width-threshold'."
 
 (defun prot-modeline--vc-get-face (key)
   "Get face from KEY in `prot-modeline--vc-faces'."
-   (alist-get key prot-modeline--vc-faces 'up-to-date))
+  (alist-get key prot-modeline--vc-faces 'up-to-date))
 
 (defun prot-modeline--vc-face (file backend)
   "Return VC state face for FILE with BACKEND."
@@ -519,18 +519,18 @@ TYPE is usually keyword `:error', `:warning' or `:note'."
 (defmacro prot-modeline-flymake-type (type indicator &optional face)
   "Return function that handles Flymake TYPE with stylistic INDICATOR and FACE."
   `(defun ,(intern (format "prot-modeline-flymake-%s" type)) ()
-     (when-let ((count (prot-modeline-flymake-counter
-                        ,(intern (format ":%s" type)))))
+     (when-let* ((count (prot-modeline-flymake-counter
+                         ,(intern (format ":%s" type)))))
        (concat
         (propertize ,indicator 'face 'shadow)
         (propertize count
                     'face ',(or face type)
-                     'mouse-face 'mode-line-highlight
-                     ;; FIXME 2023-07-03: Clicking on the text with
-                     ;; this buffer and a single warning present, the
-                     ;; diagnostics take up the entire frame.  Why?
-                     'local-map prot-modeline-flymake-map
-                     'help-echo "mouse-1: buffer diagnostics\nmouse-3: project diagnostics")))))
+                    'mouse-face 'mode-line-highlight
+                    ;; FIXME 2023-07-03: Clicking on the text with
+                    ;; this buffer and a single warning present, the
+                    ;; diagnostics take up the entire frame.  Why?
+                    'local-map prot-modeline-flymake-map
+                    'help-echo "mouse-1: buffer diagnostics\nmouse-3: project diagnostics")))))
 
 (prot-modeline-flymake-type error "☣")
 (prot-modeline-flymake-type warning "!")

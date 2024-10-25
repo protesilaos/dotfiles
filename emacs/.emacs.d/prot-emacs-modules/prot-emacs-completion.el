@@ -290,7 +290,7 @@ Development continues on GitHub with GitLab as a mirror."))
 
   ;; Because the *scratch* buffer is produced before we load this, we
   ;; have to explicitly activate the mode there.
-  (when-let ((scratch (get-buffer "*scratch*")))
+  (when-let* ((scratch (get-buffer "*scratch*")))
     (with-current-buffer scratch
       (abbrev-mode 1)))
 

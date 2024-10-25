@@ -56,7 +56,7 @@
 
 (defun prot-marginalia-buffer (buffer)
   "Annotate BUFFER with the return value of function `buffer-file-name'."
-  (if-let ((name (buffer-file-name (get-buffer buffer))))
+  (if-let* ((name (buffer-file-name (get-buffer buffer))))
       (prot-marginalia-display (abbreviate-file-name name))
     (prot-marginalia-display (format "%s" (buffer-local-value 'major-mode (get-buffer buffer))))))
 
@@ -66,7 +66,7 @@
               (pkg (intern-soft package))
               (desc (or (when (package-desc-p pkg) pkg)
                         (car (alist-get pkg pkg-alist))
-                        (if-let (built-in (assq pkg package--builtins))
+                        (if-let* ((built-in (assq pkg package--builtins)))
                             (package--from-builtin built-in)
                           (car (alist-get pkg package-archive-contents))))))
     (prot-marginalia-display (package-desc-summary desc))))
@@ -81,15 +81,15 @@
 
 (defun prot-marginalia--first-line-documentation (symbol)
   "Return first line of SYMBOL documentation string."
-  (when-let ((doc-string (prot-marginalia--get-symbol-doc symbol))
-             ((stringp doc-string))
-             ((not (string-empty-p doc-string))))
+  (when-let* ((doc-string (prot-marginalia--get-symbol-doc symbol))
+              ((stringp doc-string))
+              ((not (string-empty-p doc-string))))
     (car (split-string doc-string "[?!.\n]"))))
 
 (defun prot-marginalia-symbol (symbol)
   "Annotate SYMBOL with its documentation string."
-  (when-let ((sym (intern-soft symbol))
-             (doc-string (prot-marginalia--first-line-documentation sym)))
+  (when-let* ((sym (intern-soft symbol))
+              (doc-string (prot-marginalia--first-line-documentation sym)))
     (prot-marginalia-display doc-string)))
 
 (provide 'prot-marginalia)

@@ -48,7 +48,7 @@ number (integer or floating point) or a function.")
 
 (defun prot-window--get-window-size (key)
   "Extract the value of KEY from `prot-window-window-sizes'."
-  (when-let ((value (plist-get prot-window-window-sizes key)))
+  (when-let* ((value (plist-get prot-window-window-sizes key)))
     (cond
      ((functionp value)
       (funcall value))
@@ -148,9 +148,9 @@ call NAME as a function."
 
 (defun prot-window--get-new-shell-buffer ()
   "Return buffer name for `shell' buffers."
-  (if-let ((buffers (prot-window--get-shell-buffers))
-           (buffers-length (length buffers))
-           ((>= buffers-length 1)))
+  (if-let* ((buffers (prot-window--get-shell-buffers))
+            (buffers-length (length buffers))
+            ((>= buffers-length 1)))
       (format "*shell*<%s>" (1+ buffers-length))
     "*shell*"))
 
@@ -159,7 +159,7 @@ call NAME as a function."
   (let ((name (prot-window--get-new-shell-buffer)))
     (shell name)
     (set-frame-name name)
-    (when-let ((buffer (get-buffer name)))
+    (when-let* ((buffer (get-buffer name)))
       (with-current-buffer buffer
         (add-hook
          'delete-frame-functions

@@ -333,8 +333,8 @@ Also see `prot-search-grep-todo-keywords'."
 (defun prot-search-outline ()
   "Go to the line of the given outline using completion."
   (interactive)
-  (when-let ((selection (prot-search--outline-prompt))
-             (line (string-to-number (car (split-string selection "\t")))))
+  (when-let* ((selection (prot-search--outline-prompt))
+              (line (string-to-number (car (split-string selection "\t")))))
     (goto-line line)
     (run-hooks 'prot-search-outline-hook)))
 

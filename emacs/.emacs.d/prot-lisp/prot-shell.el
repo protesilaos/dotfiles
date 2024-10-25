@@ -109,8 +109,8 @@ Only account for the history Emacs knows about, ignoring
 (defun prot-shell-track-cd (&rest _)
   "Track shell input of cd commands.
 Push `shell-last-dir' to `prot-shell-cd-directories'."
-  (when-let ((input (prot-shell--last-input))
-             ((string-match-p "cd " input)))
+  (when-let* ((input (prot-shell--last-input))
+              ((string-match-p "cd " input)))
     (push shell-last-dir prot-shell-cd-directories)))
 
 (defvar prot-shell--cd-history nil
@@ -118,9 +118,9 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
 
 (defun prot-shell--cd-prompt ()
   "Prompt for a directory among `prot-shell-cd-directories'."
-  (if-let ((history prot-shell-cd-directories)
-           (dirs (cons default-directory history))
-           (def (if (listp dirs) (car dirs) shell-last-dir)))
+  (if-let* ((history prot-shell-cd-directories)
+            (dirs (cons default-directory history))
+            (def (if (listp dirs) (car dirs) shell-last-dir)))
       (completing-read
        (format-prompt "Select directory" def)
        dirs nil :require-match nil 'prot-shell--cd-history def)
@@ -146,7 +146,7 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
 (defun prot-shell-cd-vc-root-dir ()
   "Change into the `vc-root-dir'."
   (interactive)
-  (if-let ((root (prot-shell--get-vc-root-dir)))
+  (if-let* ((root (prot-shell--get-vc-root-dir)))
       (prot-shell--insert-and-send "cd" root)
     (user-error "Cannot find the VC root of `%s'" default-directory)))
 

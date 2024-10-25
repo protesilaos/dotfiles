@@ -183,10 +183,10 @@ effects."
   (declare (indent defun))
   (let ((eval))
     (dolist (element body)
-      (when-let (((plistp element))
-                 (key (car element))
-                 ((eq key :eval))
-                 (val (cadr element)))
+      (when-let* (((plistp element))
+                  (key (car element))
+                  ((eq key :eval))
+                  (val (cadr element)))
         (setq eval val
               body (delq element body))))
     (when eval `(progn ,@body))))
@@ -213,8 +213,8 @@ DEFINITIONS is a sequence of string and command pairs."
   (let ((keys (seq-filter #'stringp definitions))
         ;; We do accept nil as a definition: it unsets the given key.
         (commands (seq-remove #'stringp definitions)))
-    `(when-let (((keymapp ,keymap))
-                (map ,keymap))
+    `(when-let* (((keymapp ,keymap))
+                 (map ,keymap))
        ,@(mapcar
           (lambda (pair)
             (let* ((key (car pair))

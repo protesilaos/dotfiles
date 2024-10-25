@@ -7,8 +7,8 @@ See definition of `prot-emacs-with-desktop-session'.")
 See `prot-emacs-tiling-window-manager-regexp' for what
 constitutes a matching tiling window manager."
   (declare (indent 0))
-  `(when-let ((session (getenv "DESKTOP_SESSION"))
-              ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
+  `(when-let* ((session (getenv "DESKTOP_SESSION"))
+               ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
      ,@body))
 
 (defun prot-emacs-add-to-list (list element)
@@ -93,13 +93,13 @@ the `delight' shell script."
 I place a file in ~/.config/prot-xtwm-active-theme which contains
 a single word describing my system-wide theme.  This is part of
 my dotfiles.  Check my `delight' shell script for more."
-  (when-let ((file "~/.config/prot-xtwm-active-theme")
-             ((file-exists-p file)))
-      (string-match-p
-       "dark"
-       (with-temp-buffer
-         (insert-file-contents file)
-         (buffer-string)))))
+  (when-let* ((file "~/.config/prot-xtwm-active-theme")
+              ((file-exists-p file)))
+    (string-match-p
+     "dark"
+     (with-temp-buffer
+       (insert-file-contents file)
+       (buffer-string)))))
 
 (defun prot-emacs-theme-environment-dark-p ()
   "Return non-nil if environment theme is dark."
@@ -111,7 +111,7 @@ my dotfiles.  Check my `delight' shell script for more."
 Add this to `after-make-frame-functions' so that new frames do
 not retain the generic background set by the function
 `prot-emacs-avoid-initial-flash-of-light'."
-  (when-let ((theme (car custom-enabled-themes)))
+  (when-let* ((theme (car custom-enabled-themes)))
     (enable-theme theme)))
 
 ;; NOTE 2023-02-05: The reason the following works is because (i) the

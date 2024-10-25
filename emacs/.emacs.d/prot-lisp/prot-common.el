@@ -227,7 +227,7 @@ If FRAME is non-nil, inspect the current frame."
 ;;;###autoload
 (defun prot-common-completion-category ()
   "Return completion category."
-  (when-let ((window (active-minibuffer-window)))
+  (when-let* ((window (active-minibuffer-window)))
     (with-current-buffer (window-buffer window)
       (completion-metadata-get
        (completion-metadata (buffer-substring-no-properties
@@ -339,7 +339,7 @@ Return the exit code and output in a list."
 ;;;###autoload
 (defun prot-common-auth-get-field (host prop)
   "Find PROP in `auth-sources' for HOST entry."
-  (when-let ((source (auth-source-search :host host)))
+  (when-let* ((source (auth-source-search :host host)))
     (if (eq prop :secret)
         (funcall (plist-get (car source) prop))
       (plist-get (flatten-list source) prop))))

@@ -98,16 +98,16 @@ backtick and single quote, else two backticks."
 
 (defun prot-pair--annotate (character)
   "Annotate CHARACTER with its description in `prot-pair-pairs'."
-  (when-let ((char (if (characterp character) character (string-to-char character)))
-             (plist (alist-get char prot-pair-pairs))
-             (description (plist-get plist :description)))
+  (when-let* ((char (if (characterp character) character (string-to-char character)))
+              (plist (alist-get char prot-pair-pairs))
+              (description (plist-get plist :description)))
     (format "  %s" description)))
 
 (defun prot-pair--get-pair (character)
   "Get the pair of corresponding to CHARACTER."
-  (when-let ((char (if (characterp character) character (string-to-char character)))
-             (plist (alist-get char prot-pair-pairs))
-             (pair (plist-get plist :pair)))
+  (when-let* ((char (if (characterp character) character (string-to-char character)))
+              (plist (alist-get char prot-pair-pairs))
+              (pair (plist-get plist :pair)))
     pair))
 
 (defun prot-pair--insert-prompt ()

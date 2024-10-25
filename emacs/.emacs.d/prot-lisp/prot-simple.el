@@ -72,11 +72,11 @@ expression."
   (if (and (region-active-p)
            (eq last-command this-command))
       (ignore-errors (forward-sexp 1))
-    (when-let ((thing (cond
-                       ((thing-at-point 'url) 'url)
-                       ((thing-at-point 'sexp) 'sexp)
-                       ((thing-at-point 'string) 'string)
-                       ((thing-at-point 'word) 'word))))
+    (when-let* ((thing (cond
+                        ((thing-at-point 'url) 'url)
+                        ((thing-at-point 'sexp) 'sexp)
+                        ((thing-at-point 'string) 'string)
+                        ((thing-at-point 'word) 'word))))
       (prot-simple--mark (bounds-of-thing-at-point thing)))))
 
 ;;;###autoload
@@ -154,8 +154,8 @@ The DWIM behaviour of this command is as follows:
 ;;
 ;; (defun prot-simple--number-replace (number amount operation)
 ;;   "Perform OPERATION on NUMBER at point by AMOUNT."
-;;   (when-let ((bounds (bounds-of-thing-at-point 'number))
-;;              (replacement (prot-simple--number-operate number amount operation)))
+;;   (when-let* ((bounds (bounds-of-thing-at-point 'number))
+;;               (replacement (prot-simple--number-operate number amount operation)))
 ;;     (delete-region (car bounds) (cdr bounds))
 ;;     (save-excursion
 ;;       (insert (number-to-string replacement)))))
@@ -322,7 +322,7 @@ to `line-beginning-position'."
          (line-end-position) :no-error
          (prefix-numeric-value current-prefix-arg))
       (line-beginning-position))))
-  (when-let ((regexp-end (prot-simple--pos-url-on-line char)))
+  (when-let* ((regexp-end (prot-simple--pos-url-on-line char)))
     (goto-char regexp-end)
     (unless (looking-at ">")
       (insert ">")
@@ -468,9 +468,9 @@ demarcated by BEG and END."
 ;; When the region is active, toggle the presence of STRING for each
 ;; line in the region."
 ;;   (interactive (list (prot-simple-line-prefix-infer-or-prompt)))
-;;   (if-let ((region-p (region-active-p))
-;;            (beg (region-beginning))
-;;            (end (line-number-at-pos (region-end))))
+;;   (if-let* ((region-p (region-active-p))
+;;             (beg (region-beginning))
+;;             (end (line-number-at-pos (region-end))))
 ;;       (progn
 ;;         (goto-char beg)
 ;;         (push-mark (point))
@@ -490,11 +490,11 @@ demarcated by BEG and END."
          (end (pos-eol))
          diff-eol-point
          diff-eol-mark)
-    (when-let (((use-region-p))
-               (pos (point))
-               (mrk (mark))
-               (line-diff-mark-point (1+ (- (line-number-at-pos mrk)
-                                            (line-number-at-pos pos)))))
+    (when-let* (((use-region-p))
+                (pos (point))
+                (mrk (mark))
+                (line-diff-mark-point (1+ (- (line-number-at-pos mrk)
+                                             (line-number-at-pos pos)))))
       (if (> pos mrk)
           (setq start (pos-bol line-diff-mark-point)) ; pos-bol of where the mark is
         (setq end (pos-eol line-diff-mark-point)))    ; pos-eol of the line where the mark is
@@ -521,15 +521,15 @@ demarcated by BEG and END."
 (defun prot-simple--move-line-user-error (boundary)
   "Return `user-error' with message accounting for BOUNDARY.
 BOUNDARY is a buffer position, expected to be `point-min' or `point-max'."
-  (when-let ((bound (line-number-at-pos boundary))
-             (scope (cond
-                     ((and (use-region-p)
-                           (or (= (line-number-at-pos (point)) bound)
-                               (= (line-number-at-pos (mark)) bound)))
-                      "region is ")
-                     ((= (line-number-at-pos (point)) bound)
-                      "")
-                     (t nil))))
+  (when-let* ((bound (line-number-at-pos boundary))
+              (scope (cond
+                      ((and (use-region-p)
+                            (or (= (line-number-at-pos (point)) bound)
+                                (= (line-number-at-pos (mark)) bound)))
+                       "region is ")
+                      ((= (line-number-at-pos (point)) bound)
+                       "")
+                      (t nil))))
     (user-error (format "Warning: %salready in the last line!" scope))))
 
 (defun prot-simple-move-above-dwim (arg)
@@ -746,14 +746,14 @@ Name the buffer after the defun's symbol."
 (defun prot-simple-display-unsaved-buffers ()
   "Produce buffer menu listing unsaved file-visiting buffers."
   (interactive)
-  (if-let ((unsaved-buffers (prot-simple--get-unsaved-buffers)))
+  (if-let* ((unsaved-buffers (prot-simple--get-unsaved-buffers)))
       (prot-simple--display-unsaved-buffers unsaved-buffers "*Unsaved buffers*")
     (message "No unsaved buffers")))
 
 (defun prot-simple-display-unsaved-buffers-on-exit (&rest _)
   "Produce buffer menu listing unsaved file-visiting buffers.
 Add this as :before advice to `save-buffers-kill-emacs'."
-  (when-let ((unsaved-buffers (prot-simple--get-unsaved-buffers)))
+  (when-let* ((unsaved-buffers (prot-simple--get-unsaved-buffers)))
     (prot-simple--display-unsaved-buffers unsaved-buffers "*Unsaved buffers*")))
 
 ;;;###autoload
@@ -865,8 +865,8 @@ counter-clockwise."
 (cl-defmethod register--type ((_regval vector)) 'vector)
 
 (cl-defmethod register-val-describe ((val vector) _verbose)
-  (if-let ((pos (aref val 2))
-           (file (aref val 1)))
+  (if-let* ((pos (aref val 2))
+            (file (aref val 1)))
       (princ (format "%s at position %s" file pos))
     (princ "Garbage data")))
 

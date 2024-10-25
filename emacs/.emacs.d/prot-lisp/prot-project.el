@@ -73,9 +73,9 @@ the project in DIRECTORY using `project-dired'."
 
 (defun prot-project-rename-vc-root-log (&rest _)
   "Rename the buffer of `vc-print-root-log' to mention the project."
-  (when-let ((root (vc-root-dir))
-             ((consp project--list))
-             ((member root (mapcar #'car project--list))))
+  (when-let* ((root (vc-root-dir))
+              ((consp project--list))
+              ((member root (mapcar #'car project--list))))
     (rename-buffer (format "*vc-root-log: %s*" root))))
 
 (advice-add #'vc-print-root-log :after #'prot-project-rename-vc-root-log)
@@ -135,7 +135,7 @@ is a string."
         (file-symbol (intern file)))
     `(progn
        (defun ,project-find-fn (dir)
-         (when-let ((root (locate-dominating-file dir ,file)))
+         (when-let* ((root (locate-dominating-file dir ,file)))
            (cons ',file-symbol root)))
 
        (cl-defmethod project-root ((project (head ,file-symbol)))

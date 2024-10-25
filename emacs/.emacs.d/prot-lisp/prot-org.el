@@ -50,11 +50,11 @@
 
 (defun prot-org--capture-coach-person-message-from ()
   "Return default value for `prot-org--capture-coach-person-prompt'."
-  (when-let ((from (cond
-                    ((derived-mode-p 'message-mode)
-                     (message-fetch-field "To"))
-                    ((derived-mode-p 'notmuch-show-mode)
-                     (notmuch-show-get-header :From)))))
+  (when-let* ((from (cond
+                     ((derived-mode-p 'message-mode)
+                      (message-fetch-field "To"))
+                     ((derived-mode-p 'notmuch-show-mode)
+                      (notmuch-show-get-header :From)))))
     (string-clean-whitespace (car (split-string from "<")))))
 
 (defun prot-org--capture-coach-person-message-from-and-subject ()

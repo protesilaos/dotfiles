@@ -141,11 +141,10 @@
       (flymake-mode 1)))
 
   (defun prot/flymake-mode-in-my-projects ()
-    (when-let ((file (buffer-file-name))
-               ((string-prefix-p prot/flymake-mode-projects-path
-                                 (expand-file-name file)))
-               ((not (file-directory-p file)))
-               ((file-regular-p file)))
+    (when-let* ((file (buffer-file-name))
+                ((string-prefix-p prot/flymake-mode-projects-path (expand-file-name file)))
+                ((not (file-directory-p file)))
+                ((file-regular-p file)))
       (add-hook 'find-file-hook #'prot/flymake-mode-lexical-binding nil t)))
 
   (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)

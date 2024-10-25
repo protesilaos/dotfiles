@@ -62,8 +62,8 @@
   "Return a Dired buffer for files matching REGEXP.
 Perform the search recursively from the current directory."
   (interactive (list (prot-dired-regexp-prompt)))
-  (if-let ((files (prot-dired--get-files regexp))
-           (relative-paths (mapcar #'file-relative-name files)))
+  (if-let* ((files (prot-dired--get-files regexp))
+            (relative-paths (mapcar #'file-relative-name files)))
       (dired (cons (format "prot-flat-dired for `%s'" regexp) relative-paths))
     (error "No files matching `%s'" regexp)))
 
@@ -205,7 +205,7 @@ For more on such headings, read `dired-maybe-insert-subdir'."
   (while (and (prot-dired-subdirectory-previous)
               (not (equal (dired-current-directory)
                           (expand-file-name default-directory))))
-      (dired-kill-subdir)))
+    (dired-kill-subdir)))
 
 (autoload 'cl-remove-if-not "cl-seq")
 

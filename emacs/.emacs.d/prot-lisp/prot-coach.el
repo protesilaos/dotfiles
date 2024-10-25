@@ -43,11 +43,11 @@
 
 (defun prot-coach--name-prompt-default ()
   "Return default value for `prot-coach-name-prompt'."
-  (when-let ((from (cond
-                    ((derived-mode-p 'message-mode)
-                     (message-fetch-field "To"))
-                    ((derived-mode-p 'notmuch-show-mode)
-                     (notmuch-show-get-header :From)))))
+  (when-let* ((from (cond
+                     ((derived-mode-p 'message-mode)
+                      (message-fetch-field "To"))
+                     ((derived-mode-p 'notmuch-show-mode)
+                      (notmuch-show-get-header :From)))))
     (string-clean-whitespace (car (split-string from "<")))))
 
 (defun prot-coach-name-prompt ()
@@ -172,7 +172,7 @@ Omit entries with a CANCEL state."
     (let (sessions)
       (org-map-entries
        (lambda ()
-         (when-let ((entry (prot-coach--get-deadline-and-close name)))
+         (when-let* ((entry (prot-coach--get-deadline-and-close name)))
            (push entry sessions))))
       (prot-coach--print-table-with-sessions name sessions))))
 

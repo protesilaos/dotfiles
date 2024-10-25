@@ -52,8 +52,8 @@
 
 (defun prot-orderless-beg-or-end (word _index _total)
   "Expand WORD~ to \\(^WORD\\|WORD$\\)."
-  (when-let (((string-suffix-p "~" word))
-             (word (substring word 0 -1)))
+  (when-let* (((string-suffix-p "~" word))
+              (word (substring word 0 -1)))
     `(orderless-regexp . ,(format "\\(^%s\\|%s$\\)" word word))))
 
 (provide 'prot-orderless)

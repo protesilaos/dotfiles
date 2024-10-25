@@ -89,9 +89,9 @@
   (setq rainbow-x-colors nil)
 
   (defun prot/rainbow-mode-in-themes ()
-    (when-let ((file (buffer-file-name))
-               ((derived-mode-p 'emacs-lisp-mode))
-               ((string-match-p "-theme" file)))
+    (when-let* ((file (buffer-file-name))
+                ((derived-mode-p 'emacs-lisp-mode))
+                ((string-match-p "-theme" file)))
       (rainbow-mode 1)))
   :bind ( :map ctl-x-x-map
           ("c" . rainbow-mode)) ; C-x x c
