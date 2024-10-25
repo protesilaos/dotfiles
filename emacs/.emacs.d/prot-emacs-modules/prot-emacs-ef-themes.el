@@ -5,10 +5,13 @@
 (use-package ef-themes
   :ensure t
   :demand t
-  :bind ("<f5>" . ef-themes-select)
+  :bind
+  (("<f5>" . ef-themes-rotate)
+   ("C-<f5>" . ef-themes-select))
   :config
   (setq ef-themes-variable-pitch-ui t
         ef-themes-mixed-fonts t
+        ef-themes-rotate ef-themes-items
         ef-themes-headings ; read the manual's entry of the doc string
         '((0 . (variable-pitch light 1.9))
           (1 . (variable-pitch light 1.8))
@@ -96,6 +99,7 @@
         (ef-themes-load-random 'dark)
       (ef-themes-load-random 'light))
 
-    (define-key global-map (kbd "<f5>") #'ef-themes-select)))
+    (define-key global-map (kbd "<f5>") #'ef-themes-select)
+    (define-key global-map (kbd "C-<f5>") #'ef-themes-rotate)))
 
 (provide 'prot-emacs-ef-themes)
