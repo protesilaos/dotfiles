@@ -264,17 +264,17 @@
     ("C-c n R" . denote-rename-file-using-front-matter)
     :map org-mode-map
     ("C-c n d l" . denote-org-extras-dblock-insert-links)
-    ("C-c n d b" . denote-org-extras-dblock-insert-links)
+    ("C-c n d b" . denote-org-extras-dblock-insert-backlinks)
     ;; Key bindings specifically for Dired.
     :map dired-mode-map
-    ("C-c C-d C-i" . denote-link-dired-marked-notes)
+    ("C-c C-d C-i" . denote-dired-link-marked-notes)
     ("C-c C-d C-r" . denote-dired-rename-marked-files)
     ("C-c C-d C-k" . denote-dired-rename-marked-files-with-keywords)
     ("C-c C-d C-f" . denote-dired-rename-marked-files-using-front-matter))
   :config
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
-  (setq denote-file-type nil) ; Org is the default file type
+  (setq denote-file-type 'text) ; Org is the default file type
 
   ;; If you want to have a "controlled vocabulary" of keywords,
   ;; meaning that you only use a predefined set of them, then you want
@@ -297,7 +297,26 @@
   ;; instead of their long file name they have a literal "[D]"
   ;; followed by the file's title.  Read the doc string of
   ;; `denote-rename-buffer-format' for how to modify this.
-  (denote-rename-buffer-mode 1))
+  (denote-rename-buffer-mode 1)
+
+  ;; ----- PERSONAL TWEAKS FOR EXPERIMENTS -----
+  (setq denote-text-front-matter "title: %s\n\n")
+
+  (defun prot/denote-add-text-front-matter-separator ()
+    "Add separator equal to the length of the title.
+Do this when the `denote-file-type' is `text'."
+    (when (or (eq denote-file-type 'text)
+              ;; Not `string=' because there may be a .gpg extension as well.
+              (string-match-p (file-name-extension buffer-file-name) "txt"))
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "title:" nil t)
+          (let ((text (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+            (if (re-search-forward "^$" nil t)
+                (insert (make-string (length text) ?-))
+              (error "Could not find an empty line after the front matter")))))))
+
+  (add-hook 'denote-after-new-note-hook #'prot/denote-add-text-front-matter-separator))
 
 (when prot-emacs-completion-extras
   (use-package consult-denote
