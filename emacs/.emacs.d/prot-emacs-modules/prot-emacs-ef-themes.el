@@ -99,7 +99,7 @@
         (ef-themes-load-random 'dark)
       (ef-themes-load-random 'light))
 
-    (define-key global-map (kbd "<f5>") #'ef-themes-select)
-    (define-key global-map (kbd "C-<f5>") #'ef-themes-rotate)))
+    (define-key global-map (kbd "<f5>") #'ef-themes-rotate)
+    (define-key global-map (kbd "C-<f5>") #'ef-themes-select)))
 
 (provide 'prot-emacs-ef-themes)
