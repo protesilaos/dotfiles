@@ -175,6 +175,17 @@ produces dates with a fixed length."
 
 (defvar org-priority-highest)
 
+(defun prot-org-agenda-include-priority-no-timestamp ()
+  "Return nil if heading has a priority but no timestamp.
+Otherwise, return the buffer position from where the search should
+continue, per `org-agenda-skip-function'."
+  (let ((point (point)))
+    (if (and (eq (nth 3 (org-heading-components)) ?A)
+             (not (org-get-deadline-time point))
+             (not (org-get-scheduled-time point)))
+        nil
+      (line-beginning-position 2))))
+
 (defvar prot-org-custom-daily-agenda
   ;; NOTE 2021-12-08: Specifying a match like the following does not
   ;; work.
@@ -185,10 +196,15 @@ produces dates with a fixed length."
   ;; `org-agenda-skip-function'.
   `((tags-todo "*"
                ((org-agenda-overriding-header "Important tasks without a date\n")
-                (org-agenda-skip-function '(org-agenda-skip-if nil '(timestamp)))
-                (org-agenda-skip-function
-                 `(org-agenda-skip-entry-if
-                   'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
+                ;; NOTE 2024-10-31: Those used to work, but now the
+                ;; query for the timestamp is ignored.  I thus wrote
+                ;; `prot-org-agenda-include-priority-no-timestamp'.
+                ;;
+                ;; (org-agenda-skip-function '(org-agenda-skip-subtree-if nil '(timestamp)))
+                ;; (org-agenda-skip-function
+                ;;  `(org-agenda-skip-entry-if
+                ;;    'notregexp ,(format "\\[#%s\\]" (char-to-string org-priority-highest))))
+                (org-agenda-skip-function #'prot-org-agenda-include-priority-no-timestamp)
                 (org-agenda-block-separator nil)))
     (agenda "" ((org-agenda-overriding-header "\nPending scheduled tasks")
                 (org-agenda-time-grid nil)
