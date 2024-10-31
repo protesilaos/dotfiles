@@ -66,6 +66,7 @@
    ("C-x v k" . vc-delete-file) ; 'k' for kill==>delete is more common
    ("C-x v G" . vc-log-search)  ; git log --grep
    ("C-x v t" . vc-create-tag)
+   ("C-x v c" . vc-clone) ; Emacs 31
    ("C-x v d" . vc-diff)
    ("C-x v ." . vc-dir-root) ; `vc-dir-root' is from Emacs 28
    ("C-x v <return>" . vc-dir-root)
