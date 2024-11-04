@@ -305,7 +305,7 @@
   (defun prot/denote-add-text-front-matter-separator ()
     "Add separator equal to the length of the title.
 Do this when the `denote-file-type' is `text'."
-    (when (or (eq denote-file-type 'text)
+    (when (and (eq denote-file-type 'text)
               ;; Not `string=' because there may be a .gpg extension as well.
               (string-match-p (file-name-extension buffer-file-name) "txt"))
       (save-excursion
