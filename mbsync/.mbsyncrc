@@ -80,3 +80,30 @@ Remove Near
 Expunge Near
 SyncState *
 
+##########
+
+IMAPAccount gml
+Host imap.gmail.com
+UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gml/ { print $(NF-2); exit; }'"
+PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gml/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore gml-remote
+Account gml
+
+MaildirStore gml-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/gml/
+Inbox ~/.mail/gml/Inbox
+
+Channel gml
+Far :gml-remote:
+Near :gml-local:
+# Include everything
+Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred"
+Sync All
+Create Near
+Remove Near
+Expunge Near
+SyncState *

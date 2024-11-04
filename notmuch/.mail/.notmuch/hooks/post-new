@@ -33,7 +33,8 @@ notmuch tag +inbox +unread -new -- tag:new
 
 # tag my replies as "sent"
 # notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*" not tag:list)'
-notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*" not tag:list not tag:archived)'
+notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*protesilaos*" not tag:list not tag:archived)'
+notmuch tag -new -unread +inbox +sent -- '(from:"*prot*@gmail*" not to:"*protesilaos*" not tag:list not tag:archived)'
 
 # This is imperfect, but add the "coach" tag to any message that
 # includes those keywords in the subject line.  The starting date is
