@@ -273,7 +273,7 @@ Specific to the current window's mode line.")
                  (buffer-narrowed-p)
                  (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
         (propertize " Narrow " 'face 'prot-modeline-indicator-cyan-bg)))
-  "Mode line construct to report the multilingual environment.")
+  "Mode line construct to report the narrowed state of the current buffer.")
 
 ;;;; Input method
 
