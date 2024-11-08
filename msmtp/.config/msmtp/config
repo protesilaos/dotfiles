@@ -30,17 +30,5 @@ eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/p
 eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
 passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
 
-# gml
-account gml
-auth on
-protocol smtp
-tls on
-tls_starttls on
-host smtp.gmail.com
-port 587
-eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gml/ { print $(NF-2); exit; }')
-eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gml/ { print $(NF-2); exit; }')
-passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gml/ { print $NF; exit; }'"
-
 # Set a default account (I copied from man msmtp)
 account default : pub
