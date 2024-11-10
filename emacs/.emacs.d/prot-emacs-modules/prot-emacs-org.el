@@ -228,21 +228,21 @@
                     ":END:\n\n"
                     "%a\n%i%?")
            :empty-lines-after 1)
-          ("e" "Email note (unprocessed)" entry ; Also see `org-capture-templates-contexts'
-           (file+headline "tasks.org" "Unprocessed")
-           ,(concat "* TODO %:subject :mail:\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%a\n%i%?")
-           :empty-lines-after 1)
+          ;; ("e" "Email note (unprocessed)" entry ; Also see `org-capture-templates-contexts'
+          ;;  (file+headline "tasks.org" "Unprocessed")
+          ;;  ,(concat "* TODO %:subject :mail:\n"
+          ;;           ":PROPERTIES:\n"
+          ;;           ":CAPTURED: %U\n"
+          ;;           ":END:\n\n"
+          ;;           "%a\n%i%?")
+          ;;  :empty-lines-after 1)
           ("w" "Add to the wishlist (may do some day)" entry
            (file+headline "tasks.org" "Wishlist")
            ,(concat "* %^{Title}\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%?")
+                    "%a%?")
            :empty-lines-after 1)
           ("c" "Clock in and do immediately" entry
            (file+headline "tasks.org" "Clocked tasks")
@@ -259,11 +259,11 @@
           ("t" "Time-sensitive task" entry
            (file+headline "tasks.org" "Tasks with a date")
            ,(concat "* TODO %^{Title} %^g\n"
-                    "%^{How time sensitive it is|SCHEDULED|DEADLINE}: %^t\n"
+                    "%^{How time sensitive it is||SCHEDULED|DEADLINE}: %^t\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%?")
+                    "%a%?")
            :empty-lines-after 1)
           ("p" "Private lesson or service" entry
            (file "coach.org")
@@ -279,10 +279,15 @@
            :immediate-finish t
            :empty-lines 1)))
 
-  (setq org-capture-templates-contexts
-        '(("e" ((in-mode . "notmuch-search-mode")
-                (in-mode . "notmuch-show-mode")
-                (in-mode . "notmuch-tree-mode"))))))
+  ;; NOTE 2024-11-10: I realised that I was not using this enough, so
+  ;; I decided to simplify my setup.  Keeping it here, in case I need
+  ;; it again.
+
+  ;; (setq org-capture-templates-contexts
+  ;;       '(("e" ((in-mode . "notmuch-search-mode")
+  ;;               (in-mode . "notmuch-show-mode")
+  ;;               (in-mode . "notmuch-tree-mode")))))
+  )
 
 ;;;; agenda
 (use-package org-agenda
