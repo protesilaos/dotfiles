@@ -14089,27 +14089,33 @@ For use in `prot-org-capture-coach'."
 
 (defun prot-org-capture-coach ()
   "Contents of an Org capture template for my coaching lessons."
-  (concat "* COACH " (prot-org--capture-coach-person-prompt) " "
-          (prot-org--capture-coach-description-prompt) " :lesson:\n"
-          ;; See comment above
-          ;; (prot-org--capture-coach-date-prompt-range)
-          "DEADLINE: %^T\n"
-          ":PROPERTIES:\n"
-          ":CAPTURED: %U\n"
-          ":APPT_WARNTIME: 20\n"
-          ":END:\n\n"
-          "%a%?"))
+  (let ((identifier (format-time-string "%Y%m%dT%H%M%S")))
+    (format "* COACH %s %s :lesson:
+DEADLINE: %%^T
+:PROPERTIES:
+:CAPTURED: %%U
+:CUSTOM_ID: %s
+:APPT_WARNTIME: 20
+:END:
+
+%%a%%?"
+            (prot-org--capture-coach-person-prompt)
+            (prot-org--capture-coach-description-prompt)
+            identifier
+            identifier)))
 
 (defun prot-org-capture-coach-clock ()
   "Contents of an Org capture for my clocked coaching services."
-  (concat "* COACH " (prot-org--capture-coach-person-prompt) " "
-          (prot-org--capture-coach-description-prompt) " :service:\n"
-          ;; See comment above
-          ;; (prot-org--capture-coach-date-prompt-range)
-          ":PROPERTIES:\n"
-          ":CAPTURED: %U\n"
-          ":END:\n\n"
-          "%a%?"))
+  (format "* COACH %s %s :service:
+:PROPERTIES:
+:CAPTURED: %%U
+:CUSTOM_ID: %s
+:END:
+
+%%a%%?"
+          (prot-org--capture-coach-person-prompt)
+          (prot-org--capture-coach-description-prompt)
+          (format-time-string "%Y%m%dT%H%M%S")))
 
 (declare-function cl-letf "cl-lib")
 
