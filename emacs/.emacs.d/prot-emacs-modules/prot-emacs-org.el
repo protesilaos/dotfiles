@@ -259,7 +259,7 @@
           ("t" "Time-sensitive task" entry
            (file+headline "tasks.org" "Tasks with a date")
            ,(concat "* TODO %^{Title} %^g\n"
-                    "%^{How time sensitive it is||SCHEDULED|DEADLINE}: %^t\n"
+                    "%^{How time sensitive it is|SCHEDULED|SCHEDULED|DEADLINE}: %^t\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
