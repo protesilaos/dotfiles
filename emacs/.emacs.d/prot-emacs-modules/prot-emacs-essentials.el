@@ -512,9 +512,7 @@ to be cycling through the edits."
 (use-package shell
   :ensure nil
   :bind
-  ( :map global-map
-    ("<f1>" . shell) ; I don't use F1 for help commands
-    :map shell-mode-map
+  ( :map shell-mode-map
     ("C-c C-k" . comint-clear-buffer)
     ("C-c C-w" . comint-write-output))
   :config
@@ -566,6 +564,7 @@ to be cycling through the edits."
 
 (use-package prot-shell
   :ensure nil
+  :bind (("<f1>" . prot-shell)) ; I don't use F1 for help commands
   :hook (shell-mode . prot-shell-mode))
 
 ;;; Laptop settings

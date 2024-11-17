@@ -3369,9 +3369,13 @@ shell for us. Mine is ~bash~ because I am a simpleton, but also
 because my =prot-shell.el= provides a few niceties that improve the
 user experience ([[#h:32f6fe0f-23c4-44cc-97cc-3e5372bd484e][The =prot-shell.el= library]]).
 
-I run a shell to do tihngs like interface with my system's package
+I run a shell to do things like interface with my system's package
 manager or run a program with some flags. =M-x shell= is more than
-enough for this purpose.
+enough for this purpose. To make it a bit easier to work with multiple
+shells that need to be named after the directory they are in, I use
+the command ~prot-shell~: it not only uses a unique and informative
+buffer name, but it also keeps track of ~cd~ commands to update the
+buffer name accordingly.
 
 Note that there also exists a shell implemented in Emacs Lisp. It is
 called ~eshell~. Unlike ~shell~, it does not read the =~/.bashrc= and
@@ -3408,9 +3412,7 @@ Now the actual configurations:
 (use-package shell
   :ensure nil
   :bind
-  ( :map global-map
-    ("<f1>" . shell) ; I don't use F1 for help commands
-    :map shell-mode-map
+  ( :map shell-mode-map
     ("C-c C-k" . comint-clear-buffer)
     ("C-c C-w" . comint-write-output))
   :config
@@ -3462,6 +3464,7 @@ Now the actual configurations:
 
 (use-package prot-shell
   :ensure nil
+  :bind (("<f1>" . prot-shell)) ; I don't use F1 for help commands
   :hook (shell-mode . prot-shell-mode))
 #+end_src
 
@@ -15874,6 +15877,12 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
               ((string-match-p "cd " input)))
     (push shell-last-dir prot-shell-cd-directories)))
 
+(defun prot-shell-update-name-on-cd (&rest _)
+  "Update the shell buffer name after a cd for use in `prot-shell'."
+  (when-let* ((input (prot-shell--last-input))
+              ((string-match-p "cd " input)))
+    (rename-buffer (format "*prot-shell in %s*" default-directory) :make-unique)))
+
 (defvar prot-shell--cd-history nil
   "Minibuffer history for `prot-shell-cd'.")
 
@@ -16058,6 +16067,15 @@ If point is at the beginning of a shell prompt, return previous
 input, otherwise perform buffer motion."
   (interactive "^p")
   (prot-shell--history-or-motion 'comint-next-input 'next-line arg))
+
+;;;###autoload
+(defun prot-shell ()
+  "Like `shell' but always start a new shell.
+Name the shell buffer after the `default-directory'.  If the name of
+that buffer already exists, then reuse it."
+  (interactive)
+  (with-current-buffer (shell (format "*prot-shell in %s*" default-directory))
+    (add-hook 'comint-output-filter-functions #'prot-shell-update-name-on-cd nil :local)))
 
 ;;;; Minor mode setup
 

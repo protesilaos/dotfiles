@@ -113,6 +113,12 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
               ((string-match-p "cd " input)))
     (push shell-last-dir prot-shell-cd-directories)))
 
+(defun prot-shell-update-name-on-cd (&rest _)
+  "Update the shell buffer name after a cd for use in `prot-shell'."
+  (when-let* ((input (prot-shell--last-input))
+              ((string-match-p "cd " input)))
+    (rename-buffer (format "*prot-shell in %s*" default-directory) :make-unique)))
+
 (defvar prot-shell--cd-history nil
   "Minibuffer history for `prot-shell-cd'.")
 
@@ -297,6 +303,15 @@ If point is at the beginning of a shell prompt, return previous
 input, otherwise perform buffer motion."
   (interactive "^p")
   (prot-shell--history-or-motion 'comint-next-input 'next-line arg))
+
+;;;###autoload
+(defun prot-shell ()
+  "Like `shell' but always start a new shell.
+Name the shell buffer after the `default-directory'.  If the name of
+that buffer already exists, then reuse it."
+  (interactive)
+  (with-current-buffer (shell (format "*prot-shell in %s*" default-directory))
+    (add-hook 'comint-output-filter-functions #'prot-shell-update-name-on-cd nil :local)))
 
 ;;;; Minor mode setup
 
