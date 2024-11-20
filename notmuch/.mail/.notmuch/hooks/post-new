@@ -54,9 +54,5 @@ notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmod
 notmuch tag -inbox +list +emacs -- 'to:"/*@debbugs.gnu.org*/"'
 notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org not to:emacs-humanities-owner@gnu.org
 
-## Others
-notmuch tag -inbox +list +notmuch -- from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org
-notmuch tag -inbox +list +sourcehut -- 'to:"/*~sircmpwn/sr.ht-discuss@lists.sr.ht*/"'
-
-# include mailing lists sent to me into the "inbox"
+# include mailing lists sent to me in the "inbox"
 notmuch tag +inbox -- '(to:"*@protesilaos.com*" tag:list)'
