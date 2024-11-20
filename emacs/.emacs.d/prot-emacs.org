@@ -8926,11 +8926,11 @@ user option ~auth-sources~. I set it to a single GPG-encrypted entry.
 The contents of that file look like this:
 
 #+begin_example
-machine pub port 993 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
-machine inf port 993 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
+machine pub port 993 login SOME-USER-NAME-HERE-1 password SOME-PASSWORD-HERE
+machine inf port 993 login SOME-USER-NAME-HERE-2 password SOME-PASSWORD-HERE
 
-machine mail.gandi.net port 465 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
-machine mail.gandi.net port 465 login SOME-USER-NAME-HERE password SOME-PASSWORD-HERE
+machine smtp.some-server.com port 465 login SOME-USER-NAME-HERE-1 password SOME-PASSWORD-HERE
+machine mail.other-server.com port 465 login SOME-USER-NAME-HERE-2 password SOME-PASSWORD-HERE
 #+end_example
 
 Each line can be read as a map of key-value pairs. Think of it like this:
@@ -8938,8 +8938,8 @@ Each line can be read as a map of key-value pairs. Think of it like this:
 #+begin_example
 machine pub
 port 993
-login SOME-USER-NAME-HERE
-password SOME-PASSWORD-HERE
+login SOME-USER-NAME-HERE-1
+password SOME-PASSWORD-HERE-1
 #+end_example
 
 Depending on the settings and the applicable program, Emacs reads this
@@ -9236,6 +9236,26 @@ in nature and may be used by other Elisp snippets of mine ([[#h:3fccfadf-22e9-45
 Doing things this way ensures that I do not share the details about
 the accounts I set.
 
+At any rate, the format of ~notmuch-identities~ is like this:
+
+#+begin_example emacs-lisp
+(setq notmuch-identities '("Protesilaos Stavrou <someone@somewhere.com>" "Prot <just-my-nickname@somewhere.com>"))
+#+end_example
+
+While the corresponding ~notmuch-fcc-dirs~ map those accounts to the
+relative path of their local sent mail folder (it is relative to the
+root of the directory that ~notmuch~ indexes, so something like
+=~/.mail/pub/Sent= needs to be written as =pub/Sent=). The data
+structure looks like this:
+
+#+begin_example emacs-lisp
+(setq notmuch-fcc-dirs
+      '(("someone@somewhere.com" . "someone/Sent")
+        ("nickname@somewhere.com" . "nickname/Sent")))
+#+end_example
+
+Now the actual code I use:
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Account settings
 (use-package notmuch
@@ -9249,9 +9269,9 @@ the accounts I set.
                     (format "%s <%s>" user-full-name str))
                   (list prv pub inf))
           notmuch-fcc-dirs
-          `((,prv . "prv/Sent")
-            (,inf . "inf/Sent")
-            (,pub . "pub/Sent")))))
+          `((,prv . "mailbox/Sent")
+            (,inf . "mailbox/Sent")
+            (,pub . "mailbox/Sent")))))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about the general user interface
@@ -10255,6 +10275,37 @@ What you see there is three separate email accounts.
 # changes so I do not mind copying it here directly.
 
 #+begin_example sh
+IMAPAccount mailbox
+Host imap.mailbox.org
+UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }'"
+PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore mailbox-remote
+Account mailbox
+
+MaildirStore mailbox-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/mailbox/
+Inbox ~/.mail/mailbox/Inbox
+
+Channel mailbox
+Far :mailbox-remote:
+Near :mailbox-local:
+# Include everything
+Patterns *
+Sync All
+Create Both
+Remove Both
+Expunge Both
+SyncState *
+#+end_example
+
+Below is an older version of this file (as of 2024-11-20) that shows
+how to make things work with multiple accounts:
+
+#+begin_example sh
 IMAPAccount pub
 Host mail.gandi.net
 UserCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }'"
@@ -10349,6 +10400,30 @@ as with ~mbsync~, I retrieve the user name and password via commands
 that read from the =~/.authinfo= file ([[#h:bf540a85-12a6-4005-bf00-2ff3370e5adb][Contents of my =.mbsyncrc=]]).
 
 #+begin_example sh
+# See my mbsync config, which is reflected here.
+# https://github.com/protesilaos/dotfiles
+
+defaults
+auth on
+protocol smtp
+tls on
+tls_starttls off
+host smtp.mailbox.org
+port 465
+
+account mailbox
+eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
+eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
+passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
+
+# Set a default account (I copied from man msmtp)
+account default : mailbox
+#+end_example
+
+Below is an older version of this file (as of 2024-11-20) that shows
+how to make things work with multiple accounts:
+
+#+begin_example sh
 # See my mbsync config, which is reflectd here.
 # https://github.com/protesilaos/dotfiles
 
@@ -10356,11 +10431,9 @@ defaults
 auth on
 protocol smtp
 tls on
-# FIXME 2023-08-08: I cannot send the message if `tls_starttls' is on.
-# Why?
-tls_starttls off
+tls_starttls on
 host mail.gandi.net
-port 465
+port 587
 
 # pub
 account pub

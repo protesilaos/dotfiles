@@ -20,9 +20,9 @@
                     (format "%s <%s>" user-full-name str))
                   (list prv pub inf))
           notmuch-fcc-dirs
-          `((,prv . "prv/Sent")
-            (,inf . "inf/Sent")
-            (,pub . "pub/Sent")))))
+          `((,prv . "mailbox/Sent")
+            (,inf . "mailbox/Sent")
+            (,pub . "mailbox/Sent")))))
 
 ;;;; General UI
 (use-package notmuch

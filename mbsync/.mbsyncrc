@@ -1,82 +1,25 @@
-IMAPAccount pub
-Host mail.gandi.net
-UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }'"
-PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
+IMAPAccount mailbox
+Host imap.mailbox.org
+UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }'"
+PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
 SSLType IMAPS
 
-IMAPStore pub-remote
-Account pub
+IMAPStore mailbox-remote
+Account mailbox
 
-MaildirStore pub-local
+MaildirStore mailbox-local
 Subfolders Verbatim
 # The trailing "/" is important
-Path ~/.mail/pub/
-Inbox ~/.mail/pub/Inbox
+Path ~/.mail/mailbox/
+Inbox ~/.mail/mailbox/Inbox
 
-Channel pub
-Far :pub-remote:
-Near :pub-local:
+Channel mailbox
+Far :mailbox-remote:
+Near :mailbox-local:
 # Include everything
 Patterns *
 Sync All
-Create Near
-Remove Near
-Expunge Near
+Create Both
+Remove Both
+Expunge Both
 SyncState *
-
-##########
-
-IMAPAccount inf
-Host mail.gandi.net
-UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }'"
-PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
-SSLType IMAPS
-
-IMAPStore inf-remote
-Account inf
-
-MaildirStore inf-local
-Subfolders Verbatim
-# The trailing "/" is important
-Path ~/.mail/inf/
-Inbox ~/.mail/inf/Inbox
-
-Channel inf
-Far :inf-remote:
-Near :inf-local:
-# Include everything
-Pattern *
-Sync All
-Create Near
-Remove Near
-Expunge Near
-SyncState *
-
-##########
-
-IMAPAccount prv
-Host mail.gandi.net
-UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }'"
-PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
-SSLType IMAPS
-
-IMAPStore prv-remote
-Account prv
-
-MaildirStore prv-local
-Subfolders Verbatim
-# The trailing "/" is important
-Path ~/.mail/prv/
-Inbox ~/.mail/prv/Inbox
-
-Channel prv
-Far :prv-remote:
-Near :prv-local:
-# Include everything
-Patterns *
-Sync All
-Create Near
-Remove Near
-Expunge Near
-SyncState *
-
