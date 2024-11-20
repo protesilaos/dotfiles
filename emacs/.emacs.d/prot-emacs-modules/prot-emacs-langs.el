@@ -299,26 +299,7 @@
   ;; instead of their long file name they have a literal "[D]"
   ;; followed by the file's title.  Read the doc string of
   ;; `denote-rename-buffer-format' for how to modify this.
-  (denote-rename-buffer-mode 1)
-
-  ;; ----- PERSONAL TWEAKS FOR EXPERIMENTS -----
-  (setq denote-text-front-matter "title: %s\n\n")
-
-  (defun prot/denote-add-text-front-matter-separator ()
-    "Add separator equal to the length of the title.
-Do this when the `denote-file-type' is `text'."
-    (when (and (eq denote-file-type 'text)
-              ;; Not `string=' because there may be a .gpg extension as well.
-              (string-match-p (file-name-extension buffer-file-name) "txt"))
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward "title:" nil t)
-          (let ((text (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-            (if (re-search-forward "^$" nil t)
-                (insert (make-string (length text) ?-))
-              (error "Could not find an empty line after the front matter")))))))
-
-  (add-hook 'denote-after-new-note-hook #'prot/denote-add-text-front-matter-separator))
+  (denote-rename-buffer-mode 1))
 
 (when prot-emacs-completion-extras
   (use-package consult-denote
