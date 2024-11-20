@@ -2469,6 +2469,8 @@ this via some hook.
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
     ("M-k" . prot-simple-kill-line-backward)
+    ("M-j" . delete-indentation)
+    ("M-w" . prot-simple-kill-ring-save)
     ("C-S-d" . prot-simple-duplicate-line-or-region)
     ("C-S-w" . prot-simple-copy-line)
     ("C-S-y" . prot-simple-yank-replace-line-or-region)
@@ -8449,7 +8451,9 @@ not even bother trying as I seldom have that need.
   :ensure nil
   :bind
   (("M-$" . prot-spell-spell-dwim)
-   ("C-M-$" . prot-spell-change-dictionary))
+   ("C-M-$" . prot-spell-change-dictionary)
+   ("M-i" . prot-spell-spell-dwim) ; override `tab-to-tab-stop'
+   ("C-M-i" . prot-spell-change-dictionary)) ; override `complete-symbol'
   :config
   (setq prot-spell-dictionaries
         '(("EN English" . "en")

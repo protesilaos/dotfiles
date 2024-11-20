@@ -115,7 +115,9 @@
   :ensure nil
   :bind
   (("M-$" . prot-spell-spell-dwim)
-   ("C-M-$" . prot-spell-change-dictionary))
+   ("C-M-$" . prot-spell-change-dictionary)
+   ("M-i" . prot-spell-spell-dwim) ; override `tab-to-tab-stop'
+   ("C-M-i" . prot-spell-change-dictionary)) ; override `complete-symbol'
   :config
   (setq prot-spell-dictionaries
         '(("EN English" . "en")

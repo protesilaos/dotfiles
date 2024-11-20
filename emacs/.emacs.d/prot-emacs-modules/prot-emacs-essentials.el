@@ -92,6 +92,7 @@
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
     ("M-k" . prot-simple-kill-line-backward)
+    ("M-j" . delete-indentation)
     ("M-w" . prot-simple-kill-ring-save)
     ("C-S-d" . prot-simple-duplicate-line-or-region)
     ("C-S-w" . prot-simple-copy-line)
