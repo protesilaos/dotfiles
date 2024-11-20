@@ -87,19 +87,7 @@
           ( :name "🏆 unread coaching"
             :query "tag:unread and tag:coach"
             :sort-order newest-first
-            :key ,(kbd "c"))
-          ;; Emacs
-          ( :name "🔨 emacs-devel"
-            :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "e d"))
-          ( :name "🦄 emacs-orgmode"
-            :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "e o"))
-          ( :name "🐛 emacs-bugs"
-            :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
-            :sort-order newest-first :key ,(kbd "e b")))))
+            :key ,(kbd "c")))))
 
 ;;;; Tags
 (use-package notmuch
