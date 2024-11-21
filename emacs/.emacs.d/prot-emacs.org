@@ -9219,7 +9219,7 @@ directory being part of the ~load-path~).
   :commands (notmuch notmuch-mua-new-mail))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about the acount settings
+**** The =prot-emacs-notmuch.el= section about the account settings
 :PROPERTIES:
 :CUSTOM_ID: h:2fca749c-a84e-415c-9ac0-b1518d06fa51
 :END:
@@ -9263,15 +9263,17 @@ Now the actual code I use:
   :config
   (let ((prv (prot-common-auth-get-field "prv" :user))
         (pub (prot-common-auth-get-field "pub" :user))
-        (inf (prot-common-auth-get-field "inf" :user)))
+        (inf (prot-common-auth-get-field "inf" :user))
+        (box (prot-common-auth-get-field "mailbox" :user)))
     (setq notmuch-identities
           (mapcar (lambda (str)
                     (format "%s <%s>" user-full-name str))
-                  (list prv pub inf))
+                  (list prv pub inf box))
           notmuch-fcc-dirs
           `((,prv . "mailbox/Sent")
             (,inf . "mailbox/Sent")
-            (,pub . "mailbox/Sent")))))
+            (,pub . "mailbox/Sent")
+            (,box . "mailbox/Sent")))))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about the general user interface

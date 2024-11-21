@@ -32,8 +32,8 @@ path=/home/prot/.mail
 
 [user]
 name=Protesilaos Stavrou
-primary_email=public@protesilaos.com
-other_email=info@protesilaos.com
+primary_email=prot@protesilaos.com
+other_email=public@protesilaos.com;info@protesilaos.com
 
 # Configuration for "notmuch new"
 #
