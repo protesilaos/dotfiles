@@ -142,6 +142,87 @@ DEADLINE: %%^T
 (advice-add 'org-capture-place-template :around 'prot-org--capture-no-delete-windows)
 (advice-add 'org-add-log-note :around 'prot-org--capture-no-delete-windows)
 
+;;;;; Custom function to select a project to add to
+
+(defun prot-org--get-outline (&optional file)
+  "Return `outline-regexp' headings and line numbers of current file or FILE."
+  (with-current-buffer (find-file-noselect file)
+    (let ((outline-regexp (format "^\\(?:%s\\)" (or (bound-and-true-p outline-regexp) "[*\^L]+")))
+          candidates)
+      (save-excursion
+        (goto-char (point-min))
+        (while (if (bound-and-true-p outline-search-function)
+                   (funcall outline-search-function)
+                 (re-search-forward outline-regexp nil t))
+          (push
+           ;; NOTE 2024-11-24: The -5 (minimum width) is a sufficiently high number to keep the
+           ;; alignment consistent in most cases.  Larger files will simply shift the heading text
+           ;; in minibuffer, but this is not an issue anymore.
+           (format "%-5s\t%s"
+                   (line-number-at-pos (point))
+                   (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+           candidates)
+          (goto-char (1+ (line-end-position)))))
+      (if candidates
+          (nreverse candidates)
+        (user-error "No outline")))))
+
+(defvar prot-org-outline-history nil
+  "Minibuffer history for `prot-org-outline-prompt'.")
+
+(defun prot-org-outline-prompt (&optional file)
+  "Prompt for outline among headings retrieved by `prot-org--get-outline'.
+With optional FILE use the outline of it, otherwise use that of
+the current file."
+  (let ((current-file (or file buffer-file-name))
+        (default (car prot-org-outline-history)))
+    (completing-read
+     (format-prompt
+      (format "Select heading inside `%s': "
+              (propertize (file-name-nondirectory current-file) 'face 'error))
+      default)
+     (prot-common-completion-table-no-sort 'imenu (prot-org--get-outline current-file))
+     nil :require-match nil 'prot-org-outline-history default)))
+
+(defvar prot-org-file-history nil
+  "Minibuffer history of `prot-org-file-prompt'.")
+
+(defun prot-org--not-useful-p (file)
+  "Return non-nil if FILE is not a useful Org file for `org-capture'."
+  (or (string-match-p "\\.org_archive\\'" file)
+      (backup-file-name-p file)
+      (not (string-match-p "\\.org\\'" file))))
+
+(defun prot-org-file-prompt ()
+  "Select a file in the `org-directory'."
+  (if-let ((dir org-directory)
+           (files (directory-files-recursively org-directory ".*" nil))
+           (files (seq-remove #'prot-org--not-useful-p files)))
+      (let ((default (car prot-org-file-history)))
+        (completing-read
+         (format-prompt "Select file" default)
+         files nil :require-match nil 'prot-org-file-history default))
+    (user-error "There are no files in the `org-directory'")))
+
+;;;###autoload
+(defun prot-org-select-project (file line-with-heading)
+  (interactive
+   (let ((f (prot-org-file-prompt)))
+     (list f (prot-org-outline-prompt f))))
+  (pcase-let* ((`(,line ,text) (split-string line-with-heading "\t"))
+               (line (string-to-number line)))
+    (with-current-buffer (find-file file)
+      (goto-char (point-min))
+      (forward-line (1- line))
+      (org-insert-todo-subheading '(4)))))
+
+;;;###autoload
+(defun prot-org-capture-select-project ()
+  "Like `prot-org-select-project' but specifically for `org-capture'."
+  (declare (interactive-only t))
+  (interactive)
+  (call-interactively 'prot-org-select-project))
+
 ;;;; org-agenda
 
 (declare-function calendar-day-name "calendar")
