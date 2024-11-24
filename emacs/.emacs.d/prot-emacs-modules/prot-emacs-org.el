@@ -228,67 +228,6 @@
                     ":END:\n\n"
                     "%a\n%i%?")
            :empty-lines-after 1)
-          ;; ("e" "Email note (unprocessed)" entry ; Also see `org-capture-templates-contexts'
-          ;;  (file+headline "tasks.org" "Unprocessed")
-          ;;  ,(concat "* TODO %:subject :mail:\n"
-          ;;           ":PROPERTIES:\n"
-          ;;           ":CAPTURED: %U\n"
-          ;;           ":END:\n\n"
-          ;;           "%a\n%i%?")
-          ;;  :empty-lines-after 1)
-          ("w" "Add to the wishlist (may do some day)" entry
-           (file+headline "tasks.org" "Wishlist")
-           ,(concat "* %^{Title}\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%a%?")
-           :empty-lines-after 1)
-          ("c" "Clock in and do immediately" entry
-           (file+headline "tasks.org" "Clocked tasks")
-           ,(concat "* TODO %^{Title}\n"
-                    ":PROPERTIES:\n"
-                    ":EFFORT: %^{Effort estimate in minutes|5|10|15|30|45|60|90|120}\n"
-                    ":END:\n\n"
-                    "%a\n")
-           :prepend t
-           :clock-in t
-           :clock-keep t
-           :immediate-finish t
-           :empty-lines-after 1)
-          ("t" "Time-sensitive task" entry
-           (file+headline "tasks.org" "Tasks with a date")
-           ,(concat "* TODO %^{Title} %^g\n"
-                    "%^{How time sensitive it is|SCHEDULED|SCHEDULED|DEADLINE}: %^t\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%a%?")
-           :empty-lines-after 1)
-          ("p" "Private lesson or service" entry
-           (file "coach.org")
-           #'prot-org-capture-coach
-           :prepend t
-           :empty-lines 1)
-          ("P" "Private service clocked" entry
-           (file+headline "coach.org" "Clocked services")
-           #'prot-org-capture-coach-clock
-           :prepend t
-           :clock-in t
-           :clock-keep t
-           :immediate-finish t
-           :empty-lines 1)))
-
-
-  (setq org-capture-templates
-        `(("u" "Unprocessed" entry
-           (file+headline "tasks.org" "Unprocessed")
-           ,(concat "* %^{Title}\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%a\n%i%?")
-           :empty-lines-after 1)
           ("p" "Projects in general" entry
            (file+headline "tasks.org" "Projects")
            ,(concat "* TODO %^{Title} %^g\n"
@@ -301,14 +240,9 @@
 
           ("s" "Add to an existing project" entry
            (function prot-org-capture-select-project)
-           ,(concat "* TODO %^{Title} %^g\n"
-                    "%^{How time sensitive it is|SCHEDULED|SCHEDULED|DEADLINE}: %^t\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%a%?")
+           "* TODO %?"
            :empty-lines-after 1)
-          
+
           ("p" "Projects in general" entry
            (file+headline "tasks.org" "Projects")
            ,(concat "* TODO %^{Title} %^g\n"

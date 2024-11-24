@@ -205,23 +205,18 @@ the current file."
     (user-error "There are no files in the `org-directory'")))
 
 ;;;###autoload
-(defun prot-org-select-project (file line-with-heading)
-  (interactive
-   (let ((f (prot-org-file-prompt)))
-     (list f (prot-org-outline-prompt f))))
-  (pcase-let* ((`(,line ,text) (split-string line-with-heading "\t"))
-               (line (string-to-number line)))
-    (with-current-buffer (find-file file)
-      (goto-char (point-min))
-      (forward-line (1- line))
-      (org-insert-todo-subheading '(4)))))
-
-;;;###autoload
 (defun prot-org-capture-select-project ()
   "Like `prot-org-select-project' but specifically for `org-capture'."
   (declare (interactive-only t))
   (interactive)
-  (call-interactively 'prot-org-select-project))
+  (pcase-let* ((file (prot-org-file-prompt))
+               (line-with-heading (prot-org-outline-prompt file))
+               (`(,line ,text) (split-string line-with-heading "\t"))
+               (line (string-to-number line)))
+    ;; NOTE 2024-11-24: `with-current-buffer' does not work with `org-capture'.
+    (find-file file)
+    (goto-char (point-min))
+    (forward-line (1- line))))
 
 ;;;; org-agenda
 
