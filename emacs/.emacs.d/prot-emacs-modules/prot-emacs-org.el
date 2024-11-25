@@ -247,7 +247,7 @@
            :empty-lines-after 1)
           ("s" "Select file and heading to add to" entry
            (function prot-org-capture-select-project)
-           "* TODO %^{Title} %^g\n%?"
+           "* TODO %^{Title}%?"
            :empty-lines-after 1)
 
           ;; NOTE 2024-11-24: I am not using this, but am keeping it
