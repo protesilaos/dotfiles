@@ -103,7 +103,7 @@ For use in `prot-org-capture-coach'."
 DEADLINE: %%^T
 :PROPERTIES:
 :CAPTURED: %%U
-:CUSTOM_ID: %s
+:CUSTOM_ID: h:%s
 :APPT_WARNTIME: 20
 :END:
 
@@ -118,7 +118,7 @@ DEADLINE: %%^T
   (format "* COACH %s %s :service:
 :PROPERTIES:
 :CAPTURED: %%U
-:CUSTOM_ID: %s
+:CUSTOM_ID: h:%s
 :END:
 
 %%a%%?"

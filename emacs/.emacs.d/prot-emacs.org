@@ -7717,7 +7717,7 @@ As for my workflow, here is an overview:
            ,(concat "* %^{Title}\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
                     "%a\n%i%?")
            :empty-lines-after 1)
@@ -7726,7 +7726,7 @@ As for my workflow, here is an overview:
            ,(concat "* %^{Title} %^g\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
                     "%a%?")
            :empty-lines-after 1)
@@ -7735,7 +7735,7 @@ As for my workflow, here is an overview:
            ,(concat "* TODO %^{Title} %^g\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
                     "%a%?")
            :empty-lines-after 1)
@@ -7744,7 +7744,7 @@ As for my workflow, here is an overview:
            ,(concat "* TODO %^{Title}%?\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n")
            :empty-lines-after 1)
 
@@ -14153,7 +14153,7 @@ For use in `prot-org-capture-coach'."
 DEADLINE: %%^T
 :PROPERTIES:
 :CAPTURED: %%U
-:CUSTOM_ID: %s
+:CUSTOM_ID: h:%s
 :APPT_WARNTIME: 20
 :END:
 
@@ -14168,7 +14168,7 @@ DEADLINE: %%^T
   (format "* COACH %s %s :service:
 :PROPERTIES:
 :CAPTURED: %%U
-:CUSTOM_ID: %s
+:CUSTOM_ID: h:%s
 :END:
 
 %%a%%?"

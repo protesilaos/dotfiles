@@ -225,7 +225,7 @@
            ,(concat "* %^{Title}\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
                     "%a\n%i%?")
            :empty-lines-after 1)
@@ -234,7 +234,7 @@
            ,(concat "* %^{Title} %^g\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
                     "%a%?")
            :empty-lines-after 1)
@@ -243,7 +243,7 @@
            ,(concat "* TODO %^{Title} %^g\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
                     "%a%?")
            :empty-lines-after 1)
@@ -252,7 +252,7 @@
            ,(concat "* TODO %^{Title}%?\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
-                    ":CUSTOM_ID: %(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n")
            :empty-lines-after 1)
 
