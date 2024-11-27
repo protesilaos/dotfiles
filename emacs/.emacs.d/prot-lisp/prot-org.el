@@ -201,7 +201,8 @@ the current file."
       (let ((default (car prot-org-file-history)))
         (completing-read
          (format-prompt "Select file" default)
-         files nil :require-match nil 'prot-org-file-history default))
+         (prot-common-completion-table 'file files)
+         nil :require-match nil 'prot-org-file-history default))
     (user-error "There are no files in the `org-directory'")))
 
 ;;;###autoload
