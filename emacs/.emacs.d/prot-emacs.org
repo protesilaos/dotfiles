@@ -14269,6 +14269,9 @@ the current file."
     (goto-char (point-min))
     (forward-line (1- line))))
 
+(defalias 'prot-org-goto-heading-in-file 'prot-org-capture-select-project
+ "Alias for `prot-org-capture-select-project'.")
+
 ;;;; org-agenda
 
 (declare-function calendar-day-name "calendar")
