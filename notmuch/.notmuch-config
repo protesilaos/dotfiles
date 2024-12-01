@@ -65,7 +65,7 @@ ignore=.uidvalidity;.mbsyncstate;.mbsyncstate.new;.mbsyncstate.lock
 #
 
 [search]
-exclude_tags=del;spam;
+exclude_tags=
 
 # Maildir compatibility configuration
 #
