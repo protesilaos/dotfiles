@@ -236,7 +236,7 @@
                     ":CAPTURED: %U\n"
                     ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
-                    "%a%?")
+                    "%a\n%?")
            :empty-lines-after 1)
           ("t" "Task to do" entry
            (file+headline "tasks.org" "All tasks")
@@ -245,7 +245,7 @@
                     ":CAPTURED: %U\n"
                     ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                     ":END:\n\n"
-                    "%a%?")
+                    "%a\n%?")
            :empty-lines-after 1)
           ("s" "Select file and heading to add to" entry
            (function prot-org-capture-select-project)
