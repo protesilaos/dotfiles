@@ -1,21 +1,23 @@
-IMAPAccount mailbox
-Host imap.mailbox.org
-UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }'"
-PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
+# Gandi
+####################################################################################################
+IMAPAccount gandi
+Host mail.gandi.net
+UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prot-gandi/ { print $(NF-2); exit; }'"
+PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prot-gandi/ { print $NF; exit; }'"
 SSLType IMAPS
 
-IMAPStore mailbox-remote
-Account mailbox
+IMAPStore gandi-remote
+Account gandi
 
-MaildirStore mailbox-local
+MaildirStore gandi-local
 Subfolders Verbatim
 # The trailing "/" is important
-Path ~/.mail/mailbox/
-Inbox ~/.mail/mailbox/Inbox
+Path ~/.mail/gandi/
+Inbox ~/.mail/gandi/Inbox
 
-Channel mailbox
-Far :mailbox-remote:
-Near :mailbox-local:
+Channel gandi
+Far :gandi-remote:
+Near :gandi-local:
 # Include everything
 Patterns *
 Sync All
@@ -23,3 +25,63 @@ Create Both
 Remove Both
 Expunge Both
 SyncState *
+
+# NOTE 2024-12-01: I do not use the others, but have tested them in
+# the past. I keep the settings here in case I decide to test the
+# functionality again.
+
+# # Gmail
+# ####################################################################################################
+# IMAPAccount gmail
+# Host imap.gmail.com
+# UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $(NF-2); exit; }'"
+# PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $NF; exit; }'"
+# SSLType IMAPS
+#
+# IMAPStore gmail-remote
+# Account gmail
+#
+# MaildirStore gmail-local
+# Subfolders Verbatim
+# # The trailing "/" is important
+# Path ~/.mail/gmail/
+# Inbox ~/.mail/gmail/Inbox
+#
+# Channel gmail
+# Far :gmail-remote:
+# Near :gmail-local:
+# # Include everything
+# Patterns *
+# Sync All
+# Create Near
+# Remove Near
+# Expunge Near
+# SyncState *
+
+# # Mailbox
+# ####################################################################################################
+# IMAPAccount mailbox
+# Host imap.mailbox.org
+# UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }'"
+# PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
+# SSLType IMAPS
+#
+# IMAPStore mailbox-remote
+# Account mailbox
+#
+# MaildirStore mailbox-local
+# Subfolders Verbatim
+# # The trailing "/" is important
+# Path ~/.mail/mailbox/
+# Inbox ~/.mail/mailbox/Inbox
+#
+# Channel mailbox
+# Far :mailbox-remote:
+# Near :mailbox-local:
+# # Include everything
+# Patterns *
+# Sync All
+# Create Near
+# Remove Near
+# Expunge Near
+# SyncState *

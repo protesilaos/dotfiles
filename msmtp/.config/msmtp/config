@@ -5,14 +5,39 @@ defaults
 auth on
 protocol smtp
 tls on
-tls_starttls off
-host smtp.mailbox.org
-port 465
+tls_starttls on
 
-account mailbox
-eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
-eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
-passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
+# Gandi
+####################################################################################################
+account gandi
+host mail.gandi.net
+port 587
+eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prot-gandi/ { print $(NF-2); exit; }')
+eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prot-gandi/ { print $(NF-2); exit; }')
+passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prot-gandi/ { print $NF; exit; }'"
+
+# NOTE 2024-12-01: I do not use the others, but have tested them in
+# the past. I keep the settings here in case I decide to test the
+# functionality again.
+
+# # Gmail
+# ####################################################################################################
+# account gmail
+# host smtp.gmail.com
+# port 587
+# eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $(NF-2); exit; }')
+# eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $(NF-2); exit; }')
+# passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $NF; exit; }'"
+
+# # Mailbox
+# ####################################################################################################
+# account mailbox
+# host smtp.mailbox.org
+# port 465
+# eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
+# eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
+# passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
+
 
 # Set a default account (I copied from man msmtp)
-account default : mailbox
+account default : gandi

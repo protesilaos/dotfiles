@@ -9267,19 +9267,19 @@ Now the actual code I use:
 (use-package notmuch
   :defer t
   :config
-  (let ((prv (prot-common-auth-get-field "prv" :user))
-        (pub (prot-common-auth-get-field "pub" :user))
-        (inf (prot-common-auth-get-field "inf" :user))
-        (box (prot-common-auth-get-field "mailbox" :user)))
+  (let ((prv (prot-common-auth-get-field "prv-gandi" :user))
+        (pub (prot-common-auth-get-field "pub-gandi" :user))
+        (inf (prot-common-auth-get-field "inf-gandi" :user))
+        (box (prot-common-auth-get-field "prot-gandi" :user)))
     (setq notmuch-identities
           (mapcar (lambda (str)
                     (format "%s <%s>" user-full-name str))
                   (list prv pub inf box))
           notmuch-fcc-dirs
-          `((,prv . "mailbox/Sent")
-            (,inf . "mailbox/Sent")
-            (,pub . "mailbox/Sent")
-            (,box . "mailbox/Sent")))))
+          `((,prv . "gandi/Sent")
+            (,inf . "gandi/Sent")
+            (,pub . "gandi/Sent")
+            (,box . "gandi/Sent")))))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about the general user interface
@@ -10274,55 +10274,26 @@ What you see there is three separate email accounts.
 # changes so I do not mind copying it here directly.
 
 #+begin_example sh
-IMAPAccount mailbox
-Host imap.mailbox.org
-UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }'"
-PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
-SSLType IMAPS
-
-IMAPStore mailbox-remote
-Account mailbox
-
-MaildirStore mailbox-local
-Subfolders Verbatim
-# The trailing "/" is important
-Path ~/.mail/mailbox/
-Inbox ~/.mail/mailbox/Inbox
-
-Channel mailbox
-Far :mailbox-remote:
-Near :mailbox-local:
-# Include everything
-Patterns *
-Sync All
-Create Both
-Remove Both
-Expunge Both
-SyncState *
-#+end_example
-
-Below is an older version of this file (as of 2024-11-20) that shows
-how to make things work with multiple accounts:
-
-#+begin_example sh
-IMAPAccount pub
+# Gandi
+####################################################################################################
+IMAPAccount gandi
 Host mail.gandi.net
-UserCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }'"
-PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
+UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gandi/ { print $(NF-2); exit; }'"
+PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gandi/ { print $NF; exit; }'"
 SSLType IMAPS
 
-IMAPStore pub-remote
-Account pub
+IMAPStore gandi-remote
+Account gandi
 
-MaildirStore pub-local
+MaildirStore gandi-local
 Subfolders Verbatim
 # The trailing "/" is important
-Path ~/.mail/pub/
-Inbox ~/.mail/pub/Inbox
+Path ~/.mail/gandi/
+Inbox ~/.mail/gandi/Inbox
 
-Channel pub
-Far :pub-remote:
-Near :pub-local:
+Channel gandi
+Far :gandi-remote:
+Near :gandi-local:
 # Include everything
 Patterns *
 Sync All
@@ -10331,61 +10302,61 @@ Remove Both
 Expunge Both
 SyncState *
 
-##########
+# # Gmail
+# ####################################################################################################
+# IMAPAccount gmail
+# Host imap.gmail.com
+# UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $(NF-2); exit; }'"
+# PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $NF; exit; }'"
+# SSLType IMAPS
+#
+# IMAPStore gmail-remote
+# Account gmail
+#
+# MaildirStore gmail-local
+# Subfolders Verbatim
+# # The trailing "/" is important
+# Path ~/.mail/gmail/
+# Inbox ~/.mail/gmail/Inbox
+#
+# Channel gmail
+# Far :gmail-remote:
+# Near :gmail-local:
+# # Include everything
+# Patterns *
+# Sync All
+# Create Near
+# Remove Near
+# Expunge Near
+# SyncState *
 
-IMAPAccount inf
-Host mail.gandi.net
-UserCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }'"
-PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
-SSLType IMAPS
-
-IMAPStore inf-remote
-Account inf
-
-MaildirStore inf-local
-Subfolders Verbatim
-# The trailing "/" is important
-Path ~/.mail/inf/
-Inbox ~/.mail/inf/Inbox
-
-Channel inf
-Far :inf-remote:
-Near :inf-local:
-# Include everything
-Pattern *
-Sync All
-Create Both
-Remove Both
-Expunge Both
-SyncState *
-
-##########
-
-IMAPAccount prv
-Host mail.gandi.net
-UserCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }'"
-PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
-SSLType IMAPS
-
-IMAPStore prv-remote
-Account prv
-
-MaildirStore prv-local
-Subfolders Verbatim
-# The trailing "/" is important
-Path ~/.mail/prv/
-Inbox ~/.mail/prv/Inbox
-
-Channel prv
-Far :prv-remote:
-Near :prv-local:
-# Include everything
-Patterns *
-Sync All
-Create Both
-Remove Both
-Expunge Both
-SyncState *
+# # Mailbox
+# ####################################################################################################
+# IMAPAccount mailbox
+# Host imap.mailbox.org
+# UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }'"
+# PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
+# SSLType IMAPS
+#
+# IMAPStore mailbox-remote
+# Account mailbox
+#
+# MaildirStore mailbox-local
+# Subfolders Verbatim
+# # The trailing "/" is important
+# Path ~/.mail/mailbox/
+# Inbox ~/.mail/mailbox/Inbox
+#
+# Channel mailbox
+# Far :mailbox-remote:
+# Near :mailbox-local:
+# # Include everything
+# Patterns *
+# Sync All
+# Create Near
+# Remove Near
+# Expunge Near
+# SyncState *
 #+end_example
 
 **** Contents of my ~msmtp~ configuration file
@@ -10406,57 +10377,38 @@ defaults
 auth on
 protocol smtp
 tls on
-tls_starttls off
-host smtp.mailbox.org
-port 465
-
-account mailbox
-eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
-eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
-passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
-
-# Set a default account (I copied from man msmtp)
-account default : mailbox
-#+end_example
-
-Below is an older version of this file (as of 2024-11-20) that shows
-how to make things work with multiple accounts:
-
-#+begin_example sh
-# See my mbsync config, which is reflectd here.
-# https://github.com/protesilaos/dotfiles
-
-defaults
-auth on
-protocol smtp
-tls on
 tls_starttls on
+
+# Gandi
+####################################################################################################
+account gandi
 host mail.gandi.net
 port 587
+eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gandi/ { print $(NF-2); exit; }')
+eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gandi/ { print $(NF-2); exit; }')
+passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gandi/ { print $NF; exit; }'"
 
-# pub
-account pub
-# FIXME 2023-08-08: Optimise this?
-eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
-eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $(NF-2); exit; }')
-passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
+# # Gmail
+# ####################################################################################################
+# account gmail
+# host smtp.gmail.com
+# port 587
+# eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $(NF-2); exit; }')
+# eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $(NF-2); exit; }')
+# passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gmail/ { print $NF; exit; }'"
 
-# inf
-account inf
-# FIXME 2023-08-08: Optimise this?
-eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
-eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $(NF-2); exit; }')
-passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
+# # Mailbox
+# ####################################################################################################
+# account mailbox
+# host smtp.mailbox.org
+# port 465
+# eval echo from $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
+# eval echo user $(gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $(NF-2); exit; }')
+# passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/mailbox/ { print $NF; exit; }'"
 
-# prv
-account prv
-# FIXME 2023-08-08: Optimise this?
-eval echo from $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
-eval echo user $(gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $(NF-2); exit; }')
-passwordeval "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
 
 # Set a default account (I copied from man msmtp)
-account default : pub
+account default : gandi
 #+end_example
 
 ** TODO The =prot-emacs-web.el= module

@@ -12,19 +12,19 @@
 (use-package notmuch
   :defer t
   :config
-  (let ((prv (prot-common-auth-get-field "prv" :user))
-        (pub (prot-common-auth-get-field "pub" :user))
-        (inf (prot-common-auth-get-field "inf" :user))
-        (box (prot-common-auth-get-field "mailbox" :user)))
+  (let ((prv (prot-common-auth-get-field "prv-gandi" :user))
+        (pub (prot-common-auth-get-field "pub-gandi" :user))
+        (inf (prot-common-auth-get-field "inf-gandi" :user))
+        (box (prot-common-auth-get-field "prot-gandi" :user)))
     (setq notmuch-identities
           (mapcar (lambda (str)
                     (format "%s <%s>" user-full-name str))
                   (list prv pub inf box))
           notmuch-fcc-dirs
-          `((,prv . "mailbox/Sent")
-            (,inf . "mailbox/Sent")
-            (,pub . "mailbox/Sent")
-            (,box . "mailbox/Sent")))))
+          `((,prv . "gandi/Sent")
+            (,inf . "gandi/Sent")
+            (,pub . "gandi/Sent")
+            (,box . "gandi/Sent")))))
 
 ;;;; General UI
 (use-package notmuch
