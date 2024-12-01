@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# pre-new --- Notmuch rules that run before notmuch new
+#
+# Copyright (c) 2021-2024  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+## Commentary:
+#
+# The order of those commands matters.
+#
+# Part of my dotfiles: <https://github.com/protesilaos/dotfiles>.
+
+
+# Move unwanted email to the appropriate directory and tag it accordingly.
+mail_root_path=$(notmuch config get database.path)
+
+# This moves them outside the mailbox they belong to.  They are placed
+# in a shared directory that is local to the machine I am using.
+# Basically, something marked as spam or for deletion is removed from
+# the server at this stage.
+notmuch search --output=files --format=text0 tag:del | xargs -r0 mv -t "${mail_root_path}/trash/cur/"
+notmuch search --output=files --format=text0 tag:spam | xargs -r0 mv -t "${mail_root_path}/junk/cur/"
+
+# Those messages should not have the inbox tag and are designated as
+# local-only.  By removing the tags they originally had, I make sure
+# they are not processed again by the above snippet.
+notmuch tag -inbox -del +dellocal -- tag:del
+notmuch tag -inbox -spam +spamlocal -- tag:spam
