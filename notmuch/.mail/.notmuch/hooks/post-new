@@ -24,7 +24,6 @@
 #
 # Part of my dotfiles: <https://github.com/protesilaos/dotfiles>.
 
-
 # remove "unread" from "replied"
 notmuch tag -unread -new -- tag:replied
 
@@ -47,12 +46,12 @@ notmuch tag +coach -- date:2023-01-20..now subject:/[Tt]utor\|[Cc]oach\|[Ll]esso
 notmuch tag +package -- "(to:~protesilaos/*@lists.sr.ht or to:protesilaos/*noreply.github.com or to:*incoming.gitlab.com) not tag:archived not tag:list"
 
 
-# mailing lists
-## emacs
-notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gnu.org
-notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org
-notmuch tag -inbox +list +emacs -- 'to:"/*@debbugs.gnu.org*/"'
-notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org not to:emacs-humanities-owner@gnu.org
-
-# include mailing lists sent to me in the "inbox"
-notmuch tag +inbox -- '(to:"*@protesilaos.com*" tag:list)'
+# # mailing lists
+# ## emacs
+# notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gnu.org
+# notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org
+# notmuch tag -inbox +list +emacs -- 'to:"/*@debbugs.gnu.org*/"'
+# notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org not to:emacs-humanities-owner@gnu.org
+#
+# # include mailing lists sent to me in the "inbox"
+# notmuch tag +inbox -- '(to:"*@protesilaos.com*" tag:list)'
