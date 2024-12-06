@@ -224,7 +224,7 @@ daemon, as I have encountered instabilities with it. Instead, I run a
 single instance of Emacs and then configure it to act as the server.
 This means that I can still connect to the running session via
 ~emacsclient~, which is useful when I want to evaluate Elisp code from
-outside of Emacs (e.g. with my ~delight~ shell script that switches
+outside of Emacs (e.g. with my ~delight.sh~ shell script that switches
 the entire "environment" theme of my tiling window manager or desktop
 environment---see my dotfiles for the technicalities).
 
@@ -410,7 +410,7 @@ accordingly. This is done in the sections about themes:
   "Return non-nil if gsettings (GNOME) has a dark theme.
 Return nil if the DESKTOP_SESSION is either bspwm or
 herbstluftwm, per the configuration of my dotfiles.  Also check
-the `delight' shell script."
+the `delight.sh' shell script."
   (prot-emacs-with-desktop-session
     (string-match-p
      "dark"
@@ -420,7 +420,7 @@ the `delight' shell script."
   "Return non-nil if my custom setup has a dark theme.
 I place a file in ~/.config/prot-xtwm-active-theme which contains
 a single word describing my system-wide theme.  This is part of
-my dotfiles.  Check my `delight' shell script for more."
+my dotfiles.  Check my `delight.sh' shell script for more."
   (when-let* ((file "~/.config/prot-xtwm-active-theme")
               ((file-exists-p file)))
     (string-match-p
@@ -3010,7 +3010,7 @@ it through a new ~emacsclient~ call. This is useful if we want to
 launch new frames that share resources with the existing running
 process. Though the ~emacsclient~ can be used to simply evaluate code
 outside of an Emacs frame (e.g. to load a new theme, as I do with my
-~delight~ shell script as part of my dotfiles).
+~delight.sh~ shell script as part of my dotfiles).
 
 When we close the last frame, the server is terminated. Whereas the
 daemon remains active even if all Emacs frames are closed. For me, the

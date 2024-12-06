@@ -66,8 +66,8 @@ mod4 + {_,shift +} Tab
 # or decreasing past either of those limits, we move to the other end:
 # 0 5 ... 30 0 5.
 mod4 + bracket{left,right}
-    herbstluftwm_adjust_gaps {-,+}5
+    herbstluftwm_adjust_gaps.sh {-,+}5
 
 # Like the above, but for border width.
 mod4 + shift + bracket{left,right}
-    herbstluftwm_adjust_borders {-,+}5
+    herbstluftwm_adjust_borders.sh {-,+}5

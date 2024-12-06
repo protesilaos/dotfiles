@@ -33,7 +33,7 @@ smart_window_surroundings="$(_get_value smart_window_surroundings)"
 smart_frame_surroundings="$(_get_value smart_frame_surroundings)"
 frame_border_width="$(_get_value frame_border_width)"
 
-# This is used by the 'delight' script.
+# This is used by the 'delight.sh' script.
 focus_mode_status="$HOME"/.config/prot-xtwm-focus-mode
 
 _hc ()

@@ -47,10 +47,10 @@ mod4 + {Left,Down,Up,Right}
 #
 # bspwm_smart_move is part of my dotfiles (link in the description).
 mod4 + shift + {h,j,k,l}
-    bspwm_smart_move {west,south,north,east}
+    bspwm_smart_move.sh {west,south,north,east}
 
 mod4 + shift + {Left,Down,Up,Right}
-    bspwm_smart_move {west,south,north,east}
+    bspwm_smart_move.sh {west,south,north,east}
 
 # Dynamic desktop behaviour:  this invokes a script of mine that
 # implements dynamic desktops (see dotfiles).  If the given desktop
@@ -80,7 +80,7 @@ mod4 + shift + {Left,Down,Up,Right}
 # which replaces the "send" commands noted above with their
 # "send+follow" equivalents.
 mod4 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
-    ;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
+    ;bspwm_dynamic_desktops.sh {--df,--ns,--nm,--da} {0-9}
 
 # mod4 + {_,shift + }{1-9}
 #     bspc {desktop -f,node -d} {1-9}
@@ -183,11 +183,11 @@ mod4 + {_,shift + }r
 # increasing or decreasing past either of those limits, we move to the
 # other end: 0 5 ... 30 0 5.
 mod4 + bracket{left,right}
-    bspwm_adjust_gaps {-,+}5
+    bspwm_adjust_gaps.sh {-,+}5
 
 # Like the above, but for border width.
 mod4 + shift + bracket{left,right}
-    bspwm_adjust_borders {-,+}5
+    bspwm_adjust_borders.sh {-,+}5
 
 #### Advanced operations (receptacles and scripted actions)
 
@@ -209,34 +209,34 @@ mod4 + n ; r ; r
 # Insert the marked window (or focused if no marks) in the first
 # matching receptacle (or preselection if no receptacles).
 mod4 + n ; r ; i
-    bspwm_smart_presel
+    bspwm_smart_presel.sh
 
 # Kill/remove the first matching receptacle from the current desktop.
 # With shift, kill them all at once.
 mod4 + n ; r ; {_, shift + }k
     { \
     bspc node 'any.leaf.!window.local' -k, \
-    bspwm_multifaceted_operation --kill-all-receptacles \
+    bspwm_multifaceted_operation.sh --kill-all-receptacles \
     }
 
 # Summon all marked windows across all desktops to the current desktop.
 mod4 + w ; m
-    bspwm_multifaceted_operation --summon-all-marked
+    bspwm_multifaceted_operation.sh --summon-all-marked
 
 # Bring the windows of the given desktop to the current one.  With
 # shift, send the current window to the given one.
 mod4 + w ; mod4 + {_, shift + }{0-9}
-    bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} {0-9}
+    bspwm_multifaceted_operation.sh {--bring-desktop-here,--send-desktop-there} {0-9}
 
 # Close {or kill} all windows in the present desktop except the focused
 # or any marked ones.
 mod4 + w ; mod4 + {_,shift + }q
-    bspwm_multifaceted_operation --{close,kill}-all-local-non-focused
+    bspwm_multifaceted_operation.sh --{close,kill}-all-local-non-focused
 
 # Assign the locked flag to all windows in the current desktop.  With
 # shift, remove the locked flag from all.
 mod4 + w ; {_, shift + }l
-    bspwm_multifaceted_operation {--lock-all-local,--unlock-all-local}
+    bspwm_multifaceted_operation.sh {--lock-all-local,--unlock-all-local}
 
 
 #### Continuous input mode
@@ -252,7 +252,7 @@ mod4 + w ; {_, shift + }l
 
 # Resize node in the given direction.
 mod4 + c : {h,j,k,l}
-    bspwm_resize {west,south,north,east} 50
+    bspwm_resize.sh {west,south,north,east} 50
 
 # Mode for dynamic gaps.
 mod4 + c : bracket{left,right}

@@ -43,4 +43,4 @@ include i3-theme
 # include i3WM, BSPWM, and Herbstluftwm.  I configure them to be
 # similar.  This means, among others, that I define key bindings using
 # SXHKD instead of the native configuration method (where applicable).
-exec command -v xtwm_common > /dev/null && xtwm_common
+exec command -v xtwm_common.sh > /dev/null && xtwm_common.sh

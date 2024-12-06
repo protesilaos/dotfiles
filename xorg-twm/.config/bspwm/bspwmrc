@@ -62,14 +62,14 @@ _check bspwm_external_rules && \
         "$(command -v bspwm_external_rules)"
 
 #### Colours
-_check bspwm_conf_colors && bspwm_conf_colors
+_check bspwm_conf_colors.sh && bspwm_conf_colors.sh
 
 #### Autostart
 
 # Common settings used by my BSPWM and Herbstluftwm setups
 # (collectively referred to as "Xorg Tiling Window Managers").  I
 # configure those window managers to be similar.
-_check xtwm_common && xtwm_common
+_check xtwm_common.sh && xtwm_common.sh
 
 # Add padding equal to the panel height to fix an issue where there is
 # an overlap between panel and windows.

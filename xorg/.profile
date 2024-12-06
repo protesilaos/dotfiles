@@ -36,11 +36,6 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # Set PATH so it includes user's private executables.
-if [ -d "$HOME"/bin ]; then
-    PATH=$PATH:"$HOME"/bin
-fi
-
-# This is another possible location for user-specific binaries.
 if [ -d "$HOME"/.local/bin ]; then
     PATH=$PATH:"$HOME"/.local/bin
 fi
@@ -48,11 +43,6 @@ fi
 if [ -d "$HOME"/Builds/bin ]
 then
     PATH=$PATH:"$HOME"/Builds/bin
-fi
-
-if [ -d /opt/bin ]
-then
-    PATH=$PATH:/opt/bin
 fi
 
 ##########################

@@ -92,7 +92,7 @@ _xterm ()
 
     # Another one of my scripts for live recolouring running terminal
     # emulators, by using escape sequences.
-    repaint_terminals &
+    repaint_terminals.sh &
 }
 
 # TODO 2021-08-27: dunst

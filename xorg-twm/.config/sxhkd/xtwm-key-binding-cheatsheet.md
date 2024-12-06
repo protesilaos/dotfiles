@@ -28,7 +28,7 @@ invoke my custom shell scripts.
 | Key                               | Description                                                               |
 |-----------------------------------+---------------------------------------------------------------------------|
 | Super + F5                        | Reload the environemnt's theme (toggle between light and dark)            |
-| Ctrl + Alt + Delete               | Bring up the "poweroptionsmenu" script to log out, restart, shutdown      |
+| Ctrl + Alt + Delete               | Bring up the "poweroptionsmenu.sh" script to log out, restart, shutdown      |
 | Super + Delete                    | Same as above                                                             |
 | Super + d                         | Show a menu for desktop applications                                      |
 | Super + b                         | Show a menu with open windows (the "b" is a mnemonic for "buffers")       |
@@ -60,7 +60,7 @@ These apply to the "entire environment" and thus have the prefix
 | Super + e ; p      | Reload the system panel, which is called "polybar"                   |
 | Super + e ; x      | Reload the XResources files, which affects XTerm                     |
 | Super + e ; t      | Reload the environemnt's theme (toggle between light and dark)       |
-| Super + e ; Delete | Bring up the "poweroptionsmenu" script to log out, restart, shutdown |
+| Super + e ; Delete | Bring up the "poweroptionsmenu.sh" script to log out, restart, shutdown |
 
 ## HerbstluftWM
 

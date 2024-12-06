@@ -44,7 +44,7 @@ border_width="$(_get_value border_width)"
 # part of the nodes.
 effective_padding=$(("$bottom_padding" + "$window_gap"))
 
-# This is used by the 'delight' script.
+# This is used by the 'delight.sh' script.
 focus_mode_status="$HOME"/.config/prot-xtwm-focus-mode
 
 if [ "$effective_padding" -ge "$panel_height" ]

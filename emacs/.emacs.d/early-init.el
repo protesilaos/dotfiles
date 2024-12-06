@@ -82,7 +82,7 @@ Simplified version of `add-to-list'."
   "Return non-nil if gsettings (GNOME) has a dark theme.
 Return nil if the DESKTOP_SESSION is either bspwm or
 herbstluftwm, per the configuration of my dotfiles.  Also check
-the `delight' shell script."
+the `delight.sh' shell script."
   (prot-emacs-with-desktop-session
     (string-match-p
      "dark"
@@ -92,7 +92,7 @@ the `delight' shell script."
   "Return non-nil if my custom setup has a dark theme.
 I place a file in ~/.config/prot-xtwm-active-theme which contains
 a single word describing my system-wide theme.  This is part of
-my dotfiles.  Check my `delight' shell script for more."
+my dotfiles.  Check my `delight.sh' shell script for more."
   (when-let* ((file "~/.config/prot-xtwm-active-theme")
               ((file-exists-p file)))
     (string-match-p

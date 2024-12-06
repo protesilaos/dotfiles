@@ -103,7 +103,7 @@ _hc attr theme.title_align left
 _hc attr theme.title_when multiple_tabs # only with the max layout
 
 #### Colours
-_check herbstluftwm_conf_colors && herbstluftwm_conf_colors
+_check herbstluftwm_conf_colors.sh && herbstluftwm_conf_colors.sh
 
 #### Rules
 # TODO 2021-11-08: I have kept the defaults here.  Needs review.
@@ -126,4 +126,4 @@ _hc rule index=e
 # Common settings used by my BSPWM and Herbstluftwm setups
 # (collectively referred to as "Xorg Tiling Window Managers").  I
 # configure those window managers to be similar.
-_check xtwm_common && xtwm_common
+_check xtwm_common.sh && xtwm_common.sh

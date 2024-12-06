@@ -18,25 +18,14 @@ _checkexec ()
 
 ### General settings
 
-# Include my scripts in the PATH.
-if [ -d "$HOME"/bin ]
-then
-    PATH=$PATH:"$HOME"/bin
-fi
-
-if [ -d "$HOME"/.local/bin ]
-then
+# Set PATH so it includes user's private executables.
+if [ -d "$HOME"/.local/bin ]; then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
 if [ -d "$HOME"/Builds/bin ]
 then
     PATH=$PATH:"$HOME"/Builds/bin
-fi
-
-if [ -d /opt/bin ]
-then
-    PATH=$PATH:/opt/bin
 fi
 
 if [ -d "/var/lib/flatpak/exports/bin" ]

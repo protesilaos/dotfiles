@@ -1,5 +1,5 @@
 ! Part of my dotfiles: <https://github.com/protesilaos/dotfiles>.
 !
 ! IMPORTANT do not edit manually!!!  All themes are changed by a single
-! script: delight.
+! script: delight.sh.
 #include "modus_operandi.Xcolors"
