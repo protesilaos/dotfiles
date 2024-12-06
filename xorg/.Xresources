@@ -45,7 +45,7 @@ xterm*cursorUnderLine: false
 xterm*pointerShape: XTerm
 
 ! Cursor blink
-xterm*cursorBlink: true
+xterm*cursorBlink: false
 xterm*cursorOffTime: 600
 xterm*cursorOnTime: 1200
 
