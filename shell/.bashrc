@@ -152,6 +152,17 @@ _checkexec lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # remember the original command when necessary.  There are some
 # exceptions for commands I seldom execute.
 
+#### Apt (Debian)
+
+if _checkexec apt
+then
+    alias aptuu="sudo apt update && sudo apt upgrade"
+    alias aptar="sudo apt autoremove"
+    alias aptss="apt search -n"
+    alias aptsh="apt show"
+    alias aptls="dpkg -L"
+fi
+
 #### Pacman and Yay (Arch Linux)
 
 if _checkexec pacman
