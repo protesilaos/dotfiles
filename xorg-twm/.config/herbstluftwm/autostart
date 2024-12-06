@@ -24,6 +24,28 @@
 
 ## Code:
 
+# NOTE 2024-12-06: It seems my ~/.profile is not being read.  I need
+# these here.
+
+# Set PATH so it includes user's private executables.
+if [ -d "$HOME"/.local/bin ]; then
+    PATH=$PATH:"$HOME"/.local/bin
+fi
+
+if [ -d "$HOME"/Builds/bin ]
+then
+    PATH=$PATH:"$HOME"/Builds/bin
+fi
+
+# Auto unlocks the GPG and SSH agents.
+eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+# export SSH_AUTH_SOCK
+
+# TODO 2023-10-08: Why does this work on my laptop, but not the above?
+# Is the desktop affected?
+export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
+
+
 ### Essentials
 
 _hc ()
