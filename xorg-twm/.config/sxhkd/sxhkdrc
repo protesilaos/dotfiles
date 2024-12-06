@@ -28,7 +28,7 @@ mod4 + e ; p
 
 # Reload the Xresources file
 mod4 + e ; x
-    xrdb -I "$HOME" -merge "$HOME"/.Xresources
+    xrdb -I "$HOME" -merge "$HOME"/.Xresources  && notify-send -i xterm "Reloaded Xresources"
 
 # "Theme" mnemonic
 mod4 + e ; t
