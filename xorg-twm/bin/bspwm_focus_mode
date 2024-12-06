@@ -22,7 +22,7 @@
 
 command -v polybar > /dev/null || { echo "ERROR: no polybar available"; exit 1; }
 
-panel_height="$(awk -F '=' '/height/ { print $2; exit; }' "$HOME"/.config/polybar/config)"
+panel_height="$(awk -F '=' '/height/ { print $2; exit; }' "$HOME"/.config/polybar/config.ini)"
 
 # The bottom padding is extracted from the running program.
 bottom_padding="$(bspc config bottom_padding)"

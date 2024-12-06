@@ -75,7 +75,7 @@ _check xtwm_common && xtwm_common
 # an overlap between panel and windows.
 _panel_height() {
     awk -F '=' '/height/ { print $2; exit; }' \
-        "$HOME"/.config/polybar/config
+        "$HOME"/.config/polybar/config.ini
 }
 
 bspc config bottom_padding "$(_panel_height)"
