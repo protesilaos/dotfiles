@@ -168,8 +168,8 @@ _xsettingsd ()
 
         if [ -f "$xsettingsd" ]
         then
-            _sed "s,\(.*\/ThemeName\) \"[a-zA-Z-]*\",\1 \"${1}\"," "$xsettingsd"
-            _sed "s,\(.*\/IconThemeName\) \"[a-zA-Z-]*\",\1 \"${2}\"," "$xsettingsd"
+            _sed "s,\(.*\/ThemeName\) \"[0-9a-zA-Z-]*\",\1 \"${1}\"," "$xsettingsd"
+            _sed "s,\(.*\/IconThemeName\) \"[0-9a-zA-Z-]*\",\1 \"${2}\"," "$xsettingsd"
         fi
 
         # This is a very lightweight program that simply loads the
