@@ -63,17 +63,17 @@ xterm*highlightTextColor: XtDefaultBackground
 
 ! Font settings
 xterm*faceName: Monospace
-xterm*faceSize: 8
+xterm*faceSize: 10
 xterm*renderFont: true
 xterm*boldColors: false
-xterm*faceSize1: 10
-xterm*faceSize2: 12
-xterm*faceSize3: 15
-xterm*faceSize4: 18.25
-xterm*faceSize5: 20.5
-xterm*faceSize6: 25.5
+xterm*faceSize1: 12
+xterm*faceSize2: 14
+xterm*faceSize3: 18
+xterm*faceSize4: 22
+xterm*faceSize5: 28
+xterm*faceSize6: 36
 xterm*forceBoxChars: false
-xterm*limitFontsets: 5
+xterm*limitFontsets: 3
 xterm*scaleHeight: 1.0
 
 ! Scroll and output
