@@ -18,6 +18,6 @@
 
 case "$DESKTOP_SESSION"
 in
-    bspwm) bspwm_focus_mode ;;
-    herbstluftwm) herbstluftwm_focus_mode ;;
+    bspwm) bspwm_focus_mode.sh ;;
+    herbstluftwm) herbstluftwm_focus_mode.sh ;;
 esac

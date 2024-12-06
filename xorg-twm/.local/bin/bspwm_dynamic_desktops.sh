@@ -42,7 +42,7 @@
 # monitor in bspwmrc (empty desktops are removed upon invoking one of
 # this script's commands).
 #
-# `bspwm_dynamic_desktops' is part of my dotfiles (which also offer a
+# `bspwm_dynamic_desktops.sh' is part of my dotfiles (which also offer a
 # complete implementation): https://github.com/protesilaos/dotfiles
 
 

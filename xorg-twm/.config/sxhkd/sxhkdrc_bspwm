@@ -45,7 +45,7 @@ mod4 + {Left,Down,Up,Right}
 # spread out the nodes (see the key chord further down).  You may also
 # --rotate the tree.
 #
-# bspwm_smart_move is part of my dotfiles (link in the description).
+# bspwm_smart_move.sh is part of my dotfiles (link in the description).
 mod4 + shift + {h,j,k,l}
     bspwm_smart_move.sh {west,south,north,east}
 
@@ -65,7 +65,7 @@ mod4 + shift + {Left,Down,Up,Right}
 # unfocused monitor, without focusing it (focus stays on the current
 # desktop/monitor).  It also inserts a receptacle, meaning that the next
 # created window will go there without calling focus to itself (see my
-# bspwm_external_rules).
+# bspwm_external_rules.sh).
 #
 #
 # Commands for receptacles are defined in the "advanced operations"
@@ -87,7 +87,7 @@ mod4 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
 
 ## Use this for "send+follow" instead of just "send"
 # mod4 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
-#   ;bspwm_dynamic_desktops {--df,--nsf,--nmf,--da} {0-9}
+#   ;bspwm_dynamic_desktops.sh {--df,--nsf,--nmf,--da} {0-9}
 
 # With `alt` focus {next,previous} window in the current desktop.  With
 # `mod4` focus {next,previous} desktop in the current monitor.
@@ -114,10 +114,10 @@ mod4 + o
 # windows because: (i) I do not use them and if I do I do not want to
 # change their dimensions, and (ii) to keep the script concise.
 mod4 + ctrl + {h,j,k,l}
-    bspwm_resize {west,south,north,east} 50
+    bspwm_resize.sh {west,south,north,east} 50
 
 mod4 + ctrl + {Left,Down,Up,Right}
-    bspwm_resize {west,south,north,east} 50
+    bspwm_resize.sh {west,south,north,east} 50
 
 # Preselect the direction or insert again to cancel the preselection.
 # This enters the manual tiling mode that splits the currently focused
@@ -192,13 +192,13 @@ mod4 + shift + bracket{left,right}
 #### Advanced operations (receptacles and scripted actions)
 
 # NOTE The behaviour of preselections and receptacles is regulated by my
-# bspwm_external_rules command (which is called from within bspwmrc).
+# bspwm_external_rules.sh command (which is called from within bspwmrc).
 
 # Insert receptacle following the tiling scheme or preselection.
 # Receptacles are empty frames that function as placeholders for
 # windows.
 #
-# Whereas bspwm_smart_move (defined above) will automatically insert
+# Whereas bspwm_smart_move.sh (defined above) will automatically insert
 # a receptacle in the given direction by splitting the entire viewport.
 #
 # The mod4 + n prefix is a mnemonic for "node" and then r is for
@@ -252,7 +252,7 @@ mod4 + w ; {_, shift + }l
 
 # Resize node in the given direction.
 mod4 + c : {h,j,k,l}
-    bspwm_resize.sh {west,south,north,east} 50
+    bspwm_resize.sh.sh {west,south,north,east} 50
 
 # Mode for dynamic gaps.
 mod4 + c : bracket{left,right}

@@ -10,7 +10,7 @@
 # following sxhkdrc config:
 #
 # super + ctrl + {Left,Down,Up,Right}
-#     bspwm_resize {west,south,north,east} 50
+#     bspwm_resize.sh {west,south,north,east} 50
 
 size=${2:-'10'}
 direction=$1

@@ -368,13 +368,13 @@ case "$DESKTOP_SESSION"
 in
     bspwm)
         wm_executable=bspwm
-        conf_colors=bspwm_conf_colors
+        conf_colors=bspwm_conf_colors.sh
 
         _bspwm_or_hlwm
         ;;
     herbstluftwm)
         wm_executable=herbstluftwm
-        conf_colors=herbstluftwm_conf_colors
+        conf_colors=herbstluftwm_conf_colors.sh
 
         _bspwm_or_hlwm
         ;;

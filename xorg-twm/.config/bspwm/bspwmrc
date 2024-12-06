@@ -57,11 +57,11 @@ _check() {
 
 # # Determine XrandR settings.  Whether an external display is connected
 # # to the laptop or not.
-# _check bspwm_conf_xrandr && bspwm_conf_xrandr
+# _check bspwm_conf_xrandr.sh && bspwm_conf_xrandr.sh
 
 # Define desktop[s] [per monitor].  Contingent on the above.  Also note
 # that this leverages my `bspwm_dynamic_desktops'.
-_check bspwm_conf_desktops && bspwm_conf_desktops
+_check bspwm_conf_desktops.sh && bspwm_conf_desktops.sh
 
 #### Window management
 _bc automatic_scheme spiral
@@ -79,9 +79,9 @@ _bc pointer_action1 move
 _bc pointer_action2 resize_side
 _bc ignore_ewmh_focus false
 
-_check bspwm_external_rules && \
+_check bspwm_external_rules.sh && \
     _bc external_rules_command \
-        "$(command -v bspwm_external_rules)"
+        "$(command -v bspwm_external_rules.sh)"
 
 #### Colours
 _check bspwm_conf_colors.sh && bspwm_conf_colors.sh

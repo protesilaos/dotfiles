@@ -27,7 +27,7 @@ _pkill() {
 }
 
 _kill_processes() {
-    _pkill bspwm_external_rules
+    _pkill bspwm_external_rules.sh
     _pkill sxhkd
     _pkill polybar
     _pkill feh

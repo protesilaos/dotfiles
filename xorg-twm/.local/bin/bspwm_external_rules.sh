@@ -68,6 +68,9 @@ window_title="$(xwininfo -id "$window_id" | sed ' /^xwininfo/!d ; s,.*"\(.*\)".*
 # NOTE 2021-09-06: I don't necessarily use those, but it is good to have
 # this here.
 case "$window_class" in
+    [Ee]macs)
+        echo "state=tiled"
+        ;;
 	[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|my_float_window)
 		echo "state=floating"
 		echo "center=on"
