@@ -45,9 +45,10 @@ _check ()
 # 'gr'.
 if _check setxkbmap
 then
-    setxkbmap -layout 'us,gr' -option '' -option 'ctrl:nocaps' \
-              -option 'altwin:menu_win' -option 'caps:none' \
-              -option 'compose:ins' -option 'grp:win_space_toggle'
+    # setxkbmap -layout 'us,gr' -option '' -option 'ctrl:nocaps' \
+    #           -option 'altwin:menu_win' -option 'caps:none' \
+    #           -option 'compose:ins' -option 'grp:win_space_toggle'
+    setxkbmap -layout 'us,gr' -option '' -option 'compose:ins'
 fi
 
 # The hotkey daemon that handles all custom key bindings.  I split the
