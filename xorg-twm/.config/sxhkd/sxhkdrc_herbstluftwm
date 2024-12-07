@@ -5,23 +5,23 @@
 #
 ### Description
 #
-# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
-# work with `herbstclient`.  This is part of my dotfiles, which are
-# managed with GNU Stow.  See https://github.com/protesilaos/dotfiles
+# Partial configuration file for the Simple X Hotkey Daemon. Meant to
+# work with `herbstclient`. This is part of my dotfiles, which are
+# managed with GNU Stow. See https://github.com/protesilaos/dotfiles
 
 ### Code
 
-# Close currently focused window.  mod4+q closes the frame if no
-# window is present.  With shift it closes the frame of the last
-# window while it closes that.  With mod4+alt+q remove the frame and
-# merge its windows with the closest neighbouring frame.
+# Close currently focused window. mod4+q closes the frame if no window
+# is present. With shift it closes the frame of the last window while
+# it closes that. With mod4+alt+q remove the frame and merge its
+# windows with the closest neighbouring frame.
 mod4 + {_, shift +, alt+} q
     herbstclient {close_or_remove,close_and_remove,remove}
 
 #### Focus/swap windows/tags
 
-# Focus in the given direction.  With Shift move the window in the given
-# direction.
+# Focus in the given direction. With Shift move the window in the
+# given direction. With Ctrl resize the window in the given direction.
 mod4 + {_, shift +, ctrl +} {h,j,k,l}
     herbstclient {focus,shift,resize} {left,down,up,right} {_,_,0.05}
 
@@ -37,29 +37,35 @@ mod4 + alt + {h,j,k,l}
 mod4 + alt + {Left,Down,Up,Right}
     herbstclient split {left,bottom,top,right} 0.5
 
-
+# Switch focus to workspace N. With Shift send currently focused
+# window to that workspace.
 mod4 + {_,shift +} {0-9}
     herbstclient {use_index,move_index} {0-9}
 
-mod4 + {f,shift + space}
+# Toggle the fullscreen and tiling/floating state of the currently
+# focused window.
+mod4 + {f,space}
     herbstclient {fullscreen toggle,set_attr clients.focus.floating toggle}
 
-# Alt + Tab (cycle all windows and frames in the current tag)
-mod1 + {_, shift +} Tab
-    herbstclient cycle_all {+1,-1}
+# Alt + Tab to cycle all windows and frames in the current tag (how
+# desktop environments do it).
+#
+# Super + Tab to cycle all windows in the current frame.
+#
+# Use Shift to cycle in the opposite direction.
+{mod1,mod4} + {_, shift +} Tab
+    herbstclient {cycle_all,cycle} {+1,-1}
 
-# Alt + Backtick (cycle all windows in the current frame)
-mod1 + {_, shift +} grave
-    herbstclient cycle {+1,-1}
-
+# Rotate the current workspace clockwise. With Shift mirror/flip the
+# layout. This command only works if there is more thatn one frame
+# available.
 mod4  + {_, shift +} r
     herbstclient {rotate,mirror both}
 
+# Cycle the layouts of the current frame. There is the option of a
+# grid layout, but I do not use it.
 mod4 + t
     herbstclient cycle_layout +1 vertical horizontal max
-
-mod4 + {_,shift +} Tab
-    herbstclient use_index {+,-}1 --skip-visible
 
 # Adjust size of frame gaps using my script.  This script of mine
 # cycles through values 0 and 30, meaning that if we keep increasing
