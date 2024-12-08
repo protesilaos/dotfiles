@@ -88,6 +88,11 @@ do
     _hc add "${tag_names[$i]}"
 done
 
+if [ -f "$HOME"/.config/herbstluftwm/my_herbstluftwm_workspaces.txt ]
+then
+    _check herbstluftwm_loadstate.sh && herbstluftwm_loadstate.sh < "$HOME"/.config/herbstluftwm/my_herbstluftwm_workspaces.txt
+fi
+
 # NOTE 2024-12-06: I am no longer using this, but I am keeping it here
 # because it is a useful feature.
 #
