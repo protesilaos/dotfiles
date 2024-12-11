@@ -77,3 +77,6 @@ mod4 + bracket{left,right}
 # Like the above, but for border width.
 mod4 + shift + bracket{left,right}
     herbstluftwm_adjust_borders.sh {-,+}5
+
+mod4 + w ; {t,h,m}
+    herbstluftwm_load_workspace_layout.sh {third,half,middle}
