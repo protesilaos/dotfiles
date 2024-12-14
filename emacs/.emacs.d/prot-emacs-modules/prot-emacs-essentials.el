@@ -24,11 +24,6 @@
   (setq echo-keystrokes-help nil) ; Emacs 30
   (setq epa-keys-select-method 'minibuffer) ; Emacs 30
 
-  (add-to-list 'save-some-buffers-action-alist
-               (list "d"
-                     (lambda (buffer) (diff-buffer-with-file (buffer-file-name buffer)))
-                     "show diff between the buffer and its file"))
-
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
   :bind
