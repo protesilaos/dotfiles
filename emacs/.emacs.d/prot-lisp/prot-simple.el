@@ -214,8 +214,7 @@ When called interactively without a prefix numeric argument, N is
 (defun prot-simple-copy-line ()
   "Copy the current line to the `kill-ring'."
   (interactive)
-  (copy-region-as-kill (line-beginning-position) (line-end-position))
-  (setq this-command 'kill-line))
+  (copy-region-as-kill (line-beginning-position) (line-end-position)))
 
 (make-obsolete 'prot-simple-copy-line-or-region 'prot-simple-copy-line "2023-09-26")
 
@@ -226,9 +225,7 @@ When the region is active, use `kill-ring-save' between the BEG and END
 positions.  Otherwise, copy the current line."
   (interactive "r")
   (if (region-active-p)
-      (progn
-        (kill-ring-save beg end)
-        (setq this-command 'kill-region))
+      (kill-ring-save beg end)
     (prot-simple-copy-line)))
 
 (defun prot-simple--duplicate-buffer-substring (boundaries)
