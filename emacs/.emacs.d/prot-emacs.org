@@ -14041,7 +14041,7 @@ the current file."
   "Clock table with effort estimate column to use for custom clock reports.")
 
 (defvar prot-org-clock--template-no-effort
-  "#+BEGIN: clocktable :formula % :timestamp t :sort (1 . ?a) :link t :scope nil :hidefiles t :maxlevel 8 :stepskip0 t
+  "#+BEGIN: clocktable :formula % :timestamp t :sort (1 . ?a) :link nil :scope nil :hidefiles t :maxlevel 8 :stepskip0 t
 ,#+END:"
   "Clock table to use for custom clock reports.")
 
