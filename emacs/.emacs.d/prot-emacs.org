@@ -7740,7 +7740,7 @@ As for my workflow, here is an overview:
                     "%a\n%?")
            :empty-lines-after 1)
           ("s" "Select file and heading to add to" entry
-           (function prot-org-capture-select-project)
+           (function prot-org-select-heading-in-file)
            ,(concat "* TODO %^{Title}%?\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
@@ -14208,7 +14208,7 @@ the current file."
     (user-error "There are no files in the `org-directory'")))
 
 ;;;###autoload
-(defun prot-org-capture-select-project ()
+(defun prot-org-select-heading-in-file ()
   "Like `prot-org-select-project' but specifically for `org-capture'."
   (declare (interactive-only t))
   (interactive)

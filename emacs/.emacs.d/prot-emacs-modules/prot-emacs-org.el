@@ -248,7 +248,7 @@
                     "%a\n%?")
            :empty-lines-after 1)
           ("s" "Select file and heading to add to" entry
-           (function prot-org-capture-select-project)
+           (function prot-org-select-heading-in-file)
            ,(concat "* TODO %^{Title}%?\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"

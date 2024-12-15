@@ -206,7 +206,7 @@ the current file."
     (user-error "There are no files in the `org-directory'")))
 
 ;;;###autoload
-(defun prot-org-capture-select-project ()
+(defun prot-org-select-heading-in-file ()
   "Like `prot-org-select-project' but specifically for `org-capture'."
   (declare (interactive-only t))
   (interactive)
