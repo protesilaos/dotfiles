@@ -14137,6 +14137,7 @@ DEADLINE: %%^T
 ;; we were missing the `&rest':
 ;; <https://github.com/org-roam/org-roam/issues/2142#issuecomment-1100718373>.
 (defun prot-org--capture-no-delete-windows (&rest args)
+  "Apply ARGS while ignoring `delete-other-windows'."
   (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
     (apply args)))
 
