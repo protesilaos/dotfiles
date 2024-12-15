@@ -7040,6 +7040,8 @@ Finally, we ~provide~ the module. This is the mirror function of
 :CUSTOM_ID: h:d799c3c0-bd6a-40bb-bd1a-ba4ea5367840
 :END:
 
+# TODO 2024-12-15: Document the prot-org.el clocking commands.
+
 Watch:
 
 - [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18)
@@ -8037,12 +8039,6 @@ from it and thus keeps me focused.
   ;;   ;; today.
   ;;   (setq org-habit-show-all-today t)
   )
-#+end_src
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
-(use-package prot-coach
-  :ensure nil
-  :commands (prot-coach-done-sessions-with-person))
 #+end_src
 
 *** The =prot-emacs-org.el= call to ~provide~
@@ -10843,194 +10839,6 @@ Use completion among previous entries, retrieving their data from
 
 (provide 'prot-abbrev)
 ;;; prot-abbrev.el ends here
-#+end_src
-
-** The =prot-coach.el= library
-:PROPERTIES:
-:CUSTOM_ID: h:dbdfc774-c389-403f-95e7-17fa62c53d84
-:END:
-
-#+begin_src emacs-lisp :tangle "prot-lisp/prot-coach.el" :mkdirp yes
-;;; prot-coach.el --- Code for my personal coaching sessions -*- lexical-binding: t -*-
-
-;; Copyright (C) 2023-2024  Protesilaos Stavrou
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "30.1"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or (at
-;; your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-;;; Commentary:
-;;
-;; Code for my personal coaching sessions: <https://protesilaos.com/coach>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
-
-;;; Code:
-
-;;;; Jitsi link
-
-(declare-function message-fetch-field "message" (header &optional first))
-(declare-function notmuch-show-get-header "notmuch-show")
-
-(defvar prot-coach--name-prompt-history nil
-  "Minibuffer history of `prot-coach-name-prompt'.")
-
-(defun prot-coach--name-prompt-default ()
-  "Return default value for `prot-coach-name-prompt'."
-  (when-let* ((from (cond
-                     ((derived-mode-p 'message-mode)
-                      (message-fetch-field "To"))
-                     ((derived-mode-p 'notmuch-show-mode)
-                      (notmuch-show-get-header :From)))))
-    (string-clean-whitespace (car (split-string from "<")))))
-
-(defun prot-coach-name-prompt ()
-  "Prompt for student name."
-  (let ((def (prot-coach--name-prompt-default)))
-    (read-string
-     (format-prompt "Name of student" def)
-     nil 'prot-coach--name-prompt-history def)))
-
-(defun prot-coach-get-identifier ()
-  "Return identifier as YYYYmmddTHHMMSS.
-This is the Denote identifier I use practically everywhere:
-https://protesilaos.com/emacs/denote."
-  (format-time-string "%Y%m%dT%H%M%S"))
-
-;; I copied the "slug" functions from my denote.el.
-(defconst prot-coach-excluded-punctuation-regexp "[][{}!@#$%^&*()=+'\"?,.\|;:~`‘’“”/]*"
-  "Punctionation that is removed from file names.
-We consider those characters illegal for our purposes.")
-
-(defvar prot-coach-excluded-punctuation-extra-regexp nil
-  "Additional punctuation that is removed from file names.
-This variable is for advanced users who need to extend the
-`prot-coach-excluded-punctuation-regexp'.  Once we have a better
-understanding of what we should be omitting, we will update
-things accordingly.")
-
-(defun prot-coach--slug-no-punct (str)
-  "Convert STR to a file name slug."
-  (replace-regexp-in-string
-   (concat prot-coach-excluded-punctuation-regexp
-           prot-coach-excluded-punctuation-extra-regexp)
-   "" str))
-
-(defun prot-coach--slug-hyphenate (str)
-  "Replace spaces and underscores with hyphens in STR.
-Also replace multiple hyphens with a single one and remove any
-leading and trailing hyphen."
-  (replace-regexp-in-string
-   "^-\\|-$" ""
-   (replace-regexp-in-string
-    "-\\{2,\\}" "-"
-    (replace-regexp-in-string "_\\|\s+" "-" str))))
-
-(defun prot-coach-sluggify (str)
-  "Make STR an appropriate slug for file names and related."
-  (downcase (prot-coach--slug-hyphenate (prot-coach--slug-no-punct str))))
-
-(defun prot-coach--format-jitsi (name)
-  "Format a Jitsi link with a unique identifier that includes NAME."
-  (format "https://meet.jit.si/%s--%s"
-          (prot-coach-get-identifier)
-          (prot-coach-sluggify name)))
-
-;;;###autoload
-(defun prot-coach-jitsi-link (name)
-  "Insert Jitsi link for NAME person."
-  (interactive (list (prot-coach-name-prompt)))
-  (insert (prot-coach--format-jitsi name)))
-
-;;;; Time tables
-
-(require 'org)
-
-;; FIXME 2023-03-29: Can this work with logbooks for repeatable
-;; entries?
-(defun prot-coach--get-deadline-and-close (&optional name)
-  "Get time stamps of deadline and closed for optional NAME.
-Omit entries with a CANCEL state."
-  (org-with-point-at (point)
-    (when-let* ((case-fold-search t)
-                (heading (org-no-properties
-                          (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
-                ((string-match-p (or name ".*") heading))
-                (deadline (org-entry-get nil "DEADLINE"))
-                (closed (org-entry-get nil "CLOSED"))
-                ((not (string= (org-entry-get nil "TODO") "CANCEL"))))
-      (list heading (format "%s" deadline) (format "%s" closed)))))
-
-(defun prot-coach--print-table-with-sessions (name sessions)
-  "Return time table for NAME given SESSIONS."
-  (let ((buf (get-buffer-create (format "*prot-coach with %s" name))))
-    (with-current-buffer buf
-      (org-mode)
-      (erase-buffer)
-      (goto-char (point-min))
-      (insert "# Type C-c C-c in the TBLFM line to produce the table\n\n")
-      (insert "* Cost without counting minutes\n")
-      (insert (concat
-               "\n"
-               "| Description | Started | Closed | Days | Hours | Cost (EUR) |" "\n"
-               "|-------------+---------+--------+------+-------+------------|" "\n"))
-      (mapc
-       (lambda (session)
-         (insert (format "| %s | %s | %s |\n"
-                         (nth 0 session)
-                         (nth 1 session)
-                         (nth 2 session))))
-       sessions)
-      (insert (concat "|-+" "\n"
-                      "| " "\n"
-                      "#+TBLFM: $4=date($3) - date($2) :: $5=86400 * $4;U"
-                      ":: @>$5=vsum(@<<..@>>);U :: $6=$5*20;N :: @>$>=vsum(@<<..@>>)"
-                      ":: @>$1='(length (org-lookup-all \".*\" '(@<<$1..@>>$1) nil 'string-match-p))"
-                      "\n"))
-      (org-table-recalculate-buffer-tables))
-    (pop-to-buffer buf)))
-
-;;;###autoload
-(defun prot-coach-done-sessions-with-person ()
-  "Produce buffer with time table for a given student."
-  (declare (interactive-only t))
-  (interactive)
-  (when-let* ((file (buffer-file-name))
-              (dir (file-name-directory file))
-              ((string-match-p "coach" file))
-              ((or (member file org-agenda-files)
-                   ;; NOTE 2023-03-29: This assumes the file paths are
-                   ;; absolute and end with a directory delimiter.
-                   (member dir org-agenda-files)))
-              (name (prot-coach-name-prompt)))
-    (let (sessions)
-      (org-map-entries
-       (lambda ()
-         (when-let* ((entry (prot-coach--get-deadline-and-close name)))
-           (push entry sessions))))
-      (prot-coach--print-table-with-sessions name sessions))))
-
-(provide 'prot-coach)
-;;; prot-coach.el ends here
 #+end_src
 
 ** The =prot-comment.el= library
@@ -14222,8 +14030,145 @@ the current file."
     (goto-char (point-min))
     (forward-line (1- line))))
 
-(defalias 'prot-org-goto-heading-in-file 'prot-org-capture-select-project
- "Alias for `prot-org-capture-select-project'.")
+(defalias 'prot-org-goto-heading-in-file 'prot-org-select-heading-in-file
+ "Alias for `prot-org-select-heading-in-file'.")
+
+;;;; Org clock report
+
+(defvar prot-org-clock--template-with-effort
+  "#+BEGIN: clocktable :formula % :properties (\"Effort\") :timestamp t :sort (1 . ?a) :link t :scope nil :hidefiles t :maxlevel 8 :stepskip0 t
+,#+END:"
+  "Clock table with effort estimate column to use for custom clock reports.")
+
+(defvar prot-org-clock--template-no-effort
+  "#+BEGIN: clocktable :formula % :timestamp t :sort (1 . ?a) :link t :scope nil :hidefiles t :maxlevel 8 :stepskip0 t
+,#+END:"
+  "Clock table to use for custom clock reports.")
+
+(defvar prot-org-clock--ranges
+  '( today yesterday thisweek lastweek thismonth
+     lastmonth thisyear lastyear untilnow)
+  "Time ranges of my interest for clock reports.")
+
+(defvar prot-org-clock--report-range-history nil
+  "Minibuffer history for `prot-org-clock--report-range-prompt'.")
+
+(defun prot-org-clock--report-range-prompt ()
+  "Prompt for a clock table range among `prot-org-clock--ranges'."
+  (let ((default (car prot-org-clock--report-range-history)))
+    (completing-read
+     (format-prompt "Select a time range for the clock" default)
+     prot-org-clock--ranges nil :require-match nil 'prot-org-clock--report-range-history
+     default)))
+
+(defun prot-org-clock--get-report (scope)
+  "Produce clock report with current file SCOPE and return its buffer.
+SCOPE is a symbol of either `file' or `subtree'.  If the former, then
+use the entire file's contents.  Else use those of the current subtree."
+  (let ((buffer (get-buffer-create "*prot-org-custom-clock-report*")))
+    (save-restriction
+      (unwind-protect
+          (progn
+            (pcase scope
+              ('file nil)
+              ('subtree (org-narrow-to-subtree))
+              (_ (error "The scope `%s' is unknown" scope)))
+            (let ((contents (buffer-substring (point-min) (point-max))))
+              (with-current-buffer buffer
+                (erase-buffer)
+                (org-mode)
+                (save-excursion
+                  (insert (format "%s\n\n" prot-org-clock--template-with-effort))
+                  (insert contents))
+                (save-excursion
+                  (let ((range (prot-org-clock--report-range-prompt)))
+                    (goto-char (line-end-position))
+                    (insert (concat " :block " range))))
+                (org-dblock-update))))
+        (widen)))
+    buffer))
+
+;;;###autoload
+(defun prot-org-clock-report-current-subtree-or-file (&optional whole-buffer)
+  "Produce a clock report in a new buffer for the subtree at point.
+With optional WHOLE-BUFFER as a non-nil value, operate on the entire file.
+When called interactively WHOLE-BUFFER is a prefix argument."
+  (interactive "P")
+  (when-let* ((buffer (prot-org-clock--get-report (if whole-buffer 'file 'subtree))))
+    (pop-to-buffer buffer)))
+
+;;;###autoload
+(defun prot-org-clock-select-heading-and-clock-report ()
+  "Select a heading in a file and do a clock report for it in a new buffer."
+  (interactive)
+  (call-interactively 'prot-org-select-heading-in-file)
+  (call-interactively 'prot-org-clock-report-current-subtree-or-file))
+
+;;;;; Coaching-related Org custom clocking
+
+;; TODO 2024-12-15: This sort of thing must exist in Org, but I did
+;; not find it.
+(defun prot-org--timestamp-to-time (string)
+  "Return time object of STRING timestamp."
+  (org-timestamp-to-time (org-timestamp-from-string string)))
+
+(defun prot-org-coach--get-entries (todo-keyword string since)
+  "Get Org entries matching TODO-KEYWORD followed by STRING in the heading.
+Limit entries to those whole deadline/scheduled is equal or greater to
+SINCE date.
+
+Each entry is a plist of :heading, :contents, :started, :closed."
+  (or (delq nil
+            (org-map-entries
+             (lambda ()
+               (when-let* ((case-fold-search t)
+                           (started (prot-org--timestamp-to-time (or (org-entry-get nil "DEADLINE") (org-entry-get nil "SCHEDULED"))))
+                           (closed (prot-org--timestamp-to-time (org-entry-get nil "CLOSED")))
+                           ((re-search-forward (format "\\<%s\\>.*\\<%s\\>" todo-keyword string) (line-end-position) t 1))
+                           ((org-time-less-p since started)))
+                 (list
+                  :heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)
+                  :contents (org-get-entry)
+                  :started started
+                  :closed closed)))))
+      (user-error "No entries with heading matching `\\<%s\\>.*\\<%s\\>'" todo-keyword string)))
+
+(defvar prot-org-coach--name-history nil
+  "Minibuffer history of `prot-org-coach--name-prompt'.")
+
+(defun prot-org-coach--name-prompt ()
+  "Prompt for name of person."
+  (let ((default (car prot-org-coach--name-history)))
+    (read-string
+     (format-prompt "Name of person" default)
+     nil 'prot-org-coach--name-history default)))
+
+;;;###autoload
+(defun prot-org-coach-report (name since)
+  "Produce clock report for coaching with person of NAME.
+SINCE is the date (of time 00:00) to count from until now."
+  (interactive
+   (list
+    (prot-org-coach--name-prompt)
+    (format "[%s]" (org-read-date))))
+  (if-let* ((since-object (prot-org--timestamp-to-time since))
+            (entries (prot-org-coach--get-entries "done" name since-object))
+            (buffer (get-buffer-create "*prot-org-coach-entries*")))
+      (with-current-buffer (pop-to-buffer buffer)
+        (erase-buffer)
+        (org-mode)
+        (dolist (entry entries)
+          (insert (format "* %s\n%s\n\n" (plist-get entry :heading) (plist-get entry :contents)))
+          (org-clock-in nil (plist-get entry :started))
+          (org-clock-out nil t (plist-get entry :closed)))
+        (goto-char (point-min))
+        (save-excursion
+          (insert (format "%s\n\n" prot-org-clock--template-no-effort)))
+        (save-excursion
+          (goto-char (line-end-position))
+          (insert (format " :tstart %S" since)))
+        (org-dblock-update))
+    (user-error "No entries for name `%s'" name)))
 
 ;;;; org-agenda
 
@@ -16433,8 +16378,7 @@ When called interactively without a prefix numeric argument, N is
 (defun prot-simple-copy-line ()
   "Copy the current line to the `kill-ring'."
   (interactive)
-  (copy-region-as-kill (line-beginning-position) (line-end-position))
-  (setq this-command 'kill-line))
+  (copy-region-as-kill (line-beginning-position) (line-end-position)))
 
 (make-obsolete 'prot-simple-copy-line-or-region 'prot-simple-copy-line "2023-09-26")
 
@@ -16445,9 +16389,7 @@ When the region is active, use `kill-ring-save' between the BEG and END
 positions.  Otherwise, copy the current line."
   (interactive "r")
   (if (region-active-p)
-      (progn
-        (kill-ring-save beg end)
-        (setq this-command 'kill-region))
+      (kill-ring-save beg end)
     (prot-simple-copy-line)))
 
 (defun prot-simple--duplicate-buffer-substring (boundaries)

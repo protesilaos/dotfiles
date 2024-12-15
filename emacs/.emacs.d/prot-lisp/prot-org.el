@@ -220,8 +220,145 @@ the current file."
     (goto-char (point-min))
     (forward-line (1- line))))
 
-(defalias 'prot-org-goto-heading-in-file 'prot-org-capture-select-project
- "Alias for `prot-org-capture-select-project'.")
+(defalias 'prot-org-goto-heading-in-file 'prot-org-select-heading-in-file
+ "Alias for `prot-org-select-heading-in-file'.")
+
+;;;; Org clock report
+
+(defvar prot-org-clock--template-with-effort
+  "#+BEGIN: clocktable :formula % :properties (\"Effort\") :timestamp t :sort (1 . ?a) :link t :scope nil :hidefiles t :maxlevel 8 :stepskip0 t
+#+END:"
+  "Clock table with effort estimate column to use for custom clock reports.")
+
+(defvar prot-org-clock--template-no-effort
+  "#+BEGIN: clocktable :formula % :timestamp t :sort (1 . ?a) :link t :scope nil :hidefiles t :maxlevel 8 :stepskip0 t
+#+END:"
+  "Clock table to use for custom clock reports.")
+
+(defvar prot-org-clock--ranges
+  '( today yesterday thisweek lastweek thismonth
+     lastmonth thisyear lastyear untilnow)
+  "Time ranges of my interest for clock reports.")
+
+(defvar prot-org-clock--report-range-history nil
+  "Minibuffer history for `prot-org-clock--report-range-prompt'.")
+
+(defun prot-org-clock--report-range-prompt ()
+  "Prompt for a clock table range among `prot-org-clock--ranges'."
+  (let ((default (car prot-org-clock--report-range-history)))
+    (completing-read
+     (format-prompt "Select a time range for the clock" default)
+     prot-org-clock--ranges nil :require-match nil 'prot-org-clock--report-range-history
+     default)))
+
+(defun prot-org-clock--get-report (scope)
+  "Produce clock report with current file SCOPE and return its buffer.
+SCOPE is a symbol of either `file' or `subtree'.  If the former, then
+use the entire file's contents.  Else use those of the current subtree."
+  (let ((buffer (get-buffer-create "*prot-org-custom-clock-report*")))
+    (save-restriction
+      (unwind-protect
+          (progn
+            (pcase scope
+              ('file nil)
+              ('subtree (org-narrow-to-subtree))
+              (_ (error "The scope `%s' is unknown" scope)))
+            (let ((contents (buffer-substring (point-min) (point-max))))
+              (with-current-buffer buffer
+                (erase-buffer)
+                (org-mode)
+                (save-excursion
+                  (insert (format "%s\n\n" prot-org-clock--template-with-effort))
+                  (insert contents))
+                (save-excursion
+                  (let ((range (prot-org-clock--report-range-prompt)))
+                    (goto-char (line-end-position))
+                    (insert (concat " :block " range))))
+                (org-dblock-update))))
+        (widen)))
+    buffer))
+
+;;;###autoload
+(defun prot-org-clock-report-current-subtree-or-file (&optional whole-buffer)
+  "Produce a clock report in a new buffer for the subtree at point.
+With optional WHOLE-BUFFER as a non-nil value, operate on the entire file.
+When called interactively WHOLE-BUFFER is a prefix argument."
+  (interactive "P")
+  (when-let* ((buffer (prot-org-clock--get-report (if whole-buffer 'file 'subtree))))
+    (pop-to-buffer buffer)))
+
+;;;###autoload
+(defun prot-org-clock-select-heading-and-clock-report ()
+  "Select a heading in a file and do a clock report for it in a new buffer."
+  (interactive)
+  (call-interactively 'prot-org-select-heading-in-file)
+  (call-interactively 'prot-org-clock-report-current-subtree-or-file))
+
+;;;;; Coaching-related Org custom clocking
+
+;; TODO 2024-12-15: This sort of thing must exist in Org, but I did
+;; not find it.
+(defun prot-org--timestamp-to-time (string)
+  "Return time object of STRING timestamp."
+  (org-timestamp-to-time (org-timestamp-from-string string)))
+
+(defun prot-org-coach--get-entries (todo-keyword string since)
+  "Get Org entries matching TODO-KEYWORD followed by STRING in the heading.
+Limit entries to those whole deadline/scheduled is equal or greater to
+SINCE date.
+
+Each entry is a plist of :heading, :contents, :started, :closed."
+  (or (delq nil
+            (org-map-entries
+             (lambda ()
+               (when-let* ((case-fold-search t)
+                           (started (prot-org--timestamp-to-time (or (org-entry-get nil "DEADLINE") (org-entry-get nil "SCHEDULED"))))
+                           (closed (prot-org--timestamp-to-time (org-entry-get nil "CLOSED")))
+                           ((re-search-forward (format "\\<%s\\>.*\\<%s\\>" todo-keyword string) (line-end-position) t 1))
+                           ((org-time-less-p since started)))
+                 (list
+                  :heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)
+                  :contents (org-get-entry)
+                  :started started
+                  :closed closed)))))
+      (user-error "No entries with heading matching `\\<%s\\>.*\\<%s\\>'" todo-keyword string)))
+
+(defvar prot-org-coach--name-history nil
+  "Minibuffer history of `prot-org-coach--name-prompt'.")
+
+(defun prot-org-coach--name-prompt ()
+  "Prompt for name of person."
+  (let ((default (car prot-org-coach--name-history)))
+    (read-string
+     (format-prompt "Name of person" default)
+     nil 'prot-org-coach--name-history default)))
+
+;;;###autoload
+(defun prot-org-coach-report (name since)
+  "Produce clock report for coaching with person of NAME.
+SINCE is the date (of time 00:00) to count from until now."
+  (interactive
+   (list
+    (prot-org-coach--name-prompt)
+    (format "[%s]" (org-read-date))))
+  (if-let* ((since-object (prot-org--timestamp-to-time since))
+            (entries (prot-org-coach--get-entries "done" name since-object))
+            (buffer (get-buffer-create "*prot-org-coach-entries*")))
+      (with-current-buffer (pop-to-buffer buffer)
+        (erase-buffer)
+        (org-mode)
+        (dolist (entry entries)
+          (insert (format "* %s\n%s\n\n" (plist-get entry :heading) (plist-get entry :contents)))
+          (org-clock-in nil (plist-get entry :started))
+          (org-clock-out nil t (plist-get entry :closed)))
+        (goto-char (point-min))
+        (save-excursion
+          (insert (format "%s\n\n" prot-org-clock--template-no-effort)))
+        (save-excursion
+          (goto-char (line-end-position))
+          (insert (format " :tstart %S" since)))
+        (org-dblock-update))
+    (user-error "No entries for name `%s'" name)))
 
 ;;;; org-agenda
 

@@ -498,8 +498,4 @@
   ;;   (setq org-habit-show-all-today t)
   )
 
-(use-package prot-coach
-  :ensure nil
-  :commands (prot-coach-done-sessions-with-person))
-
 (provide 'prot-emacs-org)
