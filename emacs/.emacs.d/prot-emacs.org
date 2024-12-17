@@ -1566,24 +1566,17 @@ This is one of the components of the =prot-emacs-theme.el= module
 It defines some theme settings and also includes code I use when I
 need to test things.
 
-The ~standard-themes~ are a pair of light and dark themes for GNU
-Emacs.  They emulate the out-of-the-box looks of Emacs (which
-technically do NOT constitute a theme) while bringing to them thematic
-consistency, customizability, and extensibility.  In practice, the
-Standard themes take the default style of the font-lock and Org faces,
-complement it with a wider and harmonious colour palette, address many
-inconsistencies, and apply established semantic patterns across all
-interfaces by supporting a large number of packages.
+The ~standard-themes~ are a collection of light and dark themes for
+GNU Emacs. The ~standard-light~ and ~standard-dark~ emulate the
+out-of-the-box looks of Emacs (which technically do NOT constitute a
+theme) while bringing to them thematic consistency, customizability,
+and extensibility. Other themes are stylistic variations of those.
 
-+ Package name (GNU ELPA): ~standard-themes~
-+ Official manual: <https://protesilaos.com/emacs/standard-themes>
-+ Change log: <https://protesilaos.com/emacs/standard-themes-changelog>
-+ Sample pictures: <https://protesilaos.com/emacs/standard-themes-pictures>
-+ Git repositories:
-  - GitHub: <https://github.com/protesilaos/standard-themes>
-  - GitLab: <https://gitlab.com/protesilaos/standard-themes>
-+ Backronym: Standard Themes Are Not Derivatives but the
-  Affectionately Reimagined Default ... themes.
+In practice, the Standard themes take the default style of the
+font-lock and Org faces, complement it with a wider and harmonious
+colour palette, address many inconsistencies, and apply established
+semantic patterns across all interfaces by supporting a large number
+of packages.
 
 Note that the ~prot-emacs-comment~ is there for my testing purposes
 ([[#h:3b14faa6-83fd-4d5f-b3bc-85f72fd572d4][The =init.el= macro to do nothing with Elisp code (~prot-emacs-comment~)]]).
@@ -1597,21 +1590,13 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 (use-package standard-themes
   :ensure t
   :demand t
-  :bind ("<f5>" . standard-themes-toggle)
+  :bind (("<f5>" . standard-themes-toggle)
+         ("M-<f5>" . standard-themes-rotate))
   :config
   (setq standard-themes-bold-constructs t
         standard-themes-italic-constructs t
         standard-themes-mixed-fonts t
         standard-themes-variable-pitch-ui t
-        standard-themes-mode-line-accented nil
-
-        ;; Accepts a symbol value
-        standard-themes-fringes 'subtle
-
-        ;; The following accept lists of properties
-        standard-themes-links nil
-        standard-themes-region nil
-        standard-themes-prompts nil
 
         ;; more complex alist to set weight, height, and optional
         ;; `variable-pitch' per heading level (t is for any level not
@@ -1631,9 +1616,10 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 
   ;; Load a theme that is consistent with my session's theme.  Those
   ;; functions are defined in my init.el.
-  (if (prot-emacs-theme-environment-dark-p)
-      (standard-themes-load-dark)
-    (standard-themes-load-light)))
+  (standard-themes-load-theme
+   (if (prot-emacs-theme-environment-dark-p)
+       'standard-dark
+     'standard-light)))
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment
@@ -1646,21 +1632,14 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
     (require 'standard-themes)
     (load-theme 'standard-dark t t)
     (load-theme 'standard-light t t)
+    (load-theme 'standard-dark-tinted t t)
+    (load-theme 'standard-light-tinted t t)
 
     (setq standard-themes-bold-constructs t
           standard-themes-italic-constructs t
           standard-themes-disable-other-themes t
           standard-themes-mixed-fonts t
           standard-themes-variable-pitch-ui t
-          standard-themes-mode-line-accented nil
-
-          ;; Accepts a symbol value
-          standard-themes-fringes 'subtle
-
-          ;; The following accept lists of properties
-          standard-themes-links nil
-          standard-themes-region nil
-          standard-themes-prompts nil
 
           ;; more complex alist to set weight, height, and optional
           ;; `variable-pitch' per heading level (t is for any level not
@@ -1684,11 +1663,13 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
                (concat "/home/prot/Git/Projects/standard-themes/" (symbol-name theme) "-theme.el")))
             (standard-themes--list-enabled-themes))
 
-    (if (prot-emacs-theme-environment-dark-p)
-        (load-theme 'standard-dark :no-confirm)
-      (load-theme 'standard-light :no-confirm))
+    (standard-themes-load-theme
+     (if (prot-emacs-theme-environment-dark-p)
+         'standard-dark
+       'standard-light))
 
-    (define-key global-map (kbd "<f5>") #'standard-themes-toggle)))
+    (define-key global-map (kbd "<f5>") #'standard-themes-toggle)
+    (define-key global-map (kbd "M-<f5>") #'standard-themes-rotate)))
 
 (provide 'prot-emacs-standard-themes)
 #+end_src

@@ -6,21 +6,13 @@
 (use-package standard-themes
   :ensure t
   :demand t
-  :bind ("<f5>" . standard-themes-toggle)
+  :bind (("<f5>" . standard-themes-toggle)
+         ("M-<f5>" . standard-themes-rotate))
   :config
   (setq standard-themes-bold-constructs t
         standard-themes-italic-constructs t
         standard-themes-mixed-fonts t
         standard-themes-variable-pitch-ui t
-        standard-themes-mode-line-accented nil
-
-        ;; Accepts a symbol value
-        standard-themes-fringes 'subtle
-
-        ;; The following accept lists of properties
-        standard-themes-links nil
-        standard-themes-region nil
-        standard-themes-prompts nil
 
         ;; more complex alist to set weight, height, and optional
         ;; `variable-pitch' per heading level (t is for any level not
@@ -40,9 +32,10 @@
 
   ;; Load a theme that is consistent with my session's theme.  Those
   ;; functions are defined in my init.el.
-  (if (prot-emacs-theme-environment-dark-p)
-      (standard-themes-load-dark)
-    (standard-themes-load-light)))
+  (standard-themes-load-theme
+   (if (prot-emacs-theme-environment-dark-p)
+       'standard-dark
+     'standard-light)))
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment
@@ -55,21 +48,14 @@
     (require 'standard-themes)
     (load-theme 'standard-dark t t)
     (load-theme 'standard-light t t)
+    (load-theme 'standard-dark-tinted t t)
+    (load-theme 'standard-light-tinted t t)
 
     (setq standard-themes-bold-constructs t
           standard-themes-italic-constructs t
           standard-themes-disable-other-themes t
           standard-themes-mixed-fonts t
           standard-themes-variable-pitch-ui t
-          standard-themes-mode-line-accented nil
-
-          ;; Accepts a symbol value
-          standard-themes-fringes 'subtle
-
-          ;; The following accept lists of properties
-          standard-themes-links nil
-          standard-themes-region nil
-          standard-themes-prompts nil
 
           ;; more complex alist to set weight, height, and optional
           ;; `variable-pitch' per heading level (t is for any level not
@@ -93,10 +79,12 @@
                (concat "/home/prot/Git/Projects/standard-themes/" (symbol-name theme) "-theme.el")))
             (standard-themes--list-enabled-themes))
 
-    (if (prot-emacs-theme-environment-dark-p)
-        (load-theme 'standard-dark :no-confirm)
-      (load-theme 'standard-light :no-confirm))
+    (standard-themes-load-theme
+     (if (prot-emacs-theme-environment-dark-p)
+         'standard-dark
+       'standard-light))
 
-    (define-key global-map (kbd "<f5>") #'standard-themes-toggle)))
+    (define-key global-map (kbd "<f5>") #'standard-themes-toggle)
+    (define-key global-map (kbd "M-<f5>") #'standard-themes-rotate)))
 
 (provide 'prot-emacs-standard-themes)
