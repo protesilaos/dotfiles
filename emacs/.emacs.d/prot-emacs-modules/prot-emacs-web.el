@@ -1,7 +1,7 @@
 ;;;; `browse-url'
 (use-package browse-url
   :ensure nil
-  :defer t
+  :defer 1
   :config
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
