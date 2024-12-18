@@ -302,6 +302,7 @@ Development continues on GitHub with GitLab as a mirror."))
 ;;; Corfu (in-buffer completion popup)
 (use-package corfu
   :ensure t
+  :if (display-graphic-p)
   :hook (after-init . global-corfu-mode)
   ;; I also have (setq tab-always-indent 'complete) for TAB to complete
   ;; when it does not need to perform an indentation change.

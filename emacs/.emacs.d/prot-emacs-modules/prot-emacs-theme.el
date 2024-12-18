@@ -315,6 +315,7 @@
 ;; Read the manual: <https://protesilaos.com/emacs/show-font>
 (use-package show-font
   :ensure t
+  :if (display-graphic-p)
   :commands (show-font-select-preview show-font-list)
   :config
   ;; These are the defaults, but I keep them here for easier access.

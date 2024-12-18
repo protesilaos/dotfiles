@@ -438,6 +438,7 @@ word.  Fall back to regular `expreg-expand'."
 ;;; Visualise undo ring (`vundo')
 (use-package vundo
   :ensure t
+  :if (display-graphic-p)
   :defer 1
   :bind
   ( :map vundo-mode-map
