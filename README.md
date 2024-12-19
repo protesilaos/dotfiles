@@ -70,25 +70,26 @@ differentiates the window managers is their individual features.
   them.
 
 + **herbstluftwm (hlwm):** herbstluftwm prioritises manual tiling
-  methods and can treat arbitrary rectangles of a monitor as virtual
-  monitors.  The virtual monitors feature is perfect for anyone with a
-  widescreen display.  The one I have (which is not mine, but anyway)
-  is 2560x1080, so I split it by default into a regular 1920x1080 area
-  and another "sidebar" of 640x1080.  herbstluftwm has the concept of
-  "frame", which is a container of regular windows.  Each frame can
-  have its own layout, including a vertical/horizontal stack, grid,
-  and tabbed.
+  methods. It has the concept of "frames", which are rectangles that
+  include regular app windows. Each frame has its own dimensions are
+  layout. For example, it is possible to have a frame where windows
+  are vertically layed out one below the other and another frame with
+  a tabbed layout. What makes this even more appealing, is the ease
+  with which a workspace can be preconfigured (or dymanically
+  adjusted) to a given arrangement of frames and their layouts. I
+  think herbstluftwm is optimal for screens wider than the the regular
+  1920x1080. Otherwise, the manual tiling method adds cognitive load
+  that the user does not have while using bspwm.
 
 + **i3 (or i3wm):** The first tiling window manager I ever used (circa
-  2017).  The reason I abandoned it back in the day in favour of bspwm
+  2017). The reason I abandoned it back in the day in favour of bspwm
   is because its default tiling method requires manual intervention to
-  change the split direction.  On a small laptop monitor, I prefer
-  this to be done automatically, hence bspwm.  Though on a wide
-  monitor, I typically keep the split direction constant.  i3 has the
-  concept of the "container" (same as herbstluftwm "frame"), which can
-  be set to stacked, tabbed, or tiled layouts.  As such, i3 is
-  somewhere between bspwm and herbstluftwm.  Choose according to your
-  needs.
+  change the split direction. On a small laptop monitor, I prefer this
+  to be done automatically, hence bspwm. Though on a wide monitor, I
+  typically keep the split direction constant. i3 has the concept of
+  the "container" (same as the herbstluftwm "frame"), which can be set
+  to stacked, tabbed, or tiled layouts. As such, i3 is somewhere
+  between bspwm and herbstluftwm. Choose according to your needs.
 
 Check the `xtwm-key-binding-cheatsheet.md` file for an overview of
 their key bindings.
