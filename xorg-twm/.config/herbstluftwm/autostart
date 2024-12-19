@@ -90,7 +90,10 @@ done
 
 if [ -f "$HOME"/.config/herbstluftwm/my_herbstluftwm_workspaces.txt ]
 then
-    _check herbstluftwm_loadstate.sh && herbstluftwm_loadstate.sh < "$HOME"/.config/herbstluftwm/my_herbstluftwm_workspaces.txt
+    if [ "$(xrandr | grep "\\<connected\\>" | awk -F ' ' '{ print $3; exit; }' | awk -F 'x' '{ print $1; exit; }')" -gt 1920 ]
+    then
+        _check herbstluftwm_loadstate.sh && herbstluftwm_loadstate.sh < "$HOME"/.config/herbstluftwm/my_herbstluftwm_workspaces.txt
+    fi
 fi
 
 # NOTE 2024-12-06: I am no longer using this, but I am keeping it here
