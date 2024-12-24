@@ -78,5 +78,5 @@ mod4 + bracket{left,right}
 mod4 + shift + bracket{left,right}
     herbstluftwm_adjust_borders.sh {-,+}5
 
-mod4 + w ; {t,h,m}
-    herbstluftwm_load_workspace_layout.sh {third,half,middle}
+mod4 + w ; {f,t,h,m}
+    herbstluftwm_load_workspace_layout.sh {full,third,half,middle}

@@ -18,23 +18,23 @@
 # along with this program.	If not, see <https://www.gnu.org/licenses/>.
 
 my_loaded_layout=""
+my_full="(clients horizontal:0)"
+my_third="(split horizontal:0.25:0.75 (clients vertical:0) (clients max:0))"
+my_half="(split horizontal:0.5:0.5 (clients max:0) (clients max:0))"
+my_middle="(split horizontal:0.2:0.8 (clients vertical:0) (split horizontal:0.75:0.25 (clients max:0) (clients vertical:0)))"
 
 case $1 in
+    full)
+        herbstclient load "$my_full" && my_loaded_layout="full"
+        ;;
     third)
-        herbstclient load \
-                     "(split horizontal:0.25:0.75 (clients vertical:0) (clients max:0))" \
-            && my_loaded_layout="third"
-
+        herbstclient load "$my_third" && my_loaded_layout="third"
         ;;
     half)
-        herbstclient load \
-                     "(split horizontal:0.5:0.5 (clients max:0) (clients max:0))" \
-            && my_loaded_layout="half"
+        herbstclient load "$my_half" && my_loaded_layout="half"
         ;;
     middle)
-        herbstclient load \
-                     "(split horizontal:0.2:0.8 (clients vertical:0) (split horizontal:0.75:0.25 (clients max:0) (clients vertical:0)))" \
-            && my_loaded_layout="middle"
+        herbstclient load "$my_middle" && my_loaded_layout="middle"
         ;;
 esac
 
