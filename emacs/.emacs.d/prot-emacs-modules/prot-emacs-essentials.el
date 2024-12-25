@@ -23,6 +23,7 @@
   (setq scroll-error-top-bottom t)
   (setq echo-keystrokes-help nil) ; Emacs 30
   (setq epa-keys-select-method 'minibuffer) ; Emacs 30
+  (setq trusted-content '("~/Git/Projects/")) ; Emacs 30
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
