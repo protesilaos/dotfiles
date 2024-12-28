@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # pre-new --- Notmuch rules that run before notmuch new
 #
@@ -19,23 +19,31 @@
 #
 ## Commentary:
 #
-# The order of those commands matters.
+# Move unwanted email to the appropriate local directory and tag it
+# accordingly.  The order of those commands matters.
 #
 # Part of my dotfiles: <https://github.com/protesilaos/dotfiles>.
 
+if [ "$HOSTNAME" = "kronos" ]
+then
+    mail_root_path=$(notmuch config get database.path)
+    for tag in del spam
+    do
+        target_directory="${mail_root_path}/${tag}local/"
 
-# Move unwanted email to the appropriate directory and tag it accordingly.
-mail_root_path=$(notmuch config get database.path)
+        if [ ! -d "$target_directory" ]
+        then
+            mkdir -p "$target_directory"
+        fi
 
-# This moves them outside the mailbox they belong to.  They are placed
-# in a shared directory that is local to the machine I am using.
-# Basically, something marked as spam or for deletion is removed from
-# the server at this stage.
-notmuch search --output=files --format=text0 tag:del | xargs -r0 mv -t "${mail_root_path}/trash/cur/"
-notmuch search --output=files --format=text0 tag:spam | xargs -r0 mv -t "${mail_root_path}/junk/cur/"
+        while IFS= read -r -d $'\0' file
+        do
+            if [ -f "$file" ]
+            then
+                mv "$file" "$target_directory$(basename -- "${file//,U=[0-9]*:/:}")"
+            fi
+        done < <(notmuch search --output=files --format=text0 tag:"$tag")
 
-# Those messages should not have the inbox tag and are designated as
-# local-only.  By removing the tags they originally had, I make sure
-# they are not processed again by the above snippet.
-notmuch tag -inbox -del +dellocal -- tag:del
-notmuch tag -inbox -spam +spamlocal -- tag:spam
+        notmuch tag -inbox -"${tag}" +"${tag}"local -- tag:"$tag"
+    done
+fi
