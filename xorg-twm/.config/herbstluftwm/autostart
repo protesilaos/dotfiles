@@ -93,6 +93,8 @@ then
     if [ "$(xrandr | grep "\\<connected\\>" | awk -F ' ' '{ print $3; exit; }' | awk -F 'x' '{ print $1; exit; }')" -gt 1920 ]
     then
         _check herbstluftwm_loadstate.sh && herbstluftwm_loadstate.sh < "$HOME"/.config/herbstluftwm/my_herbstluftwm_workspaces.txt
+    else
+        _check herbstluftwm_loadstate.sh && echo "0: (clients max:0)" | herbstluftwm_loadstate.sh
     fi
 fi
 
