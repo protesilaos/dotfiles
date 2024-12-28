@@ -9455,7 +9455,8 @@ confirmation where needed.
   :config
   (setq notmuch-mua-compose-in 'current-window)
   (setq notmuch-mua-hidden-headers nil)
-  (setq notmuch-address-command 'internal) ; NOTE 2024-01-09: I am not using this and must review it.
+  (setq notmuch-address-command 'internal)
+  (setq notmuch-address-use-company nil)
   (setq notmuch-always-prompt-for-sender t)
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
   (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
@@ -9466,7 +9467,27 @@ confirmation where needed.
   (setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
         (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
                 "pi[èe]ce\s+jointe?\\|"
-                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b")))
+                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
+
+  (defun prot-notmuch-message-tab ()
+    "Override for `message-tab' to enforce header line check.
+More specifically, perform address completion when on a relevant header
+line, because `message-tab' sometimes (not sure when/how) fails to do
+that and instead tries to complete against dictionary entries."
+    (interactive nil message-mode)
+    (cond
+     ((save-excursion
+        (goto-char (line-beginning-position))
+        (looking-at notmuch-address-completion-headers-regexp))
+      (notmuch-address-expand-name)
+      ;; Completion was performed; nothing else to do.
+      nil)
+     (message-tab-body-function (funcall message-tab-body-function))
+     (t (funcall (or (lookup-key text-mode-map "\t")
+                     (lookup-key global-map "\t")
+                     'indent-relative)))))
+
+  (advice-add #'message-tab :override #'prot-notmuch-message-tab))
 #+end_src
 
 **** The =prot-emacs-notmuch.el= section about reading messages
