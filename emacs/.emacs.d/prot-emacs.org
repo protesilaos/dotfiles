@@ -1816,16 +1816,11 @@ I also take care to make it work with my customised mode line
            :left-fringe-width 20
            :right-fringe-width 20))
 
-  ;; (setq spacious-padding-subtle-mode-line
-  ;;       `( :mode-line-active ,(if (or (eq prot-emacs-load-theme-family 'modus)
-  ;;                                     (eq prot-emacs-load-theme-family 'standard))
-  ;;                                 'default
-  ;;                               'help-key-binding)
-  ;;          :mode-line-inactive window-divider))
-
   ;; Read the doc string of `spacious-padding-subtle-mode-line' as
   ;; it is very flexible.
-  (setq spacious-padding-subtle-mode-line nil))
+  (setq spacious-padding-subtle-mode-line
+        '( :mode-line-active spacious-padding-subtle-mode-line-active
+           :mode-line-inactive spacious-padding-subtle-mode-line-inactive)))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~rainbow-mode~
