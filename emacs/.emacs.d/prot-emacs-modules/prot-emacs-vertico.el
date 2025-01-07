@@ -47,7 +47,6 @@
           (unicode-name ,@prot-vertico-multiform-maximal)
           ;; Minimal
           (file ,@prot-vertico-multiform-minimal
-                (vertico-preselect . prompt)
                 (vertico-sort-function . prot-vertico-sort-directories-first))
           (t ,@prot-vertico-multiform-minimal)))
 

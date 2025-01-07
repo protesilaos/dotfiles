@@ -4868,7 +4868,6 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
           (unicode-name ,@prot-vertico-multiform-maximal)
           ;; Minimal
           (file ,@prot-vertico-multiform-minimal
-                (vertico-preselect . prompt)
                 (vertico-sort-function . prot-vertico-sort-directories-first))
           (t ,@prot-vertico-multiform-minimal)))
 
@@ -17274,7 +17273,8 @@ function.  Then you can control the buffer's specifics via
                              :prompt    ""
                              :separator ""
                              :ellipsis  ""
-                             :no-match  "")))
+                             :no-match  ""))
+    (vertico-preselect . prompt))
   "List of configurations for minimal Vertico multiform.
 The minimal view is intended to be more private or less
 revealing.  This is important when, for example, a prompt shows
@@ -17288,6 +17288,7 @@ automatically.")
 
 (defvar prot-vertico-multiform-maximal
   '((vertico-count . 10)
+    (vertico-preselect . directory)
     (vertico-resize . t))
   "List of configurations for maximal Vertico multiform.")
 
