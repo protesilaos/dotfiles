@@ -4857,6 +4857,8 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
     ("<up>" . prot-vertico-private-previous)
     ("C-l" . vertico-multiform-vertical))
   :config
+  (setq vertico-multiform-commands
+        `(("consult-\\(.*\\)?\\(find\\|grep\\|ripgrep\\)" ,@prot-vertico-multiform-maximal)))
   (setq vertico-multiform-categories
         `(;; Maximal
           (embark-keybinding ,@prot-vertico-multiform-maximal)

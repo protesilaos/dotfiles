@@ -36,6 +36,8 @@
     ("<up>" . prot-vertico-private-previous)
     ("C-l" . vertico-multiform-vertical))
   :config
+  (setq vertico-multiform-commands
+        `(("consult-\\(.*\\)?\\(find\\|grep\\|ripgrep\\)" ,@prot-vertico-multiform-maximal)))
   (setq vertico-multiform-categories
         `(;; Maximal
           (embark-keybinding ,@prot-vertico-multiform-maximal)
