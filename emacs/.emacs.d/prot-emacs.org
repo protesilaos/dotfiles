@@ -2018,10 +2018,8 @@ Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][Th
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
 (use-package fontaine
   :ensure t
-  :if (display-graphic-p)
   :hook
-  ;; Persist the latest font preset when closing/starting Emacs and
-  ;; while switching between themes.
+  ;; Persist the latest font preset when closing/starting Emacs.
   ((after-init . fontaine-mode)
    (after-init . (lambda ()
                    ;; Set last preset or fall back to desired style from `fontaine-presets'.

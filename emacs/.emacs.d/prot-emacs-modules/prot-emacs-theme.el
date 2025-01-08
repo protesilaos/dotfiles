@@ -182,10 +182,8 @@
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
 (use-package fontaine
   :ensure t
-  :if (display-graphic-p)
   :hook
-  ;; Persist the latest font preset when closing/starting Emacs and
-  ;; while switching between themes.
+  ;; Persist the latest font preset when closing/starting Emacs.
   ((after-init . fontaine-mode)
    (after-init . (lambda ()
                    ;; Set last preset or fall back to desired style from `fontaine-presets'.
