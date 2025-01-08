@@ -11,8 +11,8 @@ window {
     border:           5px;
     border-color:     @bg-alt;
     padding:          10px;
-    width:            25%;
-    height:           15%;
+    width:            33%;
+    height:           20%;
     /* max-height:       25%; */
 }
 
