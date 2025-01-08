@@ -30,6 +30,8 @@
     ("M-," . vertico-quick-insert)
     ("M-." . vertico-quick-exit)
     :map vertico-multiform-map
+    ("RET" . prot-vertico-private-exit)
+    ("<return>" . prot-vertico-private-exit)
     ("C-n" . prot-vertico-private-next)
     ("<down>" . prot-vertico-private-next)
     ("C-p" . prot-vertico-private-previous)
