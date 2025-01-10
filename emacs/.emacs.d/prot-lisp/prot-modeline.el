@@ -192,11 +192,14 @@ package).")
 
 (defun prot-modeline--string-truncate-p (str)
   "Return non-nil if STR should be truncated."
-  (if (string-empty-p str)
-      str
-    (and (prot-common-window-narrow-p)
+  (cond
+   ((or (not (stringp str))
+        (string-empty-p str)
+        (string-blank-p str))
+    nil)
+   ((and (prot-common-window-narrow-p)
          (> (length str) prot-modeline-string-truncate-length)
-         (not (one-window-p :no-minibuffer)))))
+         (not (one-window-p :no-minibuffer))))))
 
 (defun prot-modeline--truncate-p ()
   "Return non-nil if truncation should happen.
