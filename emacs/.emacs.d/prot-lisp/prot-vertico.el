@@ -117,7 +117,7 @@ Else do `vertico-exit'."
              (eq vertico-preselect 'prompt)))
     (vertico-exit-input))
    ((and vertico-unobtrusive-mode (> vertico--total 1))
-    (minibuffer-complete)
+    (minibuffer-complete-and-exit)
     (prot-vertico-private-next))
    (t
     (vertico-exit))))
