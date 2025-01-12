@@ -96,11 +96,6 @@
             ;; below current window
             ("\\(\\*Capture\\*\\|CAPTURE-.*\\)"
              (display-buffer-reuse-mode-window display-buffer-below-selected))
-            ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-             (display-buffer-reuse-mode-window display-buffer-below-selected)
-             (window-height . 0.1)
-             (dedicated . t)
-             (preserve-size . (t . t)))
             ((derived-mode . reb-mode) ; M-x re-builder
              (display-buffer-reuse-mode-window display-buffer-below-selected)
              (window-height . 4) ; note this is literal lines, not relative
@@ -112,6 +107,7 @@
                     (derived-mode . log-view-mode)
                     (derived-mode . help-mode) ; See the hooks for `visual-line-mode'
                     "\\*\\(|Buffer List\\|Occur\\|vc-change-log\\|eldoc.*\\).*"
+                    "\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
                     prot-window-shell-or-term-p
                     ;; ,world-clock-buffer-name
                     ))
