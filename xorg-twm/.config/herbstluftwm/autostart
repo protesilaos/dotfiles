@@ -134,7 +134,7 @@ _hc attr theme.title_height 12
 _hc attr theme.title_depth 3
 _hc attr theme.title_font "Monospace:size=8:weight=bold" # see my fontconfig setup
 _hc attr theme.normal.title_font "Monospace:size=8"
-_hc attr theme.title_align left
+_hc attr theme.title_align center
 _hc attr theme.title_when multiple_tabs # only with the max layout
 
 #### Colours
