@@ -111,8 +111,9 @@ Else do `vertico-exit'."
     (minibuffer-complete)
     (vertico-exit))
    ((and vertico-unobtrusive-mode
-         (string-empty-p (minibuffer-contents))
-         (or minibuffer-default
+         (not minibuffer--require-match)
+         (or (string-empty-p (minibuffer-contents))
+             minibuffer-default
              (eq vertico-preselect 'directory)
              (eq vertico-preselect 'prompt)))
     (vertico-exit-input))
