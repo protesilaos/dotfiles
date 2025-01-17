@@ -6129,7 +6129,7 @@ to a certain height.
              (display-buffer-no-window)
              (allow-no-window . t))
             ;; bottom side window
-            ("\\*Org \\(Select\\|Note\\)\\*" ; the `org-capture' key selection and `org-add-log-note'
+            ("\\*\\(Org \\(Select\\|Note\\)\\|Agenda Commands\\)\\*" ; the `org-capture' key selection and `org-add-log-note'
              (display-buffer-in-side-window)
              (dedicated . t)
              (side . bottom)
