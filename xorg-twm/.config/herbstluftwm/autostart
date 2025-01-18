@@ -124,8 +124,8 @@ _hc set frame_normal_opacity 15
 _hc set frame_active_opacity 50
 
 _hc attr theme.inner_width 1
-_hc attr theme.border_width 3
-_hc attr theme.active.outer_width 3
+_hc attr theme.border_width 2
+_hc attr theme.active.outer_width 1
 _hc attr theme.floating.border_width 1
 _hc attr theme.floating.outer_width 1
 
