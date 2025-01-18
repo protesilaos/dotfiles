@@ -33,6 +33,7 @@ then
            fg_main="#ffffff"
            fg_dim="#989898"
            bg_active="#79a8ffaa"
+           bg_tab_current="#c6daff"
            border_active="#79a8ff"
            border_normal="#000000"
            border_urgent="#ff8059"
@@ -44,6 +45,7 @@ then
            fg_main="#000000"
            fg_dim="#595959"
            bg_active="#3548cfaa"
+           bg_tab_current="#092068"
            border_active="#3548cf"
            border_normal="#ffffff"
            border_urgent="#a60000"
@@ -57,7 +59,7 @@ then
    _hc set frame_bg_normal_color "$bg_main"
    _hc set frame_bg_active_color "$bg_active"
 
-   _hc attr theme.active.color "$border_active"
+   _hc attr theme.active.color "$bg_tab_current"
    _hc attr theme.normal.color "$border_normal"
    _hc attr theme.urgent.color "$border_urgent"
 
