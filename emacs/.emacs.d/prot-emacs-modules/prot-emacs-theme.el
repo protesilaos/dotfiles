@@ -203,22 +203,27 @@
 
   (setq fontaine-presets
         '((small
-           :default-height 80)
+           :default-family "Iosevka Comfy Wide"
+           :default-height 70
+           :default-weight light
+           :fixed-pitch-family "Iosevka Comfy Wide"
+           :variable-pitch-family "Iosevka Comfy Wide Motion Duo"
+           :bold-weight extrabold)
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
            :default-weight semilight
            :default-height 115
            :bold-weight extrabold)
-          (large
-           :inherit medium
-           :default-height 150)
           (live-stream
            :default-family "Iosevka Comfy Wide Motion"
-           :default-height 150
-           :default-weight medium
+           :default-height 130
+           :default-weight light
            :fixed-pitch-family "Iosevka Comfy Wide Motion"
            :variable-pitch-family "Iosevka Comfy Wide Duo"
            :bold-weight extrabold)
+          (large
+           :inherit medium
+           :default-height 150)
           (presentation
            :default-height 180)
           (jumbo
