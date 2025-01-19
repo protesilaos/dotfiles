@@ -202,12 +202,16 @@
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
 
   (setq fontaine-presets
-        '((small
+        '((tiny
            :default-family "Iosevka Comfy Wide"
            :default-height 70
            :default-weight light
            :fixed-pitch-family "Iosevka Comfy Wide"
            :variable-pitch-family "Iosevka Comfy Wide Motion Duo"
+           :bold-weight extrabold)
+          (small
+           :default-height 80
+           :default-weight light
            :bold-weight extrabold)
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
