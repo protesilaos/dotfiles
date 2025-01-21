@@ -3153,7 +3153,7 @@ word.  Fall back to regular `expreg-expand'."
          (t (expreg-expand)))))))
 #+end_src
 
-*** The =prot-emacs-essentials.el= section about ~vundo~ (visualise undo steps)
+*** COMMENT The =prot-emacs-essentials.el= section about ~vundo~ (visualise undo steps)
 :PROPERTIES:
 :CUSTOM_ID: h:66ea5d9d-f60b-4d92-ba51-06c27d1be784
 :END:

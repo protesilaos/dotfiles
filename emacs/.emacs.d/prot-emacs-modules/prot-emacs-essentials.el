@@ -436,50 +436,6 @@ word.  Fall back to regular `expreg-expand'."
          (symbol (prot/expreg-expand 2))
          (t (expreg-expand)))))))
 
-;;; Visualise undo ring (`vundo')
-(use-package vundo
-  :ensure t
-  :if (display-graphic-p)
-  :defer 1
-  :bind
-  ( :map vundo-mode-map
-    ("C-/" . vundo-backward)
-    ("C-?" . vundo-forward)
-    ("u" . vundo-backward)
-    ("U" . vundo-forward)
-    ("g" . vundo-goto-last-saved)
-    ("." . vundo-goto-last-saved)
-    ("h" . vundo-backward)
-    ("j" . vundo-next)
-    ("k" . vundo-previous)
-    ("l" . vundo-forward))
-  :config
-  (setq vundo-glyph-alist vundo-unicode-symbols)
-
-  (defvar prot/vundo-undo-functions '(undo undo-only undo-redo)
-    "List of undo functions to check if we need to visualise the undo ring.")
-
-  (defvar prot/vundo-undo-command #'undo
-    "Command to call if we are not going to visualise the undo ring.")
-
-  (defun prot/vundo-if-repeat-undo (&rest args)
-    "Use `vundo' if the last command is among `prot/vundo-undo-functions'.
-In other words, start visualising the undo ring if we are going
-to be cycling through the edits."
-    (interactive)
-    (if (and (member last-command prot/vundo-undo-functions)
-             (not undo-in-region))
-        (call-interactively 'vundo)
-      (apply args)))
-
-  (mapc
-   (lambda (fn)
-     (advice-add fn :around #'prot/vundo-if-repeat-undo))
-   prot/vundo-undo-functions)
-
-  (with-eval-after-load 'pulsar
-    (add-hook 'vundo-post-exit-hook #'pulsar-pulse-line-green)))
-
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (use-package tmr
