@@ -254,19 +254,23 @@ that and instead tries to complete against dictionary entries."
   :config
   (setq notmuch-indicator-args
         '(( :terms "tag:unread and tag:inbox"
-            :label "[A] "
+            ;; :label "[A] "
+            :label "📥 "
             :label-face prot-modeline-indicator-green
             :counter-face prot-modeline-indicator-green)
           ( :terms "tag:unread and tag:inbox and not tag:package and not tag:coach"
-            :label "[U] "
+            ;; :label "[U] "
+            :label "💬 "
             :label-face prot-modeline-indicator-cyan
             :counter-face prot-modeline-indicator-cyan)
           ( :terms "tag:unread and tag:package and tag:inbox"
-            :label "[P] "
+            ;; :label "[P] "
+            :label "📦 "
             :label-face prot-modeline-indicator-magenta
             :counter-face prot-modeline-indicator-magenta)
           ( :terms "tag:unread and tag:coach and tag:inbox"
-            :label "[C] "
+            ;; :label "[C] "
+            :label "🏆 "
             :label-face prot-modeline-indicator-red
             :counter-face prot-modeline-indicator-red))
 
