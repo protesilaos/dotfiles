@@ -64,6 +64,15 @@ Used by `prot-simple-inset-date'."
   (activate-mark))
 
 ;;;###autoload
+(defun prot-simple-sudo ()
+  "Find the current file or directory using SUDO."
+  (interactive)
+  (let ((destination (or buffer-file-name default-directory)))
+    (if (string= (file-remote-p destination 'method) "sudo")
+        (user-error "Already using `sudo'")
+      (find-file (format "/sudo::/%s" destination)))))
+
+;;;###autoload
 (defun prot-simple-mark-sexp ()
   "Mark symbolic expression at or near point.
 Repeat to extend the region forward to the next symbolic
