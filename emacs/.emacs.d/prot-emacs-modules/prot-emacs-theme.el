@@ -316,7 +316,7 @@
 (use-package show-font
   :ensure t
   :if (display-graphic-p)
-  :commands (show-font-select-preview show-font-list)
+  :commands (show-font-select-preview show-font-list show-font-tabulated)
   :config
   ;; These are the defaults, but I keep them here for easier access.
   (setq show-font-pangram 'prot)
