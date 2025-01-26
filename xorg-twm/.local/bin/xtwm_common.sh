@@ -48,7 +48,7 @@ then
     # setxkbmap -layout 'us,gr' -option '' -option 'ctrl:nocaps' \
     #           -option 'altwin:menu_win' -option 'caps:none' \
     #           -option 'compose:ins' -option 'grp:win_space_toggle'
-    setxkbmap -layout 'us,gr' -option '' -option 'compose:menu'
+    setxkbmap -layout 'us,gr' -option '' -option 'grp:win_space_toggle' -option 'compose:menu'
 fi
 
 # The hotkey daemon that handles all custom key bindings.  I split the

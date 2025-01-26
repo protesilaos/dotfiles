@@ -146,13 +146,13 @@ mod4 + {_, shift + }t
 mod4 + m
     bspc desktop -l next
 
-# Toggle floating, tiled, fullscreen view.  Tiled is what is used by
+# Toggle floating/tiled and fullscreen view.  Tiled is what is used by
 # default. Floating windows have their own dimensions and can be stacked
-# on top of each other.
+# on top of each other.  The 's' key is a mnemonic for "stacking".
 #
 # NOTE the presence of the tilde ~.  If current state matches the given
 # state, then the argument is interpreted as the last state.
-mod4 + {shift + space,f}
+mod4 + {s,f}
     bspc node -t ~{floating,fullscreen}
 
 # Set the node flags.  Locked is a node that cannot be closed with `bspc

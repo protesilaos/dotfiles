@@ -37,9 +37,7 @@ _kill_processes() {
 # In case something stops working, we can call this script
 # (Ctrl+Alt+Delete on my sxhkdrc) and apply the modifications again.
 _kbd_reset() {
-    setxkbmap -layout 'us,gr' -option '' -option 'ctrl:nocaps' \
-              -option 'altwin:menu_win' -option 'caps:none' \
-              -option 'compose:ins' -option 'grp:win_space_toggle'
+    setxkbmap -layout 'us,gr' -option '' -option 'grp:win_space_toggle' -option 'compose:menu'
 }
 
 _check_systemd() {

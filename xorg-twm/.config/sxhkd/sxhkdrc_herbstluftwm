@@ -43,8 +43,8 @@ mod4 + {_,shift +} {0-9}
     herbstclient {use_index,move_index} {0-9}
 
 # Toggle the fullscreen and tiling/floating state of the currently
-# focused window.
-mod4 + {f,space}
+# focused window.  The 's' key is a mnemonic for "stacking".
+mod4 + {f,s}
     herbstclient {fullscreen toggle,set_attr clients.focus.floating toggle}
 
 # Alt + Tab to cycle all windows and frames in the current tag (how
