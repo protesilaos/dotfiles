@@ -69,7 +69,17 @@
 (use-package prot-common
   :ensure nil
   :functions (prot-common-truncate-lines-silently)
-  :hook ((fundamental-mode text-mode prog-mode dired-mode) . prot-common-truncate-lines-silently)
+  :hook ((text-mode prog-mode dired-mode prot/fundamental-mode) . prot-common-truncate-lines-silently)
+  :init
+  (defvar prot/fundamental-mode-hook nil
+    "Normal hook for `fundamental-mode' (which is missing by default).")
+
+  (defun prot/fundamental-mode-run-hook (&rest args)
+    "Apply ARGS and then run `prot/fundamental-mode-hook'."
+    (apply args)
+    (run-hooks 'prot/fundamental-mode-hook))
+
+  (advice-add #'fundamental-mode :around #'prot/fundamental-mode-run-hook)
   :config
   ;; NEVER tell me which key can call a command that I specifically
   ;; invoked with M-x: I have a good reason to use it that way.
