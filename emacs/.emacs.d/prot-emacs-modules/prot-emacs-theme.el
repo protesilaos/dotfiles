@@ -210,9 +210,7 @@
            :variable-pitch-family "Iosevka Comfy Wide Motion Duo"
            :bold-weight extrabold)
           (small
-           :default-height 80
-           :default-weight light
-           :bold-weight extrabold)
+           :default-height 80)
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
            :default-weight semilight
