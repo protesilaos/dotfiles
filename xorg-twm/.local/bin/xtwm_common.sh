@@ -98,7 +98,7 @@ _check picom && picom --config /dev/null -r 3 -o 0.55 -l -2 -t -2 \
 _check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
 
 # Use the same cursor everywhere
-_check xsetroot && xsetroot -xcf /usr/share/icons/Bibata-Original-Ice/cursors/left_ptr 16
+_check xsetroot && xsetroot -xcf /usr/share/icons/Adwaita/cursors/left_ptr 16
 
 # Load my Xresources
 _check xrdb && [ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources

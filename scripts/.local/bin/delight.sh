@@ -29,10 +29,10 @@
 
 #### General
 
-gtk_theme_light="adw-gtk3"
-gtk_theme_dark="adw-gtk3-dark"
-icon_theme_light="Papirus"
-icon_theme_dark="Papirus-Dark"
+gtk_theme_light="Adwaita"
+gtk_theme_dark="Adwaita-Dark"
+icon_theme_light="Adwaita"
+icon_theme_dark="Adwaita"
 
 _depcheck ()
 {
