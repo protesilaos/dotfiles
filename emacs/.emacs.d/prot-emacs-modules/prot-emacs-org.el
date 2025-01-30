@@ -78,6 +78,7 @@
     ("s" . org-narrow-to-subtree)
     :map ctl-x-x-map
     ("i" . prot-org-id-headlines)
+    ("r" . prot-org-id-headlines-readable)
     ("h" . prot-org-ox-html))
   :config
   ;; My custom extras, which I use for the agenda and a few other Org features.
@@ -258,7 +259,7 @@
 
           ;; NOTE 2024-11-24: I am not using this, but am keeping it
           ;; here because the approach is good.
-          
+
           ;; ("c" "Clock in and do immediately" entry
           ;;  (file+headline "tasks.org" "Clocked tasks")
           ;;  ,(concat "* TODO %^{Title}\n"

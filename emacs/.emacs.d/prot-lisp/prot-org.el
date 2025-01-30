@@ -565,11 +565,28 @@ If the entry already has a CUSTOM_ID, return it as-is, else
 create a new one."
   (let* ((pos (point))
          (id (org-entry-get pos "CUSTOM_ID")))
-    (if (and id (stringp id) (string-match-p "\\S-" id))
-        id
-      (setq id (org-id-new "h"))
-      (org-entry-put pos "CUSTOM_ID" id)
-      id)))
+    (or (and id (stringp id) (string-match-p "\\S-" id))
+        (and (setq id (org-id-new "h")) (org-entry-put pos "CUSTOM_ID" id)))
+    id))
+
+(defun prot-org--heading-to-id ()
+  "Convert current heading text to an ID for CUSTOM_ID purposes."
+  (thread-last
+    (org-get-heading :no-tags :no-todo :no-priority :no-comment)
+    (replace-regexp-in-string "[][{}!@#$%^&*()+'\"?,.\|;:~`‘’“”/=]*" "")
+    (replace-regexp-in-string "\s" "-")
+    (string-trim)
+    (downcase)
+    (concat "h:")))
+
+(defun prot-org--id-get-readable ()
+  "Like `prot-org--id-get' but use the heading wording to create and ID."
+  (let* ((pos (point))
+         (id (org-entry-get pos "CUSTOM_ID")))
+    (or (and id (stringp id) (string-match-p "\\S-" id))
+        (and (setq id (prot-org--heading-to-id))
+             (org-entry-put pos "CUSTOM_ID" id)))
+    id))
 
 (declare-function org-map-entries "org")
 
@@ -577,14 +594,23 @@ create a new one."
 (defun prot-org-id-headlines ()
   "Add missing CUSTOM_ID to all headlines in current file."
   (interactive)
-  (org-map-entries
-   (lambda () (prot-org--id-get))))
+  (org-map-entries (lambda () (prot-org--id-get))))
 
 ;;;###autoload
-(defun prot-org-id-headline ()
-  "Add missing CUSTOM_ID to headline at point."
+(defun prot-org-id-headlines-readable ()
+  "Like `prot-org-id-headlines' but with readable IDs.
+A readable identifier is one derived from the text of the heading.  In
+theory, this may not be unique."
   (interactive)
-  (prot-org--id-get))
+  (org-map-entries (lambda () (prot-org--id-get-readable))))
+
+;;;###autoload
+(defun prot-org-id-headline (&optional readable)
+  "Add missing CUSTOM_ID to headline at point.
+With optional prefix argument READABLE get a readable identifier derived
+from the heading text instead of a UUID."
+  (interactive "P")
+  (funcall (if readable 'prot-org--id-get-readable 'prot-org--id-get)))
 
 ;;;###autoload
 (defun prot-org-get-dotemacs-link ()
