@@ -10435,16 +10435,42 @@ account default : gandi
 :CUSTOM_ID: h:f23d9cef-ab7b-4486-a070-9c7ae664eadf
 :END:
 
-*** TODO The =prot-emacs-web.el= settings about following links (~browse-url~)
+*** The =prot-emacs-web.el= settings about following links (~browse-url~)
 :PROPERTIES:
 :CUSTOM_ID: h:edb70963-d590-4959-bc59-1e5435c8e78a
 :END:
+
+The built-in ~browse-url~ package makes it possible to open a web page
+from inside Emacs. Where that web page is opened depends either on the
+specific command used to pick a web browser or on the value of the
+user option ~browse-url-browser-function~. In the latter case, Emacs
+will use whichever browser the user specifies (well, technically, it
+will call the given function which is responsible for setting up the
+browser).
+
+I generally prefer to open links inside of Emacs using the EWW
+browser ([[#h:b09b4fce-31fe-4381-a49a-6a7206ac5f1b][The =prot-emacs-web.el= settings about the web browser (~eww~)]]).
+Emacs it can render HTML well, although it does not handle CSS and
+JavaScript ([[#h:60483672-aeb6-427b-bbef-54a5c31e39ab][The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)]]).
+If the page cannot be displayed properly because it depends on some
+JavaScript functionality, then I use the command ~eww-browse-with-external-browser~,
+which is bound to ~&~ by default, to open the page in whichever
+browser I have specified in the ~browse-url-secondary-browser-function~.
+
+Overall, this approach works nicely with email in Emacs as well as
+with RSS and IRC clients:
+
+- [[#h:755e195b-9471-48c7-963b-33055969b4e2][The =prot-emacs-email.el= module]]
+- [[#h:adc258d3-f444-4bb5-8a8d-43025a689167][The =prot-emacs-web.el= RSS/Atom reader (~elfeed~)]]
+- [[#h:b9e6834b-e636-414e-8c50-9e04ba77a0a3][The =prot-emacs-web.el= settings for the IRC client]]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el" :mkdirp yes
 ;;;; `browse-url'
 (use-package browse-url
   :ensure nil
-  :defer 1
+  :commands
+  ( browse-url browse-url-at-point browse-url-at-mouse browse-url-of-file
+    browse-url-firefox browse-url-chromium browse-url-epiphany)
   :config
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
