@@ -10467,10 +10467,35 @@ account default : gandi
   (setq goto-address-mail-mouse-face 'highlight))
 #+end_src
 
-*** TODO The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)
+*** The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)
 :PROPERTIES:
 :CUSTOM_ID: h:60483672-aeb6-427b-bbef-54a5c31e39ab
 :END:
+
+Emacs can render HTML and is thus capable of displaying web pages and
+richly formatted emails. The core funtionality is handled by the
+built-in Simple HTML Renderer (~shr~). Other tools are available to
+navigate to web pages:
+
+- [[#h:edb70963-d590-4959-bc59-1e5435c8e78a][The =prot-emacs-web.el= settings about following links (~browse-url~)]]
+- [[#h:7639683b-4b6f-42ee-9ae0-76eeec6fee9a][The =prot-emacs-web.el= settings about buttonising links (~goto-addr~)]]
+- [[#h:b09b4fce-31fe-4381-a49a-6a7206ac5f1b][The =prot-emacs-web.el= settings about the web browser (~eww~)]]
+
+What Emacs cannot do as of this writing (2025-02-03) is parse CSS and
+run JavaScript. This means that modern web pages will generally not
+work as expected or not load any contents at all. This should not be a
+problem for HTML email, but it makes much of the World Wide Web
+unusable.
+
+For me, this limitation is not a real problem as the stuff I read is
+fine without the bells and whistles of CSS and JavaScript. What I have
+here are settings to make HTML look the way I prefer. The two most
+important variables in this regard are ~shr-use-colors~ and
+~shr-use-fonts~ because (i) I want web pages to always use my theme
+colours instead of hardcoding their own and (ii) I do not want SHR to
+render text in ~variable-pitch~ because for me the right way to opt in
+to this feature is by enabling ~variable-pitch-mode~ in the given
+buffer (as I do, for example, via the ~text-mode-hook~ ([[#h:60d6aae2-6e4b-402c-b6a8-411fc49a6857][The =prot-emacs-theme.el= section about ~variable-pitch-mode~ and font resizing]])).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `shr' (Simple HTML Renderer)
@@ -10479,10 +10504,10 @@ account default : gandi
   :defer t
   :config
   (setq shr-use-colors nil)             ; t is bad for accessibility
-  (setq shr-use-fonts nil)              ; t is not for me
+  (setq shr-use-fonts nil)              ; t is superfluous, given `variable-pitch-mode'
   (setq shr-max-image-proportion 0.6)
   (setq shr-image-animate nil)          ; No GIFs, thank you!
-  (setq shr-width fill-column)          ; check `prot-eww-readable'
+  (setq shr-width fill-column)
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
   (setq shr-fill-text nil)              ; Emacs 31
