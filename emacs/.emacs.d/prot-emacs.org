@@ -10476,16 +10476,23 @@ with RSS and IRC clients:
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 #+end_src
 
-*** TODO The =prot-emacs-web.el= settings about buttonising links (~goto-addr~)
+*** The =prot-emacs-web.el= settings about buttonising links (~goto-addr~)
 :PROPERTIES:
 :CUSTOM_ID: h:7639683b-4b6f-42ee-9ae0-76eeec6fee9a
 :END:
+
+The built-in ~goto-addr~ is used to turn any plain text web URL into a
+clickable button. All we need is to enable the ~goto-addr-mode~ (or
+its programming variant ~goto-addr-prog-mode~). I personally do not
+use this directly, though there are other packages that may request
+the functionality. As such, I define the configurations I prefer to
+have, which are strictly stylistic.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `goto-addr'
 (use-package goto-addr
   :ensure nil
-  :defer t
+  :commands (goto-addr-mode goto-addr-prog-mode)
   :config
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
