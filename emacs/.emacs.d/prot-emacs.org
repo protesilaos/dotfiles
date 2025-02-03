@@ -10385,6 +10385,9 @@ change the XDG directory but then you know what you are doing). Just
 as with ~mbsync~, I retrieve the user name and password via commands
 that read from the =~/.authinfo= file ([[#h:bf540a85-12a6-4005-bf00-2ff3370e5adb][Contents of my =.mbsyncrc=]]).
 
+# I know about the Org '#+include' directive but this file rarely
+# changes so I do not mind copying it here directly.
+
 #+begin_example sh
 # See my mbsync config, which is reflected here.
 # https://github.com/protesilaos/dotfiles
