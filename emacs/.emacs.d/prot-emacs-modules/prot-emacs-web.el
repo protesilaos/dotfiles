@@ -1,7 +1,9 @@
 ;;;; `browse-url'
 (use-package browse-url
   :ensure nil
-  :defer 1
+  :commands
+  ( browse-url browse-url-at-point browse-url-at-mouse browse-url-of-file
+    browse-url-firefox browse-url-chromium browse-url-epiphany)
   :config
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))

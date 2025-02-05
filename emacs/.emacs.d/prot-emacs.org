@@ -10567,16 +10567,27 @@ buffer (as I do, for example, via the ~text-mode-hook~ ([[#h:60d6aae2-6e4b-402c-
   (setq shr-cookie-policy nil))
 #+end_src
 
-*** TODO The =prot-emacs-web.el= settings about browser cookies
+*** The =prot-emacs-web.el= settings about browser cookies
 :PROPERTIES:
 :CUSTOM_ID: h:399f1ec8-30e6-40c3-931b-e7c7409716c8
 :END:
+
+The built-in ~url-cookie~ provides functionality to handle cookies in
+web pages. For example, we can use the command ~url-cookie-list~ to
+produce a listing of all the cookies that are set by the current web
+page. Personally, I prefer to reject all cookies when I browse the web
+through Emacs, so I set the variable ~url-cookie-untrusted-urls~ to
+not trust any page. Whatever we set here will affect the behaviour of
+~eww~, though not of external browsers:
+
+- [[#h:edb70963-d590-4959-bc59-1e5435c8e78a][The =prot-emacs-web.el= settings about following links (~browse-url~)]]
+- [[#h:b09b4fce-31fe-4381-a49a-6a7206ac5f1b][The =prot-emacs-web.el= settings about the web browser (~eww~)]]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `url-cookie'
 (use-package url-cookie
   :ensure nil
-  :defer t
+  :commands (url-cookie-list)
   :config
   (setq url-cookie-untrusted-urls '(".*")))
 #+end_src
