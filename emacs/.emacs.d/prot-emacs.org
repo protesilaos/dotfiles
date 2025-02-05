@@ -4651,10 +4651,10 @@ completion styles where I configure pattern-matching algorithms
 accordingly ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
 
 The out-of-the-box settings of ~marginalia~ are perfectly usable.
-Though there are some categories that I either do not want to annotate
-(like =file=) or that I want to tweak their presentation of. You will
-thus notice how my =prot-marginalia.el= configures the user option
-~marginalia-annotator-registry~ ([[#h:92085a6d-213f-400d-be83-763eb80a3877][The =prot-marginalia.el= library]]).
+We can always write our own functions or opt out of some annotations
+by modifying the user option ~marginalia-annotator-registry~. I used
+to do that, but ultimately decided that I did not need to make any
+changes.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Detailed completion annotations (marginalia.el)
@@ -4663,23 +4663,6 @@ thus notice how my =prot-marginalia.el= configures the user option
   :hook (after-init . marginalia-mode)
   :config
   (setq marginalia-max-relative-age 0)) ; absolute time
-
-;;;; Custom completion annotations
-(use-package prot-marginalia
-  :ensure nil
-  :after marginalia
-  :config
-  (setq marginalia-annotator-registry
-        '((bookmark prot-marginalia-bookmark)
-          (buffer prot-marginalia-buffer)
-          (command marginalia-annotate-command)
-          (function prot-marginalia-symbol)
-          (symbol prot-marginalia-symbol)
-          (variable prot-marginalia-symbol)
-          (face marginalia-annotate-face)
-          (imenu marginalia-annotate-imenu)
-          (package prot-marginalia-package)
-          (unicode-name marginalia-annotate-char))))
 #+end_src
 
 *** The =prot-emacs-completion.el= setting to load a minibuffer UI submodule
@@ -12817,110 +12800,6 @@ As a final step, save `prot-eww-visited-history' to a file (see
 
 (provide 'prot-eww)
 ;;; prot-eww.el ends here
-#+end_src
-
-** The =prot-marginalia.el= library
-:PROPERTIES:
-:CUSTOM_ID: h:92085a6d-213f-400d-be83-763eb80a3877
-:END:
-
-#+begin_src emacs-lisp :tangle "prot-lisp/prot-marginalia.el" :mkdirp yes
-;;; prot-marginalia.el --- Code for my custom mode line -*- lexical-binding: t -*-
-
-;; Copyright (C) 2023-2024  Protesilaos Stavrou
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "30.1"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or (at
-;; your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-;;; Commentary:
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
-
-;;; Code:
-
-(require 'bookmark)
-(require 'package)
-
-(defun prot-marginalia-truncate (string)
-  "Truncate STRING to `fill-column', if necessary."
-  (if (> (length string) fill-column)
-      (concat (substring string 0 fill-column) "...")
-    string))
-
-(defun prot-marginalia-display (string)
-  "Propertize the display of STRING for completion annotation purposes."
-  (when (stringp string)
-    (format "%s%s"
-            (propertize " " 'display `(space :align-to 40))
-            (propertize (prot-marginalia-truncate string)
-                        'face 'completions-annotations))))
-
-(defun prot-marginalia-bookmark (bookmark)
-  "Annotate BOOKMARK with its file path."
-  (when-let* ((bm (assoc bookmark (bound-and-true-p bookmark-alist)))
-              (path (bookmark-get-filename bookmark)))
-    (prot-marginalia-display path)))
-
-(defun prot-marginalia-buffer (buffer)
-  "Annotate BUFFER with the return value of function `buffer-file-name'."
-  (if-let* ((name (buffer-file-name (get-buffer buffer))))
-      (prot-marginalia-display (abbreviate-file-name name))
-    (prot-marginalia-display (format "%s" (buffer-local-value 'major-mode (get-buffer buffer))))))
-
-(defun prot-marginalia-package (package)
-  "Annotate PACKAGE with its summary."
-  (when-let* ((pkg-alist (bound-and-true-p package-alist))
-              (pkg (intern-soft package))
-              (desc (or (when (package-desc-p pkg) pkg)
-                        (car (alist-get pkg pkg-alist))
-                        (if-let* ((built-in (assq pkg package--builtins)))
-                            (package--from-builtin built-in)
-                          (car (alist-get pkg package-archive-contents))))))
-    (prot-marginalia-display (package-desc-summary desc))))
-
-(defun prot-marginalia--get-symbol-doc (symbol)
-  "Return documentation string according to SYMBOL type."
-  (cond
-   ((or (functionp symbol) (macrop symbol))
-    (documentation symbol))
-   (t
-    (get symbol 'variable-documentation))))
-
-(defun prot-marginalia--first-line-documentation (symbol)
-  "Return first line of SYMBOL documentation string."
-  (when-let* ((doc-string (prot-marginalia--get-symbol-doc symbol))
-              ((stringp doc-string))
-              ((not (string-empty-p doc-string))))
-    (car (split-string doc-string "[?!.\n]"))))
-
-(defun prot-marginalia-symbol (symbol)
-  "Annotate SYMBOL with its documentation string."
-  (when-let* ((sym (intern-soft symbol))
-              (doc-string (prot-marginalia--first-line-documentation sym)))
-    (prot-marginalia-display doc-string)))
-
-(provide 'prot-marginalia)
-;;; prot-marginalia.el ends here
 #+end_src
 
 ** The =prot-modeline.el= library
