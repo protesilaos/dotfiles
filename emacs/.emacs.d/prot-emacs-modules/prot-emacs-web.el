@@ -11,7 +11,7 @@
 ;;;; `goto-addr'
 (use-package goto-addr
   :ensure nil
-  :defer t
+  :commands (goto-addr-mode goto-addr-prog-mode)
   :config
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
@@ -24,10 +24,10 @@
   :defer t
   :config
   (setq shr-use-colors nil)             ; t is bad for accessibility
-  (setq shr-use-fonts nil)              ; t is not for me
+  (setq shr-use-fonts nil)              ; t is superfluous, given `variable-pitch-mode'
   (setq shr-max-image-proportion 0.6)
   (setq shr-image-animate nil)          ; No GIFs, thank you!
-  (setq shr-width fill-column)          ; check `prot-eww-readable'
+  (setq shr-width fill-column)
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
   (setq shr-fill-text nil)              ; Emacs 31
@@ -36,16 +36,21 @@
 ;;;; `url-cookie'
 (use-package url-cookie
   :ensure nil
-  :defer t
+  :commands (url-cookie-list)
   :config
   (setq url-cookie-untrusted-urls '(".*")))
 
 ;;;; `eww' (Emacs Web Wowser)
 (use-package eww
   :ensure nil
+  :after prot-simple
   :commands (eww)
   :bind
-  ( :map eww-link-keymap
+  ( :map eww-mode-map
+    ("S" . nil) ; unmap `eww-list-buffers'
+    ("b" . prot-simple-buffers-major-mode) ; a general version to show buffer of current mode
+    ("m" . bookmark-set)
+    :map eww-link-keymap
     ("v" . nil) ; stop overriding `eww-view-source'
     :map eww-mode-map
     ("L" . eww-list-bookmarks)
@@ -56,19 +61,12 @@
     :map eww-bookmark-mode-map
     ("d" . eww-bookmark-kill)) ; same
   :config
-  (setq eww-restore-desktop t)
-  (setq eww-desktop-remove-duplicates t)
+  (setq eww-auto-rename-buffer 'title)
   (setq eww-header-line-format nil)
-  (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
-  (setq eww-download-directory (expand-file-name "~/Documents/eww-downloads"))
-  (setq eww-suggest-uris
-        '(eww-links-at-point
-          thing-at-point-url-at-point))
   (setq eww-bookmarks-directory (locate-user-emacs-file "eww-bookmarks/"))
   (setq eww-history-limit 150)
   (setq eww-use-external-browser-for-content-type
         "\\`\\(video/\\|audio\\)") ; On GNU/Linux check your mimeapps.list
-  (setq eww-browse-url-new-window-is-tab nil)
   (setq eww-form-checkbox-selected-symbol "[X]")
   (setq eww-form-checkbox-symbol "[ ]")
   ;; NOTE `eww-retrieve-command' is for Emacs28.  I tried the following
@@ -81,7 +79,16 @@
   ;;
   ;; '("wget" "--quiet" "--output-document=-")
   ;; '("chromium" "--headless" "--dump-dom")
-  (setq eww-retrieve-command nil))
+  (setq eww-retrieve-command nil)
+
+  ;; NOTE 2025-02-03: Emacs has a robust framework for writing
+  ;; bookmarks, which `eww' supports.  Though `eww' also defines its
+  ;; own parallel bookmark data, which I do not want to use.  So here
+  ;; I disable all the relevant commands.
+  (mapc
+   (lambda (command)
+     (put command 'disabled t))
+   '(eww-list-bookmarks eww-add-bookmark eww-bookmark-mode)))
 
 ;;;; `prot-eww' extras
 (use-package prot-eww
