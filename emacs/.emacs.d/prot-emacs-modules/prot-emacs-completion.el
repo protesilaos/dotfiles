@@ -453,23 +453,6 @@ Development continues on GitHub with GitLab as a mirror."))
   :config
   (setq marginalia-max-relative-age 0)) ; absolute time
 
-;;;; Custom completion annotations
-(use-package prot-marginalia
-  :ensure nil
-  :after marginalia
-  :config
-  (setq marginalia-annotator-registry
-        '((bookmark prot-marginalia-bookmark)
-          (buffer prot-marginalia-buffer)
-          (command marginalia-annotate-command)
-          (function prot-marginalia-symbol)
-          (symbol prot-marginalia-symbol)
-          (variable prot-marginalia-symbol)
-          (face marginalia-annotate-face)
-          (imenu marginalia-annotate-imenu)
-          (package prot-marginalia-package)
-          (unicode-name marginalia-annotate-char))))
-
 ;;; The minibuffer user interface (mct, vertico, or none)
 (when prot-emacs-completion-ui
   (require

@@ -1,7 +1,9 @@
 ;;;; `browse-url'
 (use-package browse-url
   :ensure nil
-  :defer 1
+  :commands
+  ( browse-url browse-url-at-point browse-url-at-mouse browse-url-of-file
+    browse-url-firefox browse-url-chromium browse-url-epiphany)
   :config
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
@@ -9,7 +11,7 @@
 ;;;; `goto-addr'
 (use-package goto-addr
   :ensure nil
-  :defer t
+  :commands (goto-addr-mode goto-addr-prog-mode)
   :config
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
@@ -22,10 +24,10 @@
   :defer t
   :config
   (setq shr-use-colors nil)             ; t is bad for accessibility
-  (setq shr-use-fonts nil)              ; t is not for me
+  (setq shr-use-fonts nil)              ; t is superfluous, given `variable-pitch-mode'
   (setq shr-max-image-proportion 0.6)
   (setq shr-image-animate nil)          ; No GIFs, thank you!
-  (setq shr-width fill-column)          ; check `prot-eww-readable'
+  (setq shr-width fill-column)
   (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
   (setq shr-fill-text nil)              ; Emacs 31
