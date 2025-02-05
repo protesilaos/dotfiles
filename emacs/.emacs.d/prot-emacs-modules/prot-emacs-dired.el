@@ -154,7 +154,9 @@
   ;;         (preserve-size . (t . t))
   ;;         (window-parameters . ((mode-line-format . none)
   ;;                               (header-line-format . none)))))
-  )
+
+  (setq dired-preview-display-action-alist
+        #'dired-preview-display-action-alist-below))
 
 (use-package ready-player
   :ensure t
