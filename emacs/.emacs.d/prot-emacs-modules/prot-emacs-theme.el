@@ -202,45 +202,36 @@
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
 
   (setq fontaine-presets
-        '((tiny
-           :default-family "Iosevka Comfy Wide"
-           :default-height 70
-           :default-weight light
-           :fixed-pitch-family "Iosevka Comfy Wide"
-           :variable-pitch-family "Iosevka Comfy Wide Motion Duo"
-           :bold-weight extrabold)
-          (small
+        '((small
            :default-height 80)
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
+           :default-family "Aporetic Serif Mono"
            :default-weight semilight
            :default-height 115
-           :bold-weight extrabold)
-          (live-stream
-           :default-family "Iosevka Comfy Wide Motion"
-           :default-height 130
-           :default-weight light
-           :fixed-pitch-family "Iosevka Comfy Wide Motion"
-           :variable-pitch-family "Iosevka Comfy Wide Duo"
+           :fixed-pitch-family "Aporetic Serif Mono"
+           :variable-pitch-family "Aporetic Sans"
            :bold-weight extrabold)
           (large
            :inherit medium
            :default-height 150)
           (presentation
+           :inherit medium
            :default-height 180)
           (jumbo
+           :inherit medium
            :default-height 260)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
            ;; <https://protesilaos.com/emacs/fontaine>.
-           :default-family "Iosevka Comfy"
+           :default-family "Aporetic Sans Mono"
            :default-weight regular
            :default-slant normal
            :default-width normal
            :default-height 100
 
-           :fixed-pitch-family "Iosevka Comfy"
+           :fixed-pitch-family "Aporetic Sans Mono"
            :fixed-pitch-weight nil
            :fixed-pitch-slant nil
            :fixed-pitch-width nil
@@ -252,7 +243,7 @@
            :fixed-pitch-serif-width nil
            :fixed-pitch-serif-height 1.0
 
-           :variable-pitch-family "Iosevka Comfy Motion Duo"
+           :variable-pitch-family "Aporetic Serif"
            :variable-pitch-weight nil
            :variable-pitch-slant nil
            :variable-pitch-width nil

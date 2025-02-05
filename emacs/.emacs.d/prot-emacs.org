@@ -2037,46 +2037,36 @@ Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][Th
   ;; completeness.
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
 
+  ;; The font family is my design: <https://github.com/protesilaos/aporetic>.
   (setq fontaine-presets
-        '((tiny
-           :default-family "Iosevka Comfy Wide"
-           :default-height 70
-           :default-weight light
-           :fixed-pitch-family "Iosevka Comfy Wide"
-           :variable-pitch-family "Iosevka Comfy Wide Motion Duo"
-           :bold-weight extrabold)
-          (small
+        '((small
            :default-height 80)
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
-           :default-weight semilight
+           :default-family "Aporetic Serif Mono"
            :default-height 115
-           :bold-weight extrabold)
-          (live-stream
-           :default-family "Iosevka Comfy Wide Motion"
-           :default-height 130
-           :default-weight light
-           :fixed-pitch-family "Iosevka Comfy Wide Motion"
-           :variable-pitch-family "Iosevka Comfy Wide Duo"
-           :bold-weight extrabold)
+           :fixed-pitch-family "Aporetic Serif Mono"
+           :variable-pitch-family "Aporetic Sans")
           (large
            :inherit medium
            :default-height 150)
           (presentation
+           :inherit medium
            :default-height 180)
           (jumbo
+           :inherit medium
            :default-height 260)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
            ;; <https://protesilaos.com/emacs/fontaine>.
-           :default-family "Iosevka Comfy"
+           :default-family "Aporetic Sans Mono"
            :default-weight regular
            :default-slant normal
            :default-width normal
            :default-height 100
 
-           :fixed-pitch-family "Iosevka Comfy"
+           :fixed-pitch-family "Aporetic Sans Mono"
            :fixed-pitch-weight nil
            :fixed-pitch-slant nil
            :fixed-pitch-width nil
@@ -2088,7 +2078,7 @@ Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][Th
            :fixed-pitch-serif-width nil
            :fixed-pitch-serif-height 1.0
 
-           :variable-pitch-family "Iosevka Comfy Motion Duo"
+           :variable-pitch-family "Aporetic Serif"
            :variable-pitch-weight nil
            :variable-pitch-slant nil
            :variable-pitch-width nil
@@ -2245,10 +2235,38 @@ adjust the current buffer's text size ([[#h:6b6778af-8bd2-4f97-a794-e23774aa6cf3
    ("C-x C-0" . global-text-scale-adjust)))
 #+end_src
 
+**** Information about my Aporetic fonts
+:PROPERTIES:
+:CUSTOM_ID: h:448972b2-ed15-4c1b-bb36-3906118c0978
+:END:
+
+[ This is the successor of my discontinued /Iosevka Comfy/ fonts
+  ([[#h:3b989679-7e3f-4f03-b4bb-611006ea01ce][Information about my Iosevka Comfy fonts]]). ]
+
+/Aporetic/ is a family of fonts that is designed for reading comfort.
+It has a consistent rounded style with open shapes. /Aporetic/ fonts
+come in monospaced and proportionately spaced sizes as well as serif
+and sans-serif variants. Thus:
+
+- Aporetic Sans
+- Aporetic Serif
+- Aporetic Sans Mono
+- Aporetic Serif Mono
+
+Sources:
+
++ Git repository: <https://github.com/protesilaos/aporetic>.
++ Sample pictures: <https://protesilaos.com/emacs/aporetic-fonts-pictures>
++ Backronym: Aporetic's Predecessor Objects' Reserved Eponym Truly Included "Comfy".
+
 **** Information about my Iosevka Comfy fonts
 :PROPERTIES:
 :CUSTOM_ID: h:3b989679-7e3f-4f03-b4bb-611006ea01ce
 :END:
+
+[ As of 2025-02-04, the Iosevka Comfy project is discontinued. The
+  main reason is that "Iosevka" is a reserved name. See my Aporetic
+  fonts instead ([[#h:448972b2-ed15-4c1b-bb36-3906118c0978][Information about my Aporetic fonts]]). ]
 
 /Iosevka Comfy/ is a customised build of the Iosevka typeface, with a
 consistent rounded style and overrides for almost all individual
