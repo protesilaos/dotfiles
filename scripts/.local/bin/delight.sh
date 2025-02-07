@@ -82,7 +82,7 @@ _xterm ()
     [ -f "$xresources" ] || { echo "No Xresources file"; exit 1; }
     [ -f "$active_theme" ] || { echo "No active Xresources theme"; exit 1; }
 
-    case ${1:-$wm_theme}
+    case $wm_theme
     in
         light) _sed "s,vivendi,operandi," "$active_theme" ;;
         dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
@@ -241,7 +241,7 @@ _bspwm_or_hlwm ()
     _feh &
     _rofi &
 
-    if [ -f $focus_mode_status ] && [ "$(sed 1q "$focus_mode_status")" = off ]
+    if [ -f "$focus_mode_status" ] && [ "$(sed 1q "$focus_mode_status")" = off ]
     then
         _polybar launch
     else
