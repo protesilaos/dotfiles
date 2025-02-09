@@ -201,17 +201,16 @@
   ;; completeness.
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
 
+  ;; The font family is my design: <https://github.com/protesilaos/aporetic>.
   (setq fontaine-presets
         '((small
            :default-height 80)
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
            :default-family "Aporetic Serif Mono"
-           :default-weight semilight
            :default-height 115
            :fixed-pitch-family "Aporetic Serif Mono"
-           :variable-pitch-family "Aporetic Sans"
-           :bold-weight extrabold)
+           :variable-pitch-family "Aporetic Sans")
           (large
            :inherit medium
            :default-height 150)
