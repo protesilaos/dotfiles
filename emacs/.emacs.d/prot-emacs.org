@@ -5924,20 +5924,27 @@ macro and tell it which command should be empowered to run in such a
 popup frame. I did a video demonstrating this functionality: [[https://protesilaos.com/codelog/2024-09-19-emacs-command-popup-frame-emacsclient/][Emacs: commands in popup frames with ~emacsclient~]]
 (2024-09-19).
 
-All we need here is the hooks that close the frame after the commands
-run succesfully. The commands I configure are for ~org-capture~ and
-~tmr~:
+The code I have also sets up the appropriate hooks so that after the
+command runs it deletes the popup frame. This way we do not end up
+with more frames than we need. Here is the sample of what it does:
 
-- [[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]]
-- [[#h:6dce278e-86c7-4620-9271-d5af5499f0cc][The =prot-emacs-essentials.el= section about ~tmr~ (set timers)]]
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp yes
+#+begin_example emacs-lisp
 (with-eval-after-load 'org-capture
   (add-hook 'org-capture-after-finalize-hook #'prot-window-delete-popup-frame))
 
 (with-eval-after-load 'tmr
   (add-hook 'tmr-timer-created-functions #'prot-window-delete-popup-frame))
-#+end_src
+
+(with-eval-after-load 'prot-project
+  (add-hook 'prot-project-switch-hook #'prot-window-delete-popup-frame))
+#+end_example
+
+The commands I configure are for ~org-capture~ and ~tmr~ as well as my
+custom ~prot-project-switch~:
+
+- [[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-org.el= Org capture templates (~org-capture~)]]
+- [[#h:6dce278e-86c7-4620-9271-d5af5499f0cc][The =prot-emacs-essentials.el= section about ~tmr~ (set timers)]]
+- [[#h:7dcbcadf-8af6-487d-b864-e4ce56d69530][The =prot-emacs-git.el= section about =project.el=]]
 
 At my system level I also have keybindings bound to call the following
 (you can try those on the command line---remember they depend on the
@@ -5946,11 +5953,12 @@ daemon or ~server-mode~):
 #+begin_example sh
 # Run `org-capture` in a popup frame that is deleted after you are done.
 emacsclient -e '(prot-window-popup-org-capture)'
-#+end_example
 
-#+begin_example sh
 # Same idea for the `tmr` command.
 emacsclient -e '(prot-window-popup-tmr)'
+
+# Same idea for the `prot-project-switch` command.
+emacsclient -e '(prot-window-popup-prot-project-switch)'
 #+end_example
 
 *** The =prot-emacs-window.el= section about uniquifying buffer names
@@ -5977,7 +5985,7 @@ would have the following buffer names in the various styles:
 I use the =forward= style, which is the closest to the actual file
 name.
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp "yes"
 ;;; General window and buffer configurations
 (use-package uniquify
   :ensure nil
@@ -15052,6 +15060,9 @@ With optional COMMAND, run it in DIRECTORY."
   "Return a list of frame names."
   (mapcar #'car (make-frame-names-alist)))
 
+(defvar prot-project-switch-hook nil
+  "Normal hook called after `prot-project-switch'.")
+
 ;;;###autoload
 (defun prot-project-switch (directory)
   "Switch to project DIRECTORY.
@@ -15062,7 +15073,9 @@ the project in DIRECTORY using `project-dired'."
   (let ((name (file-name-nondirectory (directory-file-name directory))))
     (if (member name (prot-project--frame-names))
         (select-frame-by-name name)
-      (prot-project--switch directory 'project-dired))))
+      (prot-project--switch directory 'project-dired))
+    (run-hooks 'prot-project-switch-hook)
+    (setq this-command 'project-switch-project)))
 
 ;;;; Produce a VC root log for the project
 
@@ -17604,8 +17617,9 @@ call NAME as a function."
 (defun prot-window-delete-popup-frame (&rest _)
   "Kill selected selected frame if it has parameter `prot-window-popup-frame'.
 Use this function via a hook."
-  (when (frame-parameter nil 'prot-window-popup-frame)
-    (delete-frame)))
+  (dolist (frame (frame-list))
+    (when (frame-parameter frame 'prot-window-popup-frame)
+      (delete-frame frame))))
 
 (defmacro prot-window-define-with-popup-frame (command)
   "Define function which calls COMMAND in a new frame.
@@ -17614,7 +17628,9 @@ Make the new frame have the `prot-window-popup-frame' parameter."
      ,(format "Run `%s' in a popup frame with `prot-window-popup-frame' parameter.
 Also see `prot-window-delete-popup-frame'." command)
      (interactive)
-     (let ((frame (make-frame '((prot-window-popup-frame . t)))))
+     (let ((frame (make-frame '((prot-window-popup-frame . t)
+                                (explicit-name . t)
+                                (name . "prot-window-popup")))))
        (select-frame frame)
        (switch-to-buffer " prot-window-hidden-buffer-for-popup-frame")
        (condition-case nil
@@ -17623,16 +17639,30 @@ Also see `prot-window-delete-popup-frame'." command)
           (delete-frame frame))))))
 
 (declare-function org-capture "org-capture" (&optional goto keys))
-(defvar org-capture-after-finalize-hook)
+(declare-function tmr "tmr" (time &optional description acknowledgep))
+(declare-function prot-project-switch "prot-project" (directory))
 
 ;;;###autoload (autoload 'prot-window-popup-org-capture "prot-window")
-(prot-window-define-with-popup-frame org-capture)
-
-(declare-function tmr "tmr" (time &optional description acknowledgep))
-(defvar tmr-timer-created-functions)
+(prot-window-define-with-popup-frame org-capture) ; defines command `prot-window-popup-org-capture'
 
 ;;;###autoload (autoload 'prot-window-popup-tmr "prot-window")
-(prot-window-define-with-popup-frame tmr)
+(prot-window-define-with-popup-frame tmr)  ; defines command `prot-window-popup-tmr'
+
+;;;###autoload (autoload 'prot-window-popup-tmr "prot-window")
+(prot-window-define-with-popup-frame prot-project-switch)  ; defines command `prot-window-popup-prot-project-switch'
+
+(defun prot-window-set-delete-popup-hook (feature hook)
+  "Set up `prot-window-delete-popup-frame' for FEATURE with HOOK."
+  (with-eval-after-load feature
+    (add-hook hook #'prot-window-delete-popup-frame)))
+
+(defvar org-capture-after-finalize-hook)
+(defvar tmr-timer-created-functions)
+(defvar prot-project-switch-hook)
+
+(prot-window-set-delete-popup-hook 'org-capture 'org-capture-after-finalize-hook)
+(prot-window-set-delete-popup-hook 'tmr 'tmr-timer-created-functions)
+(prot-window-set-delete-popup-hook 'prot-project 'prot-project-switch-hook)
 
 (provide 'prot-window)
 ;;; prot-window.el ends here

@@ -202,8 +202,9 @@ call NAME as a function."
 (defun prot-window-delete-popup-frame (&rest _)
   "Kill selected selected frame if it has parameter `prot-window-popup-frame'.
 Use this function via a hook."
-  (when (frame-parameter nil 'prot-window-popup-frame)
-    (delete-frame)))
+  (dolist (frame (frame-list))
+    (when (frame-parameter frame 'prot-window-popup-frame)
+      (delete-frame frame))))
 
 (defmacro prot-window-define-with-popup-frame (command)
   "Define function which calls COMMAND in a new frame.
@@ -212,7 +213,9 @@ Make the new frame have the `prot-window-popup-frame' parameter."
      ,(format "Run `%s' in a popup frame with `prot-window-popup-frame' parameter.
 Also see `prot-window-delete-popup-frame'." command)
      (interactive)
-     (let ((frame (make-frame '((prot-window-popup-frame . t)))))
+     (let ((frame (make-frame '((prot-window-popup-frame . t)
+                                (explicit-name . t)
+                                (name . "prot-window-popup")))))
        (select-frame frame)
        (switch-to-buffer " prot-window-hidden-buffer-for-popup-frame")
        (condition-case nil
@@ -221,16 +224,30 @@ Also see `prot-window-delete-popup-frame'." command)
           (delete-frame frame))))))
 
 (declare-function org-capture "org-capture" (&optional goto keys))
-(defvar org-capture-after-finalize-hook)
+(declare-function tmr "tmr" (time &optional description acknowledgep))
+(declare-function prot-project-switch "prot-project" (directory))
 
 ;;;###autoload (autoload 'prot-window-popup-org-capture "prot-window")
-(prot-window-define-with-popup-frame org-capture)
-
-(declare-function tmr "tmr" (time &optional description acknowledgep))
-(defvar tmr-timer-created-functions)
+(prot-window-define-with-popup-frame org-capture) ; defines command `prot-window-popup-org-capture'
 
 ;;;###autoload (autoload 'prot-window-popup-tmr "prot-window")
-(prot-window-define-with-popup-frame tmr)
+(prot-window-define-with-popup-frame tmr)  ; defines command `prot-window-popup-tmr'
+
+;;;###autoload (autoload 'prot-window-popup-tmr "prot-window")
+(prot-window-define-with-popup-frame prot-project-switch)  ; defines command `prot-window-popup-prot-project-switch'
+
+(defun prot-window-set-delete-popup-hook (feature hook)
+  "Set up `prot-window-delete-popup-frame' for FEATURE with HOOK."
+  (with-eval-after-load feature
+    (add-hook hook #'prot-window-delete-popup-frame)))
+
+(defvar org-capture-after-finalize-hook)
+(defvar tmr-timer-created-functions)
+(defvar prot-project-switch-hook)
+
+(prot-window-set-delete-popup-hook 'org-capture 'org-capture-after-finalize-hook)
+(prot-window-set-delete-popup-hook 'tmr 'tmr-timer-created-functions)
+(prot-window-set-delete-popup-hook 'prot-project 'prot-project-switch-hook)
 
 (provide 'prot-window)
 ;;; prot-window.el ends here

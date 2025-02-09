@@ -69,7 +69,13 @@ window_title="$(xwininfo -id "$window_id" | sed ' /^xwininfo/!d ; s,.*"\(.*\)".*
 # this here.
 case "$window_class" in
     [Ee]macs)
-        echo "state=tiled"
+        if [ "$window_title" = "prot-window-popup" ]
+        then
+		    echo "state=floating"
+            echo "center=on"
+        else
+            echo "state=tiled"
+        fi
         ;;
 	[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|my_float_window)
 		echo "state=floating"

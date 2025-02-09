@@ -71,6 +71,10 @@ mod4 + Return
 mod4 + {b,d}
     rofi -show {window,drun}
 
+# Run `org-capture`, `tmr`, or `prot-project-switch` in a popup frame that is deleted after you are done.
+mod4 + p ; {o,t,p}
+    emacsclient -e "({prot-window-popup-org-capture,prot-window-popup-tmr,prot-window-popup-prot-project-switch})"
+
 #### Miscellaneous tools and media keys
 
 

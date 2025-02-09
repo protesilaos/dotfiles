@@ -57,6 +57,9 @@ With optional COMMAND, run it in DIRECTORY."
   "Return a list of frame names."
   (mapcar #'car (make-frame-names-alist)))
 
+(defvar prot-project-switch-hook nil
+  "Normal hook called after `prot-project-switch'.")
+
 ;;;###autoload
 (defun prot-project-switch (directory)
   "Switch to project DIRECTORY.
@@ -67,7 +70,9 @@ the project in DIRECTORY using `project-dired'."
   (let ((name (file-name-nondirectory (directory-file-name directory))))
     (if (member name (prot-project--frame-names))
         (select-frame-by-name name)
-      (prot-project--switch directory 'project-dired))))
+      (prot-project--switch directory 'project-dired))
+    (run-hooks 'prot-project-switch-hook)
+    (setq this-command 'project-switch-project)))
 
 ;;;; Produce a VC root log for the project
 
