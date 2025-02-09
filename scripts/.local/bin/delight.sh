@@ -108,12 +108,12 @@ _xfce4terminal ()
         light)
             _sed "s,ColorForeground=.*,ColorForeground=#000000," "$active_theme"
             _sed "s,ColorBackground=.*,ColorBackground=#ffffff," "$active_theme"
-            _sed "ColorPalette=.*,ColorPalette=$palette_light" "$active_theme"
+            _sed "s,ColorPalette=.*,ColorPalette=$palette_light," "$active_theme"
             ;;
         dark)
             _sed "s,ColorForeground=.*,ColorForeground=#ffffff," "$active_theme"
             _sed "s,ColorBackground=.*,ColorBackground=#000000," "$active_theme"
-            _sed "ColorPalette=.*,ColorPalette=$palette_dark" "$active_theme"
+            _sed "s,ColorPalette=.*,ColorPalette=$palette_dark," "$active_theme"
             ;;
     esac
 }
