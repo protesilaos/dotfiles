@@ -149,6 +149,7 @@ _hc rule floatplacement=none
 _hc rule fixedsize floating=on
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
 _hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on floatplacement=center
+_hc rule title='prot-window-popup' focus=on floatplacement=center floating=on
 _hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
 # Empty frames function as the equivalent of BSPWM's receptacles: they
