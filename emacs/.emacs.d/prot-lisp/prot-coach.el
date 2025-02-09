@@ -1,6 +1,6 @@
 ;;; prot-coach.el --- Code for my personal coaching sessions -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2024  Protesilaos Stavrou
+;; Copyright (C) 2023-2025  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

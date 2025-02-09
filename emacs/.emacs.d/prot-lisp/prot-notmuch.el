@@ -1,6 +1,6 @@
 ;;; prot-notmuch.el --- Tweaks for my notmuch.el configurations -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2024  Protesilaos Stavrou
+;; Copyright (C) 2021-2025  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
