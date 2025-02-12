@@ -2,7 +2,7 @@
 
 # Delight (DE light) --- Toggle DE/WM and Emacs themes
 #
-# Copyright (c) 2020-2024  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2020-2025  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -108,12 +108,12 @@ _xfce4terminal ()
         light)
             _sed "s,ColorForeground=.*,ColorForeground=#000000," "$active_theme"
             _sed "s,ColorBackground=.*,ColorBackground=#ffffff," "$active_theme"
-            _sed "ColorPalette=.*,ColorPalette=$palette_light" "$active_theme"
+            _sed "s,ColorPalette=.*,ColorPalette=$palette_light," "$active_theme"
             ;;
         dark)
             _sed "s,ColorForeground=.*,ColorForeground=#ffffff," "$active_theme"
             _sed "s,ColorBackground=.*,ColorBackground=#000000," "$active_theme"
-            _sed "ColorPalette=.*,ColorPalette=$palette_dark" "$active_theme"
+            _sed "s,ColorPalette=.*,ColorPalette=$palette_dark," "$active_theme"
             ;;
     esac
 }

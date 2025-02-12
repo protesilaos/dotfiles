@@ -1,6 +1,6 @@
 ;;; prot-scratch.el --- Scratch buffers for editable major mode of choice -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2024  Protesilaos Stavrou
+;; Copyright (C) 2023-2025  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

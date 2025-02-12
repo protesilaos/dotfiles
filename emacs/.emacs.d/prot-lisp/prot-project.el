@@ -1,6 +1,6 @@
 ;;; prot-project.el --- Extensions for project.el -*- lexical-binding: t -*-
 
-;; Copyright (C) 2024-2024  Protesilaos Stavrou
+;; Copyright (C) 2025-2025  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

@@ -1,6 +1,6 @@
 ;;; prot-pair.el --- Insert character pair around symbol or region -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2024  Protesilaos Stavrou
+;; Copyright (C) 2023-2025  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
