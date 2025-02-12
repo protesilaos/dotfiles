@@ -320,7 +320,9 @@ abcdefghijklmnopqrstuvwxyz
 ()[]{}<>«»‹› 6bB8&0ODdoa 1tiIlL|\/
 !ij c¢ 5$Ss 7Z2z 9gqp nmMNNMW uvvwWuuw
 x×X .,·°;:¡!¿?`'‘’   ÄAÃÀ TODO
-"))
+")
+
+(setq show-font-display-buffer-action-alist '(display-buffer-full-frame)))
 
 ;;;;; `variable-pitch-mode' setup
 (use-package face-remap
