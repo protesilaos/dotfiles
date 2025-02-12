@@ -212,7 +212,11 @@
   ;; reason.
   (setq git-commit-style-convention-checks '(non-empty-second-line))
 
-  (setq magit-diff-refine-hunk t))
+  (setq magit-diff-refine-hunk t)
+
+  ;; Show icons for files in the Magit status and other buffers.
+  (with-eval-after-load 'magit
+    (setq magit-format-file-function #'magit-format-file-nerd-icons)))
 
 (use-package magit-repos
   :ensure nil ; part of `magit'
