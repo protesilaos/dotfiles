@@ -86,7 +86,6 @@
 
 ;;;; general settings
   (setq org-ellipsis "⮧")
-  (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-M-RET-may-split-line '((default . nil)))
@@ -124,6 +123,14 @@
     (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
       (add-hook hook #'pulsar-recenter-center)
       (add-hook hook #'pulsar-reveal-entry))))
+
+;;;; `org-indent-mode' and related
+(use-package org
+  :ensure nil
+  :config
+  (setq org-adapt-indentation nil) ; No, non, nein, όχι to literal indentation!
+  (setq org-indent-mode-turns-on-hiding-stars nil)
+  (setq org-indent-indentation-per-level 4))
 
 ;;;; refile, todo
 (use-package org

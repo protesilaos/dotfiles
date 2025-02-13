@@ -7269,7 +7269,6 @@ on how I use Org.
 
 ;;;; general settings
   (setq org-ellipsis "⮧")
-  (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-M-RET-may-split-line '((default . nil)))
@@ -7307,6 +7306,66 @@ on how I use Org.
     (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
       (add-hook hook #'pulsar-recenter-center)
       (add-hook hook #'pulsar-reveal-entry))))
+#+end_src
+
+*** The =prot-emacs-org.el= Org indent mode settings
+:PROPERTIES:
+:CUSTOM_ID: h:0c758fca-0a51-4095-9483-b9b0a594333a
+:END:
+
+Perhaps the most obvious feature of the Org syntax is the heading
+levels. Users can fold them to conceal or reveal only the section of
+the document they are interested in. For some documents, such as this
+one, where there are lots of deeply nested headings with plenty of
+text below them, I find that ~org-indent-mode~ makes it easier for me
+to make sense of the contents.
+
+As its name suggests, this minor mode will indent headings and their
+text according to their level of depth. This makes it easier to tell
+that something belongs to a heading of depth 3 (three asterisks)
+instead of two.
+
+The indentation produced by this mode is purely visual though: it does
+not actually append tabs or spaces to your file. That is what the user
+option ~org-adapt-indentation~ does. For me, I do not want anything to
+perform sweeping modifications to my files, as it can easily lead to
+mistakes or make things more inconvenient.
+
+Whereas the purely visual ~org-indent-mode~ is a feature we can turn
+on and off at will without worrying that something will change in our
+file.
+
+I do not set up this minor mode via a hook, as I do not really need it
+for small Org files. Instead, I set up the files I am interested in to
+have the following somewhere close to the top:
+
+: #+startup: content indent
+
+What this =#+startup= directive does is to (i) show all the headings
+while folding their contents and (ii) activate ~org-indent-mode~. If
+you add the =#+startup= to an already open file, then you need to do
+=M-x org-mode-restart= for changes to take effect.
+
+By default, ~org-indent-mode~ will hide the leading asterisks, keeping
+only one at a time. This looks cleaner overall, though I find it
+harder to add a new heading as I am not quite sure how many asterisks
+I need to add when I perform a manual insertion. Plus, I like seeing
+all the leading starts, anyway, in the same way I prefer to have all
+the emphasis markers on display. As such, I set the user option
+~org-indent-mode-turns-on-hiding-stars~ to ~nil~.
+
+The other small tweak I make is to make the indentation a bit more
+pronounced, by setting ~org-indent-indentation-per-level~ to =4=
+instead of =2=.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
+;;;; `org-indent-mode' and related
+(use-package org
+  :ensure nil
+  :config
+  (setq org-adapt-indentation nil) ; No, non, nein, όχι to literal indentation!
+  (setq org-indent-mode-turns-on-hiding-stars nil)
+  (setq org-indent-indentation-per-level 4))
 #+end_src
 
 *** The =prot-emacs-org.el= Org to-do and refile settings
