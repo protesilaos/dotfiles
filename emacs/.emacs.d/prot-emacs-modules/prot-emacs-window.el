@@ -133,6 +133,7 @@
   :ensure nil
   :demand t
   :config
+  (setq split-window-preferred-direction 'horizontal) ; Emacs 31
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)

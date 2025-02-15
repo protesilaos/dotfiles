@@ -2182,7 +2182,9 @@ abcdefghijklmnopqrstuvwxyz
 ()[]{}<>«»‹› 6bB8&0ODdoa 1tiIlL|\/
 !ij c¢ 5$Ss 7Z2z 9gqp nmMNNMW uvvwWuuw
 x×X .,·°;:¡!¿?`'‘’   ÄAÃÀ TODO
-"))
+")
+
+(setq show-font-display-buffer-action-alist '(display-buffer-full-frame)))
 #+end_src
 
 *** The =prot-emacs-theme.el= section about ~variable-pitch-mode~ and font resizing
@@ -6233,6 +6235,7 @@ and the other more basic functions I have defined for this purpose.
   :ensure nil
   :demand t
   :config
+  (setq split-window-preferred-direction 'horizontal) ; Emacs 31
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
@@ -7018,7 +7021,11 @@ cases, a combination of =vc= and the command-line will suffice
   ;; reason.
   (setq git-commit-style-convention-checks '(non-empty-second-line))
 
-  (setq magit-diff-refine-hunk t))
+  (setq magit-diff-refine-hunk t)
+
+  ;; Show icons for files in the Magit status and other buffers.
+  (with-eval-after-load 'magit
+    (setq magit-format-file-function #'magit-format-file-nerd-icons)))
 
 (use-package magit-repos
   :ensure nil ; part of `magit'
@@ -7262,7 +7269,6 @@ on how I use Org.
 
 ;;;; general settings
   (setq org-ellipsis "⮧")
-  (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-M-RET-may-split-line '((default . nil)))
@@ -7300,6 +7306,66 @@ on how I use Org.
     (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
       (add-hook hook #'pulsar-recenter-center)
       (add-hook hook #'pulsar-reveal-entry))))
+#+end_src
+
+*** The =prot-emacs-org.el= Org indent mode settings
+:PROPERTIES:
+:CUSTOM_ID: h:0c758fca-0a51-4095-9483-b9b0a594333a
+:END:
+
+Perhaps the most obvious feature of the Org syntax is the heading
+levels. Users can fold them to conceal or reveal only the section of
+the document they are interested in. For some documents, such as this
+one, where there are lots of deeply nested headings with plenty of
+text below them, I find that ~org-indent-mode~ makes it easier for me
+to make sense of the contents.
+
+As its name suggests, this minor mode will indent headings and their
+text according to their level of depth. This makes it easier to tell
+that something belongs to a heading of depth 3 (three asterisks)
+instead of two.
+
+The indentation produced by this mode is purely visual though: it does
+not actually append tabs or spaces to your file. That is what the user
+option ~org-adapt-indentation~ does. For me, I do not want anything to
+perform sweeping modifications to my files, as it can easily lead to
+mistakes or make things more inconvenient.
+
+Whereas the purely visual ~org-indent-mode~ is a feature we can turn
+on and off at will without worrying that something will change in our
+file.
+
+I do not set up this minor mode via a hook, as I do not really need it
+for small Org files. Instead, I set up the files I am interested in to
+have the following somewhere close to the top:
+
+: #+startup: content indent
+
+What this =#+startup= directive does is to (i) show all the headings
+while folding their contents and (ii) activate ~org-indent-mode~. If
+you add the =#+startup= to an already open file, then you need to do
+=M-x org-mode-restart= for changes to take effect.
+
+By default, ~org-indent-mode~ will hide the leading asterisks, keeping
+only one at a time. This looks cleaner overall, though I find it
+harder to add a new heading as I am not quite sure how many asterisks
+I need to add when I perform a manual insertion. Plus, I like seeing
+all the leading starts, anyway, in the same way I prefer to have all
+the emphasis markers on display. As such, I set the user option
+~org-indent-mode-turns-on-hiding-stars~ to ~nil~.
+
+The other small tweak I make is to make the indentation a bit more
+pronounced, by setting ~org-indent-indentation-per-level~ to =4=
+instead of =2=.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
+;;;; `org-indent-mode' and related
+(use-package org
+  :ensure nil
+  :config
+  (setq org-adapt-indentation nil) ; No, non, nein, όχι to literal indentation!
+  (setq org-indent-mode-turns-on-hiding-stars nil)
+  (setq org-indent-indentation-per-level 4))
 #+end_src
 
 *** The =prot-emacs-org.el= Org to-do and refile settings
@@ -16892,6 +16958,31 @@ Else do `vertico-exit'."
    (t
     (vertico-exit))))
 
+;; I want to keep `prot-window-define-with-popup-frame' as-is because
+;; it is useful for other users as well.  But I also wish to extend it
+;; to make Vertico use its buffer mode, if I am running Vertico.  So I
+;; do this with an advice even though the proper way would be to
+;; modify my macro directly.
+(defun prot-vertico-with-buffer-mode (&rest args)
+  "Apply ARGS with `vertico-buffer-mode' enabled.
+Do so when `prot-emacs-completion-ui' is set to use Vertico.
+
+Add this function as an advice around another."
+  (when (eq prot-emacs-completion-ui 'vertico)
+    (unwind-protect
+        (progn
+          (let ((vertico-multiform-categories `((t ,@prot-vertico-multiform-maximal)))
+                (vertico-buffer-display-action '(display-buffer-full-frame)))
+            (vertico-buffer-mode 1)
+            (apply args)))
+      (vertico-buffer-mode -1))))
+
+(with-eval-after-load 'prot-window
+  (dolist (command '(prot-window-popup-org-capture
+                     prot-window-popup-tmr
+                     prot-window-popup-prot-project-switch))
+    (advice-add command :around #'prot-vertico-with-buffer-mode)))
+
 (provide 'prot-vertico)
 ;;; prot-vertico.el ends here
 #+end_src
@@ -17110,6 +17201,8 @@ Use this function via a hook."
     (when (frame-parameter frame 'prot-window-popup-frame)
       (delete-frame frame))))
 
+;; NOTE 2025-02-11: Also see `prot-vertico-with-buffer-mode', which
+;; extends this to use a full-frame buffer for Vertico.
 (defmacro prot-window-define-with-popup-frame (command)
   "Define function which calls COMMAND in a new frame.
 Make the new frame have the `prot-window-popup-frame' parameter."

@@ -206,6 +206,8 @@ Use this function via a hook."
     (when (frame-parameter frame 'prot-window-popup-frame)
       (delete-frame frame))))
 
+;; NOTE 2025-02-11: Also see `prot-vertico-with-buffer-mode', which
+;; extends this to use a full-frame buffer for Vertico.
 (defmacro prot-window-define-with-popup-frame (command)
   "Define function which calls COMMAND in a new frame.
 Make the new frame have the `prot-window-popup-frame' parameter."

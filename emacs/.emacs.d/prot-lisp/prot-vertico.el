@@ -123,5 +123,30 @@ Else do `vertico-exit'."
    (t
     (vertico-exit))))
 
+;; I want to keep `prot-window-define-with-popup-frame' as-is because
+;; it is useful for other users as well.  But I also wish to extend it
+;; to make Vertico use its buffer mode, if I am running Vertico.  So I
+;; do this with an advice even though the proper way would be to
+;; modify my macro directly.
+(defun prot-vertico-with-buffer-mode (&rest args)
+  "Apply ARGS with `vertico-buffer-mode' enabled.
+Do so when `prot-emacs-completion-ui' is set to use Vertico.
+
+Add this function as an advice around another."
+  (when (eq prot-emacs-completion-ui 'vertico)
+    (unwind-protect
+        (progn
+          (let ((vertico-multiform-categories `((t ,@prot-vertico-multiform-maximal)))
+                (vertico-buffer-display-action '(display-buffer-full-frame)))
+            (vertico-buffer-mode 1)
+            (apply args)))
+      (vertico-buffer-mode -1))))
+
+(with-eval-after-load 'prot-window
+  (dolist (command '(prot-window-popup-org-capture
+                     prot-window-popup-tmr
+                     prot-window-popup-prot-project-switch))
+    (advice-add command :around #'prot-vertico-with-buffer-mode)))
+
 (provide 'prot-vertico)
 ;;; prot-vertico.el ends here
