@@ -10583,10 +10583,27 @@ not trust any page. Whatever we set here will affect the behaviour of
   (setq url-cookie-untrusted-urls '(".*")))
 #+end_src
 
-*** TODO The =prot-emacs-web.el= settings about the web browser (~eww~)
+*** The =prot-emacs-web.el= settings about the web browser (~eww~)
 :PROPERTIES:
 :CUSTOM_ID: h:b09b4fce-31fe-4381-a49a-6a7206ac5f1b
 :END:
+
+The built-in ~eww~, i.e. the Emacs Web Wowser, is a text-centric web
+browser that renders an HTML file in an Emacs buffer. It essentially
+is a set of helpful commands to navigate the web while loading each
+page with ~shr~ ([[#h:60483672-aeb6-427b-bbef-54a5c31e39ab][The =prot-emacs-web.el= settings about the Simple HTML Renderer (~shr~)]]).
+
+Because ~shr~ only parses HTML code without CSS or JavaScript, ~eww~
+is thus limited to what effectively is a simple, textual representation
+of the web page. This is not good enough for websites that provide
+rich interactivity, though it works reasonably well for blogs or pages
+with text-heavy content (such as my website).
+
+I use ~eww~ inside Emacs to quickly visit links to pages that are
+likely okay in an HTML-only presentation. If the page does not behave
+properly, then I type =&= (~eww-browse-with-external-browser~) to use
+my "secondary" browser, which should be a fully fledged application
+like Firefox ([[#h:edb70963-d590-4959-bc59-1e5435c8e78a][The =prot-emacs-web.el= settings about following links (~browse-url~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `eww' (Emacs Web Wowser)
@@ -10601,14 +10618,8 @@ not trust any page. Whatever we set here will affect the behaviour of
     ("m" . bookmark-set)
     :map eww-link-keymap
     ("v" . nil) ; stop overriding `eww-view-source'
-    :map eww-mode-map
-    ("L" . eww-list-bookmarks)
     :map dired-mode-map
-    ("E" . eww-open-file) ; to render local HTML files
-    :map eww-buffers-mode-map
-    ("d" . eww-bookmark-kill)   ; it actually deletes
-    :map eww-bookmark-mode-map
-    ("d" . eww-bookmark-kill)) ; same
+    ("E" . eww-open-file)) ; to render local HTML files
   :config
   (setq eww-auto-rename-buffer 'title)
   (setq eww-header-line-format nil)
@@ -10630,53 +10641,48 @@ not trust any page. Whatever we set here will affect the behaviour of
   ;; '("chromium" "--headless" "--dump-dom")
   (setq eww-retrieve-command nil)
 
-  ;; NOTE 2025-02-03: Emacs has a robust framework for writing
+  ;; NOTE 2025-02-15: Emacs has a robust framework for writing
   ;; bookmarks, which `eww' supports.  Though `eww' also defines its
   ;; own parallel bookmark data, which I do not want to use.  So here
   ;; I disable all the relevant commands.
-  (mapc
-   (lambda (command)
-     (put command 'disabled t))
-   '(eww-list-bookmarks eww-add-bookmark eww-bookmark-mode)))
+  (dolist (command '( eww-list-bookmarks eww-add-bookmark eww-bookmark-mode
+                      eww-list-buffers eww-toggle-fonts eww-toggle-colors
+                      eww-switch-to-buffer))
+    (put command 'disabled t)))
 #+end_src
 
-*** TODO The =prot-emacs-web.el= extras for ~eww~ (=prot-eww.el=)
+*** The =prot-emacs-web.el= extras for ~eww~ (=prot-eww.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:1fcd7008-b7ed-4441-8a7b-82db43a05775
 :END:
+
+My =prot-eww.el= used to contain lots of tweaks for ~eww~, however
+many of those are now built into Emacs. So I have trimmed down my
+file to provide only these commands:
+
+- ~prot-eww-visit-url-on-page~ :: Use minibuffer completion to select
+  a URL among those linked to from the current web page. Then visit
+  that URL using ~eww~. With an optional universal prefix argument
+  (=C-u= with default key bindings), visit the selected URL in a new
+  buffer.
+
+- ~prot-eww-find-feed~ :: Produce a bespoke buffer listing the
+  RSS/Atom feeds provided by the current website.
+
+- ~prot-eww-open-in-other-window~ :: Like ~eww~, but operate in a new
+  Emacs window instead of using the current one.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `prot-eww' extras
 (use-package prot-eww
   :ensure nil
   :after eww
-  :config
-  (setq prot-eww-save-history-file
-        (locate-user-emacs-file "prot-eww-visited-history"))
-  (setq prot-eww-save-visited-history t)
-  (setq prot-eww-bookmark-link nil)
-
-  (add-hook 'prot-eww-history-mode-hook #'hl-line-mode)
-
-  (define-prefix-command 'prot-eww-map)
-  (define-key global-map (kbd "C-c w") 'prot-eww-map)
-
-  (prot-emacs-keybind prot-eww-map
-    "b" #'prot-eww-visit-bookmark
-    "e" #'prot-eww-browse-dwim
-    "s" #'prot-eww-search-engine)
-  (prot-emacs-keybind eww-mode-map
-    "B" #'prot-eww-bookmark-page
-    "D" #'prot-eww-download-html
-    "F" #'prot-eww-find-feed
-    "H" #'prot-eww-list-history
-    "b" #'prot-eww-visit-bookmark
-    "e" #'prot-eww-browse-dwim
-    "o" #'prot-eww-open-in-other-window
-    "E" #'prot-eww-visit-url-on-page
-    "J" #'prot-eww-jump-to-url-on-page
-    "R" #'prot-eww-readable
-    "Q" #'prot-eww-quit))
+  :bind
+  ( :map eww-mode-map
+    ("F" . prot-eww-find-feed)
+    ("o" . prot-eww-open-in-other-window)
+    ("j" . prot-eww-jump-to-url-on-page)
+    ("J" . prot-eww-visit-url-on-page)))
 #+end_src
 
 *** TODO The =prot-emacs-web.el= RSS/Atom reader (~elfeed~)

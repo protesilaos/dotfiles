@@ -52,14 +52,8 @@
     ("m" . bookmark-set)
     :map eww-link-keymap
     ("v" . nil) ; stop overriding `eww-view-source'
-    :map eww-mode-map
-    ("L" . eww-list-bookmarks)
     :map dired-mode-map
-    ("E" . eww-open-file) ; to render local HTML files
-    :map eww-buffers-mode-map
-    ("d" . eww-bookmark-kill)   ; it actually deletes
-    :map eww-bookmark-mode-map
-    ("d" . eww-bookmark-kill)) ; same
+    ("E" . eww-open-file)) ; to render local HTML files
   :config
   (setq eww-auto-rename-buffer 'title)
   (setq eww-header-line-format nil)
@@ -81,46 +75,25 @@
   ;; '("chromium" "--headless" "--dump-dom")
   (setq eww-retrieve-command nil)
 
-  ;; NOTE 2025-02-03: Emacs has a robust framework for writing
+  ;; NOTE 2025-02-15: Emacs has a robust framework for writing
   ;; bookmarks, which `eww' supports.  Though `eww' also defines its
   ;; own parallel bookmark data, which I do not want to use.  So here
   ;; I disable all the relevant commands.
-  (mapc
-   (lambda (command)
-     (put command 'disabled t))
-   '(eww-list-bookmarks eww-add-bookmark eww-bookmark-mode)))
+  (dolist (command '( eww-list-bookmarks eww-add-bookmark eww-bookmark-mode
+                      eww-list-buffers eww-toggle-fonts eww-toggle-colors
+                      eww-switch-to-buffer))
+    (put command 'disabled t)))
 
 ;;;; `prot-eww' extras
 (use-package prot-eww
   :ensure nil
   :after eww
-  :config
-  (setq prot-eww-save-history-file
-        (locate-user-emacs-file "prot-eww-visited-history"))
-  (setq prot-eww-save-visited-history t)
-  (setq prot-eww-bookmark-link nil)
-
-  (add-hook 'prot-eww-history-mode-hook #'hl-line-mode)
-
-  (define-prefix-command 'prot-eww-map)
-  (define-key global-map (kbd "C-c w") 'prot-eww-map)
-
-  (prot-emacs-keybind prot-eww-map
-    "b" #'prot-eww-visit-bookmark
-    "e" #'prot-eww-browse-dwim
-    "s" #'prot-eww-search-engine)
-  (prot-emacs-keybind eww-mode-map
-    "B" #'prot-eww-bookmark-page
-    "D" #'prot-eww-download-html
-    "F" #'prot-eww-find-feed
-    "H" #'prot-eww-list-history
-    "b" #'prot-eww-visit-bookmark
-    "e" #'prot-eww-browse-dwim
-    "o" #'prot-eww-open-in-other-window
-    "E" #'prot-eww-visit-url-on-page
-    "J" #'prot-eww-jump-to-url-on-page
-    "R" #'prot-eww-readable
-    "Q" #'prot-eww-quit))
+  :bind
+  ( :map eww-mode-map
+    ("F" . prot-eww-find-feed)
+    ("o" . prot-eww-open-in-other-window)
+    ("j" . prot-eww-jump-to-url-on-page)
+    ("J" . prot-eww-visit-url-on-page)))
 
 ;;; Elfeed feed/RSS reader
 (use-package elfeed
