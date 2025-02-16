@@ -107,7 +107,8 @@ minibuffer to show the remaining candidates and select the first one.
 Else do `vertico-exit'."
   (interactive)
   (cond
-   ((= vertico--total 1)
+   ((and (= vertico--total 1)
+         (not (eq 'file (vertico--metadata-get 'category))))
     (minibuffer-complete)
     (vertico-exit))
    ((and vertico-unobtrusive-mode
