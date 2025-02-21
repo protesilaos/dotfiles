@@ -30,7 +30,7 @@
 #### General
 
 gtk_theme_light="Adwaita"
-gtk_theme_dark="Adwaita-Dark"
+gtk_theme_dark="Adwaita-dark"
 icon_theme_light="Adwaita"
 icon_theme_dark="Adwaita"
 
