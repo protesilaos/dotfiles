@@ -126,7 +126,7 @@ purpose and function:
 - The =prot-emacs-post-custom= file :: Like the above, this file is
   meant for users of my setup. It is evaluated /after/ the rest of my
   setup is loaded. Users can include whatever code they want in this
-  file to either override existing functionality of define new one.
+  file to either override existing functionality or define new functions.
 
 - The =prot-emacs.org= file :: The source of what you are currently
   reading.
