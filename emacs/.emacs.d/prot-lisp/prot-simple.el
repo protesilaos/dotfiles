@@ -228,12 +228,19 @@ When called interactively without a prefix numeric argument, N is
 (make-obsolete 'prot-simple-copy-line-or-region 'prot-simple-copy-line "2023-09-26")
 
 ;;;###autoload
-(defun prot-simple-kill-ring-save (beg end)
+(defun prot-simple-kill-ring-save (&optional beg end)
   "Copy the current region or line.
 When the region is active, use `kill-ring-save' between the BEG and END
 positions.  Otherwise, copy the current line."
-  (interactive "r")
-  (if (region-active-p)
+  ;; NOTE 2025-02-23: Using (interactive "r") returns an error before
+  ;; running the body of this function if there is no mark.  This
+  ;; happens when visiting a file.
+  (interactive
+   (when (region-active-p)
+     (list
+      (region-beginning)
+      (region-end))))
+  (if (and beg end)
       (kill-ring-save beg end)
     (prot-simple-copy-line)))
 
