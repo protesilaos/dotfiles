@@ -21,9 +21,9 @@ Near :gandi-local:
 # Include everything
 Patterns *
 Sync All
-Create Both
-Remove Both
-Expunge Both
+Create Near
+Remove Near
+Expunge Near
 SyncState *
 
 # NOTE 2024-12-01: I do not use the others, but have tested them in
