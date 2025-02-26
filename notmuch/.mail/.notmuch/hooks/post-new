@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# post-new --- Notmuch rules that run after notmuch new
+# post-new --- Notmuch rules that run after notmuch-new(1)
 #
 # Copyright (c) 2021-2025  Protesilaos Stavrou <info@protesilaos.com>
 #
@@ -17,12 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-## Commentary:
+### Commentary:
 #
-# The order of those commands matters.  Maybe I will write something
-# more sophisticated in the future.
+# Note that the order of those commands matters.
 #
 # Part of my dotfiles: <https://github.com/protesilaos/dotfiles>.
+
+### Code:
 
 # remove "unread" from "replied"
 notmuch tag -unread -new -- tag:replied
@@ -40,18 +41,3 @@ notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@p
 # <https://protesilaos.com/news/2023-01-20-emacs-linux-life-coach/>.
 # I may refine this further based on patterns I observe.
 notmuch tag +coach -- date:2023-01-20..now subject:/[Tt]utor\|[Cc]oach\|[Ll]esson/
-
-# Another "mostly okay" but not 100% correct way of identifying my
-# package-related messages.
-notmuch tag +package -- "(to:~protesilaos/*@lists.sr.ht or to:protesilaos/*noreply.github.com or to:*incoming.gitlab.com) not tag:archived not tag:list"
-
-
-# # mailing lists
-# ## emacs
-# notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gnu.org
-# notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org
-# notmuch tag -inbox +list +emacs -- 'to:"/*@debbugs.gnu.org*/"'
-# notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org not to:emacs-humanities-owner@gnu.org
-#
-# # include mailing lists sent to me in the "inbox"
-# notmuch tag +inbox -- '(to:"*@protesilaos.com*" tag:list)'
