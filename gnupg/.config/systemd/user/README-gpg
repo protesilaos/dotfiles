@@ -1,0 +1,3 @@
+Use this:
+
+    systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket
