@@ -49,3 +49,37 @@ then
         notmuch tag -inbox -"${tag}" +"${tag}"local -- tag:"$tag"
     done
 fi
+
+### PROT 2025-03-01: To archive mail manually, I did the following.
+### This is useful once every few years, so there is no need to
+### automate it. Note that this assumes that mbsync can remove and
+### expunge mail on the far/server side.
+#
+# Confirm that we have messages matching these search terms:
+#
+#     notmuch count tag:"sent" from:*@protesilaos.com date:..2024-01-01
+#
+# Now add a tag to all of them to make it clear they are archived:
+#
+#     notmuch tag +archivesent -- tag:"sent" from:*@protesilaos.com date:..2024-01-01
+#
+# Confirm the count is the same for the new tag:
+#
+#     notmuch count tag:"archivesent"
+#
+# Same principle for the inbox:
+#
+#     notmuch count tag:"inbox" date:..2024-01-01
+#     notmuch tag +archiveinbox -- tag:"inbox" date:..2024-01-01
+#     notmuch count tag:"archiveinbox"
+#
+# Now move the messages to their respective directories, which I
+# created beforehand (note that I use `echo` to make sure it works
+# before doing anything---remove the `echo` to actually move the
+# files).
+#
+#     while IFS= read -r -d $'\0' file; do echo mv "$file" "$HOME"/.mail/inboxlocal/$(basename -- "${file//,U=[0-9]*:/:}") ; done < <(notmuch search --output=files --format=text0 tag:"archiveinbox" and not tag:"archivesent")
+#
+#     while IFS= read -r -d $'\0' file; do echo mv "$file" "$HOME"/.mail/sentlocal/$(basename -- "${file//,U=[0-9]*:/:}") ; done < <(notmuch search --output=files --format=text0 tag:"archivesent")
+#
+# Then do an `mbsync` followed by `notmuch new` to synchronise everything.
