@@ -2430,7 +2430,7 @@ here:
 (use-package prot-common
   :ensure nil
   :functions (prot-common-truncate-lines-silently)
-  :hook ((text-mode prog-mode dired-mode prot/fundamental-mode) . prot-common-truncate-lines-silently)
+  :hook ((text-mode prog-mode dired-mode prot/fundamental-mode hexl-mode) . prot-common-truncate-lines-silently)
   :init
   (defvar prot/fundamental-mode-hook nil
     "Normal hook for `fundamental-mode' (which is missing by default).")
