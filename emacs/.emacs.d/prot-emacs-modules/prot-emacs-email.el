@@ -58,17 +58,14 @@
   (dired-mode . turn-on-gnus-dired-mode))
 
 ;;;; `sendmail' (mail transfer agent)
-(use-package sendmail
+(use-package smtpmail
   :ensure nil
   :after message
   :config
-  (setq send-mail-function 'sendmail-send-it
-        ;; ;; NOTE 2023-08-08: We do not need this if we have the Arch
-        ;; ;; Linux `msmtp-mta' package installed: it replaces the
-        ;; ;; generic sendmail executable with msmtp.
-        ;;
-        ;; sendmail-program (executable-find "msmtp")
-        message-sendmail-envelope-from 'header))
+  (setq send-mail-function #'smtpmail-send-it)
+  (setq smtpmail-smtp-server "mail.gandi.net")
+  (setq smtpmail-smtp-service 587)
+  (setq smtpmail-stream-type 'starttls))
 
 (when (executable-find "notmuch")
   (require 'prot-emacs-notmuch))

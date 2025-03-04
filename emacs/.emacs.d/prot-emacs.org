@@ -9188,27 +9188,20 @@ numerous accoutrements.
   (dired-mode . turn-on-gnus-dired-mode))
 #+end_src
 
-*** The =prot-emacs-email.el= settings for ~sendmail~
+*** The =prot-emacs-email.el= settings for ~sendmail~ (SMTP)
 :PROPERTIES:
 :CUSTOM_ID: h:c7c9815c-e259-4810-816a-9ebc1a146004
 :END:
 
 As I explain in the [[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]],
-I use the external ~msmtp~ program to handle email sending, else to
+I have used the external ~msmtp~ program to handle email sending, else to
 set up the Mail Transfer Agent (MTA). With ~msmtp~ and a compatibility
-package installed (~msmtp-mta~ on Arch Linux), the standard ~sendmail~
-executable becomes a symlink to the ~msmtp~ program.
+package installed (~msmtp-mta~ on Arch Linux and Debian), the standard ~sendmail~
+executable becomes a symlink to the ~msmtp~ program. My ~msmtp~ setup
+worked fine for a long time until my outgoing messages started getting
+rejected as spam. Here is the Emacs part I used to have:
 
-I use this method because it is more portable and flexible. With the
-standard built-in Emacs design to use the ~smtpmail-send-it~ function
-as the value of ~send-mail-function~, I also need to declare in Elisp
-what the SMTP server is. I would rather encapsulate the login
-credentials in a separate configuration file, independent of Emacs,
-while also ensuring that different accounts can use their own SMTP
-server.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
-;;;; `sendmail' (mail transfer agent)
+#+begin_example emacs-lisp
 (use-package sendmail
   :ensure nil
   :after message
@@ -9220,6 +9213,28 @@ server.
         ;;
         ;; sendmail-program (executable-find "msmtp")
         message-sendmail-envelope-from 'header))
+#+end_example
+
+I have not been able to determine the exact cause of my troubles with
+spam, but it seems that not relying on ~msmtp~ fixes the problem. So
+the following code block is how I do it now. What I liked about the
+~msmtp~ approach as opposed to what I have now is that I did not have
+to specify any login credentials in Emacs and could, in principle,
+define distinct authentication methods for different email accounts.
+Whereas the following is for single-account setups, even though we can
+technically make it work with more of them via hooks and custom
+functions.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
+;;;; `sendmail' (mail transfer agent)
+(use-package smtpmail
+  :ensure nil
+  :after message
+  :config
+  (setq send-mail-function #'smtpmail-send-it)
+  (setq smtpmail-smtp-server "mail.gandi.net")
+  (setq smtpmail-smtp-service 587)
+  (setq smtpmail-stream-type 'starttls))
 #+end_src
 
 *** The =prot-emacs-email.el= loading of the email client and call to ~provide~
@@ -10264,34 +10279,41 @@ the server to retain messages, which is of practical benefit for
 accessing mail on multiple machines.
 
 A copy of my server's contents needs to be stored locally. This is
-valuable for backup purposes. It also provides the option to move to
-another email service provider by just syncing the local data to the
-new location while deleting the old one. More importantly though,
-local files can be indexed, granting us access to a powerful search
-mechanism (more below).
+valuable for backup purposes but also to remove old messages from the
+server where I no longer need them. Having all my mail locally also
+provides the option to move to another email service provider by just
+syncing the local data to the new location while deleting the old one.
+More importantly though, local files can be indexed, granting us
+access to a powerful search mechanism (more below).
 
-The program that stores email locally is called ~mbsync~. For whatever
-reason, the system package is ~isync~. This is true for Arch Linux and
-Debian. (I also heard it is the case with ~homebrew~, but please check.)
+The program that communicates with the server to store email locally
+is called ~mbsync~. For whatever reason, the system package is
+~isync~. This is true for Arch Linux and Debian. (I also heard it is
+the case with ~homebrew~, but please check.)
 
 With ~mbsync~ we synchronise the state from the server (known as the
-"far" side) to our computer (the "near" side). The directionality can
-be one-way, far to near or near to far. Or it can be two-way, as is
+=far= side) to our computer (the =near= side). The directionality can
+be one-way: far to near or near to far. Or it can be two-way, as is
 the case on my end. Concretely, what I have on my computer is mirrored
-on the server.
+on the server. This directionality can be different for certain
+operations, such as the creation of folders and the permanent removal
+of message files.
 
 The format ~mbsync~ uses is called =maildir=. This is in contrast to
-the Unix =mbox=. I do not know about the pros and cons of each format,
-other than the fact that =maildir= has been working flawlessly for me
-for years---and email is my primary medium of communication online
+the Unix =mbox=. With =maildir= each email is a single file and they
+are all organised by directory. Whereas in =mbox= there is one huge
+file which is internally parsed into the individual messages---a
+method that I do not like. In practical terms though, what matters is
+reliability: =maildir= has been working flawlessly for me for
+years---and email is my primary medium of communication online
 ([[#h:bf540a85-12a6-4005-bf00-2ff3370e5adb][Contents of my =.mbsyncrc=]]).
 
 The local files are indexed with a "mail indexer" system program.
-There are a few of those. The ones I have used are ~mu~ and ~notmuch~.
-Both are built on top of the ~xapian~ search engine software and both
-offer the same features. The noticeable differences exist at the level
-of the email client, else the Mail User Agent (MUA), which I cover
-further below.
+There are a few of those available. The ones I have used are ~mu~ and
+~notmuch~. Both are built on top of the ~xapian~ search engine
+software and both offer the same features. The noticeable differences
+exist at the level of the email client, else the Mail User Agent
+(MUA), which I cover further below.
 
 Mail indexers create a database out of a local email directory for the
 purposes of retrieving data from it. In practical terms, we can run a
@@ -10301,17 +10323,18 @@ whose =From= mail header matches the given name. The search terms are
 quite sophisticated, accepting tags, date ranges, and even queries for
 message contents.
 
-Indexation is an archiving process. We do not need a Mail User Agent
-(MUA) to handle all the interactivity involved. There are cases where
-we can have some old messages in such a read-only state. Though we
-most probably need to deal with email in present time, hence the need
-for a MUA.
+Indexation is an archiving process: it simply creates a database
+representation of the files on the system. As such, we do not need a
+Mail User Agent (MUA) to handle all the interactivity involved. There
+are cases where we can have some old messages in such a read-only
+state. Though we most probably need to deal with email in present
+time, hence the need for a MUA.
 
 The MUA is responsible for all the interactive aspects of dealing with
 email: show a list of messages, display an individual email, handle
-message composition, and others such as tagging, searching,
-downloading... In short, the mail user agent is what we normally
-understand as the "email app".
+message composition, and other conveniences such as tagging,
+searching, downloading... In short, the mail user agent is what we
+normally understand as the "email app".
 
 The ~mu~ and ~notmuch~ indexers both come with their own Emacs MUA as
 part of their system package. For the former, the Emacs package is known
@@ -10326,11 +10349,23 @@ you need when conversations start getting longer and you have plenty
 of them. I never use the tree view provided by =notmuch.el=, unless I
 am testing something.
 
+The ~notmuch~ system program also provides a hooks mechanism, which is
+a way to define custom behaviour at various stages of the indexing
+process. In practical terms, we can have rules to tag messages or move
+them into specific folders. These are implemented as shell scripts.
+
 Behind the scenes, the MUA needs some other program to actually send
-messages. For this purpose, I set up the ~msmtp~ system package, which
-defines a handler for the standard ~sendmail~ system utility. Not to
-bother you with the technicalities: ~msmtp~ is basically the same as
-~mbsync~ but for sending instead of fetching.
+messages. For this purpose, we can set up the ~msmtp~ system package,
+which defines a handler for the standard ~sendmail~ system utility.
+Not to bother you with the technicalities: ~msmtp~ is basically the
+same as ~mbsync~ but for sending instead of fetching (it is
+technically called a Mail Transfer Agent (MTA)).
+
+I used ~msmtp~ for at least a couple of years and was content with its
+functionality, though from around the summer of 2024 I kept
+experiencing issues with my outgoing messages getting rejected as
+spam. I have since reverted to the more generic method that Emacs
+implements, which does not rely on ~msmtp~ ([[#h:c7c9815c-e259-4810-816a-9ebc1a146004][The =prot-emacs-email.el= settings for ~sendmail~ (SMTP)]]).
 
 This all sounds complex to anyone who expects email to be encapsulated
 in a single application. What we have here is the Unix paradigm in
