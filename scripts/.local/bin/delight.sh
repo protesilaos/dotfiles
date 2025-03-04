@@ -29,8 +29,8 @@
 
 #### General
 
-gtk_theme_light="adw-gtk3"
-gtk_theme_dark="adw-gtk3-dark"
+gtk_theme_light="Adwaita"
+gtk_theme_dark="Adwaita-dark"
 icon_theme_light="Adwaita"
 icon_theme_dark="Adwaita"
 
