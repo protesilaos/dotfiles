@@ -300,23 +300,16 @@ _i3 ()
 
 #### Gsettings
 
-#  TODO 2024-04-05: Remove those functions or, at least, make them easier to remember.
-
-_gsettings ()
-{
-    gsettings "$1" "$2" "${@:3}"
-}
-
 # Get or set the GTK theme
-_gsettings_gtk_act ()
+_gsettings_gtk_act_theme_interface ()
 {
-    _gsettings "$1" "$2" gtk-theme "${@:3}"
+    gsettings "$1" org.gnome.desktop.interface gtk-theme "${@:2}"
 }
 
 # Set the Color Scheme
 _gsettings_color_scheme_set ()
 {
-    _gsettings 'set' 'org.gnome.desktop.interface' 'color-scheme' "$1"
+    gsettings set org.gnome.desktop.interface color-scheme "$1"
 }
 
 ##### Gnome
@@ -324,22 +317,21 @@ _gsettings_color_scheme_set ()
 _gnome_theme ()
 {
     _depcheck gsettings
-	interface="org.gnome.desktop.interface"
 
-    if [ "$(_gsettings_gtk_act 'get' $interface)" = "'$gtk_theme_light'" ]
+    if [ "$(_gsettings_gtk_act_theme_interface get)" = "'$gtk_theme_light'" ]
     then
-        _gsettings_gtk_act 'set' $interface "$gtk_theme_dark"
+        _gsettings_gtk_act_theme_interface set "$gtk_theme_dark"
     else
-        _gsettings_gtk_act 'set' $interface "$gtk_theme_light"
+        _gsettings_gtk_act_theme_interface set "$gtk_theme_light"
     fi
 
     if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" = "'prefer-light'" ]
     then
         style=dark
-        _gsettings_color_scheme_set 'prefer-dark'
+        _gsettings_color_scheme_set prefer-dark
     else
         style=light
-        _gsettings_color_scheme_set 'prefer-light'
+        _gsettings_color_scheme_set prefer-light
     fi
 }
 
@@ -364,20 +356,19 @@ _xfquery_set ()
 _xfce ()
 {
     _depcheck gsettings
-	interface="org.gnome.desktop.interface"
 
     if [ "$(_xfquery_get 'xsettings' '/Net/ThemeName')" = "$gtk_theme_light" ]
     then
         style=dark
         # _xfquery_set 'xfwm4' '/general/theme' 'adwaita-dark'
-        _gsettings_gtk_act 'set' $interface "$gtk_theme_dark"
+        _gsettings_gtk_act_theme_interface set "$gtk_theme_dark"
         _xfquery_set 'xsettings' '/Net/ThemeName' "$gtk_theme_dark"
         _xfquery_set 'xsettings' '/Net/IconThemeName' "$icon_theme_dark"
         _gsettings_color_scheme_set 'prefer-dark'
     else
         style=light
         # _xfquery_set 'xfwm4' '/general/theme' 'adwaita'
-        _gsettings_gtk_act 'set' $interface "$gtk_theme_light"
+        _gsettings_gtk_act_theme_interface set "$gtk_theme_light"
         _xfquery_set 'xsettings' '/Net/ThemeName' "$gtk_theme_light"
         _xfquery_set 'xsettings' '/Net/IconThemeName' "$icon_theme_light"
         _gsettings_color_scheme_set 'prefer-light'
