@@ -301,13 +301,21 @@ This command can then be followed by the standard
 (defun prot-simple-delete-line ()
   "Delete (not kill) from point to the end of the line."
   (interactive)
-  (delete-region (point) (line-end-position)))
+  (let ((point (point))
+        (end (line-end-position)))
+    (if (eq point end)
+        (delete-region point (+ end 1))
+      (delete-region point end))))
 
 ;;;###autoload
 (defun prot-simple-delete-line-backward ()
   "Delete (not kill) from point to the beginning of the line."
   (interactive)
-  (delete-region (line-beginning-position) (point)))
+  (let ((point (point))
+        (beg (line-beginning-position)))
+    (if (eq point beg)
+        (delete-region (- beg 1) point)
+      (delete-region point end))))
 
 ;;;###autoload
 (define-minor-mode prot-simple-auto-fill-visual-line-mode
