@@ -298,6 +298,18 @@ This command can then be followed by the standard
   (kill-line 0))
 
 ;;;###autoload
+(defun prot-simple-delete-line ()
+  "Delete (not kill) from point to the end of the line."
+  (interactive)
+  (delete-region (point) (line-end-position)))
+
+;;;###autoload
+(defun prot-simple-delete-line-backward ()
+  "Delete (not kill) from point to the beginning of the line."
+  (interactive)
+  (delete-region (line-beginning-position) (point)))
+
+;;;###autoload
 (define-minor-mode prot-simple-auto-fill-visual-line-mode
   "Enable `visual-line-mode' and disable `auto-fill-mode' in the current buffer."
   :global nil

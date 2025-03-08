@@ -102,6 +102,8 @@
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
+    ("C-d" . prot-simple-delete-line) ; overrides `delete-char'
+    ("C-S-d" . prot-simple-delete-line-backward)
     ("M-k" . prot-simple-kill-line-backward)
     ("M-j" . delete-indentation)
     ("M-w" . prot-simple-kill-ring-save)

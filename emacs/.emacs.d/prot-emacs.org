@@ -2481,6 +2481,8 @@ this via some hook.
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
+    ("C-d" . prot-simple-delete-line) ; overrides `delete-char'
+    ("C-S-d" . prot-simple-delete-line-backward)
     ("M-k" . prot-simple-kill-line-backward)
     ("M-j" . delete-indentation)
     ("M-w" . prot-simple-kill-ring-save)
@@ -7236,6 +7238,8 @@ on how I use Org.
     ;; I don't like that Org binds one zillion keys, so if I want one
     ;; for something more important, I disable it from here.
     ("C-a" . nil)
+    ("C-d" . nil)
+    ("C-S-d" . nil)
     ("C-'" . nil)
     ("C-," . nil)
     ("M-;" . nil)
@@ -16087,6 +16091,18 @@ This command can then be followed by the standard
   "Kill from point to the beginning of the line."
   (interactive)
   (kill-line 0))
+
+;;;###autoload
+(defun prot-simple-delete-line ()
+  "Delete (not kill) from point to the end of the line."
+  (interactive)
+  (delete-region (point) (line-end-position)))
+
+;;;###autoload
+(defun prot-simple-delete-line-backward ()
+  "Delete (not kill) from point to the beginning of the line."
+  (interactive)
+  (delete-region (line-beginning-position) (point)))
 
 ;;;###autoload
 (define-minor-mode prot-simple-auto-fill-visual-line-mode
