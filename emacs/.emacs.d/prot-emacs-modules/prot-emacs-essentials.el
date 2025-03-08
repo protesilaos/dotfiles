@@ -107,7 +107,7 @@
     ("M-k" . prot-simple-kill-line-backward)
     ("M-j" . delete-indentation)
     ("M-w" . prot-simple-kill-ring-save)
-    ("C-S-d" . prot-simple-duplicate-line-or-region)
+    ("C-a" . prot-simple-duplicate-line-or-region) ; "again" mnemonic, overrides `move-beginning-of-line'
     ("C-S-w" . prot-simple-copy-line)
     ("C-S-y" . prot-simple-yank-replace-line-or-region)
     ("C-v" . prot-simple-multi-line-below) ; overrides `scroll-up-command'

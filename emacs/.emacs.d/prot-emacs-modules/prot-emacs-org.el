@@ -59,6 +59,7 @@
     :map org-mode-map
     ;; I don't like that Org binds one zillion keys, so if I want one
     ;; for something more important, I disable it from here.
+    ("C-a" . nil)
     ("C-d" . nil)
     ("C-S-d" . nil)
     ("C-'" . nil)
