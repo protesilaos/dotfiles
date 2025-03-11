@@ -12938,8 +12938,8 @@ than `split-width-threshold'."
 (defvar-local prot-modeline-vc-branch
     '(:eval
       (when-let* (((mode-line-window-selected-p))
-                  (file (buffer-file-name))
-                  (backend (vc-backend file))
+                  (file (or buffer-file-name default-directory))
+                  (backend (or (vc-backend file) 'Git))
                   ;; ((vc-git-registered file))
                   (branch (prot-modeline--vc-branch-name file backend))
                   (face (prot-modeline--vc-face file backend)))
