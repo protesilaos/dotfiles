@@ -16115,7 +16115,7 @@ This command can then be followed by the standard
         (beg (line-beginning-position)))
     (if (eq point beg)
         (delete-region (- beg 1) point)
-      (delete-region point end))))
+      (delete-region point beg))))
 
 ;;;###autoload
 (define-minor-mode prot-simple-auto-fill-visual-line-mode
