@@ -4,7 +4,7 @@ IMAPAccount gandi
 Host mail.gandi.net
 UserCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prot-gandi/ { print $(NF-2); exit; }'"
 PassCmd "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prot-gandi/ { print $NF; exit; }'"
-TLSType IMAPS
+SSLType IMAPS
 
 IMAPStore gandi-remote
 Account gandi
