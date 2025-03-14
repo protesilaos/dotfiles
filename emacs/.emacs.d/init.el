@@ -143,8 +143,14 @@ before all other modules of my setup."
   '(agitate
     altcaps
     beframe
+    consult-denote
     cursory
     denote
+    denote-journal
+    denote-markdown
+    denote-org
+    denote-silo
+    denote-sequence
     dired-preview
     ef-themes
     fontaine
