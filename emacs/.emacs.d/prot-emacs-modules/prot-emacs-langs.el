@@ -230,7 +230,6 @@
   ;; If you use Markdown or plain text files you want to fontify links
   ;; upon visiting the file (Org renders links as buttons right away).
   ((text-mode . denote-fontify-links-mode-maybe)
-
    ;; Highlight Denote file names in Dired buffers.  Below is the
    ;; generic approach, which is great if you rename files Denote-style
    ;; in lots of places as I do.
@@ -247,7 +246,7 @@
   ( :map global-map
     ("C-c n n" . denote)
     ("C-c n N" . denote-type)
-    ("C-c n o" . denote-sort-dired) ; "order" mnemonic
+    ("C-c n d" . denote-sort-dired)
     ;; Note that `denote-rename-file' can work from any context, not
     ;; just Dired buffers.  That is why we bind it here to the
     ;; `global-map'.
@@ -264,9 +263,6 @@
     ("C-c n b" . denote-backlinks)
     ;; Also see `denote-rename-file' further above.
     ("C-c n R" . denote-rename-file-using-front-matter)
-    :map org-mode-map
-    ("C-c n d l" . denote-org-extras-dblock-insert-links)
-    ("C-c n d b" . denote-org-extras-dblock-insert-backlinks)
     ;; Key bindings specifically for Dired.
     :map dired-mode-map
     ("C-c C-d C-i" . denote-dired-link-marked-notes)
@@ -282,16 +278,13 @@
   ;; meaning that you only use a predefined set of them, then you want
   ;; `denote-infer-keywords' to be nil and `denote-known-keywords' to
   ;; have the keywords you need.
-  (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
+  (setq denote-known-keywords '("emacs" "philosophy" "politics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-
   (setq denote-excluded-directories-regexp nil)
   (setq denote-date-format nil) ; read its doc string
   (setq denote-rename-confirmations nil) ; CAREFUL with this if you are not familiar with Denote!
-
   (setq denote-backlinks-show-context nil)
-
   (setq denote-rename-buffer-format "[D] %t%b")
   (setq denote-buffer-has-backlinks-string " (<--->)")
 
