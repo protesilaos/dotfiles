@@ -350,6 +350,24 @@
   ;; Read the doc string of `denote-journal-title-format'.
   (setq denote-journal-title-format 'day-date-month-year))
 
+;;;; Denote Silo extras (denote-silo)
+
+(use-package denote-silo
+  :ensure t
+  ;; Bind these commands to key bindings of your choice.
+  :commands ( denote-silo-create-note
+              denote-silo-open-or-create
+              denote-silo-select-silo-then-command
+              denote-silo-dired
+              denote-silo-cd )
+  :config
+  ;; Add your silos to this list.  By default, it only includes the
+  ;; value of the variable `denote-directory'.
+  (setq denote-silo-directories
+        (list denote-directory
+              "~/Documents/books/"
+              "~/Documents/denote-test-silo/")))
+
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
 (use-package olivetti

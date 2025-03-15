@@ -9003,6 +9003,41 @@ workflow.
   (setq denote-journal-title-format 'day-date-month-year))
 #+end_src
 
+**** The =prot-emacs-langs.el= extension for Denote Silo extras (~denote-silo~)
+:PROPERTIES:
+:CUSTOM_ID: h:87b9b59c-6adb-4d40-a4ae-90705d193932
+:END:
+
+This is another package of mine. It makes it easier to work with
+multiple "silos", as explained in the Denote manual. In short, a
+"silo" is a localised ~denote-directory~ that is not connected to the
+default/global ~denote-directory~ and other silos.
+
++ Package name (GNU ELPA): ~denote-silo~ (⚠️ Not available yet)
++ Official manual: <https://protesilaos.com/emacs/denote-silo>
++ Git repository: <https://github.com/protesilaos/denote-silo>
++ Backronym: Denote... Silos Insulate Localised Objects.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;;; Denote Silo extras (denote-silo)
+
+(use-package denote-silo
+  :ensure t
+  ;; Bind these commands to key bindings of your choice.
+  :commands ( denote-silo-create-note
+              denote-silo-open-or-create
+              denote-silo-select-silo-then-command
+              denote-silo-dired
+              denote-silo-cd )
+  :config
+  ;; Add your silos to this list.  By default, it only includes the
+  ;; value of the variable `denote-directory'.
+  (setq denote-silo-directories
+        (list denote-directory
+              "~/Documents/books/"
+              "~/Documents/denote-test-silo/")))
+#+end_src
+
 *** The =prot-emacs-langs.el= settings for ~logos~ (writing extras and buffer navigation)
 :PROPERTIES:
 :CUSTOM_ID: h:137c67f1-b112-42b7-aec9-c44ef4a6241a
