@@ -324,6 +324,15 @@
     denote-org-dblock-insert-missing-links
     denote-org-dblock-insert-files-as-headings))
 
+;;;; Denote Markdown extras (denote-markdown)
+
+(use-package denote-markdown
+  :ensure t
+  :commands ( denote-markdown-convert-links-to-file-paths
+              denote-markdown-convert-links-to-denote-type
+              denote-markdown-convert-links-to-obsidian-type
+              denote-markdown-convert-obsidian-links-to-denote-type ))
+
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
 (use-package olivetti

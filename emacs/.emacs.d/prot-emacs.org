@@ -8938,6 +8938,35 @@ Watch:
     denote-org-dblock-insert-files-as-headings))
 #+end_src
 
+**** The =prot-emacs-langs.el= extension for Denote Markdown extras (~denote-markdown~)
+:PROPERTIES:
+:CUSTOM_ID: h:523bf4f8-fb4e-42e9-bf64-d7c7ebbfbab5
+:END:
+
+This is another one of my packages. It provides some convenience
+functions to better integrate Markdown with Deonte. This is mostly
+about converting links from one type to another so that they can work
+in different applications (because Markdown does not have a
+standardised way to define custom link types).
+
++ Package name (GNU ELPA): ~denote-markdown~ (⚠️ Not available yet)
++ Official manual: <https://protesilaos.com/emacs/denote-markdown>
++ Git repository: <https://github.com/protesilaos/denote-markdown>
++ Backronyms: Denote... Markdown's Ambitious Reimplimentations
+  Knowingly Dilute Obvious Widespread Norms; Denote... Markup
+  Agnosticism Requires Knowhow to Do Only What's Necessary.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;;; Denote Markdown extras (denote-markdown)
+
+(use-package denote-markdown
+  :ensure t
+  :commands ( denote-markdown-convert-links-to-file-paths
+              denote-markdown-convert-links-to-denote-type
+              denote-markdown-convert-links-to-obsidian-type
+              denote-markdown-convert-obsidian-links-to-denote-type ))
+#+end_src
+
 *** The =prot-emacs-langs.el= settings for ~logos~ (writing extras and buffer navigation)
 :PROPERTIES:
 :CUSTOM_ID: h:137c67f1-b112-42b7-aec9-c44ef4a6241a
