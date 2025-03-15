@@ -8967,6 +8967,42 @@ standardised way to define custom link types).
               denote-markdown-convert-obsidian-links-to-denote-type ))
 #+end_src
 
+**** The =prot-emacs-langs.el= extension for Denote Journal extras (~denote-journal~)
+:PROPERTIES:
+:CUSTOM_ID: h:5812a834-f294-4714-85a5-f8466ececaa8
+:END:
+
+This is another one of my packages. The ~denote-journal~ package makes
+it easier to use Denote for journaling. While it is possible to use
+the generic ~denote~ command (and related) to maintain a journal, this
+package defines extra functionality to streamline the journaling
+workflow.
+
++ Package name (GNU ELPA): `denote-journal` (⚠️ Not available yet)
++ Official manual: <https://protesilaos.com/emacs/denote-journal>
++ Git repository: <https://github.com/protesilaos/denote-journal>
++ Backronym: Denote... Journaling Obviously Utilises Reasonableness
+  Notwithstanding Affectionate Longing.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;;; Denote Journal extras (denote-journal)
+
+(use-package denote-journal
+  :ensure t
+  :commands ( denote-journal-new-entry
+              denote-journal-new-or-existing-entry
+              denote-journal-link-or-create-entry )
+  :config
+  ;; Use the "journal" subdirectory of the `denote-directory'.  Set this
+  ;; to nil to use the `denote-directory' instead.
+  (setq denote-journal-directory (expand-file-name "journal" denote-directory))
+  ;; Default keyword for new journal entries. It can also be a list of
+  ;; strings.
+  (setq denote-journal-keyword "journal")
+  ;; Read the doc string of `denote-journal-title-format'.
+  (setq denote-journal-title-format 'day-date-month-year))
+#+end_src
+
 *** The =prot-emacs-langs.el= settings for ~logos~ (writing extras and buffer navigation)
 :PROPERTIES:
 :CUSTOM_ID: h:137c67f1-b112-42b7-aec9-c44ef4a6241a
