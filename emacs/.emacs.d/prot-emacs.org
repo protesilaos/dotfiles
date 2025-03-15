@@ -8883,6 +8883,8 @@ preview of the file-to-linked/opened and by adding more sources to the
   Unambiguous Targets...denote.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;;; Integrate Consult with Denote
+
 (when prot-emacs-completion-extras
   (use-package consult-denote
     :ensure t

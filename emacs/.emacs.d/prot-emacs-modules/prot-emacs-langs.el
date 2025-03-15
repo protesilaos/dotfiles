@@ -294,6 +294,8 @@
   ;; `denote-rename-buffer-format' for how to modify this.
   (denote-rename-buffer-mode 1))
 
+;;;; Integrate Consult with Denote
+
 (when prot-emacs-completion-extras
   (use-package consult-denote
     :ensure t
