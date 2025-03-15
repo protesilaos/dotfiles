@@ -8895,6 +8895,49 @@ preview of the file-to-linked/opened and by adding more sources to the
     (consult-denote-mode 1)))
 #+end_src
 
+**** The =prot-emacs-langs.el= extension for Denote Org extras (~denote-org~)
+:PROPERTIES:
+:CUSTOM_ID: h:b30cdbfe-71a1-46ed-b243-32c270963d68
+:END:
+
+This is another one of my packages. With ~denote-org~, users have
+Org-specific extensions such as dynamic blocks, links to headings, and
+splitting an Org subtree into its own standalone file. This package's
+official manual covers the technicalities.
+
++ Package name (GNU ELPA): ~denote-org~ (⚠️ Not available yet)
++ Official manual: <https://protesilaos.com/emacs/denote-org>
++ Git repository: <https://github.com/protesilaos/denote-org>
++ Backronym: Denote... Ordinarily Restricts Gyrations.
+
+Watch:
+
+- [[https://protesilaos.com/codelog/2023-11-25-emacs-denote-org-dynamic-blocks/][Denote Org dynamic blocks]] (2023-11-25)
+- [[https://protesilaos.com/codelog/2023-12-04-emacs-denote-sort-mechanism/][The new Denote sort mechanism (Dired, Org dynamic blocks)]] (2023-12-04)
+- [[https://protesilaos.com/codelog/2024-07-30-emacs-denote-exclude-dirs-org-blocks/][Exclude directories in Denote's Org dynamic blocks]] (2024-07-30)
+- [[https://protesilaos.com/codelog/2024-01-20-emacs-denote-link-org-headings/][Denote links to Org headings]] (2024-01-20)
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;;; Denote Org extras (denote-org)
+
+(use-package denote-org
+  :ensure t
+  :commands
+  ( denote-org-link-to-heading
+    denote-org-backlinks-for-heading
+
+    denote-org-extract-org-subtree
+
+    denote-org-convert-links-to-file-type
+    denote-org-convert-links-to-denote-type
+
+    denote-org-dblock-insert-files
+    denote-org-dblock-insert-links
+    denote-org-dblock-insert-backlinks
+    denote-org-dblock-insert-missing-links
+    denote-org-dblock-insert-files-as-headings))
+#+end_src
+
 *** The =prot-emacs-langs.el= settings for ~logos~ (writing extras and buffer navigation)
 :PROPERTIES:
 :CUSTOM_ID: h:137c67f1-b112-42b7-aec9-c44ef4a6241a
