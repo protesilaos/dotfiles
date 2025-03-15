@@ -8757,8 +8757,8 @@ affects.
 :CUSTOM_ID: h:e86a66dc-7ef9-4f09-ad7e-946de2034e8d
 :END:
 
-This is another one of my packages and is extended by my
-~consult-denote~ package ([[#h:ee82e629-fb05-4c75-9175-48a760a25691][The =prot-emacs-langs.el= integration between Consult and Denote (~consult-denote~)]]).
+This is another one of my packages and is extended by several other
+packages further below.
 
 Denote is a simple note-taking tool for Emacs. It is based on the idea
 that notes should follow a predictable and descriptive file-naming
