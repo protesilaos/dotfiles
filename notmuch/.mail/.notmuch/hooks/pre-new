@@ -61,7 +61,7 @@ fi
 #
 # Now add a tag to all of them to make it clear they are archived:
 #
-#     notmuch tag +archivesent -- tag:"sent" from:*@protesilaos.com date:..2024-01-01
+#     notmuch tag +archivesent -sent -- tag:"sent" from:*@protesilaos.com date:..2024-01-01
 #
 # Confirm the count is the same for the new tag:
 #
@@ -70,7 +70,7 @@ fi
 # Same principle for the inbox:
 #
 #     notmuch count tag:"inbox" date:..2024-01-01
-#     notmuch tag +archiveinbox -- tag:"inbox" date:..2024-01-01
+#     notmuch tag +archiveinbox -inbox -- tag:"inbox" date:..2024-01-01
 #     notmuch count tag:"archiveinbox"
 #
 # Now move the messages to their respective directories, which I
@@ -83,3 +83,8 @@ fi
 #     while IFS= read -r -d $'\0' file; do echo mv "$file" "$HOME"/.mail/sentlocal/$(basename -- "${file//,U=[0-9]*:/:}") ; done < <(notmuch search --output=files --format=text0 tag:"archivesent")
 #
 # Then do an `mbsync` followed by `notmuch new` to synchronise everything.
+#
+# In case the aforementioned tags are confusing:
+#
+#     notmuch tag -archiveinbox +iarchive -- tag:archiveinbox
+#     notmuch tag -archivesent +isent -- tag:archivesent
