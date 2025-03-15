@@ -8938,6 +8938,50 @@ Watch:
     denote-org-dblock-insert-files-as-headings))
 #+end_src
 
+**** The =prot-emacs-langs.el= extension for Denote sequence notes or folgezettel (~denote-sequence~)
+:PROPERTIES:
+:CUSTOM_ID: h:020e7df6-0a7b-4c71-9188-f871bca2bf48
+:END:
+
+This is another one of my packages. The ~denote-sequence~ package
+provides an optional extension to ~denote~ for naming files with a
+sequencing scheme. The idea is to establish hiearchical relationships
+between files, such that the contents of one logically follow or
+complement those of another.
+
++ Package name (GNU ELPA): ~denote-sequence~ (⚠️ Not available yet)
++ Official manual: <https://protesilaos.com/emacs/denote-sequence>
++ Git repository: <https://github.com/protesilaos/denote-sequence>
++ Backronym: Denote... Sequences Efficiently Queue Unsorted Entries
+  Notwithstanding Curation Efforts.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;;; Denote Sequence notes or folgezettel (denote-sequence)
+
+(use-package denote-sequence
+  :ensure t
+  :bind
+  ( :map global-map
+    ;; Here we make "C-c n s" a prefix for all "[n]otes with [s]equence".
+    ;; This is just for demonstration purposes: use the key bindings
+    ;; that work for you.  Also check the commands:
+    ;;
+    ;; - `denote-sequence-new-parent'
+    ;; - `denote-sequence-new-sibling'
+    ;; - `denote-sequence-new-child'
+    ;; - `denote-sequence-new-child-of-current'
+    ;; - `denote-sequence-new-sibling-of-current'
+    ("C-c n s s" . denote-sequence)
+    ("C-c n s f" . denote-sequence-find)
+    ("C-c n s l" . denote-sequence-link)
+    ("C-c n s d" . denote-sequence-dired)
+    ("C-c n s r" . denote-sequence-reparent)
+    ("C-c n s c" . denote-sequence-convert))
+  :config
+  ;; The default sequence scheme is `numeric'.
+  (setq denote-sequence-scheme 'alphanumeric))
+#+end_src
+
 **** The =prot-emacs-langs.el= extension for Denote Markdown extras (~denote-markdown~)
 :PROPERTIES:
 :CUSTOM_ID: h:523bf4f8-fb4e-42e9-bf64-d7c7ebbfbab5
