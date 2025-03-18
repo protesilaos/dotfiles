@@ -16603,8 +16603,10 @@ There is no dragging the character forward.  This is the
 behaviour of `transpose-chars' when point is at the end of the
 line."
   (interactive)
-  (transpose-chars -1)
-  (forward-char))
+  (if (eq (point) (line-end-position))
+      (transpose-chars 1)
+    (transpose-chars -1)
+    (forward-char)))
 
 ;;;; Commands for paragraphs
 
