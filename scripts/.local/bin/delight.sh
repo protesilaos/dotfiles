@@ -103,7 +103,7 @@ _xfce4terminal ()
     palette_light="#000000;#a60000;#006800;#6f5500;#0031a9;#8f0075;#005e8b;#aaaaaa;#505050;#972500;#00663f;#884900;#0000b0;#531ab6;#005f5f;#ffffff;"
     palette_dark="#000000;#ff5f59;#44bc44;#d0bc00;#2fafff;#f78fe7;#00d3d0;#aaaaaa;#505050;#ff6b55;#00c06f;#fec43f;#00bcff;#b6a0ff;#6ae4b9;#ffffff;"
 
-    case $wm_theme
+    case "$1"
     in
         light)
             _sed "s,ColorForeground=.*,ColorForeground=#000000," "$active_theme"
@@ -231,7 +231,7 @@ _bspwm_or_hlwm ()
     _emacs "$style" &
     _xsettingsd "$style" &
     _xterm &
-    _xfce4terminal &
+    _xfce4terminal "$style" &
     # # NOTE 2021-09-25: I tried alacritty for a while, but the way it
     # reads the fonts on Xorg makes the point size larger than expected.
     # Also, it seems to miss some smaller sizes, so I cannot use it
@@ -374,7 +374,8 @@ _xfce ()
         _gsettings_color_scheme_set 'prefer-light'
     fi
 
-    _emacs "$style"
+    _emacs "$style" &
+    _xfce4terminal "$style" &
 }
 
 #### Sessions
