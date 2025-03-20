@@ -10770,7 +10770,7 @@ with RSS and IRC clients:
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 #+end_src
 
-*** The =prot-emacs-web.el= settings about buttonising links (~goto-addr~)
+*** The =prot-emacs-web.el= settings about buttonising links (~goto-address-mode~)
 :PROPERTIES:
 :CUSTOM_ID: h:7639683b-4b6f-42ee-9ae0-76eeec6fee9a
 :END:
@@ -10786,7 +10786,10 @@ have, which are strictly stylistic.
 ;;;; `goto-addr'
 (use-package goto-addr
   :ensure nil
-  :commands (goto-addr-mode goto-addr-prog-mode)
+  :commands (goto-address-mode goto-address-prog-mode)
+  :hook
+  ((text-mode . goto-address-mode)
+   (prog-mode . goto-address-prog-mode))
   :config
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)

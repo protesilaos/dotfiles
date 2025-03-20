@@ -11,7 +11,10 @@
 ;;;; `goto-addr'
 (use-package goto-addr
   :ensure nil
-  :commands (goto-addr-mode goto-addr-prog-mode)
+  :commands (goto-address-mode goto-address-prog-mode)
+  :hook
+  ((text-mode . goto-address-mode)
+   (prog-mode . goto-address-prog-mode))
   :config
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
