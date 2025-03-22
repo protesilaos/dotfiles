@@ -72,6 +72,9 @@ packages and a contributor to Emacs core. Here are my current settings
 system-configuration-options
 #+end_src
 
+Debian users can read this article, which remains relevant unless
+otherwise noted: <https://protesilaos.com/codelog/2025-03-22-emacs-build-source-debian/>.
+
 Users of Arch Linux can refer to this =PKGBUILD= I maintain for my
 purposes:
 
@@ -912,7 +915,8 @@ files that are already placed where I need them to be.
 
 The =package.el= is built into Emacs and is perfectly fine for my
 use-case. We do not need to load it explicitly, as it will be called
-by ~use-package~ when it needs it. Since the introduction of the
+by ~use-package~ when it needs it (also watch my video about the
+[[https://protesilaos.com/codelog/2024-07-23-emacs-use-package-essentials/][~use-package~ essentials]] (2024-07-23)). Since the introduction of the
 =early-init.el= file, we also do not need to initialise the packages
 at this point: we activate the cache instead ([[#h:7a037504-8a2f-4df0-8482-ce6476354440][The =early-init.el= initialises the package cache]]).
 
@@ -3675,6 +3679,8 @@ inputs, displaying helpful annotations next to each candidate, and
 "completion styles" to control how user input is matched to
 candidates. Because we use the minibuffer for most common
 interactions, completion is an integral part of any setup.
+
+Also watch my video about [[https://protesilaos.com/codelog/2024-02-17-emacs-modern-minibuffer-packages/][modern minibuffer packages]] (2024-02-17).
 
 *** The =prot-emacs-completion.el= settings for completion styles
 :PROPERTIES:
@@ -7058,10 +7064,12 @@ Finally, we ~provide~ the module. This is the mirror function of
 :CUSTOM_ID: h:d799c3c0-bd6a-40bb-bd1a-ba4ea5367840
 :END:
 
-# TODO 2024-12-15: Document the prot-org.el clocking commands.
-
 Watch:
 
+- [[https://protesilaos.com/codelog/2025-01-26-emacs-organise-init/][Organise your init file (outline-minor-mode or Org literate config)]] (2025-01-26)
+- [[https://protesilaos.com/codelog/2025-01-16-emacs-org-todo-agenda-basics/][Org todo and agenda basics]] (2025-01-16)
+- [[https://protesilaos.com/codelog/2024-12-26-emacs-org-hide-citations-mode/][Tone down Org citations on demand]] (2024-12-26)
+- [[https://protesilaos.com/codelog/2024-12-15-emacs-org-coaching-clock/][Custom Org clock report for my coaching]] (2024-12-15)
 - [[https://protesilaos.com/codelog/2023-12-18-emacs-org-advanced-literate-conf/][Advanced literate configuration with Org]] (2023-12-18)
 - [[https://protesilaos.com/codelog/2023-05-23-emacs-org-basics/][Basics of Org mode]] (2023-05-23)
 - [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09)
