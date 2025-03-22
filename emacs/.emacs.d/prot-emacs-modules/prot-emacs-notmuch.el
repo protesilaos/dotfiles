@@ -254,12 +254,12 @@ that and instead tries to complete against dictionary entries."
             :label "💬 "
             :label-face prot-modeline-indicator-cyan
             :counter-face prot-modeline-indicator-cyan)
-          ( :terms "tag:unread and tag:package and tag:inbox"
+          ( :terms "tag:unread and tag:package"
             ;; :label "[P] "
             :label "🛠️ "
             :label-face prot-modeline-indicator-magenta
             :counter-face prot-modeline-indicator-magenta)
-          ( :terms "tag:unread and tag:coach and tag:inbox"
+          ( :terms "tag:unread and tag:coach"
             ;; :label "[C] "
             :label "🏆 "
             :label-face prot-modeline-indicator-red
