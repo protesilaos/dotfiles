@@ -70,8 +70,11 @@
            :left-fringe-width 20
            :right-fringe-width 20))
 
-  ;; Read the doc string of `spacious-padding-subtle-mode-line' as
-  ;; it is very flexible.
+  ;; (setq spacious-padding-subtle-mode-line nil)
+
+  ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
+  ;; is very flexible.  Here we make the mode lines be a single
+  ;; overline.
   (setq spacious-padding-subtle-mode-line
         '( :mode-line-active spacious-padding-subtle-mode-line-active
            :mode-line-inactive spacious-padding-subtle-mode-line-inactive)))
