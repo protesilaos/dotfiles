@@ -2488,26 +2488,40 @@ this via some hook.
 
   (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
 
+  ;; All `prot-simple-override-mode' does is activate a key map.
+  ;; Below I add keys to that map.  Because the mode is enabled
+  ;; globally, those keys take precedence over the ones specified by
+  ;; any given major mode.  In principle, this means that my keys will
+  ;; always work (though technically they can be overriden by another
+  ;; minor mode, depending on which one is evaluated last).
+  (prot-simple-override-mode 1)
+
   (with-eval-after-load 'pulsar
     (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-recenter-center)
     (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-reveal-entry))
   :bind
-  ( ("ESC ESC" . prot-simple-keyboard-quit-dwim)
-    ("C-g" . prot-simple-keyboard-quit-dwim)
-    ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
-    ;; Commands for lines
-    ("C-d" . prot-simple-delete-line) ; overrides `delete-char'
-    ("C-S-d" . prot-simple-delete-line-backward)
-    ("M-k" . prot-simple-kill-line-backward)
-    ("M-j" . delete-indentation)
-    ("M-w" . prot-simple-kill-ring-save)
+  ( :map prot-simple-override-mode-map
     ("C-a" . prot-simple-duplicate-line-or-region) ; "again" mnemonic, overrides `move-beginning-of-line'
-    ("C-S-w" . prot-simple-copy-line)
-    ("C-S-y" . prot-simple-yank-replace-line-or-region)
+    ("C-d" . prot-simple-delete-line) ; overrides `delete-char'
+
     ("C-v" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
     ("<next>" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
     ("M-v" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
+
+    :map global-map
+    ("ESC ESC" . prot-simple-keyboard-quit-dwim)
+    ("C-g" . prot-simple-keyboard-quit-dwim)
+    ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
+    ;; Commands for lines
+
+    ("C-S-d" . prot-simple-delete-line-backward)
+    ("M-k" . prot-simple-kill-line-backward)
+    ("M-j" . delete-indentation)
+    ("M-w" . prot-simple-kill-ring-save)
+
+    ("C-S-w" . prot-simple-copy-line)
+    ("C-S-y" . prot-simple-yank-replace-line-or-region)
     ("<C-return>" . prot-simple-new-line-below)
     ("<C-S-return>" . prot-simple-new-line-above)
     ("C-x x a" . prot-simple-auto-fill-visual-line-mode) ; auto-fill/visual-line toggle
@@ -16967,6 +16981,19 @@ VARIANT is either `dark' or `light'."
 VARIANT is either `dark' or `light'."
   (interactive (list (prot-simple--list-accessible-colors-prompt)))
   (list-colors-display (prot-simple-accessible-colors variant)))
+
+;;;; Global minor mode to override key maps
+
+(defvar prot-simple-override-mode-map (make-sparse-keymap)
+  "Key map of `prot-simple-override-mode'.
+Enable that mode to have its key bindings take effect over those of the
+major mode.")
+
+(define-minor-mode prot-simple-override-mode
+  "Enable the `prot-simple-override-mode-map'."
+  :init-value nil
+  :global t
+  :keymap prot-simple-override-mode-map)
 
 (provide 'prot-simple)
 ;;; prot-simple.el ends here
