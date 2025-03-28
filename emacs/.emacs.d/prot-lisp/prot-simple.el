@@ -977,5 +977,18 @@ VARIANT is either `dark' or `light'."
   (interactive (list (prot-simple--list-accessible-colors-prompt)))
   (list-colors-display (prot-simple-accessible-colors variant)))
 
+;;;; Global minor mode to override key maps
+
+(defvar prot-simple-override-mode-map (make-sparse-keymap)
+  "Key map of `prot-simple-override-mode'.
+Enable that mode to have its key bindings take effect over those of the
+major mode.")
+
+(define-minor-mode prot-simple-override-mode
+  "Enable the `prot-simple-override-mode-map'."
+  :init-value nil
+  :global t
+  :keymap prot-simple-override-mode-map)
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here

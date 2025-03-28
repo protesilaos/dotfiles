@@ -94,26 +94,40 @@
 
   (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
 
+  ;; All `prot-simple-override-mode' does is activate a key map.
+  ;; Below I add keys to that map.  Because the mode is enabled
+  ;; globally, those keys take precedence over the ones specified by
+  ;; any given major mode.  In principle, this means that my keys will
+  ;; always work (though technically they can be overriden by another
+  ;; minor mode, depending on which one is evaluated last).
+  (prot-simple-override-mode 1)
+
   (with-eval-after-load 'pulsar
     (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-recenter-center)
     (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-reveal-entry))
   :bind
-  ( ("ESC ESC" . prot-simple-keyboard-quit-dwim)
-    ("C-g" . prot-simple-keyboard-quit-dwim)
-    ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
-    ;; Commands for lines
-    ("C-d" . prot-simple-delete-line) ; overrides `delete-char'
-    ("C-S-d" . prot-simple-delete-line-backward)
-    ("M-k" . prot-simple-kill-line-backward)
-    ("M-j" . delete-indentation)
-    ("M-w" . prot-simple-kill-ring-save)
+  ( :map prot-simple-override-mode-map
     ("C-a" . prot-simple-duplicate-line-or-region) ; "again" mnemonic, overrides `move-beginning-of-line'
-    ("C-S-w" . prot-simple-copy-line)
-    ("C-S-y" . prot-simple-yank-replace-line-or-region)
+    ("C-d" . prot-simple-delete-line) ; overrides `delete-char'
+
     ("C-v" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
     ("<next>" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
     ("M-v" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
+
+    :map global-map
+    ("ESC ESC" . prot-simple-keyboard-quit-dwim)
+    ("C-g" . prot-simple-keyboard-quit-dwim)
+    ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
+    ;; Commands for lines
+
+    ("C-S-d" . prot-simple-delete-line-backward)
+    ("M-k" . prot-simple-kill-line-backward)
+    ("M-j" . delete-indentation)
+    ("M-w" . prot-simple-kill-ring-save)
+
+    ("C-S-w" . prot-simple-copy-line)
+    ("C-S-y" . prot-simple-yank-replace-line-or-region)
     ("<C-return>" . prot-simple-new-line-below)
     ("<C-S-return>" . prot-simple-new-line-above)
     ("C-x x a" . prot-simple-auto-fill-visual-line-mode) ; auto-fill/visual-line toggle
@@ -136,7 +150,8 @@
     ;; Commands for windows and pages
     ("C-x o" . prot-simple-other-window)
     ("C-x n k" . prot-simple-delete-page-delimiters)
-    ("C-x M-r" . prot-simple-swap-window-buffers)
+    ("M-r" . rotate-windows) ; Emacs 31 override `move-to-window-line-top-bottom'
+    ("M-S-r" . rotate-windows-back) ; Emacs 31
     ;; Commands for buffers
     ("<C-f2>" . prot-simple-rename-file-and-buffer)
     ("C-x k" . prot-simple-kill-buffer-current)
@@ -348,7 +363,7 @@
 
   ;; All of the following variables are for Emacs 28
   (setq world-clock-list t)
-  (setq world-clock-time-format "%R	%z	%A %d %B")
+  (setq world-clock-time-format "%z %R	%a %d %b (%Z)")
   (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60))
