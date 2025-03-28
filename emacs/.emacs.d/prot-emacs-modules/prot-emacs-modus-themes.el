@@ -26,12 +26,12 @@
           (agenda-date . (variable-pitch regular 1.3))
           (t . (regular 1.15))))
 
-  ;; (setq modus-themes-common-palette-overrides nil)
-  (setq modus-themes-common-palette-overrides
-        '((cursor cyan-intense)
-          (comment magenta-faint)
-          (bg-paren-match bg-magenta-subtle)
-          (fg-paren-match magenta)))
+  ;; (setq modus-themes-common-palette-overrides
+  ;;       '((cursor cyan-intense)
+  ;;         (comment magenta-faint)
+  ;;         (bg-paren-match bg-magenta-subtle)
+  ;;         (fg-paren-match magenta)))
+  (setq modus-themes-common-palette-overrides nil)
 
   (if (prot-emacs-theme-environment-dark-p)
       (modus-themes-load-theme (cadr modus-themes-to-toggle))
