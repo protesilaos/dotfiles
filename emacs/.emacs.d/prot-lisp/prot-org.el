@@ -208,7 +208,12 @@ the current file."
 
 ;;;###autoload
 (defun prot-org-select-heading-in-file ()
-  "Like `prot-org-select-project' but specifically for `org-capture'."
+  "Move to heading in Org file stored in `org-directory'.
+Prompt for file, then for heading inside of that file.
+
+This function can also be used as part of an `org-capture' template to
+navigate to a file+heading and then capture something which is inserted
+there."
   (declare (interactive-only t))
   (interactive)
   (pcase-let* ((file (prot-org-file-prompt))
