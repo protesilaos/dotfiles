@@ -417,7 +417,7 @@ Development continues on GitHub with GitLab as a mirror."))
   ;; limited number of contexts.
   (use-package prot-embark
     :ensure nil
-    :after embark
+    :commands (prot-embark-act prot-embark-act-no-quit)
     :bind
     ( :map global-map
       ("C-," . prot-embark-act-no-quit)
