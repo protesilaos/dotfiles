@@ -368,7 +368,10 @@ Development continues on GitHub with GitLab as a mirror."))
 (when prot-emacs-completion-extras
   (use-package embark
     :ensure t
-    :defer 1
+    :bind
+    ( :map minibuffer-local-map
+      ("C-c C-c" . embark-collect)
+      ("C-c C-e" . embark-export))
     :config
     (setq embark-confirm-act-all nil)
     ;; The prot-embark.el has an advice to further simplify the
