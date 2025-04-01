@@ -8904,10 +8904,9 @@ preview of the file-to-linked/opened and by adding more sources to the
 ~consult-buffer~ command.
 
 + Package name (GNU ELPA): ~consult-denote~
-+ Official manual: not available yet.
-+ Change log: not available yet.
-+ Git repositories:
-  + GitHub: <https://github.com/protesilaos/consult-denote>
++ Official manual: <https://protesilaos.com/emacs/consult-denote>
++ Change log: <https://protesilaos.com/emacs/consult-denote-changelog>
++ Git repository: <https://github.com/protesilaos/consult-denote>
 + Backronym: Consult-Orchestrated Navigation and Selection of
   Unambiguous Targets...denote.
 
