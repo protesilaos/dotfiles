@@ -9086,7 +9086,7 @@ multiple "silos", as explained in the Denote manual. In short, a
 "silo" is a localised ~denote-directory~ that is not connected to the
 default/global ~denote-directory~ and other silos.
 
-+ Package name (GNU ELPA): ~denote-silo~ (⚠️ Not available yet)
++ Package name (GNU ELPA): ~denote-silo~
 + Official manual: <https://protesilaos.com/emacs/denote-silo>
 + Git repository: <https://github.com/protesilaos/denote-silo>
 + Backronym: Denote... Silos Insulate Localised Objects.
