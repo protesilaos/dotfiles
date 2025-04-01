@@ -8978,7 +8978,7 @@ sequencing scheme. The idea is to establish hiearchical relationships
 between files, such that the contents of one logically follow or
 complement those of another.
 
-+ Package name (GNU ELPA): ~denote-sequence~ (⚠️ Not available yet)
++ Package name (GNU ELPA): ~denote-sequence~
 + Official manual: <https://protesilaos.com/emacs/denote-sequence>
 + Git repository: <https://github.com/protesilaos/denote-sequence>
 + Backronym: Denote... Sequences Efficiently Queue Unsorted Entries
