@@ -9022,7 +9022,7 @@ about converting links from one type to another so that they can work
 in different applications (because Markdown does not have a
 standardised way to define custom link types).
 
-+ Package name (GNU ELPA): ~denote-markdown~ (⚠️ Not available yet)
++ Package name (GNU ELPA): ~denote-markdown~
 + Official manual: <https://protesilaos.com/emacs/denote-markdown>
 + Git repository: <https://github.com/protesilaos/denote-markdown>
 + Backronyms: Denote... Markdown's Ambitious Reimplimentations
