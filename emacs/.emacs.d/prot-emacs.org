@@ -8934,7 +8934,7 @@ Org-specific extensions such as dynamic blocks, links to headings, and
 splitting an Org subtree into its own standalone file. This package's
 official manual covers the technicalities.
 
-+ Package name (GNU ELPA): ~denote-org~ (⚠️ Not available yet)
++ Package name (GNU ELPA): ~denote-org~
 + Official manual: <https://protesilaos.com/emacs/denote-org>
 + Git repository: <https://github.com/protesilaos/denote-org>
 + Backronym: Denote... Ordinarily Restricts Gyrations.
