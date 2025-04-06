@@ -11050,20 +11050,48 @@ file to provide only these commands:
   (prot-elfeed-fontify-tags))
 #+end_src
 
-*** TODO The =prot-emacs-web.el= settings for the IRC client
+*** The =prot-emacs-web.el= settings for the IRC client (~rcirc~)
 :PROPERTIES:
 :CUSTOM_ID: h:b9e6834b-e636-414e-8c50-9e04ba77a0a3
 :END:
+
+IRC is a communication protocol for live text messaging. The typical
+use-case involves multiple users writing to the same "channel".
+Messages appear in chronological order, with reference to the username
+who wrote them. Users can direct a message to one another by means of
+writing =@= followed by the username. Users can join multiple channels
+at once. Channels have a =#= prefix to their name. There can also be
+one-to-one exchanges, which behave like every basic messaging app. It
+is all plain text and it just works!
+
+IRC is not like a modern chat application though because it does not
+persist messages by default. Users must make a special arrangement for
+that, which I never bothered to learn. My usage is super simple: log
+in during some special event, such as EmacsConf, and only follow what
+is happening live. Otherwise, I do not bother with IRC.
+
+Emacs comes with two built-in IRC clients: ~erc~ and ~rcirc~. ~erc~
+has lots of features and I would consider it better for power users.
+While ~rcirc~ is more minimal and thus easier for casual IRC users
+such as myself.
+
+In the following code block, the essential data to streamline the log
+in process is ~rcirc-server-alist~. What I have there uses the
+function ~prot-common-auth-get-field~ to extract a password from my
+=.authinfo.gpg= file ([[#h:24f17614-ee3d-4cd1-bbe3-f53e4f39c281][The =prot-emacs-email.el= basic settings (including =authinfo=)]]).
+It then uses the ~rcirc-default-nick~ to establish a connection. The
+only channel I join automatically whenever I do =M-x rcirc= is that of
+=#emacs=. Again, I am not into IRC.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;; Rcirc (IRC client)
 (use-package rcirc
   :ensure nil
-  :bind ("C-c i" . irc)
+  :commands (irc rcirc)
   :config
   (setq rcirc-server-alist
         `(("irc.libera.chat"
-           :channels ("#emacs" "#rcirc")
+           :channels ("#emacs")
            :port 6697
            :encryption tls
            :password ,(prot-common-auth-get-field "libera" :secret))))

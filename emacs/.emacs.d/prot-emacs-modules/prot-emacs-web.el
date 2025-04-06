@@ -145,11 +145,11 @@
 ;;; Rcirc (IRC client)
 (use-package rcirc
   :ensure nil
-  :bind ("C-c i" . irc)
+  :commands (irc rcirc)
   :config
   (setq rcirc-server-alist
         `(("irc.libera.chat"
-           :channels ("#emacs" "#rcirc")
+           :channels ("#emacs")
            :port 6697
            :encryption tls
            :password ,(prot-common-auth-get-field "libera" :secret))))
