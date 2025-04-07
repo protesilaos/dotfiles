@@ -285,7 +285,7 @@
   (setq denote-date-format nil) ; read its doc string
   (setq denote-rename-confirmations nil) ; CAREFUL with this if you are not familiar with Denote!
   (setq denote-backlinks-show-context nil)
-  (setq denote-rename-buffer-format "[D] %t%b")
+  (setq denote-rename-buffer-format "[D] %D%b")
   (setq denote-buffer-has-backlinks-string " (<--->)")
 
   ;; Automatically rename Denote buffers when opening them so that
