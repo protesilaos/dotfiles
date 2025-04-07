@@ -100,6 +100,8 @@
 
     ;; Also check `modus-themes-select'.  To list the palette's colours,
     ;; use `modus-themes-list-colors', `modus-themes-list-colors-current'.
-    (define-key global-map (kbd "<f5>") #'modus-themes-toggle)))
+    (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+    (define-key global-map (kbd "C-<f5>") #'modus-themes-select)
+    (define-key global-map (kbd "M-<f5>") #'modus-themes-rotate)))
 
 (provide 'prot-emacs-modus-themes)
