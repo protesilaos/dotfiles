@@ -79,7 +79,8 @@
              (display-buffer-reuse-mode-window display-buffer-at-bottom)
              (window-height . 0.3)
              (dedicated . t)
-             (preserve-size . (t . t)))
+             (preserve-size . (t . t))
+             (body-function . select-window))
             ("\\*Embark Actions\\*"
              (display-buffer-reuse-mode-window display-buffer-below-selected)
              (window-height . fit-window-to-buffer)
