@@ -364,7 +364,9 @@
   :ensure t
   :commands ( denote-journal-new-entry
               denote-journal-new-or-existing-entry
-              denote-journal-link-or-create-entry )
+              denote-journal-link-or-create-entry
+              prot/denote-journal-new-or-existing-entry )
+  :bind ("C-c n j" . prot/denote-journal-new-or-existing-entry)
   :hook (calendar-mode . denote-journal-calendar-mode)
   :config
   ;; Use the "journal" subdirectory of the `denote-directory'.  Set this
@@ -373,7 +375,19 @@
   ;; Default keyword for new journal entries.  It can also be a list of strings.
   (setq denote-journal-keyword "journal")
   ;; Read the doc string of `denote-journal-title-format'.
-  (setq denote-journal-title-format 'day-date-month-year))
+  (setq denote-journal-title-format 'day-date-month-year)
+
+  (defun prot/denote-journal-new-or-existing-entry ()
+    "EXPERIMENTAL Like `denote-journal-new-or-existing-entry' but with no front matter."
+    (interactive)
+    (cl-letf (((symbol-function #'denote--format-front-matter) (lambda (&rest _) ""))
+              (denote-file-type 'text)
+              (denote-journal-title-format ""))
+      (let* ((internal-date (current-time))
+             (files (denote-journal--entry-today internal-date)))
+        (if files
+            (find-file (denote-journal-select-file-prompt files))
+          (call-interactively 'denote-journal-new-entry))))))
 
 ;;;; Denote Silo extras (denote-silo)
 
