@@ -148,7 +148,7 @@
                 "\\)"))
 
   (setq dired-preview-display-action-alist
-        '((display-buffer-in-side-window)
+        '((display-buffer-in-side-window display-buffer-below-selected display-buffer-no-window)
           (side . right)
           (window-width . 0.2)
           (preserve-size . (t . t))
