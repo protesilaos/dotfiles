@@ -244,6 +244,20 @@ positions.  Otherwise, copy the current line."
       (kill-ring-save beg end)
     (prot-simple-copy-line)))
 
+;;;###autoload
+(defun prot-simple-kill-region (&optional beg end)
+  "Do `kill-region' when the region is active, else `kill-ring-save' symbol at point."
+  (interactive
+   (when (region-active-p)
+     (list
+      (region-beginning)
+      (region-end))))
+  (if (and beg end)
+      (kill-region beg end)
+    (prot-simple-mark-sexp)
+    (copy-region-as-kill (region-beginning) (region-end)))
+  (setq this-command 'kill-ring-save))
+
 (defun prot-simple--duplicate-buffer-substring (boundaries)
   "Duplicate buffer substring between BOUNDARIES.
 BOUNDARIES is a cons cell representing buffer positions."

@@ -2523,10 +2523,10 @@ this via some hook.
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
-
     ("C-S-d" . prot-simple-delete-line-backward)
     ("M-k" . prot-simple-kill-line-backward)
     ("M-j" . delete-indentation)
+    ("C-w" . prot-simple-kill-region)
     ("M-w" . prot-simple-kill-ring-save)
 
     ("C-S-w" . prot-simple-copy-line)
@@ -7039,7 +7039,12 @@ cases, a combination of =vc= and the command-line will suffice
 
 (use-package magit
   :ensure t
-  :bind ("C-c g" . magit-status)
+  :bind
+  ( :map global-map
+    ("C-c g" . magit-status)
+    :map magit-mode-map
+    ("C-w" . nil)
+    ("M-w" . nil))
   :init
   (setq magit-define-global-key-bindings nil)
   (setq magit-section-visibility-indicator '("⮧"))
@@ -16297,6 +16302,20 @@ positions.  Otherwise, copy the current line."
   (if (and beg end)
       (kill-ring-save beg end)
     (prot-simple-copy-line)))
+
+;;;###autoload
+(defun prot-simple-kill-region (&optional beg end)
+  "Do `kill-region' when the region is active, else `kill-ring-save' symbol at point."
+  (interactive
+   (when (region-active-p)
+     (list
+      (region-beginning)
+      (region-end))))
+  (if (and beg end)
+      (kill-region beg end)
+    (prot-simple-mark-sexp)
+    (copy-region-as-kill (region-beginning) (region-end)))
+  (setq this-command 'kill-ring-save))
 
 (defun prot-simple--duplicate-buffer-substring (boundaries)
   "Duplicate buffer substring between BOUNDARIES.

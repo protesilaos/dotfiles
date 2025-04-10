@@ -200,7 +200,12 @@
 
 (use-package magit
   :ensure t
-  :bind ("C-c g" . magit-status)
+  :bind
+  ( :map global-map
+    ("C-c g" . magit-status)
+    :map magit-mode-map
+    ("C-w" . nil)
+    ("M-w" . nil))
   :init
   (setq magit-define-global-key-bindings nil)
   (setq magit-section-visibility-indicator '("⮧"))

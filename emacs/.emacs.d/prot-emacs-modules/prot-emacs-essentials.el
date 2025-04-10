@@ -120,10 +120,10 @@
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ;; Commands for lines
-
     ("C-S-d" . prot-simple-delete-line-backward)
     ("M-k" . prot-simple-kill-line-backward)
     ("M-j" . delete-indentation)
+    ("C-w" . prot-simple-kill-region)
     ("M-w" . prot-simple-kill-ring-save)
 
     ("C-S-w" . prot-simple-copy-line)
