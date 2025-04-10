@@ -364,84 +364,14 @@ Development continues on GitHub with GitLab as a mirror."))
       (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
         (add-hook 'consult-after-jump-hook fn)))))
 
-;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
+;;; Extended minibuffer actions and more (embark.el)
 (when prot-emacs-completion-extras
   (use-package embark
     :ensure t
     :bind
     ( :map minibuffer-local-map
       ("C-c C-c" . embark-collect)
-      ("C-c C-e" . embark-export))
-    :config
-    (setq embark-confirm-act-all nil)
-    ;; The prot-embark.el has an advice to further simplify the
-    ;; minimal indicator.  It shows cycling, which I never want to see
-    ;; or do.
-    (setq embark-mixed-indicator-both nil)
-    (setq embark-mixed-indicator-delay 1.0)
-    (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
-    (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
-    (setq embark-verbose-indicator-buffer-sections '(bindings))
-    (setq embark-verbose-indicator-excluded-actions
-          '(embark-cycle embark-act-all embark-collect embark-export embark-insert))
-
-    ;; I never cycle and want to disable the damn thing.  Normally, a
-    ;; nil value disables a key binding but here that value is
-    ;; interpreted as the binding for `embark-act'.  So I just add
-    ;; some obscure key that I do not have.  I absolutely do not want
-    ;; to cycle!
-    (setq embark-cycle-key "<XF86Travel>")
-
-    ;; I do not want `embark-org' and am not sure what is loading it.
-    ;; So I just unsert all the keymaps... This is the nuclear option
-    ;; but here we are.
-    (with-eval-after-load 'embark-org
-      (defvar prot/embark-org-keymaps
-        '(embark-org-table-cell-map
-          embark-org-table-map
-          embark-org-link-copy-map
-          embark-org-link-map
-          embark-org-src-block-map
-          embark-org-item-map
-          embark-org-plain-list-map
-          embark-org-export-in-place-map)
-        "List of Embark keymaps for Org.")
-
-      ;; Reset `prot/embark-org-keymaps'.
-      (seq-do
-       (lambda (keymap)
-         (set keymap (make-sparse-keymap)))
-       prot/embark-org-keymaps)))
-
-  ;; I define my own keymaps because I only use a few functions in a
-  ;; limited number of contexts.
-  (use-package prot-embark
-    :ensure nil
-    :commands (prot-embark-act prot-embark-act-no-quit)
-    :bind
-    ( :map global-map
-      ("C-," . prot-embark-act-no-quit)
-      ("C-." . prot-embark-act-quit)
-      :map embark-collect-mode-map
-      ("C-," . prot-embark-act-no-quit)
-      ("C-." . prot-embark-act-quit)
-      :map minibuffer-local-filename-completion-map
-      ("C-," . prot-embark-act-no-quit)
-      ("C-." . prot-embark-act-quit))
-    :config
-    (setq embark-keymap-alist
-          '((buffer prot-embark-buffer-map)
-            (command prot-embark-command-map)
-            (expression prot-embark-expression-map)
-            (file prot-embark-file-map)
-            (function prot-embark-function-map)
-            (identifier prot-embark-identifier-map)
-            (package prot-embark-package-map)
-            (region prot-embark-region-map)
-            (symbol prot-embark-symbol-map)
-            (url prot-embark-url-map)
-            (variable prot-embark-variable-map)
-            (t embark-general-map))))
+      ("C-c C-e" . embark-export)))
 
   ;; Needed for correct exporting while using Embark with Consult
   ;; commands.

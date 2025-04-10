@@ -2522,6 +2522,7 @@ this via some hook.
     ("ESC ESC" . prot-simple-keyboard-quit-dwim)
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
+    ("C-," . prot-simple-mark-sexp)   ; I also have `isearch-forward-symbol-at-point' on C-.
     ;; Commands for lines
     ("C-S-d" . prot-simple-delete-line-backward)
     ("M-k" . prot-simple-kill-line-backward)
@@ -4516,34 +4517,38 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
 [ This feature is subject to [[#h:91477890-49d5-48c3-9627-62295d2ab35d][The =init.el= user option to load extras for minibuffer completion]]. ]
 
 The ~embark~ package by Omar Antolín Camarena provides a mechanism to
-perform relevant actions in the given context. What constitutes "the
-given context" depends on where the cursor is, such as if it is at the
-end of a symbolic expression in Lisp code or inside the minibuffer.
-The single point of entry is the ~embark-act~ command or variants like
-~embark-dwim~.
+perform relevant actions via key bindings in the given context. What
+constitutes "the given context" depends on where the cursor is, such
+as if it is at the end of a symbolic expression in Lisp code or inside
+the minibuffer. The single point of entry is the ~embark-act~ command
+or variants like ~embark-dwim~.
 
 With ~embark-act~ we gain access to a customisable list of commands
 for the given context. If we are over a Lisp symbol, one possible
 action is to describe it (i.e. produce documentation about it). If we
 are browsing files in the minibuffer, possible actions include file
 operations such as to delete or rename the file. And so on for
-everything.
+everything. The ~embark-dwim~ command always performs the default
+action for the given context. It is like invoking ~embark-act~ and
+then typing the =RET= key.
 
-The ~embark-dwim~ command always performs the default action for the
-given context. It is like invoking ~embark-act~ and then typing the
-=RET= key.
+A killer feature of ~embark~ is how it acts on minibuffer completion
+candidates: it can collect a snapshot of them or place them in a
+buffer whose major mode is appropriate for whatever they are (e.g.
+~dired~ for files and ~ibuffer~ for buffers). We can thus type
+something in the minibuffer to narrow the results, then use
+~embark-collect~ or ~embark-export~ to capture the results and operate
+on them accordingly.
 
-A killer feature of ~embark~ is the concepts of "collect" and
-"export". These are used in the minibuffer to produce a dedicated
-buffer that contains all the completion candidates. For example, if we
-are reading documentation about =embark-= and have 10 items there, we
-can "collect" the results in their own buffer and then navigate it as
-if it were the minibuffer: =RET= will perform the action that the
-actual minibuffer would have carried out (to show documentation, in
-this case). Similarly, the export mechanism takes the completion
-candidates out of the minibuffer, though it also puts them in a major
-mode that is appropriate for them. Files, for instance, will be placed
-in a Dired buffer ([[#h:f8b08a77-f3a8-42fa-b1a9-f940348889c3][The =prot-emacs-dired.el= module]]).
+For example, if we are reading documentation about =embark-= and have
+10 items there, we can "collect" the results in their own buffer and
+then navigate it as if it were the minibuffer: =RET= will perform the
+action that the actual minibuffer would have carried out (to show
+documentation, in this case). The minibuffer does not have to stay
+open and will thus not interfere with anything else we may want to do.
+Similarly, the "export" mechanism takes the completion candidates out
+of the minibuffer, though it also puts them in a major mode that is
+appropriate for acting them like ~dired~ and ~ibuffer~.
 
 Depending on the configurations about the "indicator", the ~embark-act~
 command will display an informative buffer with keys and their
@@ -4551,26 +4556,17 @@ corresponding commands. We can control its placement the same way we
 do with all well-behaved buffers ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]).
 
 One downside of ~embark~ is that it is hard to know what the context
-is. I have had this experience myself several times, where I though I
-was targeting the URL at point while the actions were about Org source
-blocks, headings, and whatnot. Embark is probably correct in such a
-case, though I cannot make my brain think the way it expects.
+is. I have had this experience myself several times, where I thought I
+was targeting the URL at point while the actions were actually about
+Org source blocks, headings, and whatnot.
 
 Another downside, which is also true for ~which-key~ ([[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][The =prot-emacs-which-key.el= module]]),
 is the sheer number of options for each context. I feel that the
-defaults should be more conservative, to have 3-4 actions per context
-to make it easier to find stuff. Those who need more, can add them.
-Documentation can also be provided to that end. Adding commands to
-such a list is not a trivial task, because the user must modify
-keymaps and thus understand the relevant concepts. Sure, we can all
-learn, but this is not your usual ~setq~ tweak.
-
-All things considered, I do not recommend ~embark~ to new users as I
-know for a fact that people have trouble using it effectively. Power
-users can benefit from it, though you will notice in the following
-code block and in =prot-embark.el= how even power users need to put in
-some work ([[#h:fb034be5-c316-4c4f-a46f-cebcab332a47][The =prot-embark.el= library]]). Whether it is worth it or
-not depends on one's use-case.
+defaults should be much more conservative: to have 3-4 actions per
+context in order to make it easier to find stuff. The package would
+then provide an easy way for users to opt in to what they need (e.g. I
+do not care about acting on Org heading) rather than having to opt out
+of a ton of contexts and their corresponding key bindings.
 
 Karthik Chikmagalur has an excellently written and presented essay on
 [[https://karthinks.com/software/fifteen-ways-to-use-embark/][Fifteen ways to use Embark]]. If you plan on becoming an ~embark~ power
@@ -4591,98 +4587,38 @@ interaction or with text-regions, Embark acts as a lever to amplify
 the power of Emacs’ myriad built in commands and libraries.
 #+end_quote
 
-I have been using Emacs since 2019 and not once did I have a use for
-~transpose-regions~ or ~apply-macro-to-region-lines~. To run a
-keyboard macro in a region, narrow to it, and call the kmacro with a
+Some will be pursuaded to make Embark the epicentre of their workflow.
+I am not convinced this is a net benefit. To use Kathik's example, I
+have been using Emacs since 2019 and not once---not once!---did I have
+a use for ~transpose-regions~ or ~apply-macro-to-region-lines~. To run
+a keyboard macro in a region, narrow to it, and call the kmacro with a
 =0= argument (run until you encounter an error or the end of the
 buffer). Why remember such a specialised function when the general
 pattern is getting the job done? And why be presented with the option
 of that same function every single time you ~embark-act~ on a region?
 
 Personally, I would be content with a package that does the equivalent
-of "collect" and "export". The rest is about organising keybindings
-and how you approach a given task (workflow as opposed to core
-functionality).
+of "collect" and "export". Those should be built into =minibuffer.el=.
+The rest is about organising keybindings and how you approach a given
+task: a matter of workflow as opposed to core functionality.
+
+Up until 2025-04-10, I maintained a =prot-embark.el= package as part
+of this configuration. It defined some extras for using Embark in a
+way that made sense to me. I was also redefining all of Embark's key
+maps, in an attempt to reduce its sheer number of options that I never
+had a need for. Eventually I realised that I was still not using
+Embark the way it is intended, so I decided to only focus on
+~embark-collect~ and ~embark-export~.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
+;;; Extended minibuffer actions and more (embark.el)
 (when prot-emacs-completion-extras
   (use-package embark
     :ensure t
     :bind
     ( :map minibuffer-local-map
       ("C-c C-c" . embark-collect)
-      ("C-c C-e" . embark-export))
-    :config
-    (setq embark-confirm-act-all nil)
-    ;; The prot-embark.el has an advice to further simplify the
-    ;; minimal indicator.  It shows cycling, which I never want to see
-    ;; or do.
-    (setq embark-mixed-indicator-both nil)
-    (setq embark-mixed-indicator-delay 1.0)
-    (setq embark-indicators '(embark-mixed-indicator embark-highlight-indicator))
-    (setq embark-verbose-indicator-nested nil) ; I think I don't have them, but I do not want them either
-    (setq embark-verbose-indicator-buffer-sections '(bindings))
-    (setq embark-verbose-indicator-excluded-actions
-          '(embark-cycle embark-act-all embark-collect embark-export embark-insert))
-
-    ;; I never cycle and want to disable the damn thing.  Normally, a
-    ;; nil value disables a key binding but here that value is
-    ;; interpreted as the binding for `embark-act'.  So I just add
-    ;; some obscure key that I do not have.  I absolutely do not want
-    ;; to cycle!
-    (setq embark-cycle-key "<XF86Travel>")
-
-    ;; I do not want `embark-org' and am not sure what is loading it.
-    ;; So I just unsert all the keymaps... This is the nuclear option
-    ;; but here we are.
-    (with-eval-after-load 'embark-org
-      (defvar prot/embark-org-keymaps
-        '(embark-org-table-cell-map
-          embark-org-table-map
-          embark-org-link-copy-map
-          embark-org-link-map
-          embark-org-src-block-map
-          embark-org-item-map
-          embark-org-plain-list-map
-          embark-org-export-in-place-map)
-        "List of Embark keymaps for Org.")
-
-      ;; Reset `prot/embark-org-keymaps'.
-      (seq-do
-       (lambda (keymap)
-         (set keymap (make-sparse-keymap)))
-       prot/embark-org-keymaps)))
-
-  ;; I define my own keymaps because I only use a few functions in a
-  ;; limited number of contexts.
-  (use-package prot-embark
-    :ensure nil
-    :commands (prot-embark-act prot-embark-act-no-quit)
-    :bind
-    ( :map global-map
-      ("C-," . prot-embark-act-no-quit)
-      ("C-." . prot-embark-act-quit)
-      :map embark-collect-mode-map
-      ("C-," . prot-embark-act-no-quit)
-      ("C-." . prot-embark-act-quit)
-      :map minibuffer-local-filename-completion-map
-      ("C-," . prot-embark-act-no-quit)
-      ("C-." . prot-embark-act-quit))
-    :config
-    (setq embark-keymap-alist
-          '((buffer prot-embark-buffer-map)
-            (command prot-embark-command-map)
-            (expression prot-embark-expression-map)
-            (file prot-embark-file-map)
-            (function prot-embark-function-map)
-            (identifier prot-embark-identifier-map)
-            (package prot-embark-package-map)
-            (region prot-embark-region-map)
-            (symbol prot-embark-symbol-map)
-            (url prot-embark-url-map)
-            (variable prot-embark-variable-map)
-            (t embark-general-map))))
+      ("C-c C-e" . embark-export)))
 
   ;; Needed for correct exporting while using Embark with Consult
   ;; commands.
@@ -5173,7 +5109,9 @@ the search of the previous succesful match.
   :ensure nil
   :demand t
   :bind
-  ( :map minibuffer-local-isearch-map
+  ( :map global-map
+    ("C-." . isearch-forward-symbol-at-point) ; easier than M-s . // I also have `prot-simple-mark-sexp' on C-,
+    :map minibuffer-local-isearch-map
     ("M-/" . isearch-complete-edit)
     :map occur-mode-map
     ("t" . toggle-truncate-lines)
@@ -12396,152 +12334,6 @@ minibuffer with something like `exit-minibuffer'."
 
 (provide 'prot-elfeed)
 ;;; prot-elfeed.el ends here
-#+end_src
-
-** The =prot-embark.el= library
-:PROPERTIES:
-:CUSTOM_ID: h:fb034be5-c316-4c4f-a46f-cebcab332a47
-:END:
-
-#+begin_src emacs-lisp :tangle "prot-lisp/prot-embark.el" :mkdirp yes
-;;; prot-embark.el --- Custom Embark keymaps -*- lexical-binding: t -*-
-
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "30.1") (embark "0.23"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or (at
-;; your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-;;; Commentary:
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
-
-;;; Code:
-
-(require 'embark)
-
-(defvar-keymap prot-embark-general-map
-  :parent embark-general-map
-  "i" #'embark-insert
-  "w" #'embark-copy-as-kill
-  "E" #'embark-export
-  "S" #'embark-collect
-  "A" #'embark-act-all
-  "DEL" #'delete-region)
-
-(defvar-keymap prot-embark-url-map
-  :parent embark-general-map
-  "b" #'browse-url
-  "d" #'embark-download-url
-  "e" #'eww)
-
-(defvar-keymap prot-embark-buffer-map
-  :parent embark-general-map
-  "k" #'prot-simple-kill-buffer
-  "o" #'switch-to-buffer-other-window
-  "e" #'ediff-buffers)
-
-(add-to-list 'embark-post-action-hooks (list 'prot-simple-kill-buffer 'embark--restart))
-
-(defvar-keymap prot-embark-file-map
-  :parent embark-general-map
-  "f" #'find-file
-  "j" #'embark-dired-jump
-  "c" #'copy-file
-  "e" #'ediff-files)
-
-(defvar-keymap prot-embark-identifier-map
-  :parent embark-general-map
-  "h" #'display-local-help
-  "." #'xref-find-definitions
-  "o" #'occur)
-
-(defvar-keymap prot-embark-command-map
-  :parent embark-general-map
-  "h" #'describe-command
-  "." #'embark-find-definition)
-
-(defvar-keymap prot-embark-expression-map
-  :parent embark-general-map
-  "e" #'pp-eval-expression
-  "m" #'pp-macroexpand-expression)
-
-(defvar-keymap prot-embark-function-map
-  :parent embark-general-map
-  "h" #'describe-function
-  "." #'embark-find-definition)
-
-(defvar-keymap prot-embark-package-map
-  :parent embark-general-map
-  "h" #'describe-package
-  "i" #'package-install
-  "d" #'package-delete
-  "r" #'package-reinstall
-  "u" #'embark-browse-package-url
-  "w" #'embark-save-package-url)
-
-(defvar-keymap prot-embark-symbol-map
-  :parent embark-general-map
-  "h" #'describe-symbol
-  "." #'embark-find-definition)
-
-(defvar-keymap prot-embark-variable-map
-  :parent embark-general-map
-  "h" #'describe-variable
-  "." #'embark-find-definition)
-
-(defvar-keymap prot-embark-region-map
-  :parent embark-general-map
-  "a" #'align-regexp
-  "D" #'delete-duplicate-lines
-  "f" #'flush-lines
-  "i" #'epa-import-keys-region
-  "d" #'epa-decrypt-armor-in-region
-  "r" #'repunctuate-sentences
-  "s" #'sort-lines
-  "u" #'untabify)
-
-;; The minimal indicator shows cycling options, but I have no use
-;; for those.  I want it to be silent.
-(defun prot-embark-no-minimal-indicator ())
-(advice-add #'embark-minimal-indicator :override #'prot-embark-no-minimal-indicator)
-
-(defun prot-embark-act-no-quit ()
-  "Call `embark-act' but do not quit after the action."
-  (interactive)
-  (let ((embark-quit-after-action nil))
-    (call-interactively #'embark-act)))
-
-(defun prot-embark-act-quit ()
-  "Call `embark-act' and quit after the action."
-  (interactive)
-  (let ((embark-quit-after-action t))
-    (call-interactively #'embark-act))
-  (when (and (> (minibuffer-depth) 0)
-             (derived-mode-p 'completion-list-mode))
-    (abort-recursive-edit)))
-
-(provide 'prot-embark)
-;;; prot-embark.el ends here
 #+end_src
 
 ** The =prot-eww.el= library

@@ -43,7 +43,9 @@
   :ensure nil
   :demand t
   :bind
-  ( :map minibuffer-local-isearch-map
+  ( :map global-map
+    ("C-." . isearch-forward-symbol-at-point) ; easier than M-s . // I also have `prot-simple-mark-sexp' on C-,
+    :map minibuffer-local-isearch-map
     ("M-/" . isearch-complete-edit)
     :map occur-mode-map
     ("t" . toggle-truncate-lines)
