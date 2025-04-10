@@ -147,17 +147,7 @@
                 "epub"
                 "\\)"))
 
-  (setq dired-preview-display-action-alist
-        '((display-buffer-in-side-window display-buffer-below-selected display-buffer-no-window)
-          (side . right)
-          (window-width . 0.2)
-          (preserve-size . (t . t))
-          (window-parameters . ((mode-line-format . none)
-                                (header-line-format . none)))))
-
-  ;; (setq dired-preview-display-action-alist
-  ;;       #'dired-preview-display-action-alist-below)
-  )
+  (setq dired-preview-display-action-alist #'dired-preview-display-action-alist-below))
 
 (use-package ready-player
   :ensure t
