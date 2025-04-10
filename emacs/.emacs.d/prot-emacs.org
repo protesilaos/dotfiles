@@ -1721,7 +1721,11 @@ are called. The pulse effect is added there (~pulsar-after-function-hook~).
           pulsar-iterations 10
           pulsar-face 'pulsar-green
           pulsar-highlight-face 'pulsar-magenta)
+  ;; Pulse after `pulsar-pulse-region-functions'.
+  (setq pulsar-pulse-region-functions pulsar-pulse-region-common-functions)
 
+  ;; Pulse after `pulsar-pulse-functions'.  The default value of that
+  ;; user option is comprehensive.
   (pulsar-global-mode 1)
   :hook
   ;; There are convenience functions/commands which pulse the line using
