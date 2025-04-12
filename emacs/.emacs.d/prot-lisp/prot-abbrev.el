@@ -75,5 +75,39 @@ Use completion among previous entries, retrieving their data from
   "Insert message to update NAME.html page, by prompting for NAME."
   (insert (format "Update %s.html" (prot-abbrev-update-html-prompt))))
 
+(defvar prot-abbrev-org-macro-key-history nil
+  "Minibuffer history for `prot-abbrev-org-macro-key-prompt'.")
+
+(defun prot-abbrev-org-macro-key-prompt ()
+  "Minibuffer prompt for `prot-abbrev-org-macro-key'.
+Use completion among previous entries, retrieving their data from
+`prot-abbrev-org-macro-key-history'."
+  (completing-read
+   "Key binding: "
+   prot-abbrev-org-macro-key-history
+   nil nil nil 'prot-abbrev-org-macro-key-history))
+
+(defvar prot-abbrev-org-macro-key-symbol-history nil
+  "Minibuffer history for `prot-abbrev-org-macro-key-symbol-prompt'.")
+
+(defun prot-abbrev-org-macro-key-symbol-prompt ()
+  "Minibuffer prompt for `prot-abbrev-org-macro-key'.
+Use completion among previous entries, retrieving their data from
+`prot-abbrev-org-macro-key-symbol-history'."
+  (completing-read
+   "Command name: "
+   prot-abbrev-org-macro-key-symbol-history
+   nil nil nil 'prot-abbrev-org-macro-key-symbol-history))
+
+(defun prot-abbrev-org-macro-key-command ()
+  "Insert {{{kbd(KEY)}}} (~SYMBOL~) by prompting for KEY and SYMBOL."
+  (insert (format "{{{kbd(%s)}}} (~%s~)"
+                  (prot-abbrev-org-macro-key-prompt)
+                  (prot-abbrev-org-macro-key-symbol-prompt))))
+
+(defun prot-abbrev-org-macro-key ()
+  "Insert {{{kbd(KEY)}}} by prompting for KEY."
+  (insert (format "{{{kbd(%s)}}}" (prot-abbrev-org-macro-key-prompt))))
+
 (provide 'prot-abbrev)
 ;;; prot-abbrev.el ends here

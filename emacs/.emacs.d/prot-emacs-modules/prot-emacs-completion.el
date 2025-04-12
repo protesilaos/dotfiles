@@ -257,7 +257,9 @@
 
   (with-eval-after-load 'org
     (prot-emacs-abbrev org-mode-abbrev-table
-      ";dev" "{{{development-version}}}")
+      ";dev" "{{{development-version}}}"
+      ";key" #'prot-abbrev-org-macro-key
+      ";cmd" #'prot-abbrev-org-macro-key-command)
     (abbrev-table-put org-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)"))
 
   (with-eval-after-load 'message
