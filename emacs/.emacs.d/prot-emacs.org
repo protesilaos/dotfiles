@@ -1716,22 +1716,23 @@ are called. The pulse effect is added there (~pulsar-after-function-hook~).
 (use-package pulsar
   :ensure t
   :config
-  (setopt pulsar-pulse t
-          pulsar-delay 0.055
-          pulsar-iterations 10
-          pulsar-face 'pulsar-green
-          pulsar-highlight-face 'pulsar-magenta)
+  (setq pulsar-pulse t
+        pulsar-delay 0.055
+        pulsar-iterations 5
+        pulsar-face 'pulsar-green
+        pulsar-region-face 'pulsar-cyan
+        pulsar-highlight-face 'pulsar-magenta)
   ;; Pulse after `pulsar-pulse-region-functions'.
   (setq pulsar-pulse-region-functions pulsar-pulse-region-common-functions)
-
-  ;; Pulse after `pulsar-pulse-functions'.  The default value of that
-  ;; user option is comprehensive.
-  (pulsar-global-mode 1)
   :hook
   ;; There are convenience functions/commands which pulse the line using
   ;; a specific colour: `pulsar-pulse-line-red' is one of them.
   ((next-error . (pulsar-pulse-line-red pulsar-recenter-top pulsar-reveal-entry))
-   (minibuffer-setup . pulsar-pulse-line-red))
+   (minibuffer-setup . pulsar-pulse-line-red)
+   ;; Pulse right after the use of `pulsar-pulse-functions' and
+   ;; `pulsar-pulse-region-functions'.  The default value of the
+   ;; former user option is comprehensive.
+   (after-init . pulsar-global-mode))
   :bind
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
