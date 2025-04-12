@@ -12977,11 +12977,12 @@ than `split-width-threshold'."
 
 (defun prot-modeline--vc-get-face (key)
   "Get face from KEY in `prot-modeline--vc-faces'."
-  (alist-get key prot-modeline--vc-faces 'up-to-date))
+  (alist-get key prot-modeline--vc-faces 'vc-up-to-date-state))
 
 (defun prot-modeline--vc-face (file backend)
   "Return VC state face for FILE with BACKEND."
-  (prot-modeline--vc-get-face (vc-state file backend)))
+  (when-let* ((key (vc-state file backend)))
+    (prot-modeline--vc-get-face key)))
 
 (defvar-local prot-modeline-vc-branch
     '(:eval
