@@ -47,8 +47,7 @@
   "Personal extensions for Elfeed."
   :group 'elfeed)
 
-(defcustom prot-elfeed-feeds-file
-  (thread-last user-emacs-directory (expand-file-name "feeds.el.gpg"))
+(defcustom prot-elfeed-feeds-file (expand-file-name "~/feeds.el.gpg")
   "Path to file with `elfeed-feeds'."
   :type 'string
   :group 'prot-elfeed)
