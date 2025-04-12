@@ -132,6 +132,9 @@
   ;;                         (dired-preview-mode 1))))
   :defer 1
   :hook (after-init . dired-preview-global-mode)
+  :bind
+  ( :map dired-mode-map
+    ("V" . dired-preview-mode))
   :config
   (setq dired-preview-max-size (* (expt 2 20) 10))
   (setq dired-preview-delay 0.5)
