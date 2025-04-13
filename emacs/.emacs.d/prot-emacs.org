@@ -7091,6 +7091,11 @@ integrates with it. We witness this when we are setting timestamps,
 such as while setting a =SCHEDULED= or =DEADLINE= entry for a given
 heading. All I do here is set some stylistic preferences.
 
+My ~denote-journal~ package also integrates with the ~calendar~ to (i)
+show days that have a journal entry and (ii) provide commands to
+create a journal entry for the given date or visit an existing one
+([[#h:5812a834-f294-4714-85a5-f8466ececaa8][The =prot-emacs-langs.el= extension for Denote Journal extras (~denote-journal~)]]).
+
 Note that Emacs also has a ~diary~ command. I used it for a while, but
 Org is far more capable, so I switched to it completely.
 
@@ -8994,7 +8999,10 @@ This is another one of my packages. The ~denote-journal~ package makes
 it easier to use Denote for journaling. While it is possible to use
 the generic ~denote~ command (and related) to maintain a journal, this
 package defines extra functionality to streamline the journaling
-workflow.
+workflow. It also integrates with the built-in ~calendar~, to (i)
+highlight days that have a journal entry and (ii) provide commands
+that can be used from inside the ~calendar~ buffer to either visit a
+journal entry for the current date or create a new entry ([[#h:94d48381-1711-4d6b-8449-918bc1e3836c][The =prot-emacs-org.el= section on the ~calendar~]]).
 
 + Package name (GNU ELPA): ~denote-journal~
 + Official manual: <https://protesilaos.com/emacs/denote-journal>
