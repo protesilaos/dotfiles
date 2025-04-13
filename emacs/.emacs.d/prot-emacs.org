@@ -6906,18 +6906,18 @@ Control framework and its accoutrements (`diff-mode.el`,
         agitate-log-edit-informative-show-files nil))
 #+end_src
 
-*** The =prot-emacs-git.el= section about ~magit~ (great Git client)
+*** The =prot-emacs-git.el= section about ~magit~ (great Git interface)
 :PROPERTIES:
 :CUSTOM_ID: h:b08af527-9ebf-4425-ac3a-24b4f371a4fd
 :END:
 
 The ~magit~ package, maintained by Jonas Bernoulli, is the best
-front-end to ~git~ I have ever used. Not only is it excellent at
+interface to ~git~ I have ever used. Not only is it excellent at
 getting the job done, it also helps you learn more about what ~git~
 has to offer.
 
-At the core of its interface is ~transient~. This is a library that
-was originally developed as Magit-specific code that was then
+At the core of its interaction model is ~transient~. This is a library
+that was originally developed as Magit-specific code that was then
 abstracted away and ultimately incorporated into Emacs version 29.
 With ~transient~, we get a window pop up with keys and commands
 corresponding to them. The window is interactive, as the user can set
