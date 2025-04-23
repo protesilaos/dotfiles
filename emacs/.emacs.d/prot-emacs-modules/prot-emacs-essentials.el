@@ -116,7 +116,8 @@
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
 
     :map global-map
-    ("ESC ESC" . prot-simple-keyboard-quit-dwim)
+    ("ESC" . prot-simple-keyboard-quit-dwim)
+    ("<escape>" . prot-simple-keyboard-quit-dwim)
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
     ("C-," . prot-simple-mark-sexp)   ; I also have `isearch-forward-symbol-at-point' on C-.
