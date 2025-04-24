@@ -7937,7 +7937,7 @@ from it and thus keeps me focused.
 
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
-  (setq org-agenda-files `(,org-directory))
+  (setq org-agenda-files (list org-directory))
   (setq org-agenda-span 'week)
   (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
