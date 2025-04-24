@@ -6144,12 +6144,14 @@ to a certain height.
                     (derived-mode . messages-buffer-mode)
                     (derived-mode . backtrace-mode)))
              (display-buffer-reuse-mode-window display-buffer-at-bottom)
+             (mode . ( flymake-diagnostics-buffer-mode flymake-project-diagnostics-mode
+                       messages-buffer-mode backtrace-mode))
              (window-height . 0.3)
              (dedicated . t)
              (preserve-size . (t . t))
              (body-function . select-window))
             ("\\*Embark Actions\\*"
-             (display-buffer-reuse-mode-window display-buffer-below-selected)
+             (display-buffer-below-selected)
              (window-height . fit-window-to-buffer)
              (window-parameters . ((no-other-window . t)
                                    (mode-line-format . none))))
@@ -6169,14 +6171,16 @@ to a certain height.
                     (derived-mode . log-view-mode)
                     (derived-mode . help-mode) ; See the hooks for `visual-line-mode'
                     "\\*\\(|Buffer List\\|Occur\\|vc-change-log\\|eldoc.*\\).*"
-                    "\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-                    prot-window-shell-or-term-p
-                    ;; ,world-clock-buffer-name
-                    ))
+                    "\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"))
              (prot-window-display-buffer-below-or-pop)
+             (body-function . prot-window-select-fit-size))
+            (prot-window-shell-or-term-p
+             (display-buffer-reuse-mode-window display-buffer-at-bottom)
+             (mode . (shell-mode eshell-mode comint-mode))
              (body-function . prot-window-select-fit-size))
             ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\).*"
              (display-buffer-reuse-mode-window display-buffer-below-selected)
+             (mode . (calendar-mode bookmark-edit-annotation-mode ert-results-mode))
              (dedicated . t)
              (window-height . fit-window-to-buffer))
             ;; NOTE 2022-09-10: The following is for `ispell-word', though
@@ -6184,7 +6188,7 @@ to a certain height.
             ;; with `prot-spell-ispell-display-buffer' and change the
             ;; value of `ispell-choices-buffer'.
             ("\\*ispell-top-choices\\*.*"
-             (display-buffer-reuse-mode-window display-buffer-below-selected)
+             (display-buffer-below-selected)
              (window-height . fit-window-to-buffer))
             ;; same window
 
