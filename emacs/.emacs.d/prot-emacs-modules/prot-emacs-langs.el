@@ -292,7 +292,22 @@
   ;; instead of their long file name they have a literal "[D]"
   ;; followed by the file's title.  Read the doc string of
   ;; `denote-rename-buffer-format' for how to modify this.
-  (denote-rename-buffer-mode 1))
+  (denote-rename-buffer-mode 1)
+
+  ;; EXPERIMENT 2025-04-25: This is not the default order, though
+  ;; Denote supports any order for its file name components.
+  (setq denote-file-name-components-order '(identifier signature keywords title))
+
+  (defun prot/denote-rename-all-to-reorder-components ()
+    "Call `denote-dired-rename-files' without any prompts.
+In other words, preserve the value of each Denote file name component.
+
+Use this command if you want to modify the user option
+`denote-file-name-components-order' and then want your files to
+retroactively follow that order."
+    (interactive)
+    (let ((denote-prompts nil))
+      (call-interactively 'denote-dired-rename-files))))
 
 ;;;; Integrate Consult with Denote
 
