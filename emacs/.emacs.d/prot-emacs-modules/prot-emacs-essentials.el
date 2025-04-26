@@ -462,14 +462,8 @@ word.  Fall back to regular `expreg-expand'."
   :ensure t
   :bind
   (("C-c t t" . tmr)
-   ("C-c t T" . tmr-with-description)
-   ("C-c t l" . tmr-tabulated-view) ; "list timers" mnemonic
-   ("C-c t c" . tmr-clone)
-   ("C-c t k" . tmr-cancel)
-   ("C-c t s" . tmr-reschedule)
-   ("C-c t e" . tmr-edit-description)
-   ("C-c t r" . tmr-remove)
-   ("C-c t R" . tmr-remove-finished))
+   ("C-c t T" . tmr-with-details)
+   ("C-c t l" . tmr-list-timers))
   :config
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
         tmr-notification-urgency 'normal

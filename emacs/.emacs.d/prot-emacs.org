@@ -3305,7 +3305,7 @@ to be cycling through the edits."
 This is a package that I wrote and for which I received substantial
 code contributions from Damien Cassou and Daniel Mendler. With ~tmr~
 we set timers using a convenient notation. The point of entry is the
-~tmr~ command (or ~tmr-with-description~ if you want to describe what
+~tmr~ command (or ~tmr-with-details~ if you want to describe what
 the timer is about).
 
 Set  a timer by specifying one of these:
@@ -3336,14 +3336,8 @@ to learn about all the available commands and their respective key bindings.
   :ensure t
   :bind
   (("C-c t t" . tmr)
-   ("C-c t T" . tmr-with-description)
-   ("C-c t l" . tmr-tabulated-view) ; "list timers" mnemonic
-   ("C-c t c" . tmr-clone)
-   ("C-c t k" . tmr-cancel)
-   ("C-c t s" . tmr-reschedule)
-   ("C-c t e" . tmr-edit-description)
-   ("C-c t r" . tmr-remove)
-   ("C-c t R" . tmr-remove-finished))
+   ("C-c t T" . tmr-with-details)
+   ("C-c t l" . tmr-list-timers))
   :config
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
         tmr-notification-urgency 'normal
