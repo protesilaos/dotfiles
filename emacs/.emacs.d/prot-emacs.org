@@ -17454,7 +17454,7 @@ Also see `prot-window-delete-popup-frame'." command)
 :CUSTOM_ID: h:74c3a9e1-6852-4307-b7ba-925d8d2f61ff
 :END:
 
-[ This question is in relation to the [[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][the anatomy of my Emacs configuration]]. ]
+[ This question is in relation to [[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][the anatomy of my Emacs configuration]]. ]
 
 I prefer to keep things separate by splitting them into modules and
 custom libraries. Smaller files are easier to work with, including
