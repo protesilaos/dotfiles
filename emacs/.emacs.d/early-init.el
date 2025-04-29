@@ -64,7 +64,7 @@ Simplified version of `add-to-list'."
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (setq gc-cons-threshold (* 1000 1000 8)
+            (setq gc-cons-threshold (* 100 100 8)
                   gc-cons-percentage 0.1
                   file-name-handler-alist prot-emacs--file-name-handler-alist
                   vc-handled-backends prot-emacs--vc-handled-backends)))
