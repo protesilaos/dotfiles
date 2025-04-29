@@ -11,7 +11,7 @@
   :config
   (setq ef-themes-variable-pitch-ui t
         ef-themes-mixed-fonts t
-        ef-themes-rotate ef-themes-items
+        ef-themes-to-rotate ef-themes-items
         ef-themes-headings ; read the manual's entry of the doc string
         '((0 . (variable-pitch light 1.9))
           (1 . (variable-pitch light 1.8))
