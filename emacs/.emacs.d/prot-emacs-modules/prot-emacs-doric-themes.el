@@ -9,13 +9,6 @@
   (setq doric-themes-to-toggle '(doric-light doric-dark))
   (setq doric-themes-to-rotate doric-themes-collection)
 
-  (with-eval-after-load 'lin
-    (setq lin-face 'hl-line)
-    (lin-global-mode -1)
-    (global-hl-line-mode 1))
-
-  (global-display-line-numbers-mode 1)
-
   (doric-themes-load-random
    (if (prot-emacs-theme-environment-dark-p)
        'dark
