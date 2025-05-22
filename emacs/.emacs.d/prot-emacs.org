@@ -4174,24 +4174,45 @@ completion (such as the ~corfu~ package).
 (use-package minibuffer
   :ensure nil
   :demand t
+  :hook (minibuffer-setup . prot-common-truncate-lines-silently)
   :config
-  (setq completions-format 'one-column)
-  (setq completion-show-help nil)
+  (setq completion-auto-deselect nil)
   (setq completion-auto-help 'always)
-  (setq completion-auto-select nil)
-  (setq completions-detailed t)
+  (setq completion-auto-select 'second-tab)
+  (setq completion-show-help nil)
   (setq completion-show-inline-help nil)
-  (setq completions-max-height 6)
-  (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
+  (setq completions-detailed t)
+  (setq completions-format 'one-column)
+  (setq completions-header-format "")
+  ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
   (setq completions-highlight-face 'completions-highlight)
-  (setq minibuffer-completion-auto-choose t)
-  (setq minibuffer-visible-completions t) ; Emacs 30
+  (setq completions-max-height 10)
   (setq completions-sort 'historical)
+  ;; This one is for Emacs 31.  It relies on what I am doing with the `completion-category-overrides'.
+  (setq completion-eager-display 'auto)
+
+  (setq minibuffer-completion-auto-choose t)
+  (setq minibuffer-visible-completions nil) ; Emacs 30
 
   (unless prot-emacs-completion-ui
     (prot-emacs-keybind minibuffer-local-completion-map
       "<up>" #'minibuffer-previous-line-completion
       "<down>" #'minibuffer-next-line-completion)
+
+    (prot-emacs-keybind completion-in-region-mode-map
+      "<up>" #'minibuffer-previous-completion
+      "<down>" #'minibuffer-next-completion
+      "RET" #'minibuffer-choose-completion)
+
+    (defun prot/completions-tweak-style ()
+      "Tweak the style of the Completions buffer."
+      (setq-local mode-line-format nil)
+      (setq-local cursor-in-non-selected-windows nil)
+      (when (and completions-header-format
+                 (not (string-blank-p completions-header-format)))
+        (setq-local display-line-numbers-offset -1)))
+
+    (add-hook 'completion-list-mode-hook #'prot/completions-tweak-style)
 
     (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently)))
 #+end_src
