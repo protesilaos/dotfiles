@@ -25,3 +25,5 @@
   (("<f5>" . doric-themes-toggle)
    ("C-<f5>" . doric-themes-select)
    ("M-<f5>" . doric-themes-rotate)))
+
+(provide 'prot-emacs-doric-themes)
