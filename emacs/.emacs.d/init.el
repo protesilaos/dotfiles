@@ -10,9 +10,9 @@ directory as the init.el."
 
 (defcustom prot-emacs-load-theme-family 'modus
   "Set of themes to load.
-Valid values are the symbols `ef', `modus', and `standard', which
-reference the `ef-themes', `modus-themes', and `standard-themes',
-respectively.
+Valid values are the symbols `doric', `ef', `modus', and `standard',
+which reference the `doric-themes', `ef-themes', `modus-themes', and
+`standard-themes', respectively.
 
 A nil value does not load any of the above (use Emacs without a
 theme).
@@ -22,6 +22,7 @@ file.  If that file exists in the Emacs directory, it is loaded
 before all other modules of my setup."
   :group 'prot-emacs
   :type '(choice :tag "Set of themes to load" :value modus
+                 (const :tag "The `doric-themes' module" doric)
                  (const :tag "The `ef-themes' module" ef)
                  (const :tag "The `modus-themes' module" modus)
                  (const :tag "The `standard-themes' module" standard)
@@ -152,6 +153,7 @@ before all other modules of my setup."
     denote-silo
     denote-sequence
     dired-preview
+    doric-themes
     ef-themes
     fontaine
     lin

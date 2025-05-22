@@ -1,6 +1,6 @@
 ;; This is deprecated code as I stopped using Gnus a long time ago.  I
 ;; keep it here for when I need to test it for my themes (`ef-themes',
-;; `modus-themes', `standard-themes').
+;; `modus-themes', `standard-themes', `doric-themes').
 
 
 (use-package gnus
