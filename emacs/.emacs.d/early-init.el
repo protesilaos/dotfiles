@@ -11,19 +11,6 @@ constitutes a matching tiling window manager."
                ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
      ,@body))
 
-(defun prot-emacs-add-to-list (list element)
-  "Add to symbol of LIST the given ELEMENT.
-Simplified version of `add-to-list'."
-  (set list (cons element (symbol-value list))))
-
-(prot-emacs-with-desktop-session
-  (mapc
-   (lambda (var)
-     (prot-emacs-add-to-list var '(width . (text-pixels . 800)))
-     (prot-emacs-add-to-list var '(height . (text-pixels . 900)))
-     (prot-emacs-add-to-list var '(scroll-bar-width  . 10)))
-   '(default-frame-alist initial-frame-alist)))
-
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize 'force
       frame-title-format '("%b")
@@ -37,13 +24,26 @@ Simplified version of `add-to-list'."
       inhibit-startup-echo-area-message user-login-name ; read the docstring
       inhibit-startup-buffer-menu t)
 
-;; I do not use those graphical elements by default, but I do enable
-;; them from time-to-time for testing purposes or to demonstrate
-;; something.  NEVER tell a beginner to disable any of these.  They
-;; are helpful.
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
+(dolist (variable '(initial-frame-alist default-frame-alist))
+  (set variable `((width . (text-pixels . 1200))
+                  (height . (text-pixels . 900))
+                  (horizontal-scroll-bars . nil)
+                  (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
+                  (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                  ,@(if x-toolkit-scroll-bars
+                        (list
+                         '(vertical-scroll-bars . nil)
+                         '(scroll-bar-width . 12))
+                      (list
+                       '(vertical-scroll-bars . right)
+                       '(scroll-bar-width . 6))))))
+
+(defun prot-emacs-no-minibuffer-scroll-bar (frame)
+  "Remove the minibuffer scroll bars from FRAME."
+  (when scroll-bar-mode
+    (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent)))
+
+(add-hook 'after-make-frame-functions #'prot-emacs-no-minibuffer-scroll-bar)
 
 ;; Temporarily increase the garbage collection threshold.  These
 ;; changes help shave off about half a second of startup time.  The

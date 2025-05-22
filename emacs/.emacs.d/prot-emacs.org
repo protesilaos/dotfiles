@@ -269,38 +269,6 @@ constitutes a matching tiling window manager."
      ,@body))
 #+end_src
 
-** The =early-init.el= code to set frame parameters
-:PROPERTIES:
-:CUSTOM_ID: h:0403b581-142b-4613-bc81-51c5dccd831d
-:END:
-
-Here I am setting parameters for the size of the Emacs frame: the
-first as well as any future one. In a tiling window manager, these
-parameters are not relevant, since all windows are forcibly made to
-fit into rectangles (tiles) that fill up the entire screen. So I use
-the ~prot-emacs-with-desktop-session~ macro that I described above to
-set these parameters only when I am in a regular desktop environment
-([[#h:1e1b1503-0952-43f9-8bfe-4252fe874cd1][The early-init.el macro to run code only in a Desktop Environment]]).
-
-The ~initial-frame-alist~ is about the first frame that is produced
-when starting Emacs. The ~default-frame-alist~ is for all frames after
-that.
-
-#+begin_src emacs-lisp :tangle "early-init.el"
-(defun prot-emacs-add-to-list (list element)
-  "Add to symbol of LIST the given ELEMENT.
-Simplified version of `add-to-list'."
-  (set list (cons element (symbol-value list))))
-
-(prot-emacs-with-desktop-session
-  (mapc
-   (lambda (var)
-     (prot-emacs-add-to-list var '(width . (text-pixels . 800)))
-     (prot-emacs-add-to-list var '(height . (text-pixels . 900)))
-     (prot-emacs-add-to-list var '(scroll-bar-width  . 10)))
-   '(default-frame-alist initial-frame-alist)))
-#+end_src
-
 ** The =early-init.el= basic frame settings
 :PROPERTIES:
 :CUSTOM_ID: h:a1288a07-93f6-4e14-894e-707d5ad8b6dc
@@ -325,14 +293,63 @@ I never want.
       inhibit-x-resources t
       inhibit-startup-echo-area-message user-login-name ; read the docstring
       inhibit-startup-buffer-menu t)
+#+end_src
 
-;; I do not use those graphical elements by default, but I do enable
-;; them from time-to-time for testing purposes or to demonstrate
-;; something.  NEVER tell a beginner to disable any of these.  They
-;; are helpful.
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
+** The =early-init.el= code to set frame parameters
+:PROPERTIES:
+:CUSTOM_ID: h:0403b581-142b-4613-bc81-51c5dccd831d
+:END:
+
+Here I am setting parameters for the size of the Emacs frame: the
+first as well as any future one. In a tiling window manager, the width
+and height parameters are not important, since all windows are
+forcibly made to fit into rectangles (tiles). Though the other
+parameters are still relevant.
+
+The ~initial-frame-alist~ is about the first frame that is produced
+when starting Emacs. This is why it has to be defined in the
+=early-init.el= file: the code here runs before the first frame is
+drawn. The ~default-frame-alist~ is for all subsequent frames. We
+could, in principle, define it outside the =early-init.el=, though it
+makes sense to have it here.
+
+I choose to run Emacs without a menu bar and tool bar. Those are
+especially useful for new users, though I have no need for them. They
+take up valuable screen real estate and distact me.
+
+I feel the same way about scroll bars, but only when those are managed
+by a graphical toolkit. This is about how we build Emacs ([[#h:64c1c9f5-1218-4ff3-8e35-41e56c74f038][Details of
+my Emacs build]]). The default is to rely on the GTK toolkit, whose
+style usually does not match whatever theme I am using in Emacs. This
+is not the case when I build Emacs without a toolkit, which is my
+preferred configuration. Without a toolkit, scroll bars are drawn
+directly by Eamcs and we may thus change their colour and adjust their
+width.
+
+When I am enabling scroll bars, I want them to not show up in the
+minibuffer, hence the function ~prot-emacs-no-minibuffer-scroll-bar~.
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+(dolist (variable '(initial-frame-alist default-frame-alist))
+  (set variable `((width . (text-pixels . 1200))
+                  (height . (text-pixels . 900))
+                  (horizontal-scroll-bars . nil)
+                  (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
+                  (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                  ,@(if x-toolkit-scroll-bars
+                        (list
+                         '(vertical-scroll-bars . nil)
+                         '(scroll-bar-width . 12))
+                      (list
+                       '(vertical-scroll-bars . right)
+                       '(scroll-bar-width . 6))))))
+
+(defun prot-emacs-no-minibuffer-scroll-bar (frame)
+  "Remove the minibuffer scroll bars from FRAME."
+  (when scroll-bar-mode
+    (set-window-scroll-bars (minibuffer-window frame) nil nil nil nil :persistent)))
+
+(add-hook 'after-make-frame-functions #'prot-emacs-no-minibuffer-scroll-bar)
 #+end_src
 
 ** The =early-init.el= tweaks to startup time and garbage collection
@@ -1829,12 +1846,12 @@ I also take care to make it work with my customised mode line
   :init
   ;; These are the defaults, but I keep it here for visiibility.
   (setq spacious-padding-widths
-        '( :internal-border-width 30
+        `( :internal-border-width 30
            :header-line-width 4
            :mode-line-width 6
            :tab-width 4
            :right-divider-width 30
-           :scroll-bar-width 8
+           :scroll-bar-width ,(if x-toolkit-scroll-bars 8 6)
            :left-fringe-width 20
            :right-fringe-width 20))
 
