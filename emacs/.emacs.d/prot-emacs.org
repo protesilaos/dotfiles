@@ -6492,7 +6492,7 @@ the placement of a window in the given direction.
   (setq windmove-create-window nil)) ; Emacs 27.1
 #+end_src
 
-*** The =prot-emacs-window.el= use of contextual header line (~breadcrumb~)
+*** COMMENT The =prot-emacs-window.el= use of contextual header line (~breadcrumb~)
 :PROPERTIES:
 :CUSTOM_ID: h:29ced61b-4b5a-4f63-af00-fe311468d1cd
 :END:
@@ -6520,6 +6520,41 @@ leads to the current heading. Same idea for programming modes. Neat!
     "Enable `breadcrumb-local-mode' if the buffer is visiting a file."
     (when buffer-file-name
       (breadcrumb-local-mode 1))))
+#+end_src
+
+*** Show the name of the current function or heading (~which-function-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:03696edd-8637-4eb6-bfeb-23e828569523
+:END:
+
+The built-in ~which-key-mode~ displays the name of the current
+function/variable defition or heading. It makes it easier to figure
+out where you are in the file you are editing. This is especially
+useful when combined with search-driven navigation: you just land on a
+certain line and need to have a sense of the context.
+
+By the default, the information is displayed on the mode line, though
+this can be controlled by the user option ~which-func-display~. I
+prefer to keep it to the mode line, though it is possible to place it
+on the header line or both it and the mode line.
+
+The ~which-func-format~ controls what the indicator looks like. This
+is a bit more advanced in terms of the data structure it uses. All I
+did what to take the original value and make some minor tweaks to it.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
+;;; Show the name of the current definition or heading for context (which-function-mode)
+(use-package which-func
+  :ensure nil
+  :hook (after-init . which-function-mode)
+  :config
+  (setq which-func-modes '(prog-mode org-mode))
+  (setq which-func-display 'mode) ; Emacs 30
+  (setq which-func-unknown "")
+  (setq which-func-format
+        '((:propertize which-func-current
+		               face italic
+		               mouse-face mode-line-highlight))))
 #+end_src
 
 *** The =prot-emacs-window.el= ~provide~ form

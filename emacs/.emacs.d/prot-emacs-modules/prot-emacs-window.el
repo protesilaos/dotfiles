@@ -241,20 +241,17 @@
   :config
   (setq windmove-create-window nil)) ; Emacs 27.1
 
-;;; Header line context of symbol/heading (breadcrumb.el)
-(use-package breadcrumb
-  :ensure t
-  :functions (prot/breadcrumb-local-mode)
-  :hook ((text-mode prog-mode) . prot/breadcrumb-local-mode)
+;;; Show the name of the current definition or heading for context (which-function-mode)
+(use-package which-func
+  :ensure nil
+  :hook (after-init . which-function-mode)
   :config
-  (setq breadcrumb-project-max-length 0.5)
-  (setq breadcrumb-project-crumb-separator "/")
-  (setq breadcrumb-imenu-max-length 1.0)
-  (setq breadcrumb-imenu-crumb-separator " > ")
-
-  (defun prot/breadcrumb-local-mode ()
-    "Enable `breadcrumb-local-mode' if the buffer is visiting a file."
-    (when buffer-file-name
-      (breadcrumb-local-mode 1))))
+  (setq which-func-modes '(prog-mode org-mode))
+  (setq which-func-display 'mode) ; Emacs 30
+  (setq which-func-unknown "")
+  (setq which-func-format
+        '((:propertize which-func-current
+		               face italic
+		               mouse-face mode-line-highlight))))
 
 (provide 'prot-emacs-window)
