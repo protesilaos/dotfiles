@@ -3966,6 +3966,7 @@ Still, they do have their uses.
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
   (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
+  (setq orderless-smart-case nil)
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
@@ -4086,15 +4087,15 @@ experience.
   helpful for demonstration purposes but also to double check that I
   did not mistype something (I cannot touch-type, so this happens a lot).
 
-- The ~minibuffer-prompt-properties~ and advice to ~completing-read-multiple~
-  make it so that (i) the minibuffer prompt is not accessible with
-  regular motions to avoid mistakes and (ii) prompts that complete
-  multiple targets show an indicator about this fact. With regard to
-  the latter in particular, we have prompts like that of Org to set
-  tags for a heading (with =C-c C-q= else =M-x org-set-tags-command=)
-  where more than one candidate can be provided using completion,
-  provided each candidate is separated by the ~crm-separator~ (a comma
-  by default, though Org uses =:= in that scenario).
+- The ~minibuffer-prompt-properties~ and ~crm-prompt~ make it so that
+  (i) the minibuffer prompt is not accessible with regular motions to
+  avoid mistakes and (ii) prompts that complete multiple targets show
+  an indicator about this fact. With regard to the latter in
+  particular, we have prompts like that of Org to set tags for a
+  heading (with =C-c C-q= else =M-x org-set-tags-command=) where more
+  than one candidate can be provided using completion, provided each
+  candidate is separated by the ~crm-separator~ (a comma by default,
+  though Org uses =:= in that scenario).
 
   Remember that when using completion in the minibuffer, you can hit
   =TAB= to expand the selected choice without exiting with it. For
@@ -4133,25 +4134,7 @@ experience.
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
 
-  ;; MCT has a variant of this built-in.
-  (unless (eq prot-emacs-completion-ui 'mct)
-    ;; Add prompt indicator to `completing-read-multiple'.  We display
-    ;; [`completing-read-multiple': <separator>], e.g.,
-    ;; [`completing-read-multiple': ,] if the separator is a comma.  This
-    ;; is adapted from the README of the `vertico' package by Daniel
-    ;; Mendler.  I made some small tweaks to propertize the segments of
-    ;; the prompt.
-    (defun crm-indicator (args)
-      (cons (format "[`completing-read-multiple': %s]  %s"
-                    (propertize
-                     (replace-regexp-in-string
-                      "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                      crm-separator)
-                     'face 'error)
-                    (car args))
-            (cdr args)))
-
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
+  (setq crm-prompt (format "%s %%p" (propertize "[%d]" 'face 'shadow))) ; Emacs 31
 
   (file-name-shadow-mode 1))
 #+end_src
