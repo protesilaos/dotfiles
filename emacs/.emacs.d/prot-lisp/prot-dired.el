@@ -117,50 +117,39 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   (dired-do-kill-lines)
   (add-to-history 'prot-dired--limit-hist regexp))
 
-(defvar prot-dired--find-grep-hist '()
-  "Minibuffer history for `prot-dired-grep-marked-files'.")
+(defvar prot-dired-grep-marked-files-history nil
+  "Minibuffer history for `prot-dired-grep-marked-files-prompt'.")
+
+(defun prot-dired-grep-marked-files-prompt ()
+  "Prompt for string to search for with `prot-dired-grep-marked-files'."
+  (read-string
+   "grep for PATTERN in marked files: "
+   nil 'prot-dired-grep-marked-files-history))
 
 ;; Also see `prot-search-grep' from prot-search.el.
 ;;;###autoload
-(defun prot-dired-grep-marked-files (regexp &optional arg)
-  "Run `find' with `grep' for REGEXP on marked files.
-When no files are marked or when just a single one is marked,
-search the entire directory instead.
-
-With optional prefix ARG target a single marked file.
-
-We assume that there is no point in marking a single file and
-running find+grep on its contents.  Visit it and call `occur' or
-run grep directly on it without the whole find part."
+(defun prot-dired-grep-marked-files (files regexp)
+  "Run `find' with `grep' for REGEXP on marked FILES."
   (interactive
-   (list
-    (read-string "grep for PATTERN (marked files OR current directory): " nil 'prot-dired--find-grep-hist)
-    current-prefix-arg)
+   (if-let* ((marks (dired-get-marked-files 'no-dir))
+             (_ (> (length marks) 1)))
+       (list
+        marks
+        (prot-dired-grep-marked-files-prompt))
+     (user-error "Mark multiple files"))
    dired-mode)
-  (when-let* ((marks (dired-get-marked-files 'no-dir))
-              (files (mapconcat #'identity marks " "))
-              (args (if (or arg (length> marks 1))
-                        ;; Thanks to Sean Whitton for pointing out an
-                        ;; earlier superfluity of mine: we do not need
-                        ;; to call grep through find when we already
-                        ;; know the files we want to search in.  Check
-                        ;; Sean's dotfiles:
-                        ;; <https://git.spwhitton.name/dotfiles>.
-                        ;;
-                        ;; Any other errors or omissions are my own.
-                        (format "grep -nH --color=auto %s %s" (shell-quote-argument regexp) files)
-                      (concat
-                       "find . -not " (shell-quote-argument "(")
-                       " -wholename " (shell-quote-argument "*/.git*")
-                       " -prune " (shell-quote-argument ")")
-                       " -type f"
-                       " -exec grep -nHE --color=auto " regexp " "
-                       (shell-quote-argument "{}")
-                       " " (shell-quote-argument ";") " "))))
+  (let ((buffer-name (format "*prot-dired-grep-marked for `%s'*" regexp)))
     (compilation-start
-     args
+     (concat
+      "find . -not " (shell-quote-argument "(")
+      " -wholename " (shell-quote-argument "*/.git*")
+      " -prune " (shell-quote-argument ")")
+      " -type f"
+      " -exec grep -nHER --color=auto " regexp " "
+      (shell-quote-argument "{}")
+      " " (shell-quote-argument ";") " ")
      'grep-mode
-     (lambda (mode) (format "*prot-dired-find-%s for '%s'" mode regexp))
+     (lambda (_mode) buffer-name)
      t)))
 
 ;;;; Subdir extras and Imenu setup
@@ -233,10 +222,10 @@ For more on such headings, read `dired-maybe-insert-subdir'."
 When items are marked, insert those which are subsirectories of
 the current directory.  Ignore regular files.
 
-If no marks are active and point is on a subdirectory line,
+If no files are active and point is on a subdirectory line,
 insert it directly.
 
-If no marks are active and point is not on a subdirectory line,
+If no files are active and point is not on a subdirectory line,
 prompt for a subdirectory using completion.
 
 With optional ARG as a single prefix (`\\[universal-argument]')
