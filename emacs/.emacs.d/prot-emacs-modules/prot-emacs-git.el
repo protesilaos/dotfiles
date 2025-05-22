@@ -208,7 +208,7 @@
     ("M-w" . nil))
   :init
   (setq magit-define-global-key-bindings nil)
-  (setq magit-section-visibility-indicator '("⮧"))
+  (setq magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv))
   :config
   (setq git-commit-summary-max-length 50)
   ;; NOTE 2023-01-24: I used to also include `overlong-summary-line'
