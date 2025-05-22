@@ -27,8 +27,10 @@
         '(face
           tabs
           spaces
+          newline
           tab-mark
           space-mark
+          newline-mark
           trailing
           missing-newline-at-eof
           space-after-tab::tab
