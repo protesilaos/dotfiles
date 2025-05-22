@@ -302,24 +302,25 @@ Development continues on GitHub with GitLab as a mirror."))
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 
 ;;; Corfu (in-buffer completion popup)
-(use-package corfu
-  :ensure t
-  :if (display-graphic-p)
-  :hook (after-init . global-corfu-mode)
-  ;; I also have (setq tab-always-indent 'complete) for TAB to complete
-  ;; when it does not need to perform an indentation change.
-  :bind (:map corfu-map ("<tab>" . corfu-complete))
-  :config
-  (setq corfu-preview-current nil)
-  (setq corfu-min-width 20)
+(when prot-emacs-completion-ui
+  (use-package corfu
+    :ensure t
+    :if (display-graphic-p)
+    :hook (after-init . global-corfu-mode)
+    ;; I also have (setq tab-always-indent 'complete) for TAB to complete
+    ;; when it does not need to perform an indentation change.
+    :bind (:map corfu-map ("<tab>" . corfu-complete))
+    :config
+    (setq corfu-preview-current nil)
+    (setq corfu-min-width 20)
 
-  (setq corfu-popupinfo-delay '(1.25 . 0.5))
-  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+    (setq corfu-popupinfo-delay '(1.25 . 0.5))
+    (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
-  ;; Sort by input history (no need to modify `corfu-sort-function').
-  (with-eval-after-load 'savehist
-    (corfu-history-mode 1)
-    (add-to-list 'savehist-additional-variables 'corfu-history)))
+    ;; Sort by input history (no need to modify `corfu-sort-function').
+    (with-eval-after-load 'savehist
+      (corfu-history-mode 1)
+      (add-to-list 'savehist-additional-variables 'corfu-history))))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (when prot-emacs-completion-extras
