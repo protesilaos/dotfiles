@@ -221,7 +221,6 @@
            :fixed-pitch-family "Aporetic Serif Mono"
            :variable-pitch-family "Aporetic Sans")
           (large
-           :inherit medium
            :default-height 150)
           (presentation
            :default-height 180)

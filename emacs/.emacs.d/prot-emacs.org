@@ -2143,10 +2143,8 @@ Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][Th
            :fixed-pitch-family "Aporetic Serif Mono"
            :variable-pitch-family "Aporetic Sans")
           (large
-           :inherit medium
            :default-height 150)
           (presentation
-           :inherit medium
            :default-height 180)
           (jumbo
            :inherit medium
