@@ -118,7 +118,7 @@
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
-  (setq elfeed-search-date-format '("%F %R" 16 :left))
+  (setq elfeed-search-date-format '("%F %R" 20 :left))
 
   (prot-emacs-keybind elfeed-search-mode-map
     "w" #'elfeed-search-yank
