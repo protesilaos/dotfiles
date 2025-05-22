@@ -3906,27 +3906,35 @@ first as ~basic~ will never match something like =~/.l/s/fo= for
   ;; - `consult-kmacro'
   ;; - `consult-location'
   ;; - `embark-keybinding'
-  ;;
   (setq completion-category-overrides
-        ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
-        ;; default for some contexts.  Read:
-        ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=50387>.
-        ;;
-        ;; `partial-completion' is a killer app for files, because it
-        ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
-        ;;
-        ;; If `basic' cannot match my current input, Emacs tries the
-        ;; next completion style in the given order.  In other words,
-        ;; `orderless' kicks in as soon as I input a space or one of its
-        ;; style dispatcher characters.
-        '((file (styles . (basic partial-completion orderless)))
-          (bookmark (styles . (basic substring)))
-          (library (styles . (basic substring)))
-          (embark-keybinding (styles . (basic substring)))
-          (imenu (styles . (basic substring orderless)))
-          (consult-location (styles . (basic substring orderless)))
-          (kill-ring (styles . (emacs22 orderless)))
-          (eglot (styles . (emacs22 substring orderless))))))
+        (if prot-emacs-completion-ui
+            ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
+            ;; default for some contexts.  Read:
+            ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=50387>.
+            ;;
+            ;; `partial-completion' is a killer app for files, because it
+            ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
+            ;;
+            ;; If `basic' cannot match my current input, Emacs tries the
+            ;; next completion style in the given order.  In other words,
+            ;; `orderless' kicks in as soon as I input a space or one of its
+            ;; style dispatcher characters.
+            '((file (styles . (basic partial-completion orderless)))
+              (bookmark (styles . (basic substring)))
+              (library (styles . (basic substring)))
+              (embark-keybinding (styles . (basic substring)))
+              (imenu (styles . (basic substring orderless)))
+              (consult-location (styles . (basic substring orderless)))
+              (kill-ring (styles . (emacs22 orderless)))
+              (eglot (styles . (emacs22 substring orderless))))
+          '((file (styles . (basic partial-completion orderless)) (eager-display . t))
+            (bookmark (styles . (basic substring)))
+            (library (styles . (basic substring)))
+            (embark-keybinding (styles . (basic substring)) (eager-display . t))
+            (imenu (styles . (basic substring orderless)) (eager-display . t))
+            (consult-location (styles . (basic substring orderless)) (eager-display . t))
+            (kill-ring (styles . (emacs22 orderless)) (eager-display . t))
+            (eglot (styles . (emacs22 substring orderless)))))))
 #+end_src
 
 *** The =prot-emacs-completion.el= for the ~orderless~ completion style
