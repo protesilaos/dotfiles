@@ -4682,6 +4682,7 @@ Embark the way it is intended, so I decided to only focus on
 (when prot-emacs-completion-extras
   (use-package embark
     :ensure t
+    :hook (embark-collect-mode . prot-common-truncate-lines-silently)
     :bind
     ( :map minibuffer-local-map
       ("C-c C-c" . embark-collect)

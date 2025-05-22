@@ -370,6 +370,7 @@ Development continues on GitHub with GitLab as a mirror."))
 (when prot-emacs-completion-extras
   (use-package embark
     :ensure t
+    :hook (embark-collect-mode . prot-common-truncate-lines-silently)
     :bind
     ( :map minibuffer-local-map
       ("C-c C-c" . embark-collect)
