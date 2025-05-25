@@ -53,7 +53,7 @@
   ;; The following are from Emacs 27.1
   (setq diff-refine nil) ; I do it on demand, with my `agitate' package (more below)
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
-  (setq diff-font-lock-syntax 'hunk-also))
+  (setq diff-font-lock-syntax nil))
 
   ;;; Version control framework (vc.el, vc-git.el, and more)
 (use-package vc
