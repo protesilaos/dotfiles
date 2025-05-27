@@ -25,7 +25,7 @@ constitutes a matching tiling window manager."
       inhibit-startup-buffer-menu t)
 
 (dolist (variable '(initial-frame-alist default-frame-alist))
-  (set variable `((width . (text-pixels . 1200))
+  (set variable `((width . (text-pixels . 800))
                   (height . (text-pixels . 900))
                   (horizontal-scroll-bars . nil)
                   (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'

@@ -331,7 +331,7 @@ minibuffer, hence the function ~prot-emacs-no-minibuffer-scroll-bar~.
 
 #+begin_src emacs-lisp :tangle "early-init.el"
 (dolist (variable '(initial-frame-alist default-frame-alist))
-  (set variable `((width . (text-pixels . 1200))
+  (set variable `((width . (text-pixels . 800))
                   (height . (text-pixels . 900))
                   (horizontal-scroll-bars . nil)
                   (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
