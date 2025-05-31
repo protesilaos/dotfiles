@@ -393,7 +393,7 @@
   :defer 1
   :config
   (setq server-client-instructions nil)
-  (unless (server-running-p)
+  (unless (or (server-running-p) (daemonp))
     (server-start)))
 
 ;;; Substitute
