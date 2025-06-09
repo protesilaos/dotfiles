@@ -319,7 +319,10 @@
     ("C-c a" . (lambda ()
                  "Call Org agenda with `prot-org-custom-daily-agenda' configuration."
                  (interactive)
-                 (org-agenda nil "A"))))
+                 (org-agenda nil "A")))
+    :map org-agenda-mode-map
+    ("n" . org-agenda-next-item)
+    ("p" . org-agenda-previous-item))
   :config
 ;;;;; Custom agenda blocks
 
