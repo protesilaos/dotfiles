@@ -146,20 +146,22 @@
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
-  ;; ;; NOTE 2023-04-07: Leaving this here for demo purposes.
-  ;; (setq org-todo-keywords
-  ;;       '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")
-  ;;         (sequence "COACH(k)" "|" "COACHED(K!)")))
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "CANCEL(c@)" "DONE(d!)")
-          (sequence "COACH(k)" "|" "COACHED(K!)")))
 
-  (defface prot/org-bold-done
-    '((t :inherit (bold org-done)))
-    "Face for bold DONE-type Org keywords.")
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "MAYBE(m)" "|" "CANCELED(c@)" "DONE(d!)")))
+
+  (defface prot/org-todo-alternative
+    '((t :inherit (italic org-todo)))
+    "Face for alternative TODO-type Org keywords.")
+
+  (defface prot/org-done-alternative
+    '((t :inherit (italic org-done)))
+    "Face for alternative DONE-type Org keywords.")
 
   (setq org-todo-keyword-faces
-        '(("CANCEL" . prot/org-bold-done)))
+        '(("MAYBE" . prot/org-todo-alternative)
+          ("CANCELED" . prot/org-done-alternative)))
+
   (setq org-use-fast-todo-selection 'expert)
 
   (setq org-fontify-done-headline nil)

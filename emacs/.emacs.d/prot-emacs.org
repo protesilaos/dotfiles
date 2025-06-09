@@ -7551,20 +7551,22 @@ the capture phase ([[#h:f8f06938-0dfe-45c3-b4cf-996d36cba82d][The =prot-emacs-or
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
-  ;; ;; NOTE 2023-04-07: Leaving this here for demo purposes.
-  ;; (setq org-todo-keywords
-  ;;       '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")
-  ;;         (sequence "COACH(k)" "|" "COACHED(K!)")))
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "CANCEL(c@)" "DONE(d!)")
-          (sequence "COACH(k)" "|" "COACHED(K!)")))
 
-  (defface prot/org-bold-done
-    '((t :inherit (bold org-done)))
-    "Face for bold DONE-type Org keywords.")
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "MAYBE(m)" "|" "CANCELED(c@)" "DONE(d!)")))
+
+  (defface prot/org-todo-alternative
+    '((t :inherit (italic org-todo)))
+    "Face for alternative TODO-type Org keywords.")
+
+  (defface prot/org-done-alternative
+    '((t :inherit (italic org-done)))
+    "Face for alternative DONE-type Org keywords.")
 
   (setq org-todo-keyword-faces
-        '(("CANCEL" . prot/org-bold-done)))
+        '(("MAYBE" . prot/org-todo-alternative)
+          ("CANCELED" . prot/org-done-alternative)))
+
   (setq org-use-fast-todo-selection 'expert)
 
   (setq org-fontify-done-headline nil)
@@ -13731,7 +13733,7 @@ For use in `prot-org-capture-coach'."
 (defun prot-org-capture-coach ()
   "Contents of an Org capture template for my coaching lessons."
   (let ((identifier (format-time-string "%Y%m%dT%H%M%S")))
-    (format "* COACH %s %s :lesson:
+    (format "* TODO %s %s :coaching:
 DEADLINE: %%^T
 :PROPERTIES:
 :CAPTURED: %%U
@@ -13747,7 +13749,7 @@ DEADLINE: %%^T
 
 (defun prot-org-capture-coach-clock ()
   "Contents of an Org capture for my clocked coaching services."
-  (format "* COACH %s %s :service:
+  (format "* TODO %s %s :service:
 :PROPERTIES:
 :CAPTURED: %%U
 :CUSTOM_ID: h:%s

@@ -99,7 +99,7 @@ For use in `prot-org-capture-coach'."
 (defun prot-org-capture-coach ()
   "Contents of an Org capture template for my coaching lessons."
   (let ((identifier (format-time-string "%Y%m%dT%H%M%S")))
-    (format "* COACH %s %s :lesson:
+    (format "* TODO %s %s :coaching:
 DEADLINE: %%^T
 :PROPERTIES:
 :CAPTURED: %%U
@@ -115,7 +115,7 @@ DEADLINE: %%^T
 
 (defun prot-org-capture-coach-clock ()
   "Contents of an Org capture for my clocked coaching services."
-  (format "* COACH %s %s :service:
+  (format "* TODO %s %s :service:
 :PROPERTIES:
 :CAPTURED: %%U
 :CUSTOM_ID: h:%s
