@@ -591,10 +591,11 @@ create a new one."
     (downcase)
     (concat "h:")))
 
-(defun prot-org--id-get-readable ()
-  "Like `prot-org--id-get' but use the heading wording to create and ID."
+(defun prot-org--id-get-readable (&optional force)
+  "Like `prot-org--id-get' but use the heading wording to create and ID.
+With optional FORCE, update the value even if one exists."
   (let* ((pos (point))
-         (id (org-entry-get pos "CUSTOM_ID")))
+         (id (unless force (org-entry-get pos "CUSTOM_ID"))))
     (or (and id (stringp id) (string-match-p "\\S-" id))
         (and (setq id (prot-org--heading-to-id))
              (org-entry-put pos "CUSTOM_ID" id)))
@@ -609,12 +610,14 @@ create a new one."
   (org-map-entries (lambda () (prot-org--id-get))))
 
 ;;;###autoload
-(defun prot-org-id-headlines-readable ()
+(defun prot-org-id-headlines-readable (&optional force)
   "Like `prot-org-id-headlines' but with readable IDs.
 A readable identifier is one derived from the text of the heading.  In
-theory, this may not be unique."
-  (interactive)
-  (org-map-entries (lambda () (prot-org--id-get-readable))))
+theory, this may not be unique.
+
+With optional FORCE, update the value even if one exists."
+  (interactive "P")
+  (org-map-entries (lambda () (prot-org--id-get-readable force))))
 
 ;;;###autoload
 (defun prot-org-id-headline (&optional readable)
