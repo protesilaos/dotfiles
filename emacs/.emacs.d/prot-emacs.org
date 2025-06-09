@@ -2765,7 +2765,7 @@ revisit a file that I do not need to keep track of.
   (setq recentf-show-file-shortcuts-flag nil))
 #+end_src
 
-*** The =prot-emacs-essentials.el= mouse configurations
+*** The =prot-emacs-essentials.el= mouse configurations and scroll behaviour
 :PROPERTIES:
 :CUSTOM_ID: h:982ad7cd-01b9-4178-be58-0e24251d3608
 :END:
