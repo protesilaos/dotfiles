@@ -14127,6 +14127,13 @@ continue, per `org-agenda-skip-function'."
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)))))
   "Custom agenda for use in `org-agenda-custom-commands'.")
 
+(defun prot-org-agenda-set-outline ()
+  "Set `outline-regexp' for my Org agenda buffers."
+  (when (derived-mode-p 'org-agenda-mode)
+    (setq-local outline-regexp "^\\([\s\t]+\\)\\([A-Z]+ \\|[0-9]+:[0-9]+ \\)\\(Deadline\\|Scheduled\\)")))
+
+(add-hook 'org-agenda-mode-hook #'prot-org-agenda-set-outline)
+
 ;;;;; agenda appointments
 
 (defvar prot-org-agenda-after-edit-hook nil
