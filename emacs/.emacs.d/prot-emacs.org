@@ -1931,6 +1931,18 @@ to activate ~rainbow-mode~ if I am editing a theme file.
                 ((derived-mode-p 'emacs-lisp-mode))
                 ((string-match-p "-theme" file)))
       (rainbow-mode 1)))
+  :config
+  (defun prot/rainbow-colorize-match (color &optional match)
+  "Like `rainbow-colorize-match' but works with `hl-line-mode'."
+  (let ((match (or match 0)))
+    (put-text-property
+     (match-beginning match) (match-end match)
+     'face `((:background ,(if (> 0.5 (rainbow-x-color-luminance color))
+                               "white" "black"))
+             (:foreground ,color)
+             (:inverse-video t)))))
+
+  (advice-add #'rainbow-colorize-match :override #'prot/rainbow-colorize-match)
   :bind ( :map ctl-x-x-map
           ("c" . rainbow-mode)) ; C-x x c
   :hook (emacs-lisp-mode . prot/rainbow-mode-in-themes))
