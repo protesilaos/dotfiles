@@ -2614,7 +2614,7 @@ this via some hook.
     ;; Commands for windows and pages
     ("C-x o" . prot-simple-other-window)
     ("C-x n k" . prot-simple-delete-page-delimiters)
-    ("M-r" . rotate-windows) ; Emacs 31 override `move-to-window-line-top-bottom'
+    ("M-r" . window-layout-transpose) ; Emacs 31 override `move-to-window-line-top-bottom'
     ("M-S-r" . rotate-windows-back) ; Emacs 31
     ;; Commands for buffers
     ("<C-f2>" . prot-simple-rename-file-and-buffer)
