@@ -16095,20 +16095,21 @@ Used by `prot-simple-inset-date'."
 
 ;;;; General commands
 
+;;;###autoload
+(defun prot-simple-sudo ()
+  "Find the current file or directory using `sudo'."
+  (interactive)
+  (let ((destination (or buffer-file-name default-directory))
+        (auto-save-default nil))
+    (if (string= (file-remote-p destination 'method) "sudo")
+        (user-error "Already using `sudo'")
+      (find-file (format "/sudo::/%s" destination)))))
+
 (defun prot-simple--mark (bounds)
   "Mark between BOUNDS as a cons cell of beginning and end positions."
   (push-mark (car bounds))
   (goto-char (cdr bounds))
   (activate-mark))
-
-;;;###autoload
-(defun prot-simple-sudo ()
-  "Find the current file or directory using SUDO."
-  (interactive)
-  (let ((destination (or buffer-file-name default-directory)))
-    (if (string= (file-remote-p destination 'method) "sudo")
-        (user-error "Already using `sudo'")
-      (find-file (format "/sudo::/%s" destination)))))
 
 ;;;###autoload
 (defun prot-simple-mark-sexp ()
