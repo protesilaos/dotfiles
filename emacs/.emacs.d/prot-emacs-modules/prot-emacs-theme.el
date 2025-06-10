@@ -81,9 +81,13 @@
   ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
   ;; is very flexible.  Here we make the mode lines be a single
   ;; overline.
-  (setq spacious-padding-subtle-mode-line
-        '( :mode-line-active spacious-padding-subtle-mode-line-active
-           :mode-line-inactive spacious-padding-subtle-mode-line-inactive)))
+  (setq spacious-padding-subtle-frame-lines
+        '( :mode-line-active spacious-padding-line-active
+           :mode-line-inactive spacious-padding-line-inactive
+           :header-line-active spacious-padding-line-active
+           :header-line-inactive spacious-padding-line-inactive))
+
+  (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t)))
 
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (use-package rainbow-mode
@@ -212,9 +216,6 @@
   :bind (("C-c f" . fontaine-set-preset)
          ("C-c F" . fontaine-toggle-preset))
   :config
-  ;; This is defined in Emacs C code: it belongs to font settings.
-  (setq x-underline-at-descent-line nil)
-
   ;; And this is for Emacs28.
   (setq-default text-scale-remap-header-line t)
 
