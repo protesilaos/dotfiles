@@ -461,7 +461,7 @@
         '(todo search agenda))
   (setq org-agenda-hide-tags-regexp nil)
   (setq org-agenda-remove-tags nil)
-  (setq org-agenda-tags-column -100)
+  (setq org-agenda-tags-column 1)
 
 ;;;;; Agenda entry
   ;; NOTE: I do not use this right now.  Leaving everything to its
