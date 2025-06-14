@@ -151,5 +151,19 @@ is a string."
 
        (add-hook ',(intern (format "%s-hook" mode)) #',major-mode-fn))))
 
+;;;; Enable completion in the `compile' command
+
+(defun prot-project-compilation-read-command (command)
+  "Like `compilation-read-command' for COMMAND with completion against the `compile-history'."
+  (if-let* ((history compile-history)
+            (default (car history)))
+      (completing-read "Compile command: " history nil nil nil 'compile-history default)
+    (read-shell-command "Compile command: " command
+                      (if (equal (car compile-history) command)
+                          '(compile-history . 1)
+                        'compile-history))))
+
+(advice-add #'compilation-read-command :override #'prot-project-compilation-read-command)
+
 (provide 'prot-project)
 ;;; prot-project.el ends here
