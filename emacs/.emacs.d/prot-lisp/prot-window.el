@@ -177,7 +177,10 @@ call NAME as a function."
 (prot-window-define-full-frame coach
   (let ((buffer (get-buffer-create "*scratch for coach*")))
     (with-current-buffer buffer
-      (funcall initial-major-mode))
+      (funcall initial-major-mode)
+      (when (and (zerop (buffer-size))
+                 (stringp initial-scratch-message))
+        (insert initial-scratch-message)))
     (display-buffer buffer)
     (set-frame-name "Coach")))
 
