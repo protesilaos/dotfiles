@@ -194,6 +194,7 @@
   :config
   (require 'prot-org) ; for the above commands
 
+  (setq org-return-follows-link t)
   (setq org-link-context-for-files t)
   (setq org-link-keep-stored-after-insertion nil)
   (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
