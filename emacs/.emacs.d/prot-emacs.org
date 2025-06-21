@@ -6626,6 +6626,14 @@ Do watch the video I link to in the beginning of this section, as it
 covers the main functionality of this neat tool. I also show how it
 integrates with ~magit~ ([[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]).
 
+The =prot-ediff.el= extension contains some quality-of-life
+refinements to the core Ediff functionality ([[#h:3937b784-af0f-47c0-8c89-c74d90b00b8c][The =prot-ediff.el= library]]):
+
+- Function ~prot-ediff-store-layout~ :: Store the current frame's window configuration before Ediff is set up.
+- Function ~prot-ediff-restore-layout~ :: Restore the current frame's window configuration.
+- Command ~prot-ediff-buffers-2~ :: Produce an Ediff with the current two visible buffers.
+- Command ~prot-ediff-buffers-3~ :: Produce an Ediff with the current three visible buffers.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el" :mkdirp yes
 ;;;; `ediff'
 (use-package ediff
@@ -6639,6 +6647,18 @@ integrates with ~magit~ ([[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-em
   (setq ediff-make-buffers-readonly-at-startup nil)
   (setq ediff-merge-revisions-with-ancestor t)
   (setq ediff-show-clashes-only t))
+
+(use-package prot-ediff
+  :ensure nil
+  :bind
+  ;; The C-x v prefix is for all "version control" commands that are
+  ;; already built into Emacs.  It makes sense to extend it for this
+  ;; use-case.
+  (("C-x v 2" . prot-ediff-visible-buffers-2)
+   ("C-x v 3" . prot-ediff-visible-buffers-3))
+  :hook
+  ((ediff-before-setup . prot-ediff-store-layout)
+   (ediff-quit . prot-ediff-restore-layout)))
 #+end_src
 
 *** The =prot-emacs-git.el= section about =project.el=
@@ -12320,6 +12340,95 @@ Add this to `dired-mode-hook'."
 
 (provide 'prot-dired)
 ;;; prot-dired.el ends here
+#+end_src
+
+** The =prot-ediff.el= library
+:PROPERTIES:
+:CUSTOM_ID: h:3937b784-af0f-47c0-8c89-c74d90b00b8c
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-ediff.el" :mkdirp yes
+;;; prot-ediff.el --- Ediff extensions for my dotemacs -*- lexical-binding: t -*-
+
+;; Copyright (C) 2025  Protesilaos Stavrou
+
+;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; URL: https://protesilaos.com/emacs/dotemacs
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "30.1"))
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; Extensions for Ediff, intended for use in my Emacs setup:
+;; https://protesilaos.com/emacs/dotemacs.
+;;
+;; Remember that every piece of Elisp that I write is for my own
+;; educational and recreational purposes.  I am not a programmer and I
+;; do not recommend that you copy any of this if you are not certain of
+;; what it does.
+
+;;; Code:
+(require 'ediff)
+
+(defun prot-ediff-store-layout ()
+  "Store current frame window configuration as a frame parameter.
+Add this function to the `ediff-before-setup-hook'.
+
+Also see `prot-ediff-restore-layout'."
+  (let ((frame (selected-frame)))
+    (set-frame-parameter
+     frame
+     'prot-ediff-last-layout
+     (current-window-configuration frame))))
+
+(defun prot-ediff-restore-layout ()
+  "Restore the frame's window configuration.
+Add this function to the `ediff-quit-hook'.
+
+Also see `prot-ediff-store-layout'."
+  (if-let* ((layout (frame-parameter (selected-frame) 'prot-ediff-last-layout)))
+      (set-window-configuration layout)
+    ;; We do not signal a `user-error' here because that would prevent
+    ;; `ediff-quit' from closing the Ediff session.
+    (message "No Ediff window configuration for the current frame")))
+
+(defun prot-ediff-visible-buffers-2 ()
+  "Run ediff on the buffers displayed in the current frame's two windows."
+  (interactive)
+  (if-let* ((windows (window-list))
+            (_ (= (length windows) 2))
+            (buffers (mapcar #'window-buffer windows)))
+      (pcase-let ((`(,first ,second) buffers))
+        (ediff-buffers first second))
+    (user-error "Can only operate on two windows")))
+
+(defun prot-ediff-visible-buffers-3 ()
+  "Run ediff on the buffers displayed in the current frame's three windows."
+  (interactive)
+  (if-let* ((windows (window-list))
+            (_ (= (length windows) 3))
+            (buffers (mapcar #'window-buffer windows)))
+      (pcase-let ((`(,first ,second ,third) buffers))
+        (ediff-buffers3 first second third))
+    (user-error "Can only operate on three windows")))
+
+(provide 'prot-ediff)
+;;; prot-ediff.el ends here
 #+end_src
 
 ** The =prot-elfeed.el= library

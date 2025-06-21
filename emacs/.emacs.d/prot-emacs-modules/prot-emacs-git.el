@@ -11,6 +11,18 @@
   (setq ediff-merge-revisions-with-ancestor t)
   (setq ediff-show-clashes-only t))
 
+(use-package prot-ediff
+  :ensure nil
+  :bind
+  ;; The C-x v prefix is for all "version control" commands that are
+  ;; already built into Emacs.  It makes sense to extend it for this
+  ;; use-case.
+  (("C-x v 2" . prot-ediff-visible-buffers-2)
+   ("C-x v 3" . prot-ediff-visible-buffers-3))
+  :hook
+  ((ediff-before-setup . prot-ediff-store-layout)
+   (ediff-quit . prot-ediff-restore-layout)))
+
 ;;;; `project'
 (use-package project
   :ensure nil
