@@ -482,7 +482,7 @@ word.  Fall back to regular `expreg-expand'."
  :ensure t
  :commands (pass))
 
-;;; Shell (M-x shell)
+;;; Standard Unix Shell (M-x shell)
 (use-package shell
   :ensure nil
   :bind
@@ -508,9 +508,8 @@ word.  Fall back to regular `expreg-expand'."
   ;;     # Quit once you try to scroll past the end of the file.
   ;;     export PAGER="less --quit-at-eof"
   ;; fi
-
-  (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t)
+  (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq shell-input-autoexpand 'input)
   (setq shell-highlight-undef-enable t) ; Emacs 29.1
   (setq shell-has-auto-cd nil) ; Emacs 29.1
