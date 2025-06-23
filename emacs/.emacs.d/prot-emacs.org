@@ -3455,10 +3455,109 @@ easy to retrieve what I need.
  :commands (pass))
 #+end_src
 
+*** The =prot-emacs-essentials.el= section about generic shells and REPLs (~comint~)
+:PROPERTIES:
+:CUSTOM_ID: h:3ce29c2d-27ce-4f04-86ff-6acaf9426604
+:END:
+
+The built-in ~comint~ library defines the infrastructure necessary to
+run a command line shell or other Read Evaluate Print Loop (REPL)
+interface. It underpins the standard =M-x shell=, which I configure
+elsewhere ([[#h:7c25e281-d92e-4605-b5d6-18fe1f280a73][The =prot-emacs-essentials.el= section about ~shell~]]), as
+well as the built-in Emacs Lisp REPL of =M-x ielm=.
+
+What I define here are some basic tweaks to control the behaviour of
+Comint buffers. The ~ansi-color-for-comint-mode~ in particular takes
+care to interpret the ANSI escape sequences such that they produce the
+same result they would have had they been executed in a terminal
+emulator. For example:
+
+#+begin_example
+echo -e "\e[31mThis text is red\e[0m"
+#+end_example
+
+I never want to see the escape sequences. They look busy and will
+distort the output when there are lots of them. In the section about
+=M-x compile=, I have a similar setting for the compilation buffers
+([[#h:61c101b0-fd5e-41ba-9031-9236851af696][The =prot-emacs-essentials.el= section about the compilation interface (~compile~)]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;; Generic interface for shells or REPLs (comint)
+(use-package comint
+  :ensure nil
+  ;; Support for OS-specific escape sequences such as what `ls
+  ;; --hyperlink' uses.  I normally don't use those, but I am checking
+  ;; this to see if there are any obvious advantages/disadvantages.
+  :hook
+  (comint-output-filter-functions . comint-osc-process-output)
+  :config
+  (setq ansi-color-for-comint-mode t) ; also see `ansi-color-for-compilation-mode'
+  (setq comint-prompt-read-only t)
+  (setq comint-buffer-maximum-size 9999)
+  (setq comint-completion-autolist t)
+  (setq comint-input-ignoredups t)
+  (setq-default comint-scroll-to-bottom-on-input t)
+  (setq-default comint-scroll-to-bottom-on-output nil)
+  (setq-default comint-input-autoexpand 'input))
+#+end_src
+
+*** The =prot-emacs-essentials.el= section about the compilation interface (~compile~)
+:PROPERTIES:
+:CUSTOM_ID: h:61c101b0-fd5e-41ba-9031-9236851af696
+:END:
+
+Similar to the ~comint~ library ([[#h:3ce29c2d-27ce-4f04-86ff-6acaf9426604][The =prot-emacs-essentials.el= section about generic shells and REPLs (~comint~)]]),
+Emacs comes with a built-in interface for running compilation-related
+commands. In principle, any shell command will do. The output is
+collected in a buffer which (i) keeps tracks of errors and warnings,
+and (ii) add direct links to the relevant sources.
+
+I personally do not have a need to modify how ~compile~ adds those
+links, though I have played around with the code before, which is
+described in great detail in the doc string of the variable
+~compilation-error-regexp-alist~. Here is a sample:
+
+#+begin_example emacs-lisp
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(prot-sample
+               "^[\s\t]*\\(?:.*(\\)\\(?1:.*\\):\\(?2:[0-9]+\\)?:\\(?3:[0-9]+\\)?"
+               1 2 3))
+
+(add-to-list 'compilation-error-regexp-alist 'prot-sample)
+#+end_example
+
+The difference between ~compile~ and ~comint~ is that the latter is
+interactive and does not add links to errors/warnings. Use whichever
+one is relevant to the task at hand.
+
+All I do in my configuration of ~compile~ is set it up to handle ANSI
+escape sequences, like I do with ~comint~ (I linked to it
+above---check there for an example of an ANSI escape sequence).
+
+Note that for version controlled projects, we have the command
+~project-compile~ ([[#h:7dcbcadf-8af6-487d-b864-e4ce56d69530][The =prot-emacs-git.el= section about =project.el=]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
+;;; Compilation interface (M-x compile)
+(use-package compile
+  :ensure nil
+  :hook
+  (compilation-filter . ansi-color-compilation-filter)
+  :config
+  (setq ansi-color-for-compilation-mode t)) ; also see `ansi-color-for-comint-mode'
+#+end_src
+
 *** The =prot-emacs-essentials.el= section about ~shell~
 :PROPERTIES:
 :CUSTOM_ID: h:7c25e281-d92e-4605-b5d6-18fe1f280a73
 :END:
+
+This section relies on ~comint~ configurations, though also check the
+ones about ~compile~ to get the full picture of what is available in
+Emacs:
+
+- [[#h:3ce29c2d-27ce-4f04-86ff-6acaf9426604][The =prot-emacs-essentials.el= section about generic shells and REPLs (~comint~)]].
+- [[#h:61c101b0-fd5e-41ba-9031-9236851af696][The =prot-emacs-essentials.el= section about the compilation interface (~compile~)]].
 
 Before using Emacs, I did not have a clear idea of what the
 distinction between a "shell" and a "terminal" is. But I quickly
@@ -3515,16 +3614,7 @@ given host. For example, if I do =M-x find-file= and then input
 =/sudo::/usr/share/= to go to =/usr/share/= with =sudo= privileges,
 then I can open a shell there and bookmark it. When I jump back to the
 bookmark, Emacs will automatically handle the =sudo= part while taking
-me to that shell in its directory. Relevant note from my source code:
-
-#+begin_example emacs-lisp
-;; NOTE 2023-08-18: I sent this to the Emacs maintainers as a patch
-;; (bug#65039).  I received approval to proceed with the change, but I
-;; did not do it because a user reported an issue with SSH (TRAMP).  I
-;; do not have access to SSH and am not familiar with such workflows.
-;; If/when that changes, I will try again.  In the meantime, this is
-;; good code and it works for me.
-#+end_example
+me to that shell in its directory.
 
 Now the actual configurations:
 
@@ -3555,7 +3645,6 @@ Now the actual configurations:
   ;;     # Quit once you try to scroll past the end of the file.
   ;;     export PAGER="less --quit-at-eof"
   ;; fi
-  (setq ansi-color-for-comint-mode t)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq shell-input-autoexpand 'input)
   (setq shell-highlight-undef-enable t) ; Emacs 29.1
@@ -3563,24 +3652,12 @@ Now the actual configurations:
   (setq shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
   (setq shell-kill-buffer-on-exit t) ; Emacs 29.1
   (setq shell-completion-fignore '("~" "#" "%"))
-  (setq-default comint-scroll-to-bottom-on-input t)
-  (setq-default comint-scroll-to-bottom-on-output nil)
-  (setq-default comint-input-autoexpand 'input)
-  (setq comint-prompt-read-only t)
-  (setq comint-buffer-maximum-size 9999)
-  (setq comint-completion-autolist t)
-  (setq comint-input-ignoredups t)
   (setq tramp-default-remote-shell "/bin/bash")
 
   (setq shell-font-lock-keywords
         '(("[ \t]\\([+-][^ \t\n]+\\)" 1 font-lock-builtin-face)
           ("^[^ \t\n]+:.*" . font-lock-string-face)
-          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
-
-  ;; Support for OS-specific escape sequences such as what `ls
-  ;; --hyperlink' uses.  I normally don't use those, but I am checking
-  ;; this to see if there are any obvious advantages/disadvantages.
-  (add-hook 'comint-output-filter-functions 'comint-osc-process-output))
+          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face))))
 
 (use-package prot-shell
   :ensure nil

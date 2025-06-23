@@ -482,6 +482,32 @@ word.  Fall back to regular `expreg-expand'."
  :ensure t
  :commands (pass))
 
+;;; Generic interface for shells or REPLs (comint)
+(use-package comint
+  :ensure nil
+  ;; Support for OS-specific escape sequences such as what `ls
+  ;; --hyperlink' uses.  I normally don't use those, but I am checking
+  ;; this to see if there are any obvious advantages/disadvantages.
+  :hook
+  (comint-output-filter-functions . comint-osc-process-output)
+  :config
+  (setq ansi-color-for-comint-mode t) ; also see `ansi-color-for-compilation-mode'
+  (setq comint-prompt-read-only t)
+  (setq comint-buffer-maximum-size 9999)
+  (setq comint-completion-autolist t)
+  (setq comint-input-ignoredups t)
+  (setq-default comint-scroll-to-bottom-on-input t)
+  (setq-default comint-scroll-to-bottom-on-output nil)
+  (setq-default comint-input-autoexpand 'input))
+
+;;; Compilation interface (M-x compile)
+(use-package compile
+  :ensure nil
+  :hook
+  (compilation-filter . ansi-color-compilation-filter)
+  :config
+  (setq ansi-color-for-compilation-mode t)) ; also see `ansi-color-for-comint-mode'
+
 ;;; Standard Unix Shell (M-x shell)
 (use-package shell
   :ensure nil
@@ -508,7 +534,6 @@ word.  Fall back to regular `expreg-expand'."
   ;;     # Quit once you try to scroll past the end of the file.
   ;;     export PAGER="less --quit-at-eof"
   ;; fi
-  (setq ansi-color-for-comint-mode t)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq shell-input-autoexpand 'input)
   (setq shell-highlight-undef-enable t) ; Emacs 29.1
@@ -516,24 +541,12 @@ word.  Fall back to regular `expreg-expand'."
   (setq shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
   (setq shell-kill-buffer-on-exit t) ; Emacs 29.1
   (setq shell-completion-fignore '("~" "#" "%"))
-  (setq-default comint-scroll-to-bottom-on-input t)
-  (setq-default comint-scroll-to-bottom-on-output nil)
-  (setq-default comint-input-autoexpand 'input)
-  (setq comint-prompt-read-only t)
-  (setq comint-buffer-maximum-size 9999)
-  (setq comint-completion-autolist t)
-  (setq comint-input-ignoredups t)
   (setq tramp-default-remote-shell "/bin/bash")
 
   (setq shell-font-lock-keywords
         '(("[ \t]\\([+-][^ \t\n]+\\)" 1 font-lock-builtin-face)
           ("^[^ \t\n]+:.*" . font-lock-string-face)
-          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
-
-  ;; Support for OS-specific escape sequences such as what `ls
-  ;; --hyperlink' uses.  I normally don't use those, but I am checking
-  ;; this to see if there are any obvious advantages/disadvantages.
-  (add-hook 'comint-output-filter-functions 'comint-osc-process-output))
+          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face))))
 
 (use-package prot-shell
   :ensure nil
