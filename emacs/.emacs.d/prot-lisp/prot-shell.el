@@ -156,42 +156,45 @@ Push `shell-last-dir' to `prot-shell-cd-directories'."
       (prot-shell--insert-and-send "cd" root)
     (user-error "Cannot find the VC root of `%s'" default-directory)))
 
-;;;; Bookmark support
+;; NOTE 2025-06-23: Emacs 31 supports shell bookmarks, so I no longer
+;; need this.  I am keeping it here for reference.
 
-;; NOTE 2023-08-18: I sent this to the Emacs maintainers as a patch
-;; (bug#65039).  I received approval to proceed with the change, but I
-;; did not do it because a user reported an issue with SSH (TRAMP).  I
-;; do not have access to SSH and am not familiar with such workflows.
-;; If/when that changes, I will try again.  In the meantime, this is
-;; good code and it works for me.
-
-;; Adapted from esh-mode.el
-(declare-function bookmark-prop-get "bookmark" (bookmark prop))
-
-(defun prot-shell-bookmark-name ()
-  "Return name of bookmark based on currect directory."
-  (format "prot-shell-%s"
-          (file-name-nondirectory
-           (directory-file-name
-            (file-name-directory default-directory)))))
-
-(defvar sh-shell-file)
-
-(defun prot-shell-bookmark-make-record ()
-  "Create a bookmark for the current Shell buffer."
-  `(,(prot-shell-bookmark-name)
-    (location . ,default-directory)
-    (shell-file-name . ,sh-shell-file)
-    (handler . prot-shell-bookmark-jump)))
-
-;;;###autoload
-(defun prot-shell-bookmark-jump (bookmark)
-  "Default BOOKMARK handler for Shell buffers."
-  (let ((default-directory (bookmark-prop-get bookmark 'location))
-        (explicit-shell-file-name (bookmark-prop-get bookmark 'shell-file-name)))
-    (shell (get-buffer-create (car bookmark)))))
-
-(put 'prot-shell-bookmark-jump 'bookmark-handler-type "Shell")
+;; ;;;; Bookmark support
+;;
+;; ;; NOTE 2023-08-18: I sent this to the Emacs maintainers as a patch
+;; ;; (bug#65039).  I received approval to proceed with the change, but I
+;; ;; did not do it because a user reported an issue with SSH (TRAMP).  I
+;; ;; do not have access to SSH and am not familiar with such workflows.
+;; ;; If/when that changes, I will try again.  In the meantime, this is
+;; ;; good code and it works for me.
+;;
+;; ;; Adapted from esh-mode.el
+;; (declare-function bookmark-prop-get "bookmark" (bookmark prop))
+;;
+;; (defun prot-shell-bookmark-name ()
+;;   "Return name of bookmark based on currect directory."
+;;   (format "prot-shell-%s"
+;;           (file-name-nondirectory
+;;            (directory-file-name
+;;             (file-name-directory default-directory)))))
+;;
+;; (defvar sh-shell-file)
+;;
+;; (defun prot-shell-bookmark-make-record ()
+;;   "Create a bookmark for the current Shell buffer."
+;;   `(,(prot-shell-bookmark-name)
+;;     (location . ,default-directory)
+;;     (shell-file-name . ,sh-shell-file)
+;;     (handler . prot-shell-bookmark-jump)))
+;;
+;; ;;;###autoload
+;; (defun prot-shell-bookmark-jump (bookmark)
+;;   "Default BOOKMARK handler for Shell buffers."
+;;   (let ((default-directory (bookmark-prop-get bookmark 'location))
+;;         (explicit-shell-file-name (bookmark-prop-get bookmark 'shell-file-name)))
+;;     (shell (get-buffer-create (car bookmark)))))
+;;
+;; (put 'prot-shell-bookmark-jump 'bookmark-handler-type "Shell")
 
 ;; ;;;; Convert YouTube links to Invidious
 ;;
