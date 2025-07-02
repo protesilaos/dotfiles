@@ -5,25 +5,24 @@
   :config
 ;;;; General settings and common custom functions (prot-simple.el)
   (setq blink-matching-paren nil)
+  (setq custom-unlispify-tag-names nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
   (setq delete-pair-push-mark t) ; Emacs 31
-  (setq help-window-select t)
-  (setq next-error-recenter '(4)) ; center of the window
-  (setq find-library-include-other-files nil) ; Emacs 29
-  (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
-  (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
-  (setq tramp-connection-timeout (* 60 10)) ; seconds
-  (setq save-interprogram-paste-before-kill t)
-  (setq mode-require-final-newline 'visit-save)
-  (setq-default truncate-partial-width-windows nil)
-  (setq eval-expression-print-length nil)
-  (setq kill-do-not-save-duplicates t)
-  (setq duplicate-line-final-position -1 ; both are Emacs 29
-        duplicate-region-final-position -1)
-  (setq scroll-error-top-bottom t)
   (setq echo-keystrokes-help nil) ; Emacs 30
   (setq epa-keys-select-method 'minibuffer) ; Emacs 30
+  (setq eval-expression-print-length nil)
+  (setq find-library-include-other-files nil) ; Emacs 29
+  (setq help-window-select t)
+  (setq kill-do-not-save-duplicates t)
+  (setq mode-require-final-newline 'visit-save)
+  (setq next-error-recenter '(4)) ; center of the window
+  (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
+  (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
+  (setq save-interprogram-paste-before-kill t)
+  (setq scroll-error-top-bottom t)
+  (setq tramp-connection-timeout (* 60 10)) ; seconds
   (setq trusted-content '("~/Git/Projects/")) ; Emacs 30
+  (setq-default truncate-partial-width-windows nil)
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
