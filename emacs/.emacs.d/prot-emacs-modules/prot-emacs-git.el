@@ -127,6 +127,8 @@
   ;; check for a bunch of backends.
   (setq vc-handled-backends '(Git))
 
+  (setq vc-dir-save-some-buffers-on-revert t) ; Emacs 31
+
   ;; This one is for editing commit messages.
   (require 'log-edit)
   (setq log-edit-confirm 'changed)
