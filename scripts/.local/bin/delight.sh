@@ -31,8 +31,10 @@
 
 gtk_theme_light="Adwaita"
 gtk_theme_dark="Adwaita-dark"
-icon_theme_light="Adwaita"
-icon_theme_dark="Adwaita"
+icon_theme_light="Papirus-Light"
+icon_theme_dark="Papirus-Dark"
+# icon_theme_light="Adwaita"
+# icon_theme_dark="Adwaita"
 
 _depcheck ()
 {
