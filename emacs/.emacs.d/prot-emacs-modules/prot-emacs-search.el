@@ -108,6 +108,7 @@
 (use-package grep
   :ensure nil
   :commands (grep lgrep rgrep)
+  :hook (grep-mode . prot-common-truncate-lines-silently)
   :config
   (setq grep-save-buffers nil)
   (setq grep-use-headings t) ; Emacs 30

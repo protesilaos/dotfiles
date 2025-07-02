@@ -5428,6 +5428,7 @@ Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
 (use-package grep
   :ensure nil
   :commands (grep lgrep rgrep)
+  :hook (grep-mode . prot-common-truncate-lines-silently)
   :config
   (setq grep-save-buffers nil)
   (setq grep-use-headings t) ; Emacs 30
