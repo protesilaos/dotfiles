@@ -5440,7 +5440,8 @@ Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
           (if rgp
               "/usr/bin/rg -nH --null -e <R> <F>"
             "/usr/bin/grep <X> <C> -nH --null -e <R> <F>"))
-    (setq xref-search-program (if rgp 'ripgrep 'grep))))
+    (with-eval-after-load 'xref
+      (setq xref-search-program (if rgp 'ripgrep 'grep)))))
 #+end_src
 
 *** The =prot-emacs-search.el= setup for editable grep buffers (~grep-edit-mode~ or ~wgrep~)

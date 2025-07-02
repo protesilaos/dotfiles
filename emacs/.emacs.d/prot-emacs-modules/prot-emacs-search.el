@@ -120,7 +120,8 @@
           (if rgp
               "/usr/bin/rg -nH --null -e <R> <F>"
             "/usr/bin/grep <X> <C> -nH --null -e <R> <F>"))
-    (setq xref-search-program (if rgp 'ripgrep 'grep))))
+    (with-eval-after-load 'xref
+      (setq xref-search-program (if rgp 'ripgrep 'grep)))))
 
 ;;; wgrep (writable grep)
 ;; See the `grep-edit-mode' for the new built-in feature.
