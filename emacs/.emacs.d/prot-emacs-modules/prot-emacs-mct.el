@@ -25,12 +25,18 @@
           file
           project-file
           buffer
-          kill-ring
-          consult-location))
+          kill-ring))
   (setq mct-remove-shadowed-file-names t)
   (setq mct-completion-window-size (cons #'mct-frame-height-third 1))
   (setq mct-live-completion 'visible)
-  (setq completions-sort #'mct-sort-multi-category)
+
+  ;; This is the default value but I am keeping it here in case I
+  ;; choose to modify it.
+  (setq mct-sort-by-command-or-category
+        '((file . mct-sort-by-directory-then-by-file)
+          ((magit-checkout vc-retrieve-tag) . mct-sort-by-alpha-then-by-length)
+          ((kill-ring imenu consult-location Info-goto-node Info-index Info-menu) . nil) ; no sorting
+          (t . mct-sort-by-history)))
 
   ;; Adaptation of `icomplete-fido-backward-updir'.
   (defun prot/mct-backward-updir ()
