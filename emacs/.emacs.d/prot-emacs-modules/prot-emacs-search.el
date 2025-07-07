@@ -90,6 +90,9 @@
     (add-hook 'prot-search-outline-hook #'pulsar-reveal-entry)))
 
 ;;; grep and xref
+(defvar prot/ripgrep (or (executable-find "rg") (executable-find "ripgrep"))
+  "Store path to ripgrep executable, else nil.")
+
 (use-package re-builder
   :ensure nil
   :commands (re-builder regexp-builder)
@@ -103,7 +106,8 @@
   ;; All those have been changed for Emacs 28
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
-  (setq xref-file-name-display 'project-relative))
+  (setq xref-file-name-display 'project-relative)
+  (setq xref-search-program (if prot/ripgrep 'ripgrep 'grep)))
 
 (use-package grep
   :ensure nil
@@ -113,15 +117,11 @@
   (setq grep-save-buffers nil)
   (setq grep-use-headings t) ; Emacs 30
 
-  (let ((executable (or (executable-find "rg") "grep"))
-        (rgp (string-match-p "rg" grep-program)))
-    (setq grep-program executable)
-    (setq grep-template
-          (if rgp
-              "/usr/bin/rg -nH --null -e <R> <F>"
-            "/usr/bin/grep <X> <C> -nH --null -e <R> <F>"))
-    (with-eval-after-load 'xref
-      (setq xref-search-program (if rgp 'ripgrep 'grep)))))
+  (setq grep-program (or prot/ripgrep (executable-find "grep")))
+  (setq grep-template
+        (if prot/ripgrep
+            "/usr/bin/rg -nH --null -e <R> <F>"
+          "/usr/bin/grep <X> <C> -nH --null -e <R> <F>")))
 
 ;;; wgrep (writable grep)
 ;; See the `grep-edit-mode' for the new built-in feature.

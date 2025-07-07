@@ -5431,6 +5431,9 @@ Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 ;;; grep and xref
+(defvar prot/ripgrep (or (executable-find "rg") (executable-find "ripgrep"))
+  "Store path to ripgrep executable, else nil.")
+
 (use-package re-builder
   :ensure nil
   :commands (re-builder regexp-builder)
@@ -5444,7 +5447,8 @@ Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
   ;; All those have been changed for Emacs 28
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
-  (setq xref-file-name-display 'project-relative))
+  (setq xref-file-name-display 'project-relative)
+  (setq xref-search-program (if prot/ripgrep 'ripgrep 'grep)))
 
 (use-package grep
   :ensure nil
@@ -5454,15 +5458,11 @@ Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
   (setq grep-save-buffers nil)
   (setq grep-use-headings t) ; Emacs 30
 
-  (let ((executable (or (executable-find "rg") "grep"))
-        (rgp (string-match-p "rg" grep-program)))
-    (setq grep-program executable)
-    (setq grep-template
-          (if rgp
-              "/usr/bin/rg -nH --null -e <R> <F>"
-            "/usr/bin/grep <X> <C> -nH --null -e <R> <F>"))
-    (with-eval-after-load 'xref
-      (setq xref-search-program (if rgp 'ripgrep 'grep)))))
+  (setq grep-program (or prot/ripgrep (executable-find "grep")))
+  (setq grep-template
+        (if prot/ripgrep
+            "/usr/bin/rg -nH --null -e <R> <F>"
+          "/usr/bin/grep <X> <C> -nH --null -e <R> <F>")))
 #+end_src
 
 *** The =prot-emacs-search.el= setup for editable grep buffers (~grep-edit-mode~ or ~wgrep~)
