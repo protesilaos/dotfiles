@@ -8038,6 +8038,18 @@ As for my workflow, here is an overview:
                     ":END:\n\n"
                     "%a\n%?")
            :empty-lines-after 1)
+          ;; About "Prot Asks": <https://protesilaos.com/codelog/2025-07-10-prot-asks-chats-videos-proposal/>.
+          ("a" "Prot Asks" entry
+           (file+headline "tasks.org" "Prot Asks")
+           ,(concat "* TODO %^{Title}\n"
+                    "DEADLINE: %^T"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                    ":APPT_WARNTIME: 20"
+                    ":END:\n\n"
+                    "%a\n%?")
+           :empty-lines-after 1)
           ("t" "Task to do" entry
            (file+headline "tasks.org" "All tasks")
            ,(concat "* TODO %^{Title} %^g\n"
