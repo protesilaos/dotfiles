@@ -460,9 +460,7 @@ word.  Fall back to regular `expreg-expand'."
 (use-package tmr
   :ensure t
   :bind
-  (("C-c t t" . tmr)
-   ("C-c t T" . tmr-with-details)
-   ("C-c t l" . tmr-list-timers))
+  ("C-c t" . tmr-prefix-map)
   :config
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
         tmr-notification-urgency 'normal
