@@ -278,11 +278,11 @@
           ("a" "Prot Asks" entry
            (file+headline "tasks.org" "Prot Asks")
            ,(concat "* TODO %^{Title}\n"
-                    "DEADLINE: %^T"
+                    "DEADLINE: %^T\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
-                    ":APPT_WARNTIME: 20"
+                    ":APPT_WARNTIME: 20\n"
                     ":END:\n\n"
                     "%a\n%?")
            :empty-lines-after 1)
