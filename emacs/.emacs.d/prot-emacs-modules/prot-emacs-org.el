@@ -162,6 +162,28 @@
         '(("MAYBE" . prot/org-todo-alternative)
           ("CANCELED" . prot/org-done-alternative)))
 
+  (defface prot/org-tag-coaching
+    '((default :inherit unspecified :weight regular :slant normal)
+      (((class color) (min-colors 88) (background light))
+       :foreground "#004476")
+      (((class color) (min-colors 88) (background dark))
+       :foreground "#c0d0ef")
+      (t :foreground "cyan"))
+    "Face for coaching Org tag.")
+
+  (defface prot/org-tag-protasks
+    '((default :inherit unspecified :weight regular :slant normal)
+      (((class color) (min-colors 88) (background light))
+       :foreground "#603f00")
+      (((class color) (min-colors 88) (background dark))
+       :foreground "#deba66")
+      (t :foreground "yellow"))
+    "Face for protasks Org tag.")
+
+  (setq org-tag-faces
+        '(("coaching" . prot/org-tag-coaching)
+          ("protasks" . prot/org-tag-protasks)))
+
   (setq org-use-fast-todo-selection 'expert)
 
   (setq org-fontify-done-headline nil)
