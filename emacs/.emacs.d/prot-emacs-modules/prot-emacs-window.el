@@ -189,6 +189,7 @@
 ;; <https://protesilaos.com/emacs/beframe>.
 (use-package beframe
   :ensure t
+  :unless prot-laptop-p
   :hook (after-init . beframe-mode)
   :config
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
