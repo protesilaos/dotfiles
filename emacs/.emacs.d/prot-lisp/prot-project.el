@@ -103,7 +103,7 @@ If FRAME is nil, use the current frame."
   (tab-new)
   (find-file directory)
   (unwind-protect
-      (prot-project--switch directory)
+      (prot-project--switch directory 'project-dired)
     (tab-rename name)
     ;; NOTE 2024-01-15 06:52 +0200: I am adding this because
     ;; `tab-rename' is not persistent for some reason. Probably a bug...
@@ -124,7 +124,19 @@ Use this as an alternative to `project-switch-project'."
   (let ((name (file-name-nondirectory (directory-file-name directory))))
     (if (member name (prot-project-in-tab--get-tab-names))
         (tab-switch name)
-      (prot-project-in-tab--create-tab directory name))))
+      (prot-project-in-tab--create-tab directory name))
+    (setq this-command 'project-switch-project)))
+
+;;;###autoload
+(defun prot-project-maybe-in-tab ()
+  "Switch to project depending on `beframe-mode'.
+When the mode is enabled (the expected behaviour), use the command
+`prot-project-switch'.  Otherwise, do `prot-project-in-tab'."
+  (interactive)
+  (call-interactively
+   (if (bound-and-true-p beframe-mode)
+       'prot-project-switch
+     'prot-project-in-tab)))
 
 ;;;; Set up a project root
 

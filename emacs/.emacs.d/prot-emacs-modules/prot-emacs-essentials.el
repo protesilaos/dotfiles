@@ -551,20 +551,28 @@ word.  Fall back to regular `expreg-expand'."
   :hook (shell-mode . prot-shell-mode))
 
 ;;; Laptop settings
-(unless (directory-empty-p "/sys/class/power_supply/")
+(defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
+  "When non-nil, we assume to be working on a laptop.")
+
+(when prot-laptop-p
   (add-to-list 'default-frame-alist '(width . (text-pixels . 800)))
   (add-to-list 'default-frame-alist '(height . (text-pixels . 600)))
 
-  (use-package battery
-    :ensure nil
-    :hook (after-init . display-battery-mode)
-    :config
+  (toggle-frame-maximized)
+
+  (add-hook 'after-make-frame-functions (lambda (frame) (toggle-frame-maximized frame))))
+
+(use-package battery
+  :ensure nil
+  :if prot-laptop-p
+  :hook (after-init . display-battery-mode)
+  :config
 ;;;; Show battery status on the mode line (battery.el)
-    (setq battery-mode-line-format
-          (cond
-           ((eq battery-status-function #'battery-linux-proc-acpi)
-	        "⏻%b%p%%,%d°C ")
-	       (battery-status-function
-	        "⏻%b%p%% ")))))
+  (setq battery-mode-line-format
+        (cond
+         ((eq battery-status-function #'battery-linux-proc-acpi)
+	      "⏻%b%p%%,%d°C ")
+	     (battery-status-function
+	      "⏻%b%p%% "))))
 
 (provide 'prot-emacs-essentials)

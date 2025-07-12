@@ -3670,7 +3670,8 @@ Now the actual configurations:
 Due to my limited electricity setup, I spend about half my computer
 time on the laptop ([[#h:5668958c-2fc0-4a38-bd1f-3e0c6484977d][What hardware and software do you use?]]). It does
 not add to the load that my solar-powered batteries have to handle and
-I can thus keep the lights on until ~21:00.
+I can thus keep the lights on until ~21:00 during the winter and close
+to midnight in the summer..
 
 When I am working on my laptop, I want to make a few tweaks to the
 default dimensions of Emacs frames ([[#h:0403b581-142b-4613-bc81-51c5dccd831d][The =early-init.el= code to set frame parameters]]).
@@ -3679,21 +3680,29 @@ line.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Laptop settings
-(unless (directory-empty-p "/sys/class/power_supply/")
+(defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
+  "When non-nil, we assume to be working on a laptop.")
+
+(when prot-laptop-p
   (add-to-list 'default-frame-alist '(width . (text-pixels . 800)))
   (add-to-list 'default-frame-alist '(height . (text-pixels . 600)))
 
-  (use-package battery
-    :ensure nil
-    :hook (after-init . display-battery-mode)
-    :config
+  (toggle-frame-maximized)
+
+  (add-hook 'after-make-frame-functions (lambda (frame) (toggle-frame-maximized frame))))
+
+(use-package battery
+  :ensure nil
+  :if prot-laptop-p
+  :hook (after-init . display-battery-mode)
+  :config
 ;;;; Show battery status on the mode line (battery.el)
-    (setq battery-mode-line-format
-          (cond
-           ((eq battery-status-function #'battery-linux-proc-acpi)
-	        "⏻%b%p%%,%d°C ")
-	       (battery-status-function
-	        "⏻%b%p%% ")))))
+  (setq battery-mode-line-format
+        (cond
+         ((eq battery-status-function #'battery-linux-proc-acpi)
+	      "⏻%b%p%%,%d°C ")
+	     (battery-status-function
+	      "⏻%b%p%% "))))
 #+end_src
 
 *** The =prot-emacs-essentials.el= call to ~provide~
@@ -6511,12 +6520,16 @@ best changes I ever did to boost my productivity:
 + Backronym: Buffers Encapsulated in Frames Realise Advanced
   Management of Emacs.
 
+Note that I disable this mode on the laptop because of its limited
+screen real estate ([[#h:080aa291-95b4-4d54-8783-d156b13190e9][The =prot-emacs-essentials.el= section about the laptop-specific settings]]).
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Frame-isolated buffers
 ;; Another package of mine.  Read the manual:
 ;; <https://protesilaos.com/emacs/beframe>.
 (use-package beframe
   :ensure t
+  :unless prot-laptop-p
   :hook (after-init . beframe-mode)
   :config
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
@@ -6815,6 +6828,8 @@ Note that [[#h:654cfe49-f59d-4a0d-84ee-094ddce06848][the =prot-project.el= libra
 useful, but which I personally do not need. I am thus not including it
 here, but do take a look.
 
+TODO Because of the limited screen real estate on the laptop, ([[#h:080aa291-95b4-4d54-8783-d156b13190e9][The =prot-emacs-essentials.el= section about the laptop-specific settings]])
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `project'
 (use-package project
@@ -6840,12 +6855,10 @@ here, but do take a look.
 
 (use-package prot-project
   :ensure nil
-  ;; Also check the command `prot-project-in-tab'.  I do not use it
-  ;; because I prefer to manage my buffers in frames, with my
-  ;; `beframe' package.
+  :commands (prot-project-switch prot-project-in-tab)
   :bind
   ( :map project-prefix-map
-    ("p" . prot-project-switch)))
+    ("p" . prot-project-maybe-in-tab)))
 #+end_src
 
 *** The =prot-emacs-git.el= section about ~diff-mode~
@@ -15198,7 +15211,7 @@ If FRAME is nil, use the current frame."
   (tab-new)
   (find-file directory)
   (unwind-protect
-      (prot-project--switch directory)
+      (prot-project--switch directory 'project-dired)
     (tab-rename name)
     ;; NOTE 2024-01-15 06:52 +0200: I am adding this because
     ;; `tab-rename' is not persistent for some reason. Probably a bug...
@@ -15219,7 +15232,19 @@ Use this as an alternative to `project-switch-project'."
   (let ((name (file-name-nondirectory (directory-file-name directory))))
     (if (member name (prot-project-in-tab--get-tab-names))
         (tab-switch name)
-      (prot-project-in-tab--create-tab directory name))))
+      (prot-project-in-tab--create-tab directory name))
+    (setq this-command 'project-switch-project)))
+
+;;;###autoload
+(defun prot-project-maybe-in-tab ()
+  "Switch to project depending on `beframe-mode'.
+When the mode is enabled (the expected behaviour), use the command
+`prot-project-switch'.  Otherwise, do `prot-project-in-tab'."
+  (interactive)
+  (call-interactively
+   (if (bound-and-true-p beframe-mode)
+       'prot-project-switch
+     'prot-project-in-tab)))
 
 ;;;; Set up a project root
 

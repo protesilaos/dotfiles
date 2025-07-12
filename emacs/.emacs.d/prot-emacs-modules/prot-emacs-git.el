@@ -47,12 +47,10 @@
 
 (use-package prot-project
   :ensure nil
-  ;; Also check the command `prot-project-in-tab'.  I do not use it
-  ;; because I prefer to manage my buffers in frames, with my
-  ;; `beframe' package.
+  :commands (prot-project-switch prot-project-in-tab)
   :bind
   ( :map project-prefix-map
-    ("p" . prot-project-switch)))
+    ("p" . prot-project-maybe-in-tab)))
 
 ;;;; `diff-mode'
 (use-package diff-mode
