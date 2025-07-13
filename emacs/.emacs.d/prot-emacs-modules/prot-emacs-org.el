@@ -377,7 +377,9 @@
             (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
             (org-agenda-fontify-priorities nil)
             (org-agenda-remove-tags t))
-           ("agenda.txt"))))
+           ("agenda.txt"))
+          ("p" "Prot Asks"
+           ,prot-org-custom-prot-asks-agenda)))
 
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
