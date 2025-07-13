@@ -1,3 +1,10 @@
+(use-package tab-bar
+  :ensure nil
+  :config
+  (setq tab-bar-new-button-show nil)
+  (setq tab-bar-close-button-show nil)
+  (setq tab-bar-show 1))
+
 ;;; General window and buffer configurations
 (use-package uniquify
   :ensure nil

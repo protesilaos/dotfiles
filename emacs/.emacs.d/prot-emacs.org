@@ -6127,6 +6127,52 @@ emacsclient -e '(prot-window-popup-tmr)'
 emacsclient -e '(prot-window-popup-prot-project-switch)'
 #+end_example
 
+*** The =prot-emacs-window.el= section about the ~tab-bar-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:b4e65201-3f12-4b24-acb3-a5db48cadb3f
+:END:
+
+Emacs comes with two distincts built-in notions of "tabs": (i)
+standalone window+buffer layouts which we may also call "workspaces",
+and (ii) buffers as buttons for a visual representation and navigation
+tool to switch between buffers. The latter is provided by the
+~tab-line-mode~, which I have no use for: I rely on ~switch-to-buffer~
+and to a lesser extent ~previous-buffer~ and ~next-buffer~ (the latter
+two move back and forth in the given window's history of visible buffers).
+
+The ~tab-bar-mode~, however, fills a special niche. It is useful when
+I cannot rely on separate frames to keep a sense of context or order
+to what I am working on. This is the case when I am using my
+laptop, whose screen real estate is limited ([[#h:080aa291-95b4-4d54-8783-d156b13190e9][The =prot-emacs-essentials.el= section about the laptop-specific settings]]).
+In "laptop mode", the most efficient workflow involves a singular
+maximised frame, rather than many frames distribution across the
+desktop[s].
+
+The way I do it, each tab can hold its own project, thanks to some
+custom code I have ([[#h:7dcbcadf-8af6-487d-b864-e4ce56d69530][The =prot-emacs-git.el= section about =project.el=]]). 
+I do not need to enforce separation between tabs, such that each sees
+only the buffers opened inside of it. The reason is that I mostly use
+the laptop for shorter coding/writing sessions and for video calls.
+The heavy duty work happens on my desktop computer.
+
+While on the desktop computer, I rely on my ~beframe~ package to be
+efficient with how I manage my Emacs projects. Beframe allows for a
+frame-oriented workflow where each frame operates on its own distinct
+list of buffers ([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]).
+
+At any rate, all I have here are some basic settings. They do not
+enable any mode and are meant to be there for when my other
+configurations, which I linked to above, come into effect.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp "yes"
+(use-package tab-bar
+  :ensure nil
+  :config
+  (setq tab-bar-new-button-show nil)
+  (setq tab-bar-close-button-show nil)
+  (setq tab-bar-show 1))
+#+end_src
+
 *** The =prot-emacs-window.el= section about uniquifying buffer names
 :PROPERTIES:
 :CUSTOM_ID: h:cfbea29c-3290-4fd1-a02a-d7e887c15674
@@ -6151,7 +6197,7 @@ would have the following buffer names in the various styles:
 I use the =forward= style, which is the closest to the actual file
 name.
 
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el" :mkdirp "yes"
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; General window and buffer configurations
 (use-package uniquify
   :ensure nil
@@ -6826,12 +6872,11 @@ out their action.
 I combine projects with my ~beframe~ package, so that when I switch to
 a project I get a new frame that limits the buffers I visit there
 limited to that frame ([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]).
+This does not happen when I am on the laptop though. There I prefer a
+singular frame where each projects occupies its own ~tab-bar-mode~ tab ([[#h:b4e65201-3f12-4b24-acb3-a5db48cadb3f][The =prot-emacs-window.el= section about the ~tab-bar-mode~]]).
 
-Note that [[#h:654cfe49-f59d-4a0d-84ee-094ddce06848][the =prot-project.el= library]] defines functionality that is
-useful, but which I personally do not need. I am thus not including it
-here, but do take a look.
-
-TODO Because of the limited screen real estate on the laptop, ([[#h:080aa291-95b4-4d54-8783-d156b13190e9][The =prot-emacs-essentials.el= section about the laptop-specific settings]])
+Note that [[#h:654cfe49-f59d-4a0d-84ee-094ddce06848][the =prot-project.el= library]] defines some of the
+functionality I rely on, so do take a look at what it has to offer.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;;; `project'
