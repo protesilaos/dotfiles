@@ -500,7 +500,7 @@ continue, per `org-agenda-skip-function'."
 For use in `prot-org-custom-prot-asks-agenda'."
   (when-let* ((timestamp (or (org-entry-get nil "DEADLINE") (org-entry-get nil "SCHEDULED")))
               (time (prot-org--timestamp-to-time timestamp)))
-    (format-time-string "%A	%e	%B	%R" time)))
+    (format-time-string "%A	%e %10B %6R" time)))
 
 (defvar prot-org-custom-prot-asks-agenda
   '((tags-todo "protasks"
