@@ -1910,7 +1910,8 @@ I also take care to make it work with my customised mode line
            :header-line-active spacious-padding-line-active
            :header-line-inactive spacious-padding-line-inactive))
 
-  (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t)))
+  (when (< emacs-major-version 29)
+    (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t))))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~rainbow-mode~

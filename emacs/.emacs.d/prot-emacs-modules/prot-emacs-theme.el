@@ -87,7 +87,8 @@
            :header-line-active spacious-padding-line-active
            :header-line-inactive spacious-padding-line-inactive))
 
-  (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t)))
+  (when (< emacs-major-version 29)
+    (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t))))
 
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (use-package rainbow-mode
