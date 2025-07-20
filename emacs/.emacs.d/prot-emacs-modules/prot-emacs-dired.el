@@ -136,6 +136,7 @@
   ( :map dired-mode-map
     ("V" . dired-preview-mode))
   :config
+  (setq dired-preview-trigger-on-start nil)
   (setq dired-preview-max-size (* (expt 2 20) 10))
   (setq dired-preview-delay 0.5)
   (setq dired-preview-ignored-extensions-regexp
