@@ -26,24 +26,31 @@
     # constant width of 300
     width = 300
 
-    # The maximum height of a single notification, excluding the frame.
-    height = 300
+    # The height of a single notification, excluding the frame.
+    # dynamic height from 0 to 300
+    height = (0, 300)
+    # constant height of 300
+    # height = 300
+    # NOTE: Dunst from version 1.11 and older don't support dynamic height
+    #       and the given value is treated as the maximum height
 
     # Position the notification in the top right corner
     origin = bottom-right
 
     # Offset from the origin
-    offset = 10x50
+    # NOTE: Dunst from version 1.11 and older use this alternative notation
+    # offset = 10x50
+    offset = (10, 50)
 
     # Scale factor. It is auto-detected if value is 0.
     scale = 0
 
     # Maximum number of notification (0 means no limit)
-    notification_limit = 0
+    notification_limit = 20
 
     ### Progress bar ###
 
-    # Turn on the progess bar. It appears when a progress hint is passed with
+    # Turn on the progress bar. It appears when a progress hint is passed with
     # for example dunstify -h int:value:12
     progress_bar = true
 
@@ -60,6 +67,19 @@
     # Set the maximum width for the progress bar
     progress_bar_max_width = 300
 
+    # Corner radius for the progress bar. 0 disables rounded corners.
+    progress_bar_corner_radius = 0
+
+    # Define which corners to round when drawing the progress bar. If progress_bar_corner_radius
+    # is set to 0 this option will be ignored.
+    progress_bar_corners = all
+
+    # Corner radius for the icon image.
+    icon_corner_radius = 0
+
+    # Define which corners to round when drawing the icon image. If icon_corner_radius
+    # is set to 0 this option will be ignored.
+    icon_corners = all
 
     # Show how many messages are currently hidden (because of
     # notification_limit).
@@ -73,7 +93,8 @@
     # Draw a line of "separator_height" pixel height between two
     # notifications.
     # Set to 0 to disable.
-    separator_height = 1
+    # If gap_size is greater than 0, this setting will be ignored.
+    separator_height = 2
 
     # Padding between text and separator.
     padding = 8
@@ -91,6 +112,12 @@
     # Defines color of the frame around the notification window.
     frame_color = "#aaaaaa"
 
+    # Size of gap to display between notifications - requires a compositor.
+    # If value is greater than 0, separator_height will be ignored and a border
+    # of size frame_width will be drawn around each notification instead.
+    # Click events on gaps do not currently propagate to applications below.
+    gap_size = 0
+
     # Define a color for the separator.
     # possible values are:
     #  * auto: dunst tries to find a color fitting to the background;
@@ -99,7 +126,12 @@
     #  * anything else will be interpreted as a X color.
     separator_color = frame
 
-    # Sort messages by urgency.
+    # Sort type.
+    # possible values are:
+    #  * id: sort by id
+    #  * urgency_ascending: sort by urgency (low then normal then critical)
+    #  * urgency_descending: sort by urgency (critical then normal then low)
+    #  * update: sort by update (most recent always at the top)
     sort = yes
 
     # Don't remove messages, if the user is idle (no mouse or keyboard input)
@@ -107,11 +139,11 @@
     # Set to 0 to disable.
     # A client can set the 'transient' hint to bypass this. See the rules
     # section for how to disable this if necessary
-    idle_threshold = 120
+    # idle_threshold = 120
 
     ### Text ###
 
-    font = Monospace 9.5
+    font = Monospace 8
 
     # The spacing between lines.  If the height is smaller than the
     # font height, it will get raised to the font height.
@@ -125,7 +157,7 @@
     #        <u>underline</u>
     #
     #        For a complete reference see
-    #        <https://developer.gnome.org/pango/stable/pango-Markup.html>.
+    #        <https://docs.gtk.org/Pango/pango_markup.html>.
     #
     # strip: This setting is provided for compatibility with some broken
     #        clients that send markup even though it's not enabled on the
@@ -184,19 +216,28 @@
 
     ### Icons ###
 
-    # Align icons left/right/off
+    # Recursive icon lookup. You can set a single theme, instead of having to
+    # define all lookup paths.
+    enable_recursive_icon_lookup = true
+
+    # Set icon theme (only used for recursive icon lookup)
+    # icon_theme = Adwaita
+    # You can also set multiple icon themes, with the leftmost one being used first.
+    icon_theme = "Adwaita, Papirus-Dark, Papirus-Light"
+
+    # Align icons left/right/top/off
     icon_position = left
 
     # Scale small icons up to this size, set to 0 to disable. Helpful
     # for e.g. small files or high-dpi screens. In case of conflict,
     # max_icon_size takes precedence over this.
-    min_icon_size = 0
+    min_icon_size = 32
 
     # Scale larger icons down to this size, set to 0 to disable
-    max_icon_size = 32
+    max_icon_size = 128
 
-    # Paths to default icons.
-    icon_path = /usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/
+    # Paths to default icons (only necessary when not using recursive icon lookup)
+    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
 
     ### History ###
 
@@ -218,10 +259,10 @@
     # Always run rule-defined scripts, even if the notification is suppressed
     always_run_script = true
 
-    # Define the title of the windows spawned by dunst
+    # Define the title of the windows spawned by dunst (X11 only)
     title = Dunst
 
-    # Define the class of the windows spawned by dunst
+    # Define the class of the windows spawned by dunst (X11 only)
     class = Dunst
 
     # Define the corner radius of the notification window
@@ -230,6 +271,13 @@
     # The radius will be automatically lowered if it exceeds half of the
     # notification height to avoid clipping text and/or icons.
     corner_radius = 0
+
+    # Define which corners to round when drawing the window. If the corner radius
+    # is set to 0 this option will be ignored.
+    #
+    # Comma-separated list of the corners. The accepted corner values are bottom-right,
+    # bottom-left, top-right, top-left, top, bottom, left, right or all.
+    corners = all
 
     # Ignore the dbus closeNotification message.
     # Useful to enforce the timeout set by dunst configuration. Without this
@@ -240,7 +288,7 @@
     ### Wayland ###
     # These settings are Wayland-specific. They have no effect when using X11
 
-    # Uncomment this if you want to let notications appear under fullscreen
+    # Uncomment this if you want to let notifications appear under fullscreen
     # applications (default: overlay)
     # layer = top
 
@@ -295,23 +343,25 @@
     background = "#222222"
     foreground = "#888888"
     timeout = 4
-    # Icon for notifications with low urgency, uncomment to enable
-    #icon = /path/to/icon
+    # Icon for notifications with low urgency
+    default_icon = dialog-information
 
 [urgency_normal]
     background = "#333333"
     foreground = "#ffffff"
     timeout = 6
-    # Icon for notifications with normal urgency, uncomment to enable
-    #icon = /path/to/icon
+    override_pause_level = 30
+    # Icon for notifications with normal urgency
+    default_icon = dialog-information
 
 [urgency_critical]
     background = "#900000"
     foreground = "#ffffff"
     frame_color = "#ff0000"
     timeout = 0
-    # Icon for notifications with critical urgency, uncomment to enable
-    #icon = /path/to/icon
+    override_pause_level = 60
+    # Icon for notifications with critical urgency
+    default_icon = dialog-warning
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.
@@ -336,9 +386,18 @@
 #    new_icon
 #    set_stack_tag
 #    set_transient
+#    set_category
 #    timeout
 #    urgency
+#    icon_position
+#    skip_display
+#    history_ignore
 #    action_name
+#    word_wrap
+#    ellipsize
+#    alignment
+#    hide_text
+#    override_pause_level
 #
 # Shell-like globbing will get expanded.
 #
@@ -346,6 +405,10 @@
 # GLib based applications export their desktop-entry name. In comparison to the appname,
 # the desktop-entry won't get localized.
 #
+# You can also allow a notification to appear even when paused. Notification will appear whenever notification's override_pause_level >= dunst's paused level.
+# This can be used to set partial pause modes, where more urgent notifications get through, but less urgent stay paused. To do that, you can override the following in the rules:
+# override_pause_level = X
+
 # SCRIPTING
 # You can specify a script that gets run when the rule matches by
 # setting the "script" option.
