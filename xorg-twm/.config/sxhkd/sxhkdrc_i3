@@ -36,6 +36,10 @@ mod4 + {Left,Down,Up,Right}
 mod4 + shift + {h,j,k,l}
     i3-msg -t command move {left,down,up,right}
 
+# Use tab to go to the next
+mod4 + {_,shift +} Tab
+    i3-msg -t command focus {next,prev}
+
 # Same as above, with arrow keys.
 mod4 + shift + {Left,Down,Up,Right}
     i3-msg -t command move {left,down,up,right}
