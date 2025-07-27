@@ -8,6 +8,10 @@
 ! This file is part of my dotfiles and is meant to work with the rest of
 ! my custom desktop session: https://github.com/protesilaos/dotfiles
 
+! Default cursor theme (also see GTK configuration files)
+! =======================================================
+Xcursor.theme: Adwaita
+Xcursor.size: 16
 
 ! Font settings (for programs that do not support fontconfig)
 ! ===========================================================
