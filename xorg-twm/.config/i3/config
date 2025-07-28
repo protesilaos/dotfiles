@@ -10,7 +10,7 @@
 #
 #     <https://i3wm.org/docs/userguide.html>
 
-gaps inner 1px
+gaps inner 0
 gaps outer 0
 smart_gaps inverse_outer
 default_border pixel 2
