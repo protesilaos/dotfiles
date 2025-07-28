@@ -13,7 +13,7 @@
 
 # Reload the i3 config, restart the session in place, or exit
 mod4 + e ; {c,r,q}
-    i3-msg -t command {reload,restart,exit}
+    i3-msg -t command {reload && notify-send -a i3 -i desktop "i3 action" "Reloaded the config",restart && notify-send -a i3 -i desktop "i3 action" "Restarted the config",exit}
 
 mod4 + {t,s}
     i3-msg -t command {layout toggle tabbed split,split toggle}
