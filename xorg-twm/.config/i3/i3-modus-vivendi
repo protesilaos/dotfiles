@@ -1,10 +1,10 @@
 # Colours based on my 'modus-themes' for Emacs.
 
 # <colorclass>           <border> <bg> <text> <indicator> <child_border>
-client.focused           #79a8ff #2f337f #ffffff #ffa200 #79a8ff
-client.focused_inactive  #f78fe7 #7f337f #ffffff #ffa200 #f78fe7
-client.focused_tab_title #2f337f #2f337f #ffffff #ffa200 #2f337f
-client.unfocused         #575757 #575757 #ffffff #ffa200 #575757
-client.urgent            #a60000 #a60000 #ffffff #ffa200 #a60000 
+client.focused           #000000 #000000 #ffffff #55dd99 #79a8ff
+client.focused_inactive  #353535 #353535 #ffffff #55dd99 #f78fe7
+client.focused_tab_title #2f337f #2f337f #ffffff #55dd99 #2f337f
+client.unfocused         #575757 #575757 #ffffff #55dd99 #575757
+client.urgent            #dd4444 #dd4444 #ffffff #55dd99 #dd4444 
 # client.placeholder
 client.background #000000
