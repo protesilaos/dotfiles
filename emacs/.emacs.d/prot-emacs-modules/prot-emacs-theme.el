@@ -67,11 +67,11 @@
   :init
   ;; These are the defaults, but I keep it here for visiibility.
   (setq spacious-padding-widths
-        `( :internal-border-width 30
+        `( :internal-border-width 15
            :header-line-width 4
            :mode-line-width 6
            :tab-width 4
-           :right-divider-width 30
+           :right-divider-width 15
            :scroll-bar-width ,(if x-toolkit-scroll-bars 8 6)
            :left-fringe-width 20
            :right-fringe-width 20))
