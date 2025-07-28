@@ -221,6 +221,7 @@
   ;; Some of these variables are defined in places other than
   ;; mouse.el, but this is fine.
   (setq mouse-autoselect-window t) ; complements the auto-selection of my tiling window manager
+  (setq focus-follows-mouse t)
 
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
   (setq mouse-wheel-scroll-amount
