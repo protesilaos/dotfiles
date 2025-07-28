@@ -26,7 +26,8 @@ workspace_auto_back_and_forth yes
 # the frame, no matter the workspace it is on.
 focus_on_window_activation focus
 
-# Font for window titles.
+# Font for window titles. The syntax is described here:
+# <https://docs.gtk.org/Pango/type_func.FontDescription.from_string.html>.
 font pango:sans 8
 title_align center
 # # enable window icons for all windows with extra horizontal padding
