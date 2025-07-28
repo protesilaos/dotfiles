@@ -26,9 +26,8 @@ workspace_auto_back_and_forth yes
 # the frame, no matter the workspace it is on.
 focus_on_window_activation focus
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block.
-font pango:monospace 8
+# Font for window titles.
+font pango:sans 8
 title_align center
 
 # Start XDG autostart .desktop files using dex. See also
