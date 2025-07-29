@@ -28,7 +28,7 @@ focus_on_window_activation focus
 
 # Font for window titles. The syntax is described here:
 # <https://docs.gtk.org/Pango/type_func.FontDescription.from_string.html>.
-font pango:sans 8
+font pango:sans 7
 title_align center
 # enable window icons for all windows with extra horizontal padding
 for_window [all] title_window_icon padding 2px
