@@ -319,7 +319,7 @@ This command can then be followed by the standard
 ;;;###autoload
 (defun prot-simple-copy-line-forward (n)
   "Copy from point to the end of the Nth line.
-Without numberic prefix argument N, operate on the current line."
+Without numeric prefix argument N, operate on the current line."
   (interactive "p")
   (let ((point (point))
         (end (line-end-position n))
@@ -334,7 +334,7 @@ Without numberic prefix argument N, operate on the current line."
 ;;;###autoload
 (defun prot-simple-copy-line-backward (n)
   "Copy from point to the beginning of the Nth line.
-Without numberic prefix argument N, operate on the current line."
+Without numeric prefix argument N, operate on the current line."
   (interactive "p")
   (let ((point (point))
         (beg (line-beginning-position n))
@@ -354,7 +354,7 @@ Without numberic prefix argument N, operate on the current line."
          (end (line-end-position))
          (end+ (+ end 1)))
     (cond
-     ((> end+ (point-max)))
+     ((> end+ (point-max)) (delete-region point end))
      ((= point end) (delete-region point end+))
      (t (delete-region point end))))
   (setq this-command 'delete-region))
@@ -367,7 +367,7 @@ Without numberic prefix argument N, operate on the current line."
          (beg (line-beginning-position))
          (beg- (- beg 1)))
     (cond
-     ((< beg- (point-min)))
+     ((< beg- (point-min)) (delete-region beg point))
      ((= point beg) (delete-region beg- point))
      (t (delete-region beg point))))
   (setq this-command 'delete-region))
