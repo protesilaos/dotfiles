@@ -16739,12 +16739,14 @@ This command can then be followed by the standard
 (defun prot-simple-delete-line-backward ()
   "Delete (not kill) from point to the beginning of the line."
   (interactive)
-  (let ((point (point))
-        (beg (line-beginning-position)))
-    (if (eq point beg)
-        (delete-region (- beg 1) point)
-      (delete-region point beg)))
-  (setq this-command 'kill-whole-line))
+  (let* ((point (point))
+         (beg (line-beginning-position))
+         (beg- (- beg 1)))
+    (cond
+     ((< beg- (point-min)))
+     ((= point beg) (delete-region beg- point))
+     (t (delete-region beg point))))
+  (setq this-command 'delete-region))
 
 ;;;###autoload
 (define-minor-mode prot-simple-auto-fill-visual-line-mode
