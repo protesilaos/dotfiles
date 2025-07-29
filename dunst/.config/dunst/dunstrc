@@ -34,8 +34,8 @@
     # NOTE: Dunst from version 1.11 and older don't support dynamic height
     #       and the given value is treated as the maximum height
 
-    # Position the notification in the top right corner
-    origin = top-right
+    # Position the notification in the bottom right corner
+    origin = bottom-right
 
     # Offset from the origin
     # NOTE: Dunst from version 1.11 and older use this alternative notation
