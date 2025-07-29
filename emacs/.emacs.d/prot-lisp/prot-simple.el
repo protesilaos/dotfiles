@@ -320,12 +320,14 @@ This command can then be followed by the standard
 (defun prot-simple-delete-line ()
   "Delete (not kill) from point to the end of the line."
   (interactive)
-  (let ((point (point))
-        (end (line-end-position)))
-    (if (eq point end)
-        (delete-region point (+ end 1))
-      (delete-region point end)))
-  (setq this-command 'kill-whole-line))
+  (let* ((point (point))
+         (end (line-end-position))
+         (end+ (+ end 1)))
+    (cond
+     ((> end+ (point-max)))
+     ((= point end) (delete-region point end+))
+     (t (delete-region point end))))
+  (setq this-command 'delete-region))
 
 ;;;###autoload
 (defun prot-simple-delete-line-backward ()
