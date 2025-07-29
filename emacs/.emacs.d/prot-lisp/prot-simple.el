@@ -317,6 +317,36 @@ This command can then be followed by the standard
   (setq this-command 'kill-line))
 
 ;;;###autoload
+(defun prot-simple-copy-line-forward (n)
+  "Copy from point to the end of the Nth line.
+Without numberic prefix argument N, operate on the current line."
+  (interactive "p")
+  (let ((point (point))
+        (end (line-end-position n))
+        (max (point-max)))
+    (copy-region-as-kill
+     point
+     (if (> end max)
+         max
+       end)))
+  (setq this-command 'kill-ring-save))
+
+;;;###autoload
+(defun prot-simple-copy-line-backward (n)
+  "Copy from point to the beginning of the Nth line.
+Without numberic prefix argument N, operate on the current line."
+  (interactive "p")
+  (let ((point (point))
+        (beg (line-beginning-position n))
+        (min (point-min)))
+    (copy-region-as-kill
+     point
+     (if (< beg min)
+         min
+       beg)))
+  (setq this-command 'kill-ring-save))
+
+;;;###autoload
 (defun prot-simple-delete-line ()
   "Delete (not kill) from point to the end of the line."
   (interactive)

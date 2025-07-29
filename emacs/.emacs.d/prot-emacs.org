@@ -2594,7 +2594,9 @@ this via some hook.
     ("C-," . prot-simple-mark-sexp)   ; I also have `isearch-forward-symbol-at-point' on C-.
     ;; Commands for lines
     ("C-S-d" . prot-simple-delete-line-backward)
-    ("M-k" . prot-simple-kill-line-backward)
+    ("C-S-k" . prot-simple-kill-line-backward)
+    ("M-k" . prot-simple-copy-line-forward)
+    ("M-K" . prot-simple-copy-line-backward)
     ("M-j" . delete-indentation)
     ("C-w" . prot-simple-kill-region)
     ("M-w" . prot-simple-kill-ring-save)
@@ -4654,8 +4656,6 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
     :bind
     ( :map global-map
       ("M-g M-g" . consult-goto-line)
-      ("M-K" . consult-keep-lines) ; M-S-k is similar to M-S-5 (M-%)
-      ("M-F" . consult-focus-lines) ; same principle
       ("M-s M-b" . consult-buffer)
       ("M-s M-f" . consult-find)
       ("M-s M-g" . consult-grep)
@@ -16721,6 +16721,36 @@ This command can then be followed by the standard
   (interactive)
   (kill-line 0)
   (setq this-command 'kill-line))
+
+;;;###autoload
+(defun prot-simple-copy-line-forward (n)
+  "Copy from point to the end of the Nth line.
+Without numberic prefix argument N, operate on the current line."
+  (interactive "p")
+  (let ((point (point))
+        (end (line-end-position n))
+        (max (point-max)))
+    (copy-region-as-kill
+     point
+     (if (> end max)
+         max
+       end)))
+  (setq this-command 'kill-ring-save))
+
+;;;###autoload
+(defun prot-simple-copy-line-backward (n)
+  "Copy from point to the beginning of the Nth line.
+Without numberic prefix argument N, operate on the current line."
+  (interactive "p")
+  (let ((point (point))
+        (beg (line-beginning-position n))
+        (min (point-min)))
+    (copy-region-as-kill
+     point
+     (if (< beg min)
+         min
+       beg)))
+  (setq this-command 'kill-ring-save))
 
 ;;;###autoload
 (defun prot-simple-delete-line ()

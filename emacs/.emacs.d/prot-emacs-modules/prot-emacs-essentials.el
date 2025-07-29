@@ -121,7 +121,9 @@
     ("C-," . prot-simple-mark-sexp)   ; I also have `isearch-forward-symbol-at-point' on C-.
     ;; Commands for lines
     ("C-S-d" . prot-simple-delete-line-backward)
-    ("M-k" . prot-simple-kill-line-backward)
+    ("C-S-k" . prot-simple-kill-line-backward)
+    ("M-k" . prot-simple-copy-line-forward)
+    ("M-K" . prot-simple-copy-line-backward)
     ("M-j" . delete-indentation)
     ("C-w" . prot-simple-kill-region)
     ("M-w" . prot-simple-kill-ring-save)

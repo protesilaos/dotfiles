@@ -346,8 +346,6 @@ Development continues on GitHub with GitLab as a mirror."))
     :bind
     ( :map global-map
       ("M-g M-g" . consult-goto-line)
-      ("M-K" . consult-keep-lines) ; M-S-k is similar to M-S-5 (M-%)
-      ("M-F" . consult-focus-lines) ; same principle
       ("M-s M-b" . consult-buffer)
       ("M-s M-f" . consult-find)
       ("M-s M-g" . consult-grep)

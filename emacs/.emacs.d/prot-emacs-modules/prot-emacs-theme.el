@@ -65,7 +65,6 @@
   :hook (after-init . spacious-padding-mode)
   :bind ("<f8>" . spacious-padding-mode)
   :init
-  ;; These are the defaults, but I keep it here for visiibility.
   (setq spacious-padding-widths
         `( :internal-border-width 15
            :header-line-width 4
