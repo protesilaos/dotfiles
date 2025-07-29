@@ -15834,7 +15834,8 @@ Also see `prot-search-grep-todo-keywords'."
   (interactive)
   (when-let* ((selection (prot-search--outline-prompt))
               (line (string-to-number (car (split-string selection "\t")))))
-    (goto-line line)
+    (goto-char (point-min))
+    (forward-line (- line 1))
     (run-hooks 'prot-search-outline-hook)))
 
 ;;;; Grep
