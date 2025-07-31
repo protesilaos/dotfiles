@@ -31,7 +31,7 @@ focus_on_window_activation focus
 font pango:sans 7
 title_align center
 # enable window icons for all windows with extra horizontal padding
-for_window [all] title_window_icon padding 2px
+# for_window [all] title_window_icon padding 2px
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
