@@ -146,12 +146,11 @@ backtick and single quote, else two backticks."
     (user-error "Cannot find character `%s' in `prot-pair-pairs'" (char-to-string character))))
 
 ;;;###autoload
-(defun prot-pair-insert (pair n)
-  "Insert PAIR an N number of times around object at point.
-PAIR is one among `prot-pair-pairs'.  The object at point is
-either a symbol or the boundaries of the active region.  N is a
-numeric prefix argument, defaulting to 1 if none is provided in
-interactive use."
+(defun prot-pair-insert (character n)
+  "Insert CHARACTER pair an N number of times around object at point.
+CHARACTER is one among `prot-pair-pairs'.  The object at point is either
+a symbol or the boundaries of the active region.  N is a numeric prefix
+argument, defaulting to 1 if none is provided in interactive use."
   (interactive
    (list
     (prot-pair--insert-prompt)
