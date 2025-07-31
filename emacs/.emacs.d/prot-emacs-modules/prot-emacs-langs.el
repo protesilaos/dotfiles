@@ -52,7 +52,7 @@
 ;;;; SystemD and other configuration files (conf-mode)
 (use-package conf-mode
   :ensure nil
-  :mode ("\\`dircolors\\'" "\\.\\(service\\|timer\\)\\'"))
+  :mode ("\\`dircolors\\'" "\\.\\(service\\|timer\\)\\'" "dunstrc"))
 
 ;;;; Eldoc (Emacs live documentation feedback)
 (use-package eldoc

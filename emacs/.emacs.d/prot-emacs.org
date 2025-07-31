@@ -8647,7 +8647,7 @@ recipes, by the way.
 ;;;; SystemD and other configuration files (conf-mode)
 (use-package conf-mode
   :ensure nil
-  :mode ("\\`dircolors\\'" "\\.\\(service\\|timer\\)\\'"))
+  :mode ("\\`dircolors\\'" "\\.\\(service\\|timer\\)\\'" "dunstrc"))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for ~eldoc~
