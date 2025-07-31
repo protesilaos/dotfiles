@@ -175,7 +175,7 @@
   :ensure nil
   :bind
   (("C-'" . prot-pair-insert)
-   ("M-'" . prot-pair-insert)
+   ("M-'" . prot-pair-insert-directly)
    ("M-\\" . prot-pair-delete)))
 
 ;;;; Comments (prot-comment.el)
