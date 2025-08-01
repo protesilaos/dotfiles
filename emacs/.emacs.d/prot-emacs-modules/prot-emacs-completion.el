@@ -86,7 +86,7 @@
   :config
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
-  (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
+  (setq orderless-matching-styles '(orderless-prefixes orderless-regexp orderless-flex))
   (setq orderless-smart-case nil)
 
   ;; SPC should never complete: use it for `orderless' groups.
