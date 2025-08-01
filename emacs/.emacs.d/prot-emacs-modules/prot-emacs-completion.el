@@ -95,14 +95,6 @@
           ("SPC" . nil)
           ("?" . nil)))
 
-(use-package prot-orderless
-  :ensure nil
-  :config
-  (setq orderless-style-dispatchers
-        '(prot-orderless-literal
-          prot-orderless-file-ext
-          prot-orderless-beg-or-end)))
-
 (setq completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
 (setq-default case-fold-search t)   ; For general regexp

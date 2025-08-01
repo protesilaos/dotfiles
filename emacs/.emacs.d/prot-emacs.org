@@ -4058,16 +4058,21 @@ think of a better value). In the section about completion styles, I
 explain how I use ~orderless~ and why its power does not result in
 lots of false positives.
 
-With ~orderless~ we can also define so-called "style dispatchers".
+With ~orderless~ we can also rely on so-called "style dispatchers".
 These are characters attached to the input which instruct ~orderless~
-to use a specific pattern for that component. My =prot-orderless.el=
-defines such style dispatchers as postfix operators: they are added to
-the end of the input ([[#h:114c6e8c-697a-43e9-8fd9-52872997e1c9][The =prot-orderless.el= library]]). The equals
-sign takes the input literally, the dot interprets it as a file type
-extension, while the tilde means to match the input either at the
-beginning or the end. Granted, these are overkill most of the time. It
-is easier to just continue typing to narrow the list of candidates.
-Still, they do have their uses.
+to use a specific pattern for that component, regardless of what the
+~orderless-matching-styles~ configuration is. I used to have my own
+style dispatchers, but realised that I was not using them enough. The
+default method has also been updated since I did my configuration to
+support an affixation method (prefix OR suffix) for style dispatching.
+This method reads the ~orderless-affix-dispatch-alist~ to determine
+how to interpret the input. From that list, the most obvious advantage
+to me is the =!=, which is a logical =NOT=: it is a very easy way to
+remove something from the list of candidates while typing in the
+minibuffer. The =&= is potentially useful because it matches the
+annotations displayed by ~marginalia~ ([[#h:bd3f7a1d-a53d-4d3e-860e-25c5b35d8e7e][The =prot-emacs-completion.el= section to configure completion annotations (~marginalia~)]]).
+The remaining dispatch characters affect how the input is treated as a
+literal string, initialism, et cetera, which is not as useful to me.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Orderless completion style (and prot-orderless.el)
@@ -4086,14 +4091,6 @@ Still, they do have their uses.
   :bind ( :map minibuffer-local-completion-map
           ("SPC" . nil)
           ("?" . nil)))
-
-(use-package prot-orderless
-  :ensure nil
-  :config
-  (setq orderless-style-dispatchers
-        '(prot-orderless-literal
-          prot-orderless-file-ext
-          prot-orderless-beg-or-end)))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings to ignore letter casing
@@ -13885,7 +13882,7 @@ Add this to `notmuch-mua-send-hook'."
 ;;; prot-notmuch.el ends here
 #+end_src
 
-** The =prot-orderless.el= library
+** COMMENT The =prot-orderless.el= library
 :PROPERTIES:
 :CUSTOM_ID: h:114c6e8c-697a-43e9-8fd9-52872997e1c9
 :END:
