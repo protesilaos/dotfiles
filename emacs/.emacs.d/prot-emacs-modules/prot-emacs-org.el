@@ -148,7 +148,7 @@
   (setq org-reverse-note-order nil)
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "MAYBE(m)" "|" "CANCELED(c@)" "DONE(d!)")))
+        '((sequence "TODO(t)" "MAYBE(m)" "|" "CANCELLED(c@)" "DONE(d!)")))
 
   (defface prot/org-todo-alternative
     '((t :inherit (italic org-todo)))
@@ -160,7 +160,7 @@
 
   (setq org-todo-keyword-faces
         '(("MAYBE" . prot/org-todo-alternative)
-          ("CANCELED" . prot/org-done-alternative)))
+          ("CANCELLED" . prot/org-done-alternative)))
 
   (defface prot/org-tag-coaching
     '((default :inherit unspecified :weight regular :slant normal)
