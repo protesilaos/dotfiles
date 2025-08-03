@@ -9171,13 +9171,9 @@ facilities to rename files, regardless of file type.
   (setq denote-date-format nil) ; read its doc string
   (setq denote-rename-confirmations nil) ; CAREFUL with this if you are not familiar with Denote!
   (setq denote-backlinks-show-context nil)
-  (setq denote-rename-buffer-format "%D%b")
-  (setq denote-buffer-has-backlinks-string " (<--->)")
+  (setq denote-buffer-name-prefix "[D] ") ; to identify all Denote buffers
+  (setq denote-rename-buffer-format "%D")
 
-  ;; Automatically rename Denote buffers when opening them so that
-  ;; instead of their long file name they have a literal "[D]"
-  ;; followed by the file's title.  Read the doc string of
-  ;; `denote-rename-buffer-format' for how to modify this.
   (denote-rename-buffer-mode 1)
 
   ;; EXPERIMENT 2025-04-25: This is not the default order, though
