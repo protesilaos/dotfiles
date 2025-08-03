@@ -216,7 +216,21 @@
     "C-x C-b" #'beframe-buffer-menu
     ;; Not specific to Beframe, but since it renames frames (by means
     ;; of `beframe-mode') it is appropriate to have this here:
-    "C-x B" #'select-frame-by-name))
+    "C-x B" #'select-frame-by-name)
+
+  ;; Integration with the `consult-buffer' command.  It will show only
+  ;; buffers from the current frame.  To view all buffers, first input
+  ;; a space at the empty minibuffer prompt.  This enables the "hidden
+  ;; buffers" view.
+  (with-eval-after-load 'consult
+    (defun consult-beframe-buffer-list (&optional frame)
+      "Return the list of buffers from `beframe-buffer-names' sorted by visibility.
+With optional argument FRAME, return the list of buffers of FRAME.
+
+For use in `consult-buffer-list'."
+      (beframe-buffer-list frame :sort #'beframe-buffer-sort-visibility))
+
+    (setq consult-buffer-list #'consult-beframe-buffer-list))
 
 ;;; Frame history (undelete-frame-mode)
 (use-package frame
