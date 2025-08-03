@@ -6608,7 +6608,7 @@ With optional argument FRAME, return the list of buffers of FRAME.
 For use in `consult-buffer-list'."
       (beframe-buffer-list frame :sort #'beframe-buffer-sort-visibility))
 
-    (setq consult-buffer-list #'consult-beframe-buffer-list))
+    (setq consult-buffer-list #'consult-beframe-buffer-list)))
 #+end_src
 
 *** The =prot-emacs-window.el= configuration of ~undelete-frame-mode~ and ~winner-mode~

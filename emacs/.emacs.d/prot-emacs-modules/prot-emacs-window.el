@@ -230,7 +230,7 @@ With optional argument FRAME, return the list of buffers of FRAME.
 For use in `consult-buffer-list'."
       (beframe-buffer-list frame :sort #'beframe-buffer-sort-visibility))
 
-    (setq consult-buffer-list #'consult-beframe-buffer-list))
+    (setq consult-buffer-list #'consult-beframe-buffer-list)))
 
 ;;; Frame history (undelete-frame-mode)
 (use-package frame
