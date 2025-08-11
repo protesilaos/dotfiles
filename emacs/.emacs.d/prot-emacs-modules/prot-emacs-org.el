@@ -180,9 +180,10 @@
       (t :foreground "yellow"))
     "Face for protasks Org tag.")
 
-  (setq org-tag-faces
-        '(("coaching" . prot/org-tag-coaching)
-          ("protasks" . prot/org-tag-protasks)))
+  (when (eq prot-emacs-load-theme-family 'modus)
+    (setq org-tag-faces
+          '(("coaching" . prot/org-tag-coaching)
+            ("protasks" . prot/org-tag-protasks))))
 
   (setq org-use-fast-todo-selection 'expert)
 
