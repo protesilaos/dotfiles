@@ -25,8 +25,8 @@
   :commands (dired)
   :config
   (setq dired-guess-shell-alist-user ; those are the suggestions for ! and & in Dired
-        '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh" "xdg-open")
-          ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv" "xdg-open")
+        '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh *" "feh" "xdg-open")
+          ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv *" "mpv" "xdg-open")
           (".*" "xdg-open"))))
 
 (use-package dired
