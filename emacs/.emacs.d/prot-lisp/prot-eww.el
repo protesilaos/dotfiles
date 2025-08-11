@@ -59,8 +59,7 @@
 
 (defun prot-eww-buffer-url-prompt ()
   "Prompt for a url in the current buffer."
-  (when-let* ((completion-extra-properties `(:annotation-function ,#'prot-eww--annotate-with-url))
-              (link-data (prot-eww--get-urls))
+  (when-let* ((link-data (prot-eww--get-urls))
               (candidates (mapcar
                            (pcase-lambda (`(,position ,name ,_))
                              (format "%s	%s" position name))
@@ -70,8 +69,9 @@
                (completing-read
                 (format-prompt "Select link in the current page" nil)
                 table))
-              (index (string-to-number (car (split-string selection "\t")))))
-    (assoc index link-data)))
+              (position (car (split-string selection "\t")))
+              (number (string-to-number position)))
+    (assoc number link-data)))
 
 (defun prot-eww-visit-url-on-page (&optional new-buffer)
   "Visit URL among those in the current buffer using completion.
