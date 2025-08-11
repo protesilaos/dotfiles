@@ -126,7 +126,6 @@
   :config
   (setq cursory-presets
         '((box
-           :cursor-color font-lock-builtin-face
            :blink-cursor-interval 1.2)
           (box-no-blink
            :inherit box
