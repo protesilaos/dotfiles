@@ -424,7 +424,7 @@ retroactively follow that order."
   :ensure t
   :commands (olivetti-mode)
   :config
-  (setq olivetti-body-width 0.7)
+  (setq-default olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
