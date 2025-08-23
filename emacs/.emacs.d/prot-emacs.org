@@ -4270,7 +4270,7 @@ completion (such as the ~corfu~ package).
   :config
   (setq completion-auto-deselect nil)
   (setq completion-auto-help 'always)
-  (setq completion-auto-select 'second-tab)
+  (setq completion-auto-select nil)
   (setq completion-show-help nil)
   (setq completion-show-inline-help nil)
   (setq completions-detailed t)
@@ -4282,14 +4282,17 @@ completion (such as the ~corfu~ package).
   (setq completions-sort 'historical)
   ;; This one is for Emacs 31.  It relies on what I am doing with the `completion-category-overrides'.
   (setq completion-eager-display 'auto)
+  ;; This is also for Emacs 31 and it too leverages the `completion-category-overrides' if set to `auto'.
+  (setq completion-eager-update t)
 
-  (setq minibuffer-completion-auto-choose t)
-  (setq minibuffer-visible-completions nil) ; Emacs 30
+  (setq minibuffer-completion-auto-choose nil)
+  (setq minibuffer-visible-completions t) ; Emacs 30
 
   (unless prot-emacs-completion-ui
     (prot-emacs-keybind minibuffer-local-completion-map
       "<up>" #'minibuffer-previous-line-completion
-      "<down>" #'minibuffer-next-line-completion)
+      "<down>" #'minibuffer-next-line-completion
+      "C-l" #'minibuffer-completion-help) ; "list completions" mnemonic
 
     (prot-emacs-keybind completion-in-region-mode-map
       "<up>" #'minibuffer-previous-completion
@@ -4302,7 +4305,8 @@ completion (such as the ~corfu~ package).
       (setq-local cursor-in-non-selected-windows nil)
       (when (and completions-header-format
                  (not (string-blank-p completions-header-format)))
-        (setq-local display-line-numbers-offset -1)))
+        (setq-local display-line-numbers-offset -1))
+      (display-line-numbers-mode 1))
 
     (add-hook 'completion-list-mode-hook #'prot/completions-tweak-style)
 
