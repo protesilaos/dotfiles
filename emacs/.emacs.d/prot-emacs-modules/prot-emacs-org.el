@@ -142,7 +142,7 @@
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 2))
           (nil . (:maxlevel . 2))))
-  (setq org-refile-use-outline-path t)
+  (setq org-refile-use-outline-path nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
