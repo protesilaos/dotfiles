@@ -11525,7 +11525,13 @@ files. The user must handle this step by invoking the command
   ;; not happen in the next :hook...
   ;; :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
   :config
-  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+
+  ;; By default, icons are shown in all sorts of completion prompts.
+  ;; When those have different kinds of candidates, like files and
+  ;; folders, the icons are helpful.  If all the candidates have the
+  ;; same icon though, I prefer not to see any icon.
+  (setq nerd-icons-completion-category-icons nil))
 
 (use-package nerd-icons-corfu
   :ensure t
