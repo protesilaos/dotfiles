@@ -158,7 +158,7 @@
   (setq completion-eager-update t)
 
   (setq minibuffer-completion-auto-choose nil)
-  (setq minibuffer-visible-completions t) ; Emacs 30
+  (setq minibuffer-visible-completions nil) ; Emacs 30
 
   (unless prot-emacs-completion-ui
     (prot-emacs-keybind minibuffer-local-completion-map
