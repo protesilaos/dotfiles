@@ -38,6 +38,7 @@
   ;; - `minor-mode'
   ;; - `multi-category'
   ;; - `package'
+  ;; - `project-buffer'
   ;; - `project-file'
   ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
   ;; - `theme'
