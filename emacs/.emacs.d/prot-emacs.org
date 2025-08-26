@@ -4307,7 +4307,9 @@ completion (such as the ~corfu~ package).
       (when (and completions-header-format
                  (not (string-blank-p completions-header-format)))
         (setq-local display-line-numbers-offset -1))
-      (display-line-numbers-mode 1))
+      (display-line-numbers-mode 1)
+      (unless (eq (prot-common-completion-category) 'file)
+        (setq-local minibuffer-visible-completions t)))
 
     (add-hook 'completion-list-mode-hook #'prot/completions-tweak-style)
 
@@ -6155,7 +6157,7 @@ maximised frame, rather than many frames distribution across the
 desktop[s].
 
 The way I do it, each tab can hold its own project, thanks to some
-custom code I have ([[#h:7dcbcadf-8af6-487d-b864-e4ce56d69530][The =prot-emacs-git.el= section about =project.el=]]). 
+custom code I have ([[#h:7dcbcadf-8af6-487d-b864-e4ce56d69530][The =prot-emacs-git.el= section about =project.el=]]).
 I do not need to enforce separation between tabs, such that each sees
 only the buffers opened inside of it. The reason is that I mostly use
 the laptop for shorter coding/writing sessions and for video calls.

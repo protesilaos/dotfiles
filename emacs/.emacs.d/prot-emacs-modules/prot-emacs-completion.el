@@ -178,7 +178,9 @@
       (when (and completions-header-format
                  (not (string-blank-p completions-header-format)))
         (setq-local display-line-numbers-offset -1))
-      (display-line-numbers-mode 1))
+      (display-line-numbers-mode 1)
+      (unless (eq (prot-common-completion-category) 'file)
+        (setq-local minibuffer-visible-completions t)))
 
     (add-hook 'completion-list-mode-hook #'prot/completions-tweak-style)
 
