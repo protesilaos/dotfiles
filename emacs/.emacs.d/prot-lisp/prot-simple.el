@@ -1035,6 +1035,7 @@ VARIANT is either `dark' or `light'."
 ;;;###autoload
 (defun prot-simple-update-all-my-package-repositories ()
   "Pull or clone all `prot-emacs-my-packages'."
+  (interactive)
   (unless (executable-find "git")
     (user-error "Cannot find git program; install it first or add it to the $PATH; aborting"))
   (unless (getenv "SSH_AUTH_SOCK")
