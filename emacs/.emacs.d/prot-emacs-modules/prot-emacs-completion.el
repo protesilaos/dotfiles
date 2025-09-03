@@ -140,27 +140,33 @@
   :demand t
   :hook (minibuffer-setup . prot-common-truncate-lines-silently)
   :config
-  (setq completion-auto-deselect nil)
-  (setq completion-auto-help 'always)
-  (setq completion-auto-select nil)
-  (setq completion-show-help nil)
-  (setq completion-show-inline-help nil)
-  (setq completions-detailed t)
-  (setq completions-format 'one-column)
-  (setq completions-header-format "")
   ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
+  (setq completions-header-format "")
   (setq completions-highlight-face 'completions-highlight)
   (setq completions-max-height 10)
   (setq completions-sort 'historical)
-  ;; This one is for Emacs 31.  It relies on what I am doing with the `completion-category-overrides'.
-  (setq completion-eager-display 'auto)
-  ;; This is also for Emacs 31 and it too leverages the `completion-category-overrides' if set to `auto'.
-  (setq completion-eager-update t)
 
-  (setq minibuffer-completion-auto-choose nil)
-  (setq minibuffer-visible-completions nil) ; Emacs 30
-
+  ;; These settings make the generic minibuffer completion interface
+  ;; work more like my `mct' package.  Though it still has some issues
+  ;; with how candidates are selected.  Those might be fixed
+  ;; eventually.  The concrete problem I see with these settings is
+  ;; how the Completions can behave in very different ways, so we need
+  ;; to figure out which combination of these options works correctly.
   (unless prot-emacs-completion-ui
+    (setq completion-auto-help 'always)
+    (setq completion-show-help nil)
+    (setq completion-show-inline-help nil)
+    (setq completion-auto-select nil)
+    (setq completion-auto-deselect nil)
+    (setq completions-detailed t)
+    (setq completions-format 'one-column)
+    (setq minibuffer-completion-auto-choose nil)
+    (setq minibuffer-visible-completions nil) ; Emacs 30
+    ;; This one is for Emacs 31.  It relies on what I am doing with the `completion-category-overrides'.
+    (setq completion-eager-display 'auto)
+    ;; This is also for Emacs 31 and it too leverages the `completion-category-overrides' if set to `auto'.
+    (setq completion-eager-update t)
+
     (prot-emacs-keybind minibuffer-local-completion-map
       "<up>" #'minibuffer-previous-line-completion
       "<down>" #'minibuffer-next-line-completion
