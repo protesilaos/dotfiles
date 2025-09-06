@@ -290,9 +290,9 @@
 
   (denote-rename-buffer-mode 1)
 
-  ;; EXPERIMENT 2025-04-25: This is not the default order, though
-  ;; Denote supports any order for its file name components.
-  (setq denote-file-name-components-order '(identifier signature keywords title))
+  ;; ;; EXPERIMENT 2025-04-25: This is not the default order, though
+  ;; ;; Denote supports any order for its file name components.
+  ;; (setq denote-file-name-components-order '(identifier signature keywords title))
 
   (defun prot/denote-rename-all-to-reorder-components ()
     "Call `denote-dired-rename-files' without any prompts.
