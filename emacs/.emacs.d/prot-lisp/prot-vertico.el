@@ -124,16 +124,16 @@ Else do `vertico-exit'."
    (t
     (vertico-exit))))
 
-(cl-defgeneric vertico--display-candidates (lines)
-  "Reverse the default vertico view of LINES."
-  (move-overlay vertico--candidates-ov (point-min) (point-min))
-  ;; (setq lines (nreverse lines))
-  (unless (eq vertico-resize t)
-    (setq lines (nconc (make-list (max 0 (- vertico-count (length lines))) "\n") lines)))
-  (let ((string (apply #'concat lines)))
-    (add-face-text-property 0 (length string) 'default 'append string)
-    (overlay-put vertico--candidates-ov 'before-string string)
-    (overlay-put vertico--candidates-ov 'after-string nil)))
+;; (cl-defgeneric vertico--display-candidates (lines)
+;;   "Reverse the default vertico view of LINES."
+;;   (move-overlay vertico--candidates-ov (point-min) (point-min))
+;;   ;; (setq lines (nreverse lines))
+;;   (unless (eq vertico-resize t)
+;;     (setq lines (nconc (make-list (max 0 (- vertico-count (length lines))) "\n") lines)))
+;;   (let ((string (apply #'concat lines)))
+;;     (add-face-text-property 0 (length string) 'default 'append string)
+;;     (overlay-put vertico--candidates-ov 'before-string string)
+;;     (overlay-put vertico--candidates-ov 'after-string nil)))
 
 (provide 'prot-vertico)
 ;;; prot-vertico.el ends here
