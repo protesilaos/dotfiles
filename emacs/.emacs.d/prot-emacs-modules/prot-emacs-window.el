@@ -51,7 +51,7 @@
   :bind
   ("<f7>" . display-line-numbers-mode)
   :config
-  (setq-default display-line-numbers-type t)
+  (setq display-line-numbers-type t)
   ;; Those two variables were introduced in Emacs 27.1
   (setq display-line-numbers-major-tick 0)
   (setq display-line-numbers-minor-tick 0)

@@ -22,7 +22,7 @@
   (setq scroll-error-top-bottom t)
   (setq tramp-connection-timeout (* 60 10)) ; seconds
   (setq trusted-content '("~/Git/Projects/")) ; Emacs 30
-  (setq-default truncate-partial-width-windows nil)
+  (setq truncate-partial-width-windows nil)
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
   ;; elsewhere later in the configuration.
@@ -237,10 +237,10 @@
         mouse-wheel-follow-mouse t)
 
   ;; Scrolling behaviour
-  (setq-default scroll-preserve-screen-position t
-                scroll-conservatively 1 ; affects `scroll-step'
-                scroll-margin 0
-                next-screen-context-lines 0))
+  (setq scroll-preserve-screen-position t
+        scroll-conservatively 1 ; affects `scroll-step'
+        scroll-margin 0
+        next-screen-context-lines 0))
 
 ;;;; Repeatable key chords (repeat-mode)
 (use-package repeat
