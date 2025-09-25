@@ -763,10 +763,9 @@ uses the stop sign character, resulting in a long list of lines with
 red spots everywhere, as if we have totally broken Emacs.
 
 #+begin_src emacs-lisp :tangle "init.el"
-;; Make native compilation silent and prune its cache.
+;; Make native compilation silent.
 (when (native-comp-available-p)
-  (setq native-comp-async-report-warnings-errors 'silent) ; Emacs 28 with native compilation
-  (setq native-compile-prune-cache t)) ; Emacs 29
+  (setq native-comp-async-report-warnings-errors 'silent))
 #+end_src
 
 ** The =init.el= setting to send ~custom-file~ to oblivion
