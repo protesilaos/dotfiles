@@ -17969,16 +17969,16 @@ call NAME as a function."
          nil
          :local)))))
 
-;;;###autoload (autoload 'prot-window-coach "prot-window")
-(prot-window-define-full-frame coach
-  (let ((buffer (get-buffer-create "*scratch for coach*")))
+;;;###autoload (autoload 'prot-window-meeting "prot-window")
+(prot-window-define-full-frame meeting
+  (let ((buffer (get-buffer-create "*scratch for meeting*")))
     (with-current-buffer buffer
       (funcall initial-major-mode)
       (when (and (zerop (buffer-size))
                  (stringp initial-scratch-message))
         (insert initial-scratch-message)))
     (display-buffer buffer)
-    (set-frame-name "Coach")))
+    (set-frame-name "Meeting")))
 
 ;; REVIEW 2023-06-25: Does this merit a user option?  I don't think I
 ;; will ever set it to the left.  It feels awkward there.
