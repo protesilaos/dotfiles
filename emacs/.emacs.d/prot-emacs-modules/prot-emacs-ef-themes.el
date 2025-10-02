@@ -5,14 +5,17 @@
 (use-package ef-themes
   :ensure t
   :demand t
+  :init
+  (ef-themes-take-over-modus-themes-mode 1)
   :bind
   (("<f5>" . ef-themes-rotate)
-   ("C-<f5>" . ef-themes-select))
+   ("C-<f5>" . ef-themes-select)
+   ("M-<f5>" . ef-themes-load-random))
   :config
-  (setq ef-themes-variable-pitch-ui t
-        ef-themes-mixed-fonts t
-        ef-themes-to-rotate ef-themes-items
-        ef-themes-headings ; read the manual's entry of the doc string
+  (setq modus-themes-variable-pitch-ui t
+        modus-themes-mixed-fonts t
+        modus-themes-to-rotate nil ; defaults to the return value of `modus-themes-get-themes'
+        modus-themes-headings ; read the manual's entry of the doc string
         '((0 . (variable-pitch light 1.9))
           (1 . (variable-pitch light 1.8))
           (2 . (variable-pitch regular 1.7))
@@ -26,13 +29,13 @@
           (t . (variable-pitch 1.1))))
 
   ;; The `ef-themes' provide lots of themes.  I want to pick one at
-  ;; random when I start Emacs: the `ef-themes-load-random' does just
+  ;; random when I start Emacs: the `modus-themes-load-random' does just
   ;; that (it can be called interactively as well).  I just check with
   ;; my desktop environment to determine if the choice should be about
   ;; a light or a dark theme.  Those functions are in my init.el.
   (if (prot-emacs-theme-environment-dark-p)
-      (ef-themes-load-random 'dark)
-    (ef-themes-load-random 'light)))
+      (modus-themes-load-random 'dark)
+    (modus-themes-load-random 'light)))
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment
