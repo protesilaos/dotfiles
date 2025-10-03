@@ -1618,9 +1618,8 @@ of packages.
 
 Starting with version =3.0.0=, the ~standard-themes~ are built on top
 of the ~modus-themes~. This means that all customisation options of
-the Modus themes apply to the Standard themes ([[#h:7141f66d-f1b3-4c9a-b07a-f8e78068dcdc][Sample configuration]]).
-Same for all Modus commands that load a theme. Enable
-~standard-themes-take-over-modus-themes-mode~ to set up this
+the Modus themes apply to the Standard themes. Same for all Modus
+commands that load a theme. Enable ~standard-themes-take-over-modus-themes-mode~ to set up this
 arrangement (or enable ~modus-themes-include-derivatives-mode~ instead
 to blend Standard and Modus into one collection).
 
