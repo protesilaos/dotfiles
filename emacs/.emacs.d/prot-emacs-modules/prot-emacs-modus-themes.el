@@ -5,15 +5,35 @@
 (use-package modus-themes
   :ensure t
   :demand t
-  :bind (("<f5>" . modus-themes-toggle)
-         ("C-<f5>" . modus-themes-select)
-         ("M-<f5>" . modus-themes-rotate))
+  :init
+  ;; Starting with version 5.0.0 of the `modus-themes', other packages
+  ;; can be built on top to provide their own "Modus" derivatives.
+  ;; For example, this is what I do with my `ef-themes' and
+  ;; `standard-themes' (starting with versions 2.0.0 and 3.0.0,
+  ;; respectively).
+  ;;
+  ;; The `modus-themes-include-derivatives-mode' makes all Modus
+  ;; commands that act on a theme consider all such derivatives, if
+  ;; their respective packages are available and have been loaded.
+  ;;
+  ;; Note that those packages can even completely take over from the
+  ;; Modus themes such that, for example, `modus-themes-rotate' only
+  ;; goes through the Ef themes (to this end, the Ef themes provide
+  ;; the `ef-themes-take-over-modus-themes-mode' and the Standard
+  ;; themes have the `standard-themes-take-over-modus-themes-mode'
+  ;; equivalent).
+  ;;
+  ;; If you only care about the Modus themes, then (i) you do not need
+  ;; to enable the `modus-themes-include-derivatives-mode' and (ii) do
+  ;; not install and activate those other theme packages.
+  (modus-themes-include-derivatives-mode 1)
+  :bind
+  (("<f5>" . modus-themes-rotate)
+   ("C-<f5>" . modus-themes-select)
+   ("M-<f5>" . modus-themes-load-random))
   :config
   (setq modus-themes-custom-auto-reload nil
         modus-themes-to-toggle '(modus-operandi modus-vivendi)
-        ;; modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted)
-        ;; modus-themes-to-toggle '(modus-operandi-deuteranopia modus-vivendi-deuteranopia)
-        ;; modus-themes-to-toggle '(modus-operandi-tritanopia modus-vivendi-tritanopia)
         modus-themes-to-rotate modus-themes-items
         modus-themes-mixed-fonts t
         modus-themes-variable-pitch-ui t
@@ -26,16 +46,11 @@
           (agenda-date . (variable-pitch regular 1.3))
           (t . (regular 1.15))))
 
-  ;; (setq modus-themes-common-palette-overrides
-  ;;       '((cursor cyan-intense)
-  ;;         (comment magenta-faint)
-  ;;         (bg-paren-match bg-magenta-subtle)
-  ;;         (fg-paren-match magenta)))
   (setq modus-themes-common-palette-overrides nil)
 
   (if (prot-emacs-theme-environment-dark-p)
-      (modus-themes-load-theme (cadr modus-themes-to-toggle))
-    (modus-themes-load-theme (car modus-themes-to-toggle))))
+      (modus-themes-load-random 'dark)
+    (modus-themes-load-random 'light)))
 
 ;; NOTE: For testing purposes
 (prot-emacs-comment

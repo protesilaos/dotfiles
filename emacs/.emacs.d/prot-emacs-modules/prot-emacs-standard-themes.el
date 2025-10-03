@@ -1,90 +1,38 @@
 ;;; The Standard themes
 
-;; The themes are customisable.  Read the manual:
-;; <https://protesilaos.com/emacs/standard-themes>.
-
 (use-package standard-themes
   :ensure t
   :demand t
-  :bind (("<f5>" . standard-themes-toggle)
-         ("M-<f5>" . standard-themes-rotate))
+  :init
+  (standard-themes-take-over-modus-themes-mode 1)
+  :bind
+  (("<f5>" . modus-themes-rotate)
+   ("C-<f5>" . modus-themes-select)
+   ("M-<f5>" . modus-themes-load-random))
   :config
-  (setq standard-themes-bold-constructs t
-        standard-themes-italic-constructs t
-        standard-themes-mixed-fonts t
-        standard-themes-variable-pitch-ui t
-
-        ;; more complex alist to set weight, height, and optional
-        ;; `variable-pitch' per heading level (t is for any level not
-        ;; specified)
-        standard-themes-headings
+  (setq modus-themes-variable-pitch-ui t
+        modus-themes-mixed-fonts t
+        modus-themes-to-rotate nil ; defaults to the return value of `modus-themes-get-themes'
+        modus-themes-headings ; read the manual's entry of the doc string
         '((0 . (variable-pitch light 1.9))
           (1 . (variable-pitch light 1.8))
-          (2 . (variable-pitch light 1.7))
-          (3 . (variable-pitch semilight 1.6))
-          (4 . (variable-pitch semilight 1.5))
-          (5 . (variable-pitch 1.4))
+          (2 . (variable-pitch regular 1.7))
+          (3 . (variable-pitch regular 1.6))
+          (4 . (variable-pitch regular 1.5))
+          (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
           (6 . (variable-pitch 1.3))
           (7 . (variable-pitch 1.2))
-          (agenda-date . (1.3))
-          (agenda-structure . (variable-pitch light 1.8))
+          (agenda-date . (semilight 1.5))
+          (agenda-structure . (variable-pitch light 1.9))
           (t . (variable-pitch 1.1))))
 
-  ;; Load a theme that is consistent with my session's theme.  Those
-  ;; functions are defined in my init.el.
-  (standard-themes-load-theme
-   (if (prot-emacs-theme-environment-dark-p)
-       'standard-dark
-     'standard-light)))
-
-;; NOTE: For testing purposes
-(prot-emacs-comment
-  (:eval nil)
-  (progn
-    (mapc #'disable-theme custom-enabled-themes)
-
-    (add-to-list 'load-path "/home/prot/Git/Projects/standard-themes/")
-
-    (require 'standard-themes)
-    (load-theme 'standard-dark t t)
-    (load-theme 'standard-light t t)
-    (load-theme 'standard-dark-tinted t t)
-    (load-theme 'standard-light-tinted t t)
-
-    (setq standard-themes-bold-constructs t
-          standard-themes-italic-constructs t
-          standard-themes-disable-other-themes t
-          standard-themes-mixed-fonts t
-          standard-themes-variable-pitch-ui t
-
-          ;; more complex alist to set weight, height, and optional
-          ;; `variable-pitch' per heading level (t is for any level not
-          ;; specified)
-          standard-themes-headings
-          '((0 . (variable-pitch light 1.9))
-            (1 . (variable-pitch light 1.8))
-            (2 . (variable-pitch light 1.7))
-            (3 . (variable-pitch semilight 1.6))
-            (4 . (variable-pitch semilight 1.5))
-            (5 . (variable-pitch 1.4))
-            (6 . (variable-pitch 1.3))
-            (7 . (variable-pitch 1.2))
-            (agenda-date . (1.3))
-            (agenda-structure . (variable-pitch light 1.8))
-            (t . (variable-pitch 1.1))))
-
-    (mapcar (lambda (theme)
-              (add-to-list
-               'custom-theme-load-path
-               (concat "/home/prot/Git/Projects/standard-themes/" (symbol-name theme) "-theme.el")))
-            (standard-themes--list-enabled-themes))
-
-    (standard-themes-load-theme
-     (if (prot-emacs-theme-environment-dark-p)
-         'standard-dark
-       'standard-light))
-
-    (define-key global-map (kbd "<f5>") #'standard-themes-toggle)
-    (define-key global-map (kbd "M-<f5>") #'standard-themes-rotate)))
+  ;; The `standard-themes' provide lots of themes.  I want to pick one at
+  ;; random when I start Emacs: the `modus-themes-load-random' does just
+  ;; that (it can be called interactively as well).  I just check with
+  ;; my desktop environment to determine if the choice should be about
+  ;; a light or a dark theme.  Those functions are in my init.el.
+  (if (prot-emacs-theme-environment-dark-p)
+      (modus-themes-load-random 'dark)
+    (modus-themes-load-random 'light)))
 
 (provide 'prot-emacs-standard-themes)
