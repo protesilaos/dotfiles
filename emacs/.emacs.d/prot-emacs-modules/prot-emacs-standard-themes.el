@@ -38,8 +38,10 @@
 ;; For testing purposes...
 (prot-emacs-comment
   (:eval nil)
+  (add-to-list 'load-path "/home/prot/Git/Projects/modus-themes/")
   (add-to-list 'load-path "/home/prot/Git/Projects/standard-themes/")
 
+  (require 'modus-themes)
   (require 'standard-themes)
 
   (standard-themes-take-over-modus-themes-mode 1)

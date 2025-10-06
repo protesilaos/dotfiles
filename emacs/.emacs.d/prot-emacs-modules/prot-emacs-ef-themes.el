@@ -37,8 +37,10 @@
 
 (prot-emacs-comment
   (:eval nil)
+  (add-to-list 'load-path "/home/prot/Git/Projects/modus-themes/")
   (add-to-list 'load-path "/home/prot/Git/Projects/ef-themes/")
 
+  (require 'modus-themes)
   (require 'ef-themes)
 
   (ef-themes-take-over-modus-themes-mode 1)
