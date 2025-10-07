@@ -57,20 +57,14 @@ _emacs ()
 
     pgrep -x emacs > /dev/null || return 1
 
-    local light_theme
-    local dark_theme
-
-    light_theme="modus-operandi"
-    dark_theme="modus-vivendi"
-
     # Just switch to the appropriate theme for Emacs:
     # https://github.com/protesilaos/modus-themes
     case "$1"
     in
         # TODO 2023-03-01: Define a function to load appropriate Emacs
         # theme.
-        l*) emacsclient -e "(when (and (functionp 'modus-themes--current-theme) (modus-themes--current-theme)) (modus-themes-load-theme '${light_theme}))" > /dev/null ;;
-        d*) emacsclient -e "(when (and (functionp 'modus-themes--current-theme) (modus-themes--current-theme)) (modus-themes-load-theme '${dark_theme}))"  > /dev/null ;;
+        l*) emacsclient -e "(when (and (functionp 'modus-themes-get-themes) (modus-themes-get-themes)) (modus-themes-load-random-light))" > /dev/null ;;
+        d*) emacsclient -e "(when (and (functionp 'modus-themes-get-themes) (modus-themes-get-themes)) (modus-themes-load-random-dark))"  > /dev/null ;;
     esac
 }
 
