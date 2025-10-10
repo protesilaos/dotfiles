@@ -1032,18 +1032,20 @@ VARIANT is either `dark' or `light'."
   (interactive (list (prot-simple--list-accessible-colors-prompt)))
   (list-colors-display (prot-simple-accessible-colors variant)))
 
-;;;###autoload
-(defun prot-simple-update-all-my-package-repositories ()
-  "Pull or clone all `prot-emacs-my-packages'."
-  (interactive)
+(defun prot-simple-update-package-repositories-subr (packages)
+  "Pull or clone all repositories of my PACKAGES."
   (unless (executable-find "git")
     (user-error "Cannot find git program; install it first or add it to the $PATH; aborting"))
   (unless (getenv "SSH_AUTH_SOCK")
     (user-error "Cannot find $SSH_AUTH_SOCK; check your SSH connection; aborting"))
-  (dolist (package prot-emacs-my-packages)
+  (dolist (package packages)
     (condition-case error-data
         (let* ((common-directory (expand-file-name "~/Git/Projects/"))
-               (default-directory (expand-file-name (symbol-name package) common-directory)))
+               (name (cond
+                      ((symbolp package) (symbol-name package))
+                      ((stringp package) package)
+                      (t (error "The `%s' is neither a symbol nor a string" package))))
+               (default-directory (expand-file-name name common-directory)))
           (if (file-directory-p default-directory)
               (shell-command-to-string "git pull")
             (let ((default-directory common-directory))
@@ -1054,6 +1056,31 @@ VARIANT is either `dark' or `light'."
        (message "The package returned error data: %s" error-data))
       (quit
        (message "Aborted by the user")))))
+
+(defvar prot-simple-update-package-repositories-prompt-history nil
+  "Minibuffer history of `prot-simple-update-package-repositories-prompt'.")
+
+(defun prot-simple-update-package-repositories-prompt ()
+  "Prompt for packages among `prot-emacs-my-packages'."
+  (let ((default (car prot-simple-update-package-repositories-prompt-history)))
+    (completing-read-multiple
+     (format-prompt "Select packages" default)
+     prot-emacs-my-packages
+     nil t nil
+     'prot-simple-update-package-repositories-prompt-history
+     default)))
+
+;;;###autoload
+(defun prot-simple-updare-some-or-all-of-my-package-repositories (packages &optional all-packages)
+  "Prompt for PACKAGES among `prot-emacs-my-packages' to pull or clone.
+With a universal prefix argument for ALL-PACKAGES, do not prompt for packages and
+update them all instead."
+  (interactive
+   (list
+    (if current-prefix-arg
+        prot-emacs-my-packages
+      (prot-simple-update-package-repositories-prompt))))
+  (prot-simple-update-package-repositories-subr packages))
 
 ;;;; Global minor mode to override key maps
 
