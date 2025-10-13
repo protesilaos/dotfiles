@@ -58,6 +58,19 @@ Used by `prot-simple-inset-date'."
 ;;;; General commands
 
 ;;;###autoload
+(defun prot-simple-indent-dwim ()
+  "Indent the current defun in `prog-mode' or paragraph in `text-mode'."
+  (interactive)
+  (save-excursion
+    (cond
+     ((derived-mode-p 'prog-mode)
+      (mark-defun))
+     ((derived-mode-p 'text-mode)
+      (mark-paragraph)))
+    (indent-for-tab-command)
+    (deactivate-mark)))
+
+;;;###autoload
 (defun prot-simple-sudo ()
   "Find the current file or directory using `sudo'."
   (interactive)

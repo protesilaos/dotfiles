@@ -113,7 +113,7 @@
     ("<next>" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
     ("M-v" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
-
+    ("C-M-\\" . prot-simple-indent-dwim) ; overrides `indent-region'
     :map global-map
     ("<escape>" . prot-simple-keyboard-quit-dwim)
     ("C-g" . prot-simple-keyboard-quit-dwim)

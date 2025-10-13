@@ -2588,7 +2588,7 @@ this via some hook.
     ("<next>" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
     ("M-v" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
-
+    ("C-M-\\" . prot-simple-indent-dwim) ; overrides `indent-region'
     :map global-map
     ("<escape>" . prot-simple-keyboard-quit-dwim)
     ("C-g" . prot-simple-keyboard-quit-dwim)
@@ -16546,6 +16546,19 @@ Used by `prot-simple-inset-date'."
 ;;; Commands
 
 ;;;; General commands
+
+;;;###autoload
+(defun prot-simple-indent-dwim ()
+  "Indent the current defun in `prog-mode' or paragraph in `text-mode'."
+  (interactive)
+  (save-excursion
+    (cond
+     ((derived-mode-p 'prog-mode)
+      (mark-defun))
+     ((derived-mode-p 'text-mode)
+      (mark-paragraph)))
+    (indent-for-tab-command)
+    (deactivate-mark)))
 
 ;;;###autoload
 (defun prot-simple-sudo ()
