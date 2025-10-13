@@ -59,6 +59,7 @@
   :ensure nil
   :hook (prog-mode . eldoc-mode)
   :config
+  (setq eldoc-idle-delay 1.2)
   (setq eldoc-message-function #'message)) ; don't use mode line for M-x eval-expression, etc.
 
 ;;;; Eglot (built-in client for the language server protocol)
