@@ -845,7 +845,20 @@ then put some on the disabled list.
 
 I like starting with a scratch buffer. I know that a lot of users
 specify a dashboard or an Org agenda view, but I prefer to keep things
-generic in this regard.
+generic: sometimes I open Emacs for the purpose of viewing my agenda,
+but at others I am only keen on writing something. Besides, I
+frequently need to share my screen, so it is better not to
+accidentally divulge any potentially sensitive information.
+
+I keep the ~initial-major-mode~ to its default ~lisp-interaction-mode~
+even though my configurations for ~emacs-lisp-mode~ make that mode
+surplus to requirements ([[#h:e38f15b2-a849-47c4-9aa8-8e5fcf17f415][The =prot-emacs-langs.el= settings for ~emacs-lisp-mode~ and ~prot-elisp~]]).
+The reason I do it this way is because it is better for instructive
+purposes. Users who are not familiar with ~lisp-interaction-mode~ and
+are looking at my =*scratch*= buffer will quickly learn that they can
+type =C-j= (=M-x eval-print-last-sexp=) to evaluate and print the
+return value of the form before point. When programming in Elisp, this
+comes in handy quite frequently: I use it all the time!
 
 #+begin_src emacs-lisp :tangle "init.el"
 (setq initial-buffer-choice t)
