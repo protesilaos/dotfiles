@@ -100,6 +100,12 @@
             ("\\*\\(Output\\|Register Preview\\).*"
              (display-buffer-reuse-mode-window display-buffer-at-bottom))
             ;; below current window
+            ("*prot-elisp-macroexpand*"
+             (display-buffer-below-selected)
+             s(window-height . 0.3)
+             (dedicated . t)
+             (preserve-size . (t . t))
+             (body-function . select-window))
             ("\\(\\*Capture\\*\\|CAPTURE-.*\\)"
              (display-buffer-reuse-mode-window display-buffer-below-selected))
             ((derived-mode . reb-mode) ; M-x re-builder

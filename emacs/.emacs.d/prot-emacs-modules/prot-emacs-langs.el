@@ -24,6 +24,16 @@
   (setq elisp-eldoc-funcall-with-docstring-length 'short)
   (setq elisp-eldoc-docstring-length-limit 1000))
 
+(use-package prot-elisp
+  :ensure nil
+  :bind
+  ( :map emacs-lisp-mode-map
+    ("C-j" . prot-elisp-eval-and-print-last-sexp)  ; overrides `electric-newline-and-maybe-indent'
+    ("C-c C-p" . prot-elisp-pp-last-sexp)
+    :map lisp-interaction-mode-map
+    ("C-j" . prot-elisp-eval-and-print-last-sexp) ; overrides `eval-print-last-sexp'
+    ("C-c C-p" . prot-elisp-pp-last-sexp)))
+
 ;;;; Disable "electric" behaviour
 (use-package electric
   :ensure nil
