@@ -116,6 +116,7 @@
     ("C-M-i" . prot-simple-indent-dwim) ; overrides `completion-at-point'
     ("C-M-c" . completion-at-point) ; overrides `exit-recursive-edi't
     :map global-map
+    ("C-h h" . prot-simple-describe-at-point)
     ("<escape>" . prot-simple-keyboard-quit-dwim)
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available

@@ -2591,6 +2591,7 @@ this via some hook.
     ("C-M-i" . prot-simple-indent-dwim) ; overrides `completion-at-point'
     ("C-M-c" . completion-at-point) ; overrides `exit-recursive-edi't
     :map global-map
+    ("C-h h" . prot-simple-describe-at-point)
     ("<escape>" . prot-simple-keyboard-quit-dwim)
     ("C-g" . prot-simple-keyboard-quit-dwim)
     ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
@@ -16547,6 +16548,16 @@ Used by `prot-simple-inset-date'."
 ;;; Commands
 
 ;;;; General commands
+
+;;;###autoload
+(defun prot-simple-describe-at-point (symbol)
+  "Describe the SYMBOL at point.
+If there is no symbol or the symbol at point does not satisfy `symbolp',
+prompt for one."
+  (interactive (list (intern-soft (thing-at-point 'symbol))))
+  (if symbol
+      (describe-symbol symbol)
+    (call-interactively 'describe-symbol)))
 
 ;;;###autoload
 (defun prot-simple-indent-dwim ()

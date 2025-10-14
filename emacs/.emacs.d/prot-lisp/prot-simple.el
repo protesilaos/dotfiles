@@ -58,6 +58,16 @@ Used by `prot-simple-inset-date'."
 ;;;; General commands
 
 ;;;###autoload
+(defun prot-simple-describe-at-point (symbol)
+  "Describe the SYMBOL at point.
+If there is no symbol or the symbol at point does not satisfy `symbolp',
+prompt for one."
+  (interactive (list (intern-soft (thing-at-point 'symbol))))
+  (if symbol
+      (describe-symbol symbol)
+    (call-interactively 'describe-symbol)))
+
+;;;###autoload
 (defun prot-simple-indent-dwim ()
   "Indent the current defun in `prog-mode' or paragraph in `text-mode'."
   (interactive)
