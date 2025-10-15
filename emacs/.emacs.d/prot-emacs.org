@@ -13006,8 +13006,10 @@ If EXPRESSION is nil, prompt for one."
 (defun prot-elisp-eval-and-print-last-sexp ()
   "Evaluate and print expression before point like `eval-print-last-sexp'.
 Prepend a comment to the return value.  If there is no expression before
-point, prompt for one, print it at point, and then prepare its return as
-mentioned."
+point, prompt for one, insert it at point, and then prepare its return as
+mentioned.
+
+At all times, copy the return value to the `kill-ring'."
   (declare (interactive-only t))
   (interactive)
   (let* ((string (thing-at-point 'sexp :no-properties))
@@ -13017,7 +13019,10 @@ mentioned."
                        (read string))))
     (when comment-p
       (insert (format "%S" expression)))
-    (insert (format "\n;; => %s\n" (eval expression)))))
+    (let ((return-value (eval expression)))
+      (kill-new (format "%s" return-value))
+      (message "Copied: `%S'" return-value)
+      (insert (format "\n;; => %s\n" return-value)))))
 
 (define-derived-mode prot-elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
   "Like `emacs-lisp-mode' but for macroexpanded forms."
