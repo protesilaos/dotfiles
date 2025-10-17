@@ -29,10 +29,10 @@
   :bind
   ( :map emacs-lisp-mode-map
     ("C-j" . prot-elisp-eval-and-print-last-sexp)  ; overrides `electric-newline-and-maybe-indent'
-    ("C-c C-p" . prot-elisp-pp-last-sexp)
+    ("C-c C-p" . prot-elisp-pp-macroexpand-last-sexp)
     :map lisp-interaction-mode-map
     ("C-j" . prot-elisp-eval-and-print-last-sexp) ; overrides `eval-print-last-sexp'
-    ("C-c C-p" . prot-elisp-pp-last-sexp)))
+    ("C-c C-p" . prot-elisp-pp-macroexpand-last-sexp)))
 
 ;;;; Disable "electric" behaviour
 (use-package electric

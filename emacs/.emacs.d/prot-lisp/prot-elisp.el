@@ -75,7 +75,7 @@ At all times, copy the return value to the `kill-ring'."
   (display-line-numbers-mode 1))
 
 ;;;###autoload
-(defun prot-elisp-pp-last-sexp ()
+(defun prot-elisp-pp-macroexpand-last-sexp ()
   "Like `pp-macroexpand-last-sexp' but with a generic `display-buffer'.
 Now use `display-buffer-alist' like the Lisp gods intended."
   (declare (interactive-only t))
