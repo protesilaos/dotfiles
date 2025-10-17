@@ -35,18 +35,6 @@
 ;;; Code:
 
 ;;;###autoload
-(defun prot-elisp-eval-this-expression (expression)
-  "Do `eval-expression' on EXPRESSION.
-If EXPRESSION is not a list and is the symbol of a function, then make
-it a list before evaluation.
-
-If EXPRESSION is nil, prompt for one."
-  (interactive (list (read (thing-at-point 'sexp :no-properties))))
-  (if expression
-      (eval-expression expression)
-    (call-interactively 'eval-expression)))
-
-;;;###autoload
 (defun prot-elisp-eval-and-print-last-sexp ()
   "Evaluate and print expression before point like `eval-print-last-sexp'.
 Prepend a comment to the return value.  If there is no expression before
