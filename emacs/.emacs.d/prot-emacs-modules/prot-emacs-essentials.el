@@ -114,7 +114,8 @@
     ("M-v" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
     ("C-M-i" . prot-simple-indent-dwim) ; overrides `completion-at-point'
-    ("C-M-c" . completion-at-point) ; overrides `exit-recursive-edi't
+    ("C-M-\\" . prot-simple-indent-dwim) ; overrides `indent-region'
+    ("C-M-c" . completion-at-point) ; overrides `exit-recursive-edit'
     :map global-map
     ("C-h h" . prot-simple-describe-at-point)
     ("<escape>" . prot-simple-keyboard-quit-dwim)
