@@ -17736,7 +17736,7 @@ VARIANT is either `dark' or `light'."
      default)))
 
 ;;;###autoload
-(defun prot-simple-updare-some-or-all-of-my-package-repositories (packages &optional all-packages)
+(defun prot-simple-update-some-or-all-of-my-package-repositories (packages &optional all-packages)
   "Prompt for PACKAGES among `prot-emacs-my-packages' to pull or clone.
 With a universal prefix argument for ALL-PACKAGES, do not prompt for packages and
 update them all instead."
