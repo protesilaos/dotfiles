@@ -13043,7 +13043,7 @@ Now use `display-buffer-alist' like the Lisp gods intended."
       (progn
         (with-current-buffer buffer
           (erase-buffer)
-          (insert (format "%s" (macroexpand-1 expression)))
+          (insert (format "%S" (macroexpand-1 expression)))
           (prot-elisp-macroexpand-mode)
           (pp-buffer))
         (display-buffer buffer))
