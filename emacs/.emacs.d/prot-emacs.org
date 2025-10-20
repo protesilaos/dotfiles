@@ -13009,9 +13009,9 @@ At all times, copy the return value to the `kill-ring'."
     (when comment-p
       (insert (format "%S" expression)))
     (let ((return-value (eval expression)))
-      (kill-new (format "%s" return-value))
+      (kill-new (format "%S" return-value))
       (message "Copied: `%S'" return-value)
-      (insert (format "\n;; => %s\n" return-value)))))
+      (insert (format "\n;; => %S\n" return-value)))))
 
 (define-derived-mode prot-elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
   "Like `emacs-lisp-mode' but for macroexpanded forms."
