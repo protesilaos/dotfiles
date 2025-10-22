@@ -12994,24 +12994,20 @@ minibuffer with something like `exit-minibuffer'."
 ;;;###autoload
 (defun prot-elisp-eval-and-print-last-sexp ()
   "Evaluate and print expression before point like `eval-print-last-sexp'.
-Prepend a comment to the return value.  If there is no expression before
-point, prompt for one, insert it at point, and then prepare its return as
-mentioned.
-
-At all times, copy the return value to the `kill-ring'."
+Prepend a comment to the return value.  Also copy the return value to
+the `kill-ring' and set the mark to where point was before inserting the
+return value."
   (declare (interactive-only t))
   (interactive)
-  (let* ((string (thing-at-point 'sexp :no-properties))
-         (comment-p (string-prefix-p ";" string))
-         (expression (if comment-p
-                         (read--expression "Nothing at point; read expression: ")
-                       (read string))))
-    (when comment-p
-      (insert (format "%S" expression)))
-    (let ((return-value (eval expression)))
-      (kill-new (format "%S" return-value))
-      (message "Copied: `%S'" return-value)
-      (insert (format "\n;; => %S\n" return-value)))))
+  (if-let* ((string (thing-at-point 'sexp :no-properties))
+            (_ (not (string-prefix-p ";" string)))
+            (expression (read string)))
+      (let ((return-value (eval expression)))
+        (kill-new (format "%S" return-value))
+        (message "Copied: `%S'" return-value)
+        (push-mark (point))
+        (insert (format "\n;; => %S\n" return-value)))
+    (user-error "No expression at point")))
 
 (define-derived-mode prot-elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
   "Like `emacs-lisp-mode' but for macroexpanded forms."
