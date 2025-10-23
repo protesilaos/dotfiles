@@ -49,7 +49,8 @@ return value."
         (kill-new (format "%S" return-value))
         (message "Copied: `%S'" return-value)
         (push-mark (point))
-        (insert (format "\n;; => %S\n" return-value)))
+        (insert (format "\n%S\n" return-value))
+        (string-insert-rectangle (+ (mark) 1) (- (point) 1) ";; => "))
     (user-error "No expression at point")))
 
 (define-derived-mode prot-elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
