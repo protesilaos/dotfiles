@@ -80,16 +80,16 @@
 
     ;; (setq modus-themes-common-palette-overrides nil)
 
-    (setq modus-themes-common-palette-overrides
-          `((fringe unspecified)
-            ;; (bg-mode-line-active bg-lavender)
-            ;; (border-mode-line-active unspecified)
-            ;; (border-mode-line-inactive unspecified)
-            (bg-line-number-active bg-hl-line)
-            (bg-line-number-inactive unspecified)
-            (fg-line-number-active fg-main)
-            ;; ,@modus-themes-preset-overrides-warmer
-            ))
+    ;; (setq modus-themes-common-palette-overrides
+    ;;       `((fringe unspecified)
+    ;;         ;; (bg-mode-line-active bg-lavender)
+    ;;         ;; (border-mode-line-active unspecified)
+    ;;         ;; (border-mode-line-inactive unspecified)
+    ;;         (bg-line-number-active bg-hl-line)
+    ;;         (bg-line-number-inactive unspecified)
+    ;;         (fg-line-number-active fg-main)
+    ;;         ;; ,@modus-themes-preset-overrides-warmer
+    ;;         ))
 
     ;; ;; For testing purposes I only want the overrides for those two
     ;; ;; Modus themes.  The rest have their own styles already.
