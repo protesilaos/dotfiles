@@ -3685,16 +3685,12 @@ Now the actual configurations:
 :CUSTOM_ID: h:080aa291-95b4-4d54-8783-d156b13190e9
 :END:
 
-Due to my limited electricity setup, I spend about half my computer
-time on the laptop ([[#h:5668958c-2fc0-4a38-bd1f-3e0c6484977d][What hardware and software do you use?]]). It does
-not add to the load that my solar-powered batteries have to handle and
-I can thus keep the lights on until ~21:00 during the winter and close
-to midnight in the summer..
-
-When I am working on my laptop, I want to make a few tweaks to the
-default dimensions of Emacs frames ([[#h:0403b581-142b-4613-bc81-51c5dccd831d][The =early-init.el= code to set frame parameters]]).
+When I am working on my laptop, I want all my frames to be maximised
+by default ([[#h:0403b581-142b-4613-bc81-51c5dccd831d][The =early-init.el= code to set frame parameters]]).
 I also arrange for the battery indicator to be displayed on the mode
-line.
+line. For a while, I was using the ~prot-laptop-p~ to conditionally
+load my ~beframe~ package only on the desktop, but have decided to
+switch back to using it everywhere---I like its workflow more ([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Laptop settings
@@ -6617,7 +6613,6 @@ screen real estate ([[#h:080aa291-95b4-4d54-8783-d156b13190e9][The =prot-emacs-e
 ;; <https://protesilaos.com/emacs/beframe>.
 (use-package beframe
   :ensure t
-  :unless prot-laptop-p
   :hook (after-init . beframe-mode)
   :config
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
