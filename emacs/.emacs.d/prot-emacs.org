@@ -295,7 +295,7 @@ I never want.
       inhibit-startup-buffer-menu t)
 #+end_src
 
-** The =early-init.el= code to set frame parameters
+** The =early-init.el= code to set frame parameters for the desktop or laptop
 :PROPERTIES:
 :CUSTOM_ID: h:0403b581-142b-4613-bc81-51c5dccd831d
 :END:
@@ -304,7 +304,8 @@ Here I am setting parameters for the size of the Emacs frame: the
 first as well as any future one. In a tiling window manager, the width
 and height parameters are not important, since all windows are
 forcibly made to fit into rectangles (tiles). Though the other
-parameters are still relevant.
+parameters are still relevant. In a stacking window manager, all
+settings are important.
 
 The ~initial-frame-alist~ is about the first frame that is produced
 when starting Emacs. This is why it has to be defined in the
@@ -315,34 +316,71 @@ makes sense to have it here.
 
 I choose to run Emacs without a menu bar and tool bar. Those are
 especially useful for new users, though I have no need for them. They
-take up valuable screen real estate and distact me.
+take up valuable screen real estate, plus they distact me.
 
-I feel the same way about scroll bars, but only when those are managed
-by a graphical toolkit. This is about how we build Emacs ([[#h:64c1c9f5-1218-4ff3-8e35-41e56c74f038][Details of
-my Emacs build]]). The default is to rely on the GTK toolkit, whose
-style usually does not match whatever theme I am using in Emacs. This
-is not the case when I build Emacs without a toolkit, which is my
-preferred configuration. Without a toolkit, scroll bars are drawn
-directly by Eamcs and we may thus change their colour and adjust their
-width.
+I feel the same way about scroll bars: they should stay out of the
+way. The exception is when they are handled by a non-graphical
+toolkit. This is about how we build Emacs ([[#h:64c1c9f5-1218-4ff3-8e35-41e56c74f038][Details of my Emacs build]]).
+The default is to rely on the GTK toolkit, whose style usually does
+not match whatever theme I am using in Emacs. Whereas the "no toolkit"
+option, which is my preferred configuration, uses Emacs-specific code
+to do the work. The result is more consistent with my Emacs theme, but
+feels less like a native app. This is perfectly fine for me, as Emacs
+does not look like a modern GTK application, anyway.
+
+The scrollbars that the "no toolkit" draws can be configured from
+within Emacs to have a certain width and a given colour (the latter is
+handled by the active theme). I then arrange to make them narrow and
+to keep them around by default. Otherwise, I hide them. This is what
+the check for ~x-toolkit-scroll-bars~ does.
 
 When I am enabling scroll bars, I want them to not show up in the
 minibuffer, hence the function ~prot-emacs-no-minibuffer-scroll-bar~.
 
 #+begin_src emacs-lisp :tangle "early-init.el"
-(dolist (variable '(initial-frame-alist default-frame-alist))
-  (set variable `((width . (text-pixels . 800))
-                  (height . (text-pixels . 900))
-                  (horizontal-scroll-bars . nil)
-                  (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
-                  (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
-                  ,@(if x-toolkit-scroll-bars
-                        (list
-                         '(vertical-scroll-bars . nil)
-                         '(scroll-bar-width . 12))
-                      (list
-                       '(vertical-scroll-bars . right)
-                       '(scroll-bar-width . 6))))))
+(defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
+  "When non-nil, we assume to be working on a laptop.")
+
+(when prot-laptop-p
+  (add-hook 'window-size-change-functions #'frame-hide-title-bar-when-maximized))
+
+(setq initial-frame-alist `((horizontal-scroll-bars . nil)
+                            (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
+                            (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                            (width . (text-pixels . 800))
+                            (height . (text-pixels . 900))
+                            ,@(when prot-laptop-p
+                                (list '(fullscreen . maximized)))
+                            ,@(if x-toolkit-scroll-bars
+                                  (list
+                                   '(vertical-scroll-bars . nil)
+                                   '(scroll-bar-width . 12))
+                                (list
+                                 '(vertical-scroll-bars . right)
+                                 '(scroll-bar-width . 6)))))
+
+;; Do it again after init so that any intermediate changes are not
+;; retained.  Note that we cannot rely on setting this to
+;; `initial-frame-alist' as that may change in the meantime.  We
+;; explicitly set the value to be certain of the outcome.  This does
+;; not inhibit other programs from modifying the list, though I would
+;; consider it undesirable if they were touching these specific
+;; settings.
+(add-hook 'after-init-hook (lambda ()
+                             (setq default-frame-alist `((horizontal-scroll-bars . nil)
+                                                         (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
+                                                         (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                                                         (width . (text-pixels . 800))
+                                                         (height . (text-pixels . 900))
+                                                         ,@(when prot-laptop-p
+                                                             (list '(fullscreen . maximized)))
+                                                         ,@(if x-toolkit-scroll-bars
+                                                               (list
+                                                                '(vertical-scroll-bars . nil)
+                                                                '(scroll-bar-width . 12))
+                                                             (list
+                                                              '(vertical-scroll-bars . right)
+                                                              '(scroll-bar-width . 6)))))))
 
 (defun prot-emacs-no-minibuffer-scroll-bar (frame)
   "Remove the minibuffer scroll bars from FRAME."
@@ -3680,40 +3718,27 @@ Now the actual configurations:
   :hook (shell-mode . prot-shell-mode))
 #+end_src
 
-*** The =prot-emacs-essentials.el= section about the laptop-specific settings
+*** The =prot-emacs-essentials.el= section about the laptop battery (~display-battery-mode~)
 :PROPERTIES:
 :CUSTOM_ID: h:080aa291-95b4-4d54-8783-d156b13190e9
 :END:
 
-When I am working on my laptop, I want all my frames to be maximised
-by default ([[#h:0403b581-142b-4613-bc81-51c5dccd831d][The =early-init.el= code to set frame parameters]]).
-I also arrange for the battery indicator to be displayed on the mode
-line. For a while, I was using the ~prot-laptop-p~ to conditionally
-load my ~beframe~ package only on the desktop, but have decided to
-switch back to using it everywhere---I like its workflow more ([[#h:77e4f174-0c86-460d-8a54-47545f922ae9][The =prot-emacs-window.el= section about ~beframe~]]).
+I used to enable the built-in ~battery~ package while on my laptop to
+see a battery indicator on the mode line. I no longer need this
+because I have the same information in the system panel and want to
+keep my modelines clutter-free. There still are some tweaks I made for
+laptop-specific use with regard to the default behaviour of frames
+([[#h:0403b581-142b-4613-bc81-51c5dccd831d][The =early-init.el= code to set frame parameters]]). I am keeping this
+here because it is still useful as a sample.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-;;; Laptop settings
-(defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
-  "When non-nil, we assume to be working on a laptop.")
-
-(when prot-laptop-p
-  (defun prot-emacs-maximize-frame (frame)
-    "Maximise the given FRAME."
-    (set-frame-parameter frame 'fullscreen 'maximized))
-
-  (prot-emacs-maximize-frame (selected-frame))
-
-  (add-hook 'after-make-frame-functions #'prot-emacs-maximize-frame)
-
-  (add-hook 'window-size-change-functions #'frame-hide-title-bar-when-maximized))
-
+;;; Show battery status on the mode line with `display-battery-mode'
 (use-package battery
   :ensure nil
+  :disabled t
   :if prot-laptop-p
   :hook (after-init . display-battery-mode)
   :config
-;;;; Show battery status on the mode line (battery.el)
   (setq battery-mode-line-format
         (cond
          ((eq battery-status-function #'battery-linux-proc-acpi)
