@@ -330,12 +330,11 @@ does not look like a modern GTK application, anyway.
 
 The scrollbars that the "no toolkit" draws can be configured from
 within Emacs to have a certain width and a given colour (the latter is
-handled by the active theme). I then arrange to make them narrow and
-to keep them around by default. Otherwise, I hide them. This is what
-the check for ~x-toolkit-scroll-bars~ does.
-
-When I am enabling scroll bars, I want them to not show up in the
-minibuffer, hence the function ~prot-emacs-no-minibuffer-scroll-bar~.
+handled by the active theme). I arrange to make them narrow and to
+keep them around by default. If I was building Emacs with support for
+a graphical toolkit, then I would probably disable the scroll bars. At
+any rate, when I am enabling scroll bars, I want them to not show up
+in the minibuffer, hence ~prot-emacs-no-minibuffer-scroll-bar~.
 
 #+begin_src emacs-lisp :tangle "early-init.el"
 (defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
@@ -351,13 +350,8 @@ minibuffer, hence the function ~prot-emacs-no-minibuffer-scroll-bar~.
                             (height . (text-pixels . 900))
                             ,@(when prot-laptop-p
                                 (list '(fullscreen . maximized)))
-                            ,@(if x-toolkit-scroll-bars
-                                  (list
-                                   '(vertical-scroll-bars . nil)
-                                   '(scroll-bar-width . 12))
-                                (list
-                                 '(vertical-scroll-bars . right)
-                                 '(scroll-bar-width . 6)))))
+                            '(vertical-scroll-bars . right)
+                            '(scroll-bar-width . 6)))
 
 ;; Do it again after init so that any intermediate changes are not
 ;; retained.  Note that we cannot rely on setting this to
@@ -374,13 +368,8 @@ minibuffer, hence the function ~prot-emacs-no-minibuffer-scroll-bar~.
                                                          (height . (text-pixels . 900))
                                                          ,@(when prot-laptop-p
                                                              (list '(fullscreen . maximized)))
-                                                         ,@(if x-toolkit-scroll-bars
-                                                               (list
-                                                                '(vertical-scroll-bars . nil)
-                                                                '(scroll-bar-width . 12))
-                                                             (list
-                                                              '(vertical-scroll-bars . right)
-                                                              '(scroll-bar-width . 6)))))))
+                                                         '(vertical-scroll-bars . right)
+                                                         '(scroll-bar-width . 6)))))
 
 (defun prot-emacs-no-minibuffer-scroll-bar (frame)
   "Remove the minibuffer scroll bars from FRAME."

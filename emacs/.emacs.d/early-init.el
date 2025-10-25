@@ -37,13 +37,8 @@ constitutes a matching tiling window manager."
                             (height . (text-pixels . 900))
                             ,@(when prot-laptop-p
                                 (list '(fullscreen . maximized)))
-                            ,@(if x-toolkit-scroll-bars
-                                  (list
-                                   '(vertical-scroll-bars . nil)
-                                   '(scroll-bar-width . 12))
-                                (list
-                                 '(vertical-scroll-bars . right)
-                                 '(scroll-bar-width . 6)))))
+                            '(vertical-scroll-bars . right)
+                            '(scroll-bar-width . 6)))
 
 ;; Do it again after init so that any intermediate changes are not
 ;; retained.  Note that we cannot rely on setting this to
@@ -60,13 +55,8 @@ constitutes a matching tiling window manager."
                                                          (height . (text-pixels . 900))
                                                          ,@(when prot-laptop-p
                                                              (list '(fullscreen . maximized)))
-                                                         ,@(if x-toolkit-scroll-bars
-                                                               (list
-                                                                '(vertical-scroll-bars . nil)
-                                                                '(scroll-bar-width . 12))
-                                                             (list
-                                                              '(vertical-scroll-bars . right)
-                                                              '(scroll-bar-width . 6)))))))
+                                                         '(vertical-scroll-bars . right)
+                                                         '(scroll-bar-width . 6)))))
 
 (defun prot-emacs-no-minibuffer-scroll-bar (frame)
   "Remove the minibuffer scroll bars from FRAME."
