@@ -7415,6 +7415,9 @@ functionality, such as with Ediff and Smerge:
 - [[#h:89edea05-4d94-4ea1-b2a8-5ad01422618c][The =prot-emacs-git.el= section about ediff]].
 - [[#h:2ed18433-8b38-4518-a464-77bc76e3a87d][The =prot-emacs-git.el= section about ~smerge-mode~]].
 
+Magit is highly configurable though comes with good defaults. The
+changes I make here are not necessary.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
 (use-package transient
@@ -7424,9 +7427,11 @@ functionality, such as with Ediff and Smerge:
 
 (use-package magit
   :ensure t
-  :bind
+  :bind ; also see `magit-define-global-key-bindings'
   ( :map global-map
-    ("C-c g" . magit-status)
+    ("C-c g g" . magit-status)
+    ("C-c g d" . magit-dispatch)
+    ("C-c g f" . magit-file-dispatch)
     :map magit-mode-map
     ("C-w" . nil)
     ("M-w" . nil))
@@ -7434,25 +7439,56 @@ functionality, such as with Ediff and Smerge:
   (setq magit-define-global-key-bindings nil)
   (setq magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv))
   :config
-  (setq git-commit-summary-max-length 50)
-  ;; NOTE 2023-01-24: I used to also include `overlong-summary-line'
-  ;; in this list, but I realised I do not need it.  My summaries are
-  ;; always in check.  When I exceed the limit, it is for a good
-  ;; reason.
-  (setq git-commit-style-convention-checks '(non-empty-second-line))
-
-  (setq magit-diff-refine-hunk t)
-
   ;; Show icons for files in the Magit status and other buffers.
-  (with-eval-after-load 'magit
+  (with-eval-after-load 'nerd-icons
     (setq magit-format-file-function #'magit-format-file-nerd-icons)))
+
+(use-package magit-diff
+  :ensure nil ; part of `magit'
+  :defer t
+  :config
+  (setq magit-diff-refine-hunk t)
+  (setq magit-diff-refine-ignore-whitespace t))
+
+(use-package magit-log
+  :ensure nil ; part of `magit'
+  :defer t
+  :config
+  (setq magit-log-auto-more t))
 
 (use-package magit-repos
   :ensure nil ; part of `magit'
   :commands (magit-list-repositories)
   :init
   (setq magit-repository-directories
-        '(("~/Git/Projects" . 1))))
+        '(("~/Git/Projects" . 1)))
+  (setq magit-repolist-columns
+        `(("Name" 25 ,#'magit-repolist-column-ident
+           ())
+          ("Version" 15 ,#'magit-repolist-column-version
+           ((:sort magit-repolist-version<)))
+          ("Unpulled" 10 ,#'magit-repolist-column-unpulled-from-upstream
+           ((:help-echo "Upstream changes not in branch")
+            (:right-align t)
+            (:sort <)))
+          ("Unpushed" 10 ,#'magit-repolist-column-unpushed-to-upstream
+           ((:help-echo "Local changes not in upstream")
+            (:right-align t)
+            (:sort <)))
+          ("Path" 99 ,#'magit-repolist-column-path
+           ()))))
+
+(use-package git-commit
+  :ensure nil ; part of `magit'
+  :defer t
+  :config
+  (setq git-commit-summary-max-length 50)
+  ;; NOTE 2023-01-24: I used to also include `overlong-summary-line'
+  ;; in this list, but I realised I do not need it.  My summaries are
+  ;; always in check.  When I exceed the limit, it is for a good
+  ;; reason.
+  (setq git-commit-style-convention-checks '(non-empty-second-line))
+  (setq git-commit-major-mode #'log-edit-mode))
 #+end_src
 
 *** The =prot-emacs-git.el= call to ~provide~
