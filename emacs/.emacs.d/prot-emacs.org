@@ -7055,6 +7055,38 @@ section of this file).
   (setq diff-font-lock-syntax nil))
 #+end_src
 
+*** The =prot-emacs-git.el= section about ~smerge-mode~
+:PROPERTIES:
+:CUSTOM_ID: h:2ed18433-8b38-4518-a464-77bc76e3a87d
+:END:
+
+When we have a merge conflict with Git, the underlying program inserts
+markers in the offending files wihch show what is coming into the
+file, what we had there, and, where applicable, what the common
+ancestor was. Emacs handles this case nicely via ~smerge-mode~. The
+differently marked regions are highlighted to show their differences
+and the user can quickly pick the upper, lower, or base region among
+them. Do =M-x describe-keymap= and then check ~smerge-mode-map~ to
+learn about all the available commands. For me, the most common
+scenario is to pick either the upper or the lower region and then move
+to the next conflict.
+
+Note that ~smerge-mode~ works with both ~vc~ and ~magit~. In the case
+of the latter, it even works in the Magit status buffer:
+
+- [[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]].
+- [[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git interface)]].
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
+;;;; `smerge-mode'
+(use-package smerge-mode
+  :ensure nil
+  :defer t
+  :config
+  (setq smerge-diff-buffer-name "*smerge-diff*")
+  (setq smerge-refine-shadow-cursor nil)) ; Emacs 31
+#+end_src
+
 *** The =prot-emacs-git.el= section about =vc.el= and related
 :PROPERTIES:
 :CUSTOM_ID: h:50add1d8-f0f4-49be-9e57-ab280a4aa300
@@ -7118,6 +7150,8 @@ project). Whatever VCS we use, the workflow is the same:
 - A Dired-like buffer is also available to perform these actions
   across many edited files. Check the commands, ~vc-dir~,
   ~vc-dir-root~, or even ~project-vc-dir~.
+- Merge conflicts are handled in the affected files with the help of
+  the built-in ~smerge-mode~ ([[#h:2ed18433-8b38-4518-a464-77bc76e3a87d][The =prot-emacs-git.el= section about ~smerge-mode~]]).
 
 Remember to use =C-h m= (~describe-mode~) to get help for the buffer
 you are in and to learn the relevant key bindings.
@@ -7238,6 +7272,10 @@ many extras on top of ~vc~ that I use daily in my workflow
 :PROPERTIES:
 :CUSTOM_ID: h:257b9118-4407-410e-a56a-134fd5d1a3b4
 :END:
+
+[ NOTE 2025-10-25: I plan to review this section. The ~agitate~
+  package works, though there have been a lot of refinements to Emacs
+  since I first worked on this. Maybe I do not need it anymore. ]
 
 This is an experimental package of mine whose role is to extend the
 functionality provided by the =vc= suite of tools ([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]]),
@@ -7371,6 +7409,11 @@ The only downside of this wonderful package is that it is slow on
 Windows (based on what others have told me and showed me)... In those
 cases, a combination of =vc= and the command-line will suffice
 ([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]]).
+Otherwise, Magit integrates nicely with the rest of the Emacs
+functionality, such as with Ediff and Smerge:
+
+- [[#h:89edea05-4d94-4ea1-b2a8-5ad01422618c][The =prot-emacs-git.el= section about ediff]].
+- [[#h:2ed18433-8b38-4518-a464-77bc76e3a87d][The =prot-emacs-git.el= section about ~smerge-mode~]].
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
