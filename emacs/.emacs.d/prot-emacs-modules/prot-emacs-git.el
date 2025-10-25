@@ -222,9 +222,7 @@
   :ensure t
   :bind ; also see `magit-define-global-key-bindings'
   ( :map global-map
-    ("C-c g g" . magit-status)
-    ("C-c g d" . magit-dispatch)
-    ("C-c g f" . magit-file-dispatch)
+    ("C-c g" . magit-status)
     :map magit-mode-map
     ("C-w" . nil)
     ("M-w" . nil))
