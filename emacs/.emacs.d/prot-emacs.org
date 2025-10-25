@@ -6859,65 +6859,6 @@ This section covers my settings for version control per se, but more
 widely for tools related to checking different versions of files and
 working with so-called "projects".
 
-*** The =prot-emacs-git.el= section about ediff
-:PROPERTIES:
-:CUSTOM_ID: h:89edea05-4d94-4ea1-b2a8-5ad01422618c
-:END:
-
-[ Watch: [[https://protesilaos.com/codelog/2023-11-17-emacs-ediff-basics/][Emacs: ediff basics]] (2023-12-30) ]
-
-The built-in ~ediff~ feature provides several commands that let us
-compare files or buffers side-by-side. The defaults of ~ediff~ are bad,
-in my opinion: it puts buffers one on top of the other and places the
-"control panel" in a separate Emacs frame. The first time I tried to
-use it, I thought I broke my setup because it is unlike anything we
-normally interact with. As such, the settings I have for
-~ediff-split-window-function~ and ~ediff-window-setup-function~ are
-what I would expect Emacs maintainers to adopt as the new default. I
-strongly encourage everyone to start with them.
-
-In my workflow, the points of entry to the ~ediff~ feature are the
-commands ~ediff-files~, ~ediff-buffers~. Sometimes I use the 3-way
-variants with ~ediff-files3~ and ~ediff-buffers3~, though this is rare.
-Do watch the video I link to in the beginning of this section, as it
-covers the main functionality of this neat tool. I also show how it
-integrates with ~magit~ ([[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]).
-
-The =prot-ediff.el= extension contains some quality-of-life
-refinements to the core Ediff functionality ([[#h:3937b784-af0f-47c0-8c89-c74d90b00b8c][The =prot-ediff.el= library]]):
-
-- Function ~prot-ediff-store-layout~ :: Store the current frame's window configuration before Ediff is set up.
-- Function ~prot-ediff-restore-layout~ :: Restore the current frame's window configuration.
-- Command ~prot-ediff-buffers-2~ :: Produce an Ediff with the current two visible buffers.
-- Command ~prot-ediff-buffers-3~ :: Produce an Ediff with the current three visible buffers.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el" :mkdirp yes
-;;;; `ediff'
-(use-package ediff
-  :ensure nil
-  :commands (ediff-buffers ediff-files ediff-buffers3 ediff-files3)
-  :init
-  (setq ediff-split-window-function 'split-window-horizontally)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  :config
-  (setq ediff-keep-variants nil)
-  (setq ediff-make-buffers-readonly-at-startup nil)
-  (setq ediff-merge-revisions-with-ancestor t)
-  (setq ediff-show-clashes-only t))
-
-(use-package prot-ediff
-  :ensure nil
-  :bind
-  ;; The C-x v prefix is for all "version control" commands that are
-  ;; already built into Emacs.  It makes sense to extend it for this
-  ;; use-case.
-  (("C-x v 2" . prot-ediff-visible-buffers-2)
-   ("C-x v 3" . prot-ediff-visible-buffers-3))
-  :hook
-  ((ediff-before-setup . prot-ediff-store-layout)
-   (ediff-quit . prot-ediff-restore-layout)))
-#+end_src
-
 *** The =prot-emacs-git.el= section about =project.el=
 :PROPERTIES:
 :CUSTOM_ID: h:7dcbcadf-8af6-487d-b864-e4ce56d69530
@@ -7053,6 +6994,65 @@ section of this file).
   (setq diff-refine nil) ; I do it on demand, with my `agitate' package (more below)
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
   (setq diff-font-lock-syntax nil))
+#+end_src
+
+*** The =prot-emacs-git.el= section about ediff
+:PROPERTIES:
+:CUSTOM_ID: h:89edea05-4d94-4ea1-b2a8-5ad01422618c
+:END:
+
+[ Watch: [[https://protesilaos.com/codelog/2023-11-17-emacs-ediff-basics/][Emacs: ediff basics]] (2023-12-30) ]
+
+The built-in ~ediff~ feature provides several commands that let us
+compare files or buffers side-by-side. The defaults of ~ediff~ are bad,
+in my opinion: it puts buffers one on top of the other and places the
+"control panel" in a separate Emacs frame. The first time I tried to
+use it, I thought I broke my setup because it is unlike anything we
+normally interact with. As such, the settings I have for
+~ediff-split-window-function~ and ~ediff-window-setup-function~ are
+what I would expect Emacs maintainers to adopt as the new default. I
+strongly encourage everyone to start with them.
+
+In my workflow, the points of entry to the ~ediff~ feature are the
+commands ~ediff-files~, ~ediff-buffers~. Sometimes I use the 3-way
+variants with ~ediff-files3~ and ~ediff-buffers3~, though this is rare.
+Do watch the video I link to in the beginning of this section, as it
+covers the main functionality of this neat tool. I also show how it
+integrates with ~magit~ ([[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]).
+
+The =prot-ediff.el= extension contains some quality-of-life
+refinements to the core Ediff functionality ([[#h:3937b784-af0f-47c0-8c89-c74d90b00b8c][The =prot-ediff.el= library]]):
+
+- Function ~prot-ediff-store-layout~ :: Store the current frame's window configuration before Ediff is set up.
+- Function ~prot-ediff-restore-layout~ :: Restore the current frame's window configuration.
+- Command ~prot-ediff-buffers-2~ :: Produce an Ediff with the current two visible buffers.
+- Command ~prot-ediff-buffers-3~ :: Produce an Ediff with the current three visible buffers.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el" :mkdirp yes
+;;;; `ediff'
+(use-package ediff
+  :ensure nil
+  :commands (ediff-buffers ediff-files ediff-buffers3 ediff-files3)
+  :init
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  :config
+  (setq ediff-keep-variants nil)
+  (setq ediff-make-buffers-readonly-at-startup nil)
+  (setq ediff-merge-revisions-with-ancestor t)
+  (setq ediff-show-clashes-only t))
+
+(use-package prot-ediff
+  :ensure nil
+  :bind
+  ;; The C-x v prefix is for all "version control" commands that are
+  ;; already built into Emacs.  It makes sense to extend it for this
+  ;; use-case.
+  (("C-x v 2" . prot-ediff-visible-buffers-2)
+   ("C-x v 3" . prot-ediff-visible-buffers-3))
+  :hook
+  ((ediff-before-setup . prot-ediff-store-layout)
+   (ediff-quit . prot-ediff-restore-layout)))
 #+end_src
 
 *** The =prot-emacs-git.el= section about ~smerge-mode~
