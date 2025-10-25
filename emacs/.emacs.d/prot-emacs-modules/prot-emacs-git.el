@@ -1,28 +1,3 @@
-;;;; `ediff'
-(use-package ediff
-  :ensure nil
-  :commands (ediff-buffers ediff-files ediff-buffers3 ediff-files3)
-  :init
-  (setq ediff-split-window-function 'split-window-horizontally)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  :config
-  (setq ediff-keep-variants nil)
-  (setq ediff-make-buffers-readonly-at-startup nil)
-  (setq ediff-merge-revisions-with-ancestor t)
-  (setq ediff-show-clashes-only t))
-
-(use-package prot-ediff
-  :ensure nil
-  :bind
-  ;; The C-x v prefix is for all "version control" commands that are
-  ;; already built into Emacs.  It makes sense to extend it for this
-  ;; use-case.
-  (("C-x v 2" . prot-ediff-visible-buffers-2)
-   ("C-x v 3" . prot-ediff-visible-buffers-3))
-  :hook
-  ((ediff-before-setup . prot-ediff-store-layout)
-   (ediff-quit . prot-ediff-restore-layout)))
-
 ;;;; `project'
 (use-package project
   :ensure nil
@@ -64,6 +39,39 @@
   (setq diff-refine nil) ; I do it on demand, with my `agitate' package (more below)
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
   (setq diff-font-lock-syntax nil))
+
+;;;; `ediff'
+(use-package ediff
+  :ensure nil
+  :commands (ediff-buffers ediff-files ediff-buffers3 ediff-files3)
+  :init
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  :config
+  (setq ediff-keep-variants nil)
+  (setq ediff-make-buffers-readonly-at-startup nil)
+  (setq ediff-merge-revisions-with-ancestor t)
+  (setq ediff-show-clashes-only t))
+
+(use-package prot-ediff
+  :ensure nil
+  :bind
+  ;; The C-x v prefix is for all "version control" commands that are
+  ;; already built into Emacs.  It makes sense to extend it for this
+  ;; use-case.
+  (("C-x v 2" . prot-ediff-visible-buffers-2)
+   ("C-x v 3" . prot-ediff-visible-buffers-3))
+  :hook
+  ((ediff-before-setup . prot-ediff-store-layout)
+   (ediff-quit . prot-ediff-restore-layout)))
+
+;;;; `smerge-mode'
+(use-package smerge-mode
+  :ensure nil
+  :defer t
+  :config
+  (setq smerge-diff-buffer-name "*smerge-diff*")
+  (setq smerge-refine-shadow-cursor nil)) ; Emacs 31
 
   ;;; Version control framework (vc.el, vc-git.el, and more)
 (use-package vc
@@ -212,9 +220,11 @@
 
 (use-package magit
   :ensure t
-  :bind
+  :bind ; also see `magit-define-global-key-bindings'
   ( :map global-map
-    ("C-c g" . magit-status)
+    ("C-c g g" . magit-status)
+    ("C-c g d" . magit-dispatch)
+    ("C-c g f" . magit-file-dispatch)
     :map magit-mode-map
     ("C-w" . nil)
     ("M-w" . nil))
@@ -222,24 +232,55 @@
   (setq magit-define-global-key-bindings nil)
   (setq magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv))
   :config
-  (setq git-commit-summary-max-length 50)
-  ;; NOTE 2023-01-24: I used to also include `overlong-summary-line'
-  ;; in this list, but I realised I do not need it.  My summaries are
-  ;; always in check.  When I exceed the limit, it is for a good
-  ;; reason.
-  (setq git-commit-style-convention-checks '(non-empty-second-line))
-
-  (setq magit-diff-refine-hunk t)
-
   ;; Show icons for files in the Magit status and other buffers.
-  (with-eval-after-load 'magit
+  (with-eval-after-load 'nerd-icons
     (setq magit-format-file-function #'magit-format-file-nerd-icons)))
+
+(use-package magit-diff
+  :ensure nil ; part of `magit'
+  :defer t
+  :config
+  (setq magit-diff-refine-hunk t)
+  (setq magit-diff-refine-ignore-whitespace t))
+
+(use-package magit-log
+  :ensure nil ; part of `magit'
+  :defer t
+  :config
+  (setq magit-log-auto-more t))
 
 (use-package magit-repos
   :ensure nil ; part of `magit'
   :commands (magit-list-repositories)
   :init
   (setq magit-repository-directories
-        '(("~/Git/Projects" . 1))))
+        '(("~/Git/Projects" . 1)))
+  (setq magit-repolist-columns
+        `(("Name" 25 ,#'magit-repolist-column-ident
+           ())
+          ("Version" 15 ,#'magit-repolist-column-version
+           ((:sort magit-repolist-version<)))
+          ("Unpulled" 10 ,#'magit-repolist-column-unpulled-from-upstream
+           ((:help-echo "Upstream changes not in branch")
+            (:right-align t)
+            (:sort <)))
+          ("Unpushed" 10 ,#'magit-repolist-column-unpushed-to-upstream
+           ((:help-echo "Local changes not in upstream")
+            (:right-align t)
+            (:sort <)))
+          ("Path" 99 ,#'magit-repolist-column-path
+           ()))))
+
+(use-package git-commit
+  :ensure nil ; part of `magit'
+  :defer t
+  :config
+  (setq git-commit-summary-max-length 50)
+  ;; NOTE 2023-01-24: I used to also include `overlong-summary-line'
+  ;; in this list, but I realised I do not need it.  My summaries are
+  ;; always in check.  When I exceed the limit, it is for a good
+  ;; reason.
+  (setq git-commit-style-convention-checks '(non-empty-second-line))
+  (setq git-commit-major-mode #'log-edit-mode))
 
 (provide 'prot-emacs-git)
