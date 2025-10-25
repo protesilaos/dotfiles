@@ -33,12 +33,12 @@ constitutes a matching tiling window manager."
 (setq initial-frame-alist `((horizontal-scroll-bars . nil)
                             (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
                             (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                            (vertical-scroll-bars . nil)
+                            (scroll-bar-width . 6)
                             (width . (text-pixels . 800))
                             (height . (text-pixels . 900))
                             ,@(when prot-laptop-p
-                                (list '(fullscreen . maximized)))
-                            '(vertical-scroll-bars . right)
-                            '(scroll-bar-width . 6)))
+                                (list '(fullscreen . maximized)))))
 
 ;; Do it again after init so that any intermediate changes are not
 ;; retained.  Note that we cannot rely on setting this to
@@ -51,12 +51,12 @@ constitutes a matching tiling window manager."
                              (setq default-frame-alist `((horizontal-scroll-bars . nil)
                                                          (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
                                                          (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                                                         (vertical-scroll-bars . nil)
+                                                         (scroll-bar-width . 6)
                                                          (width . (text-pixels . 800))
                                                          (height . (text-pixels . 900))
                                                          ,@(when prot-laptop-p
-                                                             (list '(fullscreen . maximized)))
-                                                         '(vertical-scroll-bars . right)
-                                                         '(scroll-bar-width . 6)))))
+                                                             (list '(fullscreen . maximized)))))))
 
 (defun prot-emacs-no-minibuffer-scroll-bar (frame)
   "Remove the minibuffer scroll bars from FRAME."
