@@ -565,6 +565,24 @@ Specific to the current window's mode line.")
   "Mode line construct displaying Eglot information.
 Specific to the current window's mode line.")
 
+;;;; Frame name
+
+(defcustom prot-modeline-show-frame-name nil
+  "When non-nil, display the current frame name."
+  :type 'boolean)
+
+(defvar-local prot-modeline-frame-name
+  '(prot-modeline-show-frame-name
+    (" "
+     (:eval (when-let* ((_ (mode-line-window-selected-p))
+                        (current-frame (selected-frame))
+                        (_ (frame-live-p current-frame))
+                        (parameters (frame-parameters))
+                        (name (alist-get 'name parameters))
+                        (indicator "√"))
+              (format "%s %s " (propertize indicator 'face 'shadow) name)))))
+  "Mode line construct to display the current frame name.")
+
 ;;;; Miscellaneous
 
 (defvar-local prot-modeline-notmuch-indicator
@@ -597,6 +615,7 @@ Specific to the current window's mode line.")
                      prot-modeline-vc-branch
                      prot-modeline-flymake
                      prot-modeline-eglot
+                     prot-modeline-frame-name
                      ;; prot-modeline-align-right
                      prot-modeline-notmuch-indicator
                      prot-modeline-misc-info))

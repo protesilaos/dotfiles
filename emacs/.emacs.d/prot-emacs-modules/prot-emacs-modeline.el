@@ -4,6 +4,7 @@
   :config
   (setq mode-line-compact nil) ; Emacs 28
   (setq mode-line-right-align-edge 'right-margin) ; Emacs 30
+  (setq prot-modeline-show-frame-name (if prot-laptop-p t nil))
   (setq-default mode-line-format
                 '("%e"
                   prot-modeline-kbd-macro
@@ -15,8 +16,8 @@
                   prot-modeline-buffer-identification
                   "  "
                   prot-modeline-major-mode
+                  prot-modeline-frame-name
                   prot-modeline-process
-                  "  "
                   prot-modeline-vc-branch
                   "  "
                   prot-modeline-eglot

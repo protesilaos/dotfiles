@@ -336,6 +336,15 @@ not show them: I do that on demand by enabling ~scroll-bar-mode~
 scroll bars, I want them to not show up in the minibuffer, hence the
 function ~prot-emacs-no-minibuffer-scroll-bar~.
 
+Because the laptop has limited screen real estate, I take care to hide
+the title bar of maximised frames by setting up the built-in function
+~frame-hide-title-bar-when-maximized~. This is the bar at the top of
+the frame which is drawn by the operating system's window manager: it
+is where the familiar buttons are to close, minimise, or maximise the
+application window. Hiding the title bar declutters the view at the
+cost of hiding the frame title. To compensate, I have my active mode
+line display the frame name ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =prot-emacs-modeline.el= module]]).
+
 #+begin_src emacs-lisp :tangle "early-init.el"
 (defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
   "When non-nil, we assume to be working on a laptop.")
@@ -3763,7 +3772,9 @@ also avoid the repetition of global indicators, such as for the time
 or the ~notmuch-indicator~ ([[#h:0f12f144-ca9f-4d07-8563-c33b3521bfb5][The =prot-emacs-notmuch.el= section about the ~notmuch-indicator~]]).
 
 Most items that go into the ~mode-line-format~ are defined in
-[[#h:935adc09-abaa-4413-a5ab-a7a562081c20][the =prot-modeline.el= library]].
+[[#h:935adc09-abaa-4413-a5ab-a7a562081c20][the =prot-modeline.el= library]]. The frame name, in particular, is
+useful to me only when I am on the laptop, hence the option to display
+it conditionally: ~prot-modeline-show-frame-name~ ([[#h:0403b581-142b-4613-bc81-51c5dccd831d][The =early-init.el= code to set frame parameters for the desktop or laptop]]).
 
 Notice the use of ~setq-default~. This is like ~setq~ but sets the
 default value of variable that normally are buffer-local. You will
@@ -3784,6 +3795,7 @@ as soon as the given package/feature is loaded.
   :config
   (setq mode-line-compact nil) ; Emacs 28
   (setq mode-line-right-align-edge 'right-margin) ; Emacs 30
+  (setq prot-modeline-show-frame-name (if prot-laptop-p t nil))
   (setq-default mode-line-format
                 '("%e"
                   prot-modeline-kbd-macro
@@ -3795,8 +3807,8 @@ as soon as the given package/feature is loaded.
                   prot-modeline-buffer-identification
                   "  "
                   prot-modeline-major-mode
+                  prot-modeline-frame-name
                   prot-modeline-process
-                  "  "
                   prot-modeline-vc-branch
                   "  "
                   prot-modeline-eglot
@@ -13873,6 +13885,24 @@ Specific to the current window's mode line.")
   "Mode line construct displaying Eglot information.
 Specific to the current window's mode line.")
 
+;;;; Frame name
+
+(defcustom prot-modeline-show-frame-name nil
+  "When non-nil, display the current frame name."
+  :type 'boolean)
+
+(defvar-local prot-modeline-frame-name
+  '(prot-modeline-show-frame-name
+    (" "
+     (:eval (when-let* ((_ (mode-line-window-selected-p))
+                        (current-frame (selected-frame))
+                        (_ (frame-live-p current-frame))
+                        (parameters (frame-parameters))
+                        (name (alist-get 'name parameters))
+                        (indicator "√"))
+              (format "%s %s " (propertize indicator 'face 'shadow) name)))))
+  "Mode line construct to display the current frame name.")
+
 ;;;; Miscellaneous
 
 (defvar-local prot-modeline-notmuch-indicator
@@ -13905,6 +13935,7 @@ Specific to the current window's mode line.")
                      prot-modeline-vc-branch
                      prot-modeline-flymake
                      prot-modeline-eglot
+                     prot-modeline-frame-name
                      ;; prot-modeline-align-right
                      prot-modeline-notmuch-indicator
                      prot-modeline-misc-info))
