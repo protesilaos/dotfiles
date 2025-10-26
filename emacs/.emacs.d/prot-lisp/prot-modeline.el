@@ -53,6 +53,11 @@ Modify this face to, for example, add a :box attribute to all
 relevant indicators (combines nicely with my `spacious-padding'
 package).")
 
+(defface prot-modeline-indicator-small
+  '((t :inherit bold :height 0.8))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
 (defface prot-modeline-indicator-red
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
@@ -583,6 +588,21 @@ Specific to the current window's mode line.")
               (format "%s %s " (propertize indicator 'face 'shadow) name)))))
   "Mode line construct to display the current frame name.")
 
+;;;; `which-function-mode' indicator
+
+(defvar-local prot-modeline-which-function-indicator
+  `(( :propertize
+      which-func-current
+      face prot-modeline-indicator-small
+      mouse-face mode-line-highlight
+      help-echo (format "Current definition: `%s'"
+                        (or (gethash (selected-window) which-func-table)
+                            which-func-unknown))))
+  "The equivalent of `which-func-format'.")
+
+(with-eval-after-load 'which-func
+  (setq mode-line-misc-info (delete (assq 'which-function-mode mode-line-misc-info) mode-line-misc-info)))
+
 ;;;; Miscellaneous
 
 (defvar-local prot-modeline-notmuch-indicator
@@ -616,6 +636,7 @@ Specific to the current window's mode line.")
                      prot-modeline-flymake
                      prot-modeline-eglot
                      prot-modeline-frame-name
+                     prot-modeline-which-function-indicator
                      ;; prot-modeline-align-right
                      prot-modeline-notmuch-indicator
                      prot-modeline-misc-info))

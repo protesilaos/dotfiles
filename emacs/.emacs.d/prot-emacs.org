@@ -3807,8 +3807,9 @@ as soon as the given package/feature is loaded.
                   prot-modeline-buffer-identification
                   "  "
                   prot-modeline-major-mode
-                  prot-modeline-frame-name
                   prot-modeline-process
+                  "  "
+                  prot-modeline-frame-name
                   prot-modeline-vc-branch
                   "  "
                   prot-modeline-eglot
@@ -3816,6 +3817,7 @@ as soon as the given package/feature is loaded.
                   prot-modeline-flymake
                   "  "
                   mode-line-format-right-align ; Emacs 30
+                  prot-modeline-which-function-indicator
                   prot-modeline-notmuch-indicator
                   "  "
                   prot-modeline-misc-info))
@@ -6794,28 +6796,16 @@ is a bit more advanced in terms of the data structure it uses. All I
 did what to take the original value and make some minor tweaks to it.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
-;;; Show the name of the current definition or heading for context (which-function-mode)
+;;; Show the name of the current definition or heading for context (`which-function-mode')
 (use-package which-func
   :ensure nil
   :hook (after-init . which-function-mode)
   :config
   (setq which-func-modes '(prog-mode org-mode))
+  ;; NOTE 2025-10-26: I handle the indicator on my own via `prot-modeline-which-function-indicator'.
   (setq which-func-display 'mode) ; Emacs 30
   (setq which-func-unknown "")
-
-  (defface prot/which-function-small
-    '((t :inherit mode-line-emphasis :height 0.8))
-    "Face for the `which-function-mode' indicator.")
-
-  (setq which-func-format
-        `(( :propertize
-            which-func-current
-            face prot/which-function-small
-            mouse-face mode-line-highlight
-            help-echo (format "Current definition: `%s'"
-                              (or (gethash (selected-window) which-func-table)
-                                  which-func-unknown)))))
-
+  
   ;; NOTE 2025-10-24: This is an experiment.  It seems to work, but there may be downsides.
   (with-eval-after-load 'prot-modeline
     (defun prot/which-function ()
@@ -13430,6 +13420,11 @@ Modify this face to, for example, add a :box attribute to all
 relevant indicators (combines nicely with my `spacious-padding'
 package).")
 
+(defface prot-modeline-indicator-small
+  '((t :inherit bold :height 0.8))
+  "Face for modeline indicators (e.g. see my `notmuch-indicator')."
+  :group 'prot-modeline-faces)
+
 (defface prot-modeline-indicator-red
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
@@ -13960,6 +13955,21 @@ Specific to the current window's mode line.")
               (format "%s %s " (propertize indicator 'face 'shadow) name)))))
   "Mode line construct to display the current frame name.")
 
+;;;; `which-function-mode' indicator
+
+(defvar-local prot-modeline-which-function-indicator
+  `(( :propertize
+      which-func-current
+      face prot-modeline-indicator-small
+      mouse-face mode-line-highlight
+      help-echo (format "Current definition: `%s'"
+                        (or (gethash (selected-window) which-func-table)
+                            which-func-unknown))))
+  "The equivalent of `which-func-format'.")
+
+(with-eval-after-load 'which-func
+  (setq mode-line-misc-info (delete (assq 'which-function-mode mode-line-misc-info) mode-line-misc-info)))
+
 ;;;; Miscellaneous
 
 (defvar-local prot-modeline-notmuch-indicator
@@ -13993,6 +14003,7 @@ Specific to the current window's mode line.")
                      prot-modeline-flymake
                      prot-modeline-eglot
                      prot-modeline-frame-name
+                     prot-modeline-which-function-indicator
                      ;; prot-modeline-align-right
                      prot-modeline-notmuch-indicator
                      prot-modeline-misc-info))

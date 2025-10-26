@@ -268,28 +268,16 @@ For use in `consult-buffer-list'."
   :config
   (setq windmove-create-window nil)) ; Emacs 27.1
 
-;;; Show the name of the current definition or heading for context (which-function-mode)
+;;; Show the name of the current definition or heading for context (`which-function-mode')
 (use-package which-func
   :ensure nil
   :hook (after-init . which-function-mode)
   :config
   (setq which-func-modes '(prog-mode org-mode))
+  ;; NOTE 2025-10-26: I handle the indicator on my own via `prot-modeline-which-function-indicator'.
   (setq which-func-display 'mode) ; Emacs 30
   (setq which-func-unknown "")
-
-  (defface prot/which-function-small
-    '((t :inherit mode-line-emphasis :height 0.8))
-    "Face for the `which-function-mode' indicator.")
-
-  (setq which-func-format
-        `(( :propertize
-            which-func-current
-            face prot/which-function-small
-            mouse-face mode-line-highlight
-            help-echo (format "Current definition: `%s'"
-                              (or (gethash (selected-window) which-func-table)
-                                  which-func-unknown)))))
-
+  
   ;; NOTE 2025-10-24: This is an experiment.  It seems to work, but there may be downsides.
   (with-eval-after-load 'prot-modeline
     (defun prot/which-function ()

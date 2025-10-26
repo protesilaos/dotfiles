@@ -16,8 +16,9 @@
                   prot-modeline-buffer-identification
                   "  "
                   prot-modeline-major-mode
-                  prot-modeline-frame-name
                   prot-modeline-process
+                  "  "
+                  prot-modeline-frame-name
                   prot-modeline-vc-branch
                   "  "
                   prot-modeline-eglot
@@ -25,6 +26,7 @@
                   prot-modeline-flymake
                   "  "
                   mode-line-format-right-align ; Emacs 30
+                  prot-modeline-which-function-indicator
                   prot-modeline-notmuch-indicator
                   "  "
                   prot-modeline-misc-info))
