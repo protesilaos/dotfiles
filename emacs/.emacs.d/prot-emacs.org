@@ -3836,6 +3836,108 @@ as soon as the given package/feature is loaded.
     (add-hook 'spacious-padding-mode-hook #'prot/modeline-spacious-indicators)))
 #+end_src
 
+*** Show the name of the current function or heading (~which-function-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:03696edd-8637-4eb6-bfeb-23e828569523
+:END:
+
+The built-in ~which-key-mode~ displays the name of the current
+function/variable defition or heading. It makes it easier to figure
+out where you are in the file you are editing. This is especially
+useful when combined with search-driven navigation: you just land on a
+certain line and need to have a sense of the context.
+
+By the default, the information is displayed on the mode line, though
+this can be controlled by the user option ~which-func-display~. I
+prefer to keep it to the mode line, though it is possible to place it
+on the header line or both it and the mode line.
+
+The ~which-func-format~ controls what the indicator looks like. This
+is a bit more advanced in terms of the data structure it uses. All I
+did what to take the original value and make some minor tweaks to it.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-modeline.el"
+;;; Show the name of the current definition or heading for context (`which-function-mode')
+(use-package which-func
+  :ensure nil
+  :hook (after-init . which-function-mode)
+  :config
+  (setq which-func-modes '(prog-mode org-mode))
+  ;; NOTE 2025-10-26: I handle the indicator on my own via `prot-modeline-which-function-indicator'.
+  (setq which-func-display 'mode) ; Emacs 30
+  (setq which-func-unknown "")
+
+  ;; NOTE 2025-10-24: This is an experiment.  It seems to work, but there may be downsides.
+  (with-eval-after-load 'prot-modeline
+    (defun prot/which-function ()
+      "A more opinionated `which-function'."
+      (let ((name nil))
+        (cond
+         ((derived-mode-p 'lisp-data-mode)
+          (let ((text (save-excursion
+                        (beginning-of-defun)
+                        (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
+            (setq name (if (string-prefix-p ";" text)
+                           ""
+                         (prot-modeline-string-abbreviate-but-last text 1)))))
+         (t
+          (when (null name)
+            (setq name (add-log-current-defun)))
+          ;; If Imenu is loaded, try to make an index alist with it.
+          ;; If `add-log-current-defun' ran and gave nil, accept that.
+          (when (and (null name)
+                     (null add-log-current-defun-function))
+            (when (and (null name)
+                       (boundp 'imenu--index-alist)
+                       (or (null imenu--index-alist)
+                           ;; Update if outdated
+                           (/= (buffer-chars-modified-tick) imenu-menubar-modified-tick))
+                       (null which-function-imenu-failed))
+              (ignore-errors (imenu--make-index-alist t))
+              (unless imenu--index-alist
+                (setq-local which-function-imenu-failed t)))
+            ;; If we have an index alist, use it.
+            (when (and (null name)
+                       (boundp 'imenu--index-alist) imenu--index-alist)
+              (let ((alist imenu--index-alist)
+                    (minoffset (point-max))
+                    offset pair mark imstack namestack)
+                ;; Elements of alist are either ("name" . marker), or
+                ;; ("submenu" ("name" . marker) ... ). The list can be
+                ;; arbitrarily nested.
+                (while (or alist imstack)
+                  (if (null alist)
+                      (setq alist     (car imstack)
+                            namestack (cdr namestack)
+                            imstack   (cdr imstack))
+
+                    (setq pair (car-safe alist)
+                          alist (cdr-safe alist))
+
+                    (cond
+                     ((atom pair))            ; Skip anything not a cons.
+
+                     ((imenu--subalist-p pair)
+                      (setq imstack   (cons alist imstack)
+                            namestack (cons (car pair) namestack)
+                            alist     (cdr pair)))
+
+                     ((or (number-or-marker-p (setq mark (cdr pair)))
+                          (and (overlayp mark)
+                               (setq mark (overlay-start mark))))
+                      (when (and (>= (setq offset (- (point) mark)) 0)
+                                 (< offset minoffset)) ; Find the closest item.
+                        (setq minoffset offset
+                              name (if (null which-func-imenu-joiner-function)
+                                       (car pair)
+                                     (funcall
+                                      which-func-imenu-joiner-function
+                                      (reverse (cons (car pair) namestack)))))))))))))
+          (prot-modeline-string-cut-end name)))))
+
+    (advice-add #'which-function :override #'prot/which-function)))
+#+end_src
+
 *** The =prot-emacs-modeline.el= section about ~keycast~
 :PROPERTIES:
 :CUSTOM_ID: h:ba833ed8-f9d4-4693-bfd5-30452167137e
@@ -6773,108 +6875,6 @@ leads to the current heading. Same idea for programming modes. Neat!
     "Enable `breadcrumb-local-mode' if the buffer is visiting a file."
     (when buffer-file-name
       (breadcrumb-local-mode 1))))
-#+end_src
-
-*** Show the name of the current function or heading (~which-function-mode~)
-:PROPERTIES:
-:CUSTOM_ID: h:03696edd-8637-4eb6-bfeb-23e828569523
-:END:
-
-The built-in ~which-key-mode~ displays the name of the current
-function/variable defition or heading. It makes it easier to figure
-out where you are in the file you are editing. This is especially
-useful when combined with search-driven navigation: you just land on a
-certain line and need to have a sense of the context.
-
-By the default, the information is displayed on the mode line, though
-this can be controlled by the user option ~which-func-display~. I
-prefer to keep it to the mode line, though it is possible to place it
-on the header line or both it and the mode line.
-
-The ~which-func-format~ controls what the indicator looks like. This
-is a bit more advanced in terms of the data structure it uses. All I
-did what to take the original value and make some minor tweaks to it.
-
-#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
-;;; Show the name of the current definition or heading for context (`which-function-mode')
-(use-package which-func
-  :ensure nil
-  :hook (after-init . which-function-mode)
-  :config
-  (setq which-func-modes '(prog-mode org-mode))
-  ;; NOTE 2025-10-26: I handle the indicator on my own via `prot-modeline-which-function-indicator'.
-  (setq which-func-display 'mode) ; Emacs 30
-  (setq which-func-unknown "")
-  
-  ;; NOTE 2025-10-24: This is an experiment.  It seems to work, but there may be downsides.
-  (with-eval-after-load 'prot-modeline
-    (defun prot/which-function ()
-      "A more opinionated `which-function'."
-      (let ((name nil))
-        (cond
-         ((derived-mode-p 'lisp-data-mode)
-          (let ((text (save-excursion
-                        (beginning-of-defun)
-                        (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
-            (setq name (if (string-prefix-p ";" text)
-                           ""
-                         (prot-modeline-string-abbreviate-but-last text 1)))))
-         (t
-          (when (null name)
-            (setq name (add-log-current-defun)))
-          ;; If Imenu is loaded, try to make an index alist with it.
-          ;; If `add-log-current-defun' ran and gave nil, accept that.
-          (when (and (null name)
-                     (null add-log-current-defun-function))
-            (when (and (null name)
-                       (boundp 'imenu--index-alist)
-                       (or (null imenu--index-alist)
-                           ;; Update if outdated
-                           (/= (buffer-chars-modified-tick) imenu-menubar-modified-tick))
-                       (null which-function-imenu-failed))
-              (ignore-errors (imenu--make-index-alist t))
-              (unless imenu--index-alist
-                (setq-local which-function-imenu-failed t)))
-            ;; If we have an index alist, use it.
-            (when (and (null name)
-                       (boundp 'imenu--index-alist) imenu--index-alist)
-              (let ((alist imenu--index-alist)
-                    (minoffset (point-max))
-                    offset pair mark imstack namestack)
-                ;; Elements of alist are either ("name" . marker), or
-                ;; ("submenu" ("name" . marker) ... ). The list can be
-                ;; arbitrarily nested.
-                (while (or alist imstack)
-                  (if (null alist)
-                      (setq alist     (car imstack)
-                            namestack (cdr namestack)
-                            imstack   (cdr imstack))
-
-                    (setq pair (car-safe alist)
-                          alist (cdr-safe alist))
-
-                    (cond
-                     ((atom pair))            ; Skip anything not a cons.
-
-                     ((imenu--subalist-p pair)
-                      (setq imstack   (cons alist imstack)
-                            namestack (cons (car pair) namestack)
-                            alist     (cdr pair)))
-
-                     ((or (number-or-marker-p (setq mark (cdr pair)))
-                          (and (overlayp mark)
-                               (setq mark (overlay-start mark))))
-                      (when (and (>= (setq offset (- (point) mark)) 0)
-                                 (< offset minoffset)) ; Find the closest item.
-                        (setq minoffset offset
-                              name (if (null which-func-imenu-joiner-function)
-                                       (car pair)
-                                     (funcall
-                                      which-func-imenu-joiner-function
-                                      (reverse (cons (car pair) namestack)))))))))))))
-          (prot-modeline-string-cut-end name)))))
-
-    (advice-add #'which-function :override #'prot/which-function)))
 #+end_src
 
 *** The =prot-emacs-window.el= ~provide~ form
