@@ -278,7 +278,7 @@ For use in `consult-buffer-list'."
   (setq which-func-unknown "")
 
   (defface prot/which-function-small
-    '((t :inherit mode-line-emphasis :height 0.9))
+    '((t :inherit mode-line-emphasis :height 0.8))
     "Face for the `which-function-mode' indicator.")
 
   (setq which-func-format
