@@ -13421,7 +13421,7 @@ relevant indicators (combines nicely with my `spacious-padding'
 package).")
 
 (defface prot-modeline-indicator-small
-  '((t :inherit bold :height 0.8))
+  '((t :height 0.8))
   "Face for modeline indicators (e.g. see my `notmuch-indicator')."
   :group 'prot-modeline-faces)
 
