@@ -593,7 +593,7 @@ Specific to the current window's mode line.")
 (defvar-local prot-modeline-which-function-indicator
   `(( :propertize
       which-func-current
-      face prot-modeline-indicator-small
+      face '(prot-modeline-indicator-small prot-modeline-indicator-magenta)
       mouse-face mode-line-highlight
       help-echo (format "Current definition: `%s'"
                         (or (gethash (selected-window) which-func-table)
