@@ -14004,7 +14004,6 @@ Specific to the current window's mode line.")
                      prot-modeline-eglot
                      prot-modeline-frame-name
                      prot-modeline-which-function-indicator
-                     ;; prot-modeline-align-right
                      prot-modeline-notmuch-indicator
                      prot-modeline-misc-info))
   (put construct 'risky-local-variable t))
