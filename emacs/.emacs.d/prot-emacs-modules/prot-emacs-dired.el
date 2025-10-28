@@ -153,14 +153,6 @@
 
   (setq dired-preview-display-action-alist #'dired-preview-display-action-alist-below))
 
-(use-package ready-player
-  :ensure t
-  :mode
-  ("\\.\\(mp3\\|m4a\\|mp4\\|mkv\\|webm\\)\\'" . ready-player-major-mode)
-  :config
-  (setq ready-player-autoplay nil)
-  (setq ready-player-repeat nil))
-
 ;;; dired-like mode for the trash (trashed.el)
 (use-package trashed
   :ensure t

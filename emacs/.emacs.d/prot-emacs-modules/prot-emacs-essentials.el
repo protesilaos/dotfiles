@@ -435,32 +435,6 @@
   (("C-(" . goto-last-change)
    ("C-)" . goto-last-change-reverse)))
 
-;;; Mark syntactic constructs efficiently if tree-sitter is available (expreg)
-(when (and (treesit-available-p) prot-emacs-treesitter-extras)
-  (use-package expreg
-    :ensure t
-    :functions (prot/expreg-expand prot/expreg-expand-dwim)
-    ;; There is also an `expreg-contract' command, though I have no use for it.
-    :bind ("C-M-SPC" . prot/expreg-expand-dwim) ; overrides `mark-sexp'
-    :config
-    (defun prot/expreg-expand (n)
-      "Expand to N syntactic units, defaulting to 1 if none is provided interactively."
-      (interactive "p")
-      (dotimes (_ n)
-        (expreg-expand)))
-
-    (defun prot/expreg-expand-dwim ()
-      "Do-What-I-Mean `expreg-expand' to start with symbol or word.
-If over a real symbol, mark that directly, else start with a
-word.  Fall back to regular `expreg-expand'."
-      (interactive)
-      (let ((symbol (bounds-of-thing-at-point 'symbol)))
-        (cond
-         ((equal (bounds-of-thing-at-point 'word) symbol)
-          (prot/expreg-expand 1))
-         (symbol (prot/expreg-expand 2))
-         (t (expreg-expand)))))))
-
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
 (use-package tmr
