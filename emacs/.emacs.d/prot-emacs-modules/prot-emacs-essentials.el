@@ -196,6 +196,7 @@
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
   :bind
   (("C-;" . prot-comment)
+   ("M-;" . prot-comment) ; overrides `comment-dwim'
    ("C-x C-;" . prot-comment-timestamp-keyword)))
 
 ;;;; Prefix keymap (prot-prefix.el)

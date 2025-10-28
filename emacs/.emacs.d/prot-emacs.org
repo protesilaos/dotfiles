@@ -2766,6 +2766,7 @@ the module to set my desired configurations.
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
   :bind
   (("C-;" . prot-comment)
+   ("M-;" . prot-comment) ; overrides `comment-dwim'
    ("C-x C-;" . prot-comment-timestamp-keyword)))
 #+end_src
 
