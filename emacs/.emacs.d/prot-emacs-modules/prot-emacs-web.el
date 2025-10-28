@@ -104,12 +104,19 @@
   :hook
   (elfeed-show-mode . visual-line-mode)
   :bind
-  ("C-c e" . elfeed)
+  ( :map global-map
+    ("C-c e" . elfeed)
+    :map elfeed-search-mode-map
+    ("w" . elfeed-search-yank)
+    ("g" . elfeed-update)
+    ("G" . elfeed-search-update--force)
+    :map elfeed-show-mode-map
+    ("w" . elfeed-show-yank))
   :config
   (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
-  (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))
-  (setq elfeed-enclosure-default-dir "~/Downloads/")
+  (setq elfeed-db-directory (expand-file-name "elfeed/" user-emacs-directory))
+  (setq elfeed-enclosure-default-dir (expand-file-name "~/Downloads/"))
   (setq elfeed-search-filter "@2-weeks-ago +unread")
   (setq elfeed-sort-order 'descending)
   (setq elfeed-search-clipboard-type 'CLIPBOARD)
@@ -118,26 +125,19 @@
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
-  (setq elfeed-search-date-format '("%F %R" 20 :left))
-
-  (prot-emacs-keybind elfeed-search-mode-map
-    "w" #'elfeed-search-yank
-    "g" #'elfeed-update
-    "G" #'elfeed-search-update--force)
-
-  (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank))
+  (setq elfeed-search-date-format '("%F %R" 20 :left)))
 
 (use-package prot-elfeed
   :ensure nil
   :after elfeed
+  :hook
+  (elfeed-search-mode . prot-elfeed-load-feeds)
   :bind
   ( :map elfeed-search-mode-map
     ("s" . prot-elfeed-search-tag-filter)
     ("+" . prot-elfeed-toggle-tag)
     :map elfeed-show-mode-map
     ("+" . prot-elfeed-toggle-tag))
-  :hook
-  (elfeed-search-mode . prot-elfeed-load-feeds)
   :config
   (setq prot-elfeed-tag-faces t)
   (prot-elfeed-fontify-tags))

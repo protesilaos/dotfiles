@@ -11154,7 +11154,7 @@ passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gand
 account default : gandi
 #+end_example
 
-** TODO The =prot-emacs-web.el= module
+** The =prot-emacs-web.el= module
 :PROPERTIES:
 :CUSTOM_ID: h:f23d9cef-ab7b-4486-a070-9c7ae664eadf
 :END:
@@ -11401,10 +11401,64 @@ file to provide only these commands:
     ("J" . prot-eww-visit-url-on-page)))
 #+end_src
 
-*** TODO The =prot-emacs-web.el= RSS/Atom reader (~elfeed~)
+*** The =prot-emacs-web.el= RSS/Atom reader (~elfeed~)
 :PROPERTIES:
 :CUSTOM_ID: h:adc258d3-f444-4bb5-8a8d-43025a689167
 :END:
+
+The ~elfeed~ package by Christopher Wellons is an excellent RSS/Atom
+feed reader. It maintains an index of all feeds it has downloaded and
+provides a search-driven interface to them. We start by defining our
+feeds in the variable ~elfeed-feeds~. Each entry is a list with a
+string to the URL and them optional keywords. Those keywords are tags
+which expose the feed to relevant queries. Here is an example:
+
+#+begin_example emacs-lisp
+(setq elfeed-feeds '(("https://protesilaos.com/codelog.xml" emacs linux)
+                     ("https://protesilaos.com/interpretations.xml" art philosophy)))
+#+end_example
+
+When we invoke the ~elfeed~ command, we are taken to the main search
+view. To fetch new updates, we invoke the command ~elfeed-update~. The
+buffer will be populated with a listing of articles. It includes the
+date, the title, the name of the feed, and tags associated with that
+feed. From there, we can use the command ~elfeed-search-live-filter~
+or ~elfeed-search-set-filter~ to narrow the results to what we are
+interested in.
+
+The Elfeed query engine has the following semantics:
+
+- The pattern =+word= means to only show articles with the given tag,
+  while =-word= means to remove those which have that tag.
+- The =@= sign is used to specify a date or range thereof. For
+  example, it understands =@7-days-ago=, =@2-weeks-ago=,
+  =@2025-10-28=, =@2025-10-20--2025-10-28=, and
+  =@7-days-ago--3-days-ago=.
+- The =#= instructs Elfeed to limit the results to the given number,
+  like =#10= to show the first 10 matches.
+- The ~=~ is a prefix for regular expressions. Those are matched
+  against the feed title or URL.
+- Any space-separated words are treated like regular expressions.
+
+While all this is powerful, I find that I only use the =+word= and, on
+occasion, the =@3-months-ago= patterns.
+
+To read an article, just move the cursor to its line and type =RET=.
+This switches away from the buffer that runs ~elfeed-search-mode~ to
+the one which shows the article and uses ~elfeed-show-mode~.
+
+Use =M-x describe-keymap= on ~elfeed-search-mode-map~ and
+~elfeed-show-mode-map~ to learn about the available key bindings in
+the respective major modes.
+
+NOTE 2025-10-28: Here I also configure my ~prot-elfeed~ extension,
+which has some custom code ([[#h:98c313d7-62c2-48c1-b6ad-28cc25f22092][The =prot-elfeed.el= library]]). Though I
+need to review it. The one part that I will keep in some form, no
+matter the changes I might make, is how I put all feeds in their own
+file and load it separately from my Emacs configuration. This is an
+Emacs Lisp file which does a ~(setq elfeed-feeds ...)~, as shown in
+the example above. Doing ~(load-file FILE)~ has the effect of
+evaluating the Elisp therein.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;; Elfeed feed/RSS reader
@@ -11413,12 +11467,19 @@ file to provide only these commands:
   :hook
   (elfeed-show-mode . visual-line-mode)
   :bind
-  ("C-c e" . elfeed)
+  ( :map global-map
+    ("C-c e" . elfeed)
+    :map elfeed-search-mode-map
+    ("w" . elfeed-search-yank)
+    ("g" . elfeed-update)
+    ("G" . elfeed-search-update--force)
+    :map elfeed-show-mode-map
+    ("w" . elfeed-show-yank))
   :config
   (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
-  (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))
-  (setq elfeed-enclosure-default-dir "~/Downloads/")
+  (setq elfeed-db-directory (expand-file-name "elfeed/" user-emacs-directory))
+  (setq elfeed-enclosure-default-dir (expand-file-name "~/Downloads/"))
   (setq elfeed-search-filter "@2-weeks-ago +unread")
   (setq elfeed-sort-order 'descending)
   (setq elfeed-search-clipboard-type 'CLIPBOARD)
@@ -11427,26 +11488,19 @@ file to provide only these commands:
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
-  (setq elfeed-search-date-format '("%F %R" 20 :left))
-
-  (prot-emacs-keybind elfeed-search-mode-map
-    "w" #'elfeed-search-yank
-    "g" #'elfeed-update
-    "G" #'elfeed-search-update--force)
-
-  (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank))
+  (setq elfeed-search-date-format '("%F %R" 20 :left)))
 
 (use-package prot-elfeed
   :ensure nil
   :after elfeed
+  :hook
+  (elfeed-search-mode . prot-elfeed-load-feeds)
   :bind
   ( :map elfeed-search-mode-map
     ("s" . prot-elfeed-search-tag-filter)
     ("+" . prot-elfeed-toggle-tag)
     :map elfeed-show-mode-map
     ("+" . prot-elfeed-toggle-tag))
-  :hook
-  (elfeed-search-mode . prot-elfeed-load-feeds)
   :config
   (setq prot-elfeed-tag-faces t)
   (prot-elfeed-fontify-tags))
