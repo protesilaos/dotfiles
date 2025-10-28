@@ -11452,14 +11452,13 @@ Use =M-x describe-keymap= on ~elfeed-search-mode-map~ and
 ~elfeed-show-mode-map~ to learn about the available key bindings in
 the respective major modes.
 
-NOTE 2025-10-28: Here I also configure my ~prot-elfeed~ extension,
-which has some custom code ([[#h:98c313d7-62c2-48c1-b6ad-28cc25f22092][The =prot-elfeed.el= library]]). Though I
-need to review it. The one part that I will keep in some form, no
-matter the changes I might make, is how I put all feeds in their own
-file and load it separately from my Emacs configuration. This is an
-Emacs Lisp file which does a ~(setq elfeed-feeds ...)~, as shown in
-the example above. Doing ~(load-file FILE)~ has the effect of
-evaluating the Elisp therein.
+In the following configuration block, you will notice how I put all
+feeds in their own file and load them separately from my Emacs
+settings. This is an Emacs Lisp file which does a ~(setq elfeed-feeds
+FEEDS)~, as shown in the example above. Doing ~(load FILE)~ has the
+effect of evaluating the Elisp therein. By default ~load~ will throw
+an error if it cannot load the given file, which is exactly what I
+want in this case.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;; Elfeed feed/RSS reader
@@ -11489,22 +11488,16 @@ evaluating the Elisp therein.
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
-  (setq elfeed-search-date-format '("%F %R" 20 :left)))
-
-(use-package prot-elfeed
-  :ensure nil
-  :after elfeed
-  :hook
-  (elfeed-search-mode . prot-elfeed-load-feeds)
-  :bind
-  ( :map elfeed-search-mode-map
-    ("s" . prot-elfeed-search-tag-filter)
-    ("+" . prot-elfeed-toggle-tag)
-    :map elfeed-show-mode-map
-    ("+" . prot-elfeed-toggle-tag))
-  :config
-  (setq prot-elfeed-tag-faces t)
-  (prot-elfeed-fontify-tags))
+  (setq elfeed-search-date-format '("%F %R" 20 :left))
+  ;; NOTE 2025-10-28: Instead of showing my `elfeed-feeds' here, I put
+  ;; it in its own Emacs Lisp file.  The `load' function will evaluate
+  ;; that code.  Internally, the file has just the following:
+  ;;
+  ;;     (setq elfeed-feeds FEEDS)
+  (load (expand-file-name "~/feeds.el.gpg"))
+  ;; Make entries tagged as "personal" use the `bold-italic' face.
+  ;; This way I can quickly notice my own entries in the listing.
+  (add-to-list 'elfeed-search-face-alist '(personal bold-italic)))
 #+end_src
 
 *** The =prot-emacs-web.el= settings for the IRC client (~rcirc~)
@@ -12778,197 +12771,6 @@ Also see `prot-ediff-store-layout'."
 
 (provide 'prot-ediff)
 ;;; prot-ediff.el ends here
-#+end_src
-
-** The =prot-elfeed.el= library
-:PROPERTIES:
-:CUSTOM_ID: h:98c313d7-62c2-48c1-b6ad-28cc25f22092
-:END:
-
-#+begin_src emacs-lisp :tangle "prot-lisp/prot-elfeed.el" :mkdirp yes
-;;; prot-elfeed.el --- Elfeed extensions for my dotemacs -*- lexical-binding: t -*-
-
-;; Copyright (C) 2021-2025  Protesilaos Stavrou
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "30.1"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-;;; Commentary:
-
-;; NOTE 2022-06-08: This is old code.  There are things I would like to
-;; improve.
-
-;;
-;; Extensions for Elfeed, intended for use in my Emacs setup:
-;; https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
-
-;;; Code:
-
-(eval-when-compile (require 'subr-x))
-(require 'elfeed nil t)
-(require 'url-util)
-(require 'prot-common)
-
-(defgroup prot-elfeed ()
-  "Personal extensions for Elfeed."
-  :group 'elfeed)
-
-(defcustom prot-elfeed-feeds-file (expand-file-name "~/feeds.el.gpg")
-  "Path to file with `elfeed-feeds'."
-  :type 'string
-  :group 'prot-elfeed)
-
-(defcustom prot-elfeed-archives-directory "~/Documents/feeds/"
-  "Path to directory for storing Elfeed entries."
-  :type 'string
-  :group 'prot-elfeed)
-
-(defcustom prot-elfeed-tag-faces nil
-  "Add faces for certain tags.
-The tags are: critical, important, personal."
-  :type 'boolean
-  :group 'prot-elfeed)
-
-(defcustom prot-elfeed-search-tags '(critical important personal)
-  "List of user-defined tags.
-Used by `prot-elfeed-toggle-tag'."
-  :type 'list
-  :group 'prot-elfeed)
-
-(defface prot-elfeed-entry-critical '((t :inherit font-lock-warning-face))
-  "Face for Elfeed entries tagged with `critical'.")
-
-(defface prot-elfeed-entry-important '((t :inherit font-lock-constant-face))
-  "Face for Elfeed entries tagged with `important'.")
-
-(defface prot-elfeed-entry-personal '((t :inherit font-lock-variable-name-face))
-  "Face for Elfeed entries tagged with `personal'.")
-
-;;;; Utilities
-
-;;;###autoload
-(defun prot-elfeed-load-feeds ()
-  "Load file containing the `elfeed-feeds' list.
-Add this to `elfeed-search-mode-hook'."
-  (let ((feeds prot-elfeed-feeds-file))
-    (if (file-exists-p feeds)
-        (load-file feeds)
-      (user-error "Missing feeds' file"))))
-
-(defvar elfeed-search-face-alist)
-
-;;;###autoload
-(defun prot-elfeed-fontify-tags ()
-  "Expand Elfeed faces if `prot-elfeed-tag-faces' is non-nil."
-  (if prot-elfeed-tag-faces
-      (setq elfeed-search-face-alist
-            '((critical prot-elfeed-entry-critical)
-              (important prot-elfeed-entry-important)
-              (personal prot-elfeed-entry-personal)
-              (unread elfeed-search-unread-title-face)))
-    (setq elfeed-search-face-alist
-          '((unread elfeed-search-unread-title-face)))))
-
-(defvar prot-elfeed--tag-hist '()
-  "History of inputs for `prot-elfeed-toggle-tag'.")
-
-(defun prot-elfeed--character-prompt (tags)
-  "Helper of `prot-elfeed-toggle-tag' to read TAGS."
-  (let ((def (car prot-elfeed--tag-hist)))
-    (completing-read
-     (format "Toggle tag [%s]: " def)
-     tags nil t nil 'prot-elfeed--tag-hist def)))
-
-(defvar elfeed-show-entry)
-(declare-function elfeed-tagged-p "elfeed")
-(declare-function elfeed-search-toggle-all "elfeed")
-(declare-function elfeed-show-tag "elfeed")
-(declare-function elfeed-show-untag "elfeed")
-
-;;;###autoload
-(defun prot-elfeed-toggle-tag (tag)
-  "Toggle TAG for the current item.
-
-When the region is active in the `elfeed-search-mode' buffer, all
-entries encompassed by it are affected.  Otherwise the item at
-point is the target.  For `elfeed-show-mode', the current entry
-is always the target.
-
-The list of tags is provided by `prot-elfeed-search-tags'."
-  (interactive
-   (list
-    (intern
-     (prot-elfeed--character-prompt prot-elfeed-search-tags))))
-  (if (derived-mode-p 'elfeed-show-mode)
-      (if (elfeed-tagged-p tag elfeed-show-entry)
-          (elfeed-show-untag tag)
-        (elfeed-show-tag tag))
-    (elfeed-search-toggle-all tag)))
-
-(defvar elfeed-show-truncate-long-urls)
-(declare-function elfeed-entry-title "elfeed")
-(declare-function elfeed-show-refresh "elfeed")
-
-;;;; General commands
-
-(defvar elfeed-search-filter-active)
-(defvar elfeed-search-filter)
-(declare-function elfeed-db-get-all-tags "elfeed")
-(declare-function elfeed-search-update "elfeed")
-(declare-function elfeed-search-clear-filter "elfeed")
-
-(defun prot-elfeed--format-tags (tags sign)
-  "Prefix SIGN to each tag in TAGS."
-  (mapcar (lambda (tag)
-            (format "%s%s" sign tag))
-          tags))
-
-;;;###autoload
-(defun prot-elfeed-search-tag-filter ()
-  "Filter Elfeed search buffer by tags using completion.
-
-Completion accepts multiple inputs, delimited by `crm-separator'.
-Arbitrary input is also possible, but you may have to exit the
-minibuffer with something like `exit-minibuffer'."
-  (interactive)
-  (unwind-protect
-      (elfeed-search-clear-filter)
-    (let* ((elfeed-search-filter-active :live)
-           (db-tags (elfeed-db-get-all-tags))
-           (plus-tags (prot-elfeed--format-tags db-tags "+"))
-           (minus-tags (prot-elfeed--format-tags db-tags "-"))
-           (all-tags (delete-dups (append plus-tags minus-tags)))
-           (tags (completing-read-multiple
-                  "Apply one or more tags: "
-                  all-tags #'prot-common-crm-exclude-selected-p t))
-           (input (string-join `(,elfeed-search-filter ,@tags) " ")))
-      (setq elfeed-search-filter input))
-    (elfeed-search-update :force)))
-
-(provide 'prot-elfeed)
-;;; prot-elfeed.el ends here
 #+end_src
 
 ** The =prot-elisp.el= library

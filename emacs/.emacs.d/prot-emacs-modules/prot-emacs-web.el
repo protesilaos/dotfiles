@@ -125,22 +125,16 @@
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
-  (setq elfeed-search-date-format '("%F %R" 20 :left)))
-
-(use-package prot-elfeed
-  :ensure nil
-  :after elfeed
-  :hook
-  (elfeed-search-mode . prot-elfeed-load-feeds)
-  :bind
-  ( :map elfeed-search-mode-map
-    ("s" . prot-elfeed-search-tag-filter)
-    ("+" . prot-elfeed-toggle-tag)
-    :map elfeed-show-mode-map
-    ("+" . prot-elfeed-toggle-tag))
-  :config
-  (setq prot-elfeed-tag-faces t)
-  (prot-elfeed-fontify-tags))
+  (setq elfeed-search-date-format '("%F %R" 20 :left))
+  ;; NOTE 2025-10-28: Instead of showing my `elfeed-feeds' here, I put
+  ;; it in its own Emacs Lisp file.  The `load' function will evaluate
+  ;; that code.  Internally, the file has just the following:
+  ;;
+  ;;     (setq elfeed-feeds FEEDS)
+  (load (expand-file-name "~/feeds.el.gpg"))
+  ;; Make entries tagged as "personal" use the `bold-italic' face.
+  ;; This way I can quickly notice my own entries in the listing.
+  (add-to-list 'elfeed-search-face-alist '(personal bold-italic)))
 
 ;;; Rcirc (IRC client)
 (use-package rcirc
