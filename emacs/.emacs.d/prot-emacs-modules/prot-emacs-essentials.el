@@ -191,7 +191,7 @@
   (setq comment-style 'multi-line)
   (setq-default comment-column 0)
 
-  (setq prot-comment-comment-keywords '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
+  (setq prot-comment-comment-keywords '("TODO" "NOTE" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
   :bind
