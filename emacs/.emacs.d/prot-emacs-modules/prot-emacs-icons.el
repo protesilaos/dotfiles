@@ -1,12 +1,12 @@
 ;;; Icons
 (use-package nerd-icons
   :ensure t
-  :defer 1)
+  :defer t) ; will be loaded by one of the following
 
 (use-package nerd-icons-completion
   :ensure t
   :if (display-graphic-p)
-  :after (nerd-icons marginalia)
+  :after marginalia
   ;; FIXME 2024-09-01: For some reason this stopped working because it
   ;; macroexpands to `marginalia-mode' instead of
   ;; `marginalia-mode-hook'.  What is more puzzling is that this does
@@ -24,7 +24,7 @@
 (use-package nerd-icons-corfu
   :ensure t
   :if (display-graphic-p)
-  :after (nerd-icons corfu)
+  :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
@@ -38,14 +38,14 @@
 (use-package nerd-icons-xref
   :ensure t
   :if (display-graphic-p)
-  :after (nerd-icons xref)
+  :after xref
   :config
   (nerd-icons-xref-mode 1))
 
 (use-package nerd-icons-grep
   :ensure t
   :if (display-graphic-p)
-  :after (nerd-icons grep)
+  :after grep
   :config
   (when grep-use-headings
     (nerd-icons-grep-mode 1)))
