@@ -61,12 +61,13 @@
       (let ((name nil))
         (cond
          ((derived-mode-p 'lisp-data-mode)
-          (let ((text (save-excursion
-                        (beginning-of-defun)
-                        (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
-            (setq name (if (string-prefix-p ";" text)
-                           ""
-                         (prot-modeline-string-abbreviate-but-last text 1)))))
+          (ignore-errors
+            (let ((text (save-excursion
+                          (beginning-of-defun)
+                          (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
+              (setq name (if (string-prefix-p ";" text)
+                             ""
+                           (prot-modeline-string-abbreviate-but-last text 1))))))
          (t
           (when (null name)
             (setq name (add-log-current-defun)))
