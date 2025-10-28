@@ -2514,7 +2514,6 @@ key bindings.
     ("C-x C-z" . nil) ; same idea as above
     ("C-x C-c" . nil) ; avoid accidentally exiting Emacs
     ("C-x C-c C-c" . save-buffers-kill-emacs) ; more cumbersome, less error-prone
-    ("C-x C-r" . restart-emacs) ; override `find-file-read-only'
     ("C-h h" . nil) ; Never show that "hello" file
     ("M-`" . nil)
     ("M-o" . delete-blank-lines) ; alias for C-x C-o
@@ -2794,7 +2793,7 @@ configurable amount of time ([[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][The =pro
    ("C-z" . prot-prefix)))
 #+end_src
 
-*** The =prot-emacs-essentials.el= configuration to track recently visited files
+*** The =prot-emacs-essentials.el= configuration to track recently visited files (~recentf-mode~)
 :PROPERTIES:
 :CUSTOM_ID: h:f9aa7523-d88a-4080-add6-073f36cb8b9a
 :END:
@@ -2817,7 +2816,8 @@ revisit a file that I do not need to keep track of.
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 (use-package recentf
   :ensure nil
-  :hook (after-init . recentf-mode)
+  :bind
+  ("C-x C-r" . recentf-open) ; override `find-file-read-only'
   :config
   (setq recentf-max-saved-items 100)
   (setq recentf-max-menu-items 25) ; I don't use the `menu-bar-mode', but this is good to know
@@ -2826,7 +2826,8 @@ revisit a file that I do not need to keep track of.
   (setq recentf-auto-cleanup nil)
   (setq recentf-initialize-file-name-history nil)
   (setq recentf-filename-handlers nil)
-  (setq recentf-show-file-shortcuts-flag nil))
+  (setq recentf-show-file-shortcuts-flag nil)
+  (recentf-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= mouse configurations and scroll behaviour

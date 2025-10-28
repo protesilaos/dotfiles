@@ -37,7 +37,6 @@
     ("C-x C-z" . nil) ; same idea as above
     ("C-x C-c" . nil) ; avoid accidentally exiting Emacs
     ("C-x C-c C-c" . save-buffers-kill-emacs) ; more cumbersome, less error-prone
-    ("C-x C-r" . restart-emacs) ; override `find-file-read-only'
     ("C-h h" . nil) ; Never show that "hello" file
     ("M-`" . nil)
     ("M-o" . delete-blank-lines) ; alias for C-x C-o
@@ -208,7 +207,8 @@
 
 (use-package recentf
   :ensure nil
-  :hook (after-init . recentf-mode)
+  :bind
+  ("C-x C-r" . recentf-open) ; override `find-file-read-only'
   :config
   (setq recentf-max-saved-items 100)
   (setq recentf-max-menu-items 25) ; I don't use the `menu-bar-mode', but this is good to know
@@ -217,7 +217,8 @@
   (setq recentf-auto-cleanup nil)
   (setq recentf-initialize-file-name-history nil)
   (setq recentf-filename-handlers nil)
-  (setq recentf-show-file-shortcuts-flag nil))
+  (setq recentf-show-file-shortcuts-flag nil)
+  (recentf-mode 1))
 
 ;;;; Mouse and mouse wheel behaviour
 (use-package mouse
