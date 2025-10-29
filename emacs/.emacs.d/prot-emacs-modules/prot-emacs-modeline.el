@@ -62,12 +62,13 @@
         (cond
          ((derived-mode-p 'lisp-data-mode)
           (ignore-errors
-            (let ((text (save-excursion
+            (when-let* ((text (save-excursion
                           (beginning-of-defun)
-                          (buffer-substring-no-properties (line-beginning-position) (line-end-position)))))
-              (setq name (if (string-prefix-p ";" text)
+                          (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+                        (definition (replace-regexp-in-string "(.+?\s+\\(.*\\)" "\\1" text)))
+              (setq name (if (string-prefix-p ";" definition)
                              ""
-                           (prot-modeline-string-abbreviate-but-last text 1))))))
+                           (prot-modeline-string-abbreviate-but-last definition 1))))))
          (t
           (when (null name)
             (setq name (add-log-current-defun)))
