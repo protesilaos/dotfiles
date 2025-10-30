@@ -279,6 +279,6 @@
   ;; always in check.  When I exceed the limit, it is for a good
   ;; reason.
   (setq git-commit-style-convention-checks '(non-empty-second-line))
-  (setq git-commit-major-mode #'log-edit-mode))
+  (setq git-commit-major-mode #'fundamental-mode))
 
 (provide 'prot-emacs-git)

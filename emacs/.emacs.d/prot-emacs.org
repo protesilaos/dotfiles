@@ -7252,7 +7252,7 @@ changes I make here are not necessary.
   ;; always in check.  When I exceed the limit, it is for a good
   ;; reason.
   (setq git-commit-style-convention-checks '(non-empty-second-line))
-  (setq git-commit-major-mode #'log-edit-mode))
+  (setq git-commit-major-mode #'fundamental-mode))
 #+end_src
 
 *** The =prot-emacs-git.el= call to ~provide~
