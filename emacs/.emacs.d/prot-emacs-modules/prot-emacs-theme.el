@@ -352,7 +352,8 @@ x×X .,·°;:¡!¿?`'‘’   ÄAÃÀ TODO
   ;; fine in my workflow.  I am still undecided by EWW.
   (defun prot/enable-variable-pitch ()
     (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
-      (variable-pitch-mode 1)))
+      (when modus-themes-mixed-fonts
+        (variable-pitch-mode 1))))
 ;;;;; Resize keys with global effect
   :bind
   ;; Emacs 29 introduces commands that resize the font across all
