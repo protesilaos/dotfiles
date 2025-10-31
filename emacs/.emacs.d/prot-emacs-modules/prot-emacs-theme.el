@@ -6,9 +6,9 @@
 (when prot-emacs-load-theme-family
   (require
    (pcase prot-emacs-load-theme-family
-     ('doric 'prot-emacs-doric-themes)
-     ('ef 'prot-emacs-ef-themes)
      ('modus 'prot-emacs-modus-themes)
+     ('ef 'prot-emacs-ef-themes)
+     ('doric 'prot-emacs-doric-themes)
      ('standard 'prot-emacs-standard-themes))))
 
 ;;;; Pulsar
