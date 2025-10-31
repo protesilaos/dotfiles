@@ -1201,6 +1201,113 @@ Otherwise apply `package-vc-install'."
      (error "Package `%S' is neither a symbol nor a list" ,package))))
 #+end_src
 
+** The =init.el= macro to add a hook (~prot-emacs-hook~)
+:PROPERTIES:
+:CUSTOM_ID: h:283440db-f5db-4259-9be1-5a2127675824
+:END:
+
+The ~prot-emacs-hook~ is my way to set up hooks. It is flexible enough
+to work with one hook and function, a list of hooks with one function,
+a list of functions with one hook, a list of hooks with a list of
+functions, and also handle the removal of hooks as well as their
+evaluation after a given feature is loaded. Here are examples of the
+macro in action. I put the code it produces in a comment right below,
+for your convenience.
+
+#+begin_example emacs-lisp
+(prot-emacs-hook
+  text-mode-hook
+  test-fn-1)
+;; => (add-hook 'text-mode-hook #'test-fn-1)
+
+(prot-emacs-hook
+  text-mode-hook
+  (test-fn-1 test-fn-2))
+;; => (progn
+;; =>   (add-hook 'text-mode-hook #'test-fn-1)
+;; =>   (add-hook 'text-mode-hook #'test-fn-2))
+
+(prot-emacs-hook
+  (text-mode-hook prog-mode-hook)
+  test-fn-1)
+;; => (progn
+;; =>   (add-hook 'text-mode-hook #'test-fn-1)
+;; =>   (add-hook 'prog-mode-hook #'test-fn-1))
+
+(prot-emacs-hook
+  (text-mode-hook prog-mode-hook)
+  (test-fn-1 test-fn-2))
+;; => (progn
+;; =>   (add-hook 'text-mode-hook #'test-fn-1)
+;; =>   (add-hook 'text-mode-hook #'test-fn-2)
+;; =>   (add-hook 'prog-mode-hook #'test-fn-1)
+;; =>   (add-hook 'prog-mode-hook #'test-fn-2))
+
+(prot-emacs-hook
+  (text-mode-hook prog-mode-hook)
+  (test-fn-1 test-fn-2)
+  nil
+  denote)
+;; => (with-eval-after-load 'denote
+;; =>   (add-hook 'text-mode-hook #'test-fn-1)
+;; =>   (add-hook 'text-mode-hook #'test-fn-2)
+;; =>   (add-hook 'prog-mode-hook #'test-fn-1)
+;; =>   (add-hook 'prog-mode-hook #'test-fn-2))
+
+(prot-emacs-hook
+  (text-mode-hook prog-mode-hook)
+  (test-fn-1 test-fn-2)
+  :remove-them
+  denote)
+;; => (with-eval-after-load 'denote
+;; =>   (remove-hook 'text-mode-hook #'test-fn-1)
+;; =>   (remove-hook 'text-mode-hook #'test-fn-2)
+;; =>   (remove-hook 'prog-mode-hook #'test-fn-1)
+;; =>   (remove-hook 'prog-mode-hook #'test-fn-2))
+#+end_example
+
+And here is the macro:
+
+#+begin_src emacs-lisp :tangle "init.el"
+(defmacro prot-emacs-hook (hooks functions &optional remove after)
+  "For each HOOKS `add-hook' the FUNCTIONS.
+With optional REMOVE as non-nil, then `remove-hook' the FUNCTIONS from
+HOOKS.
+
+With optional AFTER as the unquoted symbol of a feature, do so after the
+given feature is available."
+  (declare (indent 0))
+  (cond
+   ((symbolp hooks)
+    (setq hooks (list hooks)))
+   ((not (proper-list-p hooks))
+    (error "The hooks are not a list: `%S'" hooks)))
+  (cond
+   ((symbolp functions)
+    (setq functions (list functions)))
+   ((not (proper-list-p functions))
+    (error "The functions are not a list: `%S'" functions)))
+  (let* ((fn (if remove 'remove-hook 'add-hook))
+         (body (mapcar
+                (lambda (h)
+                  (mapcar
+                   (lambda (f) `(,fn ',h #',f))
+                   functions))
+                hooks))
+         (hooks nil))
+    (dolist (element body)
+      (dolist (hook element)
+        (push hook hooks)))
+    (setq hooks (nreverse hooks))
+    (cond
+     (after
+      `(with-eval-after-load ',after ,@hooks))
+     ((length> hooks 1)
+      `(progn ,@hooks))
+     (t
+      (car hooks)))))
+#+end_src
+
 ** The =init.el= macro to bind keys (~prot-emacs-keybind~)
 :PROPERTIES:
 :CUSTOM_ID: h:d3684ec0-a972-4033-a4d6-41ee16e891d9

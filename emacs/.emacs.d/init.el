@@ -263,6 +263,44 @@ DEFINITIONS is a sequence of string and command pairs."
 ;;   "C-c b" beframe-prefix-map
 ;;   "C-x k" #'kill-buffer)
 
+(defmacro prot-emacs-hook (hooks functions &optional remove after)
+  "For each HOOKS `add-hook' the FUNCTIONS.
+With optional REMOVE as non-nil, then `remove-hook' the FUNCTIONS from
+HOOKS.
+
+With optional AFTER as the unquoted symbol of a feature, do so after the
+given feature is available."
+  (declare (indent 0))
+  (cond
+   ((symbolp hooks)
+    (setq hooks (list hooks)))
+   ((not (proper-list-p hooks))
+    (error "The hooks are not a list: `%S'" hooks)))
+  (cond
+   ((symbolp functions)
+    (setq functions (list functions)))
+   ((not (proper-list-p functions))
+    (error "The functions are not a list: `%S'" functions)))
+  (let* ((fn (if remove 'remove-hook 'add-hook))
+         (body (mapcar
+                (lambda (h)
+                  (mapcar
+                   (lambda (f) `(,fn ',h #',f))
+                   functions))
+                hooks))
+         (hooks nil))
+    (dolist (element body)
+      (dolist (hook element)
+        (push hook hooks)))
+    (setq hooks (nreverse hooks))
+    (cond
+     (after
+      `(with-eval-after-load ',after ,@hooks))
+     ((length> hooks 1)
+      `(progn ,@hooks))
+     (t
+      (car hooks)))))
+
 (defmacro prot-emacs-abbrev (table &rest definitions)
   "Expand abbrev DEFINITIONS for the given TABLE.
 DEFINITIONS is a sequence of (i) string pairs mapping the
