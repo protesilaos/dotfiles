@@ -323,22 +323,6 @@ making an abbreviation to a function."
             (seq-split definitions 2)))
      (error "%s is not an abbrev table" ,table)))
 
-(defvar prot-emacs-package-form-regexp
-  "^(\\(prot-emacs-keybind\\|prot-emacs-abbrev\\) +'?\\([0-9a-zA-Z-]+\\)"
-  "Regexp to add packages to `lisp-imenu-generic-expression'.")
-
-(eval-after-load 'lisp-mode
-  `(add-to-list 'lisp-imenu-generic-expression
-                (list "Packages" ,prot-emacs-package-form-regexp 2)))
-
-(defconst prot-emacs-font-lock-keywords
-  '(("(\\(prot-emacs-\\(keybind\\|abbrev\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
-     (3 font-lock-variable-name-face nil t))
-    ("(\\(prot-emacs-comment\\)\\_>[ \t']*"
-     (1 font-lock-preprocessor-face nil t))))
-
-(font-lock-add-keywords 'emacs-lisp-mode prot-emacs-font-lock-keywords)
-
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
 ;; ~/.emacs.d/prot-emacs-pre-custom.el

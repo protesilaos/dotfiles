@@ -1414,33 +1414,6 @@ making an abbreviation to a function."
      (error "%s is not an abbrev table" ,table)))
 #+end_src
 
-** The =init.el= addition of highlighting for my macros
-:PROPERTIES:
-:CUSTOM_ID: h:d168edaa-426f-4bd0-8275-3ec3d66bf126
-:END:
-
-In the previous sections, I define a few Lisp macros that I use
-throughout my setup. The following makes these known to Emacs and
-specifies how they should be colourised.
-
-#+begin_src emacs-lisp :tangle "init.el"
-(defvar prot-emacs-package-form-regexp
-  "^(\\(prot-emacs-keybind\\|prot-emacs-abbrev\\) +'?\\([0-9a-zA-Z-]+\\)"
-  "Regexp to add packages to `lisp-imenu-generic-expression'.")
-
-(eval-after-load 'lisp-mode
-  `(add-to-list 'lisp-imenu-generic-expression
-                (list "Packages" ,prot-emacs-package-form-regexp 2)))
-
-(defconst prot-emacs-font-lock-keywords
-  '(("(\\(prot-emacs-\\(keybind\\|abbrev\\)\\)\\_>[ \t']*\\(\\(\\sw\\|\\s_\\)+\\)?"
-     (3 font-lock-variable-name-face nil t))
-    ("(\\(prot-emacs-comment\\)\\_>[ \t']*"
-     (1 font-lock-preprocessor-face nil t))))
-
-(font-lock-add-keywords 'emacs-lisp-mode prot-emacs-font-lock-keywords)
-#+end_src
-
 ** The =init.el= final part to load the individual modules
 :PROPERTIES:
 :CUSTOM_ID: h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872
