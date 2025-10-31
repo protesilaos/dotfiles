@@ -204,64 +204,37 @@ effects."
           (indent-region beg end))
       (user-error "No active region; will not insert `prot-emacs-comment' here"))))
 
-(defmacro prot-emacs-install (package)
+(defmacro prot-emacs-install (package &rest vc-args)
   "Prepare to install PACKAGE.
-If PACKAGE is an unquoted symbol, then assume it to be the name of a
-package in one of the `package-archives' and use `package-install' with
-it as an argument.
+PACKAGE is an unquoted symbol, referring to the name of the package.  If
+VC-ARGS are nil, then install PACKAGE using `package-install'.
 
-If PACKAGE is an unquoted list, then treat it as a source code
-installation.  In this case, check if the first element of PACKAGE is a
-local directory.  If it is, then do `package-vc-install-from-checkout'.
-Otherwise apply `package-vc-install'."
+If VC-ARGS is non-nil, then check if their `car' is a directory.  If it
+is, apply `package-vc-install-from-checkout' on VC-ARGS, else apply
+`package-vc-install'.
+
+At all times, do nothing if PACKAGE is already installled."
   (declare (indent 0))
+  (unless (symbolp package)
+    (error "The package `%s' is not a symbol" package))
   (cond
-   ((symbolp package)
-    `(progn
-       (unless package-archive-contents
-         (package-refresh-contents))
-       (condition-case-unless-debug nil
-           (package-install ',package)
-         (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package)))))
-   ((proper-list-p package)
-    (let ((fn (if (file-directory-p (car package))
+   ((and package vc-args)
+    (let ((fn (if-let* ((first (car vc-args))
+                        (_ (and (stringp first) (file-directory-p first))))
                   'package-vc-install-from-checkout
                 'package-vc-install)))
-      `(condition-case-unless-debug err
-           (apply #',fn ',package)
-         ((quit error user-error)
-          (message "Failed `%s' with `%S': `%S'" ',fn ',package (cdr err))))))
-    (t
-     (error "Package `%S' is neither a symbol nor a list" ,package))))
-
-(defmacro prot-emacs-keybind (keymap &rest definitions)
-  "Expand key binding DEFINITIONS for the given KEYMAP.
-DEFINITIONS is a sequence of string and command pairs."
-  (declare (indent 1))
-  (unless (zerop (% (length definitions) 2))
-    (error "Uneven number of key+command pairs"))
-  (let ((keys (seq-filter #'stringp definitions))
-        ;; We do accept nil as a definition: it unsets the given key.
-        (commands (seq-remove #'stringp definitions)))
-    `(when-let* (((keymapp ,keymap))
-                 (map ,keymap))
-       ,@(mapcar
-          (lambda (pair)
-            (let* ((key (car pair))
-                   (command (cdr pair)))
-              (unless (and (null key) (null command))
-                `(define-key map (kbd ,key) ,command))))
-          (cl-mapcar #'cons keys commands)))))
-
-;; Sample of `prot-emacs-keybind'
-
-;; (prot-emacs-keybind global-map
-;;   "C-z" nil
-;;   "C-x b" #'switch-to-buffer
-;;   "C-x C-c" nil
-;; ;; Notice the -map as I am binding keymap here, not a command:
-;;   "C-c b" beframe-prefix-map
-;;   "C-x k" #'kill-buffer)
+      `(unless (package-installed-p ',package)
+         (condition-case-unless-debug err
+             (apply #',fn ,vc-args)
+           (error (message "Failed `%s' with `%S': `%S'" ',fn ,vc-args (cdr err)))))))
+   (package
+    `(progn
+       (unless (package-installed-p ',package)
+         (unless package-archive-contents
+           (package-refresh-contents))
+         (condition-case-unless-debug nil
+             (package-install ',package)
+           (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
 
 (defmacro prot-emacs-hook (hooks functions &optional remove after)
   "For each HOOKS `add-hook' the FUNCTIONS.
@@ -300,6 +273,35 @@ given feature is available."
       `(progn ,@hooks))
      (t
       (car hooks)))))
+
+(defmacro prot-emacs-keybind (keymap &rest definitions)
+  "Expand key binding DEFINITIONS for the given KEYMAP.
+DEFINITIONS is a sequence of string and command pairs."
+  (declare (indent 1))
+  (unless (zerop (% (length definitions) 2))
+    (error "Uneven number of key+command pairs"))
+  (let ((keys (seq-filter #'stringp definitions))
+        ;; We do accept nil as a definition: it unsets the given key.
+        (commands (seq-remove #'stringp definitions)))
+    `(when-let* (((keymapp ,keymap))
+                 (map ,keymap))
+       ,@(mapcar
+          (lambda (pair)
+            (let* ((key (car pair))
+                   (command (cdr pair)))
+              (unless (and (null key) (null command))
+                `(define-key map (kbd ,key) ,command))))
+          (cl-mapcar #'cons keys commands)))))
+
+;; Sample of `prot-emacs-keybind'
+
+;; (prot-emacs-keybind global-map
+;;   "C-z" nil
+;;   "C-x b" #'switch-to-buffer
+;;   "C-x C-c" nil
+;; ;; Notice the -map as I am binding keymap here, not a command:
+;;   "C-c b" beframe-prefix-map
+;;   "C-x k" #'kill-buffer)
 
 (defmacro prot-emacs-abbrev (table &rest definitions)
   "Expand abbrev DEFINITIONS for the given TABLE.

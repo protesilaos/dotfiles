@@ -1126,79 +1126,103 @@ then a Do-What-I-Mean wrapper to switch between the two):
 :END:
 
 The ~prot-emacs-install~ macro does what I want to install packages
-either from one of the package archives or directly from source. Below
-are some examples of how it can be used.
-
-Install the ~modus-themes~ package as a tarball from the relevant
-package archive ([[#h:424340cc-f3d7-4083-93c9-d852d40dfd40][The =init.el= settings for packages (=package.el=)]]).
+either from one of the package archives or directly from source code.
+Below are some examples of how it can be used, with the expanded code
+as a comment. In short, the macro will do the right thing to either
+use the function ~package-install~, ~package-vc-install~, or
+~package-vc-install-from-checkout~. In the case of the former, it will
+respect the priorities I set for package archives ([[#h:424340cc-f3d7-4083-93c9-d852d40dfd40][The =init.el= settings for packages (=package.el=)]]).
 
 #+begin_example emacs-lisp
 (prot-emacs-install modus-themes)
+;; => (progn
+;; =>   (unless (package-installed-p 'modus-themes)
+;; =>     (unless package-archive-contents (package-refresh-contents))
+;; =>     (condition-case-unless-debug nil (package-install 'modus-themes)
+;; =>       (error
+;; =>        (message
+;; =>         "Cannot install `%s'; try `M-x package-refresh-contents' first"
+;; =>         'modus-themes)))))
+
+(prot-emacs-install modus-themes "https://github.com/protesilaos/modus-themes.git")
+;; => (unless (package-installed-p 'modus-themes)
+;; =>   (condition-case-unless-debug err
+;; =>       (apply #'package-vc-install
+;; =>              ("https://github.com/protesilaos/modus-themes.git"))
+;; =>     (error
+;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
+;; =>               ("https://github.com/protesilaos/modus-themes.git")
+;; =>               (cdr err)))))
+
+(prot-emacs-install modus-themes :url "https://github.com/protesilaos/modus-themes.git" :branch "main")
+;; => (unless (package-installed-p 'modus-themes)
+;; =>   (condition-case-unless-debug err
+;; =>       (apply #'package-vc-install
+;; =>              (:url "https://github.com/protesilaos/modus-themes.git"
+;; =>                    :branch "main"))
+;; =>     (error
+;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
+;; =>               (:url "https://github.com/protesilaos/modus-themes.git"
+;; =>                     :branch "main")
+;; =>               (cdr err)))))
+
+(prot-emacs-install modus-themes "~/Git/Projects/modus-themes")
+;; => (unless (package-installed-p 'modus-themes)
+;; =>   (condition-case-unless-debug err
+;; =>       (apply #'package-vc-install-from-checkout
+;; =>              ("~/Git/Projects/modus-themes"))
+;; =>     (error
+;; =>      (message "Failed `%s' with `%S': `%S'"
+;; =>               'package-vc-install-from-checkout
+;; =>               ("~/Git/Projects/modus-themes") (cdr err)))))
+
+(prot-emacs-install modus-themes "~/Git/Projects/modus-themes-arbitrary-name-of-dir" "modus-themes")
+;; => (unless (package-installed-p 'modus-themes)
+;; =>   (condition-case-unless-debug err
+;; =>       (apply #'package-vc-install
+;; =>              ("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
+;; =>               "modus-themes"))
+;; =>     (error
+;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
+;; =>               ("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
+;; =>                "modus-themes")
+;; =>               (cdr err)))))
 #+end_example
 
-Install the package from the given URL, which is a Git repository. In
-this case, the name of the package and the appropriate version control
-software are retrieved from the URL.
-
-#+begin_example emacs-lisp
-(prot-emacs-install ("https://github.com/protesilaos/modus-themes.git"))
-#+end_example
-
-This is the same method as above, except that (i) it specifies the
-name of the package, which could be different from that implied by the
-URL, and (ii) demands a specific branch from that repository.
-
-#+begin_example emacs-lisp
-(prot-emacs-install (modus-themes :url "https://github.com/protesilaos/modus-themes.git" :branch "main"))
-#+end_example
-
-With source code installations, we also have the option to build a
-package from a local clone of the repository.
-
-#+begin_example emacs-lisp
-(prot-emacs-install ("~/Git/Projects/modus-themes"))
-#+end_example
-
-Finally, we can give it the name of the local package, if the
-directory we are specifying results in some other name that we do not
-want to use.
-
-#+begin_example emacs-lisp
-(prot-emacs-install ("~/Git/Projects/modus-themes-demo-directory" "modus-themes"))
-#+end_example
-
-And here is the macro.
+And here is the macro:
 
 #+begin_src emacs-lisp :tangle "init.el"
-(defmacro prot-emacs-install (package)
+(defmacro prot-emacs-install (package &rest vc-args)
   "Prepare to install PACKAGE.
-If PACKAGE is an unquoted symbol, then assume it to be the name of a
-package in one of the `package-archives' and use `package-install' with
-it as an argument.
+PACKAGE is an unquoted symbol, referring to the name of the package.  If
+VC-ARGS are nil, then install PACKAGE using `package-install'.
 
-If PACKAGE is an unquoted list, then treat it as a source code
-installation.  In this case, check if the first element of PACKAGE is a
-local directory.  If it is, then do `package-vc-install-from-checkout'.
-Otherwise apply `package-vc-install'."
+If VC-ARGS is non-nil, then check if their `car' is a directory.  If it
+is, apply `package-vc-install-from-checkout' on VC-ARGS, else apply
+`package-vc-install'.
+
+At all times, do nothing if PACKAGE is already installled."
   (declare (indent 0))
+  (unless (symbolp package)
+    (error "The package `%s' is not a symbol" package))
   (cond
-   ((symbolp package)
-    `(progn
-       (unless package-archive-contents
-         (package-refresh-contents))
-       (condition-case-unless-debug nil
-           (package-install ',package)
-         (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package)))))
-   ((proper-list-p package)
-    (let ((fn (if (file-directory-p (car package))
+   ((and package vc-args)
+    (let ((fn (if-let* ((first (car vc-args))
+                        (_ (and (stringp first) (file-directory-p first))))
                   'package-vc-install-from-checkout
                 'package-vc-install)))
-      `(condition-case-unless-debug err
-           (apply #',fn ',package)
-         ((quit error user-error)
-          (message "Failed `%s' with `%S': `%S'" ',fn ',package (cdr err))))))
-    (t
-     (error "Package `%S' is neither a symbol nor a list" ,package))))
+      `(unless (package-installed-p ',package)
+         (condition-case-unless-debug err
+             (apply #',fn ,vc-args)
+           (error (message "Failed `%s' with `%S': `%S'" ',fn ,vc-args (cdr err)))))))
+   (package
+    `(progn
+       (unless (package-installed-p ',package)
+         (unless package-archive-contents
+           (package-refresh-contents))
+         (condition-case-unless-debug nil
+             (package-install ',package)
+           (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
 #+end_src
 
 ** The =init.el= macro to add a hook (~prot-emacs-hook~)
