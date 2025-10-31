@@ -1,18 +1,21 @@
 #+title: GNU Emacs configuration
 #+author: Protesilaos Stavrou
-#+email: public@protesilaos.com
+#+email: info@protesilaos.com
 #+language: en
 #+options: ':t toc:nil num:t author:t email:t
 #+startup: content indent
 #+macro: latest-export-date (eval (format-time-string "%F %T %z"))
 #+macro: word-count (eval (count-words (point-min) (point-max)))
 
-*Last revised and exported on {{{latest-export-date}}} with a word
-count of {{{word-count}}}.*
+[ Last revised and exported on *{{{latest-export-date}}}* with a word
+  count of *{{{word-count}}}*. ]
 
 This is my literate Emacs configuration file. It is a combination of
 prose and code. You can either read this page or check my dotfiles to
-find everything related to my Emacs setup.
+find everything related to my Emacs setup. Whatever you do, make sure
+to *not copy-paste from what I have* without understanding what it
+does because I may be doing something unusual. Read carefully, learn
+diligently, and adapt gracefully.
 
 What you are now reading is not a common literate configuration of
 Emacs. In most such cases, you have a generic =init.el= with a call to
