@@ -204,6 +204,36 @@ effects."
           (indent-region beg end))
       (user-error "No active region; will not insert `prot-emacs-comment' here"))))
 
+(defmacro prot-emacs-install (package)
+  "Prepare to install PACKAGE.
+If PACKAGE is an unquoted symbol, then assume it to be the name of a
+package in one of the `package-archives' and use `package-install' with
+it as an argument.
+
+If PACKAGE is an unquoted list, then treat it as a source code
+installation.  In this case, check if the first element of PACKAGE is a
+local directory.  If it is, then do `package-vc-install-from-checkout'.
+Otherwise apply `package-vc-install'."
+  (declare (indent 0))
+  (cond
+   ((symbolp package)
+    `(progn
+       (unless package-archive-contents
+         (package-refresh-contents))
+       (condition-case-unless-debug nil
+           (package-install ',package)
+         (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package)))))
+   ((proper-list-p package)
+    (let ((fn (if (file-directory-p (car package))
+                  'package-vc-install-from-checkout
+                'package-vc-install)))
+      `(condition-case-unless-debug err
+           (apply #',fn ',package)
+         ((quit error user-error)
+          (message "Failed `%s' with `%S': `%S'" ',fn ',package (cdr err))))))
+    (t
+     (error "Package `%S' is neither a symbol nor a list" ,package))))
+
 (defmacro prot-emacs-keybind (keymap &rest definitions)
   "Expand key binding DEFINITIONS for the given KEYMAP.
 DEFINITIONS is a sequence of string and command pairs."

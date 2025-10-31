@@ -1120,6 +1120,87 @@ then a Do-What-I-Mean wrapper to switch between the two):
       (user-error "No active region; will not insert `prot-emacs-comment' here"))))
 #+end_src
 
+** The =init.el= macro to install a package (~prot-emacs-install~)
+:PROPERTIES:
+:CUSTOM_ID: h:aebcd86e-1f3e-4be5-a2c0-200df2b9e712
+:END:
+
+The ~prot-emacs-install~ macro does what I want to install packages
+either from one of the package archives or directly from source. Below
+are some examples of how it can be used.
+
+Install the ~modus-themes~ package as a tarball from the relevant
+package archive ([[#h:424340cc-f3d7-4083-93c9-d852d40dfd40][The =init.el= settings for packages (=package.el=)]]).
+
+#+begin_example emacs-lisp
+(prot-emacs-install modus-themes)
+#+end_example
+
+Install the package from the given URL, which is a Git repository. In
+this case, the name of the package and the appropriate version control
+software are retrieved from the URL.
+
+#+begin_example emacs-lisp
+(prot-emacs-install ("https://github.com/protesilaos/modus-themes.git"))
+#+end_example
+
+This is the same method as above, except that (i) it specifies the
+name of the package, which could be different from that implied by the
+URL, and (ii) demands a specific branch from that repository.
+
+#+begin_example emacs-lisp
+(prot-emacs-install (modus-themes :url "https://github.com/protesilaos/modus-themes.git" :branch "main"))
+#+end_example
+
+With source code installations, we also have the option to build a
+package from a local clone of the repository.
+
+#+begin_example emacs-lisp
+(prot-emacs-install ("~/Git/Projects/modus-themes"))
+#+end_example
+
+Finally, we can give it the name of the local package, if the
+directory we are specifying results in some other name that we do not
+want to use.
+
+#+begin_example emacs-lisp
+(prot-emacs-install ("~/Git/Projects/modus-themes-demo-directory" "modus-themes"))
+#+end_example
+
+And here is the macro.
+
+#+begin_src emacs-lisp :tangle "init.el"
+(defmacro prot-emacs-install (package)
+  "Prepare to install PACKAGE.
+If PACKAGE is an unquoted symbol, then assume it to be the name of a
+package in one of the `package-archives' and use `package-install' with
+it as an argument.
+
+If PACKAGE is an unquoted list, then treat it as a source code
+installation.  In this case, check if the first element of PACKAGE is a
+local directory.  If it is, then do `package-vc-install-from-checkout'.
+Otherwise apply `package-vc-install'."
+  (declare (indent 0))
+  (cond
+   ((symbolp package)
+    `(progn
+       (unless package-archive-contents
+         (package-refresh-contents))
+       (condition-case-unless-debug nil
+           (package-install ',package)
+         (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package)))))
+   ((proper-list-p package)
+    (let ((fn (if (file-directory-p (car package))
+                  'package-vc-install-from-checkout
+                'package-vc-install)))
+      `(condition-case-unless-debug err
+           (apply #',fn ',package)
+         ((quit error user-error)
+          (message "Failed `%s' with `%S': `%S'" ',fn ',package (cdr err))))))
+    (t
+     (error "Package `%S' is neither a symbol nor a list" ,package))))
+#+end_src
+
 ** The =init.el= macro to bind keys (~prot-emacs-keybind~)
 :PROPERTIES:
 :CUSTOM_ID: h:d3684ec0-a972-4033-a4d6-41ee16e891d9
