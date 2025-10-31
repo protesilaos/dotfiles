@@ -2,10 +2,8 @@
 
 ;; The themes are highly customisable.  Read the manual:
 ;; <https://protesilaos.com/emacs/modus-themes>.
-(use-package modus-themes
-  :ensure t
-  :demand t
-  :init
+(progn
+  (prot-emacs-install modus-themes)
   ;; Starting with version 5.0.0 of the `modus-themes', other packages
   ;; can be built on top to provide their own "Modus" derivatives.
   ;; For example, this is what I do with my `ef-themes' and
@@ -27,11 +25,12 @@
   ;; to enable the `modus-themes-include-derivatives-mode' and (ii) do
   ;; not install and activate those other theme packages.
   (modus-themes-include-derivatives-mode 1)
-  :bind
-  (("<f5>" . modus-themes-rotate)
-   ("C-<f5>" . modus-themes-select)
-   ("M-<f5>" . modus-themes-load-random))
-  :config
+
+  (prot-emacs-keybind global-map
+    "<f5>" #'modus-themes-rotate
+    "C-<f5>" #'modus-themes-select
+    "M-<f5>" #'modus-themes-load-random)
+
   (setq modus-themes-custom-auto-reload nil
         modus-themes-to-toggle '(modus-operandi modus-vivendi)
         modus-themes-to-rotate modus-themes-items
