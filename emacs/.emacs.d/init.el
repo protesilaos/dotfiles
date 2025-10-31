@@ -352,8 +352,6 @@ making an abbreviation to a function."
 ;; own extras on top of what I already load.  The file must exist at
 ;; ~/.emacs.d/prot-emacs-post-custom.el
 ;;
-;; The purpose of the "post customisations" is to make tweaks to what
-;; I already define, such as to change the default theme.  See above
-;; for the `prot-emacs-pre-custom.el' to make changes BEFORE loading
-;; any of my other configurations.
+;; The purpose of the "post customisations" is to evaluate arbitrary
+;; code AFTER loading all my configurations.
 (load (locate-user-emacs-file "prot-emacs-post-custom.el") :no-error :no-message)
