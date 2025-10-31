@@ -1,6 +1,6 @@
 ;;; The Ef (εὖ) themes
 
-(progn
+(prot-emacs-configure
   (prot-emacs-install ef-themes)
 
   (ef-themes-take-over-modus-themes-mode 1)

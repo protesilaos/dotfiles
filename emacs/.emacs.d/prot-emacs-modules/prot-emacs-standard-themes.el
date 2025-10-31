@@ -1,6 +1,6 @@
 ;;; The Standard themes
 
-(progn
+(prot-emacs-configure
   (prot-emacs-install standard-themes)
 
   (standard-themes-take-over-modus-themes-mode 1)

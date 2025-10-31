@@ -1,6 +1,6 @@
 ;;; The Doric themes
 
-(progn
+(prot-emacs-configure
   (prot-emacs-install doric-themes)
 
   (prot-emacs-keybind global-map

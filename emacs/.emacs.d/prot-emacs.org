@@ -1585,7 +1585,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 
 ;; The themes are highly customisable.  Read the manual:
 ;; <https://protesilaos.com/emacs/modus-themes>.
-(progn
+(prot-emacs-configure
   (prot-emacs-install modus-themes)
   ;; Starting with version 5.0.0 of the `modus-themes', other packages
   ;; can be built on top to provide their own "Modus" derivatives.
@@ -1691,7 +1691,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-ef-themes.el"
 ;;; The Ef (εὖ) themes
 
-(progn
+(prot-emacs-configure
   (prot-emacs-install ef-themes)
 
   (ef-themes-take-over-modus-themes-mode 1)
@@ -1771,7 +1771,7 @@ editor, opt for my ~modus-themes~ ([[#h:36af519a-67e1-42b6-a38a-2052638108f9][Th
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-doric-themes.el"
 ;;; The Doric themes
 
-(progn
+(prot-emacs-configure
   (prot-emacs-install doric-themes)
 
   (prot-emacs-keybind global-map
@@ -1847,7 +1847,7 @@ to blend Standard and Modus into one collection).
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-standard-themes.el"
 ;;; The Standard themes
 
-(progn
+(prot-emacs-configure
   (prot-emacs-install standard-themes)
 
   (standard-themes-take-over-modus-themes-mode 1)

@@ -2,7 +2,7 @@
 
 ;; The themes are highly customisable.  Read the manual:
 ;; <https://protesilaos.com/emacs/modus-themes>.
-(progn
+(prot-emacs-configure
   (prot-emacs-install modus-themes)
   ;; Starting with version 5.0.0 of the `modus-themes', other packages
   ;; can be built on top to provide their own "Modus" derivatives.
