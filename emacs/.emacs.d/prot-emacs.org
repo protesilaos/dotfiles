@@ -1433,20 +1433,21 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 ;; NOTE: For testing purposes
 (prot-emacs-comment
   (:eval nil)
-  (use-package modus-themes
-    :ensure nil
-    :load-path "/home/prot/Git/Projects/modus-themes/"
-    :demand t
-    :init
-    (modus-themes-include-derivatives-mode 1)
-    :bind
-    (("<f5>" . modus-themes-rotate)
-     ("C-<f5>" . modus-themes-select)
-     ("M-<f5>" . modus-themes-load-random))
-    :config
-    (if (prot-emacs-theme-environment-dark-p)
-        (modus-themes-load-random 'dark)
-      (modus-themes-load-random 'light))))
+
+  (add-to-list 'load-path "~/Git/Projects/modus-themes/")
+
+  (require 'modus-themes)
+
+  (modus-themes-include-derivatives-mode 1)
+
+  (prot-emacs-keybind global-map
+    "<f5>" #'modus-themes-rotate
+    "C-<f5>" #'modus-themes-select
+    "M-<f5>" #'modus-themes-load-random)
+
+  (if (prot-emacs-theme-environment-dark-p)
+      (modus-themes-load-random 'dark)
+    (modus-themes-load-random 'light)))
 
 (provide 'prot-emacs-modus-themes)
 #+end_src
@@ -1526,24 +1527,23 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 
 (prot-emacs-comment
   (:eval nil)
-  (use-package modus-themes
-    :ensure nil
-    :load-path "/home/prot/Git/Projects/modus-themes/")
 
-  (use-package ef-themes
-    :ensure nil
-    :load-path "/home/prot/Git/Projects/ef-themes/"
-    :init
-    ;; (modus-themes-include-derivatives-mode 1)
-    (ef-themes-take-over-modus-themes-mode 1)
-    :bind
-    (("<f5>" . modus-themes-rotate)
-     ("C-<f5>" . modus-themes-select)
-     ("M-<f5>" . modus-themes-load-random))
-    :config
-    (if (prot-emacs-theme-environment-dark-p)
-        (modus-themes-load-random 'dark)
-      (modus-themes-load-random 'light))))
+  (add-to-list 'load-path "~/Git/Projects/modus-themes/")
+  (add-to-list 'load-path "~/Git/Projects/ef-themes/")
+
+  (require 'modus-themes)
+  (require 'ef-themes)
+
+  (ef-themes-take-over-modus-themes-mode 1)
+
+  (prot-emacs-keybind global-map
+    "<f5>" #'modus-themes-rotate
+    "C-<f5>" #'modus-themes-select
+    "M-<f5>" #'modus-themes-load-random)
+
+  (if (prot-emacs-theme-environment-dark-p)
+      (modus-themes-load-random 'dark)
+    (modus-themes-load-random 'light)))
 
   (provide 'prot-emacs-ef-themes)
 #+end_src
@@ -1578,6 +1578,10 @@ editor, opt for my ~modus-themes~ ([[#h:36af519a-67e1-42b6-a38a-2052638108f9][Th
 (use-package doric-themes
   :ensure t
   :demand t
+  :bind
+  (("<f5>" . doric-themes-toggle)
+   ("C-<f5>" . doric-themes-select)
+   ("M-<f5>" . doric-themes-rotate))
   :config
   ;; These are the default values.
   (setq doric-themes-to-toggle '(doric-light doric-dark))
@@ -1585,30 +1589,28 @@ editor, opt for my ~modus-themes~ ([[#h:36af519a-67e1-42b6-a38a-2052638108f9][Th
   (doric-themes-load-random
    (if (prot-emacs-theme-environment-dark-p)
        'dark
-     'light))
-  :bind
-  (("<f5>" . doric-themes-toggle)
-   ("C-<f5>" . doric-themes-select)
-   ("M-<f5>" . doric-themes-rotate)))
+     'light)))
 
 ;; For testing purposes
 (prot-emacs-comment
   (:eval nil)
-  (add-to-list 'load-path "/home/prot/Git/Projects/doric-themes/")
+
+  (add-to-list 'load-path "~/Git/Projects/doric-themes/")
 
   (require 'doric-themes)
 
+  (prot-emacs-keybind global-map
+    "<f5>" #'doric-themes-toggle
+    "C-<f5>" #'doric-themes-select
+    "M-<f5>" #'doric-themes-rotate)
+
+  ;; These are the default values.
   (setq doric-themes-to-toggle '(doric-light doric-dark))
   (setq doric-themes-to-rotate doric-themes-collection)
   (doric-themes-load-random
    (if (prot-emacs-theme-environment-dark-p)
        'dark
-     'light))
-
-  (prot-emacs-keybind global-map
-    "<f5>" #'doric-themes-toggle
-    "C-<f5>" #'doric-themes-select
-    "M-<f5>" #'doric-themes-rotate))
+     'light)))
 
 (provide 'prot-emacs-doric-themes)
 #+end_src
@@ -1693,24 +1695,23 @@ to blend Standard and Modus into one collection).
 ;; For testing purposes...
 (prot-emacs-comment
   (:eval nil)
-  (use-package modus-themes
-    :ensure nil
-    :load-path "/home/prot/Git/Projects/modus-themes/")
 
-  (use-package standard-themes
-    :ensure nil
-    :load-path "/home/prot/Git/Projects/standard-themes/"
-    :init
-    ;; (modus-themes-include-derivatives-mode 1)
-    (standard-themes-take-over-modus-themes-mode 1)
-    :bind
-    (("<f5>" . modus-themes-rotate)
-     ("C-<f5>" . modus-themes-select)
-     ("M-<f5>" . modus-themes-load-random))
-    :config
-    (if (prot-emacs-theme-environment-dark-p)
-        (modus-themes-load-random 'dark)
-      (modus-themes-load-random 'light))))
+  (add-to-list 'load-path "~/Git/Projects/modus-themes/")
+  (add-to-list 'load-path "~/Git/Projects/standard-themes/")
+
+  (require 'modus-themes)
+  (require 'standard-themes)
+
+  (standard-themes-take-over-modus-themes-mode 1)
+
+  (prot-emacs-keybind global-map
+    "<f5>" #'modus-themes-rotate
+    "C-<f5>" #'modus-themes-select
+    "M-<f5>" #'modus-themes-load-random)
+
+  (if (prot-emacs-theme-environment-dark-p)
+      (modus-themes-load-random 'dark)
+    (modus-themes-load-random 'light)))
 
 (provide 'prot-emacs-standard-themes)
 #+end_src

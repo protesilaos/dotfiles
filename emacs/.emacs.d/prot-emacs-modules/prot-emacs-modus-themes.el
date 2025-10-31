@@ -55,19 +55,20 @@
 ;; NOTE: For testing purposes
 (prot-emacs-comment
   (:eval nil)
-  (use-package modus-themes
-    :ensure nil
-    :load-path "/home/prot/Git/Projects/modus-themes/"
-    :demand t
-    :init
-    (modus-themes-include-derivatives-mode 1)
-    :bind
-    (("<f5>" . modus-themes-rotate)
-     ("C-<f5>" . modus-themes-select)
-     ("M-<f5>" . modus-themes-load-random))
-    :config
-    (if (prot-emacs-theme-environment-dark-p)
-        (modus-themes-load-random 'dark)
-      (modus-themes-load-random 'light))))
+
+  (add-to-list 'load-path "~/Git/Projects/modus-themes/")
+
+  (require 'modus-themes)
+
+  (modus-themes-include-derivatives-mode 1)
+
+  (prot-emacs-keybind global-map
+    "<f5>" #'modus-themes-rotate
+    "C-<f5>" #'modus-themes-select
+    "M-<f5>" #'modus-themes-load-random)
+
+  (if (prot-emacs-theme-environment-dark-p)
+      (modus-themes-load-random 'dark)
+    (modus-themes-load-random 'light)))
 
 (provide 'prot-emacs-modus-themes)
