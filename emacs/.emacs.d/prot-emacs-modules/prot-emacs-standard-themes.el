@@ -1,15 +1,15 @@
 ;;; The Standard themes
 
-(use-package standard-themes
-  :ensure t
-  :demand t
-  :init
+(progn
+  (prot-emacs-install standard-themes)
+
   (standard-themes-take-over-modus-themes-mode 1)
-  :bind
-  (("<f5>" . modus-themes-rotate)
-   ("C-<f5>" . modus-themes-select)
-   ("M-<f5>" . modus-themes-load-random))
-  :config
+
+  (prot-emacs-keybind global-map
+    "<f5>" #'modus-themes-rotate
+    "C-<f5>" #'modus-themes-select
+    "M-<f5>" #'modus-themes-load-random)
+
   (setq modus-themes-variable-pitch-ui t
         modus-themes-mixed-fonts t
         modus-themes-to-rotate nil ; defaults to the return value of `modus-themes-get-themes'
