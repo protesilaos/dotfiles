@@ -1417,6 +1417,25 @@ making an abbreviation to a function."
      (error "%s is not an abbrev table" ,table)))
 #+end_src
 
+** The =init.el= macro to configure a package (~prot-emacs-configure~)
+:PROPERTIES:
+:CUSTOM_ID: h:e3aa22c1-e074-4bcd-8867-7dbcf1de4a81
+:END:
+
+The ~prot-emacs-configure~ is a simple wrapper around
+~condition-case~. The idea is to add arbitrary code for the
+configuration of a given package and catch any errors so that Emacs
+can still load without that package's code.
+
+#+begin_src emacs-lisp :tangle "init.el"
+(defmacro prot-emacs-configure (&rest body)
+  "Evaluate BODY and catch any errors."
+  `(condition-case err
+       (progn ,@body)
+     ((error user-error quit)
+      (message "Failed to configure package starting with `%S' because of `%S'" (car ',body) (cdr err)))))
+#+end_src
+
 ** The =init.el= final part to load the individual modules
 :PROPERTIES:
 :CUSTOM_ID: h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872

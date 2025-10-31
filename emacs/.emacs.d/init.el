@@ -323,6 +323,13 @@ making an abbreviation to a function."
             (seq-split definitions 2)))
      (error "%s is not an abbrev table" ,table)))
 
+(defmacro prot-emacs-configure (&rest body)
+  "Evaluate BODY and catch any errors."
+  `(condition-case err
+       (progn ,@body)
+     ((error user-error quit)
+      (message "Failed to configure package starting with `%S' because of `%S'" (car ',body) (cdr err)))))
+
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
 ;; ~/.emacs.d/prot-emacs-pre-custom.el
