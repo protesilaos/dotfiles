@@ -2240,23 +2240,16 @@ Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][Th
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Fontaine (font configurations)
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
-(use-package fontaine
-  :ensure t
-  :hook
-  ;; Persist the latest font preset when closing/starting Emacs.
-  ((after-init . fontaine-mode)
-   (after-init . (lambda ()
-                   ;; Set last preset or fall back to desired style from `fontaine-presets'.
-                   (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular)))))
-  :bind (("C-c f" . fontaine-set-preset)
-         ("C-c F" . fontaine-toggle-preset))
-  :config
-  ;; And this is for Emacs28.
-  (setq-default text-scale-remap-header-line t)
+(prot-emacs-configure
+  (prot-emacs-install fontaine)
 
-  ;; This is the default value.  Just including it here for
-  ;; completeness.
-  (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
+  (fontaine-mode 1)
+     
+  (prot-emacs-keybind global-map
+    "C-c f" #'fontaine-set-preset
+    "C-c F" #'fontaine-toggle-preset)
+
+  (setq-default text-scale-remap-header-line t) ; Emacs 28
 
   ;; The font family is my design: <https://github.com/protesilaos/aporetic>.
   (setq fontaine-presets
@@ -2352,6 +2345,8 @@ Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][Th
            :italic-height 1.0
 
            :line-spacing nil)))
+
+  (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
 
   (with-eval-after-load 'pulsar
     (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
