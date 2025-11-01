@@ -262,11 +262,8 @@
         set-mark-command-repeat-pop t))
 
 ;;;; Built-in bookmarking framework (bookmark.el)
-(use-package bookmark
-  :ensure nil
-  :commands (bookmark-set bookmark-jump bookmark-bmenu-list)
-  :hook (bookmark-bmenu-mode . hl-line-mode)
-  :config
+(prot-emacs-configure
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations nil)
   (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon

@@ -3023,11 +3023,8 @@ Also see [[#h:5685df62-4484-42ad-a062-d55ab19022e3][the =prot-emacs-essentials.e
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Built-in bookmarking framework (bookmark.el)
-(use-package bookmark
-  :ensure nil
-  :commands (bookmark-set bookmark-jump bookmark-bmenu-list)
-  :hook (bookmark-bmenu-mode . hl-line-mode)
-  :config
+(prot-emacs-configure
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations nil)
   (setq bookmark-fringe-mark nil) ; Emacs 29 to hide bookmark fringe icon
