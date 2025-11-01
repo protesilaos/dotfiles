@@ -203,11 +203,9 @@
 
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
-(use-package altcaps
-  :ensure t
-  :bind
-  ("C-x C-a" . altcaps-dwim)
-  :config
+(prot-emacs-configure
+  (prot-emacs-install altcaps)
+  (define-key global-map (kbd "C-x C-a") #'altcaps-dwim)
   ;; Force letter casing for certain characters (for legibility).
   (setq altcaps-force-character-casing
         '(;; Greek theta
