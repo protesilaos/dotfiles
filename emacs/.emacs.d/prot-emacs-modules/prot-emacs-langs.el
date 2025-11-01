@@ -79,7 +79,8 @@
   (setq eglot-autoshutdown t))
 
 ;;;; Handle performance for very long lines (so-long.el)
-(global-so-long-mode 1)
+(prot-emacs-configure
+  (global-so-long-mode 1))
 
 ;;; Markdown (markdown-mode)
 (prot-emacs-configure
@@ -87,7 +88,8 @@
   (setq markdown-fontify-code-blocks-natively t))
 
 ;;; csv-mode
-(prot-emacs-install csv-mode)
+(prot-emacs-configure
+  (prot-emacs-install csv-mode))
 
 ;;; SXHKDRC mode (one of my many packages)
 (prot-emacs-configure
@@ -284,7 +286,8 @@ retroactively follow that order."
       (consult-denote-mode 1))))
 
 ;;;; Denote Org extras (denote-org)
-(prot-emacs-install denote-org)
+(prot-emacs-configure
+  (prot-emacs-install denote-org))
 
 ;;;; Denote Sequence notes or folgezettel (denote-sequence)
 (prot-emacs-configure
@@ -299,7 +302,8 @@ retroactively follow that order."
   (setq denote-sequence-scheme 'alphanumeric))
 
 ;;;; Denote Markdown extras (denote-markdown)
-(prot-emacs-install denote-markdown)
+(prot-emacs-configure
+  (prot-emacs-install denote-markdown))
 
 ;;;; Denote Journal extras (denote-journal)
 (prot-emacs-configure

@@ -146,9 +146,11 @@
   (setq window-min-height 3)
   (setq window-min-width 30))
 
-(prot-emacs-hook (epa-info-mode-hook help-mode-hook custom-mode-hook) visual-line-mode)
+(prot-emacs-configure
+  (prot-emacs-hook (epa-info-mode-hook help-mode-hook custom-mode-hook) visual-line-mode))
 
-(prot-emacs-hook (world-clock-mode-hook calendar-mode-hook) prot-common-truncate-lines-silently)
+(prot-emacs-configure
+  (prot-emacs-hook (world-clock-mode-hook calendar-mode-hook) prot-common-truncate-lines-silently))
 
 (prot-emacs-configure
   (prot-emacs-keybind global-map

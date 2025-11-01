@@ -125,10 +125,11 @@
       pulsar)))
 
 ;;;; `org-indent-mode' and related
-(with-eval-after-load 'org
-  (setq org-adapt-indentation nil) ; No, non, nein, όχι to literal indentation!
-  (setq org-indent-mode-turns-on-hiding-stars nil)
-  (setq org-indent-indentation-per-level 4))
+(prot-emacs-configure
+  (with-eval-after-load 'org
+    (setq org-adapt-indentation nil) ; No, non, nein, όχι to literal indentation!
+    (setq org-indent-mode-turns-on-hiding-stars nil)
+    (setq org-indent-indentation-per-level 4)))
 
 ;;;; refile, todo
 (with-eval-after-load 'org
@@ -187,35 +188,39 @@
   (setq org-enforce-todo-checkbox-dependencies t))
 
 ;;;; tags
-(with-eval-after-load 'org
-  (setq org-tag-alist nil)
-  (setq org-auto-align-tags nil)
-  (setq org-tags-column 0))
+(prot-emacs-configure
+  (with-eval-after-load 'org
+    (setq org-tag-alist nil)
+    (setq org-auto-align-tags nil)
+    (setq org-tags-column 0)))
 
 ;;;; log
-(with-eval-after-load 'org
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-log-note-clock-out nil)
-  (setq org-log-redeadline 'time)
-  (setq org-log-reschedule 'time))
+(prot-emacs-configure
+  (with-eval-after-load 'org
+    (setq org-log-done 'time)
+    (setq org-log-into-drawer t)
+    (setq org-log-note-clock-out nil)
+    (setq org-log-redeadline 'time)
+    (setq org-log-reschedule 'time)))
 
 ;;;; links
-(with-eval-after-load 'org
-  (setq org-return-follows-link t)
-  (setq org-link-context-for-files t)
-  (setq org-link-keep-stored-after-insertion nil)
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+(prot-emacs-configure
+  (with-eval-after-load 'org
+    (setq org-return-follows-link t)
+    (setq org-link-context-for-files t)
+    (setq org-link-keep-stored-after-insertion nil)
+    (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)))
 
 ;;;; code blocks
-(with-eval-after-load 'org
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-src-window-setup 'current-window)
-  (setq org-edit-src-persistent-message nil)
-  (setq org-src-fontify-natively t)
-  (setq org-src-preserve-indentation t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-edit-src-content-indentation 0))
+(prot-emacs-configure
+  (with-eval-after-load 'org
+    (setq org-confirm-babel-evaluate nil)
+    (setq org-src-window-setup 'current-window)
+    (setq org-edit-src-persistent-message nil)
+    (setq org-src-fontify-natively t)
+    (setq org-src-preserve-indentation t)
+    (setq org-src-tab-acts-natively t)
+    (setq org-edit-src-content-indentation 0)))
 
 ;;;; export
 (prot-emacs-configure
