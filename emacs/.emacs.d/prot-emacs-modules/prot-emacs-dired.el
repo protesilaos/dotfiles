@@ -14,17 +14,18 @@
         (".*" "xdg-open")))
 
 (prot-emacs-configure
-  (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
-  (setq dired-make-directory-clickable t) ; Emacs 29.1
-  (setq dired-free-space nil) ; Emacs 29.1
-  (setq dired-mouse-drag-files t) ; Emacs 29.1
+  (with-eval-after-load 'dired
+    (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
+    (setq dired-make-directory-clickable t) ; Emacs 29.1
+    (setq dired-free-space nil) ; Emacs 29.1
+    (setq dired-mouse-drag-files t) ; Emacs 29.1
 
-  (prot-emacs-hook dired-mode-hook (dired-hide-details-mode hl-line-mode))
+    (prot-emacs-hook dired-mode-hook (dired-hide-details-mode hl-line-mode))
 
-  ;; In Emacs 29 there is a binding for `repeat-mode' which lets you
-  ;; repeat C-x C-j just by following it up with j.  For me, this is a
-  ;; problem as j calls `dired-goto-file', which I often use.
-  (define-key dired-jump-map (kbd "j") nil))
+    ;; In Emacs 29 there is a binding for `repeat-mode' which lets you
+    ;; repeat C-x C-j just by following it up with j.  For me, this is a
+    ;; problem as j calls `dired-goto-file', which I often use.
+    (define-key dired-jump-map (kbd "j") nil)))
 
 (prot-emacs-configure
   (with-eval-after-load 'dired
