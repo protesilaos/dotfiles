@@ -172,10 +172,10 @@
 ;;; Frame-isolated buffers
 ;; Another package of mine.  Read the manual:
 ;; <https://protesilaos.com/emacs/beframe>.
-(use-package beframe
-  :ensure t
-  :hook (after-init . beframe-mode)
-  :config
+(prot-emacs-configure
+  (prot-emacs-install beframe)
+  (require 'beframe)
+
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
 
   ;; I use this instead of :bind because I am binding a keymap and the
@@ -194,6 +194,8 @@
     ;; Not specific to Beframe, but since it renames frames (by means
     ;; of `beframe-mode') it is appropriate to have this here:
     "C-x B" #'select-frame-by-name)
+
+  (beframe-mode 1)
 
   ;; Integration with the `consult-buffer' command.  It will show only
   ;; buffers from the current frame.  To view all buffers, first input
