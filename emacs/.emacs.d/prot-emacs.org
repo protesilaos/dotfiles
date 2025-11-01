@@ -4708,8 +4708,6 @@ Also check: [[#h:e0f9c30e-3a98-4479-b709-7008277749e4][The =prot-emacs-search.el
   (prot-emacs-configure
     (prot-emacs-install consult)
 
-    (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
-
     (prot-emacs-keybind global-map
       "M-g M-g" #'consult-goto-line
       "M-s M-b" #'consult-buffer
@@ -4962,10 +4960,9 @@ pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =p
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-mct.el" :mkdirp yes
 ;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended (mct)
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
-(use-package mct
-  :ensure t
-  :hook (after-init . mct-mode)
-  :config
+(prot-emacs-configure
+  (prot-emacs-install mct)
+
   (setq mct-hide-completion-mode-line t)
   (setq mct-completing-read-multiple-indicator t)
   ;; The blocklist and passlist accept either commands/functions or
@@ -5017,11 +5014,12 @@ pop up the minibuffer eagerly ([[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =p
           (delete-region (1+ (point)) (point-max)))))
      (t (call-interactively 'backward-delete-char))))
 
-  (define-key minibuffer-local-filename-completion-map (kbd "DEL") #'prot/mct-backward-updir))
+  (define-key minibuffer-local-filename-completion-map (kbd "DEL") #'prot/mct-backward-updir)
+
+  (mct-mode 1))
 
 (provide 'prot-emacs-mct)
 #+end_src
-
 
 **** The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)
 :PROPERTIES:

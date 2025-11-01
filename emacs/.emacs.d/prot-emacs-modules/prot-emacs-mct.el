@@ -1,9 +1,8 @@
 ;;; Minibuffer and Completions in Tandem or Minibuffer Confines Transcended (mct)
 ;; Read the manual: <https://protesilaos.com/emacs/mct>.
-(use-package mct
-  :ensure t
-  :hook (after-init . mct-mode)
-  :config
+(prot-emacs-configure
+  (prot-emacs-install mct)
+
   (setq mct-hide-completion-mode-line t)
   (setq mct-completing-read-multiple-indicator t)
   ;; The blocklist and passlist accept either commands/functions or
@@ -55,6 +54,8 @@
           (delete-region (1+ (point)) (point-max)))))
      (t (call-interactively 'backward-delete-char))))
 
-  (define-key minibuffer-local-filename-completion-map (kbd "DEL") #'prot/mct-backward-updir))
+  (define-key minibuffer-local-filename-completion-map (kbd "DEL") #'prot/mct-backward-updir)
+
+  (mct-mode 1))
 
 (provide 'prot-emacs-mct)

@@ -329,8 +329,6 @@ Development continues on GitHub with GitLab as a mirror."))
   (prot-emacs-configure
     (prot-emacs-install consult)
 
-    (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
-
     (prot-emacs-keybind global-map
       "M-g M-g" #'consult-goto-line
       "M-s M-b" #'consult-buffer
