@@ -366,19 +366,20 @@ Development continues on GitHub with GitLab as a mirror."))
 
 ;;; Extended minibuffer actions and more (embark.el)
 (when prot-emacs-completion-extras
-  (use-package embark
-    :ensure t
-    :hook (embark-collect-mode . prot-common-truncate-lines-silently)
-    :bind
-    ( :map minibuffer-local-map
-      ("C-c C-c" . embark-collect)
-      ("C-c C-e" . embark-export)))
+  (prot-emacs-configure
+    (prot-emacs-install embark)
 
-  ;; Needed for correct exporting while using Embark with Consult
-  ;; commands.
-  (use-package embark-consult
-    :ensure t
-    :after (embark consult)))
+    (add-hook 'embark-collect-mode-hook #'prot-common-truncate-lines-silently)
+
+    (prot-emacs-keybind minibuffer-local-map
+      "C-c C-c" #'embark-collect
+      "C-c C-e" #'embark-export)
+
+    ;; Needed for correct exporting while using Embark with Consult commands.
+    (prot-emacs-install embark-consult)
+
+    (with-eval-after-load 'consult
+      (require 'embark-consult))))
 
 ;;; Detailed completion annotations (marginalia.el)
 (use-package marginalia
