@@ -2538,10 +2538,8 @@ key bindings.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el" :mkdirp yes
 ;;; Essential configurations
-(use-package emacs
-  :ensure nil
-  :demand t
-  :config
+(prot-emacs-configure
+
 ;;;; General settings and common custom functions (prot-simple.el)
   (setq blink-matching-paren nil)
   (setq custom-unlispify-tag-names nil)
@@ -2564,44 +2562,43 @@ key bindings.
   (setq truncate-partial-width-windows nil)
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
-  ;; elsewhere later in the configuration.
-  :bind
-  ( :map global-map
-    ("<f2>" . toggle-input-method)  ; F2 overrides that two-column gimmick.  Sorry, but no!
-    ("<insert>" . nil)
-    ("<menu>" . nil)
-    ("C-x C-d" . nil) ; never use it
-    ("C-x C-v" . nil) ; never use it
-    ("C-z" . nil) ; I have a window manager, thanks!
-    ("C-x C-z" . nil) ; same idea as above
-    ("C-x C-c" . nil) ; avoid accidentally exiting Emacs
-    ("C-x C-c C-c" . save-buffers-kill-emacs) ; more cumbersome, less error-prone
-    ("C-h h" . nil) ; Never show that "hello" file
-    ("M-`" . nil)
-    ("M-o" . delete-blank-lines) ; alias for C-x C-o
-    ("M-SPC" . cycle-spacing)
-    ("M-z" . zap-up-to-char) ; NOT `zap-to-char'
-    ("M-c" . capitalize-dwim)
-    ("M-l" . downcase-dwim) ; "lower" case
-    ("M-u" . upcase-dwim)
-    ("M-=" . count-words)
-    ("C-x O" . next-multiframe-window)
-    ("C-h K" . describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
-    ("C-h u" . apropos-user-option)
-    ("C-h F" . apropos-function) ; lower case is `describe-function'
-    ("C-h V" . apropos-variable) ; lower case is `describe-variable'
-    ("C-h L" . apropos-library) ; lower case is `view-lossage'
-    ("C-h c" . describe-char) ; overrides `describe-key-briefly'
 
-    :map prog-mode-map
-    ("C-M-d" . up-list) ; confusing name for what looks like "down" to me
-    ("<C-M-backspace>" . backward-kill-sexp)
+  (prot-emacs-keybind global-map
+    "<f2>" #'toggle-input-method  ; F2 overrides that two-column gimmick.  Sorry, but no!
+    "<insert>" #'nil
+    "<menu>" #'nil
+    "C-x C-d" #'nil ; never use it
+    "C-x C-v" #'nil ; never use it
+    "C-z" #'nil ; I have a window manager, thanks!
+    "C-x C-z" #'nil ; same idea as above
+    "C-x C-c" #'nil ; avoid accidentally exiting Emacs
+    "C-x C-c C-c" #'save-buffers-kill-emacs ; more cumbersome, less error-prone
+    "C-h h" #'nil ; Never show that "hello" file
+    "M-`" #'nil
+    "M-o" #'delete-blank-lines ; alias for C-x C-o
+    "M-SPC" #'cycle-spacing
+    "M-z" #'zap-up-to-char ; NOT `zap-to-char'
+    "M-c" #'capitalize-dwim
+    "M-l" #'downcase-dwim ; "lower" case
+    "M-u" #'upcase-dwim
+    "M-=" #'count-words
+    "C-x O" #'next-multiframe-window
+    "C-h K" #'describe-keymap ; overrides `Info-goto-emacs-key-command-node'
+    "C-h u" #'apropos-user-option
+    "C-h F" #'apropos-function ; lower case is `describe-function'
+    "C-h V" #'apropos-variable ; lower case is `describe-variable'
+    "C-h L" #'apropos-library ; lower case is `view-lossage'
+    "C-h c" #'describe-char) ; overrides `describe-key-briefly'
 
-    ;; Keymap for buffers (Emacs28)
-    :map ctl-x-x-map
-    ("f" . follow-mode)  ; override `font-lock-update'
-    ("r" . rename-uniquely)
-    ("l" . visual-line-mode)))
+  (prot-emacs-keybind prog-mode-map
+    "C-M-d" #'up-list ; confusing name for what looks like "down" to me
+    "<C-M-backspace>" #'backward-kill-sexp)
+
+  ;; Keymap for buffers (Emacs28)
+  (prot-emacs-keybind ctl-x-x-map
+    "f" #'follow-mode  ; override `font-lock-update'
+    "r" #'rename-uniquely
+    "l" #'visual-line-mode))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section about =prot-common.el= (custom basic functions)
