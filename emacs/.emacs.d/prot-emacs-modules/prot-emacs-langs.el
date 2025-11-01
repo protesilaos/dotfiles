@@ -186,11 +186,8 @@
 ;;; General configurations for prose/writing
 
 ;;;; `outline' (`outline-mode' and `outline-minor-mode')
-(use-package outline
-  :ensure nil
-  :bind
-  ("<f10>" . outline-minor-mode)
-  :config
+(prot-emacs-configure
+  (define-key global-map (kbd "<f10>") #'outline-minor-mode)
   (setq outline-minor-mode-highlight nil) ; emacs28
   (setq outline-minor-mode-cycle t) ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
