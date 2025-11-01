@@ -488,6 +488,8 @@
           ("^[^ \t\n]+:.*" . font-lock-string-face)
           ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
 
+  (prot-emacs-autoload (prot-shell prot-shell-mode) "prot-shell")
+
   (define-key global-map (kbd "<f1>") #'prot-shell) ; I don't use F1 for help commands
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 
