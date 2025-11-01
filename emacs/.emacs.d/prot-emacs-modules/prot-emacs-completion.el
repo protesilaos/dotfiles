@@ -382,11 +382,10 @@ Development continues on GitHub with GitLab as a mirror."))
       (require 'embark-consult))))
 
 ;;; Detailed completion annotations (marginalia.el)
-(use-package marginalia
-  :ensure t
-  :hook (after-init . marginalia-mode)
-  :config
-  (setq marginalia-max-relative-age 0)) ; absolute time
+(prot-emacs-configure
+  (prot-emacs-install marginalia)
+  (setq marginalia-max-relative-age 0) ; absolute time
+  (marginalia-mode 1))
 
 ;;; The minibuffer user interface (mct, vertico, or none)
 (when prot-emacs-completion-ui

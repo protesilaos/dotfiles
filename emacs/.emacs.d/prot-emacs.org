@@ -4889,11 +4889,10 @@ changes.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Detailed completion annotations (marginalia.el)
-(use-package marginalia
-  :ensure t
-  :hook (after-init . marginalia-mode)
-  :config
-  (setq marginalia-max-relative-age 0)) ; absolute time
+(prot-emacs-configure
+  (prot-emacs-install marginalia)
+  (setq marginalia-max-relative-age 0) ; absolute time
+  (marginalia-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= setting to load a minibuffer UI submodule
