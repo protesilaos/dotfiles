@@ -181,9 +181,7 @@
     "M-\\" #'prot-pair-delete))
 
 ;;;; Comments (prot-comment.el)
-(use-package prot-comment
-  :ensure nil
-  :init
+(prot-emacs-configure
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
@@ -193,10 +191,15 @@
   (setq prot-comment-comment-keywords '("TODO" "NOTE" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
   (setq prot-comment-timestamp-format-verbose "%F %T %z")
-  :bind
-  (("C-;" . prot-comment)
-   ("M-;" . prot-comment) ; overrides `comment-dwim'
-   ("C-x C-;" . prot-comment-timestamp-keyword)))
+
+  (prot-emacs-autoload
+    (prot-comment prot-comment-timestamp-keyword)
+    "prot-comment")
+
+  (prot-emacs-keybind global-map
+    "C-;" #'prot-comment
+    "M-;" #'prot-comment ; overrides `comment-dwim'
+    "C-x C-;" #'prot-comment-timestamp-keyword))
 
 ;;;; Prefix keymap (prot-prefix.el)
 (use-package prot-prefix
