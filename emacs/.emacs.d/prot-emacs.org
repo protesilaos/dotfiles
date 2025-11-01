@@ -2822,12 +2822,14 @@ quotation marks specific to natural languages I have set up.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Insert character pairs (prot-pair.el)
-(use-package prot-pair
-  :ensure nil
-  :bind
-  (("C-'" . prot-pair-insert)
-   ("M-'" . prot-pair-insert-directly)
-   ("M-\\" . prot-pair-delete)))
+(prot-emacs-configure
+  (prot-emacs-autoload
+    (prot-pair-insert prot-pair-insert-directly prot-pair-delete)
+    "prot-pair")
+  (prot-emacs-keybind global-map
+    "C-'" #'prot-pair-insert
+    "M-'" #'prot-pair-insert-directly
+    "M-\\" #'prot-pair-delete))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section for comments

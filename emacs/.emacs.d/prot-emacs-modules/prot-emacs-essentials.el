@@ -171,12 +171,14 @@
   (define-key global-map (kbd "C-c s") #'prot-scratch-buffer))
 
 ;;;; Insert character pairs (prot-pair.el)
-(use-package prot-pair
-  :ensure nil
-  :bind
-  (("C-'" . prot-pair-insert)
-   ("M-'" . prot-pair-insert-directly)
-   ("M-\\" . prot-pair-delete)))
+(prot-emacs-configure
+  (prot-emacs-autoload
+    (prot-pair-insert prot-pair-insert-directly prot-pair-delete)
+    "prot-pair")
+  (prot-emacs-keybind global-map
+    "C-'" #'prot-pair-insert
+    "M-'" #'prot-pair-insert-directly
+    "M-\\" #'prot-pair-delete))
 
 ;;;; Comments (prot-comment.el)
 (use-package prot-comment
