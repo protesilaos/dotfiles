@@ -2627,11 +2627,9 @@ here:
    for it and do not want the extra noise.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-(use-package prot-common
-  :ensure nil
-  :functions (prot-common-truncate-lines-silently)
-  :hook ((text-mode prog-mode dired-mode prot/fundamental-mode hexl-mode comint-mode) . prot-common-truncate-lines-silently)
-  :init
+(prot-emacs-configure
+  (require 'prot-common)
+
   (defvar prot/fundamental-mode-hook nil
     "Normal hook for `fundamental-mode' (which is missing by default).")
 
@@ -2641,7 +2639,11 @@ here:
     (run-hooks 'prot/fundamental-mode-hook))
 
   (advice-add #'fundamental-mode :around #'prot/fundamental-mode-run-hook)
-  :config
+
+  (prot-emacs-hook
+    (text-mode-hook prog-mode-hook dired-mode-hook prot/fundamental-mode-hook hexl-mode-hook comint-mode-hook)
+    prot-common-truncate-lines-silently)
+
   ;; NEVER tell me which key can call a command that I specifically
   ;; invoked with M-x: I have a good reason to use it that way.
   (advice-add #'execute-extended-command--describe-binding-msg :override #'prot-common-ignore))
