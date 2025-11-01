@@ -208,20 +208,19 @@
     "<insert>" #'prot-prefix
     "C-z" #'prot-prefix))
 
-(use-package recentf
-  :ensure nil
-  :bind
-  ("C-x C-r" . recentf-open) ; override `find-file-read-only'
-  :config
-  (setq recentf-max-saved-items 100)
-  (setq recentf-max-menu-items 25) ; I don't use the `menu-bar-mode', but this is good to know
-  (setq recentf-save-file-modes nil)
-  (setq recentf-keep nil)
-  (setq recentf-auto-cleanup nil)
-  (setq recentf-initialize-file-name-history nil)
-  (setq recentf-filename-handlers nil)
-  (setq recentf-show-file-shortcuts-flag nil)
-  (recentf-mode 1))
+(prot-emacs-configure
+  (define-key global-map (kbd "C-x C-r") #'recentf-open) ; override `find-file-read-only'
+
+  (with-eval-after-load 'recentf
+    (setq recentf-max-saved-items 100)
+    (setq recentf-max-menu-items 25) ; I don't use the `menu-bar-mode', but this is good to know
+    (setq recentf-save-file-modes nil)
+    (setq recentf-keep nil)
+    (setq recentf-auto-cleanup nil)
+    (setq recentf-initialize-file-name-history nil)
+    (setq recentf-filename-handlers nil)
+    (setq recentf-show-file-shortcuts-flag nil)
+    (recentf-mode 1)))
 
 ;;;; Mouse and mouse wheel behaviour
 (use-package mouse
