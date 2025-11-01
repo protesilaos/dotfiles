@@ -3348,11 +3348,11 @@ change happened. Calling the command again cycles to the point before
 that and so on. Simple and super effective.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-(use-package goto-chg
-  :ensure t
-  :bind
-  (("C-(" . goto-last-change)
-   ("C-)" . goto-last-change-reverse)))
+(prot-emacs-configure
+  (prot-emacs-install goto-chg)
+  (prot-emacs-keybind global-map
+    "C-(" #'goto-last-change
+    "C-)" #'goto-last-change-reverse))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section about ~tmr~ (set timers)

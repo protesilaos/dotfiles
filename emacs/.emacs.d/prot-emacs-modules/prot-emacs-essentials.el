@@ -402,11 +402,11 @@
   ;; C-c s is occupied by `prot-scratch-buffer'.
   (define-key global-map (kbd "C-c r") #'substitute-prefix-map))
 
-(use-package goto-chg
-  :ensure t
-  :bind
-  (("C-(" . goto-last-change)
-   ("C-)" . goto-last-change-reverse)))
+(prot-emacs-configure
+  (prot-emacs-install goto-chg)
+  (prot-emacs-keybind global-map
+    "C-(" #'goto-last-change
+    "C-)" #'goto-last-change-reverse))
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
