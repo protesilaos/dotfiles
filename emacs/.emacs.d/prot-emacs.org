@@ -3877,21 +3877,18 @@ with my customised mode line ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =pr
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-modeline.el"
 ;;; Keycast mode
-(use-package keycast
-  :ensure t
-  :after prot-modeline
-  :commands (keycast-mode-line-mode keycast-header-line-mode keycast-tab-bar-mode keycast-log-mode)
-  :init
-  (setq keycast-mode-line-format "%2s%k%c%R")
-  (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
-  (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
-  (setq keycast-mode-line-remove-tail-elements nil)
-  :config
-  (dolist (input '(self-insert-command org-self-insert-command))
-    (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+(prot-emacs-configure
+  (with-eval-after-load 'prot-modeline
+    (prot-emacs-install keycast)
+    (setq keycast-mode-line-format "%2s%k%c%R")
+    (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
+    (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
+    (setq keycast-mode-line-remove-tail-elements nil)
+    (dolist (input '(self-insert-command org-self-insert-command))
+      (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
-  (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))
-    (add-to-list 'keycast-substitute-alist `(,event nil nil))))
+    (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))
+      (add-to-list 'keycast-substitute-alist `(,event nil nil)))))
 #+end_src
 
 *** The =prot-emacs-modeline.el= call to ~provide~

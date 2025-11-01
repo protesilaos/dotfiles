@@ -126,20 +126,17 @@
     (advice-add #'which-function :override #'prot/which-function)))
 
 ;;; Keycast mode
-(use-package keycast
-  :ensure t
-  :after prot-modeline
-  :commands (keycast-mode-line-mode keycast-header-line-mode keycast-tab-bar-mode keycast-log-mode)
-  :init
-  (setq keycast-mode-line-format "%2s%k%c%R")
-  (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
-  (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
-  (setq keycast-mode-line-remove-tail-elements nil)
-  :config
-  (dolist (input '(self-insert-command org-self-insert-command))
-    (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+(prot-emacs-configure
+  (with-eval-after-load 'prot-modeline
+    (prot-emacs-install keycast)
+    (setq keycast-mode-line-format "%2s%k%c%R")
+    (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
+    (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
+    (setq keycast-mode-line-remove-tail-elements nil)
+    (dolist (input '(self-insert-command org-self-insert-command))
+      (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
-  (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))
-    (add-to-list 'keycast-substitute-alist `(,event nil nil))))
+    (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))
+      (add-to-list 'keycast-substitute-alist `(,event nil nil)))))
 
 (provide 'prot-emacs-modeline)
