@@ -282,10 +282,8 @@
     (add-to-list 'savehist-additional-variables 'register-alist)))
 
 ;;;; Auto revert mode
-(use-package autorevert
-  :ensure nil
-  :hook (after-init . global-auto-revert-mode)
-  :config
+(prot-emacs-configure
+  (global-auto-revert-mode 1)
   (setq auto-revert-verbose t))
 
 ;;;; Delete selection
