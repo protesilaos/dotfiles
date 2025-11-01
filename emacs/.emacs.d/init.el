@@ -352,6 +352,9 @@ making an abbreviation to a function."
 ;; preferences BEFORE loading any of the modules.
 (load (locate-user-emacs-file "prot-emacs-pre-custom.el") :no-error :no-message)
 
+(defvar prot-display-graphic-p (display-graphic-p)
+  "When non-nil, the display is graphical.")
+
 (require 'prot-emacs-theme)
 (require 'prot-emacs-essentials)
 (require 'prot-emacs-modeline)
