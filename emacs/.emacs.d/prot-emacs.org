@@ -3094,9 +3094,8 @@ default. With ~delete-selection-mode~ we get it.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Delete selection
-(use-package delsel
-  :ensure nil
-  :hook (after-init . delete-selection-mode))
+(prot-emacs-configure
+  (delete-selection-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for tooltips

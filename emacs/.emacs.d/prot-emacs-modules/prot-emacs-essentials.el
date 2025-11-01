@@ -287,9 +287,8 @@
   (setq auto-revert-verbose t))
 
 ;;;; Delete selection
-(use-package delsel
-  :ensure nil
-  :hook (after-init . delete-selection-mode))
+(prot-emacs-configure
+  (delete-selection-mode 1))
 
 ;;;; Tooltips (tooltip-mode)
 (use-package tooltip
