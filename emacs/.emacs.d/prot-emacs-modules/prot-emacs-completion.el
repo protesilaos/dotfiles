@@ -302,20 +302,19 @@ Development continues on GitHub with GitLab as a mirror."))
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 
 ;;; Corfu (in-buffer completion popup)
-(when prot-emacs-completion-ui
-  (use-package corfu
-    :ensure t
-    :if (display-graphic-p)
-    :hook (after-init . global-corfu-mode)
+(when (and prot-emacs-completion-ui (display-graphic-p))
+  (prot-emacs-configure
     ;; I also have (setq tab-always-indent 'complete) for TAB to complete
     ;; when it does not need to perform an indentation change.
-    :bind (:map corfu-map ("<tab>" . corfu-complete))
-    :config
+    (define-key corfu-map (kbd "<tab>") #'corfu-complete)
+
     (setq corfu-preview-current nil)
     (setq corfu-min-width 20)
 
     (setq corfu-popupinfo-delay '(1.25 . 0.5))
     (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+
+    (global-corfu-mode 1)
 
     ;; Sort by input history (no need to modify `corfu-sort-function').
     (with-eval-after-load 'savehist
