@@ -4195,12 +4195,10 @@ minibuffer prompt, indicating the level of depth in the recursion,
 starting with =2=.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-(use-package mb-depth
-  :ensure nil
-  :hook (after-init . minibuffer-depth-indicate-mode)
-  :config
-  (setq read-minibuffer-restore-windows nil) ; Emacs 28
-  (setq enable-recursive-minibuffers t))
+(prot-emacs-configure
+  (setq read-minibuffer-restore-windows nil)
+  (setq enable-recursive-minibuffers t) ; Emacs 28
+  (minibuffer-depth-indicate-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for default values

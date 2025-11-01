@@ -94,12 +94,10 @@
 (setq-default case-fold-search t)   ; For general regexp
 (setq read-file-name-completion-ignore-case t)
 
-(use-package mb-depth
-  :ensure nil
-  :hook (after-init . minibuffer-depth-indicate-mode)
-  :config
-  (setq read-minibuffer-restore-windows nil) ; Emacs 28
-  (setq enable-recursive-minibuffers t))
+(prot-emacs-configure
+  (setq read-minibuffer-restore-windows nil)
+  (setq enable-recursive-minibuffers t) ; Emacs 28
+  (minibuffer-depth-indicate-mode 1))
 
 (use-package minibuf-eldef
   :ensure nil
