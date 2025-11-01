@@ -381,19 +381,15 @@
 ;;; Substitute
 ;; Another package of mine... Video demo:
 ;; <https://protesilaos.com/codelog/2023-01-16-emacs-substitute-package-demo/>.
-(use-package substitute
-  :ensure t
-  :defer 1
+(prot-emacs-configure
+  (prot-emacs-install substitute)
+  (require 'substitute)
+
   ;; Produce a message after the substitution that reports on what
   ;; happened.  It is a single line, like "Substituted `TARGET' with
   ;; `SUBSTITUTE' N times across the buffer.
-  :hook (substitute-post-replace . substitute-report-operation)
-  :commands
-  (substitute-target-below-point ; Forward motion like isearch (C-s)
-   substitute-target-above-point ; Backward motion like isearch (C-r)
-   substitute-target-in-defun    ; inside of the current definition
-   substitute-target-in-buffer)  ; throughout the buffer
-  :config
+  (add-hook 'substitute-post-replace-hook #'substitute-report-operation)
+
   ;; Set this to non-nil to highlight all occurrences of the current
   ;; target.
   (setopt substitute-highlight t)
