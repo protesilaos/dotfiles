@@ -303,6 +303,19 @@ DEFINITIONS is a sequence of string and command pairs."
 ;;   "C-c b" beframe-prefix-map
 ;;   "C-x k" #'kill-buffer)
 
+(defmacro prot-emacs-autoload (functions file)
+  "Declare autoloads for FUNCTIONS for FILE."
+  (declare (indent 0))
+  (when (symbolp functions)
+    (setq functions (list functions)))
+  (unless (listp functions)
+    (error "The functions must be a list or symbol: %S" functions))
+  (unless (stringp file)
+    (error "The file must be a string: %S" file))
+  (if (length> functions 1)
+      `(progn ,@(mapcar (lambda (f) `(autoload #',f ,file)) functions))
+    `(autoload #',(car functions) ,file)))
+
 (defmacro prot-emacs-abbrev (table &rest definitions)
   "Expand abbrev DEFINITIONS for the given TABLE.
 DEFINITIONS is a sequence of (i) string pairs mapping the
