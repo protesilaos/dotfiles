@@ -1,12 +1,11 @@
 ;;;; `project'
-(use-package project
-  :ensure nil
-  :bind
-  (("C-x p ." . project-dired)
-   ("C-x p C-g" . keyboard-quit)
-   ("C-x p <return>" . project-dired)
-   ("C-x p <delete>" . project-forget-project))
-  :config
+(prot-emacs-configure
+  (prot-emacs-keybind global-map
+    "C-x p ." #'project-dired
+    "C-x p C-g" #'keyboard-quit
+    "C-x p <return>" #'project-dired
+    "C-x p <delete>" #'project-forget-project)
+
   (setopt project-switch-commands
           '((project-find-file "Find file")
             (project-find-regexp "Find regexp")
@@ -18,14 +17,10 @@
   (setq project-vc-extra-root-markers '(".project")) ; Emacs 29
   (setq project-key-prompt-style t) ; Emacs 30
 
-  (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message))
+  (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
 
-(use-package prot-project
-  :ensure nil
-  :commands (prot-project-switch prot-project-in-tab)
-  :bind
-  ( :map project-prefix-map
-    ("p" . prot-project-maybe-in-tab)))
+  (autoload #'prot-project-maybe-in-tab "prot-project")
+  (define-key project-prefix-map (kbd "p") #'prot-project-maybe-in-tab))
 
 ;;;; `diff-mode'
 (use-package diff-mode
