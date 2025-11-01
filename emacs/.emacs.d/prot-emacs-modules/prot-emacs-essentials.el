@@ -496,6 +496,7 @@
 ;;; Show battery status on the mode line with `display-battery-mode'
 (when prot-laptop-p
   (prot-emacs-configure
+    (require 'battery)
     (setq battery-mode-line-format
           (cond
            ((eq battery-status-function #'battery-linux-proc-acpi)
