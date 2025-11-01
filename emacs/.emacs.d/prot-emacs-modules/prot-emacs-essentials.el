@@ -223,10 +223,8 @@
     (recentf-mode 1)))
 
 ;;;; Mouse and mouse wheel behaviour
-(use-package mouse
-  :ensure nil
-  :hook (after-init . mouse-wheel-mode)
-  :config
+(prot-emacs-configure
+  (mouse-wheel-mode 1)
   ;; Some of these variables are defined in places other than
   ;; mouse.el, but this is fine.
   (setq mouse-autoselect-window t) ; complements the auto-selection of my tiling window manager
