@@ -3183,10 +3183,7 @@ these and many other buffers by configuring the ~display-buffer-alist~
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; World clock (M-x world-clock)
-(use-package time
-  :ensure nil
-  :commands (world-clock)
-  :config
+(prot-emacs-configure
   (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
         '(("America/Los_Angeles" "Los Angeles")
