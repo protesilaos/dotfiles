@@ -3245,10 +3245,7 @@ use this interface to check if some process is doing more than it should.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; `proced' (process monitor, similar to `top')
-(use-package proced
-  :ensure nil
-  :commands (proced)
-  :config
+(prot-emacs-configure
   (setq proced-auto-update-flag 'visible) ; Emacs 30 supports more the `visible' value
   (setq proced-enable-color-flag t) ; Emacs 29
   (setq proced-auto-update-interval 5)

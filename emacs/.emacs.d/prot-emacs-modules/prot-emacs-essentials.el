@@ -365,10 +365,7 @@
   (setq Man-notify-method 'pushy)) ; does not obey `display-buffer-alist'
 
 ;;;; `proced' (process monitor, similar to `top')
-(use-package proced
-  :ensure nil
-  :commands (proced)
-  :config
+(prot-emacs-configure
   (setq proced-auto-update-flag 'visible) ; Emacs 30 supports more the `visible' value
   (setq proced-enable-color-flag t) ; Emacs 29
   (setq proced-auto-update-interval 5)
