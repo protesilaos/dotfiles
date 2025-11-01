@@ -46,8 +46,6 @@
 
 ;;; Show the name of the current definition or heading for context (`which-function-mode')
 (prot-emacs-configure
-  (which-function-mode 1)
-
   (setq which-func-modes '(prog-mode org-mode))
   ;; NOTE 2025-10-26: I handle the indicator on my own via `prot-modeline-which-function-indicator'.
   (setq which-func-display 'mode) ; Emacs 30
@@ -123,7 +121,9 @@
                                       (reverse (cons (car pair) namestack)))))))))))))
           (prot-modeline-string-cut-end name)))))
 
-    (advice-add #'which-function :override #'prot/which-function)))
+    (advice-add #'which-function :override #'prot/which-function)
+
+    (which-function-mode 1)))
 
 ;;; Keycast mode
 (prot-emacs-configure
@@ -132,7 +132,8 @@
     (setq keycast-mode-line-format "%2s%k%c%R")
     (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
     (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
-    (setq keycast-mode-line-remove-tail-elements nil)
+    (setq keycast-mode-line-remove-tail-elements nil))
+  (with-eval-after-load 'keycast
     (dolist (input '(self-insert-command org-self-insert-command))
       (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 

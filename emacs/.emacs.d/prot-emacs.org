@@ -3141,8 +3141,6 @@ are best handled by my ~notmuch-indicator~ package
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Display current time
 (prot-emacs-configure
-  (display-time-mode 1)
-
   (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
@@ -3165,7 +3163,9 @@ are best handled by my ~notmuch-indicator~ package
            (format-time-string display-time-format now)
            'face 'display-time-date-and-time
            'help-echo (format-time-string "%a %b %e, %Y" now))
-          " ")))
+          " "))
+
+  (display-time-mode 1))
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for the ~world-clock~
@@ -3657,13 +3657,13 @@ here because it is still useful as a sample.
 ;;; Show battery status on the mode line with `display-battery-mode'
 (when prot-laptop-p
   (prot-emacs-configure
-    (display-battery-mode 1)
     (setq battery-mode-line-format
           (cond
            ((eq battery-status-function #'battery-linux-proc-acpi)
 	        "⏻%b%p%%,%d°C ")
 	       (battery-status-function
-	        "⏻%b%p%% ")))))
+	        "⏻%b%p%% ")))
+    (display-battery-mode 1)))
 #+end_src
 
 *** The =prot-emacs-essentials.el= call to ~provide~
@@ -3780,8 +3780,6 @@ did what to take the original value and make some minor tweaks to it.
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-modeline.el"
 ;;; Show the name of the current definition or heading for context (`which-function-mode')
 (prot-emacs-configure
-  (which-function-mode 1)
-
   (setq which-func-modes '(prog-mode org-mode))
   ;; NOTE 2025-10-26: I handle the indicator on my own via `prot-modeline-which-function-indicator'.
   (setq which-func-display 'mode) ; Emacs 30
@@ -3857,7 +3855,9 @@ did what to take the original value and make some minor tweaks to it.
                                       (reverse (cons (car pair) namestack)))))))))))))
           (prot-modeline-string-cut-end name)))))
 
-    (advice-add #'which-function :override #'prot/which-function)))
+    (advice-add #'which-function :override #'prot/which-function)
+
+    (which-function-mode 1)))
 #+end_src
 
 *** The =prot-emacs-modeline.el= section about ~keycast~
@@ -3883,7 +3883,8 @@ with my customised mode line ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =pr
     (setq keycast-mode-line-format "%2s%k%c%R")
     (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
     (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
-    (setq keycast-mode-line-remove-tail-elements nil)
+    (setq keycast-mode-line-remove-tail-elements nil))
+  (with-eval-after-load 'keycast
     (dolist (input '(self-insert-command org-self-insert-command))
       (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 

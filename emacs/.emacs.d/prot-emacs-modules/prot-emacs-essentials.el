@@ -304,8 +304,6 @@
 
 ;;;; Display current time
 (prot-emacs-configure
-  (display-time-mode 1)
-
   (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
@@ -328,7 +326,9 @@
            (format-time-string display-time-format now)
            'face 'display-time-date-and-time
            'help-echo (format-time-string "%a %b %e, %Y" now))
-          " ")))
+          " "))
+
+  (display-time-mode 1))
 
 ;;;; World clock (M-x world-clock)
 (prot-emacs-configure
@@ -494,12 +494,12 @@
 ;;; Show battery status on the mode line with `display-battery-mode'
 (when prot-laptop-p
   (prot-emacs-configure
-    (display-battery-mode 1)
     (setq battery-mode-line-format
           (cond
            ((eq battery-status-function #'battery-linux-proc-acpi)
 	        "⏻%b%p%%,%d°C ")
 	       (battery-status-function
-	        "⏻%b%p%% ")))))
+	        "⏻%b%p%% ")))
+    (display-battery-mode 1)))
 
 (provide 'prot-emacs-essentials)
