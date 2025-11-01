@@ -3,15 +3,11 @@
 ;; I install notmuch from the distro's repos because the CLI program is
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
-(use-package notmuch
-  :load-path "/usr/share/emacs/site-lisp/"
-  :defer t
-  :commands (notmuch notmuch-mua-new-mail))
+(prot-emacs-configure
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/"))
 
 ;;; Account settings
-(use-package notmuch
-  :defer t
-  :config
+(prot-emacs-configure
   (let ((prv (prot-common-auth-get-field "prv-gandi" :user))
         (pub (prot-common-auth-get-field "pub-gandi" :user))
         (inf (prot-common-auth-get-field "inf-gandi" :user))
@@ -27,9 +23,7 @@
             (,box . "gandi/Sent")))))
 
 ;;;; General UI
-(use-package notmuch
-  :defer t
-  :config
+(prot-emacs-configure
   (setq notmuch-show-logo nil
         notmuch-column-control 1.0
         notmuch-hello-auto-refresh t
@@ -39,9 +33,7 @@
         notmuch-show-all-tags-list t))
 
 ;;;; Search
-(use-package notmuch
-  :defer t
-  :config
+(prot-emacs-configure
   (setq notmuch-search-oldest-first nil)
   (setq notmuch-search-result-format
         '(("date" . "%12s  ")
@@ -91,9 +83,7 @@
             :key ,(kbd "c")))))
 
 ;;;; Tags
-(use-package notmuch
-  :defer t
-  :config
+(prot-emacs-configure
   (setq notmuch-archive-tags nil ; I do not archive email
         notmuch-message-replied-tags '("+replied")
         notmuch-message-forwarded-tags '("+forwarded")
@@ -122,9 +112,7 @@
            (concat "🏷️" tag)))))
 
 ;;;; Email composition
-(use-package notmuch
-  :defer t
-  :config
+(prot-emacs-configure
   (setq notmuch-mua-compose-in 'current-window)
   (setq notmuch-mua-hidden-headers nil)
   (setq notmuch-address-command 'internal)
@@ -141,30 +129,29 @@
                 "pi[èe]ce\s+jointe?\\|"
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
-  (defun prot-notmuch-message-tab ()
-    "Override for `message-tab' to enforce header line check.
+  (with-eval-after-load 'message
+    (defun prot-notmuch-message-tab ()
+      "Override for `message-tab' to enforce header line check.
 More specifically, perform address completion when on a relevant header
 line, because `message-tab' sometimes (not sure when/how) fails to do
 that and instead tries to complete against dictionary entries."
-    (interactive nil message-mode)
-    (cond
-     ((save-excursion
-        (goto-char (line-beginning-position))
-        (looking-at notmuch-address-completion-headers-regexp))
-      (notmuch-address-expand-name)
-      ;; Completion was performed; nothing else to do.
-      nil)
-     (message-tab-body-function (funcall message-tab-body-function))
-     (t (funcall (or (lookup-key text-mode-map "\t")
-                     (lookup-key global-map "\t")
-                     'indent-relative)))))
+      (interactive nil message-mode)
+      (cond
+       ((save-excursion
+          (goto-char (line-beginning-position))
+          (looking-at notmuch-address-completion-headers-regexp))
+        (notmuch-address-expand-name)
+        ;; Completion was performed; nothing else to do.
+        nil)
+       (message-tab-body-function (funcall message-tab-body-function))
+       (t (funcall (or (lookup-key text-mode-map "\t")
+                       (lookup-key global-map "\t")
+                       'indent-relative)))))
 
-  (advice-add #'message-tab :override #'prot-notmuch-message-tab))
+    (advice-add #'message-tab :override #'prot-notmuch-message-tab)))
 
 ;;;; Reading messages
-(use-package notmuch
-  :defer t
-  :config
+(prot-emacs-configure
   (setq notmuch-show-relative-dates t)
   (setq notmuch-show-all-multipart/alternative-parts nil)
   (setq notmuch-show-indent-messages-width 0)
@@ -181,98 +168,100 @@ that and instead tries to complete against dictionary entries."
           notmuch-wash-citation-lines-suffix count)))
 
 ;;;; Hooks and key bindings
-(use-package notmuch
-  :hook
-  (notmuch-mua-send . notmuch-mua-attachment-check) ; also see `notmuch-mua-attachment-regexp'
-  (notmuch-show . (lambda () (setq-local header-line-format nil)))
-  :config
+(prot-emacs-configure
+  (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check) ; also see `notmuch-mua-attachment-regexp'
+  (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode) ; Check my `lin' package
-  :bind
-  ( :map global-map
-    ("C-c m" . notmuch)
-    ("C-x m" . notmuch-mua-new-mail) ; override `compose-mail'
-    :map notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
-    ("a" . nil) ; the default is too easy to hit accidentally and I do not archive stuff
-    ("A" . nil)
-    ("/" . notmuch-search-filter) ; alias for l
-    ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
-    ("R" . notmuch-search-reply-to-thread-sender)
-    :map notmuch-show-mode-map
-    ("a" . nil) ; the default is too easy to hit accidentally and I do not archive stuff
-    ("A" . nil)
-    ("r" . notmuch-show-reply) ; easier to reply to all by default
-    ("R" . notmuch-show-reply-sender)
-    :map notmuch-hello-mode-map
-    ("C-<tab>" . nil)))
+
+  (prot-emacs-keybind global-map
+    "C-c m" #'notmuch
+    "C-x m" #'notmuch-mua-new-mail) ; override `compose-mail'
+
+  (with-eval-after-load 'notmuch
+    (prot-emacs-keybind notmuch-search-mode-map ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+      "a" nil ; the default is too easy to hit accidentally and I do not archive stuff
+      "A" nil
+      "/" #'notmuch-search-filter ; alias for l
+      "r" #'notmuch-search-reply-to-thread ; easier to reply to all by default
+      "R" #'notmuch-search-reply-to-thread-sender)
+
+    (prot-emacs-keybind notmuch-show-mode-map
+      "a" nil ; the default is too easy to hit accidentally and I do not archive stuff
+      "A" nil
+      "r" #'notmuch-show-reply ; easier to reply to all by default
+      "R" #'notmuch-show-reply-sender)
+
+    (define-key notmuch-hello-mode-map (kbd "C-<tab>")  nil)))
 
 ;;; My own tweaks for notmuch (prot-notmuch.el)
-(use-package prot-notmuch
-  :ensure nil
-  :after notmuch
-  :bind
-  ( :map notmuch-search-mode-map
-    ("D" . prot-notmuch-search-delete-thread)
-    ("S" . prot-notmuch-search-spam-thread)
-    ("g" . prot-notmuch-refresh-buffer)
-    :map notmuch-show-mode-map
-    ("D" . prot-notmuch-show-delete-message)
-    ("S" . prot-notmuch-show-spam-message)
-    :map notmuch-show-stash-map
-    ("S" . prot-notmuch-stash-sourcehut-link))
-  :config
-  ;; Those are for the actions that are available after pressing 'k'
-  ;; (`notmuch-tag-jump').  For direct actions, refer to the key
-  ;; bindings below.
-  (setq notmuch-tagging-keys
-        `((,(kbd "d") prot-notmuch-mark-delete-tags "💥 Mark for deletion")
-          (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
-          (,(kbd "s") prot-notmuch-mark-spam-tags "🔥 Mark as spam")
-          (,(kbd "r") ("-unread") "👁️‍🗨️ Mark as read")
-          (,(kbd "u") ("+unread") "🗨️ Mark as unread")))
+(prot-emacs-configure
+  (with-eval-after-load 'notmuch
+    (require 'prot-notmuch)
 
-  ;; These emoji are purely cosmetic.  The tag remains the same: I
-  ;; would not like to input emoji for searching.
-  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
-  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
-  (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🏆")))
-  (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️"))))
+    (prot-emacs-keybind notmuch-search-mode-map
+      "D" #'prot-notmuch-search-delete-thread
+      "S" #'prot-notmuch-search-spam-thread
+      "g" #'prot-notmuch-refresh-buffer)
+
+    (prot-emacs-keybind notmuch-show-mode-map
+      "D" #'prot-notmuch-show-delete-message
+      "S" #'prot-notmuch-show-spam-message)
+
+    (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
+
+    ;; Those are for the actions that are available after pressing 'k'
+    ;; (`notmuch-tag-jump').  For direct actions, refer to the key
+    ;; bindings below.
+    (setq notmuch-tagging-keys
+          `((,(kbd "d") prot-notmuch-mark-delete-tags "💥 Mark for deletion")
+            (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
+            (,(kbd "s") prot-notmuch-mark-spam-tags "🔥 Mark as spam")
+            (,(kbd "r") ("-unread") "👁️‍🗨️ Mark as read")
+            (,(kbd "u") ("+unread") "🗨️ Mark as unread")))
+
+    ;; These emoji are purely cosmetic.  The tag remains the same: I
+    ;; would not like to input emoji for searching.
+    (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒")))
+    (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎")))
+    (add-to-list 'notmuch-tag-formats '("coach" (concat tag "🏆")))
+    (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️")))))
 
 ;;; Glue code for notmuch and org-link (ol-notmuch.el)
-(use-package ol-notmuch
-  :ensure t
-  :after notmuch)
+(prot-emacs-configure
+  (prot-emacs-install ol-notmuch)
+  (with-eval-after-load 'notmuch
+    (require 'ol-notmuch)))
 
 ;;; notmuch-indicator (another package of mine)
-(use-package notmuch-indicator
-  :ensure t
-  :after notmuch
-  :config
-  (setq notmuch-indicator-args
-        '(( :terms "tag:unread and tag:inbox"
-            ;; :label "[U] "
-            :label "💬 "
-            :label-face prot-modeline-indicator-cyan
-            :counter-face prot-modeline-indicator-cyan)
-          ( :terms "tag:unread and tag:package"
-            ;; :label "[P] "
-            :label "🛠️ "
-            :label-face prot-modeline-indicator-magenta
-            :counter-face prot-modeline-indicator-magenta)
-          ( :terms "tag:unread and tag:coach"
-            ;; :label "[C] "
-            :label "🏆 "
-            :label-face prot-modeline-indicator-red
-            :counter-face prot-modeline-indicator-red))
+(prot-emacs-configure
+  (prot-emacs-install notmuch-indicator)
+  (with-eval-after-load 'notmuch
+    (setq notmuch-indicator-args
+          '(( :terms "tag:unread and tag:inbox"
+              ;; :label "[U] "
+              :label "💬 "
+              :label-face prot-modeline-indicator-cyan
+              :counter-face prot-modeline-indicator-cyan)
+            ( :terms "tag:unread and tag:package"
+              ;; :label "[P] "
+              :label "🛠️ "
+              :label-face prot-modeline-indicator-magenta
+              :counter-face prot-modeline-indicator-magenta)
+            ( :terms "tag:unread and tag:coach"
+              ;; :label "[C] "
+              :label "🏆 "
+              :label-face prot-modeline-indicator-red
+              :counter-face prot-modeline-indicator-red))
 
-        notmuch-indicator-refresh-count (* 60 3)
-        notmuch-indicator-hide-empty-counters t
-        notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
+          notmuch-indicator-refresh-count (* 60 3)
+          notmuch-indicator-hide-empty-counters t
+          notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
 
-  ;; I control its placement myself.  See prot-emacs-modeline.el where
-  ;; I set the `mode-line-format'.
-  (setq notmuch-indicator-add-to-mode-line-misc-info nil)
+    ;; I control its placement myself.  See prot-emacs-modeline.el where
+    ;; I set the `mode-line-format'.
+    (setq notmuch-indicator-add-to-mode-line-misc-info nil)
 
-  (notmuch-indicator-mode 1))
+    (notmuch-indicator-mode 1)))
 
 (provide 'prot-emacs-notmuch)

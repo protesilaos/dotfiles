@@ -1,38 +1,23 @@
 ;;;; File with authentication credentials (`auth-source')
-(use-package auth-source
-  :ensure nil
-  :defer t
-  :config
+(prot-emacs-configure
   (setq auth-sources '("~/.authinfo.gpg")
         user-full-name "Protesilaos Stavrou"
-        user-mail-address "public@protesilaos.com"))
+        user-mail-address "prot@protesilaos.com"))
 
 ;;;; Encryption settings (`mm-encode' and `mml-sec')
-
-(use-package mm-encode
-  :ensure nil
-  :defer t
-  :config
+(prot-emacs-configure
   (setq mm-encrypt-option nil ; use 'guided for both if you need more control
-        mm-sign-option nil))
+        mm-sign-option nil)
 
-(use-package mml-sec
-  :ensure nil
-  :defer t
-  :config
   (setq mml-secure-openpgp-encrypt-to-self t
         mml-secure-openpgp-sign-with-sender t
         mml-secure-smime-encrypt-to-self t
-        mml-secure-smime-sign-with-sender t))
+        mml-secure-smime-sign-with-sender t)
 
 ;;;; Message composition (`message')
 
-(use-package message
-  :ensure nil
-  :defer t
-  :hook
-  (message-setup . message-sort-headers)
-  :config
+  (add-hook 'message-setup-hook #'message-sort-headers)
+
   (setq mail-user-agent 'message-user-agent
         message-mail-user-agent t) ; use `mail-user-agent'
   (setq mail-header-separator "--text follows this line--")
@@ -51,21 +36,16 @@
   (setq message-wide-reply-confirm-recipients nil))
 
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
-(use-package gnus-dired
-  :ensure nil
-  :after message
-  :hook
-  (dired-mode . turn-on-gnus-dired-mode))
+(prot-emacs-configure
+  (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode))
 
 ;;;; `sendmail' (mail transfer agent)
-(use-package smtpmail
-  :ensure nil
-  :after message
-  :config
-  (setq send-mail-function #'smtpmail-send-it)
-  (setq smtpmail-smtp-server "mail.gandi.net")
-  (setq smtpmail-smtp-service 587)
-  (setq smtpmail-stream-type 'starttls))
+(prot-emacs-configure
+  (with-eval-after-load 'message
+    (setq send-mail-function #'smtpmail-send-it)
+    (setq smtpmail-smtp-server "mail.gandi.net")
+    (setq smtpmail-smtp-service 587)
+    (setq smtpmail-stream-type 'starttls)))
 
 (when (executable-find "notmuch")
   (require 'prot-emacs-notmuch))
