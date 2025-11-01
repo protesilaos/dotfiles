@@ -2066,32 +2066,32 @@ to activate ~rainbow-mode~ if I am editing a theme file.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
-(use-package rainbow-mode
-  :ensure t
-  :init
+(prot-emacs-configure
+  (prot-emacs-install rainbow-mode)
   (setq rainbow-ansi-colors nil)
   (setq rainbow-x-colors nil)
 
+  (defun prot/rainbow-colorize-match (color &optional match)
+    "Like `rainbow-colorize-match' but works with `hl-line-mode'."
+    (let ((match (or match 0)))
+      (put-text-property
+       (match-beginning match) (match-end match)
+       'face `((:background ,(if (> 0.5 (rainbow-x-color-luminance color))
+                                 "white" "black"))
+               (:foreground ,color)
+               (:inverse-video t)))))
+
+  (advice-add #'rainbow-colorize-match :override #'prot/rainbow-colorize-match)
+
   (defun prot/rainbow-mode-in-themes ()
-    (when-let* ((file (buffer-file-name))
+    (when-let* ((file buffer-file-name)
                 ((derived-mode-p 'emacs-lisp-mode))
                 ((string-match-p "-theme" file)))
       (rainbow-mode 1)))
-  :config
-  (defun prot/rainbow-colorize-match (color &optional match)
-  "Like `rainbow-colorize-match' but works with `hl-line-mode'."
-  (let ((match (or match 0)))
-    (put-text-property
-     (match-beginning match) (match-end match)
-     'face `((:background ,(if (> 0.5 (rainbow-x-color-luminance color))
-                               "white" "black"))
-             (:foreground ,color)
-             (:inverse-video t)))))
 
-  (advice-add #'rainbow-colorize-match :override #'prot/rainbow-colorize-match)
-  :bind ( :map ctl-x-x-map
-          ("c" . rainbow-mode)) ; C-x x c
-  :hook (emacs-lisp-mode . prot/rainbow-mode-in-themes))
+  (add-hook 'emacs-lisp-mode-hook #'prot/rainbow-mode-in-themes)
+
+  (define-key ctl-x-x-map (kbd "c") #'rainbow-mode)) ; C-x x c
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~cursory~
