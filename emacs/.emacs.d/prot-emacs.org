@@ -3057,10 +3057,7 @@ with ~savehist-mode~ ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Registers (register.el)
-(use-package register
-  :ensure nil
-  :defer t ; its commands are autoloaded, so this will be loaded then
-  :config
+(prot-emacs-configure
   (setq register-preview-delay 0.8
         register-preview-function #'register-preview-default)
 

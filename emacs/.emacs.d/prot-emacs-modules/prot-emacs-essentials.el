@@ -274,10 +274,7 @@
   (setq bookmark-save-flag 1))
 
 ;;;; Registers (register.el)
-(use-package register
-  :ensure nil
-  :defer t ; its commands are autoloaded, so this will be loaded then
-  :config
+(prot-emacs-configure
   (setq register-preview-delay 0.8
         register-preview-function #'register-preview-default)
 
