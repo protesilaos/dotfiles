@@ -7325,27 +7325,25 @@ Org is far more capable, so I switched to it completely.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el" :mkdirp yes
 ;;; Calendar
-(use-package calendar
-  :ensure nil
-  :commands (calendar)
-  :config
-  (setq calendar-mark-diary-entries-flag nil)
-  (setq calendar-mark-holidays-flag t)
-  (setq calendar-mode-line-format nil)
-  (setq calendar-time-display-form
-        '( 24-hours ":" minutes
-           (when time-zone (format "(%s)" time-zone))))
-  (setq calendar-week-start-day 1)      ; Monday
-  (setq calendar-date-style 'iso)
-  (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
+(prot-emacs-configure
+  (with-eval-after-load 'calendar
+    (setq calendar-mark-diary-entries-flag nil)
+    (setq calendar-mark-holidays-flag t)
+    (setq calendar-mode-line-format nil)
+    (setq calendar-time-display-form
+          '( 24-hours ":" minutes
+             (when time-zone (format "(%s)" time-zone))))
+    (setq calendar-week-start-day 1)      ; Monday
+    (setq calendar-date-style 'iso)
+    (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-  (require 'solar)
-  (setq calendar-latitude 35.17         ; Not my actual coordinates
-        calendar-longitude 33.36)
+    (require 'solar)
+    (setq calendar-latitude 35.17         ; Not my actual coordinates
+          calendar-longitude 33.36)
 
-  (require 'cal-dst)
-  (setq calendar-standard-time-zone-name "+0200")
-  (setq calendar-daylight-time-zone-name "+0300"))
+    (require 'cal-dst)
+    (setq calendar-standard-time-zone-name "+0200")
+    (setq calendar-daylight-time-zone-name "+0300")))
 #+end_src
 
 *** The =prot-emacs-org.el= section about appointment reminders (=appt.el=)
@@ -7375,17 +7373,14 @@ done at a specific time, such as coaching sessions ([[#h:f8f06938-0dfe-45c3-b4cf
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 ;;; Appt (appointment reminders which also integrate with Org agenda)
-(use-package appt
-  :ensure nil
-  :commands (appt-activate)
-  :config
-  (setq appt-display-diary nil
-        appt-display-format nil
-        appt-display-mode-line t
-        appt-display-interval 3
-        appt-audible nil ; TODO 2023-01-25: t does nothing because I disable `ring-bell-function'?
-        appt-warning-time-regexp "appt \\([0-9]+\\)" ; This is for the diary
-        appt-message-warning-time 6)
+(prot-emacs-configure
+  (setq appt-display-diary nil)
+  (setq appt-display-format nil)
+  (setq appt-display-mode-line t)
+  (setq appt-display-interval 3)
+  (setq appt-audible nil) ; TODO 2023-01-25: t does nothing because I disable `ring-bell-function'?
+  (setq appt-warning-time-regexp "appt \\([0-9]+\\)") ; This is for the diary
+  (setq appt-message-warning-time 6)
 
   (with-eval-after-load 'org-agenda
     (appt-activate 1)
