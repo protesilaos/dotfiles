@@ -3110,10 +3110,8 @@ messages (e.g. a different colour or a slant).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Tooltips (tooltip-mode)
-(use-package tooltip
-  :ensure nil
-  :hook (after-init . tooltip-mode)
-  :config
+(prot-emacs-configure
+  (tooltip-mode 1)
   (setq tooltip-delay 0.5
         tooltip-short-delay 0.5
         x-gtk-use-system-tooltips t

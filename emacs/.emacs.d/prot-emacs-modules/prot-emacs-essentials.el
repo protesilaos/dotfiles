@@ -291,10 +291,8 @@
   (delete-selection-mode 1))
 
 ;;;; Tooltips (tooltip-mode)
-(use-package tooltip
-  :ensure nil
-  :hook (after-init . tooltip-mode)
-  :config
+(prot-emacs-configure
+  (tooltip-mode 1)
   (setq tooltip-delay 0.5
         tooltip-short-delay 0.5
         x-gtk-use-system-tooltips t
