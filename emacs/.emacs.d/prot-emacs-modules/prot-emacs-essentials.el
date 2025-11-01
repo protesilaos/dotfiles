@@ -165,11 +165,10 @@
     "C-x r ." #'prot-simple-file-to-register))
 
 ;;;; Scratch buffers per major mode (prot-scratch.el)
-(use-package prot-scratch
-  :ensure nil
-  :bind ("C-c s" . prot-scratch-buffer)
-  :config
-  (setq prot-scratch-default-mode 'text-mode))
+(prot-emacs-configure
+  (setq prot-scratch-default-mode 'text-mode)
+  (autoload #'prot-scratch-buffer "prot-scratch")
+  (define-key global-map (kbd "C-c s") #'prot-scratch-buffer))
 
 ;;;; Insert character pairs (prot-pair.el)
 (use-package prot-pair

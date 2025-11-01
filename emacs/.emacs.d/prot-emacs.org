@@ -2761,11 +2761,10 @@ buffer. Read the doc string of the command ~prot-scratch-buffer~.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Scratch buffers per major mode (prot-scratch.el)
-(use-package prot-scratch
-  :ensure nil
-  :bind ("C-c s" . prot-scratch-buffer)
-  :config
-  (setq prot-scratch-default-mode 'text-mode))
+(prot-emacs-configure
+  (setq prot-scratch-default-mode 'text-mode)
+  (autoload #'prot-scratch-buffer "prot-scratch")
+  (define-key global-map (kbd "C-c s") #'prot-scratch-buffer))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section about =prot-pair.el= (insert character pairs)
