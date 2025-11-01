@@ -29,16 +29,14 @@
       "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp)))
 
 ;;;; Disable "electric" behaviour
-(use-package electric
-  :ensure nil
-  :hook
-  (prog-mode . electric-indent-local-mode)
-  :config
-  ;; I don't like auto indents in Org and related.  They are okay for
-  ;; programming.
-  (electric-pair-mode -1)
-  (electric-quote-mode -1)
-  (electric-indent-mode -1))
+(prot-emacs-configure
+  (add-hook 'prog-mode-hook #'electric-indent-local-mode)
+  (with-eval-after-load 'electric
+    ;; I don't like auto indents in Org and related.  They are okay for
+    ;; programming.
+    (electric-pair-mode -1)
+    (electric-quote-mode -1)
+    (electric-indent-mode -1)))
 
 ;;;; Parentheses (show-paren-mode)
 (use-package paren

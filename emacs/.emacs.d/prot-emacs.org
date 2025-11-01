@@ -8486,16 +8486,14 @@ of characters, I use my ~prot-pair-insert~ command ([[#h:48d2bab5-241f-49dd-9554
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Disable "electric" behaviour
-(use-package electric
-  :ensure nil
-  :hook
-  (prog-mode . electric-indent-local-mode)
-  :config
-  ;; I don't like auto indents in Org and related.  They are okay for
-  ;; programming.
-  (electric-pair-mode -1)
-  (electric-quote-mode -1)
-  (electric-indent-mode -1))
+(prot-emacs-configure
+  (add-hook 'prog-mode-hook #'electric-indent-local-mode)
+  (with-eval-after-load 'electric
+    ;; I don't like auto indents in Org and related.  They are okay for
+    ;; programming.
+    (electric-pair-mode -1)
+    (electric-quote-mode -1)
+    (electric-indent-mode -1)))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings ~show-paren-mode~
