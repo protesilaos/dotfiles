@@ -8955,14 +8955,12 @@ out. A neat package overall!
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; `dictionary'
-(use-package dictionary
-  :ensure nil
-  :bind ("C-c d" . dictionary-search)
-  :config
-  (setq dictionary-server "dict.org"
-        dictionary-default-popup-strategy "lev" ; read doc string
-        dictionary-create-buttons nil
-        dictionary-use-single-buffer t))
+(prot-emacs-configure
+  (define-key global-map (kbd "C-c d") #'dictionary-search)
+  (setq dictionary-server "dict.org")
+  (setq dictionary-default-popup-strategy "lev") ; read doc string
+  (setq dictionary-create-buttons nil)
+  (setq dictionary-use-single-buffer t))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for ~altcaps~ (alternating letter casing)

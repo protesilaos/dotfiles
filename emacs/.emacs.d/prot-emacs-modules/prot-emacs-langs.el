@@ -194,14 +194,12 @@
   (setq outline-minor-mode-use-margins nil)) ; as above
 
 ;;;; `dictionary'
-(use-package dictionary
-  :ensure nil
-  :bind ("C-c d" . dictionary-search)
-  :config
-  (setq dictionary-server "dict.org"
-        dictionary-default-popup-strategy "lev" ; read doc string
-        dictionary-create-buttons nil
-        dictionary-use-single-buffer t))
+(prot-emacs-configure
+  (define-key global-map (kbd "C-c d") #'dictionary-search)
+  (setq dictionary-server "dict.org")
+  (setq dictionary-default-popup-strategy "lev") ; read doc string
+  (setq dictionary-create-buttons nil)
+  (setq dictionary-use-single-buffer t))
 
 ;;; aLtCaPs
 ;; Read the manual: <https://protesilaos.com/emacs/altcaps>.
