@@ -957,11 +957,9 @@ files that are already placed where I need them to be.
 :END:
 
 The =package.el= is built into Emacs and is perfectly fine for my
-use-case. We do not need to load it explicitly, as it will be called
-by ~use-package~ when it needs it (also watch my video about the
-[[https://protesilaos.com/codelog/2024-07-23-emacs-use-package-essentials/][~use-package~ essentials]] (2024-07-23)). Since the introduction of the
-=early-init.el= file, we also do not need to initialise the packages
-at this point: we activate the cache instead ([[#h:7a037504-8a2f-4df0-8482-ce6476354440][The =early-init.el= initialises the package cache]]).
+use-case. Since the introduction of the =early-init.el= file, we also
+do not need to initialise the packages at this point: we activate the
+cache instead ([[#h:7a037504-8a2f-4df0-8482-ce6476354440][The =early-init.el= initialises the package cache]]).
 
 With regard to the settings here, make sure to read my article about
 package archives, pinning packages, and setting priorities:
