@@ -325,6 +325,7 @@ making an abbreviation to a function."
 
 (defmacro prot-emacs-configure (&rest body)
   "Evaluate BODY and catch any errors."
+  (declare (indent 0))
   `(condition-case err
        (progn ,@body)
      ((error user-error quit)

@@ -1430,6 +1430,7 @@ can still load without that package's code.
 #+begin_src emacs-lisp :tangle "init.el"
 (defmacro prot-emacs-configure (&rest body)
   "Evaluate BODY and catch any errors."
+  (declare (indent 0))
   `(condition-case err
        (progn ,@body)
      ((error user-error quit)
