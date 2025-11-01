@@ -178,9 +178,6 @@
 
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
 
-  ;; I use this instead of :bind because I am binding a keymap and the
-  ;; way `use-package' does it is by wrapping a lambda around it that
-  ;; then breaks `describe-key' for those keys.
   (prot-emacs-keybind global-map
     ;; Override the `set-fill-column' that I have no use for.
     "C-x f" #'other-frame-prefix
