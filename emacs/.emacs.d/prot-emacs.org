@@ -4412,7 +4412,8 @@ basis.
   (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
-  (add-to-list 'savehist-additional-variables 'kill-ring)
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'kill-ring))
   (savehist-mode 1))
 #+end_src
 
@@ -4633,9 +4634,7 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
 ;;; Corfu (in-buffer completion popup)
 (when (and prot-emacs-completion-ui (display-graphic-p))
   (prot-emacs-configure
-    ;; I also have (setq tab-always-indent 'complete) for TAB to complete
-    ;; when it does not need to perform an indentation change.
-    (define-key corfu-map (kbd "<tab>") #'corfu-complete)
+    (prot-emacs-install corfu)
 
     (setq corfu-preview-current nil)
     (setq corfu-min-width 20)
@@ -4644,6 +4643,10 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
     (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
 
     (global-corfu-mode 1)
+
+    ;; I also have (setq tab-always-indent 'complete) for TAB to complete
+    ;; when it does not need to perform an indentation change.
+    (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
     ;; Sort by input history (no need to modify `corfu-sort-function').
     (with-eval-after-load 'savehist
