@@ -2666,10 +2666,9 @@ command (~save-buffers-kill-emacs~), since I cannot find a way to do
 this via some hook.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-(use-package prot-simple
-  :ensure nil
-  :demand t
-  :config
+(prot-emacs-configure
+  (require 'prot-simple)
+
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
 
@@ -2683,70 +2682,71 @@ this via some hook.
   ;; minor mode, depending on which one is evaluated last).
   (prot-simple-override-mode 1)
 
-  (with-eval-after-load 'pulsar
-    (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-recenter-center)
-    (add-hook 'prot-simple-file-to-register-jump-hook #'pulsar-reveal-entry))
-  :bind
-  ( :map prot-simple-override-mode-map
-    ("C-a" . prot-simple-duplicate-line-or-region) ; "again" mnemonic, overrides `move-beginning-of-line'
-    ("C-d" . prot-simple-delete-line) ; overrides `delete-char'
+  (prot-emacs-hook
+    prot-simple-file-to-register-jump-hook
+    (pulsar-recenter-center pulsar-reveal-entry)
+    nil
+    pulsar)
 
-    ("C-v" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
-    ("<next>" . prot-simple-multi-line-below) ; overrides `scroll-up-command'
-    ("M-v" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
-    ("<prior>" . prot-simple-multi-line-above) ; overrides `scroll-down-command'
-    ("C-M-i" . prot-simple-indent-dwim) ; overrides `completion-at-point'
-    ("C-M-\\" . prot-simple-indent-dwim) ; overrides `indent-region'
-    ("C-M-c" . completion-at-point) ; overrides `exit-recursive-edit'
-    :map global-map
-    ("C-h h" . prot-simple-describe-at-point)
-    ("<escape>" . prot-simple-keyboard-quit-dwim)
-    ("C-g" . prot-simple-keyboard-quit-dwim)
-    ("C-M-SPC" . prot-simple-mark-sexp)   ; will be overriden by `expreg' if tree-sitter is available
-    ("C-," . prot-simple-mark-sexp)   ; I also have `isearch-forward-symbol-at-point' on C-.
+  (prot-emacs-keybind prot-simple-override-mode-map
+    "C-a" #'prot-simple-duplicate-line-or-region ; "again" mnemonic, overrides `move-beginning-of-line'
+    "C-d" #'prot-simple-delete-line ; overrides `delete-char'
+    "C-v" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
+    "<next>" #'prot-simple-multi-line-below ; overrides `scroll-up-command'
+    "M-v" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
+    "<prior>" #'prot-simple-multi-line-above ; overrides `scroll-down-command'
+    "C-M-i" #'prot-simple-indent-dwim ; overrides `completion-at-point'
+    "C-M-\\" #'prot-simple-indent-dwim ; overrides `indent-region'
+    "C-M-c" #'completion-at-point) ; overrides `exit-recursive-edit'
+
+  (prot-emacs-keybind global-map
+    "C-h h" #'prot-simple-describe-at-point
+    "<escape>" #'prot-simple-keyboard-quit-dwim
+    "C-g" #'prot-simple-keyboard-quit-dwim
+    "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
+    "C-," #'prot-simple-mark-sexp   ; I also have `isearch-forward-symbol-at-point' on C-.
     ;; Commands for lines
-    ("C-S-d" . prot-simple-delete-line-backward)
-    ("C-S-k" . prot-simple-kill-line-backward)
-    ("M-k" . prot-simple-copy-line-forward)
-    ("M-K" . prot-simple-copy-line-backward)
-    ("M-j" . delete-indentation)
-    ("C-w" . prot-simple-kill-region)
-    ("M-w" . prot-simple-kill-ring-save)
-
-    ("C-S-w" . prot-simple-copy-line)
-    ("C-S-y" . prot-simple-yank-replace-line-or-region)
-    ("<C-return>" . prot-simple-new-line-below)
-    ("<C-S-return>" . prot-simple-new-line-above)
-    ("C-x x a" . prot-simple-auto-fill-visual-line-mode) ; auto-fill/visual-line toggle
+    "C-S-d" #'prot-simple-delete-line-backward
+    "C-S-k" #'prot-simple-kill-line-backward
+    "M-k" #'prot-simple-copy-line-forward
+    "M-K" #'prot-simple-copy-line-backward
+    "M-j" #'delete-indentation
+    "C-w" #'prot-simple-kill-region
+    "M-w" #'prot-simple-kill-ring-save
+    "C-S-w" #'prot-simple-copy-line
+    "C-S-y" #'prot-simple-yank-replace-line-or-region
+    "<C-return>" #'prot-simple-new-line-below
+    "<C-S-return>" #'prot-simple-new-line-above
+    "C-x x a" #'prot-simple-auto-fill-visual-line-mode ; auto-fill/visual-line toggle
     ;; Commands for text insertion or manipulation
-    ("C-=" . prot-simple-insert-date)
-    ("C-<" . prot-simple-escape-url-dwim)
-    ;; "C->" prot-simple-insert-line-prefix-dwim
-    ("M-Z" . prot-simple-zap-to-char-backward)
+    "C-=" #'prot-simple-insert-date
+    "C-<" #'prot-simple-escape-url-dwim
+    "C->" #'prot-simple-escape-url-dwim
+    "M-Z" #'prot-simple-zap-to-char-backward
     ;; Commands for object transposition
-    ("C-S-p" . prot-simple-move-above-dwim)
-    ("C-S-n" . prot-simple-move-below-dwim)
-    ("C-t" . prot-simple-transpose-chars)
-    ("C-x C-t" . prot-simple-transpose-lines)
-    ("C-S-t" . prot-simple-transpose-paragraphs)
-    ("C-x M-t" . prot-simple-transpose-sentences)
-    ("C-M-t" . prot-simple-transpose-sexps)
-    ("M-t" . prot-simple-transpose-words)
+    "C-S-p" #'prot-simple-move-above-dwim
+    "C-S-n" #'prot-simple-move-below-dwim
+    "C-t" #'prot-simple-transpose-chars
+    "C-x C-t" #'prot-simple-transpose-lines
+    "C-S-t" #'prot-simple-transpose-paragraphs
+    "C-x M-t" #'prot-simple-transpose-sentences
+    "C-M-t" #'prot-simple-transpose-sexps
+    "M-t" #'prot-simple-transpose-words
     ;; Commands for paragraphs
-    ("M-Q" . prot-simple-unfill-region-or-paragraph)
+    "M-Q" #'prot-simple-unfill-region-or-paragraph
     ;; Commands for windows and pages
-    ("C-x o" . prot-simple-other-window)
-    ("C-x n k" . prot-simple-delete-page-delimiters)
-    ("M-r" . window-layout-transpose) ; Emacs 31 override `move-to-window-line-top-bottom'
-    ("M-S-r" . rotate-windows-back) ; Emacs 31
+    "C-x o" #'prot-simple-other-window
+    "C-x n k" #'prot-simple-delete-page-delimiters
+    "M-r" #'window-layout-transpose ; Emacs 31 override `move-to-window-line-top-bottom'
+    "M-S-r" #'rotate-windows-back ; Emacs 31
     ;; Commands for buffers
-    ("<C-f2>" . prot-simple-rename-file-and-buffer)
-    ("C-x k" . prot-simple-kill-buffer-current)
-    ("C-x K" . kill-buffer) ; leaving this here to contrast with the above
-    ("M-s b" . prot-simple-buffers-major-mode)
-    ("M-s v" . prot-simple-buffers-vc-root)
+    "<C-f2>" #'prot-simple-rename-file-and-buffer
+    "C-x k" #'prot-simple-kill-buffer-current
+    "C-x K" #'kill-buffer ; leaving this here to contrast with the above
+    "M-s b" #'prot-simple-buffers-major-mode
+    "M-s v" #'prot-simple-buffers-vc-root
     ;; Commands for files
-    ("C-x r ." . prot-simple-file-to-register)))
+    "C-x r ." #'prot-simple-file-to-register))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section about =prot-scratch.el= (scratch buffer per major mode)
