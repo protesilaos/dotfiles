@@ -373,10 +373,7 @@
   (setq proced-filter 'user))
 
 ;;;; Emacs server (allow emacsclient to connect to running session)
-(use-package server
-  :ensure nil
-  :defer 1
-  :config
+(prot-emacs-configure
   (setq server-client-instructions nil)
   (unless (or (server-running-p) (daemonp))
     (server-start)))
