@@ -418,17 +418,16 @@
         tmr-description-list 'tmr-description-history))
 
 ;;; Pass interface (password-store)
-(use-package password-store
-  :ensure t
+(prot-emacs-configure
+  (prot-emacs-install password-store)
+
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
-  :bind ("C-c k" . password-store-copy)
-  :config
-  (setq password-store-time-before-clipboard-restore 30))
+  (define-key global-map (kbd "C-c k") #'password-store-copy)
 
-(use-package pass
- :ensure t
- :commands (pass))
+  (setq password-store-time-before-clipboard-restore 30)
+
+  (prot-emacs-install pass))
 
 ;;; Generic interface for shells or REPLs (comint)
 (use-package comint

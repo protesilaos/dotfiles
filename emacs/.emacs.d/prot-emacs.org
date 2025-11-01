@@ -3427,17 +3427,16 @@ easy to retrieve what I need.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Pass interface (password-store)
-(use-package password-store
-  :ensure t
+(prot-emacs-configure
+  (prot-emacs-install password-store)
+
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
-  :bind ("C-c k" . password-store-copy)
-  :config
-  (setq password-store-time-before-clipboard-restore 30))
+  (define-key global-map (kbd "C-c k") #'password-store-copy)
 
-(use-package pass
- :ensure t
- :commands (pass))
+  (setq password-store-time-before-clipboard-restore 30)
+
+  (prot-emacs-install pass))
 #+end_src
 
 *** The =prot-emacs-essentials.el= section about generic shells and REPLs (~comint~)
