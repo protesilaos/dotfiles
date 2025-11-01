@@ -202,11 +202,11 @@
     "C-x C-;" #'prot-comment-timestamp-keyword))
 
 ;;;; Prefix keymap (prot-prefix.el)
-(use-package prot-prefix
-  :ensure nil
-  :bind-keymap
-  (("<insert>" . prot-prefix)
-   ("C-z" . prot-prefix)))
+(prot-emacs-configure
+  (require 'prot-prefix)
+  (prot-emacs-keybind global-map
+    "<insert>" #'prot-prefix
+    "C-z" #'prot-prefix))
 
 (use-package recentf
   :ensure nil

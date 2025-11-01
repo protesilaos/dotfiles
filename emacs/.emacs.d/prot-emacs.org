@@ -2892,11 +2892,11 @@ configurable amount of time ([[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][The =pro
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; Prefix keymap (prot-prefix.el)
-(use-package prot-prefix
-  :ensure nil
-  :bind-keymap
-  (("<insert>" . prot-prefix)
-   ("C-z" . prot-prefix)))
+(prot-emacs-configure
+  (require 'prot-prefix)
+  (prot-emacs-keybind global-map
+    "<insert>" #'prot-prefix
+    "C-z" #'prot-prefix))
 #+end_src
 
 *** The =prot-emacs-essentials.el= configuration to track recently visited files (~recentf-mode~)
