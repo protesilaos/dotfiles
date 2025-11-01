@@ -248,10 +248,9 @@
         next-screen-context-lines 0))
 
 ;;;; Repeatable key chords (repeat-mode)
-(use-package repeat
-  :ensure nil
-  :hook (after-init . repeat-mode)
-  :config
+(prot-emacs-configure
+  (repeat-mode 1)
+
   (setq repeat-on-final-keystroke t
         repeat-exit-timeout 5
         repeat-exit-key "<escape>"
