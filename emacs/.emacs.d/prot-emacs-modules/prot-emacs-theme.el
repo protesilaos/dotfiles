@@ -44,35 +44,37 @@
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:
 ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
-(use-package spacious-padding
-  :ensure t
-  :if (display-graphic-p)
-  :hook (after-init . spacious-padding-mode)
-  :bind ("<f8>" . spacious-padding-mode)
-  :init
-  (setq spacious-padding-widths
-        `( :internal-border-width 15
-           :header-line-width 4
-           :mode-line-width 6
-           :tab-width 4
-           :right-divider-width 15
-           :scroll-bar-width ,(if x-toolkit-scroll-bars 8 6)
-           :left-fringe-width 20
-           :right-fringe-width 20))
+(when (display-graphic-p)
+  (prot-emacs-configure
+    (prot-emacs-install spacious-padding)
 
-  ;; (setq spacious-padding-subtle-mode-line nil)
+    (spacious-padding-mode 1)
 
-  ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
-  ;; is very flexible.  Here we make the mode lines be a single
-  ;; overline.
-  (setq spacious-padding-subtle-frame-lines
-        '( :mode-line-active spacious-padding-line-active
-           :mode-line-inactive spacious-padding-line-inactive
-           :header-line-active spacious-padding-line-active
-           :header-line-inactive spacious-padding-line-inactive))
+    (define-key global-map (kbd "<f8>") #'spacious-padding-mode)
 
-  (when (< emacs-major-version 29)
-    (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t))))
+    (setq spacious-padding-widths
+          `( :internal-border-width 15
+             :header-line-width 4
+             :mode-line-width 6
+             :tab-width 4
+             :right-divider-width 15
+             :scroll-bar-width ,(if x-toolkit-scroll-bars 8 6)
+             :left-fringe-width 20
+             :right-fringe-width 20))
+
+    ;; (setq spacious-padding-subtle-mode-line nil)
+
+    ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
+    ;; is very flexible.  Here we make the mode lines be a single
+    ;; overline.
+    (setq spacious-padding-subtle-frame-lines
+          '( :mode-line-active spacious-padding-line-active
+             :mode-line-inactive spacious-padding-line-inactive
+             :header-line-active spacious-padding-line-active
+             :header-line-inactive spacious-padding-line-inactive))
+
+    (when (< emacs-major-version 29)
+      (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t)))))
 
 ;;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (use-package rainbow-mode
