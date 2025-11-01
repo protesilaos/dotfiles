@@ -361,10 +361,7 @@
   (setq world-clock-timer-second 60))
 
 ;;;; `man' (manpages)
-(use-package man
-  :ensure nil
-  :commands (man)
-  :config
+(prot-emacs-configure
   (setq Man-notify-method 'pushy)) ; does not obey `display-buffer-alist'
 
 ;;;; `proced' (process monitor, similar to `top')

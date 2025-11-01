@@ -3228,10 +3228,7 @@ conform with the newer ~display-buffer-alist~...
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;;; `man' (manpages)
-(use-package man
-  :ensure nil
-  :commands (man)
-  :config
+(prot-emacs-configure
   (setq Man-notify-method 'pushy)) ; does not obey `display-buffer-alist'
 #+end_src
 
