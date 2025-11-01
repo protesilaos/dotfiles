@@ -45,10 +45,9 @@
     (add-hook 'spacious-padding-mode-hook #'prot/modeline-spacious-indicators)))
 
 ;;; Show the name of the current definition or heading for context (`which-function-mode')
-(use-package which-func
-  :ensure nil
-  :hook (after-init . which-function-mode)
-  :config
+(prot-emacs-configure
+  (which-function-mode 1)
+
   (setq which-func-modes '(prog-mode org-mode))
   ;; NOTE 2025-10-26: I handle the indicator on my own via `prot-modeline-which-function-indicator'.
   (setq which-func-display 'mode) ; Emacs 30
