@@ -451,13 +451,11 @@
   (setq ansi-color-for-compilation-mode t)) ; also see `ansi-color-for-comint-mode'
 
 ;;; Standard Unix Shell (M-x shell)
-(use-package shell
-  :ensure nil
-  :bind
-  ( :map shell-mode-map
-    ("C-c C-k" . comint-clear-buffer)
-    ("C-c C-w" . comint-write-output))
-  :config
+(prot-emacs-configure
+  (prot-emacs-keybind shell-mode-map
+    "C-c C-k" #'comint-clear-buffer
+    "C-c C-w" #'comint-write-output)
+
   ;; Check my .bashrc which handles `comint-terminfo-terminal':
   ;;
   ;; # Default pager.  The check for the terminal is useful for Emacs with
@@ -488,12 +486,10 @@
   (setq shell-font-lock-keywords
         '(("[ \t]\\([+-][^ \t\n]+\\)" 1 font-lock-builtin-face)
           ("^[^ \t\n]+:.*" . font-lock-string-face)
-          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face))))
+          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
 
-(use-package prot-shell
-  :ensure nil
-  :bind (("<f1>" . prot-shell)) ; I don't use F1 for help commands
-  :hook (shell-mode . prot-shell-mode))
+  (define-key global-map (kbd "<f1>") #'prot-shell) ; I don't use F1 for help commands
+  (add-hook 'shell-mode-hook #'prot-shell-mode))
 
 ;;; Show battery status on the mode line with `display-battery-mode'
 (use-package battery
