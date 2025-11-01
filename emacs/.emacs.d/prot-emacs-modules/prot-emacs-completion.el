@@ -199,12 +199,13 @@
   (setq dabbrev-ignored-buffer-modes '(archive-mode image-mode docview-mode pdf-view-mode)))
 
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
-(use-package abbrev
-  :ensure nil
+(prot-emacs-configure
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
-  :hook ((text-mode prog-mode git-commit-mode) . abbrev-mode)
-  :config
+  (prot-emacs-hook
+    (text-mode-hook prog-mode-hook git-commit-mode-hook)
+    abbrev-mode)
+
   (setq only-global-abbrevs nil)
 
   (prot-emacs-abbrev global-abbrev-table
