@@ -303,10 +303,9 @@
           (no-special-glyphs . t))))
 
 ;;;; Display current time
-(use-package time
-  :ensure nil
-  :hook (after-init . display-time-mode)
-  :config
+(prot-emacs-configure
+  (display-time-mode 1)
+
   (setq display-time-format " %a %e %b, %H:%M ")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
