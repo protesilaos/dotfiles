@@ -121,11 +121,9 @@
 
   (file-name-shadow-mode 1))
 
-(use-package minibuffer
-  :ensure nil
-  :demand t
-  :hook (minibuffer-setup . prot-common-truncate-lines-silently)
-  :config
+(prot-emacs-configure
+  (add-hook 'minibuffer-setup #'prot-common-truncate-lines-silently)
+
   ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
   (setq completions-header-format "")
   (setq completions-highlight-face 'completions-highlight)
@@ -174,9 +172,9 @@
       (unless (eq (prot-common-completion-category) 'file)
         (setq-local minibuffer-visible-completions t)))
 
-    (add-hook 'completion-list-mode-hook #'prot/completions-tweak-style)
-
-    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently)))
+    (prot-emacs-hook
+      completion-list-mode-hook
+      (prot/completions-tweak-style prot-common-truncate-lines-silently))))
 
 ;;;; `savehist' (minibuffer and related histories)
 (use-package savehist

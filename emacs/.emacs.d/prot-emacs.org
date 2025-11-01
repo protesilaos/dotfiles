@@ -4315,11 +4315,9 @@ completion (such as the ~corfu~ package).
 - [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-(use-package minibuffer
-  :ensure nil
-  :demand t
-  :hook (minibuffer-setup . prot-common-truncate-lines-silently)
-  :config
+(prot-emacs-configure
+  (add-hook 'minibuffer-setup #'prot-common-truncate-lines-silently)
+
   ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
   (setq completions-header-format "")
   (setq completions-highlight-face 'completions-highlight)
@@ -4368,9 +4366,9 @@ completion (such as the ~corfu~ package).
       (unless (eq (prot-common-completion-category) 'file)
         (setq-local minibuffer-visible-completions t)))
 
-    (add-hook 'completion-list-mode-hook #'prot/completions-tweak-style)
-
-    (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently)))
+    (prot-emacs-hook
+      completion-list-mode-hook
+      (prot/completions-tweak-style prot-common-truncate-lines-silently))))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)
