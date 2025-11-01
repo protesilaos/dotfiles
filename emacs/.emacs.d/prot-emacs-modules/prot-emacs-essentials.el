@@ -410,11 +410,9 @@
 
 ;;; TMR May Ring (tmr is used to set timers)
 ;; Read the manual: <https://protesilaos.com/emacs/tmr>.
-(use-package tmr
-  :ensure t
-  :bind
-  ("C-c t" . tmr-prefix-map)
-  :config
+(prot-emacs-configure
+  (prot-emacs-install tmr)
+  (define-key global-map (kbd "C-c t") #'tmr-prefix-map)
   (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
         tmr-notification-urgency 'normal
         tmr-description-list 'tmr-description-history))
