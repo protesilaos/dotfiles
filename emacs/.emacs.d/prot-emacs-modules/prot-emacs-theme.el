@@ -285,26 +285,15 @@
 
 ;;;; Show Font (preview fonts)
 ;; Read the manual: <https://protesilaos.com/emacs/show-font>
-(use-package show-font
-  :ensure t
-  :if (display-graphic-p)
-  :commands (show-font-select-preview show-font-list show-font-tabulated)
-  :config
-  ;; These are the defaults, but I keep them here for easier access.
-  (setq show-font-pangram 'prot)
-  (setq show-font-character-sample
-        "
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-abcdefghijklmnopqrstuvwxyz
-0123456789   !@#$¢%^&*~|
-`'\"‘’“”.,;:  ()[]{}—-_+=<>
+(when (display-graphic-p)
+  (prot-emacs-configure
+    (prot-emacs-install show-font)
 
-()[]{}<>«»‹› 6bB8&0ODdoa 1tiIlL|\/
-!ij c¢ 5$Ss 7Z2z 9gqp nmMNNMW uvvwWuuw
-x×X .,·°;:¡!¿?`'‘’   ÄAÃÀ TODO
-")
+    (setq show-font-display-buffer-action-alist '(display-buffer-full-frame))
 
-(setq show-font-display-buffer-action-alist '(display-buffer-full-frame)))
+    (prot-emacs-keybind global-map
+      "C-c S s" #'show-font-select-preview
+      "C-c S l" #'show-font-tabulated)))
 
 ;;;;; `variable-pitch-mode' setup
 (use-package face-remap
