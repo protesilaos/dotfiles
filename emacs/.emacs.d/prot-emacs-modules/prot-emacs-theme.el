@@ -176,7 +176,7 @@
   (prot-emacs-install fontaine)
 
   (fontaine-mode 1)
-     
+
   (prot-emacs-keybind global-map
     "C-c f" #'fontaine-set-preset
     "C-c F" #'fontaine-toggle-preset)
@@ -296,27 +296,28 @@
       "C-c S l" #'show-font-tabulated)))
 
 ;;;;; `variable-pitch-mode' setup
-(use-package face-remap
-  :ensure nil
-  :functions prot/enable-variable-pitch
-  :bind ( :map ctl-x-x-map
-          ("v" . variable-pitch-mode))
-  :hook ((text-mode notmuch-show-mode elfeed-show-mode) . prot/enable-variable-pitch)
-  :config
-  ;; NOTE 2022-11-20: This may not cover every case, though it works
-  ;; fine in my workflow.  I am still undecided by EWW.
+(prot-emacs-configure
+  (define-key ctl-x-x-map (kbd "v") #'variable-pitch-mode)
+
   (defun prot/enable-variable-pitch ()
     (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
       (when modus-themes-mixed-fonts
         (variable-pitch-mode 1))))
+
+  ;; NOTE 2022-11-20: This may not cover every case, though it works
+  ;; fine in my workflow.  I am still undecided by EWW.
+  (prot-emacs-hook
+    (text-mode-hook notmuch-show-mode-hook elfeed-show-mode-hook)
+    prot/enable-variable-pitch)
 ;;;;; Resize keys with global effect
-  :bind
+
   ;; Emacs 29 introduces commands that resize the font across all
   ;; buffers (including the minibuffer), which is what I want, as
   ;; opposed to doing it only in the current buffer.  The keys are the
   ;; same as the defaults.
-  (("C-x C-=" . global-text-scale-adjust)
-   ("C-x C-+" . global-text-scale-adjust)
-   ("C-x C-0" . global-text-scale-adjust)))
+  (prot-emacs-keybind global-map
+    "C-x C-=" #'global-text-scale-adjust
+    "C-x C-+" #'global-text-scale-adjust
+    "C-x C-0" #'global-text-scale-adjust))
 
 (provide 'prot-emacs-theme)
