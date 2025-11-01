@@ -177,15 +177,13 @@
       (prot/completions-tweak-style prot-common-truncate-lines-silently))))
 
 ;;;; `savehist' (minibuffer and related histories)
-(use-package savehist
-  :ensure nil
-  :hook (after-init . savehist-mode)
-  :config
+(prot-emacs-configure
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 100)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
-  (add-to-list 'savehist-additional-variables 'kill-ring))
+  (add-to-list 'savehist-additional-variables 'kill-ring)
+  (savehist-mode 1))
 
 (use-package dabbrev
   :ensure nil
