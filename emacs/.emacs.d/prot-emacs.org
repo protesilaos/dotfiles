@@ -4221,11 +4221,9 @@ applicable. Without this mode, the indicator stays there at all times,
 which can be confusing or distracting.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-(use-package minibuf-eldef
-  :ensure nil
-  :hook (after-init . minibuffer-electric-default-mode)
-  :config
-  (setq minibuffer-default-prompt-format " [%s]")) ; Emacs 29
+(prot-emacs-configure
+  (setq minibuffer-default-prompt-format " [%s]") ; Emacs 29
+  (minibuffer-electric-default-mode 1))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for common interactions

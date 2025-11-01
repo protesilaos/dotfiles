@@ -99,11 +99,9 @@
   (setq enable-recursive-minibuffers t) ; Emacs 28
   (minibuffer-depth-indicate-mode 1))
 
-(use-package minibuf-eldef
-  :ensure nil
-  :hook (after-init . minibuffer-electric-default-mode)
-  :config
-  (setq minibuffer-default-prompt-format " [%s]")) ; Emacs 29
+(prot-emacs-configure
+  (setq minibuffer-default-prompt-format " [%s]") ; Emacs 29
+  (minibuffer-electric-default-mode 1))
 
 (use-package rfn-eshadow
   :ensure nil
