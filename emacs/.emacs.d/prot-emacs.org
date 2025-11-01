@@ -3467,14 +3467,12 @@ distort the output when there are lots of them. In the section about
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
 ;;; Generic interface for shells or REPLs (comint)
-(use-package comint
-  :ensure nil
+(prot-emacs-configure
   ;; Support for OS-specific escape sequences such as what `ls
   ;; --hyperlink' uses.  I normally don't use those, but I am checking
   ;; this to see if there are any obvious advantages/disadvantages.
-  :hook
-  (comint-output-filter-functions . comint-osc-process-output)
-  :config
+  (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
+
   (setq ansi-color-for-comint-mode t) ; also see `ansi-color-for-compilation-mode'
   (setq comint-prompt-read-only t)
   (setq comint-buffer-maximum-size 9999)
