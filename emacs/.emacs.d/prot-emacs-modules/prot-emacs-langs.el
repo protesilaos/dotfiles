@@ -1,38 +1,32 @@
 ;;;; Tabs, indentation, and the TAB key
-(use-package emacs
-  :ensure nil
-  :demand t
-  :config
+(prot-emacs-configure
   (setq tab-always-indent 'complete)
   (setq tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
   (setq-default tab-width 4
                 indent-tabs-mode nil))
 
 ;;;; Emacs Lisp major mode
+(prot-emacs-configure
+  (with-eval-after-load 'elisp-mode
+    (prot-emacs-keybind emacs-lisp-mode-map
+      "C-c C-b" nil  ; I do not want to byte compile the buffer
+      "C-c C-f" nil) ; .. nor the file
+    (prot-emacs-keybind lisp-interaction-mode-map
+      "C-c C-b" nil
+      "C-c C-f" nil)
 
-(use-package elisp-mode
-  :ensure nil
-  :bind
-  ( :map emacs-lisp-mode-map
-    ("C-c C-b" . nil) ; I do not want to byte compile the buffer
-    ("C-c C-f" . nil) ; .. nor the file
-    :map lisp-interaction-mode-map
-    ("C-c C-b" . nil)
-    ("C-c C-f" . nil))
-  :config
-  ;; Both of these are from Emacs 31.
-  (setq elisp-eldoc-funcall-with-docstring-length 'short)
-  (setq elisp-eldoc-docstring-length-limit 1000))
+    ;; Both of these are from Emacs 31.
+    (setq elisp-eldoc-funcall-with-docstring-length 'short)
+    (setq elisp-eldoc-docstring-length-limit 1000)
 
-(use-package prot-elisp
-  :ensure nil
-  :bind
-  ( :map emacs-lisp-mode-map
-    ("C-j" . prot-elisp-eval-and-print-last-sexp)  ; overrides `electric-newline-and-maybe-indent'
-    ("C-c C-p" . prot-elisp-pp-macroexpand-last-sexp)
-    :map lisp-interaction-mode-map
-    ("C-j" . prot-elisp-eval-and-print-last-sexp) ; overrides `eval-print-last-sexp'
-    ("C-c C-p" . prot-elisp-pp-macroexpand-last-sexp)))
+    (require 'prot-elisp)
+
+    (prot-emacs-keybind emacs-lisp-mode-map
+      "C-j" #'prot-elisp-eval-and-print-last-sexp  ; overrides `electric-newline-and-maybe-indent'
+      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp)
+    (prot-emacs-keybind lisp-interaction-mode-map
+      "C-j" #'prot-elisp-eval-and-print-last-sexp ; overrides `eval-print-last-sexp'
+      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp)))
 
 ;;;; Disable "electric" behaviour
 (use-package electric
