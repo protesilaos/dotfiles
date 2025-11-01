@@ -103,12 +103,9 @@
   (setq minibuffer-default-prompt-format " [%s]") ; Emacs 29
   (minibuffer-electric-default-mode 1))
 
-(use-package rfn-eshadow
-  :ensure nil
-  :hook (minibuffer-setup . cursor-intangible-mode)
-  :config
+(prot-emacs-configure
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   ;; Not everything here comes from rfn-eshadow.el, but this is fine.
-
   (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq echo-keystrokes 0.25)
