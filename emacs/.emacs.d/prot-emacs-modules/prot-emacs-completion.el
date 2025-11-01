@@ -1,15 +1,11 @@
 ;;; General minibuffer settings
-(use-package minibuffer
-  :ensure nil
-  :config
+(prot-emacs-configure
 ;;;; Completion styles
   (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard t)) ; Emacs 31: make `partial-completion' behave like `substring'
 
 ;;;; Completion category overrides
-(use-package minibuffer
-  :ensure nil
-  :config
+(prot-emacs-configure
   ;; Reset all the per-category defaults so that (i) we use the
   ;; standard `completion-styles' and (ii) can specify our own styles
   ;; in the `completion-category-overrides' without having to
@@ -80,11 +76,8 @@
             (eglot (styles . (emacs22 substring orderless)))))))
 
 ;;; Orderless completion style (and prot-orderless.el)
-(use-package orderless
-  :ensure t
-  :demand t
-  :after minibuffer
-  :config
+(prot-emacs-configure
+  (prot-emacs-install orderless)
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
   (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
@@ -92,9 +85,9 @@
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
-  :bind ( :map minibuffer-local-completion-map
-          ("SPC" . nil)
-          ("?" . nil)))
+  (prot-emacs-keybind minibuffer-local-completion-map
+    "SPC" nil
+    "?" nil))
 
 (setq completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)

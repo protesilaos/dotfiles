@@ -3989,9 +3989,7 @@ set of completion styles on a per-category basis using overrides
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
 ;;; General minibuffer settings
-(use-package minibuffer
-  :ensure nil
-  :config
+(prot-emacs-configure
 ;;;; Completion styles
   (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard t)) ; Emacs 31: make `partial-completion' behave like `substring'
@@ -4034,9 +4032,7 @@ first as ~basic~ will never match something like =~/.l/s/fo= for
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el" :mkdirp yes
 ;;;; Completion category overrides
-(use-package minibuffer
-  :ensure nil
-  :config
+(prot-emacs-configure
   ;; Reset all the per-category defaults so that (i) we use the
   ;; standard `completion-styles' and (ii) can specify our own styles
   ;; in the `completion-category-overrides' without having to
@@ -4141,11 +4137,8 @@ literal string, initialism, et cetera, which is not as useful to me.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Orderless completion style (and prot-orderless.el)
-(use-package orderless
-  :ensure t
-  :demand t
-  :after minibuffer
-  :config
+(prot-emacs-configure
+  (prot-emacs-install orderless)
   ;; Remember to check my `completion-styles' and the
   ;; `completion-category-overrides'.
   (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
@@ -4153,9 +4146,9 @@ literal string, initialism, et cetera, which is not as useful to me.
 
   ;; SPC should never complete: use it for `orderless' groups.
   ;; The `?' is a regexp construct.
-  :bind ( :map minibuffer-local-completion-map
-          ("SPC" . nil)
-          ("?" . nil)))
+  (prot-emacs-keybind minibuffer-local-completion-map
+    "SPC" nil
+    "?" nil))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings to ignore letter casing
