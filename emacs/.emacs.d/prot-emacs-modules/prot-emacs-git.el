@@ -158,47 +158,6 @@
     (setq vc-git-log-edit-summary-target-len 50)
     (setq vc-git-log-edit-summary-max-len 70)))
 
-;;; Agitate
-;; A package of mine to complement VC and friends.  Read the manual
-;; here: <https://protesilaos.com/emacs/agitate>.
-(use-package agitate
-  :ensure t
-  :hook
-  ((diff-mode . agitate-diff-enable-outline-minor-mode)
-   (after-init . agitate-log-edit-informative-mode))
-  :bind
-  ( :map global-map
-    ("C-x v =" . agitate-diff-buffer-or-file) ; replace `vc-diff'
-    ("C-x v g" . agitate-vc-git-grep) ; replace `vc-annotate'
-    ("C-x v f" . agitate-vc-git-find-revision)
-    ("C-x v s" . agitate-vc-git-show)
-    ("C-x v w" . agitate-vc-git-kill-commit-message)
-    ("C-x v p p" . agitate-vc-git-format-patch-single)
-    ("C-x v p n" . agitate-vc-git-format-patch-n-from-head)
-    :map diff-mode-map
-    ("C-c C-b" . agitate-diff-refine-cycle) ; replace `diff-refine-hunk'
-    ("C-c C-n" . agitate-diff-narrow-dwim)
-    ("L" . vc-print-root-log)
-    ;; Emacs 29 can use C-x v v in diff buffers, which is great, but now I
-    ;; need quick access to it...
-    ("v" . vc-next-action)
-    :map log-view-mode-map
-    ("w" . agitate-log-view-kill-revision)
-    ("W" . agitate-log-view-kill-revision-expanded)
-    :map vc-git-log-view-mode-map
-    ("c" . agitate-vc-git-format-patch-single)
-    :map log-edit-mode-map
-    ("C-c C-i C-n" . agitate-log-edit-insert-file-name)
-    ;; See user options `agitate-log-edit-emoji-collection' and
-    ;; `agitate-log-edit-conventional-commits-collection'.
-    ("C-c C-i C-e" . agitate-log-edit-emoji-commit)
-    ("C-c C-i C-c" . agitate-log-edit-conventional-commit))
-  :config
-  (advice-add #'vc-git-push :override #'agitate-vc-git-push-prompt-for-remote)
-
-  (setq agitate-log-edit-informative-show-root-log nil
-        agitate-log-edit-informative-show-files nil))
-
 ;;; Interactive and powerful git front-end (Magit)
 (use-package transient
   :defer t
