@@ -134,9 +134,7 @@
     (setq ispell-choices-buffer "*ispell-top-choices*")))
 
 ;;; Flymake
-(use-package flymake
-  :ensure nil
-  :preface
+(prot-emacs-configure
   (defvar prot/flymake-mode-projects-path
     (file-name-as-directory (expand-file-name "Projects" "~/Git/"))
     "Path to my Git projects.")
@@ -153,38 +151,36 @@
       (add-hook 'find-file-hook #'prot/flymake-mode-lexical-binding nil t)))
 
   (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
-  :bind
-  ( :map ctl-x-x-map
-    ("m" . flymake-mode) ; C-x x m
-    :map flymake-mode-map
-    ("C-c ! s" . flymake-start)
-    ("C-c ! d" . flymake-show-buffer-diagnostics) ; Emacs28
-    ("C-c ! D" . flymake-show-project-diagnostics) ; Emacs28
-    ("C-c ! n" . flymake-goto-next-error)
-    ("C-c ! p" . flymake-goto-prev-error))
-  :config
-  (setq flymake-fringe-indicator-position 'left-fringe)
-  (setq flymake-suppress-zero-counters t)
-  (setq flymake-no-changes-timeout nil)
-  (setq flymake-start-on-flymake-mode t)
-  (setq flymake-start-on-save-buffer t)
-  (setq flymake-proc-compilation-prevents-syntax-check t)
-  (setq flymake-wrap-around nil)
-  (setq flymake-mode-line-format
-        '("" flymake-mode-line-exception flymake-mode-line-counters))
-  ;; NOTE 2023-07-03: `prot-modeline.el' actually defines the counters
-  ;; itself and ignores this.
-  (setq flymake-mode-line-counter-format
-        '("" flymake-mode-line-error-counter
-          flymake-mode-line-warning-counter
-          flymake-mode-line-note-counter ""))
-  (setq flymake-show-diagnostics-at-end-of-line nil)) ; Emacs 30
+
+  (define-key ctl-x-x-map (kbd "m") #'flymake-mode) ; C-x x m
+
+  (with-eval-after-load 'flymake
+    (prot-emacs-keybind flymake-mode-map
+      "C-c ! s" #'flymake-start
+      "C-c ! d" #'flymake-show-buffer-diagnostics ; Emacs28
+      "C-c ! D" #'flymake-show-project-diagnostics ; Emacs28
+      "C-c ! n" #'flymake-goto-next-error
+      "C-c ! p" #'flymake-goto-prev-error)
+
+    (setq flymake-fringe-indicator-position 'left-fringe)
+    (setq flymake-suppress-zero-counters t)
+    (setq flymake-no-changes-timeout nil)
+    (setq flymake-start-on-flymake-mode t)
+    (setq flymake-start-on-save-buffer t)
+    (setq flymake-proc-compilation-prevents-syntax-check t)
+    (setq flymake-wrap-around nil)
+    (setq flymake-mode-line-format
+          '("" flymake-mode-line-exception flymake-mode-line-counters))
+    ;; NOTE 2023-07-03: `prot-modeline.el' actually defines the counters
+    ;; itself and ignores this.
+    (setq flymake-mode-line-counter-format
+          '("" flymake-mode-line-error-counter
+            flymake-mode-line-warning-counter
+            flymake-mode-line-note-counter ""))
+    (setq flymake-show-diagnostics-at-end-of-line nil)) ; Emacs 30
 
 ;;; Elisp packaging requirements
-(use-package package-lint-flymake
-  :ensure t
-  :after flymake
-  :config
+  (prot-emacs-install package-lint-flymake)
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 
 ;;; General configurations for prose/writing
