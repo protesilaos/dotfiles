@@ -352,6 +352,9 @@ line display the frame name ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =pro
 (defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
   "When non-nil, we assume to be working on a laptop.")
 
+(defvar prot-display-graphic-p (display-graphic-p)
+  "When non-nil, the display is graphical.")
+
 (when prot-laptop-p
   (add-hook 'window-size-change-functions #'frame-hide-title-bar-when-maximized))
 
@@ -2063,7 +2066,7 @@ I also take care to make it work with my customised mode line
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:
 ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
-(when (display-graphic-p)
+(when prot-display-graphic-p
   (prot-emacs-configure
     (prot-emacs-install spacious-padding)
 
@@ -2159,7 +2162,7 @@ such as in the difference between writing and reading.
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
-(when (display-graphic-p)
+(when prot-display-graphic-p
   (prot-emacs-configure
     (prot-emacs-install cursory)
 
@@ -2420,7 +2423,7 @@ To actually set fonts, I use my ~fontaine~ package ([[#h:cb41fef0-41a5-4a85-9552
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;;; Show Font (preview fonts)
 ;; Read the manual: <https://protesilaos.com/emacs/show-font>
-(when (display-graphic-p)
+(when prot-display-graphic-p
   (prot-emacs-configure
     (prot-emacs-install show-font)
 
@@ -4635,7 +4638,7 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Corfu (in-buffer completion popup)
-(when (and prot-emacs-completion-ui (display-graphic-p))
+(when (and prot-emacs-completion-ui prot-display-graphic-p)
   (prot-emacs-configure
     (prot-emacs-install corfu)
 

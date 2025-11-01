@@ -27,6 +27,9 @@ constitutes a matching tiling window manager."
 (defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
   "When non-nil, we assume to be working on a laptop.")
 
+(defvar prot-display-graphic-p (display-graphic-p)
+  "When non-nil, the display is graphical.")
+
 (when prot-laptop-p
   (add-hook 'window-size-change-functions #'frame-hide-title-bar-when-maximized))
 

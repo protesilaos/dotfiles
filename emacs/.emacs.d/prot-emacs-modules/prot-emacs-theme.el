@@ -44,7 +44,7 @@
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:
 ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
-(when (display-graphic-p)
+(when prot-display-graphic-p
   (prot-emacs-configure
     (prot-emacs-install spacious-padding)
 
@@ -106,7 +106,7 @@
 
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
-(when (display-graphic-p)
+(when prot-display-graphic-p
   (prot-emacs-configure
     (prot-emacs-install cursory)
 
@@ -285,7 +285,7 @@
 
 ;;;; Show Font (preview fonts)
 ;; Read the manual: <https://protesilaos.com/emacs/show-font>
-(when (display-graphic-p)
+(when prot-display-graphic-p
   (prot-emacs-configure
     (prot-emacs-install show-font)
 
