@@ -48,105 +48,90 @@
     (setq show-paren-context-when-offscreen 'overlay))) ; Emacs 29
 
 ;;;; Plain text (text-mode)
-(use-package text-mode
-  :ensure nil
-  :mode "\\`\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'"
-  :hook
-  ((text-mode . turn-on-auto-fill)
-   (prog-mode . (lambda () (setq-local sentence-end-double-space t))))
-  :config
-  (setq sentence-end-double-space nil)
-  (setq sentence-end-without-period nil)
-  (setq colon-double-space nil)
-  (setq use-hard-newlines nil)
-  (setq adaptive-fill-mode t))
+(prot-emacs-configure
+  (add-to-list 'auto-mode-alist '("\\`\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
 
-;;;; Arch Linux and AUR package scripts (sh-mode)
-(use-package sh-script
-  :ensure nil
-  :mode ("PKGBUILD" . sh-mode))
+  (add-hook 'text-mode-hook #'turn-on-auto-fill)
+  (add-hook 'prog-mode-hook (lambda () (setq-local sentence-end-double-space t)))
 
-;;;; SystemD and other configuration files (conf-mode)
-(use-package conf-mode
-  :ensure nil
-  :mode ("\\`dircolors\\'" "\\.\\(service\\|timer\\)\\'" "dunstrc"))
+  (with-eval-after-load 'text-mode
+    (setq sentence-end-double-space nil)
+    (setq sentence-end-without-period nil)
+    (setq colon-double-space nil)
+    (setq use-hard-newlines nil)
+    (setq adaptive-fill-mode t)))
+
+(prot-emacs-configure
+  ;; Arch Linux and AUR package scripts (sh-mode)
+  (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode))
+  ;; SystemD and other configuration files (conf-mode)
+  (add-to-list 'auto-mode-alist '("\\`dircolors\\'" "\\.\\(service\\|timer\\)\\'" "dunstrc")))
 
 ;;;; Eldoc (Emacs live documentation feedback)
-(use-package eldoc
-  :ensure nil
-  :hook (prog-mode . eldoc-mode)
-  :config
+(prot-emacs-configure
+  (add-hook 'prog-mode-hook #'eldoc-mode)
   (setq eldoc-idle-delay 1.0)
   (setq eldoc-message-function #'message)) ; don't use mode line for M-x eval-expression, etc.
 
 ;;;; Eglot (built-in client for the language server protocol)
-(use-package eglot
-  :ensure nil
-  :functions (eglot-ensure)
-  :commands (eglot)
-  :config
+(prot-emacs-configure
   (setq eglot-sync-connect nil)
   (setq eglot-autoshutdown t))
 
 ;;;; Handle performance for very long lines (so-long.el)
-(use-package so-long
-  :ensure nil
-  :hook (after-init . global-so-long-mode))
+(global-so-long-mode 1)
 
 ;;; Markdown (markdown-mode)
-(use-package markdown-mode
-  :ensure t
-  :defer t
-  :config
+(prot-emacs-configure
+  (prot-emacs-install markdown-mode)
   (setq markdown-fontify-code-blocks-natively t))
 
 ;;; csv-mode
-(use-package csv-mode
-  :ensure t
-  :commands (csv-align-mode))
+(prot-emacs-install csv-mode)
 
 ;;; SXHKDRC mode (one of my many packages)
-(use-package sxhkdrc-mode
-  :ensure t
+(prot-emacs-configure
+  (prot-emacs-install sxhkdrc-mode)
   ;; By default, it only applies to the sxhkdrc file, but I have other
   ;; relevant entries as well.  I separate my keys into different
   ;; modules and load only what I need.
-  :mode "sxhkdrc_.*")
+  (add-to-list 'auto-mode-alist '("sxhkdrc_.*" . sxhkdrc-mode)))
 
 ;;; Flyspell and prot-spell.el (spell check)
-(use-package flyspell
-  :ensure nil
-  :bind
-  ( :map flyspell-mode-map
-    ("C-;" . nil)
-    :map flyspell-mouse-map
-    ("<mouse-3>" . flyspell-correct-word)
-    :map ctl-x-x-map
-    ("s" . flyspell-mode)) ; C-x x s
-  :config
-  (setq flyspell-issue-message-flag nil)
-  (setq flyspell-issue-welcome-flag nil)
-  (setq ispell-program-name "aspell")
-  (setq ispell-dictionary "en_GB"))
+(prot-emacs-configure
+  (prot-emacs-autoload
+    (prot-spell-spell-dwim
+     prot-spell-change-dictionary
+     prot-spell-spell-dwim
+     prot-spell-change-dictionary)
+    "prot-spell")
 
-(use-package prot-spell
-  :ensure nil
-  :bind
-  (("M-$" . prot-spell-spell-dwim)
-   ("C-M-$" . prot-spell-change-dictionary)
-   ("M-i" . prot-spell-spell-dwim) ; override `tab-to-tab-stop'
-   ("C-M-i" . prot-spell-change-dictionary)) ; override `complete-symbol'
-  :config
-  (setq prot-spell-dictionaries
-        '(("EN English" . "en")
-          ("EL Ελληνικά" . "el")
-          ("FR Français" . "fr")
-          ("ES Espanõl" . "es")))
+  (prot-emacs-keybind global-map
+    "M-$" #'prot-spell-spell-dwim
+    "C-M-$" #'prot-spell-change-dictionary
+    "M-i" #'prot-spell-spell-dwim ; override `tab-to-tab-stop
+    "C-M-i" #'prot-spell-change-dictionary) ; override `complete-symbol'
 
-  ;; Also check prot-spell.el for what I am doing with
-  ;; `prot-spell-ispell-display-buffer'.  Then refer to the
-  ;; `display-buffer-alist' for the relevant entry.
-  (setq ispell-choices-buffer "*ispell-top-choices*"))
+  (with-eval-after-load 'flyspell
+    (define-key flyspell-mode-map (kbd "C-;") nil)
+    (define-key flyspell-mouse-map (kbd "<mouse-3>") #'flyspell-correct-word)
+    (define-key ctl-x-x-map (kbd "s") #'flyspell-mode) ; C-x x s
+
+    (setq flyspell-issue-message-flag nil)
+    (setq flyspell-issue-welcome-flag nil)
+    (setq ispell-program-name "aspell")
+    (setq ispell-dictionary "en_GB")
+
+    (setq prot-spell-dictionaries
+          '(("EN English" . "en")
+            ("EL Ελληνικά" . "el")
+            ("FR Français" . "fr")
+            ("ES Espanõl" . "es")))
+
+    ;; Also check prot-spell.el for what I am doing with
+    ;; `prot-spell-ispell-display-buffer'.  Then refer to the
+    ;; `display-buffer-alist' for the relevant entry.
+    (setq ispell-choices-buffer "*ispell-top-choices*")))
 
 ;;; Flymake
 (use-package flymake
