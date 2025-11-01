@@ -446,11 +446,8 @@
   (setq-default comint-input-autoexpand 'input))
 
 ;;; Compilation interface (M-x compile)
-(use-package compile
-  :ensure nil
-  :hook
-  (compilation-filter . ansi-color-compilation-filter)
-  :config
+(prot-emacs-configure
+  (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
   (setq ansi-color-for-compilation-mode t)) ; also see `ansi-color-for-comint-mode'
 
 ;;; Standard Unix Shell (M-x shell)
