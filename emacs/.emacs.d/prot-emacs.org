@@ -4447,10 +4447,7 @@ The term "dabbrev" stands for "dynamic abbreviation". Emacs also has
 static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-(use-package dabbrev
-  :ensure nil
-  :commands (dabbrev-expand dabbrev-completion)
-  :config
+(prot-emacs-configure
 ;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
@@ -4461,8 +4458,7 @@ static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][T
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
-  (setq dabbrev-ignored-buffer-modes
-        '(archive-mode image-mode docview-mode pdf-view-mode)))
+  (setq dabbrev-ignored-buffer-modes '(archive-mode image-mode docview-mode pdf-view-mode)))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for static text expansion (~abbrev~)

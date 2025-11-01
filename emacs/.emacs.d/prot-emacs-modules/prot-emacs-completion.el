@@ -185,10 +185,7 @@
   (add-to-list 'savehist-additional-variables 'kill-ring)
   (savehist-mode 1))
 
-(use-package dabbrev
-  :ensure nil
-  :commands (dabbrev-expand dabbrev-completion)
-  :config
+(prot-emacs-configure
 ;;;; `dabbrev' (dynamic word completion (dynamic abbreviations))
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
@@ -199,8 +196,7 @@
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
-  (setq dabbrev-ignored-buffer-modes
-        '(archive-mode image-mode docview-mode pdf-view-mode)))
+  (setq dabbrev-ignored-buffer-modes '(archive-mode image-mode docview-mode pdf-view-mode)))
 
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
 (use-package abbrev
