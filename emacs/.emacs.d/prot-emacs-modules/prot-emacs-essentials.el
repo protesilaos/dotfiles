@@ -492,17 +492,14 @@
   (add-hook 'shell-mode-hook #'prot-shell-mode))
 
 ;;; Show battery status on the mode line with `display-battery-mode'
-(use-package battery
-  :ensure nil
-  :disabled t
-  :if prot-laptop-p
-  :hook (after-init . display-battery-mode)
-  :config
-  (setq battery-mode-line-format
-        (cond
-         ((eq battery-status-function #'battery-linux-proc-acpi)
-	      "⏻%b%p%%,%d°C ")
-	     (battery-status-function
-	      "⏻%b%p%% "))))
+(when prot-laptop-p
+  (prot-emacs-configure
+    (display-battery-mode 1)
+    (setq battery-mode-line-format
+          (cond
+           ((eq battery-status-function #'battery-linux-proc-acpi)
+	        "⏻%b%p%%,%d°C ")
+	       (battery-status-function
+	        "⏻%b%p%% ")))))
 
 (provide 'prot-emacs-essentials)
