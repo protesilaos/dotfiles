@@ -3881,8 +3881,8 @@ with my customised mode line ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =pr
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-modeline.el"
 ;;; Keycast mode
 (prot-emacs-configure
+  (prot-emacs-install keycast)
   (with-eval-after-load 'prot-modeline
-    (prot-emacs-install keycast)
     (setq keycast-mode-line-format "%2s%k%c%R")
     (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
     (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)

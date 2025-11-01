@@ -127,8 +127,8 @@
 
 ;;; Keycast mode
 (prot-emacs-configure
+  (prot-emacs-install keycast)
   (with-eval-after-load 'prot-modeline
-    (prot-emacs-install keycast)
     (setq keycast-mode-line-format "%2s%k%c%R")
     (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
     (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
