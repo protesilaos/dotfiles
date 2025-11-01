@@ -212,34 +212,32 @@ For use in `consult-buffer-list'."
     (setq consult-buffer-list #'consult-beframe-buffer-list)))
 
 ;;; Frame history (undelete-frame-mode)
-(use-package frame
-  :ensure nil
-  :bind ("C-x u" . undelete-frame) ; I use only C-/ for `undo'
-  :hook (after-init . undelete-frame-mode))
+(prot-emacs-configure
+  (define-key global-map (kbd "C-x u") #'undelete-frame) ; I use only C-/ for `undo'
+  (undelete-frame-mode 1))
 
 ;;; Window history (winner-mode)
-(use-package winner
-  :ensure nil
-  :hook (after-init . winner-mode)
-  :bind
-  (("C-x <right>" . winner-redo)
-   ("C-x <left>" . winner-undo)))
+(prot-emacs-configure
+  (prot-emacs-keybind global-map
+    "C-x <right>" #'winner-redo
+    "C-x <left>" #'winner-undo)
+
+  (winner-mode 1))
 
 ;;; Directional window motions (windmove)
-(use-package windmove
-  :ensure nil
-  :bind
+(prot-emacs-configure
   ;; Those override some commands that are already available with
   ;; C-M-u, C-M-f, C-M-b.
-  (("C-M-<up>" . windmove-up)
-   ("C-M-<right>" . windmove-right)
-   ("C-M-<down>" . windmove-down)
-   ("C-M-<left>" . windmove-left)
-   ("C-M-S-<up>" . windmove-swap-states-up)
-   ("C-M-S-<right>" . windmove-swap-states-right) ; conflicts with `org-increase-number-at-point'
-   ("C-M-S-<down>" . windmove-swap-states-down)
-   ("C-M-S-<left>" . windmove-swap-states-left))
-  :config
+  (prot-emacs-keybind global-map
+    "C-M-<up>" #'windmove-up
+    "C-M-<right>" #'windmove-right
+    "C-M-<down>" #'windmove-down
+    "C-M-<left>" #'windmove-left
+    "C-M-S-<up>" #'windmove-swap-states-up
+    "C-M-S-<right>" #'windmove-swap-states-right ; conflicts with `org-increase-number-at-point'
+    "C-M-S-<down>" #'windmove-swap-states-down
+    "C-M-S-<left>" #'windmove-swap-states-left)
+
   (setq windmove-create-window nil)) ; Emacs 27.1
 
 (provide 'prot-emacs-window)
