@@ -39,14 +39,13 @@
     (electric-indent-mode -1)))
 
 ;;;; Parentheses (show-paren-mode)
-(use-package paren
-  :ensure nil
-  :hook (prog-mode . show-paren-local-mode)
-  :config
-  (setq show-paren-style 'parenthesis)
-  (setq show-paren-when-point-in-periphery nil)
-  (setq show-paren-when-point-inside-paren nil)
-  (setq show-paren-context-when-offscreen 'overlay)) ; Emacs 29
+(prot-emacs-configure
+  (add-hook 'prog-mode-hook #'show-paren-local-mode)
+  (with-eval-after-load 'paren
+    (setq show-paren-style 'parenthesis)
+    (setq show-paren-when-point-in-periphery nil)
+    (setq show-paren-when-point-inside-paren nil)
+    (setq show-paren-context-when-offscreen 'overlay))) ; Emacs 29
 
 ;;;; Plain text (text-mode)
 (use-package text-mode

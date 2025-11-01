@@ -8510,14 +8510,13 @@ and I use it globally. Simple and effective!
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; Parentheses (show-paren-mode)
-(use-package paren
-  :ensure nil
-  :hook (prog-mode . show-paren-local-mode)
-  :config
-  (setq show-paren-style 'parenthesis)
-  (setq show-paren-when-point-in-periphery nil)
-  (setq show-paren-when-point-inside-paren nil)
-  (setq show-paren-context-when-offscreen 'overlay)) ; Emacs 29
+(prot-emacs-configure
+  (add-hook 'prog-mode-hook #'show-paren-local-mode)
+  (with-eval-after-load 'paren
+    (setq show-paren-style 'parenthesis)
+    (setq show-paren-when-point-in-periphery nil)
+    (setq show-paren-when-point-inside-paren nil)
+    (setq show-paren-context-when-offscreen 'overlay))) ; Emacs 29
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for plain text (no double spaces, ~auto-fill-mode~)
