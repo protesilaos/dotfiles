@@ -6353,7 +6353,7 @@ to a certain height.
           ;; below current window
           ("*prot-elisp-macroexpand*"
            (display-buffer-below-selected)
-           s(window-height . 0.3)
+           (window-height . 0.3)
            (dedicated . t)
            (preserve-size . (t . t))
            (body-function . select-window))
@@ -6398,7 +6398,12 @@ to a certain height.
           ((or . ((derived-mode . Man-mode)
                   (derived-mode . woman-mode)
                   "\\*\\(Man\\|woman\\).*"))
-           (display-buffer-same-window)))))
+           (display-buffer-same-window))
+          ;; other `tab-bar-mode' tab
+          ((derived-mode . magit-status-mode)
+           ;; FIXME 2025-11-02: I need a "reuse tab" function
+           (display-buffer-reuse-mode-window display-buffer-in-tab)
+           (mode . magit-status-mode)))))
 #+end_src
 
 The following settings are relevant for the ~display-buffer-alist~ we
@@ -7206,6 +7211,9 @@ changes I make here are not necessary.
   (setq transient-show-popup 0.5)
 
   (prot-emacs-install magit)
+
+  ;; Let `display-buffer-alist' do its job
+  (setq magit-display-buffer-function #'display-buffe)r
 
   (define-key global-map (kbd "C-c g") #'magit-status)
   (prot-emacs-keybind magit-mode-map
