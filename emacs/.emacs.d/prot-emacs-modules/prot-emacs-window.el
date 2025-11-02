@@ -144,6 +144,7 @@
           ((derived-mode . magit-status-mode)
            (display-buffer-reuse-mode-window display-buffer-in-tab)
            (mode . magit-status-mode)
+           (tab-name . (lambda (buffer _alist) (buffer-name buffer)))
            (reusable-frames . :just-the-selected-frame)
            (inhibit-switch-frame . t)))))
 
