@@ -98,12 +98,6 @@
   ;; minor mode, depending on which one is evaluated last).
   (prot-simple-override-mode 1)
 
-  (prot-emacs-hook
-    prot-simple-file-to-register-jump-hook
-    (pulsar-recenter-center pulsar-reveal-entry)
-    nil
-    pulsar)
-
   (prot-emacs-keybind prot-simple-override-mode-map
     "C-a" #'prot-simple-duplicate-line-or-region ; "again" mnemonic, overrides `move-beginning-of-line'
     "C-d" #'prot-simple-delete-line ; overrides `delete-char'
@@ -119,8 +113,7 @@
     "C-h h" #'prot-simple-describe-at-point
     "<escape>" #'prot-simple-keyboard-quit-dwim
     "C-g" #'prot-simple-keyboard-quit-dwim
-    "C-M-SPC" #'prot-simple-mark-sexp   ; will be overriden by `expreg' if tree-sitter is available
-    "C-," #'prot-simple-mark-sexp   ; I also have `isearch-forward-symbol-at-point' on C-.
+    "C-M-SPC" #'prot-simple-mark-sexp
     ;; Commands for lines
     "C-S-d" #'prot-simple-delete-line-backward
     "C-S-k" #'prot-simple-kill-line-backward
@@ -160,9 +153,7 @@
     "C-x k" #'prot-simple-kill-buffer-current
     "C-x K" #'kill-buffer ; leaving this here to contrast with the above
     "M-s b" #'prot-simple-buffers-major-mode
-    "M-s v" #'prot-simple-buffers-vc-root
-    ;; Commands for files
-    "C-x r ." #'prot-simple-file-to-register))
+    "M-s v" #'prot-simple-buffers-vc-root))
 
 ;;;; Scratch buffers per major mode (prot-scratch.el)
 (prot-emacs-configure
@@ -273,10 +264,28 @@
   ;; (e.g. power failure).
   (setq bookmark-save-flag 1))
 
-;;;; Registers (register.el)
+;;;; Registers (register.el) and my extensions (prot-register.el)
 (prot-emacs-configure
-  (setq register-preview-delay 0.8
-        register-preview-function #'register-preview-default)
+  (prot-emacs-autoload
+    (prot-simple-file-to-register
+     prot-register-add-dwim
+     prot-register-use-dwim)
+    "prot-register")
+
+  (prot-emacs-keybind global-map
+    "C-, ," #'prot-register-add-dwim
+    "C-, ." #'prot-register-use-dwim
+    "C-, /" #'bookmark-jump) ; alternattive to C-x r b
+
+  (prot-emacs-hook
+    prot-simple-file-to-register-jump-hook
+    (pulsar-recenter-center pulsar-reveal-entry)
+    nil
+    pulsar)
+
+  (with-eval-after-load 'register
+    (setq register-preview-delay 0.8
+          register-preview-function #'register-preview-default))
 
   (with-eval-after-load 'savehist
     (add-to-list 'savehist-additional-variables 'register-alist)))
