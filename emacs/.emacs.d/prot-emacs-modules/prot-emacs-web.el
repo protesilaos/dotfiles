@@ -122,29 +122,28 @@
     (add-to-list 'elfeed-search-face-alist '(personal bold-italic))))
 
 ;;; Rcirc (IRC client)
-(prot-emacs-comment
-  (:eval nil)
-  (prot-emacs-configure
+(prot-emacs-configure
+  (with-eval-after-load 'rcirc
     (setq rcirc-server-alist
           `(("irc.libera.chat"
              :channels ("#emacs")
              :port 6697
              :encryption tls
-             :password ,(prot-common-auth-get-field "libera" :secret)))))
+             :password ,(prot-common-auth-get-field "libera" :secret))))
 
-  (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
+    (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
 
-  (setq rcirc-default-nick "protesilaos"
-        rcirc-default-user-name "protesilaos"
-        rcirc-default-full-name "Protesilaos Stavrou")
+    (setq rcirc-default-nick "protesilaos"
+          rcirc-default-user-name "protesilaos"
+          rcirc-default-full-name "Protesilaos Stavrou")
 
-  ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
-  ;; ;; actually need this.
-  ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
+    ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
+    ;; ;; actually need this.
+    ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
 
-  ;; NOTE 2021-11-28: Is there a canonical way to disable this?
-  (setq rcirc-timeout-seconds most-positive-fixnum)
+    ;; NOTE 2021-11-28: Is there a canonical way to disable this?
+    (setq rcirc-timeout-seconds most-positive-fixnum)
 
-  (rcirc-track-minor-mode 1))
+    (rcirc-track-minor-mode 1)))
 
 (provide 'prot-emacs-web)
