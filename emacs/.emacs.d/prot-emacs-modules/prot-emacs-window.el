@@ -74,6 +74,7 @@
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (mode . ( flymake-diagnostics-buffer-mode flymake-project-diagnostics-mode
                      messages-buffer-mode backtrace-mode))
+           (inhibit-switch-frame . t)
            (window-height . 0.3)
            (dedicated . t)
            (preserve-size . (t . t))
@@ -84,7 +85,8 @@
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ("\\*\\(Output\\|Register Preview\\).*"
-           (display-buffer-reuse-mode-window display-buffer-at-bottom))
+           (display-buffer-reuse-mode-window display-buffer-at-bottom)
+           (inhibit-switch-frame . t))
           ;; below current window
           ("*prot-elisp-macroexpand*"
            (display-buffer-below-selected)
@@ -93,9 +95,11 @@
            (preserve-size . (t . t))
            (body-function . select-window))
           ("\\(\\*Capture\\*\\|CAPTURE-.*\\)"
-           (display-buffer-reuse-mode-window display-buffer-below-selected))
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (inhibit-switch-frame . t))
           ((derived-mode . reb-mode) ; M-x re-builder
            (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (inhibit-switch-frame . t)
            (window-height . 4) ; note this is literal lines, not relative
            (dedicated . t)
            (preserve-size . (t . t)))
@@ -111,10 +115,12 @@
           (prot-window-shell-or-term-p
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (mode . (shell-mode eshell-mode comint-mode))
+           (inhibit-switch-frame . t)
            (body-function . prot-window-select-fit-size))
           ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (mode . (calendar-mode bookmark-edit-annotation-mode ert-results-mode))
+           (inhibit-switch-frame . t)
            (dedicated . t)
            (window-height . fit-window-to-buffer))
           ;; NOTE 2022-09-10: The following is for `ispell-word', though
