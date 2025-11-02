@@ -6963,9 +6963,7 @@ command-line or the wonderful ~magit~ Emacs package
 ([[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]).
 
 Note that in the following code block I redefine lots of key bindings.
-They make more sense to me. Furthermore, my ~agitate~ package defines
-many extras on top of ~vc~ that I use daily in my workflow
-([[#h:257b9118-4407-410e-a56a-134fd5d1a3b4][The =prot-emacs-git.el= section about ~agitate~]]).
+They make more sense to me.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Version control framework (vc.el, vc-git.el, and more)
