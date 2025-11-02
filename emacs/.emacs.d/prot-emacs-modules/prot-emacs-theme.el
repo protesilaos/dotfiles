@@ -110,7 +110,7 @@
   (prot-emacs-configure
     (prot-emacs-install cursory)
 
-    (cursory-set-last-or-fallback)
+    (require 'cursory)
 
     (setq cursory-presets
           '((box
@@ -148,6 +148,8 @@
              :blink-cursor-blinks 10
              :blink-cursor-interval 0.2
              :blink-cursor-delay 0.2)))
+
+    (cursory-set-last-or-fallback)
 
     ;; Persist configurations between Emacs sessions.  Also apply the
     ;; :cursor-color again when swithcing to another theme.
