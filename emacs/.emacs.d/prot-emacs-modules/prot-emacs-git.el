@@ -165,7 +165,7 @@
   (prot-emacs-install magit)
 
   ;; Let `display-buffer-alist' do its job
-  (setq magit-display-buffer-function #'display-buffe)r
+  (setq magit-display-buffer-function #'display-buffer)
 
   (define-key global-map (kbd "C-c g") #'magit-status)
   (prot-emacs-keybind magit-mode-map
