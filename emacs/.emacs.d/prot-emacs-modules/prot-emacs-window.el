@@ -142,9 +142,10 @@
            (display-buffer-same-window))
           ;; other `tab-bar-mode' tab
           ((derived-mode . magit-status-mode)
-           ;; FIXME 2025-11-02: I need a "reuse tab" function
            (display-buffer-reuse-mode-window display-buffer-in-tab)
-           (mode . magit-status-mode)))))
+           (mode . magit-status-mode)
+           (reusable-frames . :just-the-selected-frame)
+           (inhibit-switch-frame . t)))))
 
 (prot-emacs-configure
   (setq split-window-preferred-direction 'horizontal) ; Emacs 31
