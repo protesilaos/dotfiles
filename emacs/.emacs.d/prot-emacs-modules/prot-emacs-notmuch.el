@@ -8,19 +8,16 @@
 
 ;;; Account settings
 (prot-emacs-configure
-  (let ((prv (prot-common-auth-get-field "prv-gandi" :user))
-        (pub (prot-common-auth-get-field "pub-gandi" :user))
-        (inf (prot-common-auth-get-field "inf-gandi" :user))
-        (box (prot-common-auth-get-field "prot-gandi" :user)))
-    (setq notmuch-identities
-          (mapcar (lambda (str)
-                    (format "%s <%s>" user-full-name str))
-                  (list prv pub inf box))
-          notmuch-fcc-dirs
-          `((,prv . "gandi/Sent")
-            (,inf . "gandi/Sent")
-            (,pub . "gandi/Sent")
-            (,box . "gandi/Sent")))))
+  (with-eval-after-load 'prot-common
+    (let ((prv (prot-common-auth-get-field "prv-gandi" :user))
+          (pub (prot-common-auth-get-field "pub-gandi" :user))
+          (inf (prot-common-auth-get-field "inf-gandi" :user))
+          (box (prot-common-auth-get-field "prot-gandi" :user)))
+      (setq notmuch-identities
+            (mapcar (lambda (str)
+                      (format "%s <%s>" user-full-name str))
+                    (list prv pub inf box))
+            notmuch-fcc-dirs `((".*" . "gandi/Sent"))))))
 
 ;;;; General UI
 (prot-emacs-configure
