@@ -17290,8 +17290,9 @@ buffers in its history."
      ;; Is a tab whose last window's buffer is to be deleted.
      ((and (one-window-p)
            (length> (tab-bar-tabs) 1))
-      (tab-close)
-      (kill-buffer))
+      (let ((buffer (current-buffer)))
+        (tab-close)
+        (kill-buffer buffer)))
      ;; Is an ancillary window that appeared for this buffer but is
      ;; otherwise not supposed to be there.
      ((and (prot-common-window-small-p)
