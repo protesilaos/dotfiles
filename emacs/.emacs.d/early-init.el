@@ -1,16 +1,3 @@
-(defvar prot-emacs-tiling-window-manager-regexp "bspwm\\|herbstluftwm\\|i3"
-  "Regular expression to  tiling window managers.
-See definition of `prot-emacs-with-desktop-session'.")
-
-(defmacro prot-emacs-with-desktop-session (&rest body)
-  "Expand BODY if desktop session is not a tiling window manager.
-See `prot-emacs-tiling-window-manager-regexp' for what
-constitutes a matching tiling window manager."
-  (declare (indent 0))
-  `(when-let* ((session (getenv "DESKTOP_SESSION"))
-               ((not (string-match-p session prot-emacs-tiling-window-manager-regexp))))
-     ,@body))
-
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize 'force
       frame-title-format '("%b")
@@ -95,57 +82,5 @@ constitutes a matching tiling window manager."
 ;; package commands, like `describe-package', did not have an index of
 ;; packages to work with, requiring a `package-refresh-contents'.
 (setq package-enable-at-startup t)
-
-;;;; General theme code
-
-(defun prot-emacs-theme-gsettings-dark-p ()
-  "Return non-nil if gsettings (GNOME) has a dark theme.
-Return nil if the DESKTOP_SESSION is either bspwm or
-herbstluftwm, per the configuration of my dotfiles.  Also check
-the `delight.sh' shell script."
-  (prot-emacs-with-desktop-session
-    (string-match-p
-     "dark"
-     (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))))
-
-(defun prot-emacs-theme-twm-dark-p ()
-  "Return non-nil if my custom setup has a dark theme.
-I place a file in ~/.config/prot-xtwm-active-theme which contains
-a single word describing my system-wide theme.  This is part of
-my dotfiles.  Check my `delight.sh' shell script for more."
-  (when-let* ((file "~/.config/prot-xtwm-active-theme")
-              ((file-exists-p file)))
-    (string-match-p
-     "dark"
-     (with-temp-buffer
-       (insert-file-contents file)
-       (buffer-string)))))
-
-(defun prot-emacs-theme-environment-dark-p ()
-  "Return non-nil if environment theme is dark."
-  (or (prot-emacs-theme-twm-dark-p)
-      (prot-emacs-theme-gsettings-dark-p)))
-
-(defun prot-emacs-re-enable-frame-theme (_frame)
-  "Re-enable active theme, if any, upon FRAME creation.
-Add this to `after-make-frame-functions' so that new frames do
-not retain the generic background set by the function
-`prot-emacs-avoid-initial-flash-of-light'."
-  (when-let* ((theme (car custom-enabled-themes)))
-    (enable-theme theme)))
-
-;; NOTE 2023-02-05: The reason the following works is because (i) the
-;; `mode-line-format' is specified again and (ii) the
-;; `prot-emacs-theme-gsettings-dark-p' will load a dark theme.
-(defun prot-emacs-avoid-initial-flash-of-light ()
-  "Avoid flash of light when starting Emacs, if needed.
-New frames are instructed to call `prot-emacs-re-enable-frame-theme'."
-  (when (prot-emacs-theme-environment-dark-p)
-    (setq mode-line-format nil)
-    (set-face-attribute 'default nil :background "#000000" :foreground "#ffffff")
-    (set-face-attribute 'mode-line nil :background "#000000" :foreground "#ffffff" :box 'unspecified)
-    (add-hook 'after-make-frame-functions #'prot-emacs-re-enable-frame-theme)))
-
-(prot-emacs-avoid-initial-flash-of-light)
 
 (add-hook 'after-init-hook (lambda () (set-frame-name "home")))

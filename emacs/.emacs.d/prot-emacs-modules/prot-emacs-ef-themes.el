@@ -26,7 +26,7 @@
           (agenda-structure . (variable-pitch light 1.9))
           (t . (variable-pitch 1.1))))
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
@@ -46,7 +46,7 @@
     "C-<f5>" #'modus-themes-select
     "M-<f5>" #'modus-themes-load-random)
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 

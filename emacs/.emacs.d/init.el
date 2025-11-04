@@ -355,6 +355,12 @@ making an abbreviation to a function."
 (defvar prot-display-graphic-p (display-graphic-p)
   "When non-nil, the display is graphical.")
 
+(defun prot-emacs-gnome-prefers-dark-p ()
+  "Return non-nil if GNOME color-scheme is set to dark."
+  (string-match-p
+   "dark"
+   (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))
+
 (require 'prot-emacs-theme)
 (require 'prot-emacs-essentials)
 (require 'prot-emacs-modeline)

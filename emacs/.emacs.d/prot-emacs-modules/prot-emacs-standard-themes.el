@@ -31,7 +31,7 @@
   ;; that (it can be called interactively as well).  I just check with
   ;; my desktop environment to determine if the choice should be about
   ;; a light or a dark theme.  Those functions are in my init.el.
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
@@ -52,7 +52,7 @@
     "C-<f5>" #'modus-themes-select
     "M-<f5>" #'modus-themes-load-random)
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 

@@ -9,7 +9,7 @@
     "M-<f5>" #'doric-themes-rotate)
 
   (doric-themes-load-random
-   (if (prot-emacs-theme-environment-dark-p)
+   (if (prot-emacs-gnome-prefers-dark-p)
        'dark
      'light)))
 
@@ -27,7 +27,7 @@
     "M-<f5>" #'doric-themes-rotate)
 
   (doric-themes-load-random
-   (if (prot-emacs-theme-environment-dark-p)
+   (if (prot-emacs-gnome-prefers-dark-p)
        'dark
      'light)))
 

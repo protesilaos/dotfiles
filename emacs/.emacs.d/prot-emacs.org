@@ -245,7 +245,7 @@ the Emacs frame. In general, this early initialisation file is meant
 to set up a few basic things before Emacs produces the initial frame
 by delegating to the =init.el= ([[#h:103d6f5a-bdb1-4b49-946a-708a83c79a7d][Anatomy of my Emacs configuration]]).
 
-** The =early-init.el= macro to run code only in a Desktop Environment
+** COMMENT The =early-init.el= macro to run code only in a Desktop Environment
 :PROPERTIES:
 :CUSTOM_ID: h:1e1b1503-0952-43f9-8bfe-4252fe874cd1
 :END:
@@ -449,7 +449,7 @@ tool.
 (setq package-enable-at-startup t)
 #+end_src
 
-** The =early-init.el= defines general theme-related functions
+** COMMENT The =early-init.el= defines general theme-related functions
 :PROPERTIES:
 :CUSTOM_ID: h:7d3a283e-1595-4692-8124-e0d683cb15b2
 :END:
@@ -503,7 +503,7 @@ not retain the generic background set by the function
     (enable-theme theme)))
 #+end_src
 
-** The =early-init.el= takes care to avoid the initial flash of light
+** COMMENT The =early-init.el= takes care to avoid the initial flash of light
 :PROPERTIES:
 :CUSTOM_ID: h:a18a059d-4e62-4fd7-8c0b-1135a771a7aa
 :END:
@@ -1507,6 +1507,12 @@ The individual modules are documented in a section of their own under
 (defvar prot-display-graphic-p (display-graphic-p)
   "When non-nil, the display is graphical.")
 
+(defun prot-emacs-gnome-prefers-dark-p ()
+  "Return non-nil if GNOME color-scheme is set to dark."
+  (string-match-p
+   "dark"
+   (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))
+
 (require 'prot-emacs-theme)
 (require 'prot-emacs-essentials)
 (require 'prot-emacs-modeline)
@@ -1670,7 +1676,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
 
   (setq modus-themes-common-palette-overrides nil)
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
@@ -1689,7 +1695,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
     "C-<f5>" #'modus-themes-select
     "M-<f5>" #'modus-themes-load-random)
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
@@ -1760,7 +1766,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
           (agenda-structure . (variable-pitch light 1.9))
           (t . (variable-pitch 1.1))))
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
@@ -1780,7 +1786,7 @@ Note that the ~prot-emacs-comment~ is there for my testing purposes
     "C-<f5>" #'modus-themes-select
     "M-<f5>" #'modus-themes-load-random)
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
@@ -1823,7 +1829,7 @@ editor, opt for my ~modus-themes~ ([[#h:36af519a-67e1-42b6-a38a-2052638108f9][Th
     "M-<f5>" #'doric-themes-rotate)
 
   (doric-themes-load-random
-   (if (prot-emacs-theme-environment-dark-p)
+   (if (prot-emacs-gnome-prefers-dark-p)
        'dark
      'light)))
 
@@ -1841,7 +1847,7 @@ editor, opt for my ~modus-themes~ ([[#h:36af519a-67e1-42b6-a38a-2052638108f9][Th
     "M-<f5>" #'doric-themes-rotate)
 
   (doric-themes-load-random
-   (if (prot-emacs-theme-environment-dark-p)
+   (if (prot-emacs-gnome-prefers-dark-p)
        'dark
      'light)))
 
@@ -1921,7 +1927,7 @@ to blend Standard and Modus into one collection).
   ;; that (it can be called interactively as well).  I just check with
   ;; my desktop environment to determine if the choice should be about
   ;; a light or a dark theme.  Those functions are in my init.el.
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
@@ -1942,7 +1948,7 @@ to blend Standard and Modus into one collection).
     "C-<f5>" #'modus-themes-select
     "M-<f5>" #'modus-themes-load-random)
 
-  (if (prot-emacs-theme-environment-dark-p)
+  (if (prot-emacs-gnome-prefers-dark-p)
       (modus-themes-load-random 'dark)
     (modus-themes-load-random 'light)))
 
