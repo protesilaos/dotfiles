@@ -53,11 +53,18 @@ return value."
         (string-insert-rectangle (+ (mark) 1) (- (point) 1) ";; => "))
     (user-error "No expression at point")))
 
+(defvar-keymap prot-elisp-macroexpand-mode-map
+  :doc "Key map for `prot-elisp-macroexpand-mode'."
+  :parent special-mode-map)
+
 (define-derived-mode prot-elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
   "Like `emacs-lisp-mode' but for macroexpanded forms."
   :interactive nil
   (read-only-mode 1)
-  (display-line-numbers-mode 1))
+  (display-line-numbers-mode 1)
+  (setq-local elisp-fontify-semantically t
+              elisp-add-help-echo t)
+  (cursor-sensor-mode 1))
 
 ;;;###autoload
 (defun prot-elisp-pp-macroexpand-last-sexp ()
