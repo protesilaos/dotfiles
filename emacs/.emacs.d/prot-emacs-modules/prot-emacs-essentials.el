@@ -150,7 +150,7 @@
     "M-S-r" #'rotate-windows-back ; Emacs 31
     ;; Commands for buffers
     "<C-f2>" #'prot-simple-rename-file-and-buffer
-    "C-x k" #'prot-simple-kill-buffer-current
+    "C-x k" #'prot-simple-kill-buffer-dwim
     "C-x K" #'kill-buffer ; leaving this here to contrast with the above
     "M-s b" #'prot-simple-buffers-major-mode
     "M-s v" #'prot-simple-buffers-vc-root))

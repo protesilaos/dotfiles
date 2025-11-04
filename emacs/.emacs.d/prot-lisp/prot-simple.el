@@ -906,8 +906,13 @@ When called interactively, prompt for BUFFER."
   (let ((kill-buffer-query-functions nil))
     (kill-buffer (or buffer (current-buffer)))))
 
+(make-obsolete
+ 'prot-simple-kill-buffer-current
+ 'prot-simple-kill-buffer-dwim
+ "2025-11-04")
+
 ;;;###autoload
-(defun prot-simple-kill-buffer-current (&optional arg)
+(defun prot-simple-kill-buffer-dwim (&optional arg)
   "Kill current buffer.
 With optional prefix ARG (\\[universal-argument]) delete the
 buffer's window as well.  Kill the window regardless of ARG if it
@@ -915,11 +920,19 @@ satisfies `prot-common-window-small-p' and it has no previous
 buffers in its history."
   (interactive "P")
   (let ((kill-buffer-query-functions nil))
-    (if (or (and (prot-common-window-small-p)
-                 (null (window-prev-buffers)))
-            (and arg (not (one-window-p))))
-        (kill-buffer-and-window)
-      (kill-buffer))))
+    (cond
+     ;; Is a tab whose last window's buffer is to be deleted.
+     ((and (one-window-p)
+           (length> (tab-bar-tabs) 1))
+      (tab-close)
+      (kill-buffer))
+     ;; Is an ancillary window that appeared for this buffer but is
+     ;; otherwise not supposed to be there.
+     ((and (prot-common-window-small-p)
+           (null (window-prev-buffers)))
+      (kill-buffer-and-window))
+     (t
+      (kill-buffer)))))
 
 ;;;###autoload
 (defun prot-simple-rename-file-and-buffer (name)
