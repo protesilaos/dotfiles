@@ -1037,30 +1037,45 @@ VARIANT is either `dark' or `light'."
   (interactive (list (prot-simple--list-accessible-colors-prompt)))
   (list-colors-display (prot-simple-accessible-colors variant)))
 
+(defun prot-simple-update-package-repositories-pull (package package-directory buffer)
+  "Pull PACKAGE which extends PACKAGE-DIRECTORY.
+Use BUFFER for standard output and return the exit code."
+  (let ((default-directory package-directory))
+    (message "Pulling %s from %s" package default-directory)
+    (call-process "git" nil (list buffer t) nil "pull")))
+
+(defun prot-simple-update-package-repositories-clone (package base-directory buffer)
+  "Clone PACKAGE to an extension of BASE-DIRECTORY.
+Use BUFFER for standard output and return the exit code."
+  (message "Cloning %s to %s" package base-directory)
+  (call-process "git" nil (list buffer t) nil "clone" (format "git@github.com:protesilaos/%s %s" package base-directory)))
+
 (defun prot-simple-update-package-repositories-subr (packages)
   "Pull or clone all repositories of my PACKAGES."
   (unless (executable-find "git")
     (user-error "Cannot find git program; install it first or add it to the $PATH; aborting"))
   (unless (getenv "SSH_AUTH_SOCK")
     (user-error "Cannot find $SSH_AUTH_SOCK; check your SSH connection; aborting"))
-  (dolist (package packages)
-    (condition-case error-data
-        (let* ((common-directory (expand-file-name "~/Git/Projects/"))
-               (name (cond
-                      ((symbolp package) (symbol-name package))
-                      ((stringp package) package)
-                      (t (error "The `%s' is neither a symbol nor a string" package))))
-               (default-directory (expand-file-name name common-directory)))
-          (if (file-directory-p default-directory)
-              (shell-command-to-string "git pull")
-            (let ((default-directory common-directory))
-              (shell-command-to-string (format "git clone git@github.com:protesilaos/%s" package)))))
-      (:success
-       (message "Updated %s repository" package))
-      ((error user-error)
-       (message "The package returned error data: %s" error-data))
-      (quit
-       (message "Aborted by the user")))))
+  (let ((stdout (get-buffer-create " *prot-simple-git-package-stdout*")))
+    (dolist (package packages)
+      (condition-case error-data
+          (let* ((common-directory (expand-file-name "~/Git/Projects/"))
+                 (name (cond
+                        ((symbolp package) (symbol-name package))
+                        ((stringp package) package)
+                        (t (error "The `%s' is neither a symbol nor a string" package))))
+                 (package-directory (expand-file-name name common-directory))
+                 (return (if (file-directory-p package-directory)
+                             (prot-simple-update-package-repositories-pull package package-directory stdout)
+                           (prot-simplew-update-package-repositories-clone package common-directory stdout))))
+            (when (> return 0)
+              (error "Failed with exit code %s" return)))
+        (:success
+         (message "Updated %s repository" package))
+        ((error user-error)
+         (message "The package `%s' returned error data: %s" package error-data))
+        (quit
+         (message "Aborted by the user"))))))
 
 (defvar prot-simple-update-package-repositories-prompt-history nil
   "Minibuffer history of `prot-simple-update-package-repositories-prompt'.")
