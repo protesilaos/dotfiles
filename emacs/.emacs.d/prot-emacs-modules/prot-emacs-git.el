@@ -90,7 +90,7 @@
       "t" #'vc-create-tag
       "O" #'vc-log-outgoing
       "o" #'vc-dir-find-file-other-window
-      "d" #'vc-diff         ; parallel to D: `vc-root-diff'
+      "d" #'vc-diff ; parallel to D: `vc-root-diff'
       "k" #'vc-dir-delete-file
       "G" #'vc-revert)
     (prot-emacs-keybind vc-git-stash-shared-map
