@@ -462,7 +462,9 @@ With optional FACE, use it to propertize the BRANCH."
                'local-map prot-modeline-vc-map)
    ;; " "
    ;; (prot-modeline-diffstat file)
-   ))
+   (if-let* ((dir (vc-root-dir)))
+       (concat " " (propertize (file-name-base (directory-file-name dir)) 'face 'shadow))
+     "")))
 
 (defun prot-modeline--vc-details (file branch &optional face)
   "Return Git BRANCH details for FILE, truncating it if necessary.
