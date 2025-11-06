@@ -4033,9 +4033,8 @@ is a piece of metadata that is associated with the completion table we
 are matching against while using the minibuffer. For example, the
 ~find-file~ command has the =file= category, while the
 ~switch-to-buffer~ command uses the =buffer= category. The defaults
-for those are specified in the variable
-~completion-category-defaults~, while overrides for them can be set in
-the ~completion-category-overrides~.
+for those are specified in the ~completion-category-defaults~. The
+overrides for them can be set in the ~completion-category-overrides~.
 
 While we can override only the categories we care about, the presence
 of those ~completion-category-defaults~ will surprise us in some cases
