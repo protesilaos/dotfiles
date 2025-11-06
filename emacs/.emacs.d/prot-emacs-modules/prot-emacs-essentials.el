@@ -384,6 +384,7 @@
 ;;;; Emacs server (allow emacsclient to connect to running session)
 (prot-emacs-configure
   (setq server-client-instructions nil)
+  (require 'server)
   (unless (or (server-running-p) (daemonp))
     (server-start)))
 
@@ -461,46 +462,47 @@
 
 ;;; Standard Unix Shell (M-x shell)
 (prot-emacs-configure
-  (prot-emacs-keybind shell-mode-map
-    "C-c C-k" #'comint-clear-buffer
-    "C-c C-w" #'comint-write-output)
+  (with-eval-after-load 'shell
+    (prot-emacs-keybind shell-mode-map
+      "C-c C-k" #'comint-clear-buffer
+      "C-c C-w" #'comint-write-output)
 
-  ;; Check my .bashrc which handles `comint-terminfo-terminal':
-  ;;
-  ;; # Default pager.  The check for the terminal is useful for Emacs with
-  ;; # M-x shell (which is how I usually interact with bash these days).
-  ;; #
-  ;; # The COLORTERM is documented in (info "(emacs) General Variables").
-  ;; # I found the reference to `dumb-emacs-ansi' in (info "(emacs)
-  ;; # Connection Variables").
-  ;; if [ "$TERM" = "dumb" ] && [ "$INSIDE_EMACS" ] || [ "$TERM" = "dumb-emacs-ansi" ] && [ "$INSIDE_EMACS" ]
-  ;; then
-  ;;     export PAGER="cat"
-  ;;     alias less="cat"
-  ;;     export TERM=dumb-emacs-ansi
-  ;;     export COLORTERM=1
-  ;; else
-  ;;     # Quit once you try to scroll past the end of the file.
-  ;;     export PAGER="less --quit-at-eof"
-  ;; fi
-  (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
-  (setq shell-input-autoexpand 'input)
-  (setq shell-highlight-undef-enable t) ; Emacs 29.1
-  (setq shell-has-auto-cd nil) ; Emacs 29.1
-  (setq shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
-  (setq shell-kill-buffer-on-exit t) ; Emacs 29.1
-  (setq shell-completion-fignore '("~" "#" "%"))
-  (setq tramp-default-remote-shell "/bin/bash")
+    ;; Check my .bashrc which handles `comint-terminfo-terminal':
+    ;;
+    ;; # Default pager.  The check for the terminal is useful for Emacs with
+    ;; # M-x shell (which is how I usually interact with bash these days).
+    ;; #
+    ;; # The COLORTERM is documented in (info "(emacs) General Variables").
+    ;; # I found the reference to `dumb-emacs-ansi' in (info "(emacs)
+    ;; # Connection Variables").
+    ;; if [ "$TERM" = "dumb" ] && [ "$INSIDE_EMACS" ] || [ "$TERM" = "dumb-emacs-ansi" ] && [ "$INSIDE_EMACS" ]
+    ;; then
+    ;;     export PAGER="cat"
+    ;;     alias less="cat"
+    ;;     export TERM=dumb-emacs-ansi
+    ;;     export COLORTERM=1
+    ;; else
+    ;;     # Quit once you try to scroll past the end of the file.
+    ;;     export PAGER="less --quit-at-eof"
+    ;; fi
+    (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
+    (setq shell-input-autoexpand 'input)
+    (setq shell-highlight-undef-enable t) ; Emacs 29.1
+    (setq shell-has-auto-cd nil) ; Emacs 29.1
+    (setq shell-get-old-input-include-continuation-lines t) ; Emacs 30.1
+    (setq shell-kill-buffer-on-exit t) ; Emacs 29.1
+    (setq shell-completion-fignore '("~" "#" "%"))
+    (setq tramp-default-remote-shell "/bin/bash")
 
-  (setq shell-font-lock-keywords
-        '(("[ \t]\\([+-][^ \t\n]+\\)" 1 font-lock-builtin-face)
-          ("^[^ \t\n]+:.*" . font-lock-string-face)
-          ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
+    (setq shell-font-lock-keywords
+          '(("[ \t]\\([+-][^ \t\n]+\\)" 1 font-lock-builtin-face)
+            ("^[^ \t\n]+:.*" . font-lock-string-face)
+            ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
 
-  (prot-emacs-autoload (prot-shell prot-shell-mode) "prot-shell")
+    (prot-emacs-autoload (prot-shell prot-shell-mode) "prot-shell")
 
-  (define-key global-map (kbd "<f1>") #'prot-shell) ; I don't use F1 for help commands
-  (add-hook 'shell-mode-hook #'prot-shell-mode))
+    (define-key global-map (kbd "<f1>") #'prot-shell) ; I don't use F1 for help commands
+    (add-hook 'shell-mode-hook #'prot-shell-mode)))
 
 ;;; Show battery status on the mode line with `display-battery-mode'
 (when prot-laptop-p

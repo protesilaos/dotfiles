@@ -173,9 +173,11 @@
   (setq magit-display-buffer-function #'display-buffer)
 
   (define-key global-map (kbd "C-c g") #'magit-status)
-  (prot-emacs-keybind magit-mode-map
-    "C-w" #'nil
-    "M-w" #'nil)
+
+  (with-eval-after-load 'magit
+    (prot-emacs-keybind magit-mode-map
+      "C-w" #'nil
+      "M-w" #'nil))
 
   (setq magit-define-global-key-bindings nil)
   (setq magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv))
