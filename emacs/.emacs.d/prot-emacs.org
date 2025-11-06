@@ -6143,7 +6143,9 @@ configurations, which I linked to above, come into effect.
 (prot-emacs-configure
   (setq tab-bar-new-button-show nil)
   (setq tab-bar-close-button-show nil)
-  (setq tab-bar-show 1))
+  (setq tab-bar-show 1)
+
+  (advice-add #'window--delete :after #'prot-common-clear-minibuffer-message))
 #+end_src
 
 *** The =prot-emacs-window.el= section about uniquifying buffer names

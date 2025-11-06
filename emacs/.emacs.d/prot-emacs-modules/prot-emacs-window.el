@@ -1,7 +1,9 @@
 (prot-emacs-configure
   (setq tab-bar-new-button-show nil)
   (setq tab-bar-close-button-show nil)
-  (setq tab-bar-show 1))
+  (setq tab-bar-show 1)
+
+  (advice-add #'window--delete :after #'prot-common-clear-minibuffer-message))
 
 ;;; General window and buffer configurations
 (prot-emacs-configure
