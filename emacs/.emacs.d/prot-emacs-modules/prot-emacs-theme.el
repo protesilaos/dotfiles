@@ -303,7 +303,7 @@
 
   (defun prot/enable-variable-pitch ()
     (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
-      (when modus-themes-mixed-fonts
+      (when (bound-and-true-p modus-themes-mixed-fonts)
         (variable-pitch-mode 1))))
 
   ;; NOTE 2022-11-20: This may not cover every case, though it works
