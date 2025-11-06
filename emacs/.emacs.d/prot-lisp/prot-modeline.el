@@ -415,26 +415,6 @@ face.  Let other buffers have no face.")
                           (substring rev 0 7))))
     (capitalize branch)))
 
-;; NOTE 2023-07-27: This is a good idea, but it hardcodes Git, whereas
-;; I want a generic VC method.  Granted, I only use Git but I still
-;; want it to work as a VC extension.
-
-;; (defun prot-modeline-diffstat (file)
-;;   "Return shortened Git diff numstat for FILE."
-;;   (when-let* ((output (shell-command-to-string (format "git diff --numstat %s" file)))
-;;               (stats (split-string output "[\s\t]" :omit-nulls "[\s\f\t\n\r\v]+"))
-;;               (added (nth 0 stats))
-;;               (deleted (nth 1 stats)))
-;;     (cond
-;;      ((and (equal added "0") (equal deleted "0"))
-;;       "")
-;;      ((and (not (equal added "0")) (equal deleted "0"))
-;;       (propertize (format "+%s" added) 'face 'shadow))
-;;      ((and (equal added "0") (not (equal deleted "0")))
-;;       (propertize (format "-%s" deleted) 'face 'shadow))
-;;      (t
-;;       (propertize (format "+%s -%s" added deleted) 'face 'shadow)))))
-
 (declare-function vc-git-working-revision "vc-git" (file))
 
 (defvar prot-modeline-vc-map
@@ -459,12 +439,7 @@ With optional FACE, use it to propertize the BRANCH."
                'face face
                'mouse-face 'mode-line-highlight
                'help-echo (prot-modeline--vc-help-echo file)
-               'local-map prot-modeline-vc-map)
-   ;; " "
-   ;; (prot-modeline-diffstat file)
-   (if-let* ((dir (vc-root-dir)))
-       (concat " " (propertize (file-name-base (directory-file-name dir)) 'face 'shadow))
-     "")))
+               'local-map prot-modeline-vc-map)))
 
 (defun prot-modeline--vc-details (file branch &optional face)
   "Return Git BRANCH details for FILE, truncating it if necessary.
