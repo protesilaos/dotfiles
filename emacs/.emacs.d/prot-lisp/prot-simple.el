@@ -1041,14 +1041,16 @@ VARIANT is either `dark' or `light'."
   "Pull PACKAGE which extends PACKAGE-DIRECTORY.
 Use BUFFER for standard output and return the exit code."
   (let ((default-directory package-directory))
-    (message "Pulling %s from %s" package default-directory)
+    (message "Pulling %s from directory %s" package default-directory)
     (call-process "git" nil (list buffer t) nil "pull")))
 
 (defun prot-simple-update-package-repositories-clone (package base-directory buffer)
   "Clone PACKAGE to an extension of BASE-DIRECTORY.
 Use BUFFER for standard output and return the exit code."
-  (message "Cloning %s to %s" package base-directory)
+  (message "Cloning %s to directory %s" package base-directory)
   (call-process "git" nil (list buffer t) nil "clone" (format "git@github.com:protesilaos/%s %s" package base-directory)))
+
+(define-error 'prot-package-no-update "Package could not be updated" 'error)
 
 (defun prot-simple-update-package-repositories-subr (packages)
   "Pull or clone all repositories of my PACKAGES."
@@ -1058,24 +1060,32 @@ Use BUFFER for standard output and return the exit code."
     (user-error "Cannot find $SSH_AUTH_SOCK; check your SSH connection; aborting"))
   (let ((stdout (get-buffer-create " *prot-simple-git-package-stdout*")))
     (dolist (package packages)
-      (condition-case error-data
-          (let* ((common-directory (expand-file-name "~/Git/Projects/"))
-                 (name (cond
-                        ((symbolp package) (symbol-name package))
-                        ((stringp package) package)
-                        (t (error "The `%s' is neither a symbol nor a string" package))))
-                 (package-directory (expand-file-name name common-directory))
-                 (return (if (file-directory-p package-directory)
-                             (prot-simple-update-package-repositories-pull package package-directory stdout)
-                           (prot-simplew-update-package-repositories-clone package common-directory stdout))))
-            (when (> return 0)
-              (error "Failed with exit code %s" return)))
-        (:success
-         (message "Updated %s repository" package))
-        ((error user-error)
-         (message "The package `%s' returned error data: %s" package error-data))
-        (quit
-         (message "Aborted by the user"))))))
+      (let* ((name (cond
+                    ((symbolp package) (symbol-name package))
+                    ((stringp package) package)
+                    (t (error "The `%s' is neither a symbol nor a string" package))))
+             (common-directory (expand-file-name "~/Git/Projects/"))
+             (package-directory (expand-file-name name common-directory))
+             (exit-code (if (file-directory-p package-directory)
+                            (prot-simple-update-package-repositories-pull package package-directory stdout)
+                          (prot-simplew-update-package-repositories-clone package common-directory stdout))))
+        (condition-case error-data
+            (when (> exit-code 0)
+              (signal 'prot-package-no-update (list (format "Package `%s' got exit code `%s'" package exit-code))))
+          (:success
+           (message "Updated `%s' repository" package))
+          (prot-package-no-update
+           ;; TODO 2025-11-06: Is it safe to stash changes outright?
+           ;; I think it is fine, but maybe there is a case where this
+           ;; can lead to data loss?
+           (when (file-directory-p package-directory)
+             (let ((default-directory package-directory))
+               (vc-git-stash (format "prot-package-update %s: %s" (format-time-string "%FT%T") package))))
+           (message "Stashed changes in package `%s' because: %s" package (cdr error-data)))
+          ((error user-error)
+           (message "The package `%s' returned error data: %s" package error-data))
+          (quit
+           (message "Aborted by the user")))))))
 
 (defvar prot-simple-update-package-repositories-prompt-history nil
   "Minibuffer history of `prot-simple-update-package-repositories-prompt'.")
