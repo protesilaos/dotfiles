@@ -1080,8 +1080,10 @@ Use BUFFER for standard output and return the exit code."
            ;; can lead to data loss?
            (when (file-directory-p package-directory)
              (let ((default-directory package-directory))
+               (unless (fboundp 'vc-git-stash)
+                 (require 'vc-git))
                (vc-git-stash (format "prot-package-update %s: %s" (format-time-string "%FT%T") package))))
-           (message "Stashed changes in package `%s' because: %s" package (cdr error-data)))
+           (message "Tried to stash changes in package `%s' because: %s" package (cdr error-data)))
           ((error user-error)
            (message "The package `%s' returned error data: %s" package error-data))
           (quit
