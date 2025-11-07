@@ -124,12 +124,13 @@
       nil
       pulsar)))
 
-;;;; `org-indent-mode' and related
+;;;; `org-indent-mode' and initial folding
 (prot-emacs-configure
-  (with-eval-after-load 'org
-    (setq org-adapt-indentation nil) ; No, non, nein, όχι to literal indentation!
-    (setq org-indent-mode-turns-on-hiding-stars nil)
-    (setq org-indent-indentation-per-level 4)))
+  (add-hook 'org-mode-hook #'org-indent-mode)
+  (setq org-indent-mode-turns-on-hiding-stars nil)
+  (setq org-adapt-indentation nil) ; No, non, nein, όχι to literal indentation!
+  (setq org-indent-indentation-per-level 4)
+  (setq org-startup-folded 'content))
 
 ;;;; refile, todo
 (with-eval-after-load 'org
