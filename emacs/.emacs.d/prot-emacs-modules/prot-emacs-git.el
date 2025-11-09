@@ -180,7 +180,9 @@
       "M-w" #'nil))
 
   (setq magit-define-global-key-bindings nil)
-  (setq magit-section-visibility-indicator '(magit-fringe-bitmap> . magit-fringe-bitmapv))
+  (setq magit-section-visibility-indicators
+        `(;; (magit-fringe-bitmap> . magit-fringe-bitmapv)
+          ("⮧" . t))) ; same as `org-ellpisis'
 
   ;; Show icons for files in the Magit status and other buffers.
   (with-eval-after-load 'nerd-icons
