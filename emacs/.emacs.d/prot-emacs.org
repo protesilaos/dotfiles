@@ -8939,7 +8939,7 @@ of packaging. I use it whenever I work on my numerous Emacs packages.
           '("" flymake-mode-line-error-counter
             flymake-mode-line-warning-counter
             flymake-mode-line-note-counter ""))
-    (setq flymake-show-diagnostics-at-end-of-line nil)) ; Emacs 30
+    (setq flymake-show-diagnostics-at-end-of-line nil)) ; Emacs 31
 
 ;;; Elisp packaging requirements
   (prot-emacs-install package-lint-flymake)
