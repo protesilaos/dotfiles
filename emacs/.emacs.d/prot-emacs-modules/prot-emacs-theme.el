@@ -32,7 +32,7 @@
 
   (prot-emacs-keybind global-map
     "C-x l" #'pulsar-pulse-line ; override `count-lines-page'
-    "C-x L" #'pulsar-highlight-dwim)) ; or use `pulsar-highlight-line'
+    "C-x L" #'pulsar-highlight-permanently-dwim)) ; or use `pulsar-highlight-temporarily-dwim'
 
 ;;;; Lin
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.

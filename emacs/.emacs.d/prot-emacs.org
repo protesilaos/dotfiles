@@ -1996,7 +1996,7 @@ are called. The pulse effect is added there (~pulsar-after-function-hook~).
 
   (prot-emacs-keybind global-map
     "C-x l" #'pulsar-pulse-line ; override `count-lines-page'
-    "C-x L" #'pulsar-highlight-dwim)) ; or use `pulsar-highlight-line'
+    "C-x L" #'pulsar-highlight-permanently-dwim)) ; or use `pulsar-highlight-temporarily-dwim'
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~lin~
