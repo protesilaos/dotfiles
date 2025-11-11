@@ -15,20 +15,18 @@
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-configure
   (prot-emacs-install pulsar)
+
   (pulsar-global-mode 1)
 
   (prot-emacs-hook
     (next-error-hook minibuffer-setup-hook)
     (pulsar-pulse-line-red pulsar-recenter-top pulsar-reveal-entry))
 
-  (setq pulsar-pulse t
-        pulsar-delay 0.055
-        pulsar-iterations 5
-        pulsar-face 'pulsar-green
-        pulsar-region-face 'pulsar-cyan
-        pulsar-highlight-face 'pulsar-magenta)
-
-  (setq pulsar-pulse-region-functions pulsar-pulse-region-common-functions)
+  (setq pulsar-delay 0.055)
+  (setq pulsar-iterations 5)
+  (setq pulsar-face 'pulsar-green)
+  (setq pulsar-region-face 'pulsar-yellow)
+  (setq pulsar-highlight-face 'pulsar-magenta)
 
   (prot-emacs-keybind global-map
     "C-x l" #'pulsar-pulse-line ; override `count-lines-page'
