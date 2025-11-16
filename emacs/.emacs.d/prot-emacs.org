@@ -1824,9 +1824,8 @@ editor, opt for my ~modus-themes~ ([[#h:36af519a-67e1-42b6-a38a-2052638108f9][Th
   (prot-emacs-install doric-themes)
 
   (prot-emacs-keybind global-map
-    "<f5>" #'doric-themes-toggle
-    "C-<f5>" #'doric-themes-select
-    "M-<f5>" #'doric-themes-rotate)
+    "<f5>" #'doric-themes-rotate
+    "C-<f5>" #'doric-themes-select)
 
   (doric-themes-load-random
    (if (prot-emacs-gnome-prefers-dark-p)
@@ -1842,9 +1841,8 @@ editor, opt for my ~modus-themes~ ([[#h:36af519a-67e1-42b6-a38a-2052638108f9][Th
   (require 'doric-themes)
 
   (prot-emacs-keybind global-map
-    "<f5>" #'doric-themes-toggle
-    "C-<f5>" #'doric-themes-select
-    "M-<f5>" #'doric-themes-rotate)
+    "<f5>" #'doric-themes-rotate
+    "C-<f5>" #'doric-themes-select)
 
   (doric-themes-load-random
    (if (prot-emacs-gnome-prefers-dark-p)

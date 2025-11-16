@@ -4,9 +4,8 @@
   (prot-emacs-install doric-themes)
 
   (prot-emacs-keybind global-map
-    "<f5>" #'doric-themes-toggle
-    "C-<f5>" #'doric-themes-select
-    "M-<f5>" #'doric-themes-rotate)
+    "<f5>" #'doric-themes-rotate
+    "C-<f5>" #'doric-themes-select)
 
   (doric-themes-load-random
    (if (prot-emacs-gnome-prefers-dark-p)
@@ -22,9 +21,8 @@
   (require 'doric-themes)
 
   (prot-emacs-keybind global-map
-    "<f5>" #'doric-themes-toggle
-    "C-<f5>" #'doric-themes-select
-    "M-<f5>" #'doric-themes-rotate)
+    "<f5>" #'doric-themes-rotate
+    "C-<f5>" #'doric-themes-select)
 
   (doric-themes-load-random
    (if (prot-emacs-gnome-prefers-dark-p)
