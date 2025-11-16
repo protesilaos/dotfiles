@@ -40,7 +40,8 @@
 
     (define-key eww-link-keymap (kbd "v")  nil) ; stop overriding `eww-view-source'
 
-    (define-key dired-mode-map (kbd "E") #'eww-open-file) ; to render local HTML files
+    (with-eval-after-load 'dired
+      (define-key dired-mode-map (kbd "E") #'eww-open-file)) ; to render local HTML files
 
     (setq eww-auto-rename-buffer 'title)
     (setq eww-header-line-format nil)
