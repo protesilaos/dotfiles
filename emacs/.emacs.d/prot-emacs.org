@@ -17071,17 +17071,14 @@ line."
 ;;;; Commands for paragraphs
 
 ;;;###autoload
-(defun prot-simple-unfill-region-or-paragraph (&optional beg end)
-  "Unfill paragraph or, when active, the region.
-Join all lines in region delimited by BEG and END, if active,
-while respecting any empty lines (so multiple paragraphs are not
-joined, just unfilled).  If no region is active, operate on the
-paragraph.  The idea is to produce the opposite effect of both
-`fill-paragraph' and `fill-region'."
-  (interactive "r")
+(defun prot-simple-unfill-region-or-paragraph ()
+  "Unfill current paragraph or the active region."
+  (interactive)
+  (unless mark-ring ; needed when entering a new buffer
+    (push-mark (point) t nil))
   (let ((fill-column most-positive-fixnum))
-    (if (use-region-p)
-        (fill-region beg end)
+    (if (region-active-p)
+        (fill-region (region-beginning) (region-end))
       (fill-paragraph))))
 
 ;;;; Commands for windows and pages
