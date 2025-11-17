@@ -84,7 +84,7 @@
     (require 'prot-org)
 
 ;;;; general settings
-    (setq org-ellipsis "⮧")
+    (setq org-ellipsis " ▼")
     (setq org-special-ctrl-a/e nil)
     (setq org-special-ctrl-k nil)
     (setq org-M-RET-may-split-line '((default . nil)))
