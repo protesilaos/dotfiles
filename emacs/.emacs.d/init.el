@@ -141,6 +141,7 @@ before all other modules of my setup."
     denote
     denote-journal
     denote-markdown
+    denote-merge
     denote-org
     denote-silo
     denote-sequence

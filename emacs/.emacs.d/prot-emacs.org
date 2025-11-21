@@ -1007,6 +1007,7 @@ packages will rely on ~package-archive-priorities~.
     denote
     denote-journal
     denote-markdown
+    denote-merge
     denote-org
     denote-silo
     denote-sequence
