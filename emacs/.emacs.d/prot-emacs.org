@@ -17426,7 +17426,7 @@ Use BUFFER for standard output and return the exit code."
              (package-directory (expand-file-name name common-directory))
              (exit-code (if (file-directory-p package-directory)
                             (prot-simple-update-package-repositories-pull package package-directory stdout)
-                          (prot-simplew-update-package-repositories-clone package common-directory stdout))))
+                          (prot-simple-update-package-repositories-clone package common-directory stdout))))
         (condition-case error-data
             (when (> exit-code 0)
               (signal 'prot-package-no-update (list (format "Package `%s' got exit code `%s'" package exit-code))))
