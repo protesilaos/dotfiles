@@ -3,7 +3,8 @@
   (require 'prot-modeline)
   (setq mode-line-compact nil) ; Emacs 28
   (setq mode-line-right-align-edge 'right-margin) ; Emacs 30
-  (setq prot-modeline-show-frame-name (if prot-laptop-p t nil))
+  (setq prot-modeline-show-frame-name (alist-get 'undecorated initial-frame-alist))
+
   (setq-default mode-line-format
                 '("%e"
                   prot-modeline-kbd-macro
