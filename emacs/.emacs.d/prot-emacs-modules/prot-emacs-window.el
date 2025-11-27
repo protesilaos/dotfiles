@@ -211,19 +211,27 @@
 
   (beframe-mode 1)
 
-  ;; Integration with the `consult-buffer' command.  It will show only
-  ;; buffers from the current frame.  To view all buffers, first input
-  ;; a space at the empty minibuffer prompt.  This enables the "hidden
-  ;; buffers" view.
   (with-eval-after-load 'consult
-    (defun consult-beframe-buffer-list (&optional frame)
+    (defface beframe-buffer
+      '((t :inherit font-lock-string-face))
+      "Face for `consult' framed buffers.")
+
+    (defun prot/beframe-buffer-names-sorted (&optional frame)
       "Return the list of buffers from `beframe-buffer-names' sorted by visibility.
-With optional argument FRAME, return the list of buffers of FRAME.
+With optional argument FRAME, return the list of buffers of FRAME."
+      (beframe-buffer-names frame :sort #'beframe-buffer-sort-visibility))
 
-For use in `consult-buffer-list'."
-      (beframe-buffer-list frame :sort #'beframe-buffer-sort-visibility))
+    (defvar beframe-consult-source
+      `( :name     "Frame-specific buffers (current frame)"
+         :narrow   ?F
+         :category buffer
+         :face     beframe-buffer
+         :history  beframe-history
+         :items    ,#'prot/beframe-buffer-names-sorted
+         :action   ,#'switch-to-buffer
+         :state    ,#'consult--buffer-state))
 
-    (setq consult-buffer-list #'consult-beframe-buffer-list)))
+    (add-to-list 'consult-buffer-sources 'beframe-consult-source)))
 
 ;;; Frame history (undelete-frame-mode)
 (prot-emacs-configure
