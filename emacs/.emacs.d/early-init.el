@@ -11,21 +11,25 @@
       inhibit-startup-echo-area-message user-login-name ; read the docstring
       inhibit-startup-buffer-menu t)
 
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
 (defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
   "When non-nil, we assume to be working on a laptop.")
 
 (when prot-laptop-p
   (add-hook 'window-size-change-functions #'frame-hide-title-bar-when-maximized))
 
-(defvar prot-pgtk-p  (string-match-p "PGTK" system-configuration-features)
+(defvar prot-pgtk-p (string-match-p "PGTK" system-configuration-features)
   "When non-nil, this is a build --with-pgtk.
 PGTK is the Wayland-specific build of Emacs.")
 
 (setq initial-frame-alist `((horizontal-scroll-bars . nil)
-                            (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
-                            (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                            (menu-bar-lines . 0)
+                            (tool-bar-lines . 0)
                             (vertical-scroll-bars . nil)
-                            (scroll-bar-width . 6)
+                            (scroll-bar-width . ,(if prot-pgtk-p 12 6))
                             (width . (text-pixels . 800))
                             (height . (text-pixels . 900))
                             ,@(unless prot-pgtk-p
@@ -43,10 +47,10 @@ PGTK is the Wayland-specific build of Emacs.")
 ;; settings.
 (add-hook 'after-init-hook (lambda ()
                              (setq default-frame-alist `((horizontal-scroll-bars . nil)
-                                                         (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
-                                                         (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
+                                                         (menu-bar-lines . 0)
+                                                         (tool-bar-lines . 0)
                                                          (vertical-scroll-bars . nil)
-                                                         (scroll-bar-width . 6)
+                                                         (scroll-bar-width . (if prot-pgtk-p 12 6))
                                                          (width . (text-pixels . 800))
                                                          (height . (text-pixels . 900))
                                                          ,@(unless prot-pgtk-p

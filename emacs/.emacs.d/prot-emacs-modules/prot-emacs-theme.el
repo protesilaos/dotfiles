@@ -56,7 +56,7 @@
              :mode-line-width 6
              :tab-width 4
              :right-divider-width 15
-             :scroll-bar-width ,(if x-toolkit-scroll-bars 8 6)
+             :scroll-bar-width ,(if prot-pgtk-p 12 6)
              :left-fringe-width 20
              :right-fringe-width 20))
 
