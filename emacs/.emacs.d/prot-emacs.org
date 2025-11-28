@@ -351,6 +351,10 @@ Hiding the title bar declutters the view at the cost of hiding the
 frame title. To compensate, I have my active mode line display the
 frame name ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =prot-emacs-modeline.el= module]]).
 
+Those granted, I do need to experiment with the Wayland-specific build
+of Emacs. It is also known as "Pure GTK" or "PGTK". To this end, I
+apply some parameters subject to PGTK being present.
+
 #+begin_src emacs-lisp :tangle "early-init.el"
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -362,7 +366,7 @@ frame name ([[#h:41ee38d0-9099-4444-85e4-cc8dce00fb9a][The =prot-emacs-modeline.
 (when prot-laptop-p
   (add-hook 'window-size-change-functions #'frame-hide-title-bar-when-maximized))
 
-(defvar prot-pgtk-p  (string-match-p "PGTK" system-configuration-features)
+(defvar prot-pgtk-p (string-match-p "PGTK" system-configuration-features)
   "When non-nil, this is a build --with-pgtk.
 PGTK is the Wayland-specific build of Emacs.")
 
