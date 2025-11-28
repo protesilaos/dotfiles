@@ -14,6 +14,13 @@
 (defvar prot-laptop-p (null (directory-empty-p "/sys/class/power_supply/"))
   "When non-nil, we assume to be working on a laptop.")
 
+(when prot-laptop-p
+  (add-hook 'window-size-change-functions #'frame-hide-title-bar-when-maximized))
+
+(defvar prot-pgtk-p  (string-match-p "PGTK" system-configuration-features)
+  "When non-nil, this is a build --with-pgtk.
+PGTK is the Wayland-specific build of Emacs.")
+
 (setq initial-frame-alist `((horizontal-scroll-bars . nil)
                             (menu-bar-lines . 0) ; alternative to disabling `menu-bar-mode'
                             (tool-bar-lines . 0) ; alternative to disabling `tool-bar-mode'
@@ -21,8 +28,9 @@
                             (scroll-bar-width . 6)
                             (width . (text-pixels . 800))
                             (height . (text-pixels . 900))
-                            (undecorated . t)
-                            (border-width . 5)
+                            ,@(unless prot-pgtk-p
+                                (list '(undecorated . t)))
+                            (border-width . 0)
                             ,@(when prot-laptop-p
                                 (list '(fullscreen . maximized)))))
 
@@ -41,8 +49,9 @@
                                                          (scroll-bar-width . 6)
                                                          (width . (text-pixels . 800))
                                                          (height . (text-pixels . 900))
-                                                         (undecorated . t)
-                                                         (border-width . 5)
+                                                         ,@(unless prot-pgtk-p
+                                                             (list '(undecorated . t)))
+                                                         (border-width . 0)
                                                          ,@(when prot-laptop-p
                                                              (list '(fullscreen . maximized)))))))
 
