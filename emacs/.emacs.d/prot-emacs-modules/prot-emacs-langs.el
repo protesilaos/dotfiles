@@ -20,6 +20,9 @@
     (setq elisp-eldoc-docstring-length-limit 1000)
     (set-default-toplevel-value 'lexical-binding t) ; Emacs 31
 
+    (dolist (package prot-emacs-my-packages)
+      (add-to-list 'elisp-flymake-byte-compile-load-path (expand-file-name (format "%s" package) "/home/prot/Git/Projects/")))
+
     (require 'prot-elisp)
 
     (prot-emacs-keybind emacs-lisp-mode-map
