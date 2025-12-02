@@ -1,10 +1,10 @@
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (if (featurep 'orderless)
-      (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
-    (setq completion-styles '(basic substring initials flex)))
-  (setq completion-pcm-leading-wildcard t)) ; Emacs 31: make `partial-completion' behave like `substring'
+  (setq completion-styles '(basic substring initials flex)) ; also see `completion-category-overrides'
+  (setq completion-pcm-leading-wildcard t) ; Emacs 31: make `partial-completion' behave like `substring'
+  (with-eval-after-load 'orderless
+    (setq completion-styles '(basic substring initials flex orderless))))
 
 ;;;; Completion category overrides
 (prot-emacs-configure
@@ -79,6 +79,7 @@
 (when prot-emacs-completion-extras
   (prot-emacs-configure
     (prot-emacs-install orderless)
+    (require 'orderless)
     ;; Remember to check my `completion-styles' and the
     ;; `completion-category-overrides'.
     (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
