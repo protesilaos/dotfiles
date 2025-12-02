@@ -4368,55 +4368,35 @@ completion (such as the ~corfu~ package).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 (prot-emacs-configure
-  (add-hook 'minibuffer-setup #'prot-common-truncate-lines-silently)
+  (add-hook 'minibuffer-setup-hook #'prot-common-truncate-lines-silently)
 
-  ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
-  (setq completions-header-format "")
-  (setq completions-highlight-face 'completions-highlight)
-  (setq completions-max-height 10)
-  (setq completions-sort 'historical)
-
-  ;; These settings make the generic minibuffer completion interface
-  ;; work more like my `mct' package.  Though it still has some issues
-  ;; with how candidates are selected.  Those might be fixed
-  ;; eventually.  The concrete problem I see with these settings is
-  ;; how the Completions can behave in very different ways, so we need
-  ;; to figure out which combination of these options works correctly.
   (unless prot-emacs-completion-ui
-    (setq completion-auto-help 'always)
     (setq completion-show-help nil)
     (setq completion-show-inline-help nil)
-    (setq completion-auto-select nil)
-    (setq completion-auto-deselect nil)
     (setq completions-detailed t)
     (setq completions-format 'one-column)
-    (setq minibuffer-completion-auto-choose nil)
-    (setq minibuffer-visible-completions nil) ; Emacs 30
-    ;; This one is for Emacs 31.  It relies on what I am doing with the `completion-category-overrides'.
+    ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
+    (setq completions-header-format "")
+    (setq completions-highlight-face 'completions-highlight)
+    (setq completions-max-height 10)
+    (setq completions-sort 'historical)
+    (setq completion-auto-help 'always)
+    (setq completion-auto-select t)
+
+    ;; These two are for Emacs 31.  The value they have now means that
+    ;; each completion category will have its own behaviour based on
+    ;; what I am setting in the `completion-category-overrides'.
     (setq completion-eager-display 'auto)
-    ;; This is also for Emacs 31 and it too leverages the `completion-category-overrides' if set to `auto'.
-    (setq completion-eager-update t)
-
-    (prot-emacs-keybind minibuffer-local-completion-map
-      "<up>" #'minibuffer-previous-line-completion
-      "<down>" #'minibuffer-next-line-completion
-      "C-l" #'minibuffer-completion-help) ; "list completions" mnemonic
-
-    (prot-emacs-keybind completion-in-region-mode-map
-      "<up>" #'minibuffer-previous-completion
-      "<down>" #'minibuffer-next-completion
-      "RET" #'minibuffer-choose-completion)
+    (setq completion-eager-update 'auto)
 
     (defun prot/completions-tweak-style ()
       "Tweak the style of the Completions buffer."
-      (setq-local mode-line-format nil)
+      ;; (setq-local mode-line-format "*Completions*)
       (setq-local cursor-in-non-selected-windows nil)
       (when (and completions-header-format
                  (not (string-blank-p completions-header-format)))
         (setq-local display-line-numbers-offset -1))
-      (display-line-numbers-mode 1)
-      (unless (eq (prot-common-completion-category) 'file)
-        (setq-local minibuffer-visible-completions t)))
+      (display-line-numbers-mode 1))
 
     (prot-emacs-hook
       completion-list-mode-hook
