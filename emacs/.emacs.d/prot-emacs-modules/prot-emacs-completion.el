@@ -1,7 +1,9 @@
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
+  (if (featurep 'orderless)
+      (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
+    (setq completion-styles '(basic substring initials flex)))
   (setq completion-pcm-leading-wildcard t)) ; Emacs 31: make `partial-completion' behave like `substring'
 
 ;;;; Completion category overrides
@@ -45,49 +47,48 @@
   ;; - `consult-kmacro'
   ;; - `consult-location'
   ;; - `embark-keybinding'
+  ;;
+  ;; NOTE 2025-12-02: The `eager-display' and `eager-update' are part of Emacs 31.
   (setq completion-category-overrides
-        (if prot-emacs-completion-ui
-            ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
-            ;; default for some contexts.  Read:
-            ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=50387>.
-            ;;
-            ;; `partial-completion' is a killer app for files, because it
-            ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
-            ;;
-            ;; If `basic' cannot match my current input, Emacs tries the
-            ;; next completion style in the given order.  In other words,
-            ;; `orderless' kicks in as soon as I input a space or one of its
-            ;; style dispatcher characters.
-            '((file (styles . (basic partial-completion orderless)))
-              (bookmark (styles . (basic substring)))
-              (library (styles . (basic substring)))
-              (embark-keybinding (styles . (basic substring)))
-              (imenu (styles . (basic substring orderless)))
-              (consult-location (styles . (basic substring orderless)))
-              (kill-ring (styles . (emacs22 orderless)))
-              (eglot (styles . (emacs22 substring orderless))))
-          '((file (styles . (basic partial-completion orderless)) (eager-display . t))
-            (bookmark (styles . (basic substring)))
-            (library (styles . (basic substring)))
-            (embark-keybinding (styles . (basic substring)) (eager-display . t))
-            (imenu (styles . (basic substring orderless)) (eager-display . t))
-            (consult-location (styles . (basic substring orderless)) (eager-display . t))
-            (kill-ring (styles . (emacs22 orderless)) (eager-display . t))
-            (eglot (styles . (emacs22 substring orderless)))))))
+        '((file . ((styles . (basic partial-completion))
+                   (eager-display . nil)
+                   (eager-update . t)))
+          (bookmark . ((styles . (basic substring))
+                       (eager-display . nil)
+                       (eager-update . t)))
+          (library . ((styles . (basic substring))
+                      (eager-display . t)
+                      (eager-update . t)))
+          (embark-keybinding . ((styles . (basic substring))
+                                (eager-display . t)
+                                (eager-update . t)))
+          (imenu . ((styles . (basic substring))
+                    (eager-display . t)
+                    (eager-update . t)))
+          (consult-location . ((styles . (basic substring))
+                               (eager-display . t)
+                               (eager-update . t)))
+          (kill-ring . ((styles . (emacs22))
+                        (eager-display . nil)
+                        (eager-update . nil)))
+          (eglot . ((styles . (emacs22 substring))
+                    (eager-display . t)
+                    (eager-update . t))))))
 
 ;;; Orderless completion style (and prot-orderless.el)
-(prot-emacs-configure
-  (prot-emacs-install orderless)
-  ;; Remember to check my `completion-styles' and the
-  ;; `completion-category-overrides'.
-  (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
-  (setq orderless-smart-case nil)
+(when prot-emacs-completion-extras
+  (prot-emacs-configure
+    (prot-emacs-install orderless)
+    ;; Remember to check my `completion-styles' and the
+    ;; `completion-category-overrides'.
+    (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
+    (setq orderless-smart-case nil)
 
-  ;; SPC should never complete: use it for `orderless' groups.
-  ;; The `?' is a regexp construct.
-  (prot-emacs-keybind minibuffer-local-completion-map
-    "SPC" nil
-    "?" nil))
+    ;; SPC should never complete: use it for `orderless' groups.
+    ;; The `?' is a regexp construct.
+    (prot-emacs-keybind minibuffer-local-completion-map
+      "SPC" nil
+      "?" nil)))
 
 (setq completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
@@ -122,55 +123,35 @@
   (file-name-shadow-mode 1))
 
 (prot-emacs-configure
-  (add-hook 'minibuffer-setup #'prot-common-truncate-lines-silently)
+  (add-hook 'minibuffer-setup-hook #'prot-common-truncate-lines-silently)
 
-  ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
-  (setq completions-header-format "")
-  (setq completions-highlight-face 'completions-highlight)
-  (setq completions-max-height 10)
-  (setq completions-sort 'historical)
-
-  ;; These settings make the generic minibuffer completion interface
-  ;; work more like my `mct' package.  Though it still has some issues
-  ;; with how candidates are selected.  Those might be fixed
-  ;; eventually.  The concrete problem I see with these settings is
-  ;; how the Completions can behave in very different ways, so we need
-  ;; to figure out which combination of these options works correctly.
   (unless prot-emacs-completion-ui
-    (setq completion-auto-help 'always)
     (setq completion-show-help nil)
     (setq completion-show-inline-help nil)
-    (setq completion-auto-select nil)
-    (setq completion-auto-deselect nil)
     (setq completions-detailed t)
     (setq completions-format 'one-column)
-    (setq minibuffer-completion-auto-choose nil)
-    (setq minibuffer-visible-completions nil) ; Emacs 30
-    ;; This one is for Emacs 31.  It relies on what I am doing with the `completion-category-overrides'.
+    ;; (setq completions-header-format (propertize "%s candidates:\n" 'face 'bold-italic))
+    (setq completions-header-format "")
+    (setq completions-highlight-face 'completions-highlight)
+    (setq completions-max-height 10)
+    (setq completions-sort 'historical)
+    (setq completion-auto-help 'always)
+    (setq completion-auto-select t)
+
+    ;; These two are for Emacs 31.  The value they have now means that
+    ;; each completion category will have its own behaviour based on
+    ;; what I am setting in the `completion-category-overrides'.
     (setq completion-eager-display 'auto)
-    ;; This is also for Emacs 31 and it too leverages the `completion-category-overrides' if set to `auto'.
-    (setq completion-eager-update t)
-
-    (prot-emacs-keybind minibuffer-local-completion-map
-      "<up>" #'minibuffer-previous-line-completion
-      "<down>" #'minibuffer-next-line-completion
-      "C-l" #'minibuffer-completion-help) ; "list completions" mnemonic
-
-    (prot-emacs-keybind completion-in-region-mode-map
-      "<up>" #'minibuffer-previous-completion
-      "<down>" #'minibuffer-next-completion
-      "RET" #'minibuffer-choose-completion)
+    (setq completion-eager-update 'auto)
 
     (defun prot/completions-tweak-style ()
       "Tweak the style of the Completions buffer."
-      (setq-local mode-line-format nil)
+      ;; (setq-local mode-line-format "*Completions*)
       (setq-local cursor-in-non-selected-windows nil)
       (when (and completions-header-format
                  (not (string-blank-p completions-header-format)))
         (setq-local display-line-numbers-offset -1))
-      (display-line-numbers-mode 1)
-      (unless (eq (prot-common-completion-category) 'file)
-        (setq-local minibuffer-visible-completions t)))
+      (display-line-numbers-mode 1))
 
     (prot-emacs-hook
       completion-list-mode-hook
@@ -303,7 +284,7 @@ Development continues on GitHub with GitLab as a mirror."))
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 
 ;;; Corfu (in-buffer completion popup)
-(when (and prot-emacs-completion-ui prot-display-graphic-p)
+(when (and prot-emacs-completion-extras prot-display-graphic-p)
   (prot-emacs-configure
     (prot-emacs-install corfu)
 
@@ -323,6 +304,27 @@ Development continues on GitHub with GitLab as a mirror."))
     (with-eval-after-load 'savehist
       (corfu-history-mode 1)
       (add-to-list 'savehist-additional-variables 'corfu-history))))
+
+(prot-emacs-configure
+  (setq completion-preview-exact-match-only nil)
+  (setq completion-preview-commands '(self-insert-command
+                                      insert-char
+                                      analyze-text-conversion
+                                      completion-preview-insert-word))
+  (setq completion-preview-minimum-symbol-length 4)
+  (setq completion-preview-idle-delay 0.3)
+  (setq completion-preview-ignore-case t)
+  (setq completion-preview-sort-function #'identity)
+
+  (prot-emacs-hook
+    (text-mode-hook prog-mode-hook)
+    completion-preview-mode)
+
+  (with-eval-after-load 'completion-preview
+    (prot-emacs-keybind completion-preview-active-mode-map
+      "M-n" #'completion-preview-next-candidate
+      "M-p" #'completion-preview-prev-candidate
+      "<tab>" #'completion-preview-complete)))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (when prot-emacs-completion-extras
@@ -380,10 +382,11 @@ Development continues on GitHub with GitLab as a mirror."))
       (require 'embark-consult))))
 
 ;;; Detailed completion annotations (marginalia.el)
-(prot-emacs-configure
-  (prot-emacs-install marginalia)
-  (setq marginalia-max-relative-age 0) ; absolute time
-  (marginalia-mode 1))
+(when prot-emacs-completion-extras
+  (prot-emacs-configure
+    (prot-emacs-install marginalia)
+    (setq marginalia-max-relative-age 0) ; absolute time
+    (marginalia-mode 1)))
 
 ;;; The minibuffer user interface (mct, vertico, or none)
 (when prot-emacs-completion-ui

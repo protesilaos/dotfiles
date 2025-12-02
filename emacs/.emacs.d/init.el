@@ -44,7 +44,8 @@ before all other modules of my setup."
 
 (defcustom prot-emacs-completion-extras t
   "When non-nil load extras for minibuffer completion.
-These include packages such as `consult' and `embark'."
+These include the packages `marginalia', `orderless', `consult',
+`corfu', and `embark'."
   :group 'prot-emacs
   :type 'boolean)
 
