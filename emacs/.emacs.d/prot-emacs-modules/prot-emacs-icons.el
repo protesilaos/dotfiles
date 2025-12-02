@@ -5,14 +5,13 @@
 
     (prot-emacs-install nerd-icons-completion)
 
-    (with-eval-after-load 'marginalia
-      (nerd-icons-completion-marginalia-setup)
+    (nerd-icons-completion-mode 1)
 
-      ;; By default, icons are shown in all sorts of completion prompts.
-      ;; When those have different kinds of candidates, like files and
-      ;; folders, the icons are helpful.  If all the candidates have the
-      ;; same icon though, I prefer not to see any icon.
-      (setq nerd-icons-completion-category-icons nil))
+    ;; By default, icons are shown in all sorts of completion prompts.
+    ;; When those have different kinds of candidates, like files and
+    ;; folders, the icons are helpful.  If all the candidates have the
+    ;; same icon though, I prefer not to see any icon.
+    (setq nerd-icons-completion-category-icons nil)
 
     (prot-emacs-install nerd-icons-corfu)
 
