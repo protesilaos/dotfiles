@@ -4686,6 +4686,61 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
       (add-to-list 'savehist-additional-variables 'corfu-history))))
 #+end_src
 
+*** The =prot-emacs-completion.el= for in-buffer completion hints (~completion-preview-mode~)
+:PROPERTIES:
+:CUSTOM_ID: h:bb7959b3-d8e6-4163-8e32-bec2b96b7dde
+:END:
+
+The built-in ~completion-preview~ by Eshel Yaron provides a minimalist
+interface for in-buffer completion. Instead of popping up a list with
+completion candidates, it shows the first match as an extension of the
+text you are typing.
+
+All we need to get started is to enable ~completion-preview-mode~ via
+a relevant hook or ~global-completion-preview-mode~ to have it
+available wherever possible.
+
+The rest of the settings I have here are mostly stylistic, though I
+find them to be the best combination for my preferences. The
+overarching theme of my choices is to reduce noise. More specifically:
+
+- I set ~completion-preview-commands~ to a shorter list of triggers
+  than its default value because, for example, I do not want to see a
+  preview if I am deleting some text I provided: the completion is
+  irrelevant, anyway, so I do not wish to be made aware of it.
+
+- The ~completion-preview-idle-delay~ is fairly high for my typing
+  speed, which means that I will only see the preview if I am typing
+  more slowly. The assumption is that in such a scenario I am
+  uncertain what I should write next, at which point a hint may be
+  helpful. For this reason, the ~completion-preview-exact-match-only~
+  is ~nil~, as I want to see the hints at all times, and the
+  ~completion-preview-minimum-symbol-length~ is fairly high as I only
+  need a hint for longer words/symbols.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
+(prot-emacs-configure
+  (setq completion-preview-exact-match-only nil)
+  (setq completion-preview-commands '(self-insert-command
+                                      insert-char
+                                      analyze-text-conversion
+                                      completion-preview-insert-word))
+  (setq completion-preview-minimum-symbol-length 4)
+  (setq completion-preview-idle-delay 0.3)
+  (setq completion-preview-ignore-case t)
+  (setq completion-preview-sort-function #'identity)
+
+  (prot-emacs-hook
+    (text-mode-hook prog-mode-hook)
+    completion-preview-mode)
+
+  (with-eval-after-load 'completion-preview
+    (prot-emacs-keybind completion-preview-active-mode-map
+      "M-n" #'completion-preview-next-candidate
+      "M-p" #'completion-preview-prev-candidate
+      "<tab>" #'completion-preview-complete)))
+#+end_src
+
 *** The =prot-emacs-completion.el= settings for ~consult~
 :PROPERTIES:
 :CUSTOM_ID: h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d
