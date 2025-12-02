@@ -703,6 +703,9 @@ minibuffer. The upside is that we get more power out of Emacs. The
 downside is that they have a learning curve. Users who do not need
 these features can set the option to nil.
 
+- [[#h:7cc77fd0-8f98-4fc0-80be-48a758fcb6e2][The =prot-emacs-completion.el= for the ~orderless~ completion style]]
+- [[#h:bd3f7a1d-a53d-4d3e-860e-25c5b35d8e7e][The =prot-emacs-completion.el= section to configure completion annotations (~marginalia~)]]
+- [[#h:804b858f-7913-47ef-aaf4-8eef5b59ecb4][The =prot-emacs-completion.el= for in-buffer completion popup (~corfu~)]]
 - [[#h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d][The =prot-emacs-completion.el= settings for ~consult~]]
 - [[#h:61863da4-8739-42ae-a30f-6e9d686e1995][The =prot-emacs-completion.el= section about ~embark~]]
 
@@ -711,7 +714,8 @@ Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da
 #+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-completion-extras t
   "When non-nil load extras for minibuffer completion.
-These include packages such as `consult' and `embark'."
+These include the packages `marginalia', `orderless', `consult',
+`corfu', and `embark'."
   :group 'prot-emacs
   :type 'boolean)
 #+end_src
@@ -4039,7 +4043,9 @@ set of completion styles on a per-category basis using overrides
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
+  (if (featurep 'orderless)
+      (setq completion-styles '(basic substring initials flex orderless)) ; also see `completion-category-overrides'
+    (setq completion-styles '(basic substring initials flex)))
   (setq completion-pcm-leading-wildcard t)) ; Emacs 31: make `partial-completion' behave like `substring'
 #+end_src
 
@@ -4184,18 +4190,19 @@ literal string, initialism, et cetera, which is not as useful to me.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Orderless completion style (and prot-orderless.el)
-(prot-emacs-configure
-  (prot-emacs-install orderless)
-  ;; Remember to check my `completion-styles' and the
-  ;; `completion-category-overrides'.
-  (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
-  (setq orderless-smart-case nil)
+(when prot-emacs-completion-extras
+  (prot-emacs-configure
+    (prot-emacs-install orderless)
+    ;; Remember to check my `completion-styles' and the
+    ;; `completion-category-overrides'.
+    (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
+    (setq orderless-smart-case nil)
 
-  ;; SPC should never complete: use it for `orderless' groups.
-  ;; The `?' is a regexp construct.
-  (prot-emacs-keybind minibuffer-local-completion-map
-    "SPC" nil
-    "?" nil))
+    ;; SPC should never complete: use it for `orderless' groups.
+    ;; The `?' is a regexp construct.
+    (prot-emacs-keybind minibuffer-local-completion-map
+      "SPC" nil
+      "?" nil)))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings to ignore letter casing
@@ -4679,7 +4686,7 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Corfu (in-buffer completion popup)
-(when (and prot-emacs-completion-ui prot-display-graphic-p)
+(when (and prot-emacs-completion-extras prot-display-graphic-p)
   (prot-emacs-configure
     (prot-emacs-install corfu)
 
@@ -4934,10 +4941,11 @@ changes.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Detailed completion annotations (marginalia.el)
-(prot-emacs-configure
-  (prot-emacs-install marginalia)
-  (setq marginalia-max-relative-age 0) ; absolute time
-  (marginalia-mode 1))
+(when prot-emacs-completion-extras
+  (prot-emacs-configure
+    (prot-emacs-install marginalia)
+    (setq marginalia-max-relative-age 0) ; absolute time
+    (marginalia-mode 1)))
 #+end_src
 
 *** The =prot-emacs-completion.el= setting to load a minibuffer UI submodule
