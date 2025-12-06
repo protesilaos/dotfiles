@@ -67,11 +67,17 @@
 
 (defun prot-org--capture-coach-person-prompt ()
   "Prompt for person for use in `prot-org-capture-coach'."
-  (completing-read "Person to coach: "
-                   prot-org--capture-coach-person-history
-                   nil nil nil
-                   'prot-org--capture-coach-person-history
-                   (prot-org--capture-coach-person-message-from)))
+  (minibuffer-with-setup-hook
+      (lambda ()
+        (use-local-map
+         (let ((map (make-composed-keymap nil (current-local-map))))
+           (define-key map (kbd "SPC") nil)
+           map)))
+    (completing-read "Person to coach: "
+                     prot-org--capture-coach-person-history
+                     nil nil nil
+                     'prot-org--capture-coach-person-history
+                     (prot-org--capture-coach-person-message-from))))
 
 (defvar prot-org--capture-coach-description-history nil)
 
