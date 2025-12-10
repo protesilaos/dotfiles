@@ -4687,10 +4687,12 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
       (add-to-list 'savehist-additional-variables 'corfu-history))))
 #+end_src
 
-*** The =prot-emacs-completion.el= for in-buffer completion hints (~completion-preview-mode~)
+*** COMMENT The =prot-emacs-completion.el= for in-buffer completion hints (~completion-preview-mode~)
 :PROPERTIES:
 :CUSTOM_ID: h:bb7959b3-d8e6-4163-8e32-bec2b96b7dde
 :END:
+
+[ NOTE 2025-12-10: I stopped using this because I find it distracting. ]
 
 The built-in ~completion-preview~ by Eshel Yaron provides a minimalist
 interface for in-buffer completion. Instead of popping up a list with
@@ -4731,9 +4733,7 @@ overarching theme of my choices is to reduce noise. More specifically:
   (setq completion-preview-ignore-case t)
   (setq completion-preview-sort-function #'identity)
 
-  (prot-emacs-hook
-    (text-mode-hook prog-mode-hook)
-    completion-preview-mode)
+  (add-hook 'prog-mode-hook #'completion-preview-mode)
 
   (with-eval-after-load 'completion-preview
     (prot-emacs-keybind completion-preview-active-mode-map
