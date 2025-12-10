@@ -16570,6 +16570,7 @@ The DWIM behaviour of this command is as follows:
 - When the region is active, disable it.
 - When a minibuffer is open, but not focused, close the minibuffer.
 - When the Completions buffer is selected, close it.
+- When the Completions buffer is on display, close it.
 - In every other case use the regular `keyboard-quit'."
   (interactive)
   (cond
@@ -16577,6 +16578,10 @@ The DWIM behaviour of this command is as follows:
     (keyboard-quit))
    ((derived-mode-p 'completion-list-mode)
     (delete-completion-window))
+   ((when-let* ((completions-window (get-buffer-window "*Completions*"))
+                (current-window (selected-window)))
+      (quit-window nil completions-window)
+      (select-window current-window)))
    ((> (minibuffer-depth) 0)
     (abort-recursive-edit))
    (t
