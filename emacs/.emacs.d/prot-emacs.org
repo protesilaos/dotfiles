@@ -16587,18 +16587,6 @@ The DWIM behaviour of this command is as follows:
    (t
     (keyboard-quit))))
 
-;; DEPRECATED 2023-12-26: I have not used `prot-simple-describe-symbol'
-;; since a very long time.  The idea is fine, but having a key binding
-;; to provide a shortcut for C-h o RET is wasteful.
-
-;; (autoload 'symbol-at-point "thingatpt")
-;;
-;; ;;;###autoload
-;; (defun prot-simple-describe-symbol ()
-;;   "Run `describe-symbol' for the `symbol-at-point'."
-;;   (interactive)
-;;   (describe-symbol (symbol-at-point)))
-
 ;; DEPRECATED 2023-12-26: The `prot-simple-goto-definition' is a good
 ;; idea but it needs more work.  Ultimately though, it is easier to
 ;; just produce a Help buffer and just go to the source from there by
