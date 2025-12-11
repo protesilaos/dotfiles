@@ -107,6 +107,16 @@
     (setq completion-auto-help 'always)
     (setq completion-auto-select t)
 
+    (define-advice completion--in-region (:around (&rest args) prot)
+      "Apply ARGS with `completion-auto-help' and `completion-auto-select' bound.
+Do it so when completion requested outside the minibuffer.  Else apply
+ARGS without further changes."
+      (if (minibufferp)
+          (apply args)
+        (let ((completion-auto-help t)
+              (completion-auto-select 'second-tab))
+          (apply args))))
+
     ;; These two are for Emacs 31.  The value they have now means that
     ;; each completion category will have its own behaviour based on
     ;; what I am setting in the `completion-category-overrides'.
@@ -124,7 +134,84 @@
 
     (prot-emacs-hook
       completion-list-mode-hook
-      (prot/completions-tweak-style prot-common-truncate-lines-silently))))
+      (prot/completions-tweak-style prot-common-truncate-lines-silently))
+
+    (defun prot/quit-completions ()
+      "Always quit the Completions window."
+      (when-let* ((window (get-buffer-window "*Completions*")))
+        (quit-window nil window)))
+
+    (add-hook 'minibuffer-exit-hook #'prot/quit-completions)
+
+    (defun prot/choose-completion-no-exit ()
+      "Call `choose-completion' without exiting the minibuffer.
+Also see `prot/choose-completion-exit' and `prot/choose-completion-dwim'."
+      (interactive)
+      (choose-completion nil :no-exit :no-quit)
+      (switch-to-minibuffer))
+
+    (defun prot/choose-completion-exit ()
+      "Call `choose-completion' and exit the minibuffer.
+Also see `prot/choose-completion-no-exit' and `prot/choose-completion-dwim'."
+      (interactive)
+      (choose-completion nil :no-exit)
+      (exit-minibuffer))
+
+    (defun prot/choose-completion-dwim ()
+      "Call `choose-completion' that exits only on a unique match.
+If the match is not unique, then complete up to the largest common
+prefix or, anyhow, continue with the completion (e.g. in `find-file'
+switch into the directory and then show the files therein).
+
+Also see `prot/choose-completion-no-exit' and `prot/choose-completion-exit'."
+      (interactive)
+      (choose-completion nil :no-exit :no-quit)
+      (switch-to-minibuffer)
+      (minibuffer-completion-help)
+      (unless (get-buffer-window "*Completions*")
+        (exit-minibuffer)))
+
+    (define-advice minibuffer-completion-help (:around (&rest args) prot)
+      "Make `minibuffer-completion-help' display *Completions* in a side window.
+Make the window be at slot 0, such that the *Help* buffer produced by
+`prot/completions-describe-at-point' is to its right."
+      (let ((display-buffer-overriding-action
+             '((display-buffer-reuse-mode-window display-buffer-in-side-window)
+               (side . bottom)
+               (slot . 0))))
+        (apply args)))
+
+    (defun prot/completions-describe-at-point (symbol)
+      "Describe SYMBOL at point inside the *Completions* buffer.
+Place the *Help* buffer in a side window, situated to the right of the
+*Completions* buffer.  Make the window have the `prot-minibuffer-help'
+property, such that it can be found by `prot/completions-close-help'."
+      (interactive (list (intern-soft (thing-at-point 'symbol))))
+      (unless (derived-mode-p 'completion-list-mode)
+        (user-error "Can only do this from the *Completions* buffer"))
+      (when symbol
+        (let ((help-window-select nil)
+              (display-buffer-overriding-action
+               '((display-buffer-reuse-mode-window display-buffer-in-side-window)
+                 (slot . 1) ;  next to `prot/minibuffer-completion-help'
+                 (window-parameters . ((prot-minibuffer-help . t))))))
+          (describe-symbol symbol))))
+
+    (defun prot/completions-close-help ()
+      "Close the window that has a `'prot-minibuffer-help' parameter."
+      (when-let* ((help (seq-find
+                         (lambda (window)
+                           (window-parameter window 'prot-minibuffer-help))
+                         (window-list))))
+        (delete-window help)))
+
+    (add-hook 'minibuffer-exit-hook #'prot/completions-close-help)
+
+    (prot-emacs-keybind completion-list-mode-map
+      "h" #'prot/completions-describe-at-point ; "Help" mnemonic
+      "c" #'prot/choose-completion-no-exit ; "Choose" mnemonic
+      "TAB" #'prot/choose-completion-dwim
+      "RET" #'prot/choose-completion-exit)))
 
 ;;;; `savehist' (minibuffer and related histories)
 (prot-emacs-configure
