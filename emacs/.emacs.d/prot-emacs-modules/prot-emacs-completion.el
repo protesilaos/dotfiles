@@ -4,7 +4,7 @@
   (setq completion-styles '(basic substring initials flex)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard nil) ; Emacs 31
   (with-eval-after-load 'orderless
-    (setq completion-styles '(basic substring initials flex orderless))))
+    (setq completion-styles (append completion-styles '(orderless)))))
 
 ;;;; Completion category overrides
 (prot-emacs-configure
