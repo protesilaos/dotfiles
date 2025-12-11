@@ -14,66 +14,34 @@
   ;; explicitly override everything.
   (setq completion-category-defaults nil)
 
-  ;; A non-exhaustve list of known completion categories:
-  ;;
-  ;; - `bookmark'
-  ;; - `buffer'
-  ;; - `charset'
-  ;; - `coding-system'
-  ;; - `color'
-  ;; - `command' (e.g. `M-x')
-  ;; - `customize-group'
-  ;; - `environment-variable'
-  ;; - `expression'
-  ;; - `face'
-  ;; - `file'
-  ;; - `function' (the `describe-function' command bound to `C-h f')
-  ;; - `info-menu'
-  ;; - `imenu'
-  ;; - `input-method'
-  ;; - `kill-ring'
-  ;; - `library'
-  ;; - `minor-mode'
-  ;; - `multi-category'
-  ;; - `package'
-  ;; - `project-buffer'
-  ;; - `project-file'
-  ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
-  ;; - `theme'
-  ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
-  ;; - `variable' (the `describe-variable' command bound to `C-h v')
-  ;; - `consult-grep'
-  ;; - `consult-isearch'
-  ;; - `consult-kmacro'
-  ;; - `consult-location'
-  ;; - `embark-keybinding'
-  ;;
+  ;; Add some missing completion categories to let me configure the
+  ;; relevant prompts via the `completion-category-overrides'.
+  (define-advice read-from-kill-ring (:around (&rest args) prot)
+    (let ((completion-extra-properties (list :category 'kill-ring)))
+      (apply args)))
+
+  (define-advice read-library-name (:around (&rest args) prot)
+    (let ((completion-extra-properties (list :category 'library)))
+      (apply args)))
+
   ;; NOTE 2025-12-02: The `eager-display' and `eager-update' are part of Emacs 31.
   (setq completion-category-overrides
-        '((file . ((styles . (basic partial-completion))
+        `((symbol-help . ((basic substring flex)
+                          (eager-display . nil)
+                          (eager-update . t)))
+          (file . ((styles . (basic partial-completion))
                    (eager-display . nil)
                    (eager-update . t)))
           (bookmark . ((styles . (basic substring))
                        (eager-display . nil)
                        (eager-update . t)))
-          (library . ((styles . (basic substring))
-                      (eager-display . t)
-                      (eager-update . t)))
-          (embark-keybinding . ((styles . (basic substring))
-                                (eager-display . t)
-                                (eager-update . t)))
-          (imenu . ((styles . (basic substring))
-                    (eager-display . t)
-                    (eager-update . t)))
-          (consult-location . ((styles . (basic substring))
-                               (eager-display . t)
-                               (eager-update . t)))
-          (kill-ring . ((styles . (emacs22))
-                        (eager-display . nil)
-                        (eager-update . nil)))
-          (eglot . ((styles . (emacs22 substring))
-                    (eager-display . t)
-                    (eager-update . t))))))
+          ,@(mapcar
+             (lambda (category)
+               (cons category
+                     '((styles . (basic substring))
+                       (eager-display . t)
+                       (eager-update . t))))
+             '(eglot kill-ring consult-location imenu embark-keybinding library)))))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (when prot-emacs-completion-extras
