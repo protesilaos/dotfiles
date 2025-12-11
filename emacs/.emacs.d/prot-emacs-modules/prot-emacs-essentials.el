@@ -11,6 +11,7 @@
   (setq eval-expression-print-length nil)
   (setq find-library-include-other-files nil) ; Emacs 29
   (setq help-window-select t)
+  (setq help-window-keep-selected t) ; Emacs 29
   (setq kill-do-not-save-duplicates t)
   (setq mode-require-final-newline 'visit-save)
   (setq next-error-recenter '(4)) ; center of the window
