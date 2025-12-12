@@ -138,9 +138,11 @@ The DWIM behaviour of this command is as follows:
   (cond
    ((region-active-p)
     (keyboard-quit))
-   ((derived-mode-p 'completion-list-mode 'special-mode)
+   ((and (derived-mode-p 'completion-list-mode 'special-mode)
+         (not (one-window-p)))
     (quit-window))
-   ((when-let* ((windows (seq-filter
+   ((when-let* ((_ (not (one-window-p)))
+                (windows (seq-filter
                           (lambda (window)
                             (with-selected-window window
                               (derived-mode-p 'completion-list-mode 'special-mode)))
