@@ -4044,7 +4044,7 @@ set of completion styles on a per-category basis using overrides
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (setq completion-styles '(basic partial-completion substring initials flex)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic flex)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard nil) ; Emacs 31
   (with-eval-after-load 'orderless
     (setq completion-styles (append completion-styles '(orderless)))))
