@@ -36,7 +36,7 @@
                      '((eager-display . nil)
                        (eager-update . t))))
              '(file bookmark symbol-help))
-          (unicode-name . ((completion-styles . (orderless))
+          (unicode-name . ((styles . (orderless))
                            (eager-display . t)
                            (eager-update . t)))
           ,@(mapcar
