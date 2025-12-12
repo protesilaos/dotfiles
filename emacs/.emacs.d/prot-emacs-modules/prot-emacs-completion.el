@@ -24,6 +24,10 @@
     (let ((completion-extra-properties (list :category 'library)))
       (apply args)))
 
+  (define-advice emoji--read-emoji (:around (&rest args) prot)
+    (let ((completion-extra-properties (list :category 'unicode-name)))
+      (apply args)))
+
   ;; NOTE 2025-12-02: The `eager-display' and `eager-update' are part of Emacs 31.
   (setq completion-category-overrides
         `(,@(mapcar
@@ -32,6 +36,9 @@
                      '((eager-display . nil)
                        (eager-update . t))))
              '(file bookmark symbol-help))
+          (unicode-name . ((completion-styles . (orderless))
+                           (eager-display . t)
+                           (eager-update . t)))
           ,@(mapcar
              (lambda (category)
                (cons category
