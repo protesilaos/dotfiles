@@ -41,20 +41,19 @@
              '(buffer project-file eglot kill-ring consult-location imenu embark-keybinding library)))))
 
 ;;; Orderless completion style (and prot-orderless.el)
-(when prot-emacs-completion-extras
-  (prot-emacs-configure
-    (prot-emacs-install orderless)
-    (require 'orderless)
-    ;; Remember to check my `completion-styles' and the
-    ;; `completion-category-overrides'.
-    (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
-    (setq orderless-smart-case nil)
+(prot-emacs-configure
+  (prot-emacs-install orderless)
+  (require 'orderless)
+  ;; Remember to check my `completion-styles' and the
+  ;; `completion-category-overrides'.
+  (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
+  (setq orderless-smart-case nil)
 
-    ;; SPC should never complete: use it for `orderless' groups.
-    ;; The `?' is a regexp construct.
-    (prot-emacs-keybind minibuffer-local-completion-map
-      "SPC" nil
-      "?" nil)))
+  ;; SPC should never complete: use it for `orderless' groups.
+  ;; The `?' is a regexp construct.
+  (prot-emacs-keybind minibuffer-local-completion-map
+    "SPC" nil
+    "?" nil))
 
 (setq completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)

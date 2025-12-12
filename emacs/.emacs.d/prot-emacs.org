@@ -714,8 +714,8 @@ Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da
 #+begin_src emacs-lisp :tangle "init.el"
 (defcustom prot-emacs-completion-extras t
   "When non-nil load extras for minibuffer completion.
-These include the packages `marginalia', `orderless', `consult',
-`corfu', and `embark'."
+These include the packages `marginalia', `consult', `corfu', and
+`embark'."
   :group 'prot-emacs
   :type 'boolean)
 #+end_src
@@ -4154,20 +4154,19 @@ literal string, initialism, et cetera, which is not as useful to me.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Orderless completion style (and prot-orderless.el)
-(when prot-emacs-completion-extras
-  (prot-emacs-configure
-    (prot-emacs-install orderless)
-    (require 'orderless)
-    ;; Remember to check my `completion-styles' and the
-    ;; `completion-category-overrides'.
-    (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
-    (setq orderless-smart-case nil)
+(prot-emacs-configure
+  (prot-emacs-install orderless)
+  (require 'orderless)
+  ;; Remember to check my `completion-styles' and the
+  ;; `completion-category-overrides'.
+  (setq orderless-matching-styles '(orderless-prefixes orderless-regexp))
+  (setq orderless-smart-case nil)
 
-    ;; SPC should never complete: use it for `orderless' groups.
-    ;; The `?' is a regexp construct.
-    (prot-emacs-keybind minibuffer-local-completion-map
-      "SPC" nil
-      "?" nil)))
+  ;; SPC should never complete: use it for `orderless' groups.
+  ;; The `?' is a regexp construct.
+  (prot-emacs-keybind minibuffer-local-completion-map
+    "SPC" nil
+    "?" nil))
 #+end_src
 
 *** The =prot-emacs-completion.el= settings to ignore letter casing
