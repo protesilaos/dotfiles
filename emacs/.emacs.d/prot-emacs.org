@@ -4353,17 +4353,7 @@ completion (such as the ~corfu~ package).
     (setq completions-max-height 10)
     (setq completions-sort 'historical)
     (setq completion-auto-help 'always)
-    (setq completion-auto-select t)
-
-    (define-advice completion--in-region (:around (&rest args) prot)
-      "Apply ARGS with `completion-auto-help' and `completion-auto-select' bound.
-Do it so when completion requested outside the minibuffer.  Else apply
-ARGS without further changes."
-      (if (minibufferp)
-          (apply args)
-        (let ((completion-auto-help t)
-              (completion-auto-select 'second-tab))
-          (apply args))))
+    (setq completion-auto-select 'second-tab)
 
     ;; These two are for Emacs 31.  The value they have now means that
     ;; each completion category will have its own behaviour based on
