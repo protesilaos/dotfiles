@@ -42,8 +42,7 @@
           ,@(mapcar
              (lambda (category)
                (cons category
-                     '((styles . (basic substring))
-                       (eager-display . t)
+                     '((eager-display . t)
                        (eager-update . t))))
              '(buffer project-file eglot kill-ring consult-location imenu embark-keybinding library)))))
 
