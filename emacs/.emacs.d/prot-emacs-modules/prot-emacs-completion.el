@@ -25,7 +25,7 @@
       (apply args)))
 
   (define-advice emoji--read-emoji (:around (&rest args) prot)
-    (let ((completion-extra-properties (list :category 'unicode-name)))
+    (let ((completion-extra-properties (list :category 'emoji)))
       (apply args)))
 
   ;; NOTE 2025-12-02: The `eager-display' and `eager-update' are part of Emacs 31.
@@ -36,8 +36,11 @@
                      '((eager-display . nil)
                        (eager-update . t))))
              '(file bookmark symbol-help))
-          (unicode-name . ((styles . (orderless))
+          (emoji . ((styles . (orderless))
                            (eager-display . t)
+                           (eager-update . t)))
+          (unicode-name . ((styles . (orderless))
+                           (eager-display . nil)
                            (eager-update . t)))
           ,@(mapcar
              (lambda (category)
