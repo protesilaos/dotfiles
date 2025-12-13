@@ -4337,6 +4337,46 @@ These do not come into effect unless ~prot-emacs-completion-ui~ is set
 to a ~nil~ value or when we are not using any package for in-buffer
 completion (such as the ~corfu~ package).
 
+For a few days around early December 2025 I tried to use the following
+setup exclusively on the Emacs 31 development target. It mostly works
+and is better than it used to be, though there are several important
+limitations:
+
+- The eager update (recalculate the results as you type) is noticeably
+  choppy. I could improve it by making the function
+  ~completions--background-update~ do a ~sit-for~ a few miliseconds,
+  but was not happy with this.
+
+- The built-in =minibuffer.el= package lacks focus. There are options
+  that support conflicting workflows. One is a =TAB=-intensive
+  approach, where =TAB= triggers the display of completions, switches
+  to that buffer, and cycles through the results. Another way is to
+  set the user option ~minibuffer-visible-completions~ to a non-~nil~
+  value, which makes the cursor stay in the minibuffer and you select
+  a completion from there without switching to the =*Completions*=
+  buffer. Compounding the problem are confusingly named variables like
+  ~completion-show-help~ and ~completion-auto-help~, which mean
+  completely different things. Even after setting all this up and
+  trying it full-time for several days (plus me maintaining ~mct~ for
+  years), I still do not know exactly what I need to configure to get
+  a consistent experience.
+
+- The ~find-file~ navigation makes it harder to select a directory.
+  Whether with the =TAB=-centric workflow of its alternative, when I
+  do something like =~/G/P/= followed by =TAB= and then =RET= I expect
+  to navigate to a ~dired~ buffer that shows =~/Git/Projects/= (this
+  is possible thanks to the ~partial-completion~ style ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]])).
+  Instead it takes me to =~/Git/= or, more precisely, to whatever the
+  top candidate is in the completions buffer. That candidate is not
+  even highlighted when I do all this!
+
+Of course, I can keep adding functions to make things work the way I
+want, but it ultimately is not worth it. Vertico is robust, super
+fast, focused, and still highly configurable. My ~mct~ package is
+there just because I started it all those years ago, before ~vertico~
+was a thing and before the generic completions got most of what ~mct~
+offers.
+
 - [[#h:f012a254-2716-4c29-a64b-c2b3df34f57f][The =init.el= option to load a minibuffer user interface]]
 - [[#h:cff33514-d3ac-4c16-a889-ea39d7346dc5][The =prot-emacs-completion.el= submodule for ~vertico~ (=prot-emacs-vertico.el=)]]
 - [[#h:e9fb09f0-f2e6-4943-83bf-e5fadcfa530a][The =prot-emacs-completion.el= submodule for ~mct~ (=prot-emacs-mct.el=)]]
