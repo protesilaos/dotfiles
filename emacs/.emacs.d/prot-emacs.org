@@ -9228,7 +9228,8 @@ facilities to rename files, regardless of file type.
   (prot-emacs-keybind global-map
     "C-c n n" #'denote
     "C-c n N" #'denote-type
-    "C-c n d" #'denote-sort-dired
+    "C-c n d" #'denote-dired
+    "C-c n g" #'denote-grep
     "C-c n r" #'denote-rename-file)
 
   (with-eval-after-load 'text-mode
