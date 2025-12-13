@@ -117,7 +117,8 @@
     ;; that code.  Internally, the file has just the following:
     ;;
     ;;     (setq elfeed-feeds FEEDS)
-    (load (expand-file-name "~/feeds.el.gpg"))
+    (unless (bound-and-true-p elfeed-feeds)
+      (load (expand-file-name "~/feeds.el.gpg") :no-error :no-message))
     ;; Make entries tagged as "personal" use the `bold-italic' face.
     ;; This way I can quickly notice my own entries in the listing.
     (add-to-list 'elfeed-search-face-alist '(personal bold-italic))))
