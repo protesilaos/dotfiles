@@ -47,7 +47,7 @@
                (cons category
                      '((eager-display . t)
                        (eager-update . t))))
-             '(buffer project-file eglot kill-ring consult-location imenu embark-keybinding library)))))
+             '(buffer project-file eglot kill-ring theme consult-location imenu embark-keybinding library)))))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-configure
