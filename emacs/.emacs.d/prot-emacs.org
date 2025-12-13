@@ -473,6 +473,20 @@ tool.
 (setq package-enable-at-startup t)
 #+end_src
 
+** The =early-init.el= sets the ~user-lisp-directory~
+:PROPERTIES:
+:CUSTOM_ID: h:d4e2145a-0aae-4c8e-9518-4cf2ec1a329a
+:END:
+
+The ~user-lisp-directory~ is a user option introduced in Emacs 31. It
+makes Emacs byte compile Emacs Lisp files therein and scan them for
+autoloads. This is great news because now my custom code is treated
+the same way as packages I install ([[#h:e289a614-4f17-4d6c-a028-42fe45aebe66][The =init.el= arrangements for my own modules and custom libraries]]).
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+(setq user-lisp-directory (locate-user-emacs-file "prot-lisp/"))
+#+end_src
+
 ** COMMENT The =early-init.el= defines general theme-related functions
 :PROPERTIES:
 :CUSTOM_ID: h:7d3a283e-1595-4692-8124-e0d683cb15b2
@@ -971,6 +985,12 @@ gives me maximum flexbility, as I can still share my code the way it
 would look. Plus, if I ever decide to stop using the literate config,
 I can simply stop editing it and perfom the edits directly in the
 files that are already placed where I need them to be.
+
+As of Emacs 31, the user option ~user-lisp-directory~ can read a
+directory and treat it as if it contains actual packages. This means
+that it byte compiles it and scans it for autoloads. This is great
+news! The ~user-lisp-directory~ is set in the early init, so that it
+takes effect before loading the rest of the configuration ([[#h:d4e2145a-0aae-4c8e-9518-4cf2ec1a329a][The =early-init.el= sets the ~user-lisp-directory~]]).
 
 #+begin_src emacs-lisp :tangle "init.el"
 (mapc

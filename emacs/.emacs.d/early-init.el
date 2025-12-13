@@ -97,4 +97,6 @@ PGTK is the Wayland-specific build of Emacs.")
 ;; packages to work with, requiring a `package-refresh-contents'.
 (setq package-enable-at-startup t)
 
+(setq user-lisp-directory (locate-user-emacs-file "prot-lisp/"))
+
 (add-hook 'after-init-hook (lambda () (set-frame-name "home")))
