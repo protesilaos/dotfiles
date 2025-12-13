@@ -111,6 +111,7 @@
     (setq completions-sort 'historical)
     (setq completion-auto-help 'always)
     (setq completion-auto-select 'second-tab)
+    ;; (setq minibuffer-visible-completions t) ; Emacs 30
 
     ;; These two are for Emacs 31.  The value they have now means that
     ;; each completion category will have its own behaviour based on
