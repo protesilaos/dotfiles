@@ -6,6 +6,7 @@
 #+startup: content indent
 #+macro: latest-export-date (eval (format-time-string "%F %T %z"))
 #+macro: word-count (eval (count-words (point-min) (point-max)))
+#+property: header-args :results none
 
 [ Last revised and exported on *{{{latest-export-date}}}* with a word
   count of *{{{word-count}}}*. ]
