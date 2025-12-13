@@ -240,95 +240,54 @@
 ;;;; capture
 (prot-emacs-configure
   (define-key global-map (kbd "C-c c") #'org-capture)
+
   (with-eval-after-load 'org-capture
+
     (require 'prot-org)
 
     (setq org-capture-templates
-          `(("u" "Unprocessed" entry
-             (file+headline "tasks.org" "Unprocessed")
-             ,(concat "* %^{Title}\n"
-                      ":PROPERTIES:\n"
-                      ":CAPTURED: %U\n"
-                      ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
-                      ":END:\n\n"
-                      "%a\n%i%?")
-             :empty-lines-after 1)
-            ("w" "Wishlist" entry
-             (file+olp "tasks.org" "All tasks" "Wishlist")
-             ,(concat "* %^{Title} %^g\n"
-                      ":PROPERTIES:\n"
-                      ":CAPTURED: %U\n"
-                      ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
-                      ":END:\n\n"
-                      "%a\n%?")
-             :empty-lines-after 1)
-            ;; About "Prot Asks": <https://protesilaos.com/codelog/2025-07-10-prot-asks-chats-videos-proposal/>.
-            ("a" "Prot Asks" entry
-             (file+headline "tasks.org" "Prot Asks")
-             ,(concat "* TODO %^{Title}\n"
-                      "DEADLINE: %^T\n"
-                      ":PROPERTIES:\n"
-                      ":CAPTURED: %U\n"
-                      ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
-                      ":APPT_WARNTIME: 20\n"
-                      ":END:\n\n"
-                      "%a\n%?")
-             :empty-lines-after 1)
-            ("t" "Task to do" entry
-             (file+headline "tasks.org" "All tasks")
-             ,(concat "* TODO %^{Title} %^g\n"
-                      ":PROPERTIES:\n"
-                      ":CAPTURED: %U\n"
-                      ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
-                      ":END:\n\n"
-                      "%a\n%?")
-             :empty-lines-after 1)
-            ("s" "Select file and heading to add to" entry
-             (function prot-org-select-heading-in-file)
-             ,(concat "* TODO %^{Title}%?\n"
-                      ":PROPERTIES:\n"
-                      ":CAPTURED: %U\n"
-                      ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
-                      ":END:\n\n")
-             :empty-lines-after 1)
-
-            ;; NOTE 2024-11-24: I am not using this, but am keeping it
-            ;; here because the approach is good.
-
-            ;; ("c" "Clock in and do immediately" entry
-            ;;  (file+headline "tasks.org" "Clocked tasks")
-            ;;  ,(concat "* TODO %^{Title}\n"
-            ;;           ":PROPERTIES:\n"
-            ;;           ":EFFORT: %^{Effort estimate in minutes|5|10|15|30|45|60|90|120}\n"
-            ;;           ":END:\n\n"
-            ;;           "%a\n")
-            ;;  :prepend t
-            ;;  :clock-in t
-            ;;  :clock-keep t
-            ;;  :immediate-finish t
-            ;;  :empty-lines-after 1)
-            ("p" "Private lesson or service" entry
-             (file "coach.org")
-             #'prot-org-capture-coach
-             :prepend t
-             :empty-lines 1)
-            ("P" "Private service clocked" entry
-             (file+headline "coach.org" "Clocked services")
-             #'prot-org-capture-coach-clock
-             :prepend t
-             :clock-in t
-             :clock-keep t
-             :immediate-finish t
-             :empty-lines 1)))))
-
-;; NOTE 2024-11-10: I realised that I was not using this enough, so
-;; I decided to simplify my setup.  Keeping it here, in case I need
-;; it again.
-
-;; (setq org-capture-templates-contexts
-;;       '(("e" ((in-mode . "notmuch-search-mode")
-;;               (in-mode . "notmuch-show-mode")
-;;               (in-mode . "notmuch-tree-mode")))))
+          (let* ((without-time (concat ":PROPERTIES:\n"
+                                       ":CAPTURED: %U\n"
+                                       ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                                       ":END:\n\n"
+                                       "%a\n%?"))
+                 (with-time (concat "DEADLINE: %^T\n"
+                                    ":PROPERTIES:\n"
+                                    ":CAPTURED: %U\n"
+                                    ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
+                                    ":APPT_WARNTIME: 20\n"
+                                    ":END:\n\n"
+                                    "%a%?")))
+            `(("s" "Select file and heading to add to" entry
+               (function prot-org-select-heading-in-file)
+               ,(concat "* TODO %^{Title}%?\n" without-time)
+               :empty-lines-after 1)
+              ("t" "Task to do" entry
+               (file+headline "tasks.org" "All tasks")
+               ,(concat "* TODO %^{Title} %^g\n" without-time)
+               :empty-lines-after 1)
+              ("w" "Wishlist" entry
+               (file+olp "tasks.org" "All tasks" "Wishlist")
+               ,(concat "* %^{Title} %^g\n" without-time)
+               :empty-lines-after 1)
+              ("·" "") ; HACK to get a divider
+              ("a" "Appointment" entry
+               (file+headline "tasks.org" "Appointments")
+               ,(concat "* TODO %^{Title}\n" with-time)
+               :empty-lines-after 1)
+              ("c" "Coaching appointment" entry
+               (file "coach.org")
+               ,(concat "* TODO %^{Person and description}\n" with-time)
+               :prepend t
+               :empty-lines 1)
+              ("p" "Prot Asks" entry
+               (file+headline "tasks.org" "Prot Asks")
+               ,(concat "* TODO %^{Title}\n" with-time)
+               :empty-lines-after 1)
+              ("v" "Video call" entry
+               (file+headline "tasks.org" "Video calls")
+               ,(concat "* TODO %^{Title}\n" with-time)
+               :empty-lines-after 1))))))
 
 ;;;; agenda
 (prot-emacs-configure
