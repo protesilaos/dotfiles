@@ -1,7 +1,7 @@
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (setq completion-styles '(basic substring partial-completion flex)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic substring)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard nil) ; Emacs 31
   (with-eval-after-load 'orderless
     (setq completion-styles (append completion-styles '(orderless)))))
@@ -33,19 +33,21 @@
         `(,@(mapcar
              (lambda (category)
                (cons category
-                     '((eager-display . nil)
+                     '((styles . (partial-completion))
+                       (eager-display . nil)
                        (eager-update . t))))
              '(file bookmark symbol-help))
           (emoji . ((styles . (orderless))
-                           (eager-display . t)
-                           (eager-update . t)))
+                    (eager-display . t)
+                    (eager-update . t)))
           (unicode-name . ((styles . (orderless))
                            (eager-display . nil)
                            (eager-update . t)))
           ,@(mapcar
              (lambda (category)
                (cons category
-                     '((eager-display . t)
+                     '((styles . (basic substring orderless))
+                       (eager-display . t)
                        (eager-update . t))))
              '(buffer project-file eglot kill-ring theme consult-location imenu embark-keybinding library)))))
 
