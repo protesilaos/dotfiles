@@ -30,7 +30,7 @@
           (unicode-name ,@prot-vertico-multiform-maximal)
           ;; Minimal
           (file ,@prot-vertico-multiform-minimal
-                (vertico-sort-function . prot-vertico-sort-directories-first))
+                (vertico-sort-function . vertico-sort-directories-first))
           (t ,@prot-vertico-multiform-minimal)))
 
   (vertico-multiform-mode 1)

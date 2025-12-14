@@ -59,17 +59,6 @@ automatically.")
     (vertico-resize . t))
   "List of configurations for maximal Vertico multiform.")
 
-(defun prot-vertico--match-directory (str)
-  "Match directory delimiter in STR."
-  (string-suffix-p "/" str))
-
-;; From the Vertico documentation.
-(defun prot-vertico-sort-directories-first (files)
-  "Sort directories before FILES."
-  (setq files (vertico-sort-alpha files))
-  (nconc (seq-filter #'prot-vertico--match-directory files)
-         (seq-remove #'prot-vertico--match-directory files)))
-
 (defun prot-vertico-private-next ()
   "Like `vertico-next' but toggle vertical view if needed.
 This is done to accommodate `prot-vertico-multiform-minimal'."

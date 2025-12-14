@@ -5285,7 +5285,7 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
           (unicode-name ,@prot-vertico-multiform-maximal)
           ;; Minimal
           (file ,@prot-vertico-multiform-minimal
-                (vertico-sort-function . prot-vertico-sort-directories-first))
+                (vertico-sort-function . vertico-sort-directories-first))
           (t ,@prot-vertico-multiform-minimal)))
 
   (vertico-multiform-mode 1)
@@ -17731,17 +17731,6 @@ automatically.")
     (vertico-preselect . directory)
     (vertico-resize . t))
   "List of configurations for maximal Vertico multiform.")
-
-(defun prot-vertico--match-directory (str)
-  "Match directory delimiter in STR."
-  (string-suffix-p "/" str))
-
-;; From the Vertico documentation.
-(defun prot-vertico-sort-directories-first (files)
-  "Sort directories before FILES."
-  (setq files (vertico-sort-alpha files))
-  (nconc (seq-filter #'prot-vertico--match-directory files)
-         (seq-remove #'prot-vertico--match-directory files)))
 
 (defun prot-vertico-private-next ()
   "Like `vertico-next' but toggle vertical view if needed.
