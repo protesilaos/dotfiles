@@ -64,7 +64,7 @@
 
     ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
     ;; is very flexible.  Here we make the mode lines be a single
-    ;; overline.
+    ;; overline, while header lines have an underline.
     (setq spacious-padding-subtle-frame-lines
           '( :mode-line-active spacious-padding-line-active
              :mode-line-inactive spacious-padding-line-inactive
