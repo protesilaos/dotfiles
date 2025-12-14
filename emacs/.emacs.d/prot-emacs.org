@@ -5282,6 +5282,7 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
           (multi-category ,@prot-vertico-multiform-maximal)
           (consult-location ,@prot-vertico-multiform-maximal)
           (imenu ,@prot-vertico-multiform-maximal)
+          (theme ,@prot-vertico-multiform-maximal)
           (unicode-name ,@prot-vertico-multiform-maximal)
           ;; Minimal
           (file ,@prot-vertico-multiform-minimal

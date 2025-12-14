@@ -27,6 +27,7 @@
           (multi-category ,@prot-vertico-multiform-maximal)
           (consult-location ,@prot-vertico-multiform-maximal)
           (imenu ,@prot-vertico-multiform-maximal)
+          (theme ,@prot-vertico-multiform-maximal)
           (unicode-name ,@prot-vertico-multiform-maximal)
           ;; Minimal
           (file ,@prot-vertico-multiform-minimal
