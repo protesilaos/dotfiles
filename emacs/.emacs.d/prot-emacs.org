@@ -9369,8 +9369,7 @@ preview of the file-to-linked/opened and by adding more sources to the
     (prot-emacs-keybind global-map
       "C-c n f" #'consult-denote-find
       "C-c n g" #'consult-denote-grep)
-    (with-eval-after-load 'denote
-      (consult-denote-mode 1))))
+    (consult-denote-mode 1)))
 #+end_src
 
 **** The =prot-emacs-langs.el= extension for Denote Org extras (~denote-org~)

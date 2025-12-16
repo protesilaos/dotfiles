@@ -287,8 +287,7 @@ retroactively follow that order."
     (prot-emacs-keybind global-map
       "C-c n f" #'consult-denote-find
       "C-c n g" #'consult-denote-grep)
-    (with-eval-after-load 'denote
-      (consult-denote-mode 1))))
+    (consult-denote-mode 1)))
 
 ;;;; Denote Org extras (denote-org)
 (prot-emacs-configure
