@@ -28,15 +28,50 @@
     (let ((completion-extra-properties (list :category 'emoji)))
       (apply args)))
 
+  (defun prot/file-sort-directories-first (files)
+    "Sort FILES to have directories first and then `completions-sort' sorting."
+    (setq files (delete "../" files))
+    (setq files
+          (pcase completions-sort
+            ('nil files)
+            ('alphabetical (minibuffer-sort-alphabetically files))
+            ('historical (minibuffer-sort-by-history files))
+            (_ (funcall completions-sort files))))
+    (let ((directory-p (lambda (file) (string-suffix-p "/" file))))
+      (nconc (seq-filter directory-p files)
+             (seq-remove directory-p files))))
+
+  (defun prot/file-group (file transform)
+    "Return FILE group name unless TRANSFORM is non-nil."
+    (cond
+     (transform file)
+     ((string-suffix-p "/" file) "Directories")
+     ((string-match-p "\\.\\(tar\\|rar\\|zip\\)\\'" file) "Archives")
+     ((string-match-p "\\.\\(txt\\|md\\|org\\)\\'" file) "Text")
+     ((string-match-p "\\.\\(jpg\\|jpeg\\|png\\)\\'" file) "Images")
+     ((string-match-p "\\.\\(mkv\\|webm\\|mp4\\|mp3\\|ogg\\|flac\\|wav\\)\\'" file) "Media")
+     ((string-match-p "\\.\\(pdf\\|epub\\|texi\\|info\\)\\'" file) "Documents")
+     (t "Other")))
+
+  (defun prot/symbol-group (symbol transform)
+    "Return SYMBOL group name unless TRANSFORM is non-nil."
+    (cond
+     (transform symbol)
+     ((string-match-p "--" symbol) "Private")
+     (t "Public")))
+
   ;; NOTE 2025-12-02: The `eager-display' and `eager-update' are part of Emacs 31.
   (setq completion-category-overrides
-        `(,@(mapcar
-             (lambda (category)
-               (cons category
-                     '((styles . (partial-completion))
-                       (eager-display . nil)
-                       (eager-update . t))))
-             '(file bookmark symbol-help))
+        `((file . ((styles . (partial-completion))
+                   (eager-display . nil)
+                   (eager-update . t)
+                   (group-function . ,#'prot/file-group)
+                   (display-sort-function . ,#'prot/file-sort-directories-first)))
+          (bookmark . ((eager-display . nil)
+                       (eager-update . nil)))
+          (symbol-help . ((eager-display . nil)
+                          (eager-update . t)
+                          (group-function . ,#'prot/symbol-group)))
           (emoji . ((styles . (orderless))
                     (eager-display . t)
                     (eager-update . t)))
