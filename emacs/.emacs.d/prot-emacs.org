@@ -4253,6 +4253,7 @@ minibuffer. Let's have everything ignore casing by default.
 (setq read-buffer-completion-ignore-case t)
 (setq-default case-fold-search t)   ; For general regexp
 (setq read-file-name-completion-ignore-case t)
+(setq minibuffer-history-case-insensitive-variables t)
 #+end_src
 
 *** The =prot-emacs-completion.el= settings for recursive minibuffers

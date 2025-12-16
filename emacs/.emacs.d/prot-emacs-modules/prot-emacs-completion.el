@@ -105,6 +105,7 @@
 (setq read-buffer-completion-ignore-case t)
 (setq-default case-fold-search t)   ; For general regexp
 (setq read-file-name-completion-ignore-case t)
+(setq minibuffer-history-case-insensitive-variables t)
 
 (prot-emacs-configure
   (setq read-minibuffer-restore-windows nil)
