@@ -4830,7 +4830,9 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Corfu (in-buffer completion popup)
-(when (and prot-emacs-completion-extras prot-display-graphic-p)
+(when (and (eq prot-emacs-completion-ui 'vertico)
+           prot-emacs-completion-extras
+           prot-display-graphic-p)
   (prot-emacs-configure
     (prot-emacs-install corfu)
 
