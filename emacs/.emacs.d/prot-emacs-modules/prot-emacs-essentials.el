@@ -284,7 +284,7 @@
     nil
     pulsar)
 
-  (setq register-preview-delay 0.3
+  (setq register-preview-delay 0.5
         register-preview-function #'register-preview-default)
 
   (prot-register-persist-mode 1))
