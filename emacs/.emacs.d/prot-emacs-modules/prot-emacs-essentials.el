@@ -268,16 +268,15 @@
 
 ;;;; Registers (register.el) and my extensions (prot-register.el)
 (prot-emacs-configure
-  (prot-emacs-autoload
-    (prot-simple-file-to-register
-     prot-register-add-dwim
-     prot-register-use-dwim)
-    "prot-register")
+  (require 'prot-register)
+
+  (unless register-alist
+    (setq register-alist (prot-register-load)))
 
   (prot-emacs-keybind global-map
-    "C-, ," #'prot-register-add-dwim
-    "C-, ." #'prot-register-use-dwim
-    "C-, /" #'bookmark-jump) ; alternattive to C-x r b
+    "C-, a" #'prot-register-add-dwim
+    "C-, u" #'prot-register-use-dwim
+    "C-, j" #'bookmark-jump) ; alternattive to C-x r b
 
   (prot-emacs-hook
     prot-simple-file-to-register-jump-hook
@@ -285,12 +284,10 @@
     nil
     pulsar)
 
-  (with-eval-after-load 'register
-    (setq register-preview-delay 0.8
-          register-preview-function #'register-preview-default))
+  (setq register-preview-delay 0.3
+        register-preview-function #'register-preview-default)
 
-  (with-eval-after-load 'savehist
-    (add-to-list 'savehist-additional-variables 'register-alist)))
+  (prot-register-persist-mode 1))
 
 ;;;; Auto revert mode
 (prot-emacs-configure

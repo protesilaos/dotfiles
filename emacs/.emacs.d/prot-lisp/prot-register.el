@@ -118,5 +118,36 @@ Also see `prot-register-use-dwim'."
      (t
       (error "The register is unknown: %S" contents)))))
 
+(defcustom prot-register-save-file (locate-user-emacs-file "prot-register.eld")
+  "File to store registers to and retrieve from."
+  :type 'file)
+
+(defun prot-register-store ()
+  "Write `register-alist' to `prot-register-save-file'."
+  (with-temp-file prot-register-save-file
+    (insert ";; Auto-generated file: DO NOT EDIT -*- mode: emacs-lisp -*-\n")
+    (pp register-alist (current-buffer))))
+
+(defun prot-register-load ()
+  "Read `prot-register-save-file' and return its contents."
+  (with-temp-buffer
+    (insert-file-contents prot-register-save-file)
+    (read (buffer-string))))
+
+(defun prot-register-watcher (symbol newval operation where)
+  (when (and (eq operation 'set) (null where) newval)
+    (prot-register-store)))
+
+;;;###autoload
+(define-minor-mode prot-register-persist-mode
+  "When enabled save `register-alist' to `prot-register-save-file' when a change occurs."
+  :globat t
+  (if prot-register-persist-mode
+      (progn
+        (add-variable-watcher 'register-alist #'prot-register-watcher)
+        (add-hook 'kill-emacs-hook #'prot-register-store))
+    (remove-variable-watcher 'register-alist #'prot-register-watcher)
+    (remove-hook 'kill-emacs-hook #'prot-register-store)))
+
 (provide 'prot-register)
 ;;; prot-register.el ends here
