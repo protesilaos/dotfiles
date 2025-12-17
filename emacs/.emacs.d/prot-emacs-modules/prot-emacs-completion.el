@@ -194,7 +194,8 @@ Also see `prot/choose-completion-no-exit' and `prot/choose-completion-dwim'."
 
     (defun prot/crm-p ()
       "Return non-nil if `completing-read-multiple' is in use."
-      (when-let* ((window (active-minibuffer-window))
+      (when-let* ((_ (bound-and-true-p crm-completion-table))
+                  (window (active-minibuffer-window))
                   (buffer (window-buffer window)))
         (buffer-local-value 'crm-completion-table buffer)))
 
