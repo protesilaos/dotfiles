@@ -1,7 +1,7 @@
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (setq completion-styles '(basic substring)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard nil) ; Emacs 31
   (with-eval-after-load 'orderless
     (setq completion-styles (append completion-styles '(orderless)))))
@@ -81,10 +81,11 @@
           ,@(mapcar
              (lambda (category)
                (cons category
-                     '((styles . (basic substring orderless))
+                     '((styles . (basic orderless))
                        (eager-display . t)
                        (eager-update . t))))
-             '(buffer project-file eglot kill-ring theme consult-location imenu embark-keybinding library)))))
+             '( buffer denote-file project-file eglot kill-ring
+                theme consult-location imenu embark-keybinding library)))))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-configure
