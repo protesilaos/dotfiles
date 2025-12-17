@@ -15345,12 +15345,14 @@ is a string."
 
 (require 'register)
 
+;;;; Define new register for file with point
+
 (cl-defmethod register--type ((_regval vector)) 'vector)
 
 (cl-defmethod register-val-describe ((val vector) _verbose)
-  (if-let* ((pos (aref val 2))
+  (if-let* ((position (aref val 2))
             (file (aref val 1)))
-      (princ (format "%s at position %s" file pos))
+      (princ (format "%s at position %s" file position))
     (princ "Garbage data")))
 
 ;;;###autoload
@@ -15374,6 +15376,8 @@ outright."
     (goto-char (aref val 2))
     (run-hooks 'prot-simple-file-to-register-jump-hook))
    (t (cl-call-next-method val delete))))
+
+;;;; Do-What-I-Mean commands
 
 ;;;###autoload
 (defun prot-register-add-dwim (register &optional number)
@@ -15427,6 +15431,8 @@ Also see `prot-register-use-dwim'."
       (insert-register register))
      (t
       (error "The register is unknown: %S" contents)))))
+
+;;;; The `prot-register-persist-mode'
 
 (defcustom prot-register-save-file (locate-user-emacs-file "prot-register.eld")
   "File to store registers to and retrieve from."
