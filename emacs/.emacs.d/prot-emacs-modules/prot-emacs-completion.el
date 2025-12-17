@@ -160,7 +160,7 @@
 
     (defun prot/completions-tweak-style ()
       "Tweak the style of the Completions buffer."
-      ;; (setq-local mode-line-format "*Completions*)
+      (setq-local mode-line-format nil)
       (setq-local cursor-in-non-selected-windows nil)
       (when (and completions-header-format
                  (not (string-blank-p completions-header-format)))
