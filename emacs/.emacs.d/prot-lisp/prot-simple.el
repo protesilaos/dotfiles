@@ -154,6 +154,25 @@ The DWIM behaviour of this command is as follows:
    (t
     (keyboard-quit))))
 
+;;;###autoload
+(defun prot-simple-delete-window-dwim ()
+  "Do What I Mean to delete the current THING.
+When there is more than one window, THING is a window.
+When there are more than one `tab-bar-mode' tabs, THING is a tab.
+Else THING is a frame if frames are more than one."
+  (declare (interactive-only t))
+  (interactive)
+  (cond
+   ((length> (window-list) 1)
+    (delete-window))
+   ((and (featurep 'tab-bar)
+         (length> (tab-bar-tabs) 1))
+    (tab-close))
+   ((length> (frame-list) 1)
+    (delete-frame))
+   (t
+    (user-error "Nothing to delete"))))
+
 ;; DEPRECATED 2023-12-26: The `prot-simple-goto-definition' is a good
 ;; idea but it needs more work.  Ultimately though, it is easier to
 ;; just produce a Help buffer and just go to the source from there by

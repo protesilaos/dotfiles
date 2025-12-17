@@ -115,6 +115,7 @@
     "<escape>" #'prot-simple-keyboard-quit-dwim
     "C-g" #'prot-simple-keyboard-quit-dwim
     "C-M-SPC" #'prot-simple-mark-sexp
+    "C-x 0" #'prot-simple-delete-window-dwim ; overrides `delete-window'
     ;; Commands for lines
     "C-S-d" #'prot-simple-delete-line-backward
     "C-S-k" #'prot-simple-kill-line-backward
