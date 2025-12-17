@@ -411,6 +411,26 @@ Development continues on GitHub with GitLab as a mirror."))
       (corfu-history-mode 1)
       (add-to-list 'savehist-additional-variables 'corfu-history))))
 
+(prot-emacs-comment
+  (prot-emacs-configure
+    (setq completion-preview-exact-match-only nil)
+    (setq completion-preview-commands '(self-insert-command
+                                        insert-char
+                                        analyze-text-conversion
+                                        completion-preview-insert-word))
+    (setq completion-preview-minimum-symbol-length 4)
+    (setq completion-preview-idle-delay 0.3)
+    (setq completion-preview-ignore-case t)
+    (setq completion-preview-sort-function #'identity)
+
+    (add-hook 'prog-mode-hook #'completion-preview-mode)
+
+    (with-eval-after-load 'completion-preview
+      (prot-emacs-keybind completion-preview-active-mode-map
+        "M-n" #'completion-preview-next-candidate
+        "M-p" #'completion-preview-prev-candidate
+        "<tab>" #'completion-preview-complete))))
+
 ;;; Enhanced minibuffer commands (consult.el)
 (when prot-emacs-completion-extras
   (prot-emacs-configure
