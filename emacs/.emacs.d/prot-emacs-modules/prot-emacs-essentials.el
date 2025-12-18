@@ -461,7 +461,13 @@
 
 ;;; Standard Unix Shell (M-x shell)
 (prot-emacs-configure
-  (with-eval-after-load 'shell
+  (prot-emacs-autoload (prot-shell prot-shell-mode) "prot-shell")
+
+  (define-key global-map (kbd "<f1>") #'prot-shell) ; I don't use F1 for help commands
+
+  (with-eval-after-load 'prot-shell
+    (add-hook 'shell-mode-hook #'prot-shell-mode)
+
     (prot-emacs-keybind shell-mode-map
       "C-c C-k" #'comint-clear-buffer
       "C-c C-w" #'comint-write-output)
@@ -496,12 +502,7 @@
     (setq shell-font-lock-keywords
           '(("[ \t]\\([+-][^ \t\n]+\\)" 1 font-lock-builtin-face)
             ("^[^ \t\n]+:.*" . font-lock-string-face)
-            ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
-
-    (prot-emacs-autoload (prot-shell prot-shell-mode) "prot-shell")
-
-    (define-key global-map (kbd "<f1>") #'prot-shell) ; I don't use F1 for help commands
-    (add-hook 'shell-mode-hook #'prot-shell-mode)))
+            ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))))
 
 ;;; Show battery status on the mode line with `display-battery-mode'
 (when prot-laptop-p
