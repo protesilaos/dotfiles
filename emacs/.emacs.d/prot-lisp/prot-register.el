@@ -137,8 +137,9 @@ Also see `prot-register-use-dwim'."
 (defun prot-register-load ()
   "Read `prot-register-save-file' and return its contents."
   (with-temp-buffer
-    (insert-file-contents prot-register-save-file)
-    (read (buffer-string))))
+    (when (file-exists-p prot-register-save-file)
+      (insert-file-contents prot-register-save-file)
+      (read (buffer-string)))))
 
 (defun prot-register-watcher (symbol newval operation where)
   (when (and (eq operation 'set) (null where) newval)
