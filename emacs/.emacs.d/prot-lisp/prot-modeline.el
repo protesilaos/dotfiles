@@ -23,11 +23,6 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 

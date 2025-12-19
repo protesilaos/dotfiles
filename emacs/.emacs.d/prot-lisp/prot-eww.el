@@ -1,6 +1,6 @@
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou, Abhiseck Paira
+;; Copyright (C) 2021-2025  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
@@ -27,11 +27,6 @@
 ;;
 ;; Extensions for the eww, intended for my Emacs setup:
 ;; <https://protesilaos.com/emacs/dotemacs/>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 

@@ -27,11 +27,6 @@
 ;; Set up a scratch buffer for an editable major mode of choice.  The
 ;; idea is based on the `scratch.el' package by Ian Eure:
 ;; <https://github.com/ieure/scratch-el>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 

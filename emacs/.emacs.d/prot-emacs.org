@@ -11506,11 +11506,6 @@ not test it as much and do not try to make it perfect.
 ;;; Commentary:
 ;;
 ;; Functions for use with `abbrev-mode'.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -11628,11 +11623,6 @@ Use completion among previous entries, retrieving their data from
 ;;
 ;; This covers my newcomment.el extras, for use in my Emacs setup:
 ;; https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -11789,11 +11779,6 @@ an alternative date format, as specified by
 ;;; Commentary:
 ;;
 ;; Common functions for my Emacs: <https://protesilaos.com/emacs/dotemacs/>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -12220,11 +12205,6 @@ belong to the given subset of CONSEQUENCES.
 ;;
 ;; This covers my dired.el extensions, for use in my Emacs setup:
 ;; https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -12505,11 +12485,6 @@ Add this to `dired-mode-hook'."
 ;;
 ;; Extensions for Ediff, intended for use in my Emacs setup:
 ;; https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 (require 'ediff)
@@ -12594,11 +12569,6 @@ Also see `prot-ediff-store-layout'."
 ;;
 ;; Extensions for Emacs Lisp, intended for use in my Emacs setup:
 ;; https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -12665,7 +12635,7 @@ Now use `display-buffer-alist' like the Lisp gods intended."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-eww.el" :mkdirp yes
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou, Abhiseck Paira
+;; Copyright (C) 2021-2025  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
@@ -12692,11 +12662,6 @@ Now use `display-buffer-alist' like the Lisp gods intended."
 ;;
 ;; Extensions for the eww, intended for my Emacs setup:
 ;; <https://protesilaos.com/emacs/dotemacs/>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -13151,11 +13116,6 @@ property, such that it can be found by `prot-minibuffer-completions-close-help'.
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -13784,11 +13744,6 @@ Specific to the current window's mode line.")
 ;;
 ;; This covers my tweaks for notmuch.el that are meant for use in my
 ;; Emacs setup: https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -14067,11 +14022,6 @@ Add this to `notmuch-mua-send-hook'."
 ;;
 ;; Extensions for the Orderless completion style for use in my Emacs
 ;; setup: <https://protesilaos.com/emacs/dotemacs/>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -14135,11 +14085,6 @@ Add this to `notmuch-mua-send-hook'."
 ;;
 ;; This covers my tweaks for Org that are meant for use in my
 ;; Emacs setup: https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -14722,11 +14667,6 @@ from the heading text instead of a UUID."
 ;;
 ;; Insert character pair around symbol or region using minibuffer
 ;; completion.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -14912,11 +14852,6 @@ controlled by `delete-pair-blink-delay'."
 ;;; Commentary:
 ;;
 ;; Prefix keymap for my custom keymaps.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -15280,11 +15215,6 @@ controlled by `delete-pair-blink-delay'."
 ;;; Commentary:
 ;;
 ;; Extensions for project.el.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -15469,11 +15399,6 @@ is a string."
 ;;; Commentary:
 ;;
 ;; Extensions for register.el.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -15639,11 +15564,6 @@ Also see `prot-register-use-dwim'."
 ;; Set up a scratch buffer for an editable major mode of choice.  The
 ;; idea is based on the `scratch.el' package by Ian Eure:
 ;; <https://github.com/ieure/scratch-el>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -15775,11 +15695,6 @@ for the given MAJOR-MODE, any text is appended to it."
 ;;
 ;; This covers my isearch.el, replace.el, and grep.el extensions, for
 ;; use in my Emacs setup: <https://protesilaos.com/emacs/dotemacs>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -16329,11 +16244,6 @@ and function as links to the context they reference."
 ;;
 ;; This covers my shell.el extensions, for use in my Emacs setup:
 ;; <https://protesilaos.com/emacs/dotemacs>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -16682,11 +16592,6 @@ Add a bookmark handler for shell buffer and activate the
 ;;; Commentary:
 ;;
 ;; Common commands for my Emacs: <https://protesilaos.com/emacs/dotemacs/>.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -17843,11 +17748,6 @@ major mode.")
 ;;
 ;; This covers my spelling-related extensions, for use in my Emacs
 ;; setup: https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -17953,11 +17853,6 @@ function.  Then you can control the buffer's specifics via
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
@@ -18092,11 +17987,6 @@ Else do `vertico-exit'."
 ;;
 ;; This covers my window and display-buffer extensions, for use in my
 ;; Emacs setup: https://protesilaos.com/emacs/dotemacs.
-;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
 
 ;;; Code:
 
