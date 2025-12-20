@@ -272,7 +272,7 @@ property, such that it can be found by `prot-minibuffer-completions-close-help'.
         (setq completions-detailed t)
         (setq completions-format 'one-column)
         (setq completions-header-format "")
-        (setq completions-highlight-face 'button)
+        (setq completions-highlight-face 'success)
         (setq completions-max-height 12)
         (setq completions-sort 'historical)
         (setq completion-auto-help t)
