@@ -27,6 +27,7 @@
 ;;; Code:
 
 (require 'prot-common)
+(require 'prot-icons)
 
 (defgroup prot-modeline nil
   "Custom modeline that is stylistically close to the default."
@@ -360,14 +361,9 @@ face.  Let other buffers have no face.")
 
 ;;;; Major mode
 
-(defun prot-modeline-major-mode-indicator ()
-  "Return appropriate propertized mode line indicator for the major mode."
-  (let ((indicator (cond
-                    ((derived-mode-p 'text-mode) "§")
-                    ((derived-mode-p 'prog-mode) "λ")
-                    ((derived-mode-p 'comint-mode) ">_")
-                    (t "◦"))))
-    (propertize indicator 'face 'shadow)))
+(defun prot-modeline-major-mode-icon (&optional face)
+  "Return icon for the major mode, optionally propertized with FACE."
+  (prot-icons-get-icon major-mode face))
 
 (defun prot-modeline-major-mode-name ()
   "Return capitalized `major-mode' without the -mode suffix."
@@ -384,7 +380,7 @@ face.  Let other buffers have no face.")
      (propertize "%[" 'face 'prot-modeline-indicator-red)
      '(:eval
        (concat
-        (prot-modeline-major-mode-indicator)
+        (prot-modeline-major-mode-icon (unless (mode-line-window-selected-p) 'shadow))
         " "
         (propertize
          (prot-modeline-string-abbreviate-but-last

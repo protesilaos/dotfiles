@@ -185,8 +185,11 @@
           (" ▼" . t))) ; same as `org-ellipsis'
 
   ;; Show icons for files in the Magit status and other buffers.
-  (with-eval-after-load 'nerd-icons
-    (setq magit-format-file-function #'magit-format-file-nerd-icons))
+  (with-eval-after-load 'prot-icons
+    (setq magit-format-file-function
+          (lambda (_kind file face &rest _)
+            (let ((icon (prot-icons-get-file-icon file)))
+              (format "%s %s" icon (propertize file 'font-lock-face face))))))
 
   (setq magit-diff-refine-hunk t)
   (setq magit-diff-refine-ignore-whitespace t)

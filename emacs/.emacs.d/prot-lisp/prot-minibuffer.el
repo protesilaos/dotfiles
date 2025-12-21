@@ -30,6 +30,9 @@
 
 ;;; Code:
 
+(require 'prot-common)
+(require 'prot-icons)
+
 (defgroup prot-minibuffer nil
   "Extensions for the minibuffer and completions."
   :group 'minibuffer)
@@ -82,34 +85,28 @@ Omit the .. directory from FILES."
     (nconc (seq-filter directory-p files)
            (seq-remove directory-p files))))
 
-(defvar prot-minibuffer-file-extensions
-  '((archive "tar" "rar" "zip")
-    (image "jpg" "png" "jpeg")
-    (audio "mp3" "flac" "ogg" "wav")
-    (video "mkv" "webm" "mp4")
-    (text "org" "txt" "md")
-    (document "pdf" "epub" "info" "texi")
-    (program "sh" "el" "c" "py" "yaml" "toml" "conf" "js" "html"))
-  "Some common file extensions grouped by type.")
-
-(defun prot-minibuffer--get-file-type-regexp (type)
-  "Return regular expression for file TYPE.
-TYPE is a `car' among the elements of `prot-minibuffer-file-extensions'."
-  (when-let* ((extensions (alist-get type prot-minibuffer-file-extensions)))
-    (format "\\.%s\\'" (regexp-opt extensions))))
+(defun prot-minibuffer-file-affixate (files)
+  "Return FILES with prefix and suffix."
+  (mapcar
+   (lambda (file)
+     (list
+      file
+      (format "%s " (prot-icons-get-file-icon file))
+      (prot-minibuffer--propertize-suffix-with-space (format "%s" file))))
+   files))
 
 (defun prot-minibuffer-file-group (file transform)
   "Return FILE group name unless TRANSFORM is non-nil."
   (cond
    (transform file)
    ((string-suffix-p "/" file) "Directory")
-   ((string-match-p (prot-minibuffer--get-file-type-regexp 'archive) file) "Archive")
-   ((string-match-p (prot-minibuffer--get-file-type-regexp 'text) file) "Text")
-   ((string-match-p (prot-minibuffer--get-file-type-regexp 'image) file) "Image")
-   ((string-match-p (prot-minibuffer--get-file-type-regexp 'audio) file) "Audio")
-   ((string-match-p (prot-minibuffer--get-file-type-regexp 'video) file) "Video")
-   ((string-match-p (prot-minibuffer--get-file-type-regexp 'document) file) "Document")
-   ((string-match-p (prot-minibuffer--get-file-type-regexp 'program) file) "Program")
+   ((string-match-p (prot-common--get-file-type-regexp 'archive) file) "Archive")
+   ((string-match-p (prot-common--get-file-type-regexp 'text) file) "Text")
+   ((string-match-p (prot-common--get-file-type-regexp 'image) file) "Image")
+   ((string-match-p (prot-common--get-file-type-regexp 'audio) file) "Audio")
+   ((string-match-p (prot-common--get-file-type-regexp 'video) file) "Video")
+   ((string-match-p (prot-common--get-file-type-regexp 'document) file) "Document")
+   ((string-match-p (prot-common--get-file-type-regexp 'program) file) "Program")
    (t "Other")))
 
 (defun prot-minibuffer-symbol-sort (symbols)
@@ -127,16 +124,29 @@ TYPE is a `car' among the elements of `prot-minibuffer-file-extensions'."
             " ")
           (propertize string 'face 'completions-annotations)))
 
-(defun prot-minibuffer-buffer-annotate (buffer)
-  "Return the major mode of BUFFER or nil."
-  (with-current-buffer (get-buffer buffer)
-    (prot-minibuffer--propertize-suffix-with-space (format "%s" major-mode))))
+(defun prot-minibuffer-buffer-affixate (buffers)
+  "Return BUFFERS with prefix and suffix."
+  (mapcar
+   (lambda (buffer)
+     (let* ((buffer-object (get-buffer buffer))
+            (mode (with-current-buffer buffer-object major-mode)))
+       (list
+        buffer
+        (format "%s " (prot-icons-get-icon mode))
+        (prot-minibuffer--propertize-suffix-with-space (format "%s" mode)))))
+   buffers))
 
-(defun prot-minibuffer-bookmark-annotate (bookmark)
-  "Return the filename data of BOOKMARK or nil."
-  (when-let* ((data (bookmark-get-bookmark bookmark))
-              (filename (bookmark-prop-get data 'filename)))
-    (prot-minibuffer--propertize-suffix-with-space filename)))
+(defun prot-minibuffer-bookmark-affixate (bookmarks)
+  "Return BOOKMARKS with prefix and suffix."
+  (mapcar
+   (lambda (bookmark)
+     (let* ((data (bookmark-get-bookmark bookmark))
+            (file (bookmark-prop-get data 'filename)))
+       (list
+        bookmark
+        (format "%s " (prot-icons-get-file-icon file))
+        (prot-minibuffer--propertize-suffix-with-space (format "%s" file)))))
+   bookmarks))
 
 (defun prot-minibuffer-library-sort (libraries)
   "Sort LIBRARIES, omitting autoloads and bytecode files."

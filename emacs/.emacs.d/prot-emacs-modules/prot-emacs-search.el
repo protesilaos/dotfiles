@@ -79,7 +79,7 @@
     (setq xref-search-program (if ripgrep 'ripgrep 'grep))
 
     (setq grep-save-buffers nil)
-    (setq grep-use-headings t) ; Emacs 30
+    (setq grep-use-headings nil) ; Emacs 30
 
     (setq grep-program (or ripgrep (executable-find "grep")))
     (setq grep-template

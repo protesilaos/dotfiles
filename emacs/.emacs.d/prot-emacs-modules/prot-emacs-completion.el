@@ -26,19 +26,20 @@
                      (eager-display . nil)
                      (eager-update . t)
                      (group-function . ,#'prot-minibuffer-file-group)
+                     (affixation-function . ,#'prot-minibuffer-file-affixate)
                      (display-sort-function . ,#'prot-minibuffer-file-sort-directories-first)))
-            (bookmark . ((eager-display . nil)
-                         (eager-update . nil)
-                         (annotation-function . ,#'prot-minibuffer-bookmark-annotate)))
+            (bookmark . (,@eager-update-properties
+                         (affixation-function . ,#'prot-minibuffer-bookmark-affixate)))
             (project-file . (,@eager-update-properties
-                             (group-function . ,#'prot-minibuffer-file-group)))
+                             (group-function . ,#'prot-minibuffer-file-group)
+                             (affixation-function . ,#'prot-minibuffer-file-affixate)))
             (library . (,@eager-update-properties
                         (annotation-function . ,#'prot-minibuffer-library-annotate)
                         (display-sort-function . ,#'prot-minibuffer-library-sort)))
             (symbol-help . (,@eager-update-properties
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
-                       (annotation-function . ,#'prot-minibuffer-buffer-annotate)))
+                       (affixation-function . ,#'prot-minibuffer-buffer-affixate)))
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
             (emoji . ,eager-update-properties)

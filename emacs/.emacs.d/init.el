@@ -57,18 +57,6 @@ before all other modules of my setup."
   :group 'prot-emacs
   :type 'boolean)
 
-(defcustom prot-emacs-load-icons nil
-  "When non-nil, enable iconography in various contexts.
-This installs and uses the `nerd-icons' package and its variants.
-NOTE that you still need to invoke `nerd-icons-install-fonts'
-manually to first get the icon files.
-
-This user option must be set in the `prot-emacs-pre-custom.el'
-file.  If that file exists in the Emacs directory, it is loaded
-before all other modules of my setup."
-  :group 'prot-emacs
-  :type 'boolean)
-
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
@@ -377,8 +365,7 @@ making an abbreviation to a function."
 (require 'prot-emacs-web)
 (when prot-emacs-load-which-key
   (require 'prot-emacs-which-key))
-(when prot-emacs-load-icons
-  (require 'prot-emacs-icons))
+(require 'prot-emacs-icons)
 
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at

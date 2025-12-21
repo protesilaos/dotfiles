@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+;; TODO 2025-12-21: I need to review all this.
+
 (eval-when-compile
   (require 'subr-x)
   (require 'cl-lib))
@@ -35,6 +37,22 @@
 (defgroup prot-common ()
   "Auxiliary functions for my dotemacs."
   :group 'editing)
+
+(defvar prot-common-file-extensions
+  '((archive "tar" "rar" "zip")
+    (image "jpg" "png" "jpeg")
+    (audio "mp3" "flac" "ogg" "wav")
+    (video "mkv" "webm" "mp4")
+    (text "org" "txt" "md")
+    (document "pdf" "epub" "info" "texi")
+    (program "sh" "el" "c" "py" "yaml" "toml" "conf" "js" "html"))
+  "Some common file extensions grouped by type.")
+
+(defun prot-common--get-file-type-regexp (type)
+  "Return regular expression for file TYPE.
+TYPE is a `car' among the elements of `prot-common-file-extensions'."
+  (when-let* ((extensions (alist-get type prot-common-file-extensions)))
+    (format "\\.%s\\'" (regexp-opt extensions))))
 
 ;;;###autoload
 (defun prot-common-number-even-p (n)
