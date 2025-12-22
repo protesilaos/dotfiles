@@ -27,7 +27,7 @@
                      (eager-update . t)
                      (group-function . ,#'prot-minibuffer-file-group)
                      (affixation-function . ,#'prot-minibuffer-file-affixate)
-                     (display-sort-function . ,#'prot-minibuffer-file-sort-directories-first)))
+                     (display-sort-function . ,#'prot-minibuffer-file-sort)))
             (bookmark . (,@eager-update-properties
                          (affixation-function . ,#'prot-minibuffer-bookmark-affixate)))
             (project-file . (,@eager-update-properties
