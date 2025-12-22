@@ -80,10 +80,7 @@ Omit the .. directory from FILES."
   "Return FILES with prefix and suffix."
   (mapcar
    (lambda (file)
-     (list
-      file
-      (format "%s " (prot-icons-get-file-icon file))
-      (prot-minibuffer--propertize-suffix-with-space (format "%s" file))))
+     (list file (format "%s " (prot-icons-get-file-icon file)) ""))
    files))
 
 (defun prot-minibuffer-file-group (file transform)
