@@ -4122,6 +4122,7 @@ for this.
                        (affixation-function . ,#'prot-minibuffer-buffer-affixate)))
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
+            (denote-file . ,eager-update-properties)
             (emoji . ,eager-update-properties)
             (theme . ,eager-update-properties)
             (unicode-name . ,eager-update-properties)
@@ -12711,7 +12712,7 @@ Now use `display-buffer-alist' like the Lisp gods intended."
   :group 'prot-icons)
 
 (defvar prot-icons
-  '((dired-mode "|_" prot-icons-gray)
+  '((dired-mode "|_" dired-directory)
     (archive-mode "|@" prot-icons-yellow)
     (prog-mode ">λ" prot-icons-purple)
     (text-mode ">t" prot-icons-cyan)

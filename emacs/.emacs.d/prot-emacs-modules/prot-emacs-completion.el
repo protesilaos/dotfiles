@@ -42,6 +42,7 @@
                        (affixation-function . ,#'prot-minibuffer-buffer-affixate)))
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
+            (denote-file . ,eager-update-properties)
             (emoji . ,eager-update-properties)
             (theme . ,eager-update-properties)
             (unicode-name . ,eager-update-properties)
