@@ -12666,7 +12666,7 @@ Now use `display-buffer-alist' like the Lisp gods intended."
     (((class color) (min-colors 88) (background light))
      :foreground "#223399")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#77aaff")
+     :foreground "#5599ff")
     (t :foreground "blue"))
   "Face for icons."
   :group 'prot-icons)
@@ -12677,16 +12677,6 @@ Now use `display-buffer-alist' like the Lisp gods intended."
      :foreground "#8f2270")
     (((class color) (min-colors 88) (background dark))
      :foreground "#ee70aa")
-    (t :foreground "magenta"))
-  "Face for icons."
-  :group 'prot-icons)
-
-(defface prot-icons-purple
-  '((default :inherit prot-icons-icon)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#7744aa")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#7060ff")
     (t :foreground "magenta"))
   "Face for icons."
   :group 'prot-icons)
@@ -12704,25 +12694,35 @@ Now use `display-buffer-alist' like the Lisp gods intended."
 (defface prot-icons-gray
   '((default :inherit prot-icons-icon)
     (((class color) (min-colors 88) (background light))
-     :foreground "gray60")
+     :foreground "gray30")
     (((class color) (min-colors 88) (background dark))
-     :foreground "gray40")
+     :foreground "gray70")
+    (t :foreground "gray"))
+  "Face for icons."
+  :group 'prot-icons)
+
+(defface prot-icons-faint
+  '((default :inherit prot-icons-icon)
+    (((class color) (min-colors 88) (background light))
+     :foreground "gray70")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "gray30")
     (t :foreground "gray"))
   "Face for icons."
   :group 'prot-icons)
 
 (defvar prot-icons
-  '((dired-mode "|_" dired-directory)
-    (archive-mode "|@" prot-icons-yellow)
-    (prog-mode ">λ" prot-icons-purple)
-    (text-mode ">t" prot-icons-cyan)
+  '((dired-mode "|_" prot-icons-gray)
+    (archive-mode "|@" prot-icons-gray)
+    (prog-mode ">Π" prot-icons-magenta) ; πρόγραμμα
+    (text-mode ">Α" prot-icons-green) ; αλφάβητο
     (comint-mode ">_" prot-icons-gray)
-    (document ">$" prot-icons-red)
-    (audio ">a" prot-icons-red)
-    (image ">i" prot-icons-green)
-    (video ">v" prot-icons-magenta)
-    (t ">." prot-icons-gray))
-  "Major mode or concepts and their corresponding icons.
+    (document ">Σ" prot-icons-red) ; σύγγραμμα
+    (audio ">Η" prot-icons-cyan) ; ήχος
+    (image ">Ε" prot-icons-yellow) ; εικόνα
+    (video ">Κ" prot-icons-blue) ; κίνηση (κινηματογράφος)
+    (t ">." prot-icons-faint))
+  "Major modes or concepts and their corresponding icons.
 Each element is a cons cell of the form (THING STRING FACE), where THING
 is a symbol STRING is one or more characters that represent THING, and
 FACE is the face to use for it, where applicable.")
