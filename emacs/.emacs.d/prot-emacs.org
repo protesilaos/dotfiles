@@ -5493,10 +5493,14 @@ The =xref.el= provides the infrastructure to jump to and from a
 definition. For example, with point over a function call,
 ~xref-find-definitions~ will jump to the file and location where the
 function is defined or provide an option to pick one among multiple
-definitions, where applicable. The =grep.el= is a wrapper for the Unix
-program of the same name. Not much to add there. While =re-builder.el=
-defines a command that lets us write a regexp that matches against the
-current buffer, allowing us to test it live.
+definitions, where applicable.  When Xref finds matches across files,
+it groups them per file (and each file gets a decorative icon on the
+side ([[#h:4efde779-3ef0-40b7-82e4-70f71b321428][The =prot-emacs-icons.el= module (~prot-icons~)]])).
+
+The =grep.el= is a wrapper for the Unix program of the same name. Not
+much to add there. While =re-builder.el= defines a command that lets
+us write a regexp that matches against the current buffer, allowing us
+to test it live.
 
 Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
 (~ripgrep~) program: this covers Xref as well.
@@ -5744,6 +5748,9 @@ We can toggle this effect at any time with the =(= key, by default.
 
 I disable the repetition of the =j= key as I do use ~repeat-mode~
 ([[#h:fbe6f9da-25ee-46a3-bb03-8fa7c1d48dab][The =prot-emacs-essentials.el= settings for ~repeat-mode~]]).
+
+Note that my Dired buffers not only hide details by default: they also
+have decorative "icons" next to each file in the listing ([[#h:4efde779-3ef0-40b7-82e4-70f71b321428][The =prot-emacs-icons.el= module (~prot-icons~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-dired.el"
 (prot-emacs-configure
@@ -7246,7 +7253,8 @@ functionality, such as with Ediff and Smerge:
 - [[#h:2ed18433-8b38-4518-a464-77bc76e3a87d][The =prot-emacs-git.el= section about ~smerge-mode~]].
 
 Magit is highly configurable though comes with good defaults. The
-changes I make here are not necessary.
+changes I make here are not necessary. One of them is the inclusion of
+decorative icons next to file names ([[#h:4efde779-3ef0-40b7-82e4-70f71b321428][The =prot-emacs-icons.el= module (~prot-icons~)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
 ;;; Interactive and powerful git front-end (Magit)
@@ -7270,7 +7278,8 @@ changes I make here are not necessary.
         `(;; (magit-fringe-bitmap> . magit-fringe-bitmapv)
           (" ▼" . t))) ; same as `org-ellipsis'
 
-  ;; Show icons for files in the Magit status and other buffers.
+  ;; Show icons for files in the Magit status and other buffers.  This
+  ;; is from my prot-icons.el.
   (with-eval-after-load 'prot-icons
     (setq magit-format-file-function
           (lambda (_kind file face &rest _)
@@ -11351,6 +11360,22 @@ via =M-x= or even bind it to another key.
 :CUSTOM_ID: h:4efde779-3ef0-40b7-82e4-70f71b321428
 :END:
 
+I used to have a setup for Nerd Fonts that would add iconography to
+various interfaces. I never really like it, but understood the benefit
+of it for screen sharing: the observer can better understand what is
+on display.
+
+The =prot-icons.el= defines "icons", which are just plain text
+characters with some associated colours, and adds them to various
+places ([[#h:99294d20-ffe5-4d0b-ac62-04fb39d1ba82][The =prot-icons.el= library]]). Though anything related to the
+minibuffer and completions is done by =prot-minibuffer.el= and the
+~completion-category-overrides~, while the relevant mode line parts
+are handled by =prot-modeline.el=:
+
+- [[#h:0d49218d-4199-4847-9765-60a3f94e515d][The =prot-emacs-completion.el= settings for completion category overrides]].
+- [[#h:761861c9-9a0e-4c97-b98d-20f13a6b3b79][The =prot-minibuffer= library]].
+- [[#h:935adc09-abaa-4413-a5ab-a7a562081c20][The =prot-modeline.el= library]].
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-icons.el" :mkdirp yes
 ;;; Icons
 ;; NOTE 2025-12-21: Also see the `prot-minibuffer.el' and my
@@ -11373,12 +11398,12 @@ Each of the following subsections is dedicated to an individual custom
 library. These are "packages" of mine that are only relevant to my
 Emacs configuration, even though they are designed in accordance with
 best practices for packaging Emacs Lisp code. Many of my public-facing
-packages for Emacs started out as custom libraries like these
+packages for Emacs started out as custom libraries like those
 ([[#h:e289a614-4f17-4d6c-a028-42fe45aebe66][The init.el arrangements for my own modules and custom libraries]]).
 
 Please bear in mind that the code I write here is not necessarily as
 high quality as what I put in my public packages, meaning that I do
-not test it as much and do not try to make it perfect.
+not test it as much and do not try to make it work for all cases.
 
 ** The =prot-abbrev.el= library
 :PROPERTIES:
@@ -12553,6 +12578,9 @@ Now use `display-buffer-alist' like the Lisp gods intended."
 #+end_src
 
 ** The =prot-icons.el= library
+:PROPERTIES:
+:CUSTOM_ID: h:99294d20-ffe5-4d0b-ac62-04fb39d1ba82
+:END:
 
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-icons.el" :mkdirp yes
 ;;; prot-icons.el --- Get characters, icons, and symbols for things -*- lexical-binding: t -*-
