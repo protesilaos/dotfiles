@@ -735,33 +735,6 @@ These include the packages `marginalia', `consult', `corfu',
   :type 'boolean)
 #+end_src
 
-*** The =init.el= user option to enable ~which-key~
-:PROPERTIES:
-:CUSTOM_ID: h:24324854-1f8c-4d8b-aa7c-291de968cbf4
-:END:
-
-The ~which-key~ package provides hints for keys that complete the
-currently incomplete sequence. Here we determine whether to load the
-module or not. I personally never rely on ~which-key~ even if I enable
-its mode. If I ever need to review which key bindings are available I
-will either type =C-h= to complete a key sequence (produces a Help
-buffer with relevant keys) or I will do =C-h m= (=M-x describe-mode=
-to get information about the current major mode).
-
-Remember to read how these options come into effect ([[#h:5a41861f-4c38-45ac-8da2-51d77c0b4a73][The init.el user options]]).
-
-Also check [[#h:ddb1070d-2f91-4224-ad43-ef03f038f787][the =prot-emacs-which-key.el= module]].
-
-#+begin_src emacs-lisp :tangle "init.el"
-(defcustom prot-emacs-load-which-key nil
-  "When non-nil, display key binding hints after a short delay.
-This user option must be set in the `prot-emacs-pre-custom.el'
-file.  If that file exists in the Emacs directory, it is loaded
-before all other modules of my setup."
-  :group 'prot-emacs
-  :type 'boolean)
-#+end_src
-
 ** The =init.el= basic configurations to disable backups and lockfiles
 :PROPERTIES:
 :CUSTOM_ID: h:63d74507-0318-4c02-ad30-484abcb8f78e
@@ -1547,8 +1520,7 @@ The individual modules are documented in a section of their own under
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
 (require 'prot-emacs-web)
-(when prot-emacs-load-which-key
-  (require 'prot-emacs-which-key))
+(require 'prot-emacs-which-key)
 (require 'prot-emacs-icons)
 
 ;; For those who use my dotfiles and need an easy way to write their
@@ -11350,19 +11322,14 @@ only channel I join automatically whenever I do =M-x rcirc= is that of
 :CUSTOM_ID: h:ddb1070d-2f91-4224-ad43-ef03f038f787
 :END:
 
-There is a user option in my setup to load this module
-([[#h:24324854-1f8c-4d8b-aa7c-291de968cbf4][The =init.el= option to enable ~which-key~]]).
-
-When the ~which-key-mode~ is enabled, any incomplete key sequence will
-produce a popup at the lower part of the Emacs frame showing keys that
-complete the current sequence together with the name of the command
-they are invoking.
-
-I personally do not use this, except when I need to do a
-demonstration.
-
-Note that ~which-key~ is built into Emacs 30. If you are on a previous
-version, use =:ensure t= to install it from a package archive.
+Starting with Emacs 30, ~which-key~ is built into Emacs. This is a
+minor mode that automatically displays a listing of all the keys that
+complete the current incomplete key sequence. For example, if we type
+=C-x= and wait for ~which-key-idle-delay~, we will get a popup window
+with all the key bindings that start with =C-x=, such as =C-x C-f=.
+The listing includes the names of the commands bound to each key. This
+is useful as a learning tool, as we can then call that command by name
+via =M-x= or even bind it to another key.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-which-key.el" :mkdirp yes
 (prot-emacs-configure

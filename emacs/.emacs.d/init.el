@@ -49,14 +49,6 @@ These include the packages `marginalia', `consult', `corfu',
   :group 'prot-emacs
   :type 'boolean)
 
-(defcustom prot-emacs-load-which-key nil
-  "When non-nil, display key binding hints after a short delay.
-This user option must be set in the `prot-emacs-pre-custom.el'
-file.  If that file exists in the Emacs directory, it is loaded
-before all other modules of my setup."
-  :group 'prot-emacs
-  :type 'boolean)
-
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
@@ -363,8 +355,7 @@ making an abbreviation to a function."
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
 (require 'prot-emacs-web)
-(when prot-emacs-load-which-key
-  (require 'prot-emacs-which-key))
+(require 'prot-emacs-which-key)
 (require 'prot-emacs-icons)
 
 ;; For those who use my dotfiles and need an easy way to write their
