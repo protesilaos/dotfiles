@@ -122,9 +122,11 @@
   :group 'prot-icons)
 
 (defvar prot-icons
-  '((dired-mode "|_" prot-icons-gray)
+  '((dired-mode "|+" prot-icons-gray)
     (archive-mode "|@" prot-icons-gray)
+    (diff-mode ">Δ" prot-icons-gray) ; διαφορά
     (prog-mode ">Π" prot-icons-magenta) ; πρόγραμμα
+    (conf-mode ">Π" prot-icons-faint) ; πρόγραμμα
     (text-mode ">Α" prot-icons-green) ; αλφάβητο
     (comint-mode ">_" prot-icons-gray)
     (document ">Σ" prot-icons-red) ; σύγγραμμα
@@ -171,8 +173,12 @@ FACE is the face to use for it, where applicable.")
     (prot-icons-get-icon 'video))
    ((string-match-p (prot-common--get-file-type-regexp 'document) file)
     (prot-icons-get-icon 'document))
+   ((string-match-p (prot-common--get-file-type-regexp 'diff) file)
+    (prot-icons-get-icon 'diff-mode))
    ((string-match-p (prot-common--get-file-type-regexp 'program) file)
     (prot-icons-get-icon 'prog-mode))
+   ((string-match-p (prot-common--get-file-type-regexp 'program-data) file)
+    (prot-icons-get-icon 'conf-mode))
    (t (prot-icons-get-icon nil))))
 
 ;;;; Icons for Dired

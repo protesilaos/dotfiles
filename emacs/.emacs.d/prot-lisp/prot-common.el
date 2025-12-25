@@ -45,7 +45,9 @@
     (video "mkv" "webm" "mp4")
     (text "org" "txt" "md")
     (document "pdf" "epub" "info" "texi")
-    (program "sh" "el" "c" "py" "yaml" "yml" "toml" "conf" "js" "html" "xml"))
+    (diff "diff" "patch")
+    (program "sh" "el" "c" "py" "js" "html" "xml")
+    (program-data "yaml" "yml" "toml" "conf" "json" "css"))
   "Some common file extensions grouped by type.")
 
 (defun prot-common--get-file-type-regexp (type)
