@@ -11731,7 +11731,7 @@ an alternative date format, as specified by
     (video "mkv" "webm" "mp4")
     (text "org" "txt" "md")
     (document "pdf" "epub" "info" "texi")
-    (program "sh" "el" "c" "py" "yaml" "toml" "conf" "js" "html"))
+    (program "sh" "el" "c" "py" "yaml" "yml" "toml" "conf" "js" "html" "xml"))
   "Some common file extensions grouped by type.")
 
 (defun prot-common--get-file-type-regexp (type)
