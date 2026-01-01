@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # post-new --- Notmuch rules that run after notmuch-new(1)
 #
@@ -29,7 +29,14 @@
 notmuch tag -unread -new -- tag:replied
 
 # tag all "new" messages "inbox" and "unread"
-notmuch tag +inbox +unread -new -- tag:new
+while IFS= read -r -d $'\0' file
+do
+    if [[ "$file" != *R* ]]; then
+        notmuch tag +unread -- "path:${file}"
+    fi
+done < <(notmuch search --output=files --format=text0 tag:new)
+
+notmuch tag +inbox -new -- tag:new
 
 # tag my replies as "sent"
 # notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*" not tag:list)'
