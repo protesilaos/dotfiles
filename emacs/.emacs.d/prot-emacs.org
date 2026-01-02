@@ -12836,8 +12836,7 @@ FACE is the face to use for it, where applicable.")
   (let ((overlay (make-overlay position (+ position 1))))
     (overlay-put overlay 'prot-icons-overlay t)
     (overlay-put overlay 'evaporate t)
-    (overlay-put overlay 'before-string (propertize string 'display string))
-    (overlay-put overlay 'after-string (propertize " " 'display '(space :align-to 1)))))
+    (overlay-put overlay 'before-string (format "%s " (propertize string 'display string)))))
 
 (defun prot-icons-xref--add-icons ()
   "Add icons to Xref headings."
