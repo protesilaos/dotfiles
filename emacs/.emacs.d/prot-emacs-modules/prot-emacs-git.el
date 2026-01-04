@@ -20,6 +20,7 @@
   (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
 
   (autoload #'prot-project-maybe-in-tab "prot-project")
+  (autoload #'prot-project-switch "prot-project")
   (define-key project-prefix-map (kbd "p") #'prot-project-maybe-in-tab))
 
 ;;;; `diff-mode'

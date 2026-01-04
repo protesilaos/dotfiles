@@ -6786,6 +6786,7 @@ functionality I rely on, so do take a look at what it has to offer.
   (advice-add #'project-switch-project :after #'prot-common-clear-minibuffer-message)
 
   (autoload #'prot-project-maybe-in-tab "prot-project")
+  (autoload #'prot-project-switch "prot-project")
   (define-key project-prefix-map (kbd "p") #'prot-project-maybe-in-tab))
 #+end_src
 
@@ -18461,7 +18462,7 @@ Also see `prot-window-delete-popup-frame'." command)
 ;;;###autoload (autoload 'prot-window-popup-tmr "prot-window")
 (prot-window-define-with-popup-frame tmr)  ; defines command `prot-window-popup-tmr'
 
-;;;###autoload (autoload 'prot-window-popup-tmr "prot-window")
+;;;###autoload (autoload 'prot-window-popup-prot-project-switch "prot-window")
 (prot-window-define-with-popup-frame prot-project-switch)  ; defines command `prot-window-popup-prot-project-switch'
 
 (defun prot-window-set-delete-popup-hook (feature hook)
