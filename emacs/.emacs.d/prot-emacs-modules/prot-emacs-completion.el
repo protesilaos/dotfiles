@@ -1,7 +1,7 @@
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (setq completion-styles '(basic flex)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic substring initials flex)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard nil) ; Emacs 31
   (with-eval-after-load 'orderless
     (setq completion-styles (append completion-styles '(orderless)))))
@@ -17,8 +17,7 @@
   (prot-minibuffer-missing-categories-mode 1)
 
   ;; NOTE 2025-12-02: The `eager-display' and `eager-update' are part of Emacs 31.
-  (let* ((eager-update-properties '((styles . (basic substring flex))
-                                    (eager-display . nil)
+  (let* ((eager-update-properties '((eager-display . nil)
                                     (eager-update . t)))
          (eager-update-properties-no-sort (append eager-update-properties (list (cons 'display-sort-function #'identity)))))
     (setq completion-category-overrides
