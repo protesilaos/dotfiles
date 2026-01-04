@@ -7018,48 +7018,6 @@ They make more sense to me.
     (require 'add-log)
     (require 'log-view)
 
-    ;; NOTE: I override lots of the defaults
-    (prot-emacs-keybind global-map
-      "C-x v B" #'vc-annotate ; Blame mnemonic
-      "C-x v e" #'vc-ediff
-      "C-x v k" #'vc-delete-file ; 'k' for kill==>delete is more common
-      "C-x v G" #'vc-log-search  ; git log --grep
-      "C-x v t" #'vc-create-tag
-      "C-x v c" #'vc-clone ; Emacs 31
-      "C-x v l" #'vc-print-change-log ; Emacs 31 replacement for `vc-print-log'
-      "C-x v L" #'vc-print-root-change-log ; Emacs 31 replacement for `vc-print-root-log'
-      "C-x v d" #'vc-diff
-      "C-x v ." #'vc-dir-root ; `vc-dir-root' is from Emacs 28
-      "C-x v <return>" #'vc-dir-root)
-    (prot-emacs-keybind vc-dir-mode-map
-      "t" #'vc-create-tag
-      "O" #'vc-log-outgoing
-      "o" #'vc-dir-find-file-other-window
-      "d" #'vc-diff ; parallel to D: `vc-root-diff'
-      "k" #'vc-dir-delete-file
-      "G" #'vc-revert)
-    (prot-emacs-keybind vc-git-stash-shared-map
-      "a" #'vc-git-stash-apply-at-point
-      "c" #'vc-git-stash ; "create" named stash
-      "k" #'vc-git-stash-delete-at-point ; symmetry with `vc-dir-delete-file'
-      "p" #'vc-git-stash-pop-at-point
-      "s" #'vc-git-stash-snapshot)
-    (prot-emacs-keybind vc-annotate-mode-map
-      "M-q" #'vc-annotate-toggle-annotation-visibility
-      "C-c C-c" #'vc-annotate-goto-line
-      "<return>" #'vc-annotate-find-revision-at-line)
-    (prot-emacs-keybind log-edit-mode-map
-      "M-s" #'nil ; I use M-s for my search commands
-      "M-r" #'nil) ; I use `consult-history'
-    (prot-emacs-keybind log-view-mode-map
-      "<tab>" #'log-view-toggle-entry-display
-      "<return>" #'log-view-find-revision
-      "s" #'vc-log-search
-      "o" #'vc-log-outgoing
-      "f" #'vc-log-incoming
-      "F" #'vc-update
-      "P" #'vc-push)
-
     ;; I only use Git.  If I ever need another, I will include it here.
     ;; This may have an effect on performance, as Emacs will not try to
     ;; check for a bunch of backends.
@@ -7106,7 +7064,109 @@ They make more sense to me.
 
     ;; These two are from Emacs 29
     (setq vc-git-log-edit-summary-target-len 50)
-    (setq vc-git-log-edit-summary-max-len 70)))
+    (setq vc-git-log-edit-summary-max-len 70)
+
+    (define-advice vc-push (:around (&rest args) prot)
+      (let ((current-window (selected-window)))
+        (apply args)
+        (select-window current-window)))
+
+    (define-advice vc-pull (:around (&rest args) prot)
+      (let ((current-window (selected-window)))
+        (apply args)
+        (select-window current-window)))
+
+    (defun prot/vc-diff-dwim ()
+      "Show diff of buffer against file or against VC history."
+      (interactive)
+      (if-let* ((buffer (current-buffer))
+                (_ (buffer-modified-p buffer)))
+          (diff-buffer-with-file buffer)
+        (call-interactively #'vc-diff)))
+
+    (defvar prot/vc-git-grep-history nil
+      "Minibuffer history for `prot/vc-git-grep'.")
+
+    (defun prot/vc-git-grep (directory regexp)
+      "Use `vc-git-grep' with REGEXP in the current root Git DIRECTORY."
+      (interactive
+       (let ((directory (or (vc-root-dir)
+                            (locate-dominating-file "." ".git")
+                            (user-error "No VC root available"))))
+         (list
+          directory
+          (read-regexp
+           (format "vc-git-grep for REGEXP in `%s': "
+                   (propertize directory 'face 'warning))
+           nil 'prot/vc-git-grep-history))))
+      (vc-git-grep regexp "*" directory))
+
+    ;; NOTE: I override lots of the defaults
+    (prot-emacs-keybind global-map
+      "C-x v B" #'vc-annotate ; Blame mnemonic
+      "C-x v g" #'prot/vc-git-grep ; override original `vc-annotate' key
+      "C-x v e" #'vc-ediff
+      "C-x v k" #'vc-delete-file ; 'k' for kill==>delete is more common
+      "C-x v G" #'vc-log-search  ; git log --grep
+      "C-x v t" #'vc-create-tag
+      "C-x v c" #'vc-clone ; Emacs 31
+      "C-x v d" #'prot/vc-diff-dwim
+      "C-x v ." #'vc-dir-root ; `vc-dir-root' is from Emacs 28
+      "C-x v <return>" #'vc-dir-root)
+    (prot-emacs-keybind vc-dir-mode-map
+      "t" #'vc-create-tag
+      "I" #'vc-log-incoming
+      "O" #'vc-log-outgoing
+      "o" #'vc-dir-find-file-other-window
+      "d" #'vc-diff ; parallel to D: `vc-root-diff'
+      "k" #'vc-dir-delete-file
+      "G" #'vc-revert)
+    (prot-emacs-keybind vc-git-stash-shared-map
+      "a" #'vc-git-stash-apply-at-point
+      "c" #'vc-git-stash ; "create" named stash
+      "k" #'vc-git-stash-delete-at-point ; symmetry with `vc-dir-delete-file'
+      "p" #'vc-git-stash-pop-at-point
+      "s" #'vc-git-stash-snapshot)
+    (prot-emacs-keybind vc-annotate-mode-map
+      "M-q" #'vc-annotate-toggle-annotation-visibility
+      "C-c C-c" #'vc-annotate-goto-line
+      "<return>" #'vc-annotate-find-revision-at-line)
+    (prot-emacs-keybind log-edit-mode-map
+      "M-s" nil ; I use M-s for my search commands
+      "M-r" nil)
+    (prot-emacs-keybind log-view-mode-map
+      "<tab>" #'log-view-toggle-entry-display
+      "<return>" #'log-view-find-revision
+      "s" #'vc-log-search))
+
+  (defun prot/modus-vc-annotate ()
+    (modus-themes-with-colors
+      (setq vc-annotate-background-mode nil)
+      (setq vc-annotate-very-old-color fg-dim)
+      (setq vc-annotate-color-map
+            `(( 20. . ,red)
+              ( 40. . ,red-cooler)
+              ( 60. . ,red-warmer)
+              ( 80. . ,yellow-warmer)
+              (100. . ,yellow)
+              (120. . ,yellow-cooler)
+              (140. . ,green-warmer)
+              (160. . ,green)
+              (180. . ,green-cooler)
+              (200. . ,cyan-cooler)
+              (220. . ,cyan-warmer)
+              (240. . ,cyan)
+              (260. . ,blue-warmer)
+              (280. . ,blue)
+              (300. . ,blue-cooler)
+              (320. . ,blue-intense)
+              (340. . ,magenta-cooler)
+              (360. . ,fg-dim)))))
+
+  (when (memq prot-emacs-load-theme-family '(modus ef standard))
+    (with-eval-after-load 'vc-annotate
+      (prot/modus-vc-annotate)
+      (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-vc-annotate))))
 #+end_src
 
 *** COMMENT The =prot-emacs-git.el= section about ~agitate~
