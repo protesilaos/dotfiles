@@ -45,9 +45,11 @@
             (emoji . ,eager-update-properties)
             (theme . ,eager-update-properties)
             (unicode-name . ,eager-update-properties)
-            (kill-ring . ,eager-update-properties-no-sort)
             (imenu . ,eager-update-properties-no-sort)
-            (consult-location . ,eager-update-properties-no-sort)))))
+            (consult-location . ,eager-update-properties-no-sort)
+            (kill-ring . ((eager-display . t)
+                          (eager-update . t)
+                          (display-sort-function . identity)))))))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (when prot-emacs-completion-extras
