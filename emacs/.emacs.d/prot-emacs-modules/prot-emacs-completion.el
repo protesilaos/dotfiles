@@ -32,9 +32,9 @@
             (project-file . (,@eager-update-properties
                              (group-function . ,#'prot-minibuffer-file-group)
                              (affixation-function . ,#'prot-minibuffer-file-affixate)))
-            (library . (,@eager-update-properties
-                        (annotation-function . ,#'prot-minibuffer-library-annotate)
-                        (display-sort-function . ,#'prot-minibuffer-library-sort)))
+            (prot-minibuffer-library . (,@eager-update-properties
+                                        (annotation-function . ,#'prot-minibuffer-library-annotate)
+                                        (display-sort-function . ,#'prot-minibuffer-library-sort)))
             (symbol-help . (,@eager-update-properties
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
@@ -42,14 +42,14 @@
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
             (denote-file . ,eager-update-properties)
-            (emoji . ,eager-update-properties)
+            (prot-minibuffer-emoji . ,eager-update-properties)
             (theme . ,eager-update-properties)
             (unicode-name . ,eager-update-properties)
             (imenu . ,eager-update-properties-no-sort)
             (consult-location . ,eager-update-properties-no-sort)
-            (kill-ring . ((eager-display . t)
-                          (eager-update . t)
-                          (display-sort-function . identity)))))))
+            (prot-minibuffer-kill-ring . ((eager-display . t)
+                                          (eager-update . t)
+                                          (display-sort-function . identity)))))))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (when prot-emacs-completion-extras

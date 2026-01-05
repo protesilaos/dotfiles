@@ -4084,9 +4084,9 @@ for this.
             (project-file . (,@eager-update-properties
                              (group-function . ,#'prot-minibuffer-file-group)
                              (affixation-function . ,#'prot-minibuffer-file-affixate)))
-            (library . (,@eager-update-properties
-                        (annotation-function . ,#'prot-minibuffer-library-annotate)
-                        (display-sort-function . ,#'prot-minibuffer-library-sort)))
+            (prot-minibuffer-library . (,@eager-update-properties
+                                        (annotation-function . ,#'prot-minibuffer-library-annotate)
+                                        (display-sort-function . ,#'prot-minibuffer-library-sort)))
             (symbol-help . (,@eager-update-properties
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
@@ -4094,14 +4094,14 @@ for this.
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
             (denote-file . ,eager-update-properties)
-            (emoji . ,eager-update-properties)
+            (prot-minibuffer-emoji . ,eager-update-properties)
             (theme . ,eager-update-properties)
             (unicode-name . ,eager-update-properties)
             (imenu . ,eager-update-properties-no-sort)
             (consult-location . ,eager-update-properties-no-sort)
-            (kill-ring . ((eager-display . t)
-                          (eager-update . t)
-                          (display-sort-function . identity)))))))
+            (prot-minibuffer-kill-ring . ((eager-display . t)
+                                          (eager-update . t)
+                                          (display-sort-function . identity)))))))
 #+end_src
 
 *** The =prot-emacs-completion.el= for the ~orderless~ completion style
@@ -13151,15 +13151,15 @@ buffer instead of the current one."
 ;; Add some missing completion categories to let me configure the
 ;; relevant prompts via the `completion-category-overrides'.
 (defun prot-minibuffer@read-from-kill-ring (&rest args)
-  (let ((completion-extra-properties (list :category 'kill-ring)))
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-kill-ring)))
     (apply args)))
 
 (defun prot-minibuffer@read-library-name (&rest args)
-  (let ((completion-extra-properties (list :category 'library)))
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-library)))
     (apply args)))
 
 (defun prot-minibuffer@emoji--read-emoji (&rest args)
-  (let ((completion-extra-properties (list :category 'emoji)))
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-emoji)))
     (apply args)))
 
 ;;;###autoload

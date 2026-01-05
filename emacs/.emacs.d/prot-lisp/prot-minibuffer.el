@@ -42,15 +42,15 @@
 ;; Add some missing completion categories to let me configure the
 ;; relevant prompts via the `completion-category-overrides'.
 (defun prot-minibuffer@read-from-kill-ring (&rest args)
-  (let ((completion-extra-properties (list :category 'kill-ring)))
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-kill-ring)))
     (apply args)))
 
 (defun prot-minibuffer@read-library-name (&rest args)
-  (let ((completion-extra-properties (list :category 'library)))
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-library)))
     (apply args)))
 
 (defun prot-minibuffer@emoji--read-emoji (&rest args)
-  (let ((completion-extra-properties (list :category 'emoji)))
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-emoji)))
     (apply args)))
 
 ;;;###autoload
