@@ -9081,7 +9081,7 @@ facilities to rename files, regardless of file type.
 ;; private setup for those, as I need to test everything is in order.
 (prot-emacs-configure
   (prot-emacs-install denote)
-  (add-hook 'text-mode-hook #'denote-fontify-links-mode-maybe)
+  (add-hook 'text-mode-hook #'denote-fontify-links-mode)
   (add-hook 'dired-mode-hook #'denote-dired-mode)
 
   (prot-emacs-keybind global-map
