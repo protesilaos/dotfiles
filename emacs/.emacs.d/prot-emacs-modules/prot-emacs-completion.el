@@ -83,13 +83,12 @@
   (minibuffer-electric-default-mode 1))
 
 (prot-emacs-configure
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  ;; Not everything here comes from rfn-eshadow.el, but this is fine.
   (setq resize-mini-windows t)
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq echo-keystrokes 0.25)
   (setq kill-ring-max 60) ; Keep it small
 
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
   ;; got this from the documentation of Daniel Mendler's Vertico
   ;; package: <https://github.com/minad/vertico>.
