@@ -236,18 +236,18 @@ that and instead tries to complete against dictionary entries."
   (with-eval-after-load 'notmuch
     (setq notmuch-indicator-args
           '(( :terms "tag:unread and tag:inbox"
-              ;; :label "[U] "
-              :label "💬 "
+              :label "[U] "
+              ;; :label "💬 "
               :label-face prot-modeline-indicator-cyan
               :counter-face prot-modeline-indicator-cyan)
             ( :terms "tag:unread and tag:package"
-              ;; :label "[P] "
-              :label "🛠️ "
+              :label "[P] "
+              ;; :label "🛠️ "
               :label-face prot-modeline-indicator-magenta
               :counter-face prot-modeline-indicator-magenta)
             ( :terms "tag:unread and tag:coach"
-              ;; :label "[C] "
-              :label "🏆 "
+              :label "[C] "
+              ;; :label "🏆 "
               :label-face prot-modeline-indicator-red
               :counter-face prot-modeline-indicator-red))
 
