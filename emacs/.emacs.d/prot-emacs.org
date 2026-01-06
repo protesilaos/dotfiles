@@ -12800,7 +12800,7 @@ FACE is the face to use for it, where applicable.")
                           (prot-icons-get-file-icon file))))
         (prot-icons-dired--add-overlay (dired-move-to-filename) icon)))))
 
-(defun prot-icons-dired--refresh ()
+(defun prot-icons-dired--refresh (&rest _)
   "Update the display of icons of files in a Dired buffer."
   (prot-icons-dired--remove-all-overlays)
   (save-restriction
@@ -12820,11 +12820,13 @@ FACE is the face to use for it, where applicable.")
       (progn
         (add-hook 'dired-mode-hook #'prot-icons-dired--setup)
         (add-hook 'dired-after-readin-hook 'prot-icons-dired--annotate)
-        (advice-add 'wdired-abort-changes :after #'prot-icons-dired--refresh))
+        (advice-add #'dired-do-redisplay :after #'prot-icons-dired--refresh)
+        (advice-add #'wdired-abort-changes :after #'prot-icons-dired--refresh))
     (prot-icons-dired--remove-all-overlays)
     (remove-hook 'dired-mode-hook #'prot-icons-dired--setup)
     (remove-hook 'dired-after-readin-hook 'prot-icons-dired--annotate)
-    (advice-remove 'wdired-abort-changes #'prot-icons-dired--refresh)))
+    (advice-remove #'dired-do-redisplay #'prot-icons-dired--refresh)
+    (advice-remove #'wdired-abort-changes #'prot-icons-dired--refresh)))
 
 ;;;; Icons for Xref
 
