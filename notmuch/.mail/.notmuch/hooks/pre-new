@@ -2,7 +2,7 @@
 
 # pre-new --- Notmuch rules that run before notmuch-new(1)
 #
-# Copyright (c) 2021-2025  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (C) 2021-2026  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,6 +1,6 @@
 ;;; prot-icons.el --- Get characters, icons, and symbols for things -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>

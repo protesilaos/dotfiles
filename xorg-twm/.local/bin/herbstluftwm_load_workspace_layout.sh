@@ -2,7 +2,7 @@
 
 # herbstluftwm_load_workspace_layout --- Load preset layout in the current workspace
 #
-# Copyright (c) 2024  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (C) 2024-2026  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

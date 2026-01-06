@@ -11476,7 +11476,7 @@ not test it as much and do not try to make it work for all cases.
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-abbrev.el" :mkdirp yes
 ;;; prot-abbrev.el --- Functions for use with abbrev-mode -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -11592,7 +11592,7 @@ Use completion among previous entries, retrieving their data from
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-comment.el" :mkdirp yes
 ;;; prot-comment.el --- Extensions newcomment.el for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -11749,7 +11749,7 @@ an alternative date format, as specified by
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-common.el" :mkdirp yes
 ;;; prot-common.el --- Common functions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2025  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -12194,7 +12194,7 @@ belong to the given subset of CONSEQUENCES.
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-dired.el" :mkdirp yes
 ;;; prot-dired.el --- Extensions to dired.el for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2025  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -12474,7 +12474,7 @@ Add this to `dired-mode-hook'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-ediff.el" :mkdirp yes
 ;;; prot-ediff.el --- Ediff extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -12558,7 +12558,7 @@ Also see `prot-ediff-store-layout'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-elisp.el" :mkdirp yes
 ;;; prot-elisp.el --- Emacs Lisp extras for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -12650,7 +12650,7 @@ Now use `display-buffer-alist' like the Lisp gods intended."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-icons.el" :mkdirp yes
 ;;; prot-icons.el --- Get characters, icons, and symbols for things -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
@@ -12963,7 +12963,7 @@ FACE is the face to use for it, where applicable.")
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-eww.el" :mkdirp yes
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
@@ -13109,7 +13109,7 @@ buffer instead of the current one."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-minibuffer.el" :mkdirp yes
 ;;; prot-minibuffer.el --- Extensions for the minibuffer and completions -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
@@ -13428,7 +13428,7 @@ property, such that it can be found by `prot-minibuffer-completions-close-help'.
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-modeline.el" :mkdirp yes
 ;;; prot-modeline.el --- Code for my custom mode line -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -14049,7 +14049,7 @@ Specific to the current window's mode line.")
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-notmuch.el" :mkdirp yes
 ;;; prot-notmuch.el --- Tweaks for my notmuch.el configurations -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -14327,7 +14327,7 @@ Add this to `notmuch-mua-send-hook'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-orderless.el" :mkdirp yes
 ;;; prot-orderless.el --- Extensions for Orderless -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2025  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -14390,7 +14390,7 @@ Add this to `notmuch-mua-send-hook'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-org.el" :mkdirp yes
 ;;; prot-org.el --- Tweaks for my org-mode configurations -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -14972,7 +14972,7 @@ from the heading text instead of a UUID."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-pair.el" :mkdirp yes
 ;;; prot-pair.el --- Insert character pair around symbol or region -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -15158,7 +15158,7 @@ controlled by `delete-pair-blink-delay'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-prefix.el" :mkdirp yes
 ;;; prot-prefix.el --- Prefix keymap for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -15521,7 +15521,7 @@ controlled by `delete-pair-blink-delay'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-project.el" :mkdirp yes
 ;;; prot-project.el --- Extensions for project.el -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -15705,7 +15705,7 @@ is a string."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-register.el" :mkdirp yes
 ;;; prot-register.el --- Extensions for project.el -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -15868,7 +15868,7 @@ Also see `prot-register-use-dwim'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-scratch.el" :mkdirp yes
 ;;; prot-scratch.el --- Scratch buffers for editable major mode of choice -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -16000,7 +16000,7 @@ for the given MAJOR-MODE, any text is appended to it."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-search.el" :mkdirp yes
 ;;; prot-search.el --- Extensions to isearch, replace, grep for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2025  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -16549,7 +16549,7 @@ and function as links to the context they reference."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-shell.el" :mkdirp yes
 ;;; prot-shell.el --- M-x shell extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -16898,7 +16898,7 @@ Add a bookmark handler for shell buffer and activate the
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-simple.el" :mkdirp yes
 ;;; prot-simple.el --- Common commands for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2025  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -18053,7 +18053,7 @@ major mode.")
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-spell.el" :mkdirp yes
 ;;; prot-spell.el --- Spelling-related extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -18161,7 +18161,7 @@ function.  Then you can control the buffer's specifics via
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-vertico.el" :mkdirp yes
 ;;; prot-vertico.el --- Custom Vertico extras -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
@@ -18292,7 +18292,7 @@ Else do `vertico-exit'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-window.el" :mkdirp yes
 ;;; prot-window.el --- Display-buffer and window-related extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

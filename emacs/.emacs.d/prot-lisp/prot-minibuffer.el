@@ -1,6 +1,6 @@
 ;;; prot-minibuffer.el --- Extensions for the minibuffer and completions -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>

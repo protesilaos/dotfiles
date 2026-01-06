@@ -2,7 +2,7 @@
 
 # pcb --- Print the terminal's active colours.
 #
-# Copyright (c) 2019-2025  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (C) 2019-2026  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

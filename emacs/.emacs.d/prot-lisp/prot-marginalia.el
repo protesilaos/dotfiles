@@ -1,6 +1,6 @@
 ;;; prot-marginalia.el --- Code for my custom mode line -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2025  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

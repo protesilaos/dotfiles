@@ -2,7 +2,7 @@
 
 # gnome_custom_keys.sh --- My custom key bindings for GNOME
 #
-# Copyright (c) 2025  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (C) 2025-2026  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

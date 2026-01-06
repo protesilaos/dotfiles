@@ -1,6 +1,6 @@
 ;;; prot-elisp.el --- Emacs Lisp extras for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

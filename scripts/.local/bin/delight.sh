@@ -2,7 +2,7 @@
 
 # Delight (DE light) --- Toggle DE/WM and Emacs themes
 #
-# Copyright (c) 2020-2025  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (C) 2020-2026  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
