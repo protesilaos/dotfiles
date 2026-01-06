@@ -6508,15 +6508,16 @@ case-by-case basis.
   (prot-emacs-hook (world-clock-mode-hook calendar-mode-hook) prot-common-truncate-lines-silently))
 #+end_src
 
-*** The =prot-emacs-window.el= section key bindings
+*** The =prot-emacs-window.el= section with relevant key bindings
 :PROPERTIES:
 :CUSTOM_ID: h:49ad5448-2ccd-4f47-82fd-17819ffdbdf3
 :END:
 
-Here I simply define some key bindings. The commands I use the most in
-this list are ~delete-other-windows-vertically~, ~previous-buffer~,
-and ~next-buffer~. I rarely resize windows, though I am happy to use
-the mouse for such a case.
+Here I simply define some key bindings pertaining to window
+operations. The commands I use the most in this list are
+~delete-other-windows-vertically~, ~previous-buffer~, and
+~next-buffer~. I rarely resize windows, though I am happy to use the
+mouse for such a case.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 (prot-emacs-configure
