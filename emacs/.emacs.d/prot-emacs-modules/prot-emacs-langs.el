@@ -187,7 +187,7 @@
 
 ;;; Elisp packaging requirements
   (prot-emacs-install package-lint-flymake)
-  (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
+  (package-lint-flymake-setup))
 
 ;;; General configurations for prose/writing
 

@@ -8991,7 +8991,7 @@ of packaging. I use it whenever I work on my numerous Emacs packages.
 
 ;;; Elisp packaging requirements
   (prot-emacs-install package-lint-flymake)
-  (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
+  (package-lint-flymake-setup))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for ~outline-minor-mode~
