@@ -3762,6 +3762,27 @@ as soon as the given package/feature is loaded.
                   "  "
                   prot-modeline-misc-info))
 
+  (when (memq prot-emacs-load-theme-family '(modus ef standard))
+    (defun prot/modeline-set-faces ()
+      (modus-themes-with-colors
+        (custom-set-faces
+         `(prot-modeline-indicator-red ((,c :foreground ,red)))
+         `(prot-modeline-indicator-green ((,c :foreground ,green)))
+         `(prot-modeline-indicator-yellow ((,c :foreground ,yellow)))
+         `(prot-modeline-indicator-blue ((,c :foreground ,blue)))
+         `(prot-modeline-indicator-magenta ((,c :foreground ,magenta)))
+         `(prot-modeline-indicator-cyan ((,c :foreground ,cyan)))
+         `(prot-modeline-indicator-red-bg ((,c :background ,bg-red-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-green-bg ((,c :background ,bg-green-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-yellow-bg ((,c :background ,bg-yellow-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-blue-bg ((,c :background ,bg-blue-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-magenta-bg ((,c :background ,bg-magenta-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-cyan-bg ((,c :background ,bg-cyan-intense :foreground ,fg-main))))))
+
+    (prot/modeline-set-faces)
+
+    (add-hook 'modus-themes-after-load-theme-hook #'prot/modeline-set-faces))
+
   (with-eval-after-load 'spacious-padding
     (defun prot/modeline-spacious-indicators ()
       "Set box attribute to `'prot-modeline-indicator-button' if spacious-padding is enabled."
