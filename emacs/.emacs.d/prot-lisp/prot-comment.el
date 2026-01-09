@@ -1,6 +1,6 @@
 ;;; prot-comment.el --- Extensions newcomment.el for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

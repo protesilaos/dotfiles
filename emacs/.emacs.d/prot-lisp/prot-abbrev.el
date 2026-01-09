@@ -1,6 +1,6 @@
 ;;; prot-abbrev.el --- Functions for use with abbrev-mode -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2025  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
