@@ -135,6 +135,7 @@ These include the packages `marginalia', `consult', `corfu',
     mct
     modus-themes
     notmuch-indicator
+    oxford-calendar
     pulsar
     show-font
     spacious-padding

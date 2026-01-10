@@ -1014,6 +1014,7 @@ packages will rely on ~package-archive-priorities~.
     mct
     modus-themes
     notmuch-indicator
+    oxford-calendar
     pulsar
     show-font
     spacious-padding
