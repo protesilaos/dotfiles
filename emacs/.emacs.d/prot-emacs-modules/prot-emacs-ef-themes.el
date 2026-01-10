@@ -12,6 +12,8 @@
 
   (setq modus-themes-variable-pitch-ui t
         modus-themes-mixed-fonts t
+        modus-themes-bold-constructs t
+        modus-themes-italic-constructs t
         modus-themes-to-rotate nil ; defaults to the return value of `modus-themes-get-themes'
         modus-themes-headings ; read the manual's entry of the doc string
         '((0 . (variable-pitch light 1.9))
