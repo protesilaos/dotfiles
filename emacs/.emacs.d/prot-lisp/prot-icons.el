@@ -111,16 +111,6 @@
   "Face for icons."
   :group 'prot-icons)
 
-(defface prot-icons-faint
-  '((default :inherit prot-icons-icon)
-    (((class color) (min-colors 88) (background light))
-     :foreground "gray70")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "gray30")
-    (t :foreground "gray"))
-  "Face for icons."
-  :group 'prot-icons)
-
 (defvar prot-icons
   '((dired-mode "|+" prot-icons-gray)
     (archive-mode "|@" prot-icons-gray)
@@ -133,7 +123,7 @@
     (audio ">Η" prot-icons-cyan) ; ήχος
     (image ">Ε" prot-icons-yellow) ; εικόνα
     (video ">Κ" prot-icons-blue) ; κίνηση (κινηματογράφος)
-    (t ">." prot-icons-faint))
+    (t ">." prot-icons-gray))
   "Major modes or concepts and their corresponding icons.
 Each element is a cons cell of the form (THING STRING FACE), where THING
 is a symbol STRING is one or more characters that represent THING, and

@@ -8,6 +8,7 @@
     (defun prot/icons-set-faces ()
       (modus-themes-with-colors
         (custom-set-faces
+         `(prot-icons-gray ((,c :foreground ,fg-dim)))
          `(prot-icons-red ((,c :foreground ,red)))
          `(prot-icons-green ((,c :foreground ,green)))
          `(prot-icons-yellow ((,c :foreground ,yellow)))
