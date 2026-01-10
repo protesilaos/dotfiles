@@ -63,6 +63,7 @@ mod4 + Delete
 # mod4 + {_, shift +,ctrl + shift + } Return
 #     {uxterm,emacsclient -w 2 -a "" -e "(prot-window-shell)",emacsclient -w 2 -a "" -e "(prot-window-coach)"}
 
+# This is a Debian thing: sudo update-alternatives --config x-terminal-emulator
 mod4 + Return
     x-terminal-emulator
 
