@@ -2095,7 +2095,7 @@ I also take care to make it work with my customised mode line
       (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t)))))
 #+end_src
 
-*** The =prot-emacs-theme.el= section for ~rainbow-mode~
+*** COMMENT The =prot-emacs-theme.el= section for ~rainbow-mode~
 :PROPERTIES:
 :CUSTOM_ID: h:9438236e-a8a4-45e0-8c61-8268c634d50b
 :END:
@@ -2724,6 +2724,16 @@ this via some hook.
   ;; always work (though technically they can be overriden by another
   ;; minor mode, depending on which one is evaluated last).
   (prot-simple-override-mode 1)
+
+  (defun prot/simple-hex-highlight ()
+    (when-let* ((file buffer-file-name)
+                ((derived-mode-p 'emacs-lisp-mode))
+                ((string-match-p "-theme" file)))
+      (prot-simple-hex-color-mode 1)))
+
+  (add-hook 'emacs-lisp-mode-hook #'prot/simple-hex-highlight)
+
+  (define-key ctl-x-x-map (kbd "c") #'prot-simple-hex-color-mode) ; C-x x c
 
   (prot-emacs-keybind prot-simple-override-mode-map
     "C-a" #'prot-simple-duplicate-line-or-region ; "again" mnemonic, overrides `move-beginning-of-line'
@@ -18069,6 +18079,31 @@ major mode.")
   :init-value nil
   :global t
   :keymap prot-simple-override-mode-map)
+
+;;;; Preview hexadecimal RGB colours
+
+(defun prot-simple-hex-fontify (limit)
+  "Fontify the # of a hexadecimal RGB colour up to LIMIT."
+  (while-let ((_ (re-search-forward "\\(#\\)\\([a-fA-F0-9]\\{6\\}\\)" limit t))
+              (color (match-string-no-properties 0))
+              (beg (match-beginning 1))
+              (end (match-end 1))
+              (face (list :background color :foreground color :inverse-video t)))
+    (add-text-properties beg end (list 'face face 'font-lock-face face)))
+  nil)
+
+(defvar prot-simple-hex-color-keywords
+  '((prot-simple-hex-fontify))
+  "Font lock keywords for `prot-simple-hex-color-mode'.")
+
+(define-minor-mode prot-simple-hex-color-mode
+  "Preview hexadecimal colour values."
+  :global nil
+  :init-value nil
+  (if prot-simple-hex-color-mode
+      (font-lock-add-keywords nil prot-simple-hex-color-keywords 'set)
+    (font-lock-remove-keywords nil prot-simple-hex-color-keywords))
+  (font-lock-flush (point-min) (point-max)))
 
 (provide 'prot-simple)
 ;;; prot-simple.el ends here

@@ -99,6 +99,16 @@
   ;; minor mode, depending on which one is evaluated last).
   (prot-simple-override-mode 1)
 
+  (defun prot/simple-hex-highlight ()
+    (when-let* ((file buffer-file-name)
+                ((derived-mode-p 'emacs-lisp-mode))
+                ((string-match-p "-theme" file)))
+      (prot-simple-hex-color-mode 1)))
+
+  (add-hook 'emacs-lisp-mode-hook #'prot/simple-hex-highlight)
+
+  (define-key ctl-x-x-map (kbd "c") #'prot-simple-hex-color-mode) ; C-x x c
+
   (prot-emacs-keybind prot-simple-override-mode-map
     "C-a" #'prot-simple-duplicate-line-or-region ; "again" mnemonic, overrides `move-beginning-of-line'
     "C-d" #'prot-simple-delete-line ; overrides `delete-char'

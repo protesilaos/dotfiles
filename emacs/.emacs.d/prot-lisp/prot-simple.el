@@ -1143,5 +1143,30 @@ major mode.")
   :global t
   :keymap prot-simple-override-mode-map)
 
+;;;; Preview hexadecimal RGB colours
+
+(defun prot-simple-hex-fontify (limit)
+  "Fontify the # of a hexadecimal RGB colour up to LIMIT."
+  (while-let ((_ (re-search-forward "\\(#\\)\\([a-fA-F0-9]\\{6\\}\\)" limit t))
+              (color (match-string-no-properties 0))
+              (beg (match-beginning 1))
+              (end (match-end 1))
+              (face (list :background color :foreground color :inverse-video t)))
+    (add-text-properties beg end (list 'face face 'font-lock-face face)))
+  nil)
+
+(defvar prot-simple-hex-color-keywords
+  '((prot-simple-hex-fontify))
+  "Font lock keywords for `prot-simple-hex-color-mode'.")
+
+(define-minor-mode prot-simple-hex-color-mode
+  "Preview hexadecimal colour values."
+  :global nil
+  :init-value nil
+  (if prot-simple-hex-color-mode
+      (font-lock-add-keywords nil prot-simple-hex-color-keywords 'set)
+    (font-lock-remove-keywords nil prot-simple-hex-color-keywords))
+  (font-lock-flush (point-min) (point-max)))
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here

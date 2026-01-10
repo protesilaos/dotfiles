@@ -74,34 +74,6 @@
     (when (< emacs-major-version 29)
       (setq x-underline-at-descent-line (when spacious-padding-subtle-frame-lines t)))))
 
-;;;; Rainbow mode for colour previewing (rainbow-mode.el)
-(prot-emacs-configure
-  (prot-emacs-install rainbow-mode)
-  (setq rainbow-ansi-colors nil)
-  (setq rainbow-x-colors nil)
-
-  (defun prot/rainbow-colorize-match (color &optional match)
-    "Like `rainbow-colorize-match' but works with `hl-line-mode'."
-    (let ((match (or match 0)))
-      (put-text-property
-       (match-beginning match) (match-end match)
-       'face `((:background ,(if (> 0.5 (rainbow-x-color-luminance color))
-                                 "white" "black"))
-               (:foreground ,color)
-               (:inverse-video t)))))
-
-  (advice-add #'rainbow-colorize-match :override #'prot/rainbow-colorize-match)
-
-  (defun prot/rainbow-mode-in-themes ()
-    (when-let* ((file buffer-file-name)
-                ((derived-mode-p 'emacs-lisp-mode))
-                ((string-match-p "-theme" file)))
-      (rainbow-mode 1)))
-
-  (add-hook 'emacs-lisp-mode-hook #'prot/rainbow-mode-in-themes)
-
-  (define-key ctl-x-x-map (kbd "c") #'rainbow-mode)) ; C-x x c
-
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
 (when prot-display-graphic-p
