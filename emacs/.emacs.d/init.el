@@ -153,6 +153,20 @@ These include the packages `marginalia', `consult', `corfu',
              (cons package "gnu-elpa-devel"))
            prot-emacs-my-packages)))
 
+;; These are for Emacs 31.
+(setq package-review-policy `(not ,prot-emacs-my-packages))
+(setq package-review-diff-command
+      (cons diff-command
+            '("-u"
+              "-x" "'*.elc'"
+              "-x" "'*-autoloads.el'"
+              "-x" "'*-pkg.el'"
+              "-x" "'*.info'"
+              "-x" "'*.texi'"
+              "-x" "'*.txt'"
+              "-x" "'*.md'"
+              "-x" "'*.org'")))
+
 (setq custom-safe-themes t)
 
 (defmacro prot-emacs-comment (&rest body)

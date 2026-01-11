@@ -959,6 +959,21 @@ With regard to the settings here, make sure to read my article about
 package archives, pinning packages, and setting priorities:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
+I want to use my own packages from the GNU-devel ELPA. I am thus
+pinning them to that archive by setting the value of
+~package-pinned-packages~. This way, I get to run the latest version
+while also making sure the actual package works properly. All other
+packages will rely on ~package-archive-priorities~.
+
+The ~package-review-policy~, which is available starting with Emacs
+version 31, is a useful security enhancement. Whenever we upgrade a
+package, we get the chance to produce a diff that shows the changes we
+are about to pull in. The idea is that there are enough users who (i)
+have the technical skills to assess the code and (ii) have the time
+and willingness to do such an inspection. If that happens, then the
+Emacs community as a whole becomes more robust to supply-chain
+attacks, which are really common these days.
+
 #+begin_src emacs-lisp :tangle "init.el"
 ;;;; Packages
 
@@ -983,15 +998,7 @@ package archives, pinning packages, and setting priorities:
 ;; latest version of built-in packages.  However, this is a good
 ;; solution to set to non-nil if I ever switch to a stable release.
 (setq package-install-upgrade-built-in nil)
-#+end_src
 
-I want to use my own packages from the GNU-devel ELPA. I am thus
-pinning them to that archive by setting the value of
-~package-pinned-packages~. This way, I get to run the latest version
-while also making sure the actual package works properly. All other
-packages will rely on ~package-archive-priorities~.
-
-#+begin_src emacs-lisp :tangle "init.el"
 (defvar prot-emacs-my-packages
   '(agitate
     altcaps
@@ -1031,6 +1038,20 @@ packages will rely on ~package-archive-priorities~.
            (lambda (package)
              (cons package "gnu-elpa-devel"))
            prot-emacs-my-packages)))
+
+;; These are for Emacs 31.
+(setq package-review-policy `(not ,prot-emacs-my-packages))
+(setq package-review-diff-command
+      (cons diff-command
+            '("-u"
+              "-x" "'*.elc'"
+              "-x" "'*-autoloads.el'"
+              "-x" "'*-pkg.el'"
+              "-x" "'*.info'"
+              "-x" "'*.texi'"
+              "-x" "'*.txt'"
+              "-x" "'*.md'"
+              "-x" "'*.org'")))
 #+end_src
 
 ** The =init.el= option to declare all themes as safe
