@@ -148,10 +148,10 @@ These include the packages `marginalia', `consult', `corfu',
 
 ;; Also read: <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>
 (setq package-pinned-packages
-      `(,@(mapcar
-           (lambda (package)
-             (cons package "gnu-elpa-devel"))
-           prot-emacs-my-packages)))
+      (mapcar
+       (lambda (package)
+         (cons package "gnu-elpa-devel"))
+       prot-emacs-my-packages))
 
 ;; These are for Emacs 31.
 (setq package-review-policy
