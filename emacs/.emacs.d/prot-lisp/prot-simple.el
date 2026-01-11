@@ -1154,8 +1154,20 @@ major mode.")
               (beg (match-beginning 1))
               (end (match-end 1))
               (face (list :background color :foreground color :inverse-video t)))
-    (add-text-properties beg end (list 'face face 'font-lock-face face))
+    (add-text-properties beg end (list 'face face 'font-lock-face face 'display "######"))
     found))
+
+(defun prot-simple-hex-unfontify ()
+  "Fontify the # of a hexadecimal RGB colour up to LIMIT."
+  (save-excursion
+    (goto-char (point-min))
+    (while-let ((found (re-search-forward "\\(#\\)\\([a-fA-F0-9]\\{6\\}\\)" nil t))
+                (color (match-string-no-properties 0))
+                (beg (match-beginning 1))
+                (end (match-end 1))
+                (face (list :background color :foreground color :inverse-video t)))
+      (put-text-property beg end 'display "#")
+      found)))
 
 (defvar prot-simple-hex-color-keywords
   '((prot-simple-hex-fontify))
@@ -1167,6 +1179,7 @@ major mode.")
   :init-value nil
   (if prot-simple-hex-color-mode
       (font-lock-add-keywords nil prot-simple-hex-color-keywords)
+    (prot-simple-hex-unfontify)
     (font-lock-remove-keywords nil prot-simple-hex-color-keywords))
   (font-lock-flush (point-min) (point-max)))
 
