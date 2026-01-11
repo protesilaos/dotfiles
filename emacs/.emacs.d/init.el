@@ -154,7 +154,12 @@ These include the packages `marginalia', `consult', `corfu',
            prot-emacs-my-packages)))
 
 ;; These are for Emacs 31.
-(setq package-review-policy `(not ,prot-emacs-my-packages))
+(setq package-review-policy
+      (mapcar
+       (lambda (package)
+         (list 'not 'packagge package))
+       prot-emacs-my-packages))
+
 (setq package-review-diff-command
       (cons diff-command
             '("-u"
