@@ -13864,9 +13864,9 @@ face.  Let other buffers have no face.")
 
 ;;;; Major mode
 
-(defun prot-modeline-major-mode-icon (&optional face)
-  "Return icon for the major mode, optionally propertized with FACE."
-  (prot-icons-get-icon major-mode face))
+(defun prot-modeline-major-mode-icon ()
+  "Return icon for the major mode."
+  (prot-icons-get-icon major-mode 'prot-modeline-indicator-gray))
 
 (defun prot-modeline-major-mode-name ()
   "Return capitalized `major-mode' without the -mode suffix."
@@ -13883,7 +13883,7 @@ face.  Let other buffers have no face.")
      (propertize "%[" 'face 'prot-modeline-indicator-red)
      '(:eval
        (concat
-        (prot-modeline-major-mode-icon (unless (mode-line-window-selected-p) 'shadow))
+        (prot-modeline-major-mode-icon)
         " "
         (propertize
          (prot-modeline-string-abbreviate-but-last
