@@ -4022,14 +4022,15 @@ interpret user input and match candidates accordingly.
   point. Using the above example, this one will consider patterns that
   match all of ~emacs22~ as well as anything that completes =suffix=.
 
-- partial-completion :: This is used for file navigation. Instead of
-  typing out a full path like =~/.local/share/fonts=, we do =~/.l/s/f=
-  or variants thereof to make the matches unique such as =~/.l/sh/fon=.
-  It is a joy to navigate the file system in this way.
-
 - substring :: Matches the given sequence of characters literally
   regardless of where it is in a word. So =pro= will match
   =professional= as well as =reproduce=.
+
+- partial-completion :: This is used for file navigation. Instead of
+  typing out a full path like =~/.local/share/fonts=, we do =~/.l/s/f=
+  or variants thereof to make the matches unique such as =~/.l/sh/fon=.
+  It is a joy to navigate the file system in this way. Though it also
+  expands words are substrings.
 
 - flex :: Completion of an in-order subset of characters. It does not
   matter where the charactes are in the word, so long as they are
@@ -4071,7 +4072,7 @@ of ([[#h:0d49218d-4199-4847-9765-60a3f94e515d][The =prot-emacs-completion.el= se
 ;;; General minibuffer settings
 (prot-emacs-configure
 ;;;; Completion styles
-  (setq completion-styles '(basic substring initials flex)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic substring initials partial-completion flex)) ; also see `completion-category-overrides'
   (setq completion-pcm-leading-wildcard nil) ; Emacs 31
   (with-eval-after-load 'orderless
     (setq completion-styles (append completion-styles '(orderless)))))
