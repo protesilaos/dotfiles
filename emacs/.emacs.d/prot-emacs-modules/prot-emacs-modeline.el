@@ -41,12 +41,12 @@
          `(prot-modeline-indicator-blue ((,c :foreground ,blue)))
          `(prot-modeline-indicator-magenta ((,c :foreground ,magenta)))
          `(prot-modeline-indicator-cyan ((,c :foreground ,cyan)))
-         `(prot-modeline-indicator-red-bg ((,c :background ,bg-red-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-green-bg ((,c :background ,bg-green-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-yellow-bg ((,c :background ,bg-yellow-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-blue-bg ((,c :background ,bg-blue-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-magenta-bg ((,c :background ,bg-magenta-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-cyan-bg ((,c :background ,bg-cyan-intense :foreground ,fg-main))))))
+         `(prot-modeline-indicator-red-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-red-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-green-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-green-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-yellow-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-yellow-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-blue-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-blue-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-magenta-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-magenta-intense :foreground ,fg-main)))
+         `(prot-modeline-indicator-cyan-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-cyan-intense :foreground ,fg-main))))))
 
     (prot/modeline-set-faces)
 
@@ -56,7 +56,7 @@
     (defun prot/modeline-spacious-indicators ()
       "Set box attribute to `'prot-modeline-indicator-button' if spacious-padding is enabled."
       (if (bound-and-true-p spacious-padding-mode)
-          (set-face-attribute 'prot-modeline-indicator-button nil :box t)
+          (set-face-attribute 'prot-modeline-indicator-button nil :box '(:style flat-button))
         (set-face-attribute 'prot-modeline-indicator-button nil :box 'unspecified)))
 
     ;; Run it at startup and then afterwards whenever
