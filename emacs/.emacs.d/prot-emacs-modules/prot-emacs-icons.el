@@ -8,13 +8,14 @@
     (defun prot/icons-set-faces ()
       (modus-themes-with-colors
         (custom-set-faces
-         `(prot-icons-gray ((,c :foreground ,fg-dim)))
-         `(prot-icons-red ((,c :foreground ,red)))
-         `(prot-icons-green ((,c :foreground ,green)))
-         `(prot-icons-yellow ((,c :foreground ,yellow)))
-         `(prot-icons-blue ((,c :foreground ,blue)))
-         `(prot-icons-magenta ((,c :foreground ,magenta)))
-         `(prot-icons-cyan ((,c :foreground ,cyan))))))
+         `(prot-icons-icon ((,c :inherit (bold fixed-pitch) :box (:line-width (1 . -1)) :inverse-video t)))
+         `(prot-icons-gray ((,c :inherit prot-icons-icon :foreground ,fg-dim)))
+         `(prot-icons-red ((,c :inherit prot-icons-icon :foreground ,red)))
+         `(prot-icons-green ((,c :inherit prot-icons-icon :foreground ,green)))
+         `(prot-icons-yellow ((,c :inherit prot-icons-icon :foreground ,yellow)))
+         `(prot-icons-blue ((,c :inherit prot-icons-icon :foreground ,blue)))
+         `(prot-icons-magenta ((,c :inherit prot-icons-icon :foreground ,magenta)))
+         `(prot-icons-cyan ((,c :inherit prot-icons-icon :foreground ,cyan))))))
 
     (prot/icons-set-faces)
 

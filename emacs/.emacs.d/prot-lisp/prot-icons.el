@@ -111,8 +111,15 @@
   "Face for icons."
   :group 'prot-icons)
 
+(defface prot-icons-directory
+  `((t :inherit ,(if (facep 'dired-directory)
+                     '(prot-icons-icon dired-directory)
+                   'prot-icons-icon)))
+  "Face for icons."
+  :group 'prot-icons)
+
 (defvar prot-icons
-  '((dired-mode "|+" prot-icons-gray)
+  '((dired-mode "|+" prot-icons-directory)
     (archive-mode "|@" prot-icons-gray)
     (diff-mode ">Δ" prot-icons-gray) ; διαφορά
     (prog-mode ">Π" prot-icons-magenta) ; πρόγραμμα
