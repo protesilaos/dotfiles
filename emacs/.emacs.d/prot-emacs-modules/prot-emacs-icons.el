@@ -9,8 +9,8 @@
       (modus-themes-with-colors
         (custom-set-faces
          `(prot-icons-icon ((,c :inherit (bold fixed-pitch) :box (:line-width (1 . -1)) :inverse-video t)))
-         `(prot-icons-directory ((,c :inherit prot-icons-icon :foreground ,accent-0)))
-         `(prot-icons-gray ((,c :inherit prot-icons-icon :foreground ,fg-dim)))
+         `(prot-icons-directory ((,c :inherit bold :foreground ,accent-0)))
+         `(prot-icons-gray ((,c :inherit bold :foreground ,fg-dim)))
          `(prot-icons-red ((,c :inherit prot-icons-icon :foreground ,red)))
          `(prot-icons-green ((,c :inherit prot-icons-icon :foreground ,green)))
          `(prot-icons-yellow ((,c :inherit prot-icons-icon :foreground ,yellow)))

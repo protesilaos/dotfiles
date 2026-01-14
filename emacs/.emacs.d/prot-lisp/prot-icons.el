@@ -119,11 +119,11 @@
   :group 'prot-icons)
 
 (defvar prot-icons
-  '((dired-mode "|+" prot-icons-directory)
-    (archive-mode "|@" prot-icons-gray)
-    (diff-mode ">Δ" prot-icons-gray) ; διαφορά
+  '((dired-mode "|/" prot-icons-directory)
+    (archive-mode "|@" prot-icons-directory)
+    (diff-mode ">Δ" prot-icons-yellow) ; διαφορά
     (prog-mode ">Π" prot-icons-magenta) ; πρόγραμμα
-    (conf-mode ">Π" prot-icons-faint) ; πρόγραμμα
+    (conf-mode ">Π" prot-icons-gray) ; πρόγραμμα
     (text-mode ">Α" prot-icons-green) ; αλφάβητο
     (comint-mode ">_" prot-icons-gray)
     (document ">Σ" prot-icons-red) ; σύγγραμμα
