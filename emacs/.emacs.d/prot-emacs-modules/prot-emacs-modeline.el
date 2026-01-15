@@ -19,6 +19,7 @@
                   prot-modeline-process
                   "  "
                   prot-modeline-frame-name
+                  "  "
                   prot-modeline-vc-branch
                   "  "
                   prot-modeline-eglot

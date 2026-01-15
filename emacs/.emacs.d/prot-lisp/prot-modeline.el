@@ -175,7 +175,7 @@ package).")
   :group 'prot-modeline-faces)
 
 (defface prot-modeline-indicator-gray
-  '((t :inherit shadow))
+  '((t :inherit (bold shadow)))
   "Face for modeline indicators (e.g. see my `notmuch-indicator')."
   :group 'prot-modeline-faces)
 
@@ -423,14 +423,14 @@ face.  Let other buffers have no face.")
 (defun prot-modeline--vc-text (file branch &optional face)
   "Prepare text for Git controlled FILE, given BRANCH.
 With optional FACE, use it to propertize the BRANCH."
-  (concat
-   (propertize (char-to-string #xE0A0) 'face 'shadow)
-   " "
-   (propertize branch
-               'face face
-               'mouse-face 'mode-line-highlight
-               'help-echo (prot-modeline--vc-help-echo file)
-               'local-map prot-modeline-vc-map)))
+  (format "%s %s "
+          (propertize "Y" 'face 'prot-modeline-indicator-gray)
+          ;; (propertize (char-to-string #xE0A0) 'face 'prot-modeline-indicator-gray)
+          (propertize branch
+                      'face face
+                      'mouse-face 'mode-line-highlight
+                      'help-echo (prot-modeline--vc-help-echo file)
+                      'local-map prot-modeline-vc-map)))
 
 (defun prot-modeline--vc-details (file branch &optional face)
   "Return Git BRANCH details for FILE, truncating it if necessary.
@@ -499,7 +499,7 @@ TYPE is usually keyword `:error', `:warning' or `:note'."
      (when-let* ((count (prot-modeline-flymake-counter
                          ,(intern (format ":%s" type)))))
        (concat
-        (propertize ,indicator 'face 'shadow)
+        (propertize ,indicator 'face 'prot-modeline-indicator-gray)
         (propertize count
                     'face ',(or face type)
                     'mouse-face 'mode-line-highlight
@@ -552,8 +552,8 @@ Specific to the current window's mode line.")
                         (_ (frame-live-p current-frame))
                         (parameters (frame-parameters))
                         (name (capitalize (alist-get 'name parameters)))
-                        (indicator "√"))
-              (format "%s %s " (propertize indicator 'face 'shadow) name)))))
+                        (indicator "X"))
+              (format "%s %s " (propertize indicator 'face 'prot-modeline-indicator-gray) name)))))
   "Mode line construct to display the current frame name.")
 
 ;;;; `which-function-mode' indicator
