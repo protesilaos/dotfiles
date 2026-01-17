@@ -9795,8 +9795,8 @@ All the above are the client-agnostic settings. Now I have to put in
 place the specifics of my mail user agent. I could have a user option
 here to select one among ~notmuch~, ~mu4e~, or ~gnus~, but it is not
 practical to have two indexers check the same files, as I will need to
-keep everything in sync for no apparent benefit. One MUA is more than
-enough ([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]).
+keep everything in sync for no apparent benefit. One MUA is enough
+([[#h:b26c6297-ebe8-4f99-b069-df53cfd90520][The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)]]).
 
 Finally, we ~provide~ the module. This is the mirror function of
 ~require~ ([[#h:e6c4acf5-5b51-4b38-a86a-bf3f698ac872][The init.el final part to load the individual modules]]).
@@ -9808,7 +9808,7 @@ Finally, we ~provide~ the module. This is the mirror function of
 (provide 'prot-emacs-email)
 #+end_src
 
-*** The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)
+**** The =prot-emacs-email.el= submodule for ~notmuch~ (=prot-emacs-notmuch.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:b26c6297-ebe8-4f99-b069-df53cfd90520
 :END:
@@ -9848,7 +9848,7 @@ directory being part of the ~load-path~).
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/"))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about the account settings
+***** The =prot-emacs-notmuch.el= section about the account settings
 :PROPERTIES:
 :CUSTOM_ID: h:2fca749c-a84e-415c-9ac0-b1518d06fa51
 :END:
@@ -9900,7 +9900,7 @@ Now the actual code I use:
             notmuch-fcc-dirs `((".*" . "gandi/Sent"))))))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about the general user interface
+***** The =prot-emacs-notmuch.el= section about the general user interface
 :PROPERTIES:
 :CUSTOM_ID: h:2c9a555f-d3ec-4d0e-bad6-6c26b576a49a
 :END:
@@ -9935,7 +9935,7 @@ are not relevant.
         notmuch-show-all-tags-list t))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about the presentation of search buffers
+***** The =prot-emacs-notmuch.el= section about the presentation of search buffers
 :PROPERTIES:
 :CUSTOM_ID: h:eddc38d8-d1c1-48a4-8fa1-ce9ab2820ee3
 :END:
@@ -10006,7 +10006,7 @@ form part of the search terms or tags.
             :key ,(kbd "c")))))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about tag settings
+***** The =prot-emacs-notmuch.el= section about tag settings
 :PROPERTIES:
 :CUSTOM_ID: h:f19e7ef2-9a90-4fbd-879b-8ee0acfa1b5a
 :END:
@@ -10061,7 +10061,7 @@ incorporation in the subsequent section about setting up
            (concat "🏷️" tag)))))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about email composition settings
+***** The =prot-emacs-notmuch.el= section about email composition settings
 :PROPERTIES:
 :CUSTOM_ID: h:b91c062d-add7-42e6-b425-4fa287763b1b
 :END:
@@ -10117,7 +10117,7 @@ that and instead tries to complete against dictionary entries."
     (advice-add #'message-tab :override #'prot-notmuch-message-tab)))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about reading messages
+***** The =prot-emacs-notmuch.el= section about reading messages
 :PROPERTIES:
 :CUSTOM_ID: h:f2b7a39e-fb10-4886-9765-4be8a1701c67
 :END:
@@ -10156,7 +10156,7 @@ nicer.
           notmuch-wash-citation-lines-suffix count)))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about hooks and key bindings
+***** The =prot-emacs-notmuch.el= section about hooks and key bindings
 :PROPERTIES:
 :CUSTOM_ID: h:6148eea6-7859-4b53-95ce-7e198fc831e0
 :END:
@@ -10210,7 +10210,7 @@ Here I set up the following:
     (define-key notmuch-hello-mode-map (kbd "C-<tab>")  nil)))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)
+***** The =prot-emacs-notmuch.el= custom extensions (per =prot-notmuch.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:dbd2b775-8f51-451a-8e24-9c8424fd2e89
 :END:
@@ -10256,7 +10256,7 @@ those that are for the base Notmuch package ([[#h:6148eea6-7859-4b53-95ce-7e198f
     (add-to-list 'notmuch-tag-formats '("package" (concat tag "🗂️")))))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= glue code for ~org-capture~ (=ol-notmuch.el=)
+***** The =prot-emacs-notmuch.el= glue code for ~org-capture~ (=ol-notmuch.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:49890997-448e-408d-bebe-2003259bb125
 :END:
@@ -10280,7 +10280,7 @@ editing, file management, and related.
     (require 'ol-notmuch)))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= section about the ~notmuch-indicator~
+***** The =prot-emacs-notmuch.el= section about the ~notmuch-indicator~
 :PROPERTIES:
 :CUSTOM_ID: h:0f12f144-ca9f-4d07-8563-c33b3521bfb5
 :END:
@@ -10336,7 +10336,7 @@ respectively.
     (notmuch-indicator-mode 1)))
 #+end_src
 
-**** The =prot-emacs-notmuch.el= call to ~provide~
+***** The =prot-emacs-notmuch.el= call to ~provide~
 :PROPERTIES:
 :CUSTOM_ID: h:340e745d-544c-4473-969e-ade21ae7710d
 :END:
@@ -10348,7 +10348,7 @@ Finally, we ~provide~ the submodule. This is the mirror function of
 (provide 'prot-emacs-notmuch)
 #+end_src
 
-*** The deprecated =prot-emacs-mail.el= submodule for ~mu4e~ (=prot-emacs-mu4e.el=)
+*** The deprecated =prot-emacs-email.el= submodule for ~mu4e~ (=prot-emacs-mu4e.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:97282c11-475c-4ad3-9399-cb2cd12f93b7
 :END:
@@ -10604,7 +10604,7 @@ test it for my themes and (ii) help others who are using it.
 (provide 'prot-emacs-mu4e)
 #+end_src
 
-*** The deprecated =prot-emacs-mail.el= submodule for Gnus (=prot-emacs-gnus.el=)
+*** The deprecated =prot-emacs-email.el= submodule for Gnus (=prot-emacs-gnus.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:ae0a1c85-8412-48d3-94a9-7d6dbd801126
 :END:
