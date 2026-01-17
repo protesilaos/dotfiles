@@ -158,11 +158,11 @@ These include the packages `marginalia', `consult', `corfu',
       (append
        (mapcar
         (lambda (package)
-          (list 'not 'packagge package))
+          (cons 'not (cons 'packagge package)))
         prot-emacs-my-packages)
        (mapcar
         (lambda (archive)
-          (list 'archive (car archive)))
+          (cons 'archive (car archive)))
         package-archives)))
 
 (setq package-review-diff-command
