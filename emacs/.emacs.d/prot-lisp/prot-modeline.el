@@ -424,7 +424,7 @@ face.  Let other buffers have no face.")
   "Prepare text for Git controlled FILE, given BRANCH.
 With optional FACE, use it to propertize the BRANCH."
   (format "%s %s "
-          (propertize "\\/" 'face 'prot-modeline-indicator-gray)
+          (prot-icons-get-icon 'git 'prot-modeline-indicator-gray)
           ;; (propertize (char-to-string #xE0A0) 'face 'prot-modeline-indicator-gray)
           (propertize branch
                       'face face
@@ -551,9 +551,8 @@ Specific to the current window's mode line.")
                         (current-frame (selected-frame))
                         (_ (frame-live-p current-frame))
                         (parameters (frame-parameters))
-                        (name (capitalize (alist-get 'name parameters)))
-                        (indicator "[+]"))
-              (format "%s %s " (propertize indicator 'face 'prot-modeline-indicator-gray) name)))))
+                        (name (capitalize (alist-get 'name parameters))))
+              (format "%s %s " (prot-icons-get-icon 'frame 'prot-modeline-indicator-gray) name)))))
   "Mode line construct to display the current frame name.")
 
 ;;;; `which-function-mode' indicator
