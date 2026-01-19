@@ -12,10 +12,10 @@
          `(prot-icons-directory ((,c :inherit bold :foreground ,accent-0)))
          `(prot-icons-gray ((,c :inherit bold :foreground ,fg-dim)))
          `(prot-icons-red ((,c :inherit prot-icons-icon :foreground ,red)))
-         `(prot-icons-green ((,c :inherit prot-icons-icon :foreground ,green)))
+         `(prot-icons-green ((,c :inherit prot-icons-icon :foreground ,green-warmer)))
          `(prot-icons-yellow ((,c :inherit prot-icons-icon :foreground ,yellow)))
-         `(prot-icons-blue ((,c :inherit prot-icons-icon :foreground ,blue)))
-         `(prot-icons-magenta ((,c :inherit prot-icons-icon :foreground ,magenta)))
+         `(prot-icons-blue ((,c :inherit prot-icons-icon :foreground ,blue-cooler)))
+         `(prot-icons-magenta ((,c :inherit prot-icons-icon :foreground ,magenta-cooler)))
          `(prot-icons-cyan ((,c :inherit prot-icons-icon :foreground ,cyan))))))
 
     (prot/icons-set-faces)
