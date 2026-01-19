@@ -119,7 +119,7 @@
   :group 'prot-icons)
 
 (defvar prot-icons
-  '((dired-mode "|/" prot-icons-directory)
+  '((dired-mode "|*" prot-icons-directory)
     (archive-mode "|@" prot-icons-directory)
     (diff-mode ">Δ" prot-icons-yellow) ; διαφορά
     (prog-mode ">Π" prot-icons-magenta) ; πρόγραμμα
