@@ -33,6 +33,7 @@
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
+  (setq message-forward-as-mime t)
   (setq message-wide-reply-confirm-recipients nil))
 
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')

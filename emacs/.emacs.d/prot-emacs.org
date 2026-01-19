@@ -9714,6 +9714,7 @@ most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overvie
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
+  (setq message-forward-as-mime t)
   (setq message-wide-reply-confirm-recipients nil))
 #+end_src
 
