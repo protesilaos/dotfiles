@@ -105,6 +105,12 @@
     (completion-list-mode-hook minibuffer-setup-hook)
     prot-common-truncate-lines-silently)
 
+  (setq completions-group-format
+        (concat
+         (propertize (make-string 20 ? ) 'face 'completions-group-separator)
+         (propertize " %s " 'face 'completions-group-title)
+         (propertize " " 'face 'completions-group-separator 'display '(space :align-to right))))
+
   (unless prot-emacs-completion-ui
     (prot-minibuffer-completions-mode 1)
 
