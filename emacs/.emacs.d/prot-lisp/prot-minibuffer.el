@@ -126,7 +126,7 @@ Omit the .. directory from FILES."
   (if transform
       buffer-name
     (with-current-buffer (get-buffer buffer-name)
-      major-mode)))
+      (format "%s" major-mode))))
 
 (defun prot-minibuffer-buffer-affixate (buffers)
   "Return BUFFERS with prefix and suffix."
