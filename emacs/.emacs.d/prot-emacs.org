@@ -12898,7 +12898,8 @@ FACE is the face to use for it, where applicable.")
 (defun prot-icons-get-icon (thing &optional face)
   "Return propertized icon THING."
   (pcase-let ((`(,icon ,inherent-face) (prot-icons--get thing)))
-    (format "%2s" (propertize icon 'font-lock-face (or face inherent-face)))))
+    (let ((face (or face inherent-face)))
+      (format "%2s" (propertize icon 'font-lock-face face 'face face)))))
 
 (defun prot-icons-get-file-icon (file)
   "Return FILE icon and face."
