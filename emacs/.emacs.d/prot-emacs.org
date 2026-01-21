@@ -5167,21 +5167,27 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-vertico.el" :mkdirp yes
 ;;; Vertical completion layout (vertico)
 (prot-emacs-configure
- (prot-emacs-install vertico)
+  (prot-emacs-install vertico)
 
- (setq vertico-scroll-margin 0)
- (setq vertico-count 5)
- (setq vertico-resize t)
- (setq vertico-cycle t)
+  (setq vertico-scroll-margin 0)
+  (setq vertico-count 5)
+  (setq vertico-resize t)
+  (setq vertico-cycle t)
 
- (with-eval-after-load 'rfn-eshadow
-   ;; This works with `file-name-shadow-mode' enabled.  When you are in
-   ;; a sub-directory and use, say, `find-file' to go to your home '~/'
-   ;; or root '/' directory, Vertico will clear the old path to keep
-   ;; only your current input.
-   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
+  (with-eval-after-load 'rfn-eshadow
+    ;; This works with `file-name-shadow-mode' enabled.  When you are in
+    ;; a sub-directory and use, say, `find-file' to go to your home '~/'
+    ;; or root '/' directory, Vertico will clear the old path to keep
+    ;; only your current input.
+    (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
- (vertico-mode 1))
+  (setq vertico-group-format
+        (concat
+         (propertize (make-string 20 ? ) 'face 'completions-group-separator)
+         (propertize " %s " 'face 'completions-group-title)
+         (propertize " " 'face 'completions-group-separator 'display '(space :align-to right))))
+
+  (vertico-mode 1))
 
 ;;; Custom tweaks for vertico (prot-vertico.el)
 (prot-emacs-configure
