@@ -121,6 +121,13 @@ Omit the .. directory from FILES."
             " ")
           (propertize string 'face 'completions-annotations)))
 
+(defun prot-minibuffer-buffer-group (buffer-name transform)
+  "Return BUFFER-NAME group name unless TRANSFORM is non-nil."
+  (if transform
+      buffer-name
+    (with-current-buffer (get-buffer buffer-name)
+      major-mode)))
+
 (defun prot-minibuffer-buffer-affixate (buffers)
   "Return BUFFERS with prefix and suffix."
   (mapcar

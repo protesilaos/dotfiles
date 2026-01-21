@@ -38,6 +38,7 @@
             (symbol-help . (,@eager-update-properties
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
+                       (group-function . ,#'prot-minibuffer-buffer-group)
                        (affixation-function . ,#'prot-minibuffer-buffer-affixate)))
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))

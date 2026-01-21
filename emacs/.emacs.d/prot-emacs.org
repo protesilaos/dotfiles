@@ -4160,6 +4160,7 @@ for this.
             (symbol-help . (,@eager-update-properties
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
+                       (group-function . ,#'prot-minibuffer-buffer-group)
                        (affixation-function . ,#'prot-minibuffer-buffer-affixate)))
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
@@ -13318,6 +13319,13 @@ Omit the .. directory from FILES."
               (propertize " " 'display '(space :align-to 60))
             " ")
           (propertize string 'face 'completions-annotations)))
+
+(defun prot-minibuffer-buffer-group (buffer-name transform)
+  "Return BUFFER-NAME group name unless TRANSFORM is non-nil."
+  (if transform
+      buffer-name
+    (with-current-buffer (get-buffer buffer-name)
+      major-mode)))
 
 (defun prot-minibuffer-buffer-affixate (buffers)
   "Return BUFFERS with prefix and suffix."
