@@ -39,7 +39,7 @@
   :group 'editing)
 
 (defvar prot-common-file-extensions
-  '((archive "tar" "rar" "zip")
+  '((archive "tar" "rar" "zip" "xz")
     (image "jpg" "png" "jpeg")
     (audio "mp3" "flac" "ogg" "wav")
     (video "mkv" "webm" "mp4")
