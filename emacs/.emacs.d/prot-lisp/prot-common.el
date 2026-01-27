@@ -142,6 +142,35 @@ floating points: 16.666666666666664 => 16.667."
       (prot-common-seconds-to-hours seconds)
     (prot-common-seconds-to-minutes seconds)))
 
+(defvar prot-common-temperature-history nil
+  "Minibuffer history for temperature conversions.")
+
+;;;###autoload
+(defun prot-common-fahrenheit-to-celsius (degree)
+  "Convert Fahrenheit DEGREE to Celsius."
+  (interactive
+   (list
+    (read-number "Fahrenheit DEGREE: " nil 'prot-common-temperature-history)))
+  (let* ((converted-degrees (/ (- degree 32) 1.8))
+         (f-string (number-to-string degree))
+         (c-string (number-to-string converted-degrees)))
+    (message "%s degrees Fahrenheit is %s degrees Celcius"
+             (propertize f-string 'face 'error)
+             (propertize c-string 'face 'success))))
+
+;;;###autoload
+(defun prot-common-celsius-to-fahrenheit (degree)
+  "Convert Celsius DEGREE to Fahrenheit."
+  (interactive
+   (list
+    (read-number "Celsius DEGREE: " nil 'prot-common-temperature-history)))
+  (let* ((converted-degrees (+ (* degree 1.8) 32))
+         (c-string (number-to-string degree))
+         (f-string (number-to-string converted-degrees)))
+    (message "%s degrees Celcius is %s degrees Fahrenheit"
+             (propertize c-string 'face 'success)
+             (propertize f-string 'face 'error))))
+
 ;;;###autoload
 (defun prot-common-rotate-list-of-symbol (symbol)
   "Rotate list value of SYMBOL by moving its car to the end.
