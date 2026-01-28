@@ -54,8 +54,8 @@ export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
 # Default editor.
 if pgrep -x emacs > /dev/null
 then
-    export VISUAL="emacsclient -c"
-    export EDITOR="emacsclient -t"
+    export EDITOR="emacsclient -a emacs -t -r"
+    export VISUAL="emacsclient -a emacs -t -r"
 elif _checkexec gvim
 then
     export VISUAL="gvim"
