@@ -18176,7 +18176,7 @@ major mode.")
 ;;;; Preview hexadecimal RGB colours
 
 ;; FIXME 2026-01-10: Why is this not working in Org tables?  The
-;; properties are applied by the face is not displayed.
+;; properties are applied but the face is not displayed.
 (defun prot-simple-hex-fontify (limit)
   "Fontify the # of a hexadecimal RGB colour up to LIMIT."
   (when-let* ((found (re-search-forward "\\(#\\)\\([a-fA-F0-9]\\{6\\}\\)" limit t))
