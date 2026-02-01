@@ -45,6 +45,8 @@
   (prot-emacs-keybind vertico-map
     "<left>" #'backward-char
     "<right>" #'forward-char
+    "C-M-n" #'vertico-next-group
+    "C-M-p" #'vertico-previous-group
     "TAB" #'prot-vertico-private-complete
     "DEL" #'vertico-directory-delete-char
     "M-DEL" #'vertico-directory-delete-word

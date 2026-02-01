@@ -5213,6 +5213,8 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
   (prot-emacs-keybind vertico-map
     "<left>" #'backward-char
     "<right>" #'forward-char
+    "C-M-n" #'vertico-next-group
+    "C-M-p" #'vertico-previous-group
     "TAB" #'prot-vertico-private-complete
     "DEL" #'vertico-directory-delete-char
     "M-DEL" #'vertico-directory-delete-word
