@@ -89,7 +89,9 @@ Omit the .. directory from FILES."
    (transform file)
    ((string-suffix-p "/" file) "/")
    ((string-prefix-p "." file) ".")
-   ((file-name-extension file :include-dot))
+   ((when-let* ((extension (file-name-extension file :include-dot))
+                (_ (not (string-blank-p extension))))
+      extension))
    (t "Other")))
 
 (defun prot-minibuffer--set-default-sort (candidates)
