@@ -15096,6 +15096,59 @@ from the heading text instead of a UUID."
         (error "No CUSTOM_ID for the current entry"))
     (user-error "You are not in the right file")))
 
+;;;; Org and Diary integration
+
+(defun prot-org-diary--get-file (ics-file)
+  "Return diary file path that reuses the name of ICS-FILE.
+The path is relative to the `diary-file'."
+  (unless (file-exists-p diary-file)
+    (error "The `diary-file' does not exist"))
+  (let* ((directory (file-name-directory diary-file))
+         (ics-name (file-name-sans-extension (file-name-nondirectory ics-file)))
+         (diary-name (format "%s%s-%s-diary.txt" directory (format-time-string "%Y-%m-%d") ics-name)))
+    (when-let* ((buffer (get-file-buffer diary-name)))
+      (with-current-buffer buffer
+        (erase-buffer)))
+    (when (file-exists-p diary-name)
+      (delete-file diary-name))
+    diary-name))
+
+(defun prot-org-diary-include-file (diary-file-to-include)
+  "Include DIARY-FILE-TO-INCLUDE in the `diary-file'."
+  (unless (file-exists-p diary-file)
+    (error "The `diary-file' does not exist"))
+  (with-current-buffer (find-file-noselect diary-file)
+    (let ((include-directive (format "#include %S" diary-file-to-include)))
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward (format "^%s.*" include-directive) nil t)
+          (delete-region (match-beginning 0) (match-end 0)))
+        (goto-char (point-max))
+        (insert "\n")
+        (insert include-directive)
+        (insert "\n")
+        (save-buffer)))))
+
+;;;###autoload
+(defun prot-org-diary-import-ics (ics-file diary-file-to-include)
+  "Import ICS-FILE to DIARY-FILE."
+  (interactive
+   (let ((ics-file (read-file-name "Which ICS file? ")))
+     (list
+      ics-file
+      (prot-org-diary--get-file ics-file))))
+  (save-window-excursion
+    (icalendar-import-file ics-file diary-file-to-include))
+  (let ((diary-file-propertized (propertize diary-file-to-include 'face 'success))
+        (main-diary-file-propertized (propertize diary-file 'face 'warning)))
+    (when (yes-or-no-p (format
+                        "Imported `%s' as `%s'\nINCLUDE IT in `%s'?"
+                        (propertize ics-file 'face 'error)
+                        diary-file-propertized
+                        main-diary-file-propertized))
+      (prot-org-diary-include-file diary-file-to-include)
+      (message "Appended `%s' to `%s'" diary-file-propertized main-diary-file-propertized))))
+
 (provide 'prot-org)
 ;;; prot-org.el ends here
 #+end_src
