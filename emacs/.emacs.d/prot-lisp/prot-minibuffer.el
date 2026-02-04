@@ -113,17 +113,31 @@ Omit the .. directory from FILES."
 (defun prot-minibuffer--propertize-suffix-with-space (string)
   "Propertize STRING with spacing before it."
   (format " %s%s"
-          (if (eq completions-format 'one-column)
-              (propertize " " 'display '(space :align-to 60))
-            " ")
+          (if (and (or (eq completions-format 'horizontal)
+                       (eq completions-format 'vertical))
+                   (not prot-emacs-completion-ui))
+              " "
+            (propertize " " 'display '(space :align-to 60)))
           (propertize string 'face 'completions-annotations)))
 
 (defun prot-minibuffer-buffer-group (buffer-name transform)
   "Return BUFFER-NAME group name unless TRANSFORM is non-nil."
-  (if transform
-      buffer-name
-    (with-current-buffer (get-buffer buffer-name)
-      (format "%s" major-mode))))
+  (cond
+   (transform buffer-name)
+   ((string-prefix-p "*" buffer-name) "Special")
+   ((string-match-p "\\`magit.*?:" buffer-name) "Git")
+   ((if-let* ((buffer (get-buffer buffer-name)))
+      (with-current-buffer buffer
+        (cond
+         ((derived-mode-p 'dired-mode)
+          "Directory")
+         ((derived-mode-p 'prog-mode)
+          "Program")
+         ((derived-mode-p 'text-mode)
+          "Prose")
+         (t
+          (format "%s" major-mode))))
+      ""))))
 
 (defun prot-minibuffer-buffer-affixate (buffers)
   "Return BUFFERS with prefix and suffix."
@@ -153,7 +167,7 @@ Omit the .. directory from FILES."
   "Sort LIBRARIES, omitting autoloads and bytecode files."
   (setq libraries (seq-remove
                    (lambda (library)
-                     (string-match-p "\\(-autoload\\|\\.elc\\)" library))
+                     (string-match-p "\\(-autoload\\|\\.elc\\|\\.dir-locals\\)" library))
                    libraries))
   (prot-minibuffer--set-default-sort libraries))
 
@@ -165,21 +179,17 @@ Omit the .. directory from FILES."
 
 (defun prot-minibuffer-command-annotate (command)
   "Annotate COMMAND with its key binding and shortened documentation string."
-  (let ((symbol (intern-soft command)))
-    (format "%s%s%s"
-            (if-let* ((binding (where-is-internal symbol overriding-local-map t))
-                      (description (key-description binding))
-                      (key (when (and binding (not (stringp binding)))
-                             (format " %s " description))))
-                (propertize key 'face 'help-key-binding)
-              "")
-            (if (eq completions-format 'one-column)
-                (propertize " " 'display '(space :align-to 60))
-              " ")
-            (if-let* ((doc (condition-case nil (documentation symbol) (error nil)))
-                      (first-line (substring doc 0 (string-search "\n" doc))))
-                (propertize first-line 'face 'completions-annotations)
-              ""))))
+  (let* ((symbol (intern-soft command))
+         (key (if-let* ((binding (where-is-internal symbol overriding-local-map t))
+                        (description (key-description binding))
+                        (_ (and binding (not (stringp binding)))))
+                  (format "  %s " (propertize description 'face 'help-key-binding))
+                ""))
+         (doc (if-let* ((doc (condition-case nil (documentation symbol) (error nil)))
+                        (first-line (substring doc 0 (string-search "\n" doc))))
+                  (propertize first-line 'face 'completions-annotations)
+                "")))
+    (format "%s%s" key (prot-minibuffer--propertize-suffix-with-space doc))))
 
 ;;;; Completions
 
