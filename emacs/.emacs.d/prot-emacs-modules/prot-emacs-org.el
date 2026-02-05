@@ -315,7 +315,6 @@
           `(("A" "Daily agenda and top priority tasks"
              ,prot-org-custom-daily-agenda
              ((org-agenda-fontify-priorities nil)
-              (org-agenda-prefix-format "	 %t %s")
               (org-agenda-dim-blocked-tasks nil)))
             ("P" "Plain text daily agenda and top priorities"
              ,prot-org-custom-daily-agenda
@@ -348,12 +347,13 @@
     (setq org-agenda-max-effort nil)
 
 ;;;;; General agenda view options
-    ;; NOTE 2021-12-07: Also see my `org-agenda-custom-commands'
-    (setq org-agenda-prefix-format
-          '((agenda . " %i %-12:c%?-12t% s")
-            (todo . " %i %-12:c")
-            (tags . " %i %-12:c")
-            (search . " %i %-12:c")))
+    ;; ;; NOTE 2021-12-07: Also see my `org-agenda-custom-commands'
+    ;; (setq org-agenda-prefix-format
+    ;;       '((agenda . " %i %-12:c%?-12t% s")
+    ;;         (todo . " %i %-12:c")
+    ;;         (tags . " %i %-12:c")
+    ;;         (search . " %i %-12:c")))
+    (setq org-agenda-prefix-format "%c	 %t %s")
     (setq org-agenda-sorting-strategy
           '(((agenda habit-down time-up priority-down category-keep)
              (todo priority-down category-keep)
