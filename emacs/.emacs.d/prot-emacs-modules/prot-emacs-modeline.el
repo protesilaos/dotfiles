@@ -32,26 +32,44 @@
                   "  "
                   prot-modeline-misc-info))
 
-  (when (memq prot-emacs-load-theme-family '(modus ef standard))
-    (defun prot/modeline-set-faces ()
-      (modus-themes-with-colors
-        (custom-set-faces
-         `(prot-modeline-indicator-red ((,c :inherit bold :foreground ,red)))
-         `(prot-modeline-indicator-green ((,c :inherit bold :foreground ,green)))
-         `(prot-modeline-indicator-yellow ((,c :inherit bold :foreground ,yellow)))
-         `(prot-modeline-indicator-blue ((,c :inherit bold :foreground ,blue)))
-         `(prot-modeline-indicator-magenta ((,c :inherit bold :foreground ,magenta)))
-         `(prot-modeline-indicator-cyan ((,c :inherit bold :foreground ,cyan)))
-         `(prot-modeline-indicator-red-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-red-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-green-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-green-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-yellow-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-yellow-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-blue-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-blue-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-magenta-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-magenta-intense :foreground ,fg-main)))
-         `(prot-modeline-indicator-cyan-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-cyan-intense :foreground ,fg-main))))))
+  (when prot-emacs-load-theme-family
+    (cond
+     ((memq prot-emacs-load-theme-family '(modus ef standard))
+      (defun prot/modeline-set-faces ()
+        (modus-themes-with-colors
+         (custom-set-faces
+          `(prot-modeline-indicator-red ((,c :inherit bold :foreground ,red)))
+          `(prot-modeline-indicator-green ((,c :inherit bold :foreground ,green)))
+          `(prot-modeline-indicator-yellow ((,c :inherit bold :foreground ,yellow)))
+          `(prot-modeline-indicator-blue ((,c :inherit bold :foreground ,blue)))
+          `(prot-modeline-indicator-magenta ((,c :inherit bold :foreground ,magenta)))
+          `(prot-modeline-indicator-cyan ((,c :inherit bold :foreground ,cyan)))
+          `(prot-modeline-indicator-red-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-red-intense :foreground ,fg-main)))
+          `(prot-modeline-indicator-green-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-green-intense :foreground ,fg-main)))
+          `(prot-modeline-indicator-yellow-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-yellow-intense :foreground ,fg-main)))
+          `(prot-modeline-indicator-blue-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-blue-intense :foreground ,fg-main)))
+          `(prot-modeline-indicator-magenta-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-magenta-intense :foreground ,fg-main)))
+          `(prot-modeline-indicator-cyan-bg ((,c :inherit (bold prot-modeline-indicator-button) :background ,bg-cyan-intense :foreground ,fg-main))))))
+      (add-hook 'modus-themes-after-load-theme-hook #'prot/modeline-set-faces))
+     ((eq prot-emacs-load-theme-family 'doric)
+      (defun prot/modeline-set-faces ()
+        (doric-themes-with-colors
+          (custom-set-faces
+           `(prot-modeline-indicator-red ((t :inherit bold :foreground ,fg-red)))
+           `(prot-modeline-indicator-green ((t :inherit bold :foreground ,fg-green)))
+           `(prot-modeline-indicator-yellow ((t :inherit bold :foreground ,fg-yellow)))
+           `(prot-modeline-indicator-blue ((t :inherit bold :foreground ,fg-blue)))
+           `(prot-modeline-indicator-magenta ((t :inherit bold :foreground ,fg-magenta)))
+           `(prot-modeline-indicator-cyan ((t :inherit bold :foreground ,fg-cyan)))
+           `(prot-modeline-indicator-red-bg ((t :inherit (bold prot-modeline-indicator-button) :background ,bg-red :foreground ,fg-main)))
+           `(prot-modeline-indicator-green-bg ((t :inherit (bold prot-modeline-indicator-button) :background ,bg-green :foreground ,fg-main)))
+           `(prot-modeline-indicator-yellow-bg ((t :inherit (bold prot-modeline-indicator-button) :background ,bg-yellow :foreground ,fg-main)))
+           `(prot-modeline-indicator-blue-bg ((t :inherit (bold prot-modeline-indicator-button) :background ,bg-blue :foreground ,fg-main)))
+           `(prot-modeline-indicator-magenta-bg ((t :inherit (bold prot-modeline-indicator-button) :background ,bg-magenta :foreground ,fg-main)))
+           `(prot-modeline-indicator-cyan-bg ((t :inherit (bold prot-modeline-indicator-button) :background ,bg-cyan :foreground ,fg-main))))))
+      (add-hook 'doric-themes-after-load-theme-hook #'prot/modeline-set-faces)))
 
-    (prot/modeline-set-faces)
-
-    (add-hook 'modus-themes-after-load-theme-hook #'prot/modeline-set-faces))
+    (prot/modeline-set-faces))
 
   (with-eval-after-load 'spacious-padding
     (defun prot/modeline-spacious-indicators ()
