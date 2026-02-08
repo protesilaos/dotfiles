@@ -42,6 +42,9 @@
   (setq ediff-merge-revisions-with-ancestor t)
   (setq ediff-show-clashes-only t)
 
+  (with-eval-after-load 'outline
+    (add-hook 'ediff-prepare-buffer-hook #'outline-show-all))
+
   (prot-emacs-autoload
     (prot-ediff-visible-buffers-2
      prot-ediff-visible-buffers-3
