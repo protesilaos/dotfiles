@@ -2253,7 +2253,7 @@ such as in the difference between writing and reading.
     (define-key global-map (kbd "C-c p") #'cursory-set-preset)))
 #+end_src
 
-*** GNOME accent theme switcher for GNU Emacs
+*** GNOME accent theme switcher (~gnome-accent-theme-switcher~)
 :PROPERTIES:
 :CUSTOM_ID: h:79bcb083-0700-45d4-98cb-6e52f40b72ee
 :END:
@@ -2270,6 +2270,11 @@ light and dark mode. By default, almost all of my themes are included,
 spanning the packages ~modus-themes~, ~ef-themes~, ~doric-themes~, and
 ~standard-themes~.
 
+The command ~gnome-accent-theme-switcher-toggle-mode~ toggles the
+GNOME light/dark preference from inside Emacs. While the command
+~gnome-accent-theme-switcher-change-accent~ prompts for an accent
+color and changes it accordingly.
+
 I enable this mode when no theme is explicitly loaded and I am using
 the GNOME desktop environment ([[#h:3f1a33e4-762e-4cf3-a0ae-4c2954d9cbb8][The =prot-emacs-theme.el= section to load a theme (~prot-emacs-load-theme-family~)]]).
 
@@ -2284,6 +2289,9 @@ the GNOME desktop environment ([[#h:3f1a33e4-762e-4cf3-a0ae-4c2954d9cbb8][The =p
     "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
   (when (and (null prot-emacs-load-theme-family)
              (string= (getenv "DESKTOP_SESSION") "gnome"))
+    (prot-emacs-keybind global-map
+      "<f5>" #'gnome-accent-theme-switcher-toggle-mode
+      "C-<f5>" #'gnome-accent-theme-switcher-change-accent)
     (gnome-accent-theme-switcher-mode 1)))
 #+end_src
 
