@@ -1179,21 +1179,21 @@ respect the priorities I set for package archives ([[#h:424340cc-f3d7-4083-93c9-
 ;; => (unless (package-installed-p 'modus-themes)
 ;; =>   (condition-case-unless-debug err
 ;; =>       (apply #'package-vc-install
-;; =>              ("https://github.com/protesilaos/modus-themes.git"))
+;; =>              '("https://github.com/protesilaos/modus-themes.git"))
 ;; =>     (error
 ;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
-;; =>               ("https://github.com/protesilaos/modus-themes.git")
+;; =>               '("https://github.com/protesilaos/modus-themes.git")
 ;; =>               (cdr err)))))
 
 (prot-emacs-install modus-themes :url "https://github.com/protesilaos/modus-themes.git" :branch "main")
 ;; => (unless (package-installed-p 'modus-themes)
 ;; =>   (condition-case-unless-debug err
 ;; =>       (apply #'package-vc-install
-;; =>              (:url "https://github.com/protesilaos/modus-themes.git"
+;; =>              '(:url "https://github.com/protesilaos/modus-themes.git"
 ;; =>                    :branch "main"))
 ;; =>     (error
 ;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
-;; =>               (:url "https://github.com/protesilaos/modus-themes.git"
+;; =>               '(:url "https://github.com/protesilaos/modus-themes.git"
 ;; =>                     :branch "main")
 ;; =>               (cdr err)))))
 
@@ -1205,17 +1205,17 @@ respect the priorities I set for package archives ([[#h:424340cc-f3d7-4083-93c9-
 ;; =>     (error
 ;; =>      (message "Failed `%s' with `%S': `%S'"
 ;; =>               'package-vc-install-from-checkout
-;; =>               ("~/Git/Projects/modus-themes") (cdr err)))))
+;; =>               '("~/Git/Projects/modus-themes") (cdr err)))))
 
 (prot-emacs-install modus-themes "~/Git/Projects/modus-themes-arbitrary-name-of-dir" "modus-themes")
 ;; => (unless (package-installed-p 'modus-themes)
 ;; =>   (condition-case-unless-debug err
 ;; =>       (apply #'package-vc-install
-;; =>              ("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
+;; =>              '("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
 ;; =>               "modus-themes"))
 ;; =>     (error
 ;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
-;; =>               ("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
+;; =>               '("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
 ;; =>                "modus-themes")
 ;; =>               (cdr err)))))
 #+end_example
@@ -1244,8 +1244,8 @@ At all times, do nothing if PACKAGE is already installled."
                 'package-vc-install)))
       `(unless (package-installed-p ',package)
          (condition-case-unless-debug err
-             (apply #',fn ,vc-args)
-           (error (message "Failed `%s' with `%S': `%S'" ',fn ,vc-args (cdr err)))))))
+             (apply #',fn ',vc-args)
+           (error (message "Failed `%s' with `%S': `%S'" ',fn ',vc-args (cdr err)))))))
    (package
     `(progn
        (unless (package-installed-p ',package)

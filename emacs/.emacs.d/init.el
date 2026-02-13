@@ -235,8 +235,8 @@ At all times, do nothing if PACKAGE is already installled."
                 'package-vc-install)))
       `(unless (package-installed-p ',package)
          (condition-case-unless-debug err
-             (apply #',fn ,vc-args)
-           (error (message "Failed `%s' with `%S': `%S'" ',fn ,vc-args (cdr err)))))))
+             (apply #',fn ',vc-args)
+           (error (message "Failed `%s' with `%S': `%S'" ',fn ',vc-args (cdr err)))))))
    (package
     `(progn
        (unless (package-installed-p ',package)
