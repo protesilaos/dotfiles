@@ -37,7 +37,10 @@
 (prot-emacs-configure
   (prot-emacs-install lin)
   (setq lin-face 'lin-cyan)
-  (lin-global-mode 1))
+  (lin-global-mode 1)
+  (when (and (null prot-emacs-load-theme-family)
+             (string= (getenv "DESKTOP_SESSION") "gnome"))
+    (lin-gnome-accent-color-mode 1)))
 
 ;;;; Increase padding of windows/frames
 ;; Yet another one of my packages:
@@ -136,6 +139,9 @@
     "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
   (when (and (null prot-emacs-load-theme-family)
              (string= (getenv "DESKTOP_SESSION") "gnome"))
+    (prot-emacs-keybind global-map
+      "<f5>" #'gnome-accent-theme-switcher-toggle-mode
+      "C-<f5>" #'gnome-accent-theme-switcher-change-accent)
     (gnome-accent-theme-switcher-mode 1)))
 
 ;;;; Theme buffet
