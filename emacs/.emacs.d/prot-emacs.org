@@ -2046,6 +2046,10 @@ text or reading through the buffer's contents, so the current line
 highlight is more of a reminder of the point's location on the
 vertical axis.
 
+Lin can also integrate with the GNOME desktop environment to update
+its ~lin-face~ when the user changes an accent colour. This is what
+the minor mode ~lin-gnome-accent-color-mode~ is for.
+
 + Package name (GNU ELPA): ~lin~
 + Official manual: <https://protesilaos.com/emacs/lin>
 + Change log: <https://protesilaos.com/emacs/lin-changelog>
@@ -2060,7 +2064,10 @@ vertical axis.
 (prot-emacs-configure
   (prot-emacs-install lin)
   (setq lin-face 'lin-cyan)
-  (lin-global-mode 1))
+  (lin-global-mode 1)
+  (when (and (null prot-emacs-load-theme-family)
+             (string= (getenv "DESKTOP_SESSION") "gnome"))
+    (lin-gnome-accent-color-mode 1)))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~spacious-padding~
