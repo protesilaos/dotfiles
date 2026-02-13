@@ -129,6 +129,15 @@
     ;; suggested binding for `org-capture' and is the one I use as well.
     (define-key global-map (kbd "C-c p") #'cursory-set-preset)))
 
+;;; GNOME accent theme switcher
+(prot-emacs-configure
+  (prot-emacs-install
+    gnome-accent-theme-switcher
+    "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
+  (when (and (null prot-emacs-load-theme-family)
+             (string= (getenv "DESKTOP_SESSION") "gnome"))
+    (gnome-accent-theme-switcher-mode 1)))
+
 ;;;; Theme buffet
 (prot-emacs-configure
   (prot-emacs-install theme-buffet)

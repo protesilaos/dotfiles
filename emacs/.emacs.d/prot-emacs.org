@@ -2246,6 +2246,40 @@ such as in the difference between writing and reading.
     (define-key global-map (kbd "C-c p") #'cursory-set-preset)))
 #+end_src
 
+*** GNOME accent theme switcher for GNU Emacs
+:PROPERTIES:
+:CUSTOM_ID: h:79bcb083-0700-45d4-98cb-6e52f40b72ee
+:END:
+
+This is a small package of mine that provides the minor mode
+~gnome-accent-theme-switcher-mode~. Once enabled, this mode receives
+input from the GNOME desktop environment to update the Emacs theme
+based on the user's choice of accent color and light/dark mode. Those
+are settings provided by the GNOME desktop environment.
+
+The user option ~gnome-accent-theme-switcher-collection~ defines
+the list of themes that are used for each accent color, grouped by
+light and dark mode. By default, almost all of my themes are included,
+spanning the packages ~modus-themes~, ~ef-themes~, ~doric-themes~, and
+~standard-themes~.
+
+I enable this mode when no theme is explicitly loaded and I am using
+the GNOME desktop environment ([[#h:3f1a33e4-762e-4cf3-a0ae-4c2954d9cbb8][The =prot-emacs-theme.el= section to load a theme (~prot-emacs-load-theme-family~)]]).
+
+- Git repository: <https://github.com/protesilaos/gnome-accent-theme-switcher>.
+- Video demonstration: <https://protesilaos.com/codelog/2026-02-13-emacs-gnome-accent-theme-switcher/>
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
+;;; GNOME accent theme switcher
+(prot-emacs-configure
+  (prot-emacs-install
+    gnome-accent-theme-switcher
+    "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
+  (when (and (null prot-emacs-load-theme-family)
+             (string= (getenv "DESKTOP_SESSION") "gnome"))
+    (gnome-accent-theme-switcher-mode 1)))
+#+end_src
+
 *** The =prot-emacs-theme.el= section for ~theme-buffet~
 :PROPERTIES:
 :CUSTOM_ID: h:2af10314-c8c2-4946-bf9c-a5b0f5fe881b
