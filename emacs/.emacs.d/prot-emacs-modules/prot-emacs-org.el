@@ -19,6 +19,21 @@
     (setq calendar-standard-time-zone-name "+0200")
     (setq calendar-daylight-time-zone-name "+0300")))
 
+(prot-emacs-configure
+  (prot-emacs-install
+    institution-calendar
+    "https://github.com/protesilaos/institution-calendar.git")
+
+  ;; Remember to read the manual on how to register your own institution!
+  (setopt institution-calendar-entity 'oxford-university)
+
+  (setopt institution-calendar-include-extra-week-numbers t)
+  (setopt institution-calendar-include-intermonth-header nil)
+
+  ;; If you want to permanently change what M-x calendar shows, enable
+  ;; this mode.  Otherwise, use the relevant command.
+  (institution-calendar-mode 1))
+
 ;;; Appt (appointment reminders which also integrate with Org agenda)
 (prot-emacs-configure
   (setq appt-display-diary nil)

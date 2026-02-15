@@ -7644,6 +7644,45 @@ Org is far more capable, so I switched to it completely.
     (setq calendar-daylight-time-zone-name "+0300")))
 #+end_src
 
+*** The =prot-emacs-org.el= section about Institution Calendar (~institution-calendar~)
+:PROPERTIES:
+:CUSTOM_ID: h:a9b19aca-6705-42c8-a24a-73253ae30226
+:END:
+
+The ~institution-calendar~ is another one of my many packages. It
+augments the regular =M-x calendar= with term+week numbers for one's
+institution of choice. This is typically useful for schools and
+universities that organise their yearly work by terms, each with its
+own number of weeks. (e.g. the University of Oxford counts the week of
+2026-02-11 as week 2 of the Hilary term). The manual shows how you can
+define your own institution. The universities of Oxford and Cambridge
+are supported by default.
+
++ Official manual: <https://protesilaos.com/emacs/institution-calendar>
++ Git repository: <https://github.com/protesilaos/institution-calendar>
++ Screenshot: <https://protesilaos.com/codelog/2026-02-11-emacs-institution-calendar/>
++ Backronyms: Interestingly Nothing Serving Teachers Implement Term
+  Utilities Took Inspiration from Oxford Novices... calendar;
+  Institution ... Cambridge Added Lent Entry Notwithstanding Dates
+  Already Recorded.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
+(prot-emacs-configure
+  (prot-emacs-install
+    institution-calendar
+    "https://github.com/protesilaos/institution-calendar.git")
+
+  ;; Remember to read the manual on how to register your own institution!
+  (setopt institution-calendar-entity 'oxford-university)
+
+  (setopt institution-calendar-include-extra-week-numbers t)
+  (setopt institution-calendar-include-intermonth-header nil)
+
+  ;; If you want to permanently change what M-x calendar shows, enable
+  ;; this mode.  Otherwise, use the relevant command.
+  (institution-calendar-mode 1))
+#+end_src
+
 *** The =prot-emacs-org.el= section about appointment reminders (=appt.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:bd4b0dcb-a925-4bd7-90db-6379a7ca6f5e
