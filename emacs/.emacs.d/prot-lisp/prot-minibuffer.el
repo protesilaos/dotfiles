@@ -68,7 +68,7 @@
         (advice-remove original my-function-symbol)))))
 
 (defun prot-minibuffer-file-sort (files)
-  "Sort FILES to have directories first and then `completions-sort' sorting.
+  "Sort FILES to have directories first and the rest alphabetically.
 Omit the .. directory from FILES."
   (setq files (delete "../" files))
   (setq files (minibuffer-sort-alphabetically files))
