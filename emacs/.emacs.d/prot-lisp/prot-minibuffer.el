@@ -106,7 +106,7 @@ Omit the .. directory from FILES."
 (defun prot-minibuffer-symbol-sort (symbols)
   "Sort SYMBOLS so that public ones come first."
   (setq symbols (prot-minibuffer--set-default-sort symbols))
-  (let ((private-p (lambda (symbol) (string-suffix-p "--" symbol))))
+  (let ((private-p (lambda (symbol) (string-match-p "--" symbol))))
     (nconc (seq-remove private-p symbols)
            (seq-filter private-p symbols))))
 
