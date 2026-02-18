@@ -37,6 +37,7 @@
                                         (annotation-function . ,#'prot-minibuffer-library-annotate)
                                         (display-sort-function . ,#'prot-minibuffer-library-sort)))
             (symbol-help . (,@eager-update-properties
+                            (group-function . ,#'prot-minibuffer-symbol-group)
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
                        (group-function . ,#'prot-minibuffer-buffer-group)

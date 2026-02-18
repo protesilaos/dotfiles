@@ -110,6 +110,16 @@ Omit the .. directory from FILES."
     (nconc (seq-remove private-p symbols)
            (seq-filter private-p symbols))))
 
+(defun prot-minibuffer-symbol-group (symbol-name transform)
+  "Return SYMBOL-NAME group unless TRANSFORM is non-nil."
+  (let ((first-word-fn (lambda (string)
+                         (if (string-match "\\(.*?\\)[@/-].*" string)
+                             (match-string 1 string)
+                           string))))
+    (cond
+     (transform symbol-name)
+     ((funcall first-word-fn symbol-name)))))
+
 (defun prot-minibuffer--propertize-suffix-with-space (string)
   "Propertize STRING with spacing before it."
   (format " %s%s"
