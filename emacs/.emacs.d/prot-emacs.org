@@ -12020,7 +12020,7 @@ an alternative date format, as specified by
 
 (defvar prot-common-file-extensions
   '((archive "tar" "rar" "zip" "xz")
-    (image "jpg" "png" "jpeg")
+    (image "jpg" "png" "jpeg" "webp")
     (audio "mp3" "flac" "ogg" "wav")
     (video "mkv" "webm" "mp4")
     (text "org" "txt" "md")
