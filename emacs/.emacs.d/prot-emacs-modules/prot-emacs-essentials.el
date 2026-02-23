@@ -2,6 +2,7 @@
 (prot-emacs-configure
 
 ;;;; General settings and common custom functions (prot-simple.el)
+  (setq backward-delete-char-untabify-method 'hungry)
   (setq blink-matching-paren nil)
   (setq custom-unlispify-tag-names nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
