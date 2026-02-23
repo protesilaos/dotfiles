@@ -24,15 +24,19 @@
     institution-calendar
     "https://github.com/protesilaos/institution-calendar.git")
 
+  ;; If you want to permanently change what M-x calendar shows, enable
+  ;; `institution-calendar-mode'.  Otherwise, use the relevant command:
+  ;;
+  ;; `institution-calendar-cambridge-university'
+  ;; `institution-calendar-oxford-university'
+  ;;
+  ;; And so on for newly registered institutions.
+
   ;; Remember to read the manual on how to register your own institution!
   (setopt institution-calendar-entity 'oxford-university)
 
   (setopt institution-calendar-include-extra-week-numbers t)
-  (setopt institution-calendar-include-intermonth-header nil)
-
-  ;; If you want to permanently change what M-x calendar shows, enable
-  ;; this mode.  Otherwise, use the relevant command.
-  (institution-calendar-mode 1))
+  (setopt institution-calendar-include-intermonth-header nil))
 
 ;;; Appt (appointment reminders which also integrate with Org agenda)
 (prot-emacs-configure
