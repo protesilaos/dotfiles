@@ -2685,7 +2685,7 @@ key bindings.
   (setq save-interprogram-paste-before-kill t)
   (setq scroll-error-top-bottom t)
   (setq tramp-connection-timeout (* 60 10)) ; seconds
-  (setq trusted-content '("~/Git/Projects/")) ; Emacs 30
+  (setq trusted-content '("~/Git/Projects/" "~/Coach/")) ; Emacs 30
   (setq truncate-partial-width-windows nil)
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
