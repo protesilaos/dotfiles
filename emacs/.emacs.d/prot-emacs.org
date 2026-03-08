@@ -2871,8 +2871,8 @@ this via some hook.
     "M-r" #'window-layout-transpose ; Emacs 31 override `move-to-window-line-top-bottom'
     "M-S-r" #'rotate-windows-back ; Emacs 31
     ;; Commands for buffers
-    "C-x <f2>" #'prot-simple-copy-current-path
     "C-<f2>" #'prot-simple-rename-file-and-buffer
+    "M-<f2>" #'prot-simple-copy-current-path
     "C-x k" #'prot-simple-kill-buffer-dwim
     "C-x K" #'kill-buffer ; leaving this here to contrast with the above
     "M-s b" #'prot-simple-buffers-major-mode
