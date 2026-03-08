@@ -952,6 +952,15 @@ buffers in its history."
       (kill-buffer)))))
 
 ;;;###autoload
+(defun prot-simple-copy-current-path ()
+  "Copy the current absolute path.
+If in a file-visiting buffer, copy the `buffer-file-name'.  Else copy
+the `default-directory'."
+  (declare (interactive-only t))
+  (interactive)
+  (kill-new (or buffer-file-name default-directory)))
+
+;;;###autoload
 (defun prot-simple-rename-file-and-buffer (name)
   "Apply NAME to current file and rename its buffer.
 Do not try to make a new directory or anything fancy."
