@@ -121,6 +121,7 @@
             ("X" . "export")
             ("q" . "quote")))
     (setq org-fold-catch-invisible-edits 'show)
+    (setq org-yank-folded-subtrees nil)
     (setq org-return-follows-link nil)
     (setq org-loop-over-headlines-in-active-region 'start-level)
     (setq org-modules '(ol-info ol-eww))
