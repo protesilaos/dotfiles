@@ -274,7 +274,7 @@ fi
 if _checkexec yt-dlp
 then
     alias ytaud='yt-dlp --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
-    alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
+    alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s"'
 fi
 
 # Just for fun.
