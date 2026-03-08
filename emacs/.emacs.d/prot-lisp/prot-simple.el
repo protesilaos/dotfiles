@@ -958,7 +958,9 @@ If in a file-visiting buffer, copy the `buffer-file-name'.  Else copy
 the `default-directory'."
   (declare (interactive-only t))
   (interactive)
-  (kill-new (or buffer-file-name default-directory)))
+  (let ((path (or buffer-file-name default-directory)))
+    (kill-new path)
+    (message "Copied `%s'" (propertize path 'face 'success))))
 
 ;;;###autoload
 (defun prot-simple-rename-file-and-buffer (name)
