@@ -100,6 +100,7 @@
       nil
       log-edit)
 
+    (setq vc-display-failed-async-commands t) ; Emacs 31
     (setq vc-find-revision-no-save t)
     (setq vc-annotate-display-mode 'scale) ; scale to oldest
     ;; I use a different account for git commits
