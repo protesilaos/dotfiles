@@ -4667,6 +4667,7 @@ templates to have a real need for it---but it works).
     "typescript"     "TypeScript"
     "visavis"        "vis-à-vis"
     "deja"           "déjà"
+    "voila"          "voilà"
     "youtube"        "YouTube"
     ";up"            "🙃"
     ";uni"           "🦄"

@@ -188,6 +188,7 @@
     "typescript"     "TypeScript"
     "visavis"        "vis-à-vis"
     "deja"           "déjà"
+    "voila"          "voilà"
     "youtube"        "YouTube"
     ";up"            "🙃"
     ";uni"           "🦄"
