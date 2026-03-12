@@ -7804,6 +7804,7 @@ on how I use Org.
       "C-M-S-<right>" nil
       "C-M-S-<left>" nil
       "C-c ;" nil
+      "C-c C-x C-c" nil ; disable `org-columns', which I never use
       "C-c M-l" #'org-insert-last-stored-link
       "C-c C-M-l" #'org-toggle-link-display
       "M-." #'org-edit-special) ; alias for C-c ' (mnenomic is global M-. that goes to source
