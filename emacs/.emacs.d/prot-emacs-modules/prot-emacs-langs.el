@@ -358,6 +358,8 @@ retroactively follow that order."
     "C-x [" #'logos-backward-page-dwim
     "M-]" #'logos-forward-page-dwim
     "M-[" #'logos-backward-page-dwim
+    "M-n" #'logos-forward-page-dwim
+    "M-p" #'logos-backward-page-dwim
     "<f9>" #'logos-focus-mode)
 
   (with-eval-after-load 'logos
