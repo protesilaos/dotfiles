@@ -6996,6 +6996,37 @@ section of this file).
   (setq diff-font-lock-syntax nil))
 #+end_src
 
+*** The =prot-emacs-git.el= section about ~diff-hl~
+:PROPERTIES:
+:CUSTOM_ID: h:8e28de42-740d-47ea-b88f-f9fd8d9b6f4f
+:END:
+
+The ~diff-hl~ package by Dmitry Gutov applies a highlight to the side
+of the window on lines that have changes, as tracked by the underlying
+version control software (it is always Git in my case, but it works
+with all VCS that Emacs supports ([[#h:50add1d8-f0f4-49be-9e57-ab280a4aa300][The =prot-emacs-git.el= section about =vc.el= and related]])).
+
+I have no use for it while writing prose, so I only enable it in
+programming buffers. The highlights are especially useful in large
+files where you need to jump around to understand and to modify the
+sequence of function calls.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-git.el"
+;;;; `diff-hl'
+(prot-emacs-configure
+  (prot-emacs-install diff-hl)
+
+  (prot-emacs-keybind global-map
+    "C-x v <up>" #'diff-hl-previous-hunk
+    "C-x v <down>" #'diff-hl-next-hunk)
+
+  (setq diff-hl-draw-borders nil)
+  (setq diff-hl-update-async t)
+
+  (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+  (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
+#+end_src
+
 *** The =prot-emacs-git.el= section about ediff
 :PROPERTIES:
 :CUSTOM_ID: h:89edea05-4d94-4ea1-b2a8-5ad01422618c
