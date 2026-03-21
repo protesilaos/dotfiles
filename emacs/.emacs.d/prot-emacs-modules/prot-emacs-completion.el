@@ -250,8 +250,7 @@ Development continues on GitHub with GitLab as a mirror."))
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 
 ;;; Corfu (in-buffer completion popup)
-(when (and (eq prot-emacs-completion-ui 'vertico)
-           prot-emacs-completion-extras
+(when (and prot-emacs-completion-extras
            prot-display-graphic-p)
   (prot-emacs-configure
     (prot-emacs-install corfu)
