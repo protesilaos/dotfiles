@@ -274,6 +274,7 @@
               (format "%s %s" icon (propertize file 'font-lock-face face))))))
 
   (setq magit-diff-refine-hunk t)
+  (setq magit-diff-fontify-hunk t)
   (setq magit-diff-refine-ignore-whitespace t)
 
   (setq magit-log-auto-more t)
