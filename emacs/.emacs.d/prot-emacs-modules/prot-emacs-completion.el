@@ -41,7 +41,8 @@
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
                        (group-function . ,#'prot-minibuffer-buffer-group)
-                       (affixation-function . ,#'prot-minibuffer-buffer-affixate)))
+                       (affixation-function . ,#'prot-minibuffer-buffer-affixate)
+                       (display-sort-function . ,#'prot-minibuffer-buffer-sort)))
             (command . ((affixation-function . nil)
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
             (denote-file . ,eager-update-properties)

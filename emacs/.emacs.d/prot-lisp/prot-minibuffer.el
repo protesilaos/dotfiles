@@ -130,6 +130,21 @@ Omit the .. directory from FILES."
             (propertize " " 'display '(space :align-to 60)))
           (propertize string 'face 'completions-annotations)))
 
+(defun prot-minibuffer-buffer-sort (buffers)
+  "Sort BUFFERS by visibility.
+This is a copy of `beframe-buffer-sort-visibility', from my `beframe'
+package."
+  (let ((bufs (seq-group-by
+               (lambda (buf)
+                 (cond
+                  ((eq buf (current-buffer)) :current)
+                  ((get-buffer-window buf 'visible) :visible)
+                  (t :hidden)))
+               buffers)))
+    (nconc (alist-get :hidden  bufs)
+           (alist-get :visible bufs)
+           (alist-get :current bufs))))
+
 (defun prot-minibuffer-buffer-group (buffer-name transform)
   "Return BUFFER-NAME group name unless TRANSFORM is non-nil."
   (cond
