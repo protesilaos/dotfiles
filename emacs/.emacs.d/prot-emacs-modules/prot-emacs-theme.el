@@ -38,8 +38,7 @@
   (prot-emacs-install lin)
   (setq lin-face 'lin-cyan)
   (lin-global-mode 1)
-  (when (and (null prot-emacs-load-theme-family)
-             (string= (getenv "DESKTOP_SESSION") "gnome"))
+  (when (string= (getenv "DESKTOP_SESSION") "gnome")
     (lin-gnome-accent-color-mode 1)))
 
 ;;;; Increase padding of windows/frames
