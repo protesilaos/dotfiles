@@ -2694,6 +2694,7 @@ key bindings.
     "<f2>" #'toggle-input-method  ; F2 overrides that two-column gimmick.  Sorry, but no!
     "<insert>" #'nil
     "<menu>" #'nil
+    "C-M-w" nil ; never use it
     "C-x C-d" #'nil ; never use it
     "C-x C-v" #'nil ; never use it
     "C-z" #'nil ; I have a window manager, thanks!
