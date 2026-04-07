@@ -7542,7 +7542,7 @@ decorative icons next to file names ([[#h:4efde779-3ef0-40b7-82e4-70f71b321428][
               (format "%s %s" icon (propertize file 'font-lock-face face))))))
 
   (setq magit-diff-refine-hunk t)
-  (setq magit-diff-fontify-hunk t)
+  (setq magit-diff-fontify-hunk nil)
   (setq magit-diff-refine-ignore-whitespace t)
 
   (setq magit-log-auto-more t)
