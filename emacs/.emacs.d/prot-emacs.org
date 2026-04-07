@@ -8802,10 +8802,12 @@ will not mess up with my work.
 
     (prot-emacs-keybind emacs-lisp-mode-map
       "C-j" #'prot-elisp-eval-and-print-last-sexp  ; overrides `electric-newline-and-maybe-indent'
-      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp)
+      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp
+      "C-M-w" #'prot-elisp-copy-current-definition) ; overrides `append-next-kill'
     (prot-emacs-keybind lisp-interaction-mode-map
       "C-j" #'prot-elisp-eval-and-print-last-sexp ; overrides `eval-print-last-sexp'
-      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp)))
+      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp
+      "C-M-w" #'prot-elisp-copy-current-definition))) ; overrides `append-next-kill'
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for "electric" behaviour
@@ -12942,6 +12944,19 @@ Now use `display-buffer-alist' like the Lisp gods intended."
           (pp-buffer))
         (display-buffer buffer))
     (user-error "No expression to macroexpand")))
+
+;;;###autoload
+(defun prot-elisp-copy-current-definition ()
+  "Copy the symbol of the definition around point."
+  (interactive)
+  (if-let* ((text (save-excursion
+                    (beginning-of-defun)
+                    (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+            (definition (replace-regexp-in-string "(.+?\s+\\(.+?\\)\s+.*" "\\1" text)))
+      (progn
+        (kill-new definition)
+        (message "Copied `%s'" definition))
+    (message "Cannot find definition near point")))
 
 (provide 'prot-elisp)
 ;;; prot-elisp.el ends here

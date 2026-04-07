@@ -27,10 +27,12 @@
 
     (prot-emacs-keybind emacs-lisp-mode-map
       "C-j" #'prot-elisp-eval-and-print-last-sexp  ; overrides `electric-newline-and-maybe-indent'
-      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp)
+      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp
+      "C-M-w" #'prot-elisp-copy-current-definition) ; overrides `append-next-kill'
     (prot-emacs-keybind lisp-interaction-mode-map
       "C-j" #'prot-elisp-eval-and-print-last-sexp ; overrides `eval-print-last-sexp'
-      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp)))
+      "C-c C-p" #'prot-elisp-pp-macroexpand-last-sexp
+      "C-M-w" #'prot-elisp-copy-current-definition))) ; overrides `append-next-kill'
 
 ;;;; Disable "electric" behaviour
 (prot-emacs-configure

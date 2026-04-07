@@ -80,5 +80,18 @@ Now use `display-buffer-alist' like the Lisp gods intended."
         (display-buffer buffer))
     (user-error "No expression to macroexpand")))
 
+;;;###autoload
+(defun prot-elisp-copy-current-definition ()
+  "Copy the symbol of the definition around point."
+  (interactive)
+  (if-let* ((text (save-excursion
+                    (beginning-of-defun)
+                    (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+            (definition (replace-regexp-in-string "(.+?\s+\\(.+?\\)\s+.*" "\\1" text)))
+      (progn
+        (kill-new definition)
+        (message "Copied `%s'" definition))
+    (message "Cannot find definition near point")))
+
 (provide 'prot-elisp)
 ;;; prot-elisp.el ends here
