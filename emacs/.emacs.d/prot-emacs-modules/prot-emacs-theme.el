@@ -140,7 +140,8 @@
              (string= (getenv "DESKTOP_SESSION") "gnome"))
     (prot-emacs-keybind global-map
       "<f5>" #'gnome-accent-theme-switcher-toggle-mode
-      "C-<f5>" #'gnome-accent-theme-switcher-change-accent)
+      "C-<f5>" #'gnome-accent-theme-switcher-change-accent
+      "M-<f5>" #'gnome-accent-theme-switcher-load-random-from-current-set)
     (gnome-accent-theme-switcher-mode 1)))
 
 ;;;; Theme buffet

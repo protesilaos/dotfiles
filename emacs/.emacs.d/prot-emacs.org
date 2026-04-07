@@ -2290,7 +2290,8 @@ the GNOME desktop environment ([[#h:3f1a33e4-762e-4cf3-a0ae-4c2954d9cbb8][The =p
              (string= (getenv "DESKTOP_SESSION") "gnome"))
     (prot-emacs-keybind global-map
       "<f5>" #'gnome-accent-theme-switcher-toggle-mode
-      "C-<f5>" #'gnome-accent-theme-switcher-change-accent)
+      "C-<f5>" #'gnome-accent-theme-switcher-change-accent
+      "M-<f5>" #'gnome-accent-theme-switcher-load-random-from-current-set)
     (gnome-accent-theme-switcher-mode 1)))
 #+end_src
 
