@@ -36,6 +36,19 @@
   "Get characters, icons, and symbols for things."
   :group 'convenience)
 
+(defcustom prot-icons-style 'symbolic
+  "The style of the icons.
+
+- `alphabetic' expresses icons using alphabetic characters.
+- `emoji' represents icons as emoji characters.
+- `symbolic' uses Unicode symbols for the icons.
+
+Any other value has the same meaning as `text'."
+  :type '(choice
+          (const :tag "Alphabetic characters" alphabetic)
+          (const :tag "Emoji characters" emoji)
+          (const :tag "Unicode symbols" symbolic)))
+
 (defface prot-icons-icon
   '((t :inherit (bold fixed-pitch)))
   "Basic attributes for an icon."
@@ -118,7 +131,7 @@
   "Face for icons."
   :group 'prot-icons)
 
-(defvar prot-icons
+(defvar prot-icons-alphabetic
   '((dired-mode "|*" prot-icons-directory)
     (archive-mode "|@" prot-icons-directory)
     (diff-mode ">Δ" prot-icons-yellow) ; διαφορά
@@ -138,15 +151,58 @@ Each element is a cons cell of the form (THING STRING FACE), where THING
 is a symbol STRING is one or more characters that represent THING, and
 FACE is the face to use for it, where applicable.")
 
+(defvar prot-icons-emoji
+  '((dired-mode "📁" prot-icons-directory)
+    (archive-mode "💼" prot-icons-directory)
+    (diff-mode "🟰" prot-icons-yellow)
+    (prog-mode "🖍️" prot-icons-magenta)
+    (conf-mode "📝" prot-icons-gray)
+    (text-mode "✏️" prot-icons-green)
+    (comint-mode "🖥️" prot-icons-gray)
+    (document "📜" prot-icons-red)
+    (audio "🔊" prot-icons-cyan)
+    (image "🎨" prot-icons-yellow)
+    (video "📹" prot-icons-blue)
+    (frame "🖼️" prot-icons-gray)
+    (git "🪾" prot-icons-gray)
+    (t "⬜" prot-icons-gray))
+  "Same as `prot-icons-alphabetic' with emoji characters.")
+
+(defvar prot-icons-symbolic
+  '((dired-mode "🗁" prot-icons-directory)
+    (archive-mode "🗇" prot-icons-directory)
+    (diff-mode "𜰔" prot-icons-yellow)
+    (prog-mode "𜰊" prot-icons-magenta)
+    (conf-mode "🗅" prot-icons-gray)
+    (text-mode "𜲸" prot-icons-green)
+    (comint-mode "⨠" prot-icons-gray)
+    (document "🗎" prot-icons-red)
+    (audio "𝅘𝅥𝅮" prot-icons-cyan)
+    (image "𜷻" prot-icons-yellow)
+    (video "🖭" prot-icons-blue)
+    (frame "🗔" prot-icons-gray)
+    (git "𜸕" prot-icons-gray)
+    (t "🔾" prot-icons-gray))
+  "Same as `prot-icons-alphabetic' with Unicode symbols.")
+
+(defun prot-icons--get-style ()
+  "Return icons corresponding to `prot-icons-style'.
+More specifically, return the value of `prot-icons-alphabetic' or
+`prot-icons-emoji'."
+  (pcase prot-icons-style
+    ('emoji prot-icons-emoji)
+    ('symbolic prot-icons-symbolic)
+    (_ prot-icons-alphabetic)))
+
 (defun prot-icons--get (thing)
-  "Return `prot-icons' representation of THING."
+  "Return `prot-icons-alphabetic' representation of THING."
   (unless (symbolp thing)
     (error "The thing `%s' is not a symbol" thing))
-  (when (string-suffix-p "-mode" (symbol-name thing))
-    (while-let ((parent (get thing 'derived-mode-parent)))
-      (setq thing parent)))
-  (or (alist-get thing prot-icons)
-      (alist-get t prot-icons)))
+  (let ((icons (prot-icons--get-style)))
+    (when (string-suffix-p "-mode" (symbol-name thing))
+      (while-let ((parent (get thing 'derived-mode-parent)))
+        (setq thing parent)))
+    (or (alist-get thing icons) (alist-get t icons))))
 
 (defun prot-icons-get-icon (thing &optional face)
   "Return propertized icon THING."

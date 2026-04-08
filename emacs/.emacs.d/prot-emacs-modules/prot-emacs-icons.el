@@ -4,10 +4,16 @@
 (prot-emacs-configure
   (require 'prot-icons)
 
+  (setq prot-icons-style 'symbolic) ; `alphabetic', `symbolic', or `emoji'
+
   (prot-icons-dired-mode 1)
   (prot-icons-xref-mode 1)
 
-  (when prot-emacs-load-theme-family
+  (when (eq prot-icons-style 'symbolic)
+    (set-face-attribute 'prot-icons-icon nil :inherit 'unspecified))
+
+  (when (and prot-emacs-load-theme-family
+             (eq prot-icons-style 'alphabetic))
     (cond
      ((memq prot-emacs-load-theme-family '(modus ef standard))
       (defun prot/icons-set-faces ()
@@ -26,16 +32,16 @@
      ((eq prot-emacs-load-theme-family 'doric)
       (defun prot/icons-set-faces ()
         (doric-themes-with-colors
-         (custom-set-faces
-          `(prot-icons-icon ((t :inherit (bold fixed-pitch) :box (:line-width (1 . -1)) :inverse-video t)))
-          `(prot-icons-directory ((t :inherit bold :foreground ,fg-accent)))
-          `(prot-icons-gray ((t :inherit bold :foreground ,fg-shadow-subtle)))
-          `(prot-icons-red ((t :inherit prot-icons-icon :foreground ,fg-red)))
-          `(prot-icons-green ((t :inherit prot-icons-icon :foreground ,fg-green)))
-          `(prot-icons-yellow ((t :inherit prot-icons-icon :foreground ,fg-yellow)))
-          `(prot-icons-blue ((t :inherit prot-icons-icon :foreground ,fg-blue)))
-          `(prot-icons-magenta ((t :inherit prot-icons-icon :foreground ,fg-magenta)))
-          `(prot-icons-cyan ((t :inherit prot-icons-icon :foreground ,fg-cyan))))))
+          (custom-set-faces
+           `(prot-icons-icon ((t :inherit (bold fixed-pitch) :box (:line-width (1 . -1)) :inverse-video t)))
+           `(prot-icons-directory ((t :inherit bold :foreground ,fg-accent)))
+           `(prot-icons-gray ((t :inherit bold :foreground ,fg-shadow-subtle)))
+           `(prot-icons-red ((t :inherit prot-icons-icon :foreground ,fg-red)))
+           `(prot-icons-green ((t :inherit prot-icons-icon :foreground ,fg-green)))
+           `(prot-icons-yellow ((t :inherit prot-icons-icon :foreground ,fg-yellow)))
+           `(prot-icons-blue ((t :inherit prot-icons-icon :foreground ,fg-blue)))
+           `(prot-icons-magenta ((t :inherit prot-icons-icon :foreground ,fg-magenta)))
+           `(prot-icons-cyan ((t :inherit prot-icons-icon :foreground ,fg-cyan))))))
       (add-hook 'doric-themes-after-load-theme-hook #'prot/icons-set-faces)))
 
     (prot/icons-set-faces)))
