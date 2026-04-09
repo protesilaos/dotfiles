@@ -49,7 +49,7 @@ return value."
     (user-error "No expression at point")))
 
 (defvar-keymap prot-elisp-macroexpand-mode-map
-  :doc "Key map for `prot-elisp-macroexpand-mode'."
+  :doc "keymap for `prot-elisp-macroexpand-mode'."
   :parent special-mode-map)
 
 (define-derived-mode prot-elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"

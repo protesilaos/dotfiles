@@ -1141,10 +1141,10 @@ update them all instead."
       (prot-simple-update-package-repositories-prompt))))
   (prot-simple-update-package-repositories-subr packages))
 
-;;;; Global minor mode to override key maps
+;;;; Global minor mode to override keymaps
 
 (defvar prot-simple-override-mode-map (make-sparse-keymap)
-  "Key map of `prot-simple-override-mode'.
+  "keymap of `prot-simple-override-mode'.
 Enable that mode to have its key bindings take effect over those of the
 major mode.")
 

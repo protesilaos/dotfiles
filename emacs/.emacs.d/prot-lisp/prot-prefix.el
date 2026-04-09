@@ -180,9 +180,9 @@
 ;; some do not.  The former are those which define a prefix command
 ;; (per `define-prefix-command').  This is a symbol that references
 ;; the keymaps, thus making our binding an indirection: if we update
-;; the key map, we automatically get the new key bindings.  Whereas
+;; the keymap, we automatically get the new key bindings.  Whereas
 ;; when we bind a key to the value of a variable, we have to update
-;; the key map and then the binding for changes to propagate.
+;; the keymap and then the binding for changes to propagate.
 (defvar-keymap prot-prefix-map
   :doc "Prefix keymap with multiple subkeymaps."
   :name "Prot Prefix"

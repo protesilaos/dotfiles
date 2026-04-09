@@ -1368,7 +1368,7 @@ given feature is available."
 :CUSTOM_ID: h:d3684ec0-a972-4033-a4d6-41ee16e891d9
 :END:
 
-[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
+[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested keymaps)]] (2024-01-29). ]
 
 This Lisp macro does not try to be too smart. It simply reduces the
 typing we have to do to define key bindings. As with the underlying
@@ -2802,7 +2802,7 @@ this via some hook.
 
   (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
 
-  ;; All `prot-simple-override-mode' does is activate a key map.
+  ;; All `prot-simple-override-mode' does is activate a keymap.
   ;; Below I add keys to that map.  Because the mode is enabled
   ;; globally, those keys take precedence over the ones specified by
   ;; any given major mode.  In principle, this means that my keys will
@@ -2970,7 +2970,7 @@ the module to set my desired configurations.
 :CUSTOM_ID: h:15ad94b3-f714-4b39-973e-b68c76b38be3
 :END:
 
-[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
+[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested keymaps)]] (2024-01-29). ]
 
 [[#h:f860bd85-671e-477e-8233-23a8ba43e1c6][The =prot-prefix.el= library]] defines a set of keymaps with commonly
 used commands and puts them behind a prefix map. The idea is to hit a
@@ -5517,7 +5517,7 @@ early at startup ([[#h:713ede33-3802-40c6-a8e3-7e1fc0d0a924][The =prot-emacs-ess
 :CUSTOM_ID: h:5ce6216d-f318-4191-9d4f-9681c92f7582
 :END:
 
-These are some minor tweaks to the key maps for isearch and occur. I
+These are some minor tweaks to the keymaps for isearch and occur. I
 don't feel strongly about the rest, but the change to =C-g= is
 important for me as I want to exit the search altogether, not resume
 the search of the previous succesful match.
@@ -12920,7 +12920,7 @@ return value."
     (user-error "No expression at point")))
 
 (defvar-keymap prot-elisp-macroexpand-mode-map
-  :doc "Key map for `prot-elisp-macroexpand-mode'."
+  :doc "keymap for `prot-elisp-macroexpand-mode'."
   :parent special-mode-map)
 
 (define-derived-mode prot-elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
@@ -15624,7 +15624,7 @@ controlled by `delete-pair-blink-delay'."
 :CUSTOM_ID: h:f860bd85-671e-477e-8233-23a8ba43e1c6
 :END:
 
-[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested key maps)]] (2024-01-29). ]
+[ Watch: [[https://protesilaos.com/codelog/2024-01-29-emacs-prefix-map/][define prefix/leader key (nested keymaps)]] (2024-01-29). ]
 
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-prefix.el" :mkdirp yes
 ;;; prot-prefix.el --- Prefix keymap for my dotemacs -*- lexical-binding: t -*-
@@ -15809,9 +15809,9 @@ controlled by `delete-pair-blink-delay'."
 ;; some do not.  The former are those which define a prefix command
 ;; (per `define-prefix-command').  This is a symbol that references
 ;; the keymaps, thus making our binding an indirection: if we update
-;; the key map, we automatically get the new key bindings.  Whereas
+;; the keymap, we automatically get the new key bindings.  Whereas
 ;; when we bind a key to the value of a variable, we have to update
-;; the key map and then the binding for changes to propagate.
+;; the keymap and then the binding for changes to propagate.
 (defvar-keymap prot-prefix-map
   :doc "Prefix keymap with multiple subkeymaps."
   :name "Prot Prefix"
@@ -17334,7 +17334,7 @@ that buffer already exists, then reuse it."
 ;;;; Minor mode setup
 
 (defvar-keymap prot-shell-mode-map
-  :doc "Key map for `prot-shell-mode'."
+  :doc "keymap for `prot-shell-mode'."
   "<up>" #'prot-shell-up-dwim
   "<down>" #'prot-shell-down-dwim
   "C-c C-d" #'prot-shell-cd
@@ -18510,10 +18510,10 @@ update them all instead."
       (prot-simple-update-package-repositories-prompt))))
   (prot-simple-update-package-repositories-subr packages))
 
-;;;; Global minor mode to override key maps
+;;;; Global minor mode to override keymaps
 
 (defvar prot-simple-override-mode-map (make-sparse-keymap)
-  "Key map of `prot-simple-override-mode'.
+  "keymap of `prot-simple-override-mode'.
 Enable that mode to have its key bindings take effect over those of the
 major mode.")
 

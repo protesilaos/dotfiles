@@ -93,7 +93,7 @@
 
   (advice-add #'save-buffers-kill-emacs :before #'prot-simple-display-unsaved-buffers-on-exit)
 
-  ;; All `prot-simple-override-mode' does is activate a key map.
+  ;; All `prot-simple-override-mode' does is activate a keymap.
   ;; Below I add keys to that map.  Because the mode is enabled
   ;; globally, those keys take precedence over the ones specified by
   ;; any given major mode.  In principle, this means that my keys will
