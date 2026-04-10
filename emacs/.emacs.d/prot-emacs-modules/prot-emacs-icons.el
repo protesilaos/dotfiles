@@ -9,9 +9,6 @@
   (prot-icons-dired-mode 1)
   (prot-icons-xref-mode 1)
 
-  (when (eq prot-icons-style 'symbolic)
-    (set-face-attribute 'prot-icons-icon nil :inherit 'unspecified))
-
   (when (and prot-emacs-load-theme-family
              (eq prot-icons-style 'alphabetic))
     (cond
