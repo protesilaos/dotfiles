@@ -59,7 +59,7 @@
              :tab-width 4
              :right-divider-width 15
              :scroll-bar-width ,(if prot-pgtk-p 12 6)
-             :left-fringe-width 20
+             :left-fringe-width 8
              :right-fringe-width 20))
 
     ;; (setq spacious-padding-subtle-mode-line nil)
