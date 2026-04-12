@@ -14181,7 +14181,7 @@ face.  Let other buffers have no face.")
     (define-key map [mode-line down-mouse-1] 'vc-diff)
     (define-key map [mode-line down-mouse-3] 'vc-root-diff)
     map)
-  "Keymap to display on VC indicator.")
+  "Keymap for the `prot-modeline-vc-branch'.")
 
 (defun prot-modeline--vc-help-echo (file)
   "Return `help-echo' message for FILE tracked by VC."
