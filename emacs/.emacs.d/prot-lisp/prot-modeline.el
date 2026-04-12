@@ -332,13 +332,6 @@ See `prot-modeline-string-cut-middle'."
   (when-let* ((name (buffer-name)))
     (prot-modeline-string-cut-middle name)))
 
-(defun prot-modeline-buffer-name ()
-  "Return buffer name, with read-only indicator if relevant."
-  (let ((name (prot-modeline--buffer-name)))
-    (if buffer-read-only
-        (format "%s %s" (char-to-string #xE0A2) name)
-      name)))
-
 (defun prot-modeline-buffer-name-help-echo ()
   "Return `help-echo' value for `prot-modeline-buffer-identification'."
   (concat
@@ -350,11 +343,18 @@ See `prot-modeline-string-cut-middle'."
     'face 'font-lock-doc-face)))
 
 (defvar-local prot-modeline-buffer-identification
-    '(:eval
-      (propertize (prot-modeline-buffer-name)
-                  'face (prot-modeline-buffer-identification-face)
-                  'mouse-face 'mode-line-highlight
-                  'help-echo (prot-modeline-buffer-name-help-echo)))
+  '(:eval
+    (let* ((name (propertize (prot-modeline--buffer-name)
+                             'face (prot-modeline-buffer-identification-face)
+                             'mouse-face 'mode-line-highlight
+                             'help-echo (prot-modeline-buffer-name-help-echo)))
+           (read-only-icon (prot-icons-get-icon
+                            'read-only
+                            (unless (mode-line-window-selected-p)
+                              'prot-modeline-indicator-gray))))
+      (if buffer-read-only
+          (format "%s  %s" read-only-icon name)
+        name)))
   "Mode line construct for identifying the buffer being displayed.
 Propertize the current buffer with the `mode-line-buffer-id'
 face.  Let other buffers have no face.")
