@@ -14403,13 +14403,15 @@ Specific to the current window's mode line.")
 ;;;; `which-function-mode' indicator
 
 (defvar-local prot-modeline-which-function-indicator
-  `(( :propertize
-      which-func-current
-      face (prot-modeline-indicator-small which-func)
-      mouse-face mode-line-highlight
-      help-echo (format "Current definition: `%s'"
-                        (or (gethash (selected-window) which-func-table)
-                            which-func-unknown))))
+  '(which-function-mode
+    (:eval
+     (when (or (provided-mode-derived-p major-mode 'text-mode)
+               (provided-mode-derived-p major-mode 'prog-mode))
+       (let ((string (or (gethash (selected-window) which-func-table) which-func-unknown)))
+         (propertize string
+                     'face '(prot-modeline-indicator-small which-func)
+                     'mouse-face 'mode-line-highlight
+                     'help-echo (format "Current definition: `%s'" string))))))
   "The equivalent of `which-func-format'.")
 
 (with-eval-after-load 'which-func
