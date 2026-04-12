@@ -139,6 +139,7 @@ Any other value has the same meaning as `text'."
     (conf-mode ">Π" prot-icons-gray) ; πρόγραμμα
     (text-mode ">Α" prot-icons-green) ; αλφάβητο
     (comint-mode ">_" prot-icons-gray)
+    (read-only "" prot-icons-red)
     (document ">Σ" prot-icons-red) ; σύγγραμμα
     (audio ">Η" prot-icons-cyan) ; ήχος
     (image ">Ε" prot-icons-yellow) ; εικόνα
@@ -159,6 +160,7 @@ FACE is the face to use for it, where applicable.")
     (conf-mode "📝" prot-icons-gray)
     (text-mode "✏️" prot-icons-green)
     (comint-mode "🖥️" prot-icons-gray)
+    (read-only "🔒" prot-icons-red)
     (document "📜" prot-icons-red)
     (audio "🔊" prot-icons-cyan)
     (image "🎨" prot-icons-yellow)
@@ -176,6 +178,7 @@ FACE is the face to use for it, where applicable.")
     (conf-mode "🗅" prot-icons-gray)
     (text-mode "¶" prot-icons-green)
     (comint-mode "⨠" prot-icons-gray)
+    (read-only "" prot-icons-red)
     (document "🗎" prot-icons-red)
     (audio "𝅘𝅥𝅮" prot-icons-cyan)
     (image "𜷻" prot-icons-yellow)
