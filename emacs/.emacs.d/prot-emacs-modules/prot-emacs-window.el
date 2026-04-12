@@ -96,9 +96,6 @@
            (dedicated . t)
            (preserve-size . (t . t))
            (body-function . select-window))
-          ("\\(\\*Capture\\*\\|CAPTURE-.*\\)"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (inhibit-switch-frame . t))
           ((derived-mode . reb-mode) ; M-x re-builder
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (inhibit-switch-frame . t)
