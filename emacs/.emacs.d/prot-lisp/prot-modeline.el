@@ -547,12 +547,13 @@ Specific to the current window's mode line.")
 (defvar-local prot-modeline-frame-name
   '(prot-modeline-show-frame-name
     (" "
-     (:eval (when-let* ((_ (mode-line-window-selected-p))
-                        (current-frame (selected-frame))
-                        (_ (frame-live-p current-frame))
-                        (parameters (frame-parameters))
-                        (name (capitalize (alist-get 'name parameters))))
-              (format "%s %s " (prot-icons-get-icon 'frame 'prot-modeline-indicator-gray) name)))))
+     (:eval
+      (when-let* ((_ (mode-line-window-selected-p))
+                  (current-frame (selected-frame))
+                  (_ (frame-live-p current-frame))
+                  (parameters (frame-parameters))
+                  (name (capitalize (alist-get 'name parameters))))
+        (format "%s %s " (prot-icons-get-icon 'frame 'prot-modeline-indicator-gray) name)))))
   "Mode line construct to display the current frame name.")
 
 ;;;; `which-function-mode' indicator
