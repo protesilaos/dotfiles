@@ -544,6 +544,12 @@ Specific to the current window's mode line.")
   "When non-nil, display the current frame name."
   :type 'boolean)
 
+(defvar prot-modeline-frame-name-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [mode-line down-mouse-1] 'buffer-menu)
+    map)
+  "Keymap for the `prot-modeline-frame-name'.")
+
 (defvar-local prot-modeline-frame-name
   '(prot-modeline-show-frame-name
     (" "
@@ -553,7 +559,12 @@ Specific to the current window's mode line.")
                   (_ (frame-live-p current-frame))
                   (parameters (frame-parameters))
                   (name (capitalize (alist-get 'name parameters))))
-        (format "%s %s " (prot-icons-get-icon 'frame 'prot-modeline-indicator-gray) name)))))
+        (format "%s %s "
+                (prot-icons-get-icon 'frame 'prot-modeline-indicator-gray)
+                (propertize name
+                            'mouse-face 'mode-line-highlight
+                            'help-echo (format "Current frame name\nmouse-1: `buffer-menu'")
+                            'local-map prot-modeline-frame-name-map))))))
   "Mode line construct to display the current frame name.")
 
 ;;;; `which-function-mode' indicator
