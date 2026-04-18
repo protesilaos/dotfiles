@@ -13082,7 +13082,7 @@ FACE is the face to use for it, where applicable.")
   "Same as `prot-icons-alphabetic' with emoji characters.")
 
 (defvar prot-icons-symbolic
-  '((dired-mode "🗀" prot-icons-directory)
+  '((dired-mode "🖿" prot-icons-directory)
     (archive-mode "🮯" prot-icons-directory)
     (diff-mode "⇄" prot-icons-yellow)
     (prog-mode "⨍" prot-icons-magenta)
