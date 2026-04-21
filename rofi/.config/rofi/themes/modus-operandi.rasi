@@ -1,8 +1,8 @@
 /**
  * rofi -dump-theme output.
  * Rofi version: 1.6.1
- * User: Protesilaos Stavrou
- * Copyright: Protesilaos Stavrou --- Released under the GNU GPLv3
+ * User: Protesilaos
+ * Copyright: Protesilaos --- Released under the GNU GPLv3
  * Comment: Simple port of the Modus Operandi theme for Emacs (https://protesilaos.com/modus-themes)
  **/
 

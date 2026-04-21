@@ -1,7 +1,7 @@
 " vi: ft=vim
 " Name: modus_operandi
 " Description: Vim port of modus-operandi (Modus themes for Emacs)
-" Author: Protesilaos Stavrou, <https://protesilaos.com>
+" Author: Protesilaos, <https://protesilaos.com>
 " Meta: Created with the modus-themes-exporter.el library
 " URL: https://github.com/protesilaos/modus-themes
 

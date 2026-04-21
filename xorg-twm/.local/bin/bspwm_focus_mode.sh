@@ -5,7 +5,7 @@
 # This script is meant to be used in my custom desktop session:
 # https://github.com/protesilaos/dotfiles.
 #
-# Copyright (C) 2019-2026  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (C) 2019-2026  Protesilaos <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

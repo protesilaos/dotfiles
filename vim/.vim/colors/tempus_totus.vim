@@ -1,6 +1,6 @@
 " Name: Tempus Totus
 " Description: Light theme for prose or for coding in an open space (WCAG AAA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

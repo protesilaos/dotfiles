@@ -1,6 +1,6 @@
 " Name: Tempus Fugit
 " Description: Light, pleasant theme optimised for long writing/coding sessions (WCAG AA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

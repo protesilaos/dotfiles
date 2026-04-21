@@ -1,7 +1,7 @@
 ;;;; File with authentication credentials (`auth-source')
 (prot-emacs-configure
   (setq auth-sources '("~/.authinfo.gpg")
-        user-full-name "Protesilaos Stavrou"
+        user-full-name "Protesilaos"
         user-mail-address "prot@protesilaos.com"))
 
 ;;;; Encryption settings (`mm-encode' and `mml-sec')
@@ -23,7 +23,7 @@
   (setq mail-header-separator "--text follows this line--")
   (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
   (setq compose-mail-user-agent-warnings nil)
-  (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
+  (setq message-signature "Protesilaos\nhttps://protesilaos.com\n"
         mail-signature message-signature)
   (setq message-citation-line-function #'message-insert-formatted-citation-line)
   (setq message-citation-line-format (concat "> From: %f\n"

@@ -1,6 +1,6 @@
 " Name: Tempus Past
 " Description: Light theme inspired by old vaporwave concept art (WCAG AA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

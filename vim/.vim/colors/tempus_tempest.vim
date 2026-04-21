@@ -1,6 +1,6 @@
 " Name: Tempus Tempest
 " Description: A green-scale, subtle theme for late night hackers (WCAG AAA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

@@ -1,9 +1,9 @@
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2026  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
+;; Maintainer: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))

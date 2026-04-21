@@ -147,7 +147,7 @@
   (setq mu4e-compose-complete-addresses nil
         mu4e-compose-complete-only-personal t)
 
-  (setq mu4e-compose-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  (setq mu4e-compose-signature "Protesilaos\nprotesilaos.com\n")
   (setq mu4e-compose-signature-auto-include t)
 
   (setq mu4e-context-policy 'pick-first

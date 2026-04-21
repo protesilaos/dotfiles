@@ -137,7 +137,7 @@
 
     (setq rcirc-default-nick "protesilaos"
           rcirc-default-user-name "protesilaos"
-          rcirc-default-full-name "Protesilaos Stavrou")
+          rcirc-default-full-name "Protesilaos")
 
     ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
     ;; ;; actually need this.

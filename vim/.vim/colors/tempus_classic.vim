@@ -1,6 +1,6 @@
 " Name: Tempus Classic
 " Description: Dark theme with warm hues (WCAG AA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

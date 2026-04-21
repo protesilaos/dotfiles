@@ -129,7 +129,7 @@
   ;; name, this will use the contents of the "To:" field, prefixed by
   ;; the string I specify.  Useful when checking your "Sent" summary or
   ;; a mailing list you participate in.
-  (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
+  (setq gnus-ignored-from-addresses "Protesilaos")
   (setq gnus-summary-to-prefix "To: ")
 
   (setq gnus-summary-line-format "%U%R %-18,18&user-date; %4L:%-25,25f %B%s\n")

@@ -1,6 +1,6 @@
 " Name: Tempus Summer
 " Description: Dark theme with colours inspired by summer evenings by the sea (WCAG AA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

@@ -1,6 +1,6 @@
 ! Theme: modus-vivendi
 ! Description: XTerm port of modus-vivendi (Modus themes for Emacs)
-! Author: Protesilaos Stavrou, <https://protesilaos.com>
+! Author: Protesilaos, <https://protesilaos.com>
 xterm*background: #000000
 xterm*foreground: #ffffff
 xterm*color0: #000000

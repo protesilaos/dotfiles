@@ -1,5 +1,5 @@
 #+title: GNU Emacs configuration
-#+author: Protesilaos Stavrou
+#+author: Protesilaos
 #+email: info@protesilaos.com
 #+language: en
 #+options: ':t toc:nil num:t author:t email:t
@@ -9708,7 +9708,7 @@ email, which are consulted by miscellaneous pieces Emacs functionality.
 ;;;; File with authentication credentials (`auth-source')
 (prot-emacs-configure
   (setq auth-sources '("~/.authinfo.gpg")
-        user-full-name "Protesilaos Stavrou"
+        user-full-name "Protesilaos"
         user-mail-address "prot@protesilaos.com"))
 #+end_src
 
@@ -9815,7 +9815,7 @@ most potent I have ever used ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overvie
   (setq mail-header-separator "--text follows this line--")
   (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
   (setq compose-mail-user-agent-warnings nil)
-  (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n"
+  (setq message-signature "Protesilaos\nhttps://protesilaos.com\n"
         mail-signature message-signature)
   (setq message-citation-line-function #'message-insert-formatted-citation-line)
   (setq message-citation-line-format (concat "> From: %f\n"
@@ -9983,7 +9983,7 @@ the accounts I set.
 At any rate, the format of ~notmuch-identities~ is like this:
 
 #+begin_example emacs-lisp
-(setq notmuch-identities '("Protesilaos Stavrou <someone@somewhere.com>" "Prot <just-my-nickname@somewhere.com>"))
+(setq notmuch-identities '("Protesilaos <someone@somewhere.com>" "Prot <just-my-nickname@somewhere.com>"))
 #+end_example
 
 While the corresponding ~notmuch-fcc-dirs~ map those accounts to the
@@ -10632,7 +10632,7 @@ test it for my themes and (ii) help others who are using it.
   (setq mu4e-compose-complete-addresses nil
         mu4e-compose-complete-only-personal t)
 
-  (setq mu4e-compose-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  (setq mu4e-compose-signature "Protesilaos\nprotesilaos.com\n")
   (setq mu4e-compose-signature-auto-include t)
 
   (setq mu4e-context-policy 'pick-first
@@ -10859,7 +10859,7 @@ I keep this here in case I need to test the setup.
   ;; name, this will use the contents of the "To:" field, prefixed by
   ;; the string I specify.  Useful when checking your "Sent" summary or
   ;; a mailing list you participate in.
-  (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
+  (setq gnus-ignored-from-addresses "Protesilaos")
   (setq gnus-summary-to-prefix "To: ")
 
   (setq gnus-summary-line-format "%U%R %-18,18&user-date; %4L:%-25,25f %B%s\n")
@@ -11556,7 +11556,7 @@ only channel I join automatically whenever I do =M-x rcirc= is that of
 
     (setq rcirc-default-nick "protesilaos"
           rcirc-default-user-name "protesilaos"
-          rcirc-default-full-name "Protesilaos Stavrou")
+          rcirc-default-full-name "Protesilaos")
 
     ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
     ;; ;; actually need this.
@@ -11695,9 +11695,9 @@ not test it as much and do not try to make it work for all cases.
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-abbrev.el" :mkdirp yes
 ;;; prot-abbrev.el --- Functions for use with abbrev-mode -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2026  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -11811,9 +11811,9 @@ Use completion among previous entries, retrieving their data from
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-comment.el" :mkdirp yes
 ;;; prot-comment.el --- Extensions newcomment.el for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2026  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -11968,9 +11968,9 @@ an alternative date format, as specified by
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-common.el" :mkdirp yes
 ;;; prot-common.el --- Common functions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2026  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -12442,9 +12442,9 @@ belong to the given subset of CONSEQUENCES.
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-dired.el" :mkdirp yes
 ;;; prot-dired.el --- Extensions to dired.el for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2026  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -12722,9 +12722,9 @@ Add this to `dired-mode-hook'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-ediff.el" :mkdirp yes
 ;;; prot-ediff.el --- Ediff extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2026  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -12806,9 +12806,9 @@ Also see `prot-ediff-store-layout'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-elisp.el" :mkdirp yes
 ;;; prot-elisp.el --- Emacs Lisp extras for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2026  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -12911,10 +12911,10 @@ Now use `display-buffer-alist' like the Lisp gods intended."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-icons.el" :mkdirp yes
 ;;; prot-icons.el --- Get characters, icons, and symbols for things -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2026  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
+;; Maintainer: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -13283,10 +13283,10 @@ More specifically, return the value of `prot-icons-alphabetic' or
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-eww.el" :mkdirp yes
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2026  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
+;; Maintainer: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -13429,10 +13429,10 @@ buffer instead of the current one."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-minibuffer.el" :mkdirp yes
 ;;; prot-minibuffer.el --- Extensions for the minibuffer and completions -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2026  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
+;; Maintainer: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -13785,9 +13785,9 @@ property, such that it can be found by `prot-minibuffer-completions-close-help'.
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-modeline.el" :mkdirp yes
 ;;; prot-modeline.el --- Code for my custom mode line -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2026  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -14419,9 +14419,9 @@ Specific to the current window's mode line.")
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-notmuch.el" :mkdirp yes
 ;;; prot-notmuch.el --- Tweaks for my notmuch.el configurations -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2026  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -14697,9 +14697,9 @@ Add this to `notmuch-mua-send-hook'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-orderless.el" :mkdirp yes
 ;;; prot-orderless.el --- Extensions for Orderless -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2026  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -14760,9 +14760,9 @@ Add this to `notmuch-mua-send-hook'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-org.el" :mkdirp yes
 ;;; prot-org.el --- Tweaks for my org-mode configurations -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2026  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -15395,9 +15395,9 @@ The path is relative to the `diary-file'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-pair.el" :mkdirp yes
 ;;; prot-pair.el --- Insert character pair around symbol or region -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2026  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -15581,9 +15581,9 @@ controlled by `delete-pair-blink-delay'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-prefix.el" :mkdirp yes
 ;;; prot-prefix.el --- Prefix keymap for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2026  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -15944,9 +15944,9 @@ controlled by `delete-pair-blink-delay'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-project.el" :mkdirp yes
 ;;; prot-project.el --- Extensions for project.el -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2026  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -16128,9 +16128,9 @@ is a string."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-register.el" :mkdirp yes
 ;;; prot-register.el --- Extensions for project.el -*- lexical-binding: t -*-
 
-;; Copyright (C) 2025-2026  Protesilaos Stavrou
+;; Copyright (C) 2025-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -16291,9 +16291,9 @@ Also see `prot-register-use-dwim'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-scratch.el" :mkdirp yes
 ;;; prot-scratch.el --- Scratch buffers for editable major mode of choice -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2026  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -16423,9 +16423,9 @@ for the given MAJOR-MODE, any text is appended to it."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-search.el" :mkdirp yes
 ;;; prot-search.el --- Extensions to isearch, replace, grep for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2026  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -16972,9 +16972,9 @@ and function as links to the context they reference."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-shell.el" :mkdirp yes
 ;;; prot-shell.el --- M-x shell extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2026  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -17321,9 +17321,9 @@ Add a bookmark handler for shell buffer and activate the
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-simple.el" :mkdirp yes
 ;;; prot-simple.el --- Common commands for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2026  Protesilaos Stavrou
+;; Copyright (C) 2020-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -18527,9 +18527,9 @@ major mode.")
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-spell.el" :mkdirp yes
 ;;; prot-spell.el --- Spelling-related extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2026  Protesilaos Stavrou
+;; Copyright (C) 2021-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -18635,9 +18635,9 @@ function.  Then you can control the buffer's specifics via
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-vertico.el" :mkdirp yes
 ;;; prot-vertico.el --- Custom Vertico extras -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2026  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))
@@ -18766,9 +18766,9 @@ Else do `vertico-exit'."
 #+begin_src emacs-lisp :tangle "prot-lisp/prot-window.el" :mkdirp yes
 ;;; prot-window.el --- Display-buffer and window-related extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2026  Protesilaos Stavrou
+;; Copyright (C) 2023-2026  Protesilaos
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "30.1"))

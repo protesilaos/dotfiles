@@ -1,6 +1,6 @@
 " Name: Tempus Future
 " Description: Dark theme with colours inspired by concept art of outer space (WCAG AAA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

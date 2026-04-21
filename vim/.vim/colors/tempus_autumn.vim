@@ -1,6 +1,6 @@
 " Name: Tempus Autumn
 " Description: Dark theme with a palette inspired by earthly colours (WCAG AA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

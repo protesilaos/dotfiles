@@ -1,6 +1,6 @@
 " Name: Tempus Rift
 " Description: Dark theme with a subdued palette on the green side of the spectrum (WCAG AA compliant)
-" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Author: Protesilaos (https://protesilaos.com)
 " Meta: Created with the Tempus Themes Generator
 " URL: https://gitlab.com/protesilaos/tempus-themes-generator
 

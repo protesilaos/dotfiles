@@ -1,6 +1,6 @@
 ! Theme: modus-operandi
 ! Description: XTerm port of modus-operandi (Modus themes for Emacs)
-! Author: Protesilaos Stavrou, <https://protesilaos.com>
+! Author: Protesilaos, <https://protesilaos.com>
 xterm*background: #ffffff
 xterm*foreground: #000000
 xterm*color0: #000000
