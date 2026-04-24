@@ -12566,28 +12566,24 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;; Also see `prot-search-grep' from prot-search.el.
 ;;;###autoload
 (defun prot-dired-grep-marked-files (files regexp)
-  "Run `find' with `grep' for REGEXP on marked FILES."
+  "Run `find' with `grep' for REGEXP on marked Dired FILES.
+If FILES contains directories, search through them recursively.
+Ignore .git directories."
   (interactive
-   (if-let* ((marks (dired-get-marked-files 'no-dir))
-             (_ (> (length marks) 1)))
-       (list
-        marks
-        (prot-dired-grep-marked-files-prompt))
-     (user-error "Mark multiple files"))
-   dired-mode)
-  (let ((buffer-name (format "*prot-dired-grep-marked for `%s'*" regexp)))
-    (compilation-start
-     (concat
-      "find . -not " (shell-quote-argument "(")
-      " -wholename " (shell-quote-argument "*/.git*")
-      " -prune " (shell-quote-argument ")")
-      " -type f"
-      " -exec grep -nHER --color=auto " regexp " "
-      (shell-quote-argument "{}")
-      " " (shell-quote-argument ";") " ")
-     'grep-mode
-     (lambda (_mode) buffer-name)
-     t)))
+   (if-let* ((marks (dired-get-marked-files)))
+       (list marks (prot-dired-grep-marked-files-prompt))
+     (user-error "Mark one or more files or directories")))
+  (compilation-start
+   (concat
+    "find " (mapconcat #'shell-quote-argument files " ")
+    " -path " (shell-quote-argument "*/.git") " -prune "
+    " -o -type f "
+    " -exec grep -nHER --color=auto " (shell-quote-argument regexp) " "
+    (shell-quote-argument "{}")
+    " " (shell-quote-argument "+"))
+   'grep-mode
+   (lambda (_mode) (format "*prot-dired-grep-marked for `%s'*" regexp))
+   t))
 
 ;;;; Subdir extras and Imenu setup
 
