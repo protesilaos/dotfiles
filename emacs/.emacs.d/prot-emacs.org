@@ -13036,9 +13036,7 @@ Any other value has the same meaning as `text'."
   :group 'prot-icons)
 
 (defface prot-icons-directory
-  `((t :inherit ,(if (facep 'dired-directory)
-                     '(prot-icons-icon dired-directory)
-                   'prot-icons-icon)))
+  '((t :inherit (prot-icons-icon dired-directory)))
   "Face for icons."
   :group 'prot-icons)
 
