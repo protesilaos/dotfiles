@@ -56,10 +56,7 @@ return value."
   "Like `emacs-lisp-mode' but for macroexpanded forms."
   :interactive nil
   (read-only-mode 1)
-  (display-line-numbers-mode 1)
-  (setq-local elisp-fontify-semantically t
-              elisp-add-help-echo t)
-  (cursor-sensor-mode 1))
+  (display-line-numbers-mode 1))
 
 ;;;###autoload
 (defun prot-elisp-pp-macroexpand-last-sexp ()
