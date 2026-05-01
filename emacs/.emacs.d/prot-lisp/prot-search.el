@@ -190,6 +190,31 @@ boundaries, else start from point to the end of the buffer."
 ;;   (isearch-forward-symbol-at-point)
 ;;   (isearch-query-replace-regexp))
 
+(defvar prot-search-collect-history nil
+  "Minibuffer history for `prot-search-collect'.")
+
+;;;###autoload
+(defun prot-search-collect (regexp)
+  "Return matches for REGEXP as a substring in the current buffer.
+Put the results in a *prot-search-collect* buffer."
+  (interactive
+   (list
+    (format "\\<\\w*%s\\w*\\>" (read-string "Collect REGEXP: " nil 'prot-search-collect-history))))
+  (save-excursion
+    (goto-char (point-min))
+    (let ((matches nil))
+      (while (re-search-forward regexp nil t)
+        (push (match-string 0) matches))
+      (when matches
+        (setq matches (nreverse matches))
+        (let ((buffer (get-buffer-create "*prot-search-collect*")))
+          (with-current-buffer buffer
+            (erase-buffer)
+            (dolist (match matches)
+              (insert match)
+              (insert "\n")))
+          (display-buffer buffer))))))
+
 (autoload 'goto-address-mode "goto-addr")
 
 ;;;###autoload

@@ -5516,6 +5516,13 @@ where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][
   down the search and need the preview, at which point I call the
   Consult command on =M-s M-s= ([[#h:22e97b4c-d88d-4deb-9ab3-f80631f9ff1d][The =prot-emacs-completion.el= settings for ~consult~]]).
 
+- Type =M-s O= (not to be conflated with =M-s o= which calls ~occur~)
+  to invoke the command ~prot-search-collect~. It prompts for a
+  regular expression and then collects all its matches in a separate
+  buffer. The regular expression is matches as a substring, which then
+  captures the entire word. For a search for =act= will collect =act=,
+  =enact=, =interact=...
+
 - Type =M-s M-o= (~prot-search-occur-outline~) to produce an outline
   of the given buffer. What constitutes an outline is defined in the
   user option ~prot-search-outline-regexp-alist~. I only configure it
@@ -5558,6 +5565,7 @@ by visiting individual files or by using a grep buffer as an index.
    "M-s M-t" #'prot-search-grep-todo-keywords ; With C-u it runs `prot-search-git-grep-todo-keywords'
    "M-s M-T" #'prot-search-git-grep-todo-keywords
    "M-s s" #'prot-search-outline
+   "M-s O" #'prot-search-collect
    "M-s M-o" #'prot-search-occur-outline
    "M-s M-u" #'prot-search-occur-browse-url)
  (prot-emacs-keybind isearch-mode-map
@@ -16604,6 +16612,31 @@ boundaries, else start from point to the end of the buffer."
 ;;   (interactive)
 ;;   (isearch-forward-symbol-at-point)
 ;;   (isearch-query-replace-regexp))
+
+(defvar prot-search-collect-history nil
+  "Minibuffer history for `prot-search-collect'.")
+
+;;;###autoload
+(defun prot-search-collect (regexp)
+  "Return matches for REGEXP as a substring in the current buffer.
+Put the results in a *prot-search-collect* buffer."
+  (interactive
+   (list
+    (format "\\<\\w*%s\\w*\\>" (read-string "Collect REGEXP: " nil 'prot-search-collect-history))))
+  (save-excursion
+    (goto-char (point-min))
+    (let ((matches nil))
+      (while (re-search-forward regexp nil t)
+        (push (match-string 0) matches))
+      (when matches
+        (setq matches (nreverse matches))
+        (let ((buffer (get-buffer-create "*prot-search-collect*")))
+          (with-current-buffer buffer
+            (erase-buffer)
+            (dolist (match matches)
+              (insert match)
+              (insert "\n")))
+          (display-buffer buffer))))))
 
 (autoload 'goto-address-mode "goto-addr")
 
