@@ -116,7 +116,8 @@
            (mode . (shell-mode eshell-mode comint-mode))
            (inhibit-switch-frame . t)
            (body-function . prot-window-select-fit-size))
-          ("\\*\\(Calendar\\|Bookmark Annotation\\|ert\\).*"
+          ((or . ((derived-mode . calendar-mode)
+                  (derived-mode . ert-results-mode)))
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (mode . (calendar-mode bookmark-edit-annotation-mode ert-results-mode))
            (inhibit-switch-frame . t)
