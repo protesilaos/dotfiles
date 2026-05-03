@@ -19,7 +19,6 @@
   (setq remote-file-name-inhibit-auto-save t)                 ; Emacs 30
   (setq remote-file-name-inhibit-delete-by-moving-to-trash t) ; Emacs 30
   (setq save-interprogram-paste-before-kill t)
-  (setq scroll-error-top-bottom t)
   (setq tramp-connection-timeout (* 60 10)) ; seconds
   (setq trusted-content '("~/Git/Projects/" "~/Coach/")) ; Emacs 30
   (setq truncate-partial-width-windows nil)
@@ -248,7 +247,8 @@
         mouse-wheel-follow-mouse t)
 
   ;; Scrolling behaviour
-  (setq scroll-preserve-screen-position t
+  (setq scroll-error-top-bottom t
+        scroll-preserve-screen-position t
         scroll-conservatively 1 ; affects `scroll-step'
         scroll-margin 0
         next-screen-context-lines 0))
