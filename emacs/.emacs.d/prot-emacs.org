@@ -6809,6 +6809,34 @@ the placement of a window in the given direction.
   (setq windmove-create-window nil)) ; Emacs 27.1
 #+end_src
 
+*** The =prot-emacs-window.el= section for ~buffer-to-pdf~
+:PROPERTIES:
+:CUSTOM_ID: h:4bdb59e9-1c3c-4e60-9c11-0a6372b838db
+:END:
+
+This is yet another package of mine. It allows the user to export
+their current buffer to a PDF. In practice, this is like a screen
+capture of whatever is in the current buffer, paginated in a sensible
+way. For example, an Org file will have one heading per page.
+
+The font size and current theme are preserved. This way, users have a
+"what you see is what you get" result. For presentations, user may
+thus prefer to create a file based on the font size they like, check
+that each screenfull shows the heading with its contents, and then
+call the command ~buffer-to-pdf~. For printer-friendly output the
+~buffer-to-pdf-black-on-white~ can be used instead.
+
+- Git repository: <https://github.com/protesilaos/buffer-to-pdf>.
+- Video demonstration: <https://protesilaos.com/codelog/2026-05-02-emacs-buffer-to-pdf-new-package/>.
+- Backronym: Bewitched Users Find Files Effortlessly Rendered To PDF.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
+;;; Buffer to PDF
+(prot-emacs-configure
+  ;; The use the command `buffer-to-pdf' or `buffer-to-pdf-black-on-white'.
+  (prot-emacs-install buffer-to-pdf "https://github.com/protesilaos/buffer-to-pdf.git"))
+#+end_src
+
 *** The =prot-emacs-window.el= ~provide~ form
 :PROPERTIES:
 :CUSTOM_ID: h:2124c200-734d-49c4-aeb1-513caaf957ae
