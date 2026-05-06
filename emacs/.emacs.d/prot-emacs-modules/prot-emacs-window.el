@@ -260,4 +260,9 @@ With optional argument FRAME, return the list of buffers of FRAME."
 
   (setq windmove-create-window nil)) ; Emacs 27.1
 
+;;; Buffer to PDF
+(prot-emacs-configure
+  ;; The use the command `buffer-to-pdf' or `buffer-to-pdf-black-on-white'.
+  (prot-emacs-install buffer-to-pdf "https://github.com/protesilaos/buffer-to-pdf.git"))
+
 (provide 'prot-emacs-window)

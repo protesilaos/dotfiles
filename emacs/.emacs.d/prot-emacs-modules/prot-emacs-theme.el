@@ -144,6 +144,11 @@
       "M-<f5>" #'gnome-accent-theme-switcher-load-random-from-current-set)
     (gnome-accent-theme-switcher-mode 1)))
 
+;;; Modus themes exporter
+(prot-emacs-configure
+  ;; The use the command `modus-themes-exporter-export'.
+  (prot-emacs-install modus-themes-exporter "https://github.com/protesilaos/modus-themes-exporter.git"))
+
 ;;;; Theme buffet
 (prot-emacs-configure
   (prot-emacs-install theme-buffet)
