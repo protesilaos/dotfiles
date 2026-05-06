@@ -2252,7 +2252,7 @@ such as in the difference between writing and reading.
     (define-key global-map (kbd "C-c p") #'cursory-set-preset)))
 #+end_src
 
-*** GNOME accent theme switcher (~gnome-accent-theme-switcher~)
+*** The =prot-emacs-theme.el= section the GNOME accent theme switcher (~gnome-accent-theme-switcher~)
 :PROPERTIES:
 :CUSTOM_ID: h:79bcb083-0700-45d4-98cb-6e52f40b72ee
 :END:
@@ -2355,7 +2355,7 @@ Bruno Boal is the lead developer and I am a co-maintainer.
   (theme-buffet-timer-hours 1))
 #+end_src
 
-*** The =prot-emacs-theme.el= section about ~fontaine~
+*** The =prot-emacs-theme.el= section for ~fontaine~
 :PROPERTIES:
 :CUSTOM_ID: h:cb41fef0-41a5-4a85-9552-496d96290258
 :END:
@@ -2501,7 +2501,7 @@ Also check my ~show-font~ package ([[#h:60a005be-77bd-49f1-a865-78d7cf75bd2a][Th
     (add-hook 'fontaine-set-preset-hook #'pulsar-pulse-line)))
 #+end_src
 
-*** The =prot-emacs-theme.el= section about ~show-font~
+*** The =prot-emacs-theme.el= section for ~show-font~
 :PROPERTIES:
 :CUSTOM_ID: h:60a005be-77bd-49f1-a865-78d7cf75bd2a
 :END:
@@ -2539,7 +2539,7 @@ To actually set fonts, I use my ~fontaine~ package ([[#h:cb41fef0-41a5-4a85-9552
       "C-c S l" #'show-font-tabulated)))
 #+end_src
 
-*** The =prot-emacs-theme.el= section about ~variable-pitch-mode~ and font resizing
+*** The =prot-emacs-theme.el= section for ~variable-pitch-mode~ and font resizing
 :PROPERTIES:
 :CUSTOM_ID: h:60d6aae2-6e4b-402c-b6a8-411fc49a6857
 :END:
