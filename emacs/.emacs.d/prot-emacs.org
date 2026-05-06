@@ -2295,6 +2295,26 @@ the GNOME desktop environment ([[#h:3f1a33e4-762e-4cf3-a0ae-4c2954d9cbb8][The =p
     (gnome-accent-theme-switcher-mode 1)))
 #+end_src
 
+*** The =prot-emacs-theme.el= section for ~modus-themes-exporter~
+:PROPERTIES:
+:CUSTOM_ID: h:ac631ebf-1130-41ee-8c4e-441be3c01cbb
+:END:
+
+This is another package of mine. It empowers the user to export a
+Modus or Modus-derived theme to another application. The idea is to
+get one's favourite terminal emulator (or other such tool) to use the
+colours that are shown in Emacs.
+
+I developed this package during a live stream:
+<https://protesilaos.com/codelog/2026-04-13-emacs-live-develop-modus-themes-exporter-package/>.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
+;;; Modus themes exporter
+(prot-emacs-configure
+  ;; The use the command `modus-themes-exporter-export'.
+  (prot-emacs-install modus-themes-exporter "https://github.com/protesilaos/modus-themes-exporter.git"))
+#+end_src
+
 *** The =prot-emacs-theme.el= section for ~theme-buffet~
 :PROPERTIES:
 :CUSTOM_ID: h:2af10314-c8c2-4946-bf9c-a5b0f5fe881b
