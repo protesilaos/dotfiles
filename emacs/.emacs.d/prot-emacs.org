@@ -2308,6 +2308,10 @@ colours that are shown in Emacs.
 I developed this package during a live stream:
 <https://protesilaos.com/codelog/2026-04-13-emacs-live-develop-modus-themes-exporter-package/>.
 
++ Git repository: <https://github.com/protesilaos/modus-themes-exporter>
++ Backronym: modus-themes... Export Xenotropically Preconfigured
+  Orderly Rendered Terminal Emulator Reifications.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-theme.el"
 ;;; Modus themes exporter
 (prot-emacs-configure
