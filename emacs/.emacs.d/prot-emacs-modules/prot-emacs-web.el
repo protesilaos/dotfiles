@@ -95,7 +95,7 @@
     (prot-emacs-keybind elfeed-search-mode-map
       "w" #'elfeed-search-yank
       "g" #'elfeed-update
-      "G" #'elfeed-search-update--force)
+      "G" #'revert-buffer)
 
     (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank)
 
