@@ -37,15 +37,17 @@
 (prot-emacs-configure
   (prot-emacs-install diff-hl)
 
+  (setq diff-hl-draw-borders nil)
+  (setq diff-hl-update-async t)
+
   (prot-emacs-keybind global-map
     "C-x v <up>" #'diff-hl-previous-hunk
     "C-x v <down>" #'diff-hl-next-hunk)
 
-  (setq diff-hl-draw-borders nil)
-  (setq diff-hl-update-async t)
+  (prot-emacs-hook (prog-mode-hook vc-dir-mode-hook) turn-on-diff-hl-mode)
 
-  (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-  (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
+  (with-eval-after-load 'magit
+    (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
 ;;;; `ediff'
 (prot-emacs-configure
