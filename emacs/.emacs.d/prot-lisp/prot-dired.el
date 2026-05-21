@@ -37,6 +37,16 @@
   "Extensions for Dired."
   :group 'dired)
 
+;;;; General commands
+
+;;;###autoload
+(defun prot-dired-open-directory-externally ()
+  "Open the current directory in an external file manager."
+  (interactive nil dired-mode)
+  (if (derived-mode-p 'dired-mode)
+      (call-process "xdg-open" nil 0 nil (expand-file-name default-directory))
+    (user-error "Only do this in a Dired buffer")))
+
 ;;;; Flat Dired listing
 
 (defvar prot-dired-regexp-history nil

@@ -5986,6 +5986,7 @@ given directory ([[#h:b902e6a3-cdd2-420f-bc99-3d973c37cd20][The =prot-emacs-sear
     (prot-emacs-keybind dired-mode-map
       "i" #'prot-dired-insert-subdir ; override `dired-maybe-insert-subdir'
       "/" #'prot-dired-limit-regexp
+      "C-M-<return>" #'prot-dired-open-directory-externally ; C-<return> is `dired-do-open'
       "C-c C-l" #'prot-dired-limit-regexp
       "M-n" #'prot-dired-subdirectory-next
       "C-c C-s" #'prot-dired-search-flat-list
@@ -12543,6 +12544,16 @@ belong to the given subset of CONSEQUENCES.
 (defgroup prot-dired ()
   "Extensions for Dired."
   :group 'dired)
+
+;;;; General commands
+
+;;;###autoload
+(defun prot-dired-open-directory-externally ()
+  "Open the current directory in an external file manager."
+  (interactive nil dired-mode)
+  (if (derived-mode-p 'dired-mode)
+      (call-process "xdg-open" nil 0 nil (expand-file-name default-directory))
+    (user-error "Only do this in a Dired buffer")))
 
 ;;;; Flat Dired listing
 

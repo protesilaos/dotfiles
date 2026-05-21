@@ -60,6 +60,7 @@
     (prot-emacs-keybind dired-mode-map
       "i" #'prot-dired-insert-subdir ; override `dired-maybe-insert-subdir'
       "/" #'prot-dired-limit-regexp
+      "C-M-<return>" #'prot-dired-open-directory-externally ; C-<return> is `dired-do-open'
       "C-c C-l" #'prot-dired-limit-regexp
       "M-n" #'prot-dired-subdirectory-next
       "C-c C-s" #'prot-dired-search-flat-list
