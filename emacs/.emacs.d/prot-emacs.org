@@ -6555,16 +6555,18 @@ to a certain height.
           ("\\*ispell-top-choices\\*.*"
            (display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
-          ;; same window
-
-          ;; NOTE 2023-02-17: `man' does not fully obey the
-          ;; `display-buffer-alist'.  It works for new frames and for
-          ;; `display-buffer-below-selected', but otherwise is
-          ;; unpredictable.  See `Man-notify-method'.
-          ((or . ((derived-mode . Man-mode)
+          ;; current window
+          ((or . (;; NOTE 2023-02-17: `man' does not fully obey the
+                  ;; `display-buffer-alist'.  It works for new frames
+                  ;; and for `display-buffer-below-selected', but
+                  ;; otherwise is unpredictable.  See `Man-notify-method'.
+                  (derived-mode . Man-mode)
                   (derived-mode . woman-mode)
                   "\\*\\(Man\\|woman\\).*"))
-           (display-buffer-same-window))
+           (display-buffer-reuse-mode-window display-buffer-same-window))
+          ((or . ((derived-mode . magit-diff-mode)
+                  (derived-mode . magit-log-mode)))
+           (prot-window-display-other-or-current))
           ;; other `tab-bar-mode' tab
           ((derived-mode . magit-status-mode)
            (display-buffer-reuse-mode-window display-buffer-in-tab)
@@ -18940,6 +18942,13 @@ This as the action function in a `display-buffer-alist' entry."
       (dolist (fn functions)
         (when (apply fn args)
           (throw 'success fn))))))
+
+(defun prot-window-display-other-or-current (&rest args)
+  "Display buffer in the current or other window.
+Use the other window if only one window is present."
+  (if (length> (window-list) 1)
+      (apply #'display-buffer-same-window args)
+    (apply #'display-buffer-pop-up-window args)))
 
 (defun prot-window-shell-or-term-p (buffer &rest _)
   "Check if BUFFER is a shell or terminal.

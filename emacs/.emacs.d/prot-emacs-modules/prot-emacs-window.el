@@ -130,16 +130,18 @@
           ("\\*ispell-top-choices\\*.*"
            (display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
-          ;; same window
-
-          ;; NOTE 2023-02-17: `man' does not fully obey the
-          ;; `display-buffer-alist'.  It works for new frames and for
-          ;; `display-buffer-below-selected', but otherwise is
-          ;; unpredictable.  See `Man-notify-method'.
-          ((or . ((derived-mode . Man-mode)
+          ;; current window
+          ((or . (;; NOTE 2023-02-17: `man' does not fully obey the
+                  ;; `display-buffer-alist'.  It works for new frames
+                  ;; and for `display-buffer-below-selected', but
+                  ;; otherwise is unpredictable.  See `Man-notify-method'.
+                  (derived-mode . Man-mode)
                   (derived-mode . woman-mode)
                   "\\*\\(Man\\|woman\\).*"))
-           (display-buffer-same-window))
+           (display-buffer-reuse-mode-window display-buffer-same-window))
+          ((or . ((derived-mode . magit-diff-mode)
+                  (derived-mode . magit-log-mode)))
+           (prot-window-display-other-or-current))
           ;; other `tab-bar-mode' tab
           ((derived-mode . magit-status-mode)
            (display-buffer-reuse-mode-window display-buffer-in-tab)

@@ -96,6 +96,13 @@ This as the action function in a `display-buffer-alist' entry."
         (when (apply fn args)
           (throw 'success fn))))))
 
+(defun prot-window-display-other-or-current (&rest args)
+  "Display buffer in the current or other window.
+Use the other window if only one window is present."
+  (if (length> (window-list) 1)
+      (apply #'display-buffer-same-window args)
+    (apply #'display-buffer-pop-up-window args)))
+
 (defun prot-window-shell-or-term-p (buffer &rest _)
   "Check if BUFFER is a shell or terminal.
 This is a predicate function for `buffer-match-p', intended for
