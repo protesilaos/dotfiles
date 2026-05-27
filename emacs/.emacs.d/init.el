@@ -117,6 +117,7 @@ These include the packages `marginalia', `consult', `corfu',
   '(agitate
     altcaps
     beframe
+    buffer-to-pdf
     consult-denote
     cursory
     denote
@@ -124,12 +125,14 @@ These include the packages `marginalia', `consult', `corfu',
     denote-markdown
     denote-merge
     denote-org
-    denote-silo
     denote-sequence
+    denote-silo
     dired-preview
     doric-themes
     ef-themes
     fontaine
+    gnome-accent-theme-switcher
+    institution-calendar
     lin
     logos
     mct
