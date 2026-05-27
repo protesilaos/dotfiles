@@ -5519,10 +5519,6 @@ For isearch, I have:
 - Delete the non-matching portion of a query in isearch with a single
   backspace instead of doing it character-by-character.
 
-- Type =M-s M-<= (~prot-search-isearch-beginning-of-buffer~) or =M-s
-  M->= (~prot-search-isearch-end-of-buffer~) to search for the symbol
-  at point starting from the beginning/end of the buffer.
-
 For variants of ~occur~ or ~grep~, which also benefit from the rules I have on
 where windows/buffers are displayed ([[#h:50f8b1e4-b14e-453f-a37e-1c0e495ab80f][The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)]]):
 
@@ -5584,8 +5580,6 @@ by visiting individual files or by using a grep buffer as an index.
  (require 'prot-search)
  (prot-emacs-keybind global-map
    "M-s M-%" #'prot-search-replace-markup ; see `prot-search-markup-replacements'
-   "M-s M-<" #'prot-search-isearch-beginning-of-buffer
-   "M-s M->" #'prot-search-isearch-end-of-buffer
    "M-s g" #'prot-search-grep
    "M-s u" #'prot-search-occur-urls
    "M-s t" #'prot-search-occur-todo-keywords
@@ -5596,8 +5590,10 @@ by visiting individual files or by using a grep buffer as an index.
    "M-s M-o" #'prot-search-occur-outline
    "M-s M-u" #'prot-search-occur-browse-url)
  (prot-emacs-keybind isearch-mode-map
-   "<up>" #'prot-search-isearch-repeat-backward
-   "<down>" #'prot-search-isearch-repeat-forward
+   "<home>" #'isearch-beginning-of-buffer
+   "<end>" #'isearch-end-of-buffer
+   "<up>" #'isearch-repeat-backward
+   "<down>" #'isearch-repeat-forward
    "<backspace>" #'prot-search-isearch-abort-dwim
    "<C-return>" #'prot-search-isearch-other-end)
  (setq prot-search-outline-regexp-alist
@@ -16581,51 +16577,6 @@ search started."
     (while (or (not isearch-success) isearch-error)
       (isearch-pop-state)))
   (isearch-update))
-
-;;;###autoload
-(defun prot-search-isearch-repeat-forward (&optional arg)
-  "Move forward, keeping point at the beginning of the match.
-Optionally move to ARGth match in the given direction."
-  (interactive "p")
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end))
-  (isearch-repeat-forward (or arg 1)))
-
-;;;###autoload
-(defun prot-search-isearch-repeat-backward (&optional arg)
-  "Move backward, keeping point at the beginning of the match.
-Optionally move to ARGth match in the given direction."
-  (interactive "p")
-  (when (and (not isearch-forward) isearch-other-end)
-    (goto-char isearch-other-end))
-  (isearch-repeat-backward (or arg 1)))
-
-(defmacro prot-search-isearch-occurrence (name edge &optional doc)
-  "Construct function for moving to `isearch' occurrence.
-NAME is the name of the function.  EDGE is either the beginning
-or the end of the buffer.  Optional DOC is the resulting
-function's docstring."
-  `(defun ,name (&optional arg)
-     ,doc
-     (interactive "p")
-     (let ((x (or arg 1))
-           (command (intern (format "isearch-%s-of-buffer" ,edge))))
-       (isearch-forward-symbol-at-point)
-       (funcall command x))))
-
-(prot-search-isearch-occurrence
- prot-search-isearch-beginning-of-buffer
- "beginning"
- "Run `isearch-beginning-of-buffer' for the symbol at point.
-With numeric ARG, move to ARGth occurrence counting from the
-beginning of the buffer.")
-
-(prot-search-isearch-occurrence
- prot-search-isearch-end-of-buffer
- "end"
- "Run `isearch-end-of-buffer' for the symbol at point.
-With numeric ARG, move to ARGth occurrence counting from the
-end of the buffer.")
 
 ;;;; Replace/Occur
 

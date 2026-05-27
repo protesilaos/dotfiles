@@ -35,8 +35,6 @@
  (require 'prot-search)
  (prot-emacs-keybind global-map
    "M-s M-%" #'prot-search-replace-markup ; see `prot-search-markup-replacements'
-   "M-s M-<" #'prot-search-isearch-beginning-of-buffer
-   "M-s M->" #'prot-search-isearch-end-of-buffer
    "M-s g" #'prot-search-grep
    "M-s u" #'prot-search-occur-urls
    "M-s t" #'prot-search-occur-todo-keywords
@@ -47,8 +45,10 @@
    "M-s M-o" #'prot-search-occur-outline
    "M-s M-u" #'prot-search-occur-browse-url)
  (prot-emacs-keybind isearch-mode-map
-   "<up>" #'prot-search-isearch-repeat-backward
-   "<down>" #'prot-search-isearch-repeat-forward
+   "<home>" #'isearch-beginning-of-buffer
+   "<end>" #'isearch-end-of-buffer
+   "<up>" #'isearch-repeat-backward
+   "<down>" #'isearch-repeat-forward
    "<backspace>" #'prot-search-isearch-abort-dwim
    "<C-return>" #'prot-search-isearch-other-end)
  (setq prot-search-outline-regexp-alist
