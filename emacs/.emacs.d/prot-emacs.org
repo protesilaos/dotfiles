@@ -11552,7 +11552,7 @@ want in this case.
     (setq elfeed-curl-max-connections 10)
     (setq elfeed-db-directory (expand-file-name "elfeed/" user-emacs-directory))
     (setq elfeed-enclosure-default-dir (expand-file-name "~/Downloads/"))
-    (setq elfeed-search-filter "@2-weeks-ago +unread")
+    (setq-default elfeed-search-filter "@2-weeks-ago +unread") ; NOTE 2026-05-28: was changed to buffer-local
     (setq elfeed-sort-order 'descending)
     (setq elfeed-search-clipboard-type 'CLIPBOARD)
     (setq elfeed-search-title-max-width 100)
