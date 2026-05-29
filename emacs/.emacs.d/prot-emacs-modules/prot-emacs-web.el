@@ -122,7 +122,15 @@
       (load (expand-file-name "~/feeds.el.gpg") :no-error :no-message))
     ;; Make entries tagged as "personal" use the `bold-italic' face.
     ;; This way I can quickly notice my own entries in the listing.
-    (add-to-list 'elfeed-search-face-alist '(personal bold-italic))))
+    (add-to-list 'elfeed-search-face-alist '(personal bold-italic))
+
+    ;; NOTE 2026-05-29: Make `elfeed-search-yank' mark the entry as
+    ;; read.  If I am copying the URL, then it means I already plan to
+    ;; do something with this entry outside of Elfeed.
+    (define-advice elfeed-search-yank (:around (&rest args) prot)
+      (save-excursion
+        (apply args))
+      (call-interactively 'elfeed-search-untag-all-unread))))
 
 ;;; Rcirc (IRC client)
 (prot-emacs-configure
