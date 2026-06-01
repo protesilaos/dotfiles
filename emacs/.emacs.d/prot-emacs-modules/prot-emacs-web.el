@@ -100,6 +100,7 @@
     (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank)
 
     (setq elfeed-last-update-relative 0) ; absolute time in the header-line
+    (setq elfeed-search-separator-date-format nil) ; no date sections in the search buffer
     (setq elfeed-use-curl nil)
     (setq elfeed-curl-max-connections 10)
     (setq elfeed-db-directory (expand-file-name "elfeed/" user-emacs-directory))
