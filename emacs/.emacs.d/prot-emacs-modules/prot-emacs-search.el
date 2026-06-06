@@ -45,8 +45,8 @@
    "M-s M-o" #'prot-search-occur-outline
    "M-s M-u" #'prot-search-occur-browse-url)
  (prot-emacs-keybind isearch-mode-map
-   "<home>" #'isearch-beginning-of-buffer
-   "<end>" #'isearch-end-of-buffer
+   "C-<home>" #'isearch-beginning-of-buffer
+   "C-<end>" #'isearch-end-of-buffer
    "<up>" #'isearch-repeat-backward
    "<down>" #'isearch-repeat-forward
    "<backspace>" #'prot-search-isearch-abort-dwim
