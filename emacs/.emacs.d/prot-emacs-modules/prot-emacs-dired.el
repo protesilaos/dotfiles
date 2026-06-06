@@ -58,6 +58,7 @@
     (require 'prot-dired)
     (add-hook 'dired-mode #'prot-dired-setup-imenu)
     (prot-emacs-keybind dired-mode-map
+      "f" nil ; disable `dired-find-file' as it is on RET already
       "i" #'prot-dired-insert-subdir ; override `dired-maybe-insert-subdir'
       "/" #'prot-dired-limit-regexp
       "C-M-<return>" #'prot-dired-open-directory-externally ; C-<return> is `dired-do-open'
