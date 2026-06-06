@@ -5726,7 +5726,7 @@ Dired lets us work with our files in a way that still feels close to
 the command-line, yet has more powerful interactive features than even
 fully fledged, graphical file managers.
 
-*** The =prot-emacs-dired.el= settings for common operations
+*** The =prot-emacs-dired.el= settings for copy, rename, delete operations
 :PROPERTIES:
 :CUSTOM_ID: h:39fb0eab-54bb-4e5b-8e38-9443dbe5c5ee
 :END:
