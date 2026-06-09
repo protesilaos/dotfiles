@@ -446,9 +446,9 @@
     (setq org-agenda-current-time-string (concat "Now " (make-string 70 ?.)))
     (setq org-agenda-time-grid
           '((daily today require-timed)
-            ( 0500 0600 0700 0800 0900 1000
-              1100 1200 1300 1400 1500 1600
-              1700 1800 1900 2000 2100 2200)
+            ( 0600 0700 0800 0900 1000 1100
+              1200 1300 1400 1500 1600 1700
+              1800 1900 2000 2100 2200 2300)
             "" ""))
     (setq org-agenda-default-appointment-duration nil)
 
