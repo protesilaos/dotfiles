@@ -72,6 +72,45 @@ Perform the search recursively from the current directory."
       (dired (cons (format "prot-flat-dired for `%s'" regexp) relative-paths))
     (error "No files matching `%s'" regexp)))
 
+(defvar prot-dired-days-prompt-history nil
+  "Minibuffer history for `prot-dired-days-prompt'.")
+
+(defun prot-dired-days-prompt ()
+  "Prompt for days and return them as a number."
+  (let* ((first (car prot-dired-days-prompt-history))
+         (default (when (stringp first)
+                    (string-to-number first))))
+    (read-number "Number of days: " default 'prot-dired-days-prompt-history)))
+
+(defun prot-dired--get-last-modified (files days)
+  "Return list of FILES last modified since DAYS."
+  (seq-filter
+   (lambda (file)
+     (and-let* ((attributes (file-attributes file))
+                (last-modified (nth 5 attributes))
+                (last-modified-seconds (time-to-seconds last-modified))
+                (current-time (current-time))
+                (current-time-seconds (time-to-seconds current-time))
+                (delta-seconds (* days 24 60 60))
+                (oldest-seconds (- current-time-seconds delta-seconds))
+                (_ (>= last-modified-seconds oldest-seconds)))))
+   files))
+
+;;;###autoload
+(defun prot-dired-search-flat-list-since-days (regexp days)
+  "Return Dired buffer with files matching REGEXP up to DAYS since last modification.
+Perform the search recursively from the current directory."
+  (interactive
+   (list
+    (prot-dired-regexp-prompt)
+    (prot-dired-days-prompt)))
+  (if-let* ((files (prot-dired--get-files regexp)))
+      (if-let* ((files-filtered (prot-dired--get-last-modified files days))
+                (relative-paths (mapcar #'file-relative-name files-filtered)))
+          (dired (cons (format "prot-flat-dired since %d days for `%s'" days regexp) relative-paths))
+        (error "No files last modified within the last %d days" days))
+    (error "No files matching `%s'" regexp)))
+
 ;;;; General commands
 
 ;; NOTE 2023-06-27: This user option is quick-and-dirty.  I prefer not
