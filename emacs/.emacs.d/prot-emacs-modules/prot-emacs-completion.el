@@ -251,8 +251,7 @@ Development continues on GitHub with GitLab as a mirror."))
   (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
 
 ;;; Corfu (in-buffer completion popup)
-(when (and prot-emacs-completion-extras
-           prot-display-graphic-p)
+(when (eq prot-emacs-completion-in-buffer 'corfu)
   (prot-emacs-configure
     (prot-emacs-install corfu)
 
@@ -273,7 +272,43 @@ Development continues on GitHub with GitLab as a mirror."))
       (corfu-history-mode 1)
       (add-to-list 'savehist-additional-variables 'corfu-history))))
 
-(prot-emacs-comment
+(when (eq prot-emacs-completion-in-buffer 'corfu)
+  (prot-emacs-configure
+    (prot-emacs-install cape)
+
+    (defun prot/cape-super-set-local (&rest capfs)
+      "Set `completion-at-point-functions' to current value plus CAPFs."
+      (let* ((all (append completion-at-point-functions capfs))
+             (all-minus-global (delq t all))
+             (cape-super (apply #'cape-capf-super all-minus-global)))
+        (setq-local completion-at-point-functions (list cape-super t))))
+
+    (defun prot/cape-prog-setup ()
+      "Set up Cape for programming."
+      (prot/cape-super-set-local '(cape-file cape-dabbrev)))
+
+    (add-hook 'prog-mode-hook #'prot/cape-prog-setup)
+
+    (defun prot/cape-text-setup ()
+      "Set up Cape for prose."
+      (prot/cape-super-set-local '(cape-file cape-dabbrev cape-dict)))
+
+    (add-hook 'prog-mode-hook #'prot/cape-text-setup)))
+
+(when (eq prot-emacs-completion-in-buffer 'company)
+  (prot-emacs-configure
+    (prot-emacs-install company)
+    (setq company-dabbrev-code-completion-styles t) ; use the `completion-styles'
+    (setq company-tooltip-limit 6)
+    (setq company-tooltip-minimum-width 25)
+    (setq company-tooltip-align-annotations t)
+    (setq company-backends '((company-dabbrev-code company-capf) company-files))
+    (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+                              company-preview-if-just-one-frontend
+                              company-echo-metadata-frontend))
+    (global-company-mode 1)))
+
+(when (eq prot-emacs-completion-in-buffer 'completion-preview)
   (prot-emacs-configure
     (setq completion-preview-exact-match-only nil)
     (setq completion-preview-commands '(self-insert-command

@@ -49,6 +49,21 @@ These include the packages `marginalia', `consult', `corfu',
   :group 'prot-emacs
   :type 'boolean)
 
+(defcustom prot-emacs-completion-in-buffer 'corfu
+  "Front-end for text completion in the buffer.
+When the value is either `corfu' or `company', use the package of the
+given name.  When the value is `completion-preview' use the built-in
+`completion-preview-mode'.
+
+Use the generic completions buffer if any other value is set."
+  :group 'prot-emacs
+  :type '(choice
+          (const :tag "Generic completions buffer" nil)
+          (const :tag "Generic completions buffer" t)
+          (const :tag "The `corfu' package" corfu)
+          (const :tag "The `company' package" company)
+          (const :tag "The built-in `completion-preview-mode'" completion-preview)))
+
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
