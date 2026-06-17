@@ -4830,7 +4830,7 @@ just as good in my experience ([[#h:6d3e2d44-9b1e-4092-8287-5062e4f29da4][The =p
   (prot-emacs-configure
     (prot-emacs-install cape)
 
-    (defun prot/cape-super-set-local (&rest capfs)
+    (defun prot/cape-super-set-local (capfs)
       "Set `completion-at-point-functions' to current value plus CAPFs."
       (let* ((all (append completion-at-point-functions capfs))
              (all-minus-global (delq t all))
@@ -4847,7 +4847,7 @@ just as good in my experience ([[#h:6d3e2d44-9b1e-4092-8287-5062e4f29da4][The =p
       "Set up Cape for prose."
       (prot/cape-super-set-local '(cape-file cape-dabbrev cape-dict)))
 
-    (add-hook 'prog-mode-hook #'prot/cape-text-setup)))
+    (add-hook 'text-mode-hook #'prot/cape-text-setup)))
 #+end_src
 
 *** The =prot-emacs-completion.el= about the in-buffer completion popup (~company~)
