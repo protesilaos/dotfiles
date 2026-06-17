@@ -34,7 +34,24 @@
   (setq message-kill-buffer-on-exit t)
   ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
   (setq message-forward-as-mime t)
-  (setq message-wide-reply-confirm-recipients nil))
+  (setq message-wide-reply-confirm-recipients nil)
+
+  (defun prot/message-copy-body ()
+    "Copy the body of the current message buffer."
+    (interactive)
+    (save-excursion
+      (let ((beginning (message-goto-body))
+            (end (progn
+                   (message-goto-signature)
+                   (forward-line -2)
+                   (point))))
+        (kill-new (buffer-substring-no-properties beginning end))
+        (message "Copied the body of the current message buffer")
+        (setq this-command 'kill-ring-save))))
+
+  (with-eval-after-load 'message
+    ;; Override `message-insert-signature'.
+    (define-key message-mode-map (kbd "C-c C-w") #'prot/message-copy-body)))
 
 ;;;; Add attachments from Dired (`gnus-dired' does not require `gnus')
 (prot-emacs-configure
