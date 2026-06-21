@@ -353,7 +353,6 @@
 
 ;;;; World clock (M-x world-clock)
 (prot-emacs-configure
-  (setq display-time-world-list t)
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
         '(("America/Los_Angeles" "🇺🇸 Los Angeles")
           ("America/Vancouver" "🇨🇦 Vancouver")
