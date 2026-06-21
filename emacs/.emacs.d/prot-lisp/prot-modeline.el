@@ -275,7 +275,7 @@ Specific to the current window's mode line.")
     '(:eval
       (when (and (mode-line-window-selected-p)
                  (buffer-narrowed-p)
-                 (not (derived-mode-p 'Info-mode 'help-mode 'special-mode 'message-mode)))
+                 (not (memq major-mode '(Info-mode help-mode message-mode special-mode))))
         (propertize " Narrow " 'face 'prot-modeline-indicator-cyan-bg)))
   "Mode line construct to report the narrowed state of the current buffer.")
 
