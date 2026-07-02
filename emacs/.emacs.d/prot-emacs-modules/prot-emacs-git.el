@@ -101,6 +101,7 @@
     (setq vc-handled-backends '(Git))
 
     (setq vc-dir-save-some-buffers-on-revert t) ; Emacs 31
+    (setq vc-dir-show-key-binding-hints nil) ; Emacs 32
 
     ;; This one is for editing commit messages.
     (require 'log-edit)
