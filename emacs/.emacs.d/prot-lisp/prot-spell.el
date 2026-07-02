@@ -96,5 +96,42 @@ function.  Then you can control the buffer's specifics via
 
 (advice-add #'ispell-display-buffer :override #'prot-spell-ispell-display-buffer)
 
+;;;; French punctuation
+
+;; TODO 2026-07-01: Maybe extend the command to check for all sorts of
+;; rules, in accordance with the Charte orthotypographique du Journal
+;; officiel:
+;; <https://www.legifrance.gouv.fr/contenu/Media/Files/autour-de-la-loi/legislatif-et-reglementaire/charte_typographique_jo_janvier_2021.pdf?__cf_chl_f_tk=YcOBi.sMMWmrN5FxCQMM8YDz.OyTC62mXKuZnjZ2rvs-1782901834-1.0.1.1-IzZmLEEkwksUf1sSm5dljuFqSZjDPjXfLMYkIdbOa.Y>.
+;;
+;; Though that is not a simple search+replace operation...
+;;
+;; For the following:
+;;
+;; «L’espace insécable permet d’éviter la séparation entre deux
+;; éléments. Elle s’utilisera, entre autres, à l’intérieur des
+;; guillemets français, au sein des nombres, après les dito, avec les
+;; tirets d’incise.»
+(defvar prot-spell-french-grammar-replacements
+  '(("\\([^[:punct:][:space:]]\\)\\?" . "\\1 ?")
+    ("\\([^[:punct:][:space:]]\\):" . "\\1 :")
+    ("\\([^[:punct:][:space:]]\\);" . "\\1 ;")
+    ("\\([^[:punct:][:space:]]\\)!" . "\\1 !")
+    ("«\\([^[:punct:][:space:]]\\)" . "« \\1")
+    ("\\([^[:punct:][:space:]]\\)»" . "\\1 »")
+    ("\\([^[:punct:][:space:]]\\)%" . "\\1 %"))
+  "Add no-break space to relevant punctuation.")
+
+;;;###autoload
+(defun prot-spell-french-punctuation ()
+  "Apply the `prot-spell-french-grammar-replacements' across the buffer."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (pcase-dolist (`(,target . ,replacement) prot-spell-french-grammar-replacements)
+        (goto-char (point-min))
+        (while (re-search-forward target nil t)
+          (replace-match replacement))))))
+
 (provide 'prot-spell)
 ;;; prot-spell.el ends here

@@ -111,7 +111,8 @@
     (prot-spell-spell-dwim
      prot-spell-change-dictionary
      prot-spell-spell-dwim
-     prot-spell-change-dictionary)
+     prot-spell-change-dictionary
+     prot-spell-french-punctuation)
     "prot-spell")
 
   (prot-emacs-keybind global-map
