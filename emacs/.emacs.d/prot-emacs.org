@@ -3195,44 +3195,19 @@ quickly ([[#h:581aa0ff-b136-4099-a321-3b86edbfbccb][The =prot-emacs-essentials.e
 common use-case is to write some text to a register and then insert
 that text by calling the given register. This is much better than
 relying on the ~kill-ring~, because registers are meant to be
-overwritten by the user, whereas the ~kill-ring~ accumulates lots of
-text that we do not necessarily need.
+explicitly overwritten by the user, whereas the ~kill-ring~
+accumulates lots of text that we do not necessarily add there on
+purpose.
 
-To me, registers are essential for keyboard macros. By default,
-registers do not persist between Emacs sessions, though I do need to
-re-use them from time to time, hence the arrangement to record them
-with ~savehist-mode~ ([[#h:25765797-27a5-431e-8aa4-cc890a6a913a][The =prot-emacs-completion.el= settings for saving the history (~savehist-mode~)]]).
-
-My =prot-register.el= library defines a new register method to store
-the point in a given file. It also introduces two "Do-What-I-Mean"
-commands, one to store a register, and another to load it. Finally, it
-defines the ~prot-register-persist-mode~ which saves the registers to
-a file (controlled by ~prot-register-save-file~) whenever I make a
-change to them.
+I used to have extensions for registers, but have since reconsidered
+my approach to do more with bookmarks. The reason is that bookmarks
+are designed for persistent data, whereas registers are meant to be
+ephemeral.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el"
-;;;; Registers (register.el) and my extensions (prot-register.el)
-(prot-emacs-configure
-  (require 'prot-register)
-
-  (unless register-alist
-    (setq register-alist (prot-register-load)))
-
-  (prot-emacs-keybind global-map
-    "C-, a" #'prot-register-add-dwim
-    "C-, u" #'prot-register-use-dwim
-    "C-, j" #'bookmark-jump) ; alternattive to C-x r b
-
-  (prot-emacs-hook
-    prot-simple-file-to-register-jump-hook
-    (pulsar-recenter-center pulsar-reveal-entry)
-    nil
-    pulsar)
-
-  (setq register-preview-delay 0.5
-        register-preview-function #'register-preview-default)
-
-  (prot-register-persist-mode 1))
+;;;; Registers (register.el)
+(setq register-preview-delay 0.5
+      register-preview-function #'register-preview-default)
 #+end_src
 
 *** The =prot-emacs-essentials.el= settings for auto revert
@@ -16444,7 +16419,7 @@ is a string."
 ;;; prot-project.el ends here
 #+end_src
 
-** The =prot-register.el= library
+** COMMENT The =prot-register.el= library
 :PROPERTIES:
 :CUSTOM_ID: h:5a429ac4-5b77-48ec-8903-20da9cf64a82
 :END:

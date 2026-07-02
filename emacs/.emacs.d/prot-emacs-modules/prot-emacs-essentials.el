@@ -279,28 +279,9 @@
   ;; (e.g. power failure).
   (setq bookmark-save-flag 1))
 
-;;;; Registers (register.el) and my extensions (prot-register.el)
-(prot-emacs-configure
-  (require 'prot-register)
-
-  (unless register-alist
-    (setq register-alist (prot-register-load)))
-
-  (prot-emacs-keybind global-map
-    "C-, a" #'prot-register-add-dwim
-    "C-, u" #'prot-register-use-dwim
-    "C-, j" #'bookmark-jump) ; alternattive to C-x r b
-
-  (prot-emacs-hook
-    prot-simple-file-to-register-jump-hook
-    (pulsar-recenter-center pulsar-reveal-entry)
-    nil
-    pulsar)
-
-  (setq register-preview-delay 0.5
-        register-preview-function #'register-preview-default)
-
-  (prot-register-persist-mode 1))
+;;;; Registers (register.el)
+(setq register-preview-delay 0.5
+      register-preview-function #'register-preview-default)
 
 ;;;; Auto revert mode
 (prot-emacs-configure
