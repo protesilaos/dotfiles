@@ -40,6 +40,16 @@
 ;;;; General commands
 
 ;;;###autoload
+(defun prot-dired-count-marks ()
+  "Print message with the number of Dired marked files."
+  (interactive nil dired-mode)
+  (if-let* ((files (dired-get-marked-files))
+            (length (length files))
+            (_ (> length 1)))
+      (message "%d files are marked" length)
+    (user-error "No files found")))
+
+;;;###autoload
 (defun prot-dired-open-directory-externally ()
   "Open the current directory in an external file manager."
   (interactive nil dired-mode)
