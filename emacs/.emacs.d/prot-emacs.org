@@ -5372,6 +5372,7 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
           (embark-keybinding ,@prot-vertico-multiform-maximal)
           (multi-category ,@prot-vertico-multiform-maximal)
           (consult-location ,@prot-vertico-multiform-maximal)
+          (jinx ,@prot-vertico-multiform-maximal)
           (imenu ,@prot-vertico-multiform-maximal)
           (theme ,@prot-vertico-multiform-maximal)
           (unicode-name ,@prot-vertico-multiform-maximal)
@@ -9255,6 +9256,8 @@ times before about my "alla prima" approach to creativity). It is
 harder to set up multilingual spell checking with ~flyspell~ and I do
 not even bother trying as I seldom have that need.
 
+Also see Jinx, which is most probably better than Flyspell: [[#h:7f027040-7cd1-4b38-99b5-cb0e17f8866d][The =prot-emacs-langs.el= sample configuration for the Jinx spell checker]].
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;; Flyspell and prot-spell.el (spell check)
 (prot-emacs-configure
@@ -9291,6 +9294,50 @@ not even bother trying as I seldom have that need.
     ;; `prot-spell-ispell-display-buffer'.  Then refer to the
     ;; `display-buffer-alist' for the relevant entry.
     (setq ispell-choices-buffer "*ispell-top-choices*")))
+#+end_src
+
+*** The =prot-emacs-langs.el= sample configuration for the Jinx spell checker
+:PROPERTIES:
+:CUSTOM_ID: h:7f027040-7cd1-4b38-99b5-cb0e17f8866d
+:END:
+
+I use the generic Flyspell that is built into Emacs to do spell
+checking on demand after I am done writing. Though in my experience
+that is not the workflow most people want. They prefer to have spell
+checking on the fly, which is also capable of working with multiple
+languages at once. This is why I recommend the ~jinx~ package by
+Daniel Mendler, which I demonstrated in a video I did about writing
+using an input method (e.g. French) and using Jinx for spell-checking:
+<https://protesilaos.com/codelog/2026-07-02-emacs-french-input-method-jinx-spell/>.
+
+Here is the sample configuration for it:
+
+#+begin_src emacs-lisp :tangle no :results none
+;; You need to have libenchant available on your system. For example,
+;; Debian provides the package `libenchant-2-dev'.
+(use-package jinx
+  :ensure t
+  :demand t
+  :bind
+  ( :map global-map
+    ("M-$" . jinx-correct) ; or bind `jinx-correct-all'
+    ("C-M-$" . jinx-languages))
+  :config
+  ;; Here you can specify a string with space-separated dictionaries.
+  ;; I install the aspell dictionaries, such as the Debian package
+  ;; `aspell-fr' for French and `aspell-el' for Greek (Éllinika).
+  ;; With `aspell' installed on the system, do `aspell dicts' on the
+  ;; command-line to get a list of available dictionaries.
+  (setq jinx-languages "en fr el es")
+
+  ;; I want to have Jinx in programming modes but I do not want it to
+  ;; check anything that is a comment or string, because then it
+  ;; underlines too many things which are not useful. We can do the
+  ;; same for other modes, though I think this is fine.
+  (setq jinx-exclude-faces
+        '((prog-mode font-lock-comment-face font-lock-string-face)))
+
+  (global-jinx-mode 1))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for code linting (~flymake~)
