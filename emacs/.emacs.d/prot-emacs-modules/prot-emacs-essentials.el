@@ -337,6 +337,7 @@
   (setq zoneinfo-style-world-list ; M-x shell RET timedatectl list-timezones
         '(("America/Los_Angeles" "🇺🇸 Los Angeles")
           ("America/Vancouver" "🇨🇦 Vancouver")
+          ("America/Mexico_City" "🇲🇽 Mexico City")
           ("America/Denver" "🇺🇸 Denver")
           ("America/Chicago" "🇺🇸 Chicago")
           ("America/New_York" "🇺🇸 New York")
@@ -359,6 +360,7 @@
           ("Asia/Karachi" "🇵🇰 Karachi")
           ("Asia/Kolkata" "🇮🇳 Kolkata")
           ("Asia/Dhaka" "🇧🇩 Dhaka")
+          ("Asia/Phnom_Penh" "🇰🇭 Phnom Penh")
           ("Asia/Ho_Chi_Minh" "🇻🇳 Ho Chi Minh")
           ("Asia/Singapore" "🇸🇬 Singapore")
           ("Asia/Shanghai" "🇨🇳 Shanghai")
