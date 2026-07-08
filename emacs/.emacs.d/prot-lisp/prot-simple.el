@@ -1144,7 +1144,7 @@ update them all instead."
 ;;;; Global minor mode to override keymaps
 
 (defvar prot-simple-override-mode-map (make-sparse-keymap)
-  "keymap of `prot-simple-override-mode'.
+  "keymap for `prot-simple-override-mode'.
 Enable that mode to have its key bindings take effect over those of the
 major mode.")
 
