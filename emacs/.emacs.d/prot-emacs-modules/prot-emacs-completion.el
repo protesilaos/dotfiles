@@ -276,22 +276,24 @@ Development continues on GitHub with GitLab as a mirror."))
   (prot-emacs-configure
     (prot-emacs-install cape)
 
-    (defun prot/cape-super-set-local (capfs)
-      "Set `completion-at-point-functions' to current value plus CAPFs."
-      (let* ((all (append completion-at-point-functions capfs))
-             (all-minus-global (delq t all))
+    (defun prot/cape-super-set-local (capfs &optional individual-capfs)
+      "Set `completion-at-point-functions' to current value plus CAPFS.
+Treat CAPFS and the default value as a super CAPF.  Then append the
+INDIVIDUAL-CAPFS to the list."
+      (let* ((all-for-super (append completion-at-point-functions capfs))
+             (all-minus-global (delq t all-for-super))
              (cape-super (apply #'cape-capf-super all-minus-global)))
-        (setq-local completion-at-point-functions (list cape-super t))))
+        (setq-local completion-at-point-functions (append (list cape-super) individual-capfs (list t)))))
 
     (defun prot/cape-prog-setup ()
       "Set up Cape for programming."
-      (prot/cape-super-set-local '(cape-file cape-dabbrev)))
+      (prot/cape-super-set-local '(cape-dabbrev) '(cape-file)))
 
     (add-hook 'prog-mode-hook #'prot/cape-prog-setup)
 
     (defun prot/cape-text-setup ()
       "Set up Cape for prose."
-      (prot/cape-super-set-local '(cape-file cape-dabbrev cape-dict)))
+      (prot/cape-super-set-local '(cape-dict cape-dabbrev cape-emoji) '(cape-file)))
 
     (add-hook 'text-mode-hook #'prot/cape-text-setup)))
 
