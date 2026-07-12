@@ -295,6 +295,8 @@ INDIVIDUAL-CAPFS to the list."
       "Set up Cape for prose."
       (prot/cape-super-set-local '(cape-dict cape-dabbrev cape-emoji) '(cape-file)))
 
+    (setq completion-at-point-functions '(cape-dabbrev cape-file))
+
     (add-hook 'text-mode-hook #'prot/cape-text-setup)))
 
 (when (eq prot-emacs-completion-in-buffer 'company)
