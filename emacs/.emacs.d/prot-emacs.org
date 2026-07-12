@@ -4856,14 +4856,34 @@ some Language Server Protocol).
 (when (eq prot-emacs-completion-in-buffer 'company)
   (prot-emacs-configure
     (prot-emacs-install company)
-    (setq company-dabbrev-code-completion-styles t) ; use the `completion-styles'
+    ;; NOTE 2026-07-10: with the latest version of Company, (setq
+    ;; tab-always-indent 'complete) is supported out-of-the-box, which
+    ;; means that I can finally disable the automatic popup feature.
+    (setq company-idle-delay nil)
+
     (setq company-tooltip-limit 6)
     (setq company-tooltip-minimum-width 25)
     (setq company-tooltip-align-annotations t)
-    (setq company-backends '((company-dabbrev-code company-capf) company-files))
-    (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+    (setq company-dabbrev-code-completion-styles t) ; use the `completion-styles'
+
+    (setq company-transformers '(company-sort-by-occurrence
+                                 company-sort-by-backend-importance
+                                 company-sort-prefer-same-case-prefix))
+
+    (setq company-frontends '(company-childframe-unless-just-one-frontend
                               company-preview-if-just-one-frontend
                               company-echo-metadata-frontend))
+
+    (setq company-backends '((company-capf company-dabbrev) company-files))
+
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (setq-local company-backends '((company-dabbrev-code company-capf) company-files))))
+
+    (add-hook 'text-mode-hook
+              (lambda ()
+                (setq-local company-backends '((company-dabbrev company-ispell company-capf) company-files))))
+
     (global-company-mode 1)))
 #+end_src
 
