@@ -6477,7 +6477,8 @@ name.
 
 The built-in ~hl-line-mode~ highlights the current line by adding a
 background colour to it. I normally do not use this functionality. I
-do it only when I need to draw attention to something I am demonstrating.
+do it only when I need to draw attention to something I am
+demonstrating ([[#h:b28077e7-c219-4806-91b6-b7cc0fe468ee][The =prot-emacs-window.el= section for ~prot-streaming-mode~ (=prot-streaming.el=)]]).
 
 The ~nil~ value for ~hl-line-sticky-flag~ makes the line highlight not
 show up in unfocused windows. I prefer to keep highlights at a
@@ -6541,19 +6542,40 @@ infer in most cases.
 As with the two previous sections, I do not like to see line numbers
 by default and seldom use ~display-line-numbers-mode~. They do not
 help me navigate a buffer, nor are they relevant in most cases. I
-enable the mode only when I need to compare buffers or to get a sense
-of how far apart two relevant sections are in a file.
+enable the mode only when I need to compare buffers or when I need to
+share my screen during a video ([[#h:b28077e7-c219-4806-91b6-b7cc0fe468ee][The =prot-emacs-window.el= section for ~prot-streaming-mode~ (=prot-streaming.el=)]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
 ;;; Line numbers on the side of the window
 (prot-emacs-configure
-  (define-key global-map (kbd "<f7>") #'display-line-numbers-mode)
   (setq display-line-numbers-type t)
   ;; Those two variables were introduced in Emacs 27.1
   (setq display-line-numbers-major-tick 0)
   (setq display-line-numbers-minor-tick 0)
   ;; Use absolute numbers in narrowed buffers
   (setq-default display-line-numbers-widen t))
+#+end_src
+
+*** The =prot-emacs-window.el= section for ~prot-streaming-mode~ (=prot-streaming.el=)
+:PROPERTIES:
+:CUSTOM_ID: h:b28077e7-c219-4806-91b6-b7cc0fe468ee
+:END:
+
+The =prot-streaming.el= library implements features that are useful
+when I do a video and have to share my screen.
+
+The ~prot-streaming-mode~ treats ~display-line-numbers-mode~ and
+~hl-line-mode~ as one consistent feature, making it easy to have both
+enable and disabled with a single key press.
+
+- [[#h:f45ea51c-8129-41bd-8d6e-4b66e7f35a49][The =prot-emacs-window.el= section about line numbers (~display-line-numbers-mode~)]]
+- [[#h:ec156866-3d25-42e7-8247-b190103b6f17][The =prot-emacs-window.el= section about line highlighting (~hl-line-mode~)]]
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
+(prot-emacs-configure
+  (setq prot-streaming-mode-modes '(text-mode prog-mode dired-mode comint-mode))
+  (prot-emacs-autoload prot-streaming-mode "prot-streaming")
+  (define-key global-map (kbd "<f7>") #'prot-streaming-mode))
 #+end_src
 
 *** The =prot-emacs-window.el= rules for displaying buffers (~display-buffer-alist~)
@@ -18972,6 +18994,94 @@ function.  Then you can control the buffer's specifics via
 
 (provide 'prot-spell)
 ;;; prot-spell.el ends here
+#+end_src
+
+** The =prot-streaming.el= library
+:PROPERTIES:
+:CUSTOM_ID: h:bccb4b34-325e-43ba-b08f-b7da5342b522
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-streaming.el" :mkdirp yes
+;;; prot-streaming.el --- Tweaks for when I do videos or share my screen -*- lexical-binding: t -*-
+
+;; Copyright (C) 2026  Protesilaos
+
+;; Author: Protesilaos <info@protesilaos.com>
+;; URL: https://protesilaos.com/emacs/dotemacs
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "30.1"))
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; This covers my streaming-related extensions, for use in my Emacs
+;; setup: https://protesilaos.com/emacs/dotemacs.
+
+;;; Code:
+
+(require 'display-line-numbers)
+(require 'hl-line)
+
+(defcustom prot-streaming-mode-modes
+  '(text-mode prog-mode dired-mode comint-mode)
+  "Major modes where `prot-streaming-mode' takes effect.")
+
+(defun prot-streaming-mode--display-line-numbers (arg)
+  "Call `display-line-numbers-mode' with ARG.
+Do it for all buffers whose major mode is one among `prot-streaming-mode-modes'."
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (when (derived-mode-p prot-streaming-mode-modes)
+        (display-line-numbers-mode arg)))))
+
+(defun prot-streaming--get-mode-hooks ()
+  "Return hooks belonging to `prot-streaming-mode-modes'."
+  (mapcar
+   (lambda (symbol)
+     (intern (format "%s-hook" symbol)))
+   prot-streaming-mode-modes))
+
+(defun prot-streaming-mode--affect-hooks (add-or-remove)
+  "Apply ADD-OR-REMOVE to `prot-streaming-mode-hooks'.
+ADD-OR-REMOVE is the keyword `:add' or `:remove', which correspond to
+`add-hook' and `remove-hook'."
+  (let ((fn (pcase add-or-remove
+              (:add #'add-hook)
+              (:remove #'remove-hook)
+              (_ (error "ADD-OR-REMOVE must be either `:add' or `:remove'")))))
+    (dolist (hook (prot-streaming--get-mode-hooks))
+      (funcall fn hook #'display-line-numbers-mode))))
+
+;;;###autoload
+(define-minor-mode prot-streaming-mode
+  "Enable extras for streaming."
+  :global t
+  :init-value nil
+  (if prot-streaming-mode
+      (progn
+        (prot-streaming-mode--display-line-numbers 1)
+        (prot-streaming-mode--affect-hooks :add)
+        (global-hl-line-mode 1))
+    (prot-streaming-mode--display-line-numbers -1)
+    (prot-streaming-mode--affect-hooks :remove)
+    (global-hl-line-mode -1)))
+
+(provide 'prot-streaming)
+;;; prot-streaming.el ends here
 #+end_src
 
 ** The =prot-vertico.el= library

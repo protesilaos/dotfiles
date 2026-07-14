@@ -40,13 +40,17 @@
 
 ;;; Line numbers on the side of the window
 (prot-emacs-configure
-  (define-key global-map (kbd "<f7>") #'display-line-numbers-mode)
   (setq display-line-numbers-type t)
   ;; Those two variables were introduced in Emacs 27.1
   (setq display-line-numbers-major-tick 0)
   (setq display-line-numbers-minor-tick 0)
   ;; Use absolute numbers in narrowed buffers
   (setq-default display-line-numbers-widen t))
+
+(prot-emacs-configure
+  (setq prot-streaming-mode-modes '(text-mode prog-mode dired-mode comint-mode))
+  (prot-emacs-autoload prot-streaming-mode "prot-streaming")
+  (define-key global-map (kbd "<f7>") #'prot-streaming-mode))
 
 ;;;; `window', `display-buffer-alist', and related
 (prot-emacs-configure
