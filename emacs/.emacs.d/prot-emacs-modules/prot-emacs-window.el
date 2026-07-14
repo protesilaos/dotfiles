@@ -82,7 +82,9 @@
            (preserve-size . (t . t))
            (body-function . select-window))
           ("\\*Embark Actions\\*"
-           (display-buffer-below-selected)
+           ;; NOTE 2026-07-14: I am including `display-buffer-at-bottom' here because Embark can be
+           ;; called from the minibuffer where `display-buffer-below-selected' does not work as intended.
+           (display-buffer-reuse-mode-window display-buffer-below-selected display-buffer-at-bottom)
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
