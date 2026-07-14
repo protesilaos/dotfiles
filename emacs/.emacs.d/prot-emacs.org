@@ -6704,7 +6704,8 @@ to a certain height.
            (display-buffer-reuse-mode-window display-buffer-same-window))
           ((or . ((derived-mode . magit-diff-mode)
                   (derived-mode . magit-log-mode)))
-           (prot-window-display-other-or-current))
+           (display-buffer-reuse-mode-window prot-window-display-new display-buffer-pop-up-window)
+           (inhibit-switch-frame . t))
           ;; other `tab-bar-mode' tab
           ((derived-mode . magit-status-mode)
            (display-buffer-reuse-mode-window display-buffer-in-tab)
@@ -19207,6 +19208,14 @@ This as the action function in a `display-buffer-alist' entry."
       (dolist (fn functions)
         (when (apply fn args)
           (throw 'success fn))))))
+
+(defun prot-window-display-new (buffer alist)
+  "Display buffer in a new window if possible."
+  (when-let* ((root (frame-root-window))
+              (window (ignore-errors
+                        (or (split-window-horizontally nil root)
+                            (split-window-below nil root)))))
+    (window--display-buffer buffer window 'window alist)))
 
 (defun prot-window-display-other-or-current (&rest args)
   "Display buffer in the current or other window.

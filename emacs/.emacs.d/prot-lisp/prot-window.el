@@ -96,6 +96,14 @@ This as the action function in a `display-buffer-alist' entry."
         (when (apply fn args)
           (throw 'success fn))))))
 
+(defun prot-window-display-new (buffer alist)
+  "Display buffer in a new window if possible."
+  (when-let* ((root (frame-root-window))
+              (window (ignore-errors
+                        (or (split-window-horizontally nil root)
+                            (split-window-below nil root)))))
+    (window--display-buffer buffer window 'window alist)))
+
 (defun prot-window-display-other-or-current (&rest args)
   "Display buffer in the current or other window.
 Use the other window if only one window is present."

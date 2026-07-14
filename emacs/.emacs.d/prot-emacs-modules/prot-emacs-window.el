@@ -143,7 +143,8 @@
            (display-buffer-reuse-mode-window display-buffer-same-window))
           ((or . ((derived-mode . magit-diff-mode)
                   (derived-mode . magit-log-mode)))
-           (prot-window-display-other-or-current))
+           (display-buffer-reuse-mode-window prot-window-display-new display-buffer-pop-up-window)
+           (inhibit-switch-frame . t))
           ;; other `tab-bar-mode' tab
           ((derived-mode . magit-status-mode)
            (display-buffer-reuse-mode-window display-buffer-in-tab)
