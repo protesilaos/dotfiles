@@ -172,6 +172,16 @@ floating points: 16.666666666666664 => 16.667."
              (propertize f-string 'face 'error))))
 
 ;;;###autoload
+(defun prot-common--rotate (elements)
+  "Rotate list ELEMENTS so that nth 0 is last, nth 1 is nth 0, and so on.
+Do it without side effects, unlike `prot-common-rotate-list-of-symbol'."
+  (declare (side-effect-free t))
+  (setq elements (copy-sequence elements))
+  (let ((first (car elements))
+        (rest (cdr elements)))
+    (append rest (list first))))
+
+;;;###autoload
 (defun prot-common-rotate-list-of-symbol (symbol)
   "Rotate list value of SYMBOL by moving its car to the end.
 Return the first element before performing the rotation.
