@@ -132,12 +132,12 @@
     (define-key global-map (kbd "C-c p") #'cursory-set-preset)))
 
 ;;; GNOME accent theme switcher
-(prot-emacs-configure
-  (prot-emacs-install
-    gnome-accent-theme-switcher
-    "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
-  (when (and (null prot-emacs-load-theme-family)
-             (string= (getenv "DESKTOP_SESSION") "gnome"))
+(when (and (null prot-emacs-load-theme-family)
+           (string= (getenv "DESKTOP_SESSION") "gnome"))
+  (prot-emacs-configure
+    (prot-emacs-install
+      gnome-accent-theme-switcher
+      "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
     (prot-emacs-keybind global-map
       "<f5>" #'gnome-accent-theme-switcher-toggle-mode
       "C-<f5>" #'gnome-accent-theme-switcher-change-accent
