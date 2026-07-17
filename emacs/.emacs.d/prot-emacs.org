@@ -2097,7 +2097,7 @@ the minor mode ~lin-gnome-accent-color-mode~ is for.
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
 (prot-emacs-configure
   (prot-emacs-install lin)
-  (setq lin-face 'lin-cyan)
+  (setq lin-face 'lin-slate)
   (lin-global-mode 1)
   (when (string= (getenv "DESKTOP_SESSION") "gnome")
     (lin-gnome-accent-color-mode 1)))
