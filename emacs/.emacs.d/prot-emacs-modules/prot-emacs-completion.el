@@ -322,15 +322,32 @@ INDIVIDUAL-CAPFS to the list."
 
     (setq company-backends '((company-capf company-dabbrev) company-files))
 
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (setq-local company-backends '((company-dabbrev-code company-capf) company-files))))
+    (define-advice company-show-doc-buffer (:around (&rest args) prot)
+      (let ((help-window-select nil)
+            (display-buffer-alist nil)
+            (display-buffer-overriding-action
+             '((display-buffer-reuse-mode-window display-buffer-below-selected)
+               (window-height . 0.3)
+               (post-command-select-window . nil))))
+        (apply args)))
 
-    (add-hook 'text-mode-hook
-              (lambda ()
-                (setq-local company-backends '((company-dabbrev company-ispell company-capf) company-files))))
+    (defun prot/company-prog-backends ()
+      "Set `company-backends' locally to my preferred value for `prog-mode' and derivatives."
+      (setq-local company-backends '((company-capf company-dabbrev-code) company-files)))
 
-    (global-company-mode 1)))
+    (add-hook 'prog-mode-hook #'prot/company-prog-backends)
+
+    (defun prot/company-text-backends ()
+      "Set `company-backends' locally to my preferred value for `text-mode' and derivatives."
+      (setq-local company-backends '((company-dabbrev company-ispell company-capf) company-files)))
+
+    (add-hook 'text-mode-hook #'prot/company-text-backends)
+
+    (global-company-mode 1)
+
+    (prot-emacs-install company-statistics)
+
+    (company-statistics-mode 1)))
 
 (when (eq prot-emacs-completion-in-buffer 'completion-preview)
   (prot-emacs-configure
