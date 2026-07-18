@@ -1,7 +1,7 @@
 ;;;; Tabs, indentation, and the TAB key
 (prot-emacs-configure
   (setq tab-always-indent 'complete)
-  (setq tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
+  (setq tab-first-completion nil) ; Emacs 27
   (setq-default tab-width 4
                 indent-tabs-mode nil))
 
