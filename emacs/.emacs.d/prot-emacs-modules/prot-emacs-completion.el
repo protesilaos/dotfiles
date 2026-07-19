@@ -367,6 +367,9 @@ INDIVIDUAL-CAPFS to the list."
       (prot-emacs-keybind completion-preview-active-mode-map
         "M-n" #'completion-preview-next-candidate
         "M-p" #'completion-preview-prev-candidate
+        "M-<return>" #'completion-preview-insert
+        ;; With TAB we effectively defer to another frontend to show
+        ;; more completion candidates at once.
         "<tab>" #'completion-preview-complete))))
 
 ;;; Enhanced minibuffer commands (consult.el)
