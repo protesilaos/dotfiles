@@ -2719,6 +2719,9 @@ Better use =C-h v= (=M-x describe-variable=) to learn about each of
 these variables. Since I am here, I also unbind or repurpose some of the default
 key bindings.
 
+For the global keybinding overrides, watch my video on the matter
+from 2026-07-08: <https://protesilaos.com/codelog/2026-07-08-emacs-global-keybinding-overrides/>.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-essentials.el" :mkdirp yes
 ;;; Essential configurations
 (prot-emacs-configure
@@ -4711,6 +4714,9 @@ Development continues on GitHub with GitLab as a mirror."))
 :CUSTOM_ID: h:804b858f-7913-47ef-aaf4-8eef5b59ecb4
 :END:
 
+[ Also watch my video for everything related to in-buffer completion
+  from 2026-07-19: <https://protesilaos.com/codelog/2026-07-19-emacs-completion-at-point-functions/>. ]
+
 I generally do not rely on in-buffer text completion, no matter how
 minimalist it is ([[#h:bb7959b3-d8e6-4163-8e32-bec2b96b7dde][The =prot-emacs-completion.el= for in-buffer completion hints (~completion-preview-mode~)]]).
 I feel it slows me down and distracts me. When I do, however, need to
@@ -4770,6 +4776,9 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
 :PROPERTIES:
 :CUSTOM_ID: h:09d0dd65-90a5-41eb-a2b9-53d00eca77df
 :END:
+
+[ Also watch my video for everything related to in-buffer completion
+  from 2026-07-19: <https://protesilaos.com/codelog/2026-07-19-emacs-completion-at-point-functions/>. ]
 
 The ~cape~ package by Daniel Mendler defines functions that are useful
 for in-buffer completion. Each function has a specific scope, such as
@@ -4834,6 +4843,9 @@ INDIVIDUAL-CAPFS to the list."
 :PROPERTIES:
 :CUSTOM_ID: h:6d3e2d44-9b1e-4092-8287-5062e4f29da4
 :END:
+
+[ Also watch my video for everything related to in-buffer completion
+  from 2026-07-19: <https://protesilaos.com/codelog/2026-07-19-emacs-completion-at-point-functions/>. ]
 
 The ~company~ package by Dmitry Gutov provides a complete solution for
 in-buffer completion. It consists of a front-end, which is the popup
@@ -4908,6 +4920,9 @@ some Language Server Protocol).
 :PROPERTIES:
 :CUSTOM_ID: h:bb7959b3-d8e6-4163-8e32-bec2b96b7dde
 :END:
+
+[ Also watch my video for everything related to in-buffer completion
+  from 2026-07-19: <https://protesilaos.com/codelog/2026-07-19-emacs-completion-at-point-functions/>. ]
 
 The built-in ~completion-preview~ by Eshel Yaron provides a minimalist
 interface for in-buffer completion. Instead of popping up a list with
