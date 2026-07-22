@@ -188,10 +188,10 @@
           (large
            :default-height 150)
           (presentation
-           :default-height 180)
+           :default-height 220)
           (jumbo
            :inherit medium
-           :default-height 260)
+           :default-height 280)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
