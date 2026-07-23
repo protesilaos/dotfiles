@@ -2727,7 +2727,7 @@ from 2026-07-08: <https://protesilaos.com/codelog/2026-07-08-emacs-global-keybin
 (prot-emacs-configure
 
 ;;;; General settings and common custom functions (prot-simple.el)
-  (setq backward-delete-char-untabify-method 'hungry)
+  (setq backward-delete-char-untabify-method nil)
   (setq blink-matching-paren nil)
   (setq custom-unlispify-tag-names nil)
   (setq delete-pair-blink-delay 0.1) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
