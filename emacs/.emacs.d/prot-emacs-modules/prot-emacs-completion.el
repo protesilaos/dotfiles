@@ -40,7 +40,8 @@
                             (group-function . ,#'prot-minibuffer-symbol-group)
                             (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
             (buffer . (,@eager-update-properties
-                       (group-function . ,#'prot-minibuffer-buffer-group)
+                       ;; NOTE 2026-07-25: I am disabling this because it messes up with the sorting.
+                       ;; (group-function . ,#'prot-minibuffer-buffer-group)
                        (affixation-function . ,#'prot-minibuffer-buffer-affixate)
                        (display-sort-function . ,#'prot-minibuffer-buffer-sort)))
             (command . ((affixation-function . nil)
