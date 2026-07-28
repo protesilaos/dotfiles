@@ -54,7 +54,8 @@
             (consult-location . ,eager-update-properties-no-sort)
             (prot-minibuffer-kill-ring . ((eager-display . t)
                                           (eager-update . t)
-                                          (display-sort-function . identity)))))))
+                                          (display-sort-function . identity)))
+            (prot-minibuffer-pass . ((display-sort-function . minibuffer-sort-by-history)))))))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (when prot-emacs-completion-extras

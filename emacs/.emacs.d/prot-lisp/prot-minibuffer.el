@@ -52,19 +52,29 @@
   (let ((completion-extra-properties (list :category 'prot-minibuffer-emoji)))
     (apply args)))
 
+(defun prot-minibuffer@password-store--completing-read (&rest args)
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-pass)))
+    (apply args)))
+
+(defun prot-minibuffer--do-advice (advice functions place)
+  "Handle the advice installed by the function `prot-minibuffer-missing-categories-mode'.
+For each function in FUNCTIONS apply ARGS."
+  (dolist (original functions)
+    (when-let* ((my-function-name (format "prot-minibuffer@%s" original))
+                (my-function-symbol (intern-soft my-function-name))
+                (args (if place
+                          (list advice original place my-function-symbol)
+                        (list advice original my-function-symbol))))
+      (apply args))))
+
 ;;;###autoload
 (define-minor-mode prot-minibuffer-missing-categories-mode
   "When enabled, add missing compleiton categories to relevant prompts."
   :global t
-  (if prot-minibuffer-missing-categories-mode
-      (dolist (original (list #'read-from-kill-ring #'read-library-name #'emoji--read-emoji))
-        (when-let* ((my-function-name (format "prot-minibuffer@%s" original))
-                    (my-function-symbol (intern-soft my-function-name)))
-          (advice-add original :around my-function-symbol)))
-    (dolist (original (list #'read-from-kill-ring #'read-library-name #'emoji--read-emoji))
-      (when-let* ((my-function-name (format "prot-minibuffer@%s" original))
-                  (my-function-symbol (intern-soft my-function-name)))
-        (advice-remove original my-function-symbol)))))
+  (let ((functions '(read-from-kill-ring read-library-name emoji--read-emoji password-store--completing-read)))
+    (if prot-minibuffer-missing-categories-mode
+        (prot-minibuffer--do-advice #'advice-add functions :around)
+      (prot-minibuffer--do-advice #'advice-remove functions nil))))
 
 (defun prot-minibuffer-file-sort (files)
   "Sort FILES to have directories first and the rest alphabetically.
