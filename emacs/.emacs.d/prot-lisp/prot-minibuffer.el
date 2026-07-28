@@ -246,17 +246,23 @@ package."
 
 (defun prot-minibuffer-choose-completion-no-exit ()
   "Call `choose-completion' without exiting the minibuffer.
-Also see `prot-minibuffer-choose-completion-exit' and `prot-minibuffer-choose-completion-dwim'."
+Also see `prot-minibuffer-choose-completion-exit' and
+`prot-minibuffer-choose-completion-dwim'."
   (interactive)
-  (choose-completion nil :no-exit :no-quit)
-  (switch-to-minibuffer))
+  (if minibuffer-visible-completions
+      (minibuffer-choose-completion :no-exit)
+    (choose-completion nil :no-exit :no-quit)
+    (switch-to-minibuffer)))
 
 (defun prot-minibuffer-choose-completion-exit ()
   "Call `choose-completion' and exit the minibuffer.
-Also see `prot-minibuffer-choose-completion-no-exit' and `prot-minibuffer-choose-completion-dwim'."
+Also see `prot-minibuffer-choose-completion-no-exit' and
+`prot-minibuffer-choose-completion-dwim'."
   (interactive)
-  (choose-completion nil :no-exit)
-  (exit-minibuffer))
+  (if minibuffer-visible-completions
+      (minibuffer-choose-completion-or-exit)
+    (choose-completion nil :no-exit)
+    (exit-minibuffer)))
 
 (defun prot-minibuffer-crm-p ()
   "Return non-nil if `completing-read-multiple' is in use."
@@ -265,16 +271,23 @@ Also see `prot-minibuffer-choose-completion-no-exit' and `prot-minibuffer-choose
               (buffer (window-buffer window)))
     (buffer-local-value 'crm-completion-table buffer)))
 
+(defun prot-minibuffer-empty-p ()
+  "Return non-nil if the minibuffer is empty."
+  (eq (minibuffer-prompt-end) (point-max)))
+
 (defun prot-minibuffer-choose-completion-dwim ()
   "Call `choose-completion' that exits only on a unique match.
 If the match is not unique, then complete up to the largest common
 prefix or, anyhow, continue with the completion (e.g. in `find-file'
 switch into the directory and then show the files therein).
 
-Also see `prot-minibuffer-choose-completion-no-exit' and `prot-minibuffer-choose-completion-exit'."
+Also see `prot-minibuffer-choose-completion-no-exit' and
+`prot-minibuffer-choose-completion-exit'."
   (interactive)
   (if (prot-minibuffer-crm-p)
-      (prot-minibuffer-choose-completion-no-exit)
+      (if (prot-minibuffer-empty-p)
+          (prot-minibuffer-choose-completion-no-exit)
+        (prot-minibuffer-choose-completion-exit))
     (choose-completion nil :no-exit :no-quit)
     (switch-to-minibuffer)
     (minibuffer-completion-help)
@@ -333,7 +346,8 @@ property, such that it can be found by `prot-minibuffer-completions-close-help'.
         (setq completions-max-height 12)
         (setq completions-sort 'historical)
         (setq completion-auto-help t)
-        (setq completion-auto-select t)
+        (setq completion-auto-select nil)
+        (setq minibuffer-visible-completions t)
         (setq completion-eager-display 'auto)
         (setq completion-eager-update 'auto)
         (add-hook 'completion-list-mode-hook #'prot-minibuffer-completions-tweak-style)
@@ -348,6 +362,7 @@ property, such that it can be found by `prot-minibuffer-completions-close-help'.
     (setq completions-sort 'alphabetical)
     (setq completion-auto-help t)
     (setq completion-auto-select nil)
+    (setq minibuffer-visible-completions nil)
     (setq completion-eager-display 'auto)
     (setq completion-eager-update 'auto)
     (remove-hook 'completion-list-mode-hook #'prot-minibuffer-completions-tweak-style)
