@@ -143,35 +143,38 @@ Omit the .. directory from FILES."
   "Sort BUFFERS by visibility.
 This is a copy of `beframe-buffer-sort-visibility', from my `beframe'
 package."
-  (let ((bufs (seq-group-by
-               (lambda (buf)
-                 (cond
-                  ((eq buf (current-buffer)) :current)
-                  ((get-buffer-window buf 'visible) :visible)
-                  (t :hidden)))
-               buffers)))
-    (nconc (alist-get :hidden  bufs)
-           (alist-get :visible bufs)
-           (alist-get :current bufs))))
+  (let* ((bufs (seq-group-by
+                (lambda (buf)
+                  (cond
+                   ((eq buf (current-buffer)) :current)
+                   ((get-buffer-window buf 'visible) :visible)
+                   (t :hidden)))
+                buffers))
+         (hidden (alist-get :hidden  bufs))
+         (visible (alist-get :visible bufs))
+         (current (alist-get :current bufs)))
+    (nconc hidden visible current)))
 
-(defun prot-minibuffer-buffer-group (buffer-name transform)
-  "Return BUFFER-NAME group name unless TRANSFORM is non-nil."
-  (cond
-   (transform buffer-name)
-   ((string-prefix-p "*" buffer-name) "Special")
-   ((string-match-p "\\`magit.*?:" buffer-name) "Git")
-   ((if-let* ((buffer (get-buffer buffer-name)))
-      (with-current-buffer buffer
-        (cond
-         ((derived-mode-p 'dired-mode)
-          "Directory")
-         ((derived-mode-p 'prog-mode)
-          "Program")
-         ((derived-mode-p 'text-mode)
-          "Prose")
-         (t
-          (format "%s" major-mode))))
-      ""))))
+;; NOTE 2026-07-25: I am disabling this because it messes up with the sorting.
+
+;; (defun prot-minibuffer-buffer-group (buffer-name transform)
+;;   "Return BUFFER-NAME group name unless TRANSFORM is non-nil."
+;;   (cond
+;;    (transform buffer-name)
+;;    ((string-prefix-p "*" buffer-name) "Special")
+;;    ((string-match-p "\\`magit.*?:" buffer-name) "Git")
+;;    ((if-let* ((buffer (get-buffer buffer-name)))
+;;       (with-current-buffer buffer
+;;         (cond
+;;          ((derived-mode-p 'dired-mode)
+;;           "Directory")
+;;          ((derived-mode-p 'prog-mode)
+;;           "Program")
+;;          ((derived-mode-p 'text-mode)
+;;           "Prose")
+;;          (t
+;;           (format "%s" major-mode))))
+;;       ""))))
 
 (defun prot-minibuffer-buffer-affixate (buffers)
   "Return BUFFERS with prefix and suffix."
