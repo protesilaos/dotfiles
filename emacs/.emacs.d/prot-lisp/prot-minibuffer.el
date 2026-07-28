@@ -30,7 +30,6 @@
 
 ;;; Code:
 
-(require 'prot-common)
 (require 'prot-icons)
 
 (defgroup prot-minibuffer nil
