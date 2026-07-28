@@ -11559,7 +11559,12 @@ have, which are strictly stylistic.
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-web.el"
 ;;;; `goto-addr'
 (prot-emacs-configure
-  (add-hook 'text-mode-hook #'goto-address-mode)
+  (defun prot/goto-address-mode ()
+    "Enable `goto-address-mode' only in `text-mode' and no derivatives."
+    (when (eq major-mode 'text-mode)
+      (goto-address-mode 1)))
+
+  (add-hook 'text-mode-hook #'prot/goto-address-mode)
   (add-hook 'prog-mode-hook #'goto-address-prog-mode)
   (setq goto-address-url-face 'link)
   (setq goto-address-url-mouse-face 'highlight)
