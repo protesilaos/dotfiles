@@ -310,9 +310,12 @@ Make the window be at slot 0, such that the *Help* buffer produced by
 Place the *Help* buffer in a side window, situated to the right of the
 *Completions* buffer.  Make the window have the `prot-minibuffer-help'
 property, such that it can be found by `prot-minibuffer-completions-close-help'."
-  (interactive (list (intern-soft (thing-at-point 'symbol))))
-  (unless (derived-mode-p 'completion-list-mode)
-    (user-error "Can only do this from the *Completions* buffer"))
+  (interactive
+   (list
+    (intern-soft
+     (if minibuffer-visible-completions
+         (completion--selected-candidate)
+       (thing-at-point 'symbol)))))
   (when symbol
     (let ((help-window-select nil)
           (display-buffer-overriding-action
