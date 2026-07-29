@@ -45,9 +45,9 @@
             (prot-minibuffer-emoji . ,eager-update-properties)
             (theme . ,eager-update-properties)
             (unicode-name . ,eager-update-properties)
+            (prot-minibuffer-pass . ,eager-update-properties)
             (imenu . ,eager-update-properties-no-sort)
             (consult-location . ,eager-update-properties-no-sort)
-            (prot-minibuffer-pass . ,eager-update-properties-no-sort)
             (prot-minibuffer-kill-ring . ,eager-update-properties-no-sort)))))
 
 ;;; Orderless completion style (and prot-orderless.el)
