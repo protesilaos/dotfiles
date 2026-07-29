@@ -4192,40 +4192,33 @@ for this.
                                     (eager-update . t)))
          (eager-update-properties-no-sort (append eager-update-properties (list (cons 'display-sort-function #'identity)))))
     (setq completion-category-overrides
-          `((file . ((styles . (partial-completion))
-                     (eager-display . nil)
-                     (eager-update . t)
+          `((file . (,@eager-update-properties
+                     (styles . (partial-completion))
                      (group-function . ,#'prot-minibuffer-file-group)
                      (affixation-function . ,#'prot-minibuffer-file-affixate)
                      (display-sort-function . ,#'prot-minibuffer-file-sort)))
-            (bookmark . (,@eager-update-properties
-                         (affixation-function . ,#'prot-minibuffer-bookmark-affixate)))
+            (buffer . (,@eager-update-properties
+                       (affixation-function . ,#'prot-minibuffer-buffer-affixate)))
             (project-file . (,@eager-update-properties
                              (group-function . ,#'prot-minibuffer-file-group)
                              (affixation-function . ,#'prot-minibuffer-file-affixate)))
             (prot-minibuffer-library . (,@eager-update-properties
                                         (annotation-function . ,#'prot-minibuffer-library-annotate)
                                         (display-sort-function . ,#'prot-minibuffer-library-sort)))
-            (symbol-help . (,@eager-update-properties
-                            (group-function . ,#'prot-minibuffer-symbol-group)
-                            (display-sort-function . ,#'prot-minibuffer-symbol-sort)))
-            (buffer . (,@eager-update-properties
-                       ;; NOTE 2026-07-25: I am disabling this because it messes up with the sorting.
-                       ;; (group-function . ,#'prot-minibuffer-buffer-group)
-                       (affixation-function . ,#'prot-minibuffer-buffer-affixate)
-                       (display-sort-function . ,#'prot-minibuffer-buffer-sort)))
-            (command . ((affixation-function . nil)
+            (bookmark . (,@eager-update-properties
+                         (affixation-function . ,#'prot-minibuffer-bookmark-affixate)))
+            (command . (,@eager-update-properties
+                        (affixation-function . nil) ; so that the `annotation-function' can take effect
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
+            (symbol-help . ,eager-update-properties)
             (denote-file . ,eager-update-properties)
             (prot-minibuffer-emoji . ,eager-update-properties)
             (theme . ,eager-update-properties)
             (unicode-name . ,eager-update-properties)
             (imenu . ,eager-update-properties-no-sort)
             (consult-location . ,eager-update-properties-no-sort)
-            (prot-minibuffer-kill-ring . ((eager-display . t)
-                                          (eager-update . t)
-                                          (display-sort-function . identity)))
-            (prot-minibuffer-pass . ((display-sort-function . minibuffer-sort-by-history)))))))
+            (prot-minibuffer-pass . ,eager-update-properties-no-sort)
+            (prot-minibuffer-kill-ring . ,eager-update-properties-no-sort)))))
 #+end_src
 
 *** The =prot-emacs-completion.el= for the ~orderless~ completion style
