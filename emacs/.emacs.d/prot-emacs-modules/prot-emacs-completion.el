@@ -112,11 +112,15 @@
   (unless prot-emacs-completion-ui
     (prot-minibuffer-completions-mode 1)
 
+    (prot-emacs-keybind minibuffer-local-completion-map
+      "C-h C-h" #'prot-minibuffer-completions-describe-at-point ; overrides `help-for-help'
+      "C-<tab>" #'prot-minibuffer-choose-completion-no-exit
+      "RET" #'prot-minibuffer-choose-completion-exit)
+
     (prot-emacs-keybind completion-list-mode-map
-      "h" #'prot-minibuffer-completions-describe-at-point ; "Help" mnemonic
-      "c" #'prot-minibuffer-choose-completion-no-exit ; "Choose" mnemonic
-      "TAB" #'prot-minibuffer-choose-completion-dwim
-      "RET" #'prot-minibuffer-choose-completion-exit)))
+      "C-h C-h" #'prot-minibuffer-completions-describe-at-point ; overrides `help-for-help'
+      "C-<tab>" #'prot-minibuffer-choose-completion-no-exit
+      "RET" #'prot-minibuffer-choose-completion-dwim)))
 
 ;;;; `savehist' (minibuffer and related histories)
 (prot-emacs-configure

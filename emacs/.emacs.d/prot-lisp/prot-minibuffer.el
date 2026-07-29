@@ -250,7 +250,7 @@ Also see `prot-minibuffer-choose-completion-exit' and
 `prot-minibuffer-choose-completion-dwim'."
   (interactive)
   (if minibuffer-visible-completions
-      (minibuffer-choose-completion :no-exit)
+      (minibuffer-choose-completion :no-exit :no-quit)
     (choose-completion nil :no-exit :no-quit)
     (switch-to-minibuffer)))
 
@@ -260,7 +260,7 @@ Also see `prot-minibuffer-choose-completion-no-exit' and
 `prot-minibuffer-choose-completion-dwim'."
   (interactive)
   (if minibuffer-visible-completions
-      (minibuffer-choose-completion-or-exit)
+      (or (minibuffer-choose-completion-or-exit) (exit-minibuffer))
     (choose-completion nil :no-exit)
     (exit-minibuffer)))
 
