@@ -4141,8 +4141,11 @@ of ([[#h:0d49218d-4199-4847-9765-60a3f94e515d][The =prot-emacs-completion.el= se
 :CUSTOM_ID: h:0d49218d-4199-4847-9765-60a3f94e515d
 :END:
 
-This builds on the code we have for the ~completion-styles~
-([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
+[ Also watch: [[https://protesilaos.com/codelog/2026-07-29-emacs-default-minibuffer-completion-overview/][default minibuffer completions overview (Emacs 31)]] (2026-07-30). ]
+
+This builds on the code we have for the ~completion-styles~ ([[#h:14b09958-279e-4069-81e3-5a16c9b69892][The =prot-emacs-completion.el= settings for completion styles]]).
+It is also related to the generic minibuffer completion interface in
+general ([[#h:de61a607-0bdf-462b-94cd-c0898319590e][The =prot-emacs-completion.el= generic minibuffer UI settings]]).
 
 The ~completion-styles~ is the fallback option in case there is no
 provision for the given completion category. The completion category
@@ -4428,6 +4431,8 @@ experience.
 :PROPERTIES:
 :CUSTOM_ID: h:de61a607-0bdf-462b-94cd-c0898319590e
 :END:
+
+[ Also watch: [[https://protesilaos.com/codelog/2026-07-29-emacs-default-minibuffer-completion-overview/][default minibuffer completions overview (Emacs 31)]] (2026-07-30). ]
 
 These are some settings for the default completion user interface.
 These do not come into effect unless ~prot-emacs-completion-ui~ is set
