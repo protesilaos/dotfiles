@@ -8,11 +8,12 @@
 
   (setopt project-switch-commands
           '((project-find-file "Find file")
-            (project-find-regexp "Find regexp")
             (project-find-dir "Find directory")
+            (project-find-regexp "Find regexp")
             (project-dired "Root dired")
             (project-vc-dir "VC-Dir")
             (project-shell "Shell")
+            (project-any-command "Other command")
             (keyboard-quit "Quit")))
   (setq project-vc-extra-root-markers '(".project")) ; Emacs 29
   (setq project-key-prompt-style t) ; Emacs 30
