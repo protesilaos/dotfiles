@@ -18680,8 +18680,8 @@ buffers in its history."
 ;;;###autoload
 (defun prot-simple-copy-current-path ()
   "Copy the current absolute path.
-If in a file-visiting buffer, copy the `buffer-file-name'.  Else copy
-the `default-directory'."
+If in a file-visiting buffer, copy the variable `buffer-file-name'.
+Else copy the `default-directory'."
   (declare (interactive-only t))
   (interactive)
   (let ((path (or buffer-file-name default-directory)))
