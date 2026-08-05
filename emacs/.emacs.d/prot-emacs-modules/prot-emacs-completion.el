@@ -117,6 +117,8 @@
     (prot-minibuffer-completions-mode 1)
 
     (prot-emacs-keybind minibuffer-local-completion-map
+      "<down>" #'minibuffer-next-line-completion
+      "<up>" #'minibuffer-previous-line-completion
       "C-h C-h" #'prot-minibuffer-completions-describe-at-point ; overrides `help-for-help'
       "C-<tab>" #'prot-minibuffer-choose-completion-no-exit
       "RET" #'prot-minibuffer-choose-completion-exit)
