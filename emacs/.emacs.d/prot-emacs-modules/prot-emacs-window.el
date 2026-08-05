@@ -281,8 +281,9 @@ With optional argument FRAME, return the list of buffers of FRAME."
         speedbar-window-max-width 60)
   (setq speedbar-indentation-width 4)
   (setq speedbar-show-unknown-files t)
-  (setq speedbar-directory-unshown-regexp "\\`\\.\\.?\\'")
-  (setq speedbar-file-unshown-regexp "\\`0123456789abcdefghijklmnopqrstuvwxyz\\'") ; nonsense here because I cannot set this to nil
+  ;; NOTE 2026-08-05 17:08 +0300: Waiting for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=81556 which I just submitted.
+  (setq speedbar-directory-unshown-regexp nil
+        speedbar-file-unshown-regexp nil)
   (prot-emacs-hook speedbar-visiting-tag-hook (speedbar-recenter speedbar-highlight-one-tag-line))
 
   (defun prot/speedbar-imenu-flatten (elements)
