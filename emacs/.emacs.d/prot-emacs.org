@@ -7045,6 +7045,72 @@ call the command ~buffer-to-pdf~. For printer-friendly output the
   (prot-emacs-install buffer-to-pdf "https://github.com/protesilaos/buffer-to-pdf.git"))
 #+end_src
 
+*** The =prot-emacs-window.el= settings for the file explorer sidebar (~speedbar~)
+:PROPERTIES:
+:CUSTOM_ID: h:baf38b4b-1f0c-491f-b669-986df6af37ca
+:END:
+
+The built-in ~speedbar~ package defines infrastructure to persistently
+display information related to the current buffer.
+
+Without any configuration, this is the file structure related to the
+current buffer plus the ~imenu~ outline.
+
+Users can also list the buffers, though I have no use for that feature
+given that the same can be achieved, if needed, with ~list-buffers~ or
+~ibuffer~. To me, the ~speedbar~ interface is useful for its capacity
+to show the relevant subtree of the filesystem.
+
+Call the command ~speedbar~ to get started.
+
+By default, ~speedbar~ appears in a separate frame, which I consider
+impractical. Starting with Emacs version 31, however, there is a user
+option to move it to a side window (~speedbar-prefer-window~). I
+expect this alone to make ~speedbar~ useful for more users.
+
+The manual documents how we can extend ~speedbar~ to show arbitrary
+data, though I have no such need at the moment.
+
+The following tweaks make ~speedbar~ work in a manner that I consider
+intuitive. I remove the bitmap images it shows on graphical displays
+because I find them distracting. For the Imenu index, I choose to
+flatten it because I do not like the default grouping behaviour.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-window.el"
+(prot-emacs-configure
+  (setq speedbar-use-images nil) ; t here refers to the `cdr' of each `speedbar-expand-image-button-alist'
+  (setq speedbar-smart-directory-expand-flag nil)
+  (setq speedbar-prefer-window t ; both of these are for Emacs 31
+        speedbar-window-max-width 60)
+  (setq speedbar-indentation-width 4)
+  (setq speedbar-show-unknown-files t)
+  (prot-emacs-hook speedbar-visiting-tag-hook (speedbar-recenter speedbar-highlight-one-tag-line))
+
+  (defun prot/speedbar-imenu-flatten (elements)
+    "Flatten the Imenu ELEMENTS."
+    (let* ((elements (imenu--flatten-index-alist elements t))
+           (elements-no-prefix (mapcar
+                                (lambda (element)
+                                  (when-let* ((string (car element))
+                                              (position (cdr element))
+                                              (_ (or (natnump position) (markerp position))))
+                                    (cond
+                                     ((string-match-p ":.*:" string)
+                                      (cons
+                                       (string-join (cdr (split-string string "[:]")))
+                                       position))
+                                     ((string-match-p ":" string)
+                                      (cons
+                                       (cadr (split-string string "[:]"))
+                                       position))
+                                     (t
+                                      element))))
+                                elements)))
+      (delq nil elements-no-prefix)))
+
+  (setq speedbar-tag-hierarchy-method '(prot/speedbar-imenu-flatten)))
+#+end_src
+
 *** The =prot-emacs-window.el= ~provide~ form
 :PROPERTIES:
 :CUSTOM_ID: h:2124c200-734d-49c4-aeb1-513caaf957ae

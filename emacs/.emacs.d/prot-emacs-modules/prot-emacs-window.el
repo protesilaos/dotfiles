@@ -274,4 +274,37 @@ With optional argument FRAME, return the list of buffers of FRAME."
   ;; The use the command `buffer-to-pdf' or `buffer-to-pdf-black-on-white'.
   (prot-emacs-install buffer-to-pdf "https://github.com/protesilaos/buffer-to-pdf.git"))
 
+(prot-emacs-configure
+  (setq speedbar-use-images nil) ; t here refers to the `cdr' of each `speedbar-expand-image-button-alist'
+  (setq speedbar-smart-directory-expand-flag nil)
+  (setq speedbar-prefer-window t ; both of these are for Emacs 31
+        speedbar-window-max-width 60)
+  (setq speedbar-indentation-width 4)
+  (setq speedbar-show-unknown-files t)
+  (prot-emacs-hook speedbar-visiting-tag-hook (speedbar-recenter speedbar-highlight-one-tag-line))
+
+  (defun prot/speedbar-imenu-flatten (elements)
+    "Flatten the Imenu ELEMENTS."
+    (let* ((elements (imenu--flatten-index-alist elements t))
+           (elements-no-prefix (mapcar
+                                (lambda (element)
+                                  (when-let* ((string (car element))
+                                              (position (cdr element))
+                                              (_ (or (natnump position) (markerp position))))
+                                    (cond
+                                     ((string-match-p ":.*:" string)
+                                      (cons
+                                       (string-join (cdr (split-string string "[:]")))
+                                       position))
+                                     ((string-match-p ":" string)
+                                      (cons
+                                       (cadr (split-string string "[:]"))
+                                       position))
+                                     (t
+                                      element))))
+                                elements)))
+      (delq nil elements-no-prefix)))
+
+  (setq speedbar-tag-hierarchy-method '(prot/speedbar-imenu-flatten)))
+
 (provide 'prot-emacs-window)
