@@ -113,8 +113,7 @@
                   (derived-mode . Buffer-menu-mode)
                   (derived-mode . log-view-mode)
                   (derived-mode . help-mode) ; See the hooks for `visual-line-mode'
-                  "\\*\\(|Buffer List\\|Occur\\|vc-change-log\\|eldoc.*\\).*"
-                  "\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"))
+                  "\\*\\(|Buffer List\\|Occur\\|vc-change-log\\|eldoc.*\\).*"))
            (prot-window-display-buffer-below-or-pop)
            (body-function . prot-window-select-fit-size))
           (prot-window-shell-or-term-p
@@ -122,10 +121,15 @@
            (mode . (shell-mode eshell-mode comint-mode))
            (inhibit-switch-frame . t)
            (body-function . prot-window-select-fit-size))
+          ((derived-mode . vc-compilation-mode)
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (inhibit-switch-frame . t)
+           (dedicated . t)
+           (window-height . 0.1))
           ((or . ((derived-mode . calendar-mode)
                   (derived-mode . ert-results-mode)))
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (mode . (calendar-mode bookmark-edit-annotation-mode ert-results-mode))
+           (mode . (calendar-mode ert-results-mode))
            (inhibit-switch-frame . t)
            (dedicated . t)
            (window-height . fit-window-to-buffer))
