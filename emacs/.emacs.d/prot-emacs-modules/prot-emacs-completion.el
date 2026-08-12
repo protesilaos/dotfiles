@@ -161,6 +161,8 @@
 
   (setq only-global-abbrevs nil)
 
+  (define-key global-map (kbd "C-x a u") #'unexpand-abbrev)
+
   (prot-emacs-abbrev global-abbrev-table
     "meweb"   "https://protesilaos.com"
     "megit"   "https://github.com/protesilaos"
