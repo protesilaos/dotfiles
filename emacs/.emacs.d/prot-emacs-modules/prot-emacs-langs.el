@@ -51,7 +51,8 @@
     (setq show-paren-style 'parenthesis)
     (setq show-paren-when-point-in-periphery nil)
     (setq show-paren-when-point-inside-paren nil)
-    (setq show-paren-context-when-offscreen 'overlay))) ; Emacs 29
+    (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
+    (setq show-paren-not-in-comments-or-strings nil))) ; Emacs 31
 
 ;;;; Plain text (text-mode)
 (prot-emacs-configure

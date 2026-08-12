@@ -9143,7 +9143,8 @@ and I use it globally. Simple and effective!
     (setq show-paren-style 'parenthesis)
     (setq show-paren-when-point-in-periphery nil)
     (setq show-paren-when-point-inside-paren nil)
-    (setq show-paren-context-when-offscreen 'overlay))) ; Emacs 29
+    (setq show-paren-context-when-offscreen 'overlay) ; Emacs 29
+    (setq show-paren-not-in-comments-or-strings nil))) ; Emacs 31
 #+end_src
 
 *** The =prot-emacs-langs.el= settings for plain text (no double spaces, ~auto-fill-mode~)
