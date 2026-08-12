@@ -4839,13 +4839,13 @@ INDIVIDUAL-CAPFS to the list."
 
     (defun prot/cape-prog-setup ()
       "Set up Cape for programming."
-      (prot/cape-super-set-local '(cape-dabbrev) '(cape-file)))
+      (prot/cape-super-set-local '(cape-dabbrev cape-abbrev) '(cape-file)))
 
     (add-hook 'prog-mode-hook #'prot/cape-prog-setup)
 
     (defun prot/cape-text-setup ()
       "Set up Cape for prose."
-      (prot/cape-super-set-local '(cape-dict cape-dabbrev cape-emoji) '(cape-file)))
+      (prot/cape-super-set-local '(cape-dict cape-dabbrev cape-abbrev cape-emoji) '(cape-file)))
 
     (setq completion-at-point-functions '(cape-dabbrev cape-file))
 
@@ -4912,13 +4912,13 @@ some Language Server Protocol).
 
     (defun prot/company-prog-backends ()
       "Set `company-backends' locally to my preferred value for `prog-mode' and derivatives."
-      (setq-local company-backends '((company-capf company-dabbrev-code) company-files)))
+      (setq-local company-backends '((company-capf company-dabbrev-code company-abbrev) company-files)))
 
     (add-hook 'prog-mode-hook #'prot/company-prog-backends)
 
     (defun prot/company-text-backends ()
       "Set `company-backends' locally to my preferred value for `text-mode' and derivatives."
-      (setq-local company-backends '((company-dabbrev company-ispell company-capf) company-files)))
+      (setq-local company-backends '((company-dabbrev company-abbrev company-ispell company-capf) company-files)))
 
     (add-hook 'text-mode-hook #'prot/company-text-backends)
 
