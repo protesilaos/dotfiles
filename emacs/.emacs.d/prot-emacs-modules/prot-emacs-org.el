@@ -108,6 +108,7 @@
     (setq org-special-ctrl-a/e nil)
     (setq org-special-ctrl-k nil)
     (setq org-M-RET-may-split-line '((default . nil)))
+    (setq org-insert-heading-respect-content t)
     (setq org-hide-emphasis-markers nil)
     (setq org-hide-macro-markers nil)
     (setq org-hide-leading-stars nil)
@@ -127,7 +128,6 @@
     (setq org-loop-over-headlines-in-active-region 'start-level)
     (setq org-modules '(ol-info ol-eww))
     (setq org-use-sub-superscripts '{})
-    (setq org-insert-heading-respect-content t)
     (setq org-read-date-prefer-future 'time)
     (setq org-highlight-latex-and-related nil) ; other options affect elisp regexp in src blocks
     (setq org-fontify-quote-and-verse-blocks t)
