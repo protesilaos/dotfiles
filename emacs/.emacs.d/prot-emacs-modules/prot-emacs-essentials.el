@@ -371,6 +371,7 @@
           ("Pacific/Auckland" "🇳🇿 Auckland")))
 
   ;; All of the following variables are for Emacs 28
+  (setq world-clock-sort-order nil) ; Emacs 31
   (setq world-clock-list t)
   (setq world-clock-time-format "%z %R	%a %d %b (%Z)")
   (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
