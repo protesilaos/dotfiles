@@ -43,6 +43,9 @@
             (command . (,@eager-update-only
                         (affixation-function . nil) ; so that the `annotation-function' can take effect
                         (annotation-function . ,#'prot-minibuffer-command-annotate)))
+            (prot-minibuffer-input-method . (,@eager-update-only
+                                             (group-function . ,#'prot-minibuffer-input-method-group)
+                                             (display-sort-function . ,#'prot-minibuffer-input-method-sort)))
             (symbol-help . ,eager-update-only)
             (denote-file . ,eager-update-only)
             (tmr-timer . ,eager-both)

@@ -56,6 +56,10 @@
   (let ((completion-extra-properties (list :category 'prot-minibuffer-pass)))
     (apply args)))
 
+(defun prot-minibuffer@read-input-method-name (&rest args)
+  (let ((completion-extra-properties (list :category 'prot-minibuffer-input-method)))
+    (apply args)))
+
 (defun prot-minibuffer--do-advice (advice functions place)
   "Handle the advice installed by the function `prot-minibuffer-missing-categories-mode'.
 For each function in FUNCTIONS apply ARGS."
@@ -67,11 +71,16 @@ For each function in FUNCTIONS apply ARGS."
                         (list advice original my-function-symbol))))
       (apply args))))
 
+(defvar prot-minibuffer-missing-completion-categories-symbols
+  '( read-from-kill-ring read-library-name emoji--read-emoji
+     read-input-method-name password-store--completing-read)
+  "Symbols to be advised by `prot-minibuffer-missing-categories-mode'.")
+
 ;;;###autoload
 (define-minor-mode prot-minibuffer-missing-categories-mode
   "When enabled, add missing compleiton categories to relevant prompts."
   :global t
-  (let ((functions '(read-from-kill-ring read-library-name emoji--read-emoji password-store--completing-read)))
+  (when-let* ((functions prot-minibuffer-missing-completion-categories-symbols))
     (if prot-minibuffer-missing-categories-mode
         (prot-minibuffer--do-advice #'advice-add functions :around)
       (prot-minibuffer--do-advice #'advice-remove functions nil))))
@@ -207,6 +216,30 @@ package."
                      (string-match-p "\\(-autoload\\|\\.elc\\|\\.dir-locals\\)" library))
                    libraries))
   (prot-minibuffer--set-default-sort libraries))
+
+(defcustom prot-minibuffer-used-input-methods
+  '("greek" "french-postfix" "spanish-postfix")
+  "Input methods that I use."
+  :type '(choice (const nil)
+                 (repeat mule-input-method-string)))
+
+(defun prot-minibuffer--my-method-p (input-method)
+  "Return non-nil if INPUT-METHOD is a member of `prot-minibuffer-used-input-methods'."
+  (member input-method prot-minibuffer-used-input-methods))
+
+(defun prot-minibuffer-input-method-sort (input-methods)
+  "Sort INPUT-METHODS into `prot-minibuffer-used-input-methods' and the rest."
+  (setq input-methods (prot-minibuffer--set-default-sort input-methods))
+  (nconc (seq-filter #'prot-minibuffer--my-method-p input-methods)
+         (seq-remove #'prot-minibuffer--my-method-p input-methods)))
+
+(defun prot-minibuffer-input-method-group (input-method transform)
+  "Group INPUT-METHOD into `prot-minibuffer-used-input-methods' and the rest.
+Do it when TRANSFORM is non-nil, else return INPUT-METHOD."
+  (cond
+   (transform input-method)
+   ((prot-minibuffer--my-method-p input-method) "My input methods")
+   (t "Other input methods")))
 
 ;; NOTE 2025-12-19: Maybe there is a better way, but this is okay to start with.
 (defun prot-minibuffer-library-annotate (library)
