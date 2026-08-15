@@ -6767,7 +6767,7 @@ to a certain height.
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (inhibit-switch-frame . t))
           ;; below current window
-          ("*prot-elisp-macroexpand*"
+          ("\\*prot-elisp-macroexpand\\*"
            (display-buffer-below-selected)
            (window-height . 0.3)
            (dedicated . t)
@@ -6825,9 +6825,10 @@ to a certain height.
            (display-buffer-reuse-mode-window prot-window-display-new display-buffer-pop-up-window)
            (inhibit-switch-frame . t))
           ;; other `tab-bar-mode' tab
-          ((derived-mode . magit-status-mode)
+          ((or . ((derived-mode . magit-status-mode)
+                  (derived-mode . vc-dir-mode)))
            (display-buffer-reuse-mode-window display-buffer-in-tab)
-           (mode . magit-status-mode)
+           (mode . (magit-status-mode vc-dir-mode))
            (tab-name . (lambda (buffer _alist) (buffer-name buffer)))
            (reusable-frames . :just-the-selected-frame)
            (inhibit-switch-frame . t)))))
