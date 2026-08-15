@@ -20,6 +20,10 @@
   (setq isearch-repeat-on-direction-change t))
 
 (prot-emacs-configure
+  (setq query-replace-show-preview t) ; Emacs 32
+  (setq query-replace-from-to-separator " > "))
+
+(prot-emacs-configure
  (setq list-matching-lines-jump-to-current-line nil) ; do not jump to current line in `*occur*' buffers
  (prot-emacs-hook occur-mode-hook (prot-common-truncate-lines-silently hl-line-mode)))
 
@@ -76,6 +80,7 @@
     ;; All those have been changed for Emacs 28
     (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
     (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
+
     (setq xref-file-name-display 'project-relative)
     (setq xref-search-program (if ripgrep 'ripgrep 'grep))
 

@@ -5657,6 +5657,26 @@ end of the buffer).
   (setq isearch-repeat-on-direction-change t))
 #+end_src
 
+*** The =prot-emacs-search.el= settings for ~query-replace
+:PROPERTIES:
+:CUSTOM_ID: h:7003a374-66e3-4b32-971d-9cc23144364c
+:END:
+
+[ Watch: [[https://protesilaos.com/codelog/2023-06-10-emacs-search-replace-basics/][Emacs: basics of search and replace]] (2023-06-10). ]
+
+The ~query-replace~ command provides an interactive method for
+replacing text from the point onward. The default behaviour is to ask
+the user whether to replace the current match or not. Sometimes I need
+to go through the results one-by-one, though I usually perform a
+replacement on everything by inputting =!= at the prompt. That
+granted, I rely more on my ~substitute~ package ([[#h:b4b3c8b7-e35c-4a56-bfb9-0c8bb33b2423][The =prot-emacs-essentials.el= section about ~substitute~]]).
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
+(prot-emacs-configure
+  (setq query-replace-show-preview t) ; Emacs 32
+  (setq query-replace-from-to-separator " > "))
+#+end_src
+
 *** The =prot-emacs-search.el= tweaks for the occur buffer
 :PROPERTIES:
 :CUSTOM_ID: h:85aca4da-b89b-4fbe-89e9-3ec536ad7b0d
