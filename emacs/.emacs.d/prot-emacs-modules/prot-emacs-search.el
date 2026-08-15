@@ -88,7 +88,13 @@
               "/usr/bin/rg -nH --null -e <R> <F>"
             "/usr/bin/grep <X> <C> -nH --null -e <R> <F>")))
 
-  (add-hook 'grep-mode #'prot-common-truncate-lines-silently))
+  (add-hook 'grep-mode #'prot-common-truncate-lines-silently)
+
+  (with-eval-after-load 'outline
+    ;; The `outline-xref' is for Emacs 32
+    (define-advice outline-xref (:around (&rest args) prot)
+      (let ((xref-show-xrefs-function #'xref-show-definitions-completing-read))
+        (apply args)))))
 
 ;;; wgrep (writable grep)
 ;; See the `grep-edit-mode' for the new built-in feature.
