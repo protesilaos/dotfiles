@@ -167,18 +167,11 @@
   (define-key global-map (kbd "C-x a u") #'unexpand-abbrev)
 
   (prot-emacs-abbrev global-abbrev-table
-    "meweb"   "https://protesilaos.com"
-    "megit"   "https://github.com/protesilaos"
-    "mehub"   "https://github.com/protesilaos"
-    "meclone" "git@github.com/protesilaos/"
-    "melab"   "https://gitlab.com/protesilaos"
-    "medrive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/"
     ";web"   "https://protesilaos.com"
     ";git"   "https://github.com/protesilaos"
     ";hub"   "https://github.com/protesilaos"
     ";clone" "git@github.com/protesilaos/"
-    ";lab"   "https://gitlab.com/protesilaos"
-    ";drive" "hyper://5cr7mxac8o8aymun698736tayrh1h4kbqf359cfk57swjke716gy/")
+    ";lab"   "https://gitlab.com/protesilaos")
 
   (prot-emacs-abbrev text-mode-abbrev-table
     "asciidoc"       "AsciiDoc"
@@ -228,9 +221,7 @@
       "niceday"      "Have a nice day,\nProtesilaos (or simply \"Prot\")"
       "abest"        "All the best,\nProt"
       "bregards"     "Best regards,\nProt"
-      "nday"         "Have a nice day,\nProt"
-      "nosrht"       "P.S. I am phasing out SourceHut: <https://protesilaos.com/codelog/2024-01-27-sourcehut-no-more/>.
-Development continues on GitHub with GitLab as a mirror."))
+      "nday"         "Have a nice day,\nProt"))
 
   ;; The `prot-emacs-abbrev' macro, which simplifies how we use
   ;; `define-abbrev', does not only expand a static text.  It can take
@@ -239,9 +230,6 @@ Development continues on GitHub with GitLab as a mirror."))
   ;; templating system.
   (require 'prot-abbrev)
   (prot-emacs-abbrev global-abbrev-table
-    "metime" #'prot-abbrev-current-time
-    "medate" #'prot-abbrev-current-date
-    "mejitsi" #'prot-abbrev-jitsi-link
     ";time" #'prot-abbrev-current-time
     ";date" #'prot-abbrev-current-date
     ";jitsi" #'prot-abbrev-jitsi-link)
