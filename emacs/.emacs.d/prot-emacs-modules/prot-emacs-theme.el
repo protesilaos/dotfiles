@@ -103,7 +103,6 @@
             (underscore
              :cursor-color warning ; will typically be yellow
              :cursor-type (hbar . 3)
-
              :blink-cursor-blinks 50)
             (underscore-no-other-window
              :inherit underscore
@@ -129,7 +128,25 @@
 
     ;; We have to use the "point" mnemonic, because C-c c is often the
     ;; suggested binding for `org-capture' and is the one I use as well.
-    (define-key global-map (kbd "C-c p") #'cursory-set-preset)))
+    (define-key global-map (kbd "C-c p") #'cursory-set-preset)
+
+    (with-eval-after-load 'prot-streaming
+      (defvar prot/cursory-streaming--last-preset nil
+        "The last Cursory preset before enabling `prot/cursory-streaming-mode'.")
+
+      (defun prot/cursory-streaming-mode ()
+        "Set the Cursory preset to `box-no-blink' when streaming."
+        (cond
+         (prot-streaming-mode
+          (setq prot/cursory-streaming-mode cursory-last-selected-preset)
+          (cursory-set-preset 'box-no-blink))
+         (prot/cursory-streaming-mode
+          (cursory-set-preset prot/cursory-streaming-mode)
+          (setq prot/cursory-streaming-mode nil))
+         (t
+          (cursory-set-last-or-fallback))))
+
+      (add-hook 'prot-streaming-mode-hook #'prot/cursory-streaming-mode))))
 
 ;;; GNOME accent theme switcher
 (when (and (null prot-emacs-load-theme-family)
