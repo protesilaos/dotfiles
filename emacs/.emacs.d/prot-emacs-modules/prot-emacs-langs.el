@@ -145,30 +145,26 @@
 
 ;;; Flymake
 (prot-emacs-configure
-  (defvar prot/flymake-mode-projects-path
-    (file-name-as-directory (expand-file-name "Projects" "~/Git/"))
-    "Path to my Git projects.")
-
-  (defun prot/flymake-mode-lexical-binding ()
-    (when lexical-binding
+  (defun prot/flymake-mode-in-my-projects ()
+    "Enable `flymake-mode' when editing a trusted file."
+    (when (and buffer-file-name
+               (not (file-directory-p buffer-file-name))
+               (file-regular-p buffer-file-name)
+               (seq-some
+                (lambda (directory-or-file)
+                  (string-prefix-p (expand-file-name directory-or-file) (expand-file-name buffer-file-name)))
+                trusted-content))
       (flymake-mode 1)))
 
-  (defun prot/flymake-mode-in-my-projects ()
-    (when-let* ((file (buffer-file-name))
-                ((string-prefix-p prot/flymake-mode-projects-path (expand-file-name file)))
-                ((not (file-directory-p file)))
-                ((file-regular-p file)))
-      (add-hook 'find-file-hook #'prot/flymake-mode-lexical-binding nil t)))
-
-  (add-hook 'emacs-lisp-mode-hook #'prot/flymake-mode-in-my-projects)
+  (add-hook 'prog-mode-hook #'prot/flymake-mode-in-my-projects)
 
   (define-key ctl-x-x-map (kbd "m") #'flymake-mode) ; C-x x m
 
   (with-eval-after-load 'flymake
     (prot-emacs-keybind flymake-mode-map
       "C-c ! s" #'flymake-start
-      "C-c ! d" #'flymake-show-buffer-diagnostics ; Emacs28
-      "C-c ! D" #'flymake-show-project-diagnostics ; Emacs28
+      "C-c ! d" #'flymake-show-buffer-diagnostics ; Emacs 28
+      "C-c ! D" #'flymake-show-project-diagnostics ; Emacs 28
       "C-c ! n" #'flymake-goto-next-error
       "C-c ! p" #'flymake-goto-prev-error)
 
@@ -187,7 +183,10 @@
           '("" flymake-mode-line-error-counter
             flymake-mode-line-warning-counter
             flymake-mode-line-note-counter ""))
-    (setq flymake-show-diagnostics-at-end-of-line nil)) ; Emacs 31
+    (setq flymake-inline-diagnostics ; Emacs 32
+          '((current . fancy)
+            (current-line . short)
+            (t . nil))))
 
 ;;; Elisp packaging requirements
   (prot-emacs-install package-lint-flymake)
