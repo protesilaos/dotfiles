@@ -843,8 +843,15 @@ This sets up Emacs for me to be able to type in Greek while still
 using Emacs key bindings involving modifier keys (I don't get this if
 I switch keyboard layouts at the system level).
 
-Watch my video about multilingual editing:
-<https://protesilaos.com/codelog/2023-12-12-emacs-multilingual-editing/>.
+Watch my videos:
+- [[https://protesilaos.com/codelog/2023-12-12-emacs-multilingual-editing/][multilingual editing (Greek, French, Chinese, etc.)]] (2023-12-12);
+- [[https://protesilaos.com/codelog/2026-07-02-emacs-french-input-method-jinx-spell/][write with input method (e.g. French) and Jinx for spelling]] (2026-07-02).
+
+In my =prot-minibuffer.el= I define extensions to sort input methods
+and group them by those I rely on versus the rest:
+
+- [[#h:761861c9-9a0e-4c97-b98d-20f13a6b3b79][The =prot-minibuffer= library]];
+- [[#h:0d49218d-4199-4847-9765-60a3f94e515d][The =prot-emacs-completion.el= settings for completion category overrides]].
 
 #+begin_src emacs-lisp :tangle "init.el"
 (setq default-input-method "greek") ; also check "greek-postfix"
@@ -2257,7 +2264,6 @@ such as in the difference between writing and reading.
             (underscore
              :cursor-color warning ; will typically be yellow
              :cursor-type (hbar . 3)
-
              :blink-cursor-blinks 50)
             (underscore-no-other-window
              :inherit underscore
@@ -4579,6 +4585,8 @@ static, user-defined abbreviations ([[#h:fd84b79a-351e-40f0-b383-bf520d77834b][T
 
 [ Watch: [[https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/][abbreviations with abbrev-mode (quick text expansion)]] (2024-02-03). ]
 
+[ Watch: [[https://protesilaos.com/codelog/2026-08-09-emacs-expand-abbrev-mode-definitions-conditionally/][conditionally expand abbrev-mode definitions]] (2026-08-09). ]
+
 Unlike "dynamic abbreviations" that depend on the text already
 available in a buffer, we can define abbreviations that always expand
 to what we have specified ([[#h:567bb00f-1d82-4746-93e5-e0f60721728a][The =prot-emacs-completion.el= settings for dynamic text expansion (~dabbrev~)]]).
@@ -5829,6 +5837,7 @@ Note the use of the ~let~ to decide whether I use the ~grep~ or ~rg~
     ;; All those have been changed for Emacs 28
     (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
     (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
+
     (setq xref-file-name-display 'project-relative)
     (setq xref-search-program (if ripgrep 'ripgrep 'grep))
 
