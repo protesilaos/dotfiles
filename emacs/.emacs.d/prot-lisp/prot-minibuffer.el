@@ -105,12 +105,12 @@ Omit the .. directory from FILES."
   "Return FILE group name unless TRANSFORM is non-nil."
   (cond
    (transform file)
-   ((string-suffix-p "/" file) "/")
-   ((string-prefix-p "." file) ".")
+   ((string-suffix-p "/" file) "Directories")
+   ((string-prefix-p "." file) "Dotfiles")
    ((when-let* ((extension (file-name-extension file :include-dot))
                 (_ (not (string-blank-p extension))))
       extension))
-   (t "Other")))
+   (t "Other files")))
 
 (defun prot-minibuffer--set-default-sort (candidates)
   "Sort CANDIDATES according to `completions-sort' and return the sorted list."
@@ -255,7 +255,9 @@ Do it when TRANSFORM is non-nil, else return INPUT-METHOD."
                         (_ (and binding (not (stringp binding)))))
                   (format "  %s " (propertize description 'face 'help-key-binding))
                 ""))
-         (doc (if-let* ((doc (condition-case nil (documentation symbol) (error nil)))
+         (doc (if-let* ((doc (condition-case nil
+                                 (documentation symbol)
+                               (error nil)))
                         (first-line (substring doc 0 (string-search "\n" doc))))
                   (propertize first-line 'face 'completions-annotations)
                 "")))
