@@ -232,37 +232,35 @@ effects."
           (indent-region beg end))
       (user-error "No active region; will not insert `prot-emacs-comment' here"))))
 
-(defmacro prot-emacs-install (package &rest vc-args)
-  "Prepare to install PACKAGE.
-PACKAGE is an unquoted symbol, referring to the name of the package.  If
-VC-ARGS are nil, then install PACKAGE using `package-install'.
-
-If VC-ARGS is non-nil, then check if their `car' is a directory.  If it
-is, apply `package-vc-install-from-checkout' on VC-ARGS, else apply
-`package-vc-install'.
-
-At all times, do nothing if PACKAGE is already installled."
+(defmacro prot-emacs-install (package)
+  "Install PACKAGE, unless it is installed."
   (declare (indent 0))
   (unless (symbolp package)
     (error "The package `%s' is not a symbol" package))
-  (cond
-   ((and package vc-args)
-    (let ((fn (if-let* ((first (car vc-args))
-                        (_ (and (stringp first) (file-directory-p first))))
-                  'package-vc-install-from-checkout
-                'package-vc-install)))
-      `(unless (package-installed-p ',package)
-         (condition-case-unless-debug err
-             (apply #',fn ',vc-args)
-           (error (message "Failed `%s' with `%S': `%S'" ',fn ',vc-args (cdr err)))))))
-   (package
-    `(progn
-       (unless (package-installed-p ',package)
-         (unless package-archive-contents
-           (package-refresh-contents))
-         (condition-case-unless-debug nil
-             (package-install ',package)
-           (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
+  `(progn
+     (unless (package-installed-p ',package)
+       (unless package-archive-contents
+         (package-refresh-contents))
+       (condition-case-unless-debug nil
+           (package-install ',package)
+         (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))
+
+(defmacro prot-emacs-install-vc (package &rest vc-args)
+  "Install PACKAGE with VC-ARGS, unless it is installed."
+  (declare (indent 0))
+  (unless (symbolp package)
+    (error "The package `%s' is not a symbol" package))
+  `(progn
+     (unless (package-installed-p ',package)
+       (condition-case-unless-debug nil
+           ,(cond
+             ((length= vc-args 0)
+              `(error "VC-ARGS must be 1 or more: `%S'" ',vc-args))
+             ((length> vc-args 1)
+              `(apply 'package-vc-install ,(append (list package) vc-args)))
+             (t
+              `(funcall 'package-vc-install ,(car vc-args))))
+         (error (message "Cannot install `%s' using VC-ARGS `%S'" ',package ',vc-args))))))
 
 (defmacro prot-emacs-hook (hooks functions &optional remove after)
   "For each HOOKS `add-hook' the FUNCTIONS.

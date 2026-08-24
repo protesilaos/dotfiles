@@ -20,7 +20,7 @@
     (setq calendar-daylight-time-zone-name "+0300")))
 
 (prot-emacs-configure
-  (prot-emacs-install
+  (prot-emacs-install-vc
     institution-calendar
     "https://github.com/protesilaos/institution-calendar.git")
 

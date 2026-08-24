@@ -1192,18 +1192,24 @@ then a Do-What-I-Mean wrapper to switch between the two):
       (user-error "No active region; will not insert `prot-emacs-comment' here"))))
 #+end_src
 
-** The =init.el= macro to install a package (~prot-emacs-install~)
+** The =init.el= macro to install a package (~prot-emacs-install~, ~prot-emacs-install-vc~)
 :PROPERTIES:
 :CUSTOM_ID: h:aebcd86e-1f3e-4be5-a2c0-200df2b9e712
 :END:
 
 The ~prot-emacs-install~ macro does what I want to install packages
-either from one of the package archives or directly from source code.
-Below are some examples of how it can be used, with the expanded code
-as a comment. In short, the macro will do the right thing to either
-use the function ~package-install~, ~package-vc-install~, or
-~package-vc-install-from-checkout~. In the case of the former, it will
-respect the priorities I set for package archives ([[#h:424340cc-f3d7-4083-93c9-d852d40dfd40][The =init.el= settings for packages (=package.el=)]]).
+from the archives I set up ([[#h:424340cc-f3d7-4083-93c9-d852d40dfd40][The =init.el= settings for packages (=package.el=)]]).
+It simply installs the package, if needed, else does nothing. The
+macro takes care to refresh the package contents the first time it is
+called, though it will not do so again on subsequent calls. So in a
+long-running Emacs session, it is possible for a subsequent call to
+fail to find the latest version of a package. This is fine for me, as
+I do not frequently install packages.
+
+The ~prot-emacs-install-vc~ is the same idea but for getting a package
+directly from source, per the built-in ~package-vc-install~ function.
+
+Some examples of the forms together with the macroexpanded code:
 
 #+begin_example emacs-lisp
 (prot-emacs-install modus-themes)
@@ -1216,85 +1222,60 @@ respect the priorities I set for package archives ([[#h:424340cc-f3d7-4083-93c9-
 ;; =>         "Cannot install `%s'; try `M-x package-refresh-contents' first"
 ;; =>         'modus-themes)))))
 
-(prot-emacs-install modus-themes "https://github.com/protesilaos/modus-themes.git")
-;; => (unless (package-installed-p 'modus-themes)
-;; =>   (condition-case-unless-debug err
-;; =>       (apply #'package-vc-install
-;; =>              '("https://github.com/protesilaos/modus-themes.git"))
-;; =>     (error
-;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
-;; =>               '("https://github.com/protesilaos/modus-themes.git")
-;; =>               (cdr err)))))
+(prot-emacs-install-vc modus-themes "https://github.com/protesilaos/modus-themes")
+;; => (progn
+;; =>   (unless (package-installed-p 'modus-themes)
+;; =>     (condition-case-unless-debug nil
+;; =>         (funcall 'package-vc-install
+;; =>                  "https://github.com/protesilaos/modus-themes")
+;; =>       (error
+;; =>        (message "Cannot install `%s' using VC-ARGS `%S'" 'modus-themes
+;; =>                 '("https://github.com/protesilaos/modus-themes"))))))
 
-(prot-emacs-install modus-themes :url "https://github.com/protesilaos/modus-themes.git" :branch "main")
-;; => (unless (package-installed-p 'modus-themes)
-;; =>   (condition-case-unless-debug err
-;; =>       (apply #'package-vc-install
-;; =>              '(:url "https://github.com/protesilaos/modus-themes.git"
-;; =>                    :branch "main"))
-;; =>     (error
-;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
-;; =>               '(:url "https://github.com/protesilaos/modus-themes.git"
-;; =>                     :branch "main")
-;; =>               (cdr err)))))
-
-(prot-emacs-install modus-themes "~/Git/Projects/modus-themes")
-;; => (unless (package-installed-p 'modus-themes)
-;; =>   (condition-case-unless-debug err
-;; =>       (apply #'package-vc-install-from-checkout
-;; =>              ("~/Git/Projects/modus-themes"))
-;; =>     (error
-;; =>      (message "Failed `%s' with `%S': `%S'"
-;; =>               'package-vc-install-from-checkout
-;; =>               '("~/Git/Projects/modus-themes") (cdr err)))))
-
-(prot-emacs-install modus-themes "~/Git/Projects/modus-themes-arbitrary-name-of-dir" "modus-themes")
-;; => (unless (package-installed-p 'modus-themes)
-;; =>   (condition-case-unless-debug err
-;; =>       (apply #'package-vc-install
-;; =>              '("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
-;; =>               "modus-themes"))
-;; =>     (error
-;; =>      (message "Failed `%s' with `%S': `%S'" 'package-vc-install
-;; =>               '("~/Git/Projects/modus-themes-arbitrary-name-of-dir"
-;; =>                "modus-themes")
-;; =>               (cdr err)))))
+(prot-emacs-install-vc modus-themes :url "https://github.com/protesilaos/modus-themes")
+;; => (progn
+;; =>   (unless (package-installed-p 'modus-themes)
+;; =>     (condition-case-unless-debug nil
+;; =>         (apply 'package-vc-install
+;; =>                (modus-themes :url
+;; =>                              "https://github.com/protesilaos/modus-themes"))
+;; =>       (error
+;; =>        (message "Cannot install `%s' using VC-ARGS `%S'" 'modus-themes
+;; =>                 '(:url "https://github.com/protesilaos/modus-themes"))))))
 #+end_example
 
-And here is the macro:
+And here are the actual macros:
 
 #+begin_src emacs-lisp :tangle "init.el"
-(defmacro prot-emacs-install (package &rest vc-args)
-  "Prepare to install PACKAGE.
-PACKAGE is an unquoted symbol, referring to the name of the package.  If
-VC-ARGS are nil, then install PACKAGE using `package-install'.
-
-If VC-ARGS is non-nil, then check if their `car' is a directory.  If it
-is, apply `package-vc-install-from-checkout' on VC-ARGS, else apply
-`package-vc-install'.
-
-At all times, do nothing if PACKAGE is already installled."
+(defmacro prot-emacs-install (package)
+  "Install PACKAGE, unless it is installed."
   (declare (indent 0))
   (unless (symbolp package)
     (error "The package `%s' is not a symbol" package))
-  (cond
-   ((and package vc-args)
-    (let ((fn (if-let* ((first (car vc-args))
-                        (_ (and (stringp first) (file-directory-p first))))
-                  'package-vc-install-from-checkout
-                'package-vc-install)))
-      `(unless (package-installed-p ',package)
-         (condition-case-unless-debug err
-             (apply #',fn ',vc-args)
-           (error (message "Failed `%s' with `%S': `%S'" ',fn ',vc-args (cdr err)))))))
-   (package
-    `(progn
-       (unless (package-installed-p ',package)
-         (unless package-archive-contents
-           (package-refresh-contents))
-         (condition-case-unless-debug nil
-             (package-install ',package)
-           (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))))
+  `(progn
+     (unless (package-installed-p ',package)
+       (unless package-archive-contents
+         (package-refresh-contents))
+       (condition-case-unless-debug nil
+           (package-install ',package)
+         (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))
+
+(defmacro prot-emacs-install-vc (package &rest vc-args)
+  "Install PACKAGE with VC-ARGS, unless it is installed."
+  (declare (indent 0))
+  (unless (symbolp package)
+    (error "The package `%s' is not a symbol" package))
+  `(progn
+     (unless (package-installed-p ',package)
+       (condition-case-unless-debug nil
+           ,(cond
+             ((length= vc-args 0)
+              `(error "VC-ARGS must be 1 or more: `%S'" ',vc-args))
+             ((length> vc-args 1)
+              `(apply 'package-vc-install ,(append (list package) vc-args)))
+             (t
+              `(funcall 'package-vc-install ,(car vc-args))))
+         (error (message "Cannot install `%s' using VC-ARGS `%S'" ',package ',vc-args))))))
 #+end_src
 
 ** The =init.el= macro to add a hook (~prot-emacs-hook~)
@@ -2343,7 +2324,7 @@ the GNOME desktop environment ([[#h:3f1a33e4-762e-4cf3-a0ae-4c2954d9cbb8][The =p
 (when (and (null prot-emacs-load-theme-family)
            (string= (getenv "DESKTOP_SESSION") "gnome"))
   (prot-emacs-configure
-    (prot-emacs-install
+    (prot-emacs-install-vc
       gnome-accent-theme-switcher
       "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
     (prot-emacs-keybind global-map
@@ -2374,7 +2355,9 @@ I developed this package during a live stream:
 ;;; Modus themes exporter
 (prot-emacs-configure
   ;; The use the command `modus-themes-exporter-export'.
-  (prot-emacs-install modus-themes-exporter "https://github.com/protesilaos/modus-themes-exporter.git"))
+  (prot-emacs-install-vc
+    modus-themes-exporter
+    "https://github.com/protesilaos/modus-themes-exporter.git"))
 #+end_src
 
 *** The =prot-emacs-theme.el= section for ~theme-buffet~
@@ -6395,7 +6378,9 @@ a package for Emacs 29.
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
 (prot-emacs-configure
-  (prot-emacs-install mandoura "https://github.com/protesilaos/mandoura")
+  (prot-emacs-install-vc
+    mandoura
+    "https://github.com/protesilaos/mandoura")
   (with-eval-after-load 'dired
     (require 'mandoura)
     (prot-emacs-keybind global-map
@@ -7094,7 +7079,9 @@ call the command ~buffer-to-pdf~. For printer-friendly output the
 ;;; Buffer to PDF
 (prot-emacs-configure
   ;; The use the command `buffer-to-pdf' or `buffer-to-pdf-black-on-white'.
-  (prot-emacs-install buffer-to-pdf "https://github.com/protesilaos/buffer-to-pdf.git"))
+  (prot-emacs-install-vc
+    buffer-to-pdf
+    "https://github.com/protesilaos/buffer-to-pdf.git"))
 #+end_src
 
 *** The =prot-emacs-window.el= settings for the file explorer sidebar (~speedbar~)
@@ -8038,7 +8025,7 @@ are supported by default.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-org.el"
 (prot-emacs-configure
-  (prot-emacs-install
+  (prot-emacs-install-vc
     institution-calendar
     "https://github.com/protesilaos/institution-calendar.git")
 

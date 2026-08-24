@@ -152,7 +152,7 @@
 (when (and (null prot-emacs-load-theme-family)
            (string= (getenv "DESKTOP_SESSION") "gnome"))
   (prot-emacs-configure
-    (prot-emacs-install
+    (prot-emacs-install-vc
       gnome-accent-theme-switcher
       "https://github.com/protesilaos/gnome-accent-theme-switcher.git")
     (prot-emacs-keybind global-map
@@ -164,7 +164,9 @@
 ;;; Modus themes exporter
 (prot-emacs-configure
   ;; The use the command `modus-themes-exporter-export'.
-  (prot-emacs-install modus-themes-exporter "https://github.com/protesilaos/modus-themes-exporter.git"))
+  (prot-emacs-install-vc
+    modus-themes-exporter
+    "https://github.com/protesilaos/modus-themes-exporter.git"))
 
 ;;;; Theme buffet
 (prot-emacs-configure

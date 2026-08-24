@@ -134,7 +134,9 @@
 ;;; Play back media with Dired (mandoura.el)
 ;; This is yet another package of mine: <https://protesilaos.com/emacs>
 (prot-emacs-configure
-  (prot-emacs-install mandoura "https://github.com/protesilaos/mandoura")
+  (prot-emacs-install-vc
+    mandoura
+    "https://github.com/protesilaos/mandoura")
   (with-eval-after-load 'dired
     (require 'mandoura)
     (prot-emacs-keybind global-map

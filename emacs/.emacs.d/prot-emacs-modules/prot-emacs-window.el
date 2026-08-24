@@ -277,7 +277,9 @@ With optional argument FRAME, return the list of buffers of FRAME."
 ;;; Buffer to PDF
 (prot-emacs-configure
   ;; The use the command `buffer-to-pdf' or `buffer-to-pdf-black-on-white'.
-  (prot-emacs-install buffer-to-pdf "https://github.com/protesilaos/buffer-to-pdf.git"))
+  (prot-emacs-install-vc
+    buffer-to-pdf
+    "https://github.com/protesilaos/buffer-to-pdf.git"))
 
 (prot-emacs-configure
   (setq speedbar-use-images nil) ; t here refers to the `cdr' of each `speedbar-expand-image-button-alist'
