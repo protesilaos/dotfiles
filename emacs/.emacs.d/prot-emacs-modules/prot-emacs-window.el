@@ -155,7 +155,8 @@
            (inhibit-switch-frame . t))
           ;; other `tab-bar-mode' tab
           ((or . ((derived-mode . magit-status-mode)
-                  (derived-mode . vc-dir-mode)))
+                  (derived-mode . vc-dir-mode)
+                  "\\*.*vc-dir.*\\*"))
            (display-buffer-reuse-mode-window display-buffer-in-tab)
            (mode . (magit-status-mode vc-dir-mode))
            (tab-name . (lambda (buffer _alist) (buffer-name buffer)))
