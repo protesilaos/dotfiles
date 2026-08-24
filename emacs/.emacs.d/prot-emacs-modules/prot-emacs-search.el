@@ -76,30 +76,29 @@
 (prot-emacs-configure
   (setq reb-re-syntax 'read)
 
-  (let ((ripgrep (or (executable-find "rg") (executable-find "ripgrep"))))
-    ;; All those have been changed for Emacs 28
-    (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
-    (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
+  (setq xref-file-name-display 'project-relative)
 
-    (setq xref-file-name-display 'project-relative)
-    (setq xref-search-program (if ripgrep 'ripgrep 'grep))
+  ;; All those have been changed for Emacs 28
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
+  (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
 
-    (setq grep-save-buffers nil)
-    (setq grep-use-headings nil) ; Emacs 30
-
-    (setq grep-program (or ripgrep (executable-find "grep")))
-    (setq grep-template
-          (if ripgrep
-              "/usr/bin/rg -nH --null -e <R> <F>"
-            "/usr/bin/grep <X> <C> -nH --null -e <R> <F>")))
-
-  (add-hook 'grep-mode #'prot-common-truncate-lines-silently)
-
+  ;; The `outline-xref' is for Emacs 32
   (with-eval-after-load 'outline
-    ;; The `outline-xref' is for Emacs 32
     (define-advice outline-xref (:around (&rest args) prot)
       (let ((xref-show-xrefs-function #'xref-show-definitions-completing-read))
-        (apply args)))))
+        (apply args))))
+
+  (setq grep-save-buffers nil)
+  (setq grep-use-headings nil) ; Emacs 30
+
+  (if-let* ((ripgrep (or (executable-find "rg") (executable-find "ripgrep"))))
+      (progn
+        (setq grep-program ripgrep)
+        (setq xref-search-program 'ripgrep)
+        (setq grep-template (format "%s -nH --null -e <R> <F>" ripgrep)))
+    (error "You need to install RIPGREP"))
+
+  (add-hook 'grep-mode #'prot-common-truncate-lines-silently))
 
 ;;; wgrep (writable grep)
 ;; See the `grep-edit-mode' for the new built-in feature.
