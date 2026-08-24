@@ -11,7 +11,9 @@ Account gandi
 
 MaildirStore gandi-local
 Subfolders Verbatim
-# The trailing "/" is important
+# The trailing "/" in 'Path' is important. The path given to 'Path'
+# must exist, but the path given to 'Inbox' is created automatically
+# by 'mbsync'.
 Path ~/.mail/gandi/
 Inbox ~/.mail/gandi/Inbox
 
