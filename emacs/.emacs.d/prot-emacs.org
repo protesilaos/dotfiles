@@ -17514,18 +17514,22 @@ and function as links to the context they reference."
  prot-search--find-file-names-args
  "dired")
 
-;; (defun prot-search-find-grep-file (regexp)
-;;   "Use find to produce list of files that include REGEXP."
-;;   (interactive
-;;    (list
-;;     (read-regexp "Find and grep for REGEXP: " nil 'prot-search--find-grep-hist)))
-;;   (let ((files (process-lines "find"
-;;                               "-type" "f"
-;;                               "-exec" "grep" "-nHE" "--color=auto" (format "'%s" regexp) " "
-;;                               "-ls" " "
-;;                               "{};")
-;;                ))
-;;     (find-file (completing-read "Find file: "files))))
+;; TODO 2026-08-15: I want to revise all of the above functions that
+;; involve find/grep.  Is `process-lines' the better option?
+
+;;;###autoload
+(defun prot-search-grep-to-dired (regexp)
+  "Produce a Dired buffer with files matching REGEXP.
+Recursively search for files from the current directory using the find
+program."
+  (interactive
+   (list
+    (read-regexp "Find and grep for REGEXP: " nil 'prot-search--find-grep-hist)))
+  (let ((files (process-lines "find"
+                              "-type" "f"
+                              "-exec" "grep" "-nHE" "--color=auto" regexp
+                              "-ls" "{}" ";")))
+    (dired (cons default-directory files))))
 
 (provide 'prot-search)
 ;;; prot-search.el ends here
