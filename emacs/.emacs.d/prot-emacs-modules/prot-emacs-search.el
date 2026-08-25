@@ -20,8 +20,14 @@
   (setq isearch-repeat-on-direction-change t))
 
 (prot-emacs-configure
-  (setq query-replace-show-preview t) ; Emacs 32
-  (setq query-replace-from-to-separator " > "))
+  (setq query-replace-from-to-separator " > ")
+  (defun prot/query-replace-preview (match replacement)
+    "Do the work of `query-replace-show-preview'."
+    (format "%s%s%s"
+            (propertize match 'face 'query-replace-preview-match)
+            (propertize query-replace-from-to-separator 'face 'secondary-selection)
+            (propertize replacement 'face 'query-replace-preview)))
+  (setq query-replace-show-preview #'prot/query-replace-preview)) ; Emacs 32
 
 (prot-emacs-configure
  (setq list-matching-lines-jump-to-current-line nil) ; do not jump to current line in `*occur*' buffers

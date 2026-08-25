@@ -5656,8 +5656,14 @@ granted, I rely more on my ~substitute~ package ([[#h:b4b3c8b7-e35c-4a56-bfb9-0c
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-search.el"
 (prot-emacs-configure
-  (setq query-replace-show-preview t) ; Emacs 32
-  (setq query-replace-from-to-separator " > "))
+  (setq query-replace-from-to-separator " > ")
+  (defun prot/query-replace-preview (match replacement)
+    "Do the work of `query-replace-show-preview'."
+    (format "%s%s%s"
+            (propertize match 'face 'query-replace-preview-match)
+            (propertize query-replace-from-to-separator 'face 'secondary-selection)
+            (propertize replacement 'face 'query-replace-preview)))
+  (setq query-replace-show-preview #'prot/query-replace-preview)) ; Emacs 32
 #+end_src
 
 *** The =prot-emacs-search.el= tweaks for the occur buffer
