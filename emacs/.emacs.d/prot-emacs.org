@@ -4881,6 +4881,8 @@ some Language Server Protocol).
 (when (eq prot-emacs-completion-in-buffer 'company)
   (prot-emacs-configure
     (prot-emacs-install company)
+    (prot-emacs-install company-statistics)
+
     ;; NOTE 2026-07-10: with the latest version of Company, (setq
     ;; tab-always-indent 'complete) is supported out-of-the-box, which
     ;; means that I can finally disable the automatic popup feature.
@@ -4912,21 +4914,24 @@ some Language Server Protocol).
 
     (defun prot/company-prog-backends ()
       "Set `company-backends' locally to my preferred value for `prog-mode' and derivatives."
-      (setq-local company-backends '((company-capf company-dabbrev-code company-abbrev) company-files)))
-
-    (add-hook 'prog-mode-hook #'prot/company-prog-backends)
+      (setq-local company-backends '((company-capf company-dabbrev company-abbrev) company-files)))
 
     (defun prot/company-text-backends ()
       "Set `company-backends' locally to my preferred value for `text-mode' and derivatives."
       (setq-local company-backends '((company-dabbrev company-abbrev company-ispell company-capf) company-files)))
 
+    (prot-emacs-hook (prog-mode-hook comint-mode-hook) prot/company-prog-backends)
+    (prot-emacs-hook (prog-mode-hook text-mode-hook comint-mode-hook) company-mode)
     (add-hook 'text-mode-hook #'prot/company-text-backends)
 
-    (global-company-mode 1)
-
-    (prot-emacs-install company-statistics)
-
-    (company-statistics-mode 1)))
+    (with-eval-after-load 'company
+      (prot-emacs-keybind company-active-map
+        "C-s" #'company-filter-candidates
+        "<escape>" #'company-abort
+        "<tab>" #'company-complete-selection
+        "<up>" #'company-select-previous-or-abort
+        "<down>" #'company-select-next-or-abort)
+      (company-statistics-mode 1))))
 #+end_src
 
 *** The =prot-emacs-completion.el= for in-buffer completion hints (~completion-preview-mode~)
