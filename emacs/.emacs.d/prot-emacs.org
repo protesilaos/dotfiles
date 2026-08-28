@@ -12660,7 +12660,10 @@ will continue rotating accordingly."
 ;;;###autoload
 (defun prot-common-truncate-lines-silently ()
   "Toggle line truncation without printing messages."
-  (let ((inhibit-message t))
+  ;; NOTE 2026-08-28: I used to only do `inhibit-message' via a `let',
+  ;; but it was still printing messages.
+  (cl-letf (((symbol-function 'message) #'always)
+            (inhibit-message t))
     (toggle-truncate-lines t)))
 
 ;; NOTE 2023-08-12: I tried the `clear-message-function', but it did
