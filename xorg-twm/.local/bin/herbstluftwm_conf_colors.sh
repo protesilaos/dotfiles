@@ -32,9 +32,7 @@ then
            bg_dim="#1e1e1e"
            fg_main="#ffffff"
            fg_dim="#989898"
-           bg_active="#79a8ffaa"
-           border_active="#76afbf"
-           border_normal="#000000"
+           border_active="#365f7f"
            border_urgent="#ff8059"
            window_divider="#323232"
            ;;
@@ -43,9 +41,7 @@ then
            bg_dim="#f0f0f0"
            fg_main="#000000"
            fg_dim="#595959"
-           bg_active="#3548cfaa"
-           border_active="#2f3f83"
-           border_normal="#ffffff"
+           border_active="#9fbacf"
            border_urgent="#a60000"
            window_divider="#d7d7d7"
            ;;
@@ -53,19 +49,18 @@ then
 
    _hc set frame_border_active_color "$border_active"
    _hc set frame_border_normal_color "$border_normal"
-   _hc set frame_border_normal_color "#00000000" # full transparency
    _hc set frame_bg_normal_color "$bg_main"
-   _hc set frame_bg_active_color "$bg_active"
+   _hc set frame_bg_active_color "$border_active"
 
    _hc attr theme.active.color "$border_active"
-   _hc attr theme.normal.color "$border_normal"
+   _hc attr theme.normal.color "$bg_main"
    _hc attr theme.urgent.color "$border_urgent"
 
    _hc attr theme.active.inner_color "$border_active"
    _hc attr theme.normal.inner_color "$window_divider"
    _hc attr theme.urgent.inner_color "$border_urgent"
 
-   _hc attr theme.active.title_color "$bg_main"
+   _hc attr theme.active.title_color "$fg_main"
    _hc attr theme.normal.title_color "$fg_dim"
    _hc attr theme.urgent.title_color "$bg_main"
 
@@ -88,7 +83,7 @@ then
 
    # This is used when resizing and the window contents do not stretch
    # immediately to fill in the space.
-   _hc attr theme.background_color '#00000000'
+   _hc attr theme.background_color "$bg_main"
 
    for state in active urgent normal
    do
