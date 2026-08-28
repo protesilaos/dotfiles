@@ -122,6 +122,7 @@ _hc set always_show_frame on
 _hc set frame_bg_transparent off
 _hc set frame_normal_opacity 15
 _hc set frame_active_opacity 50
+_hc set show_frame_decorations focused_if_multiple
 
 _hc attr theme.inner_width 1
 _hc attr theme.border_width 2
