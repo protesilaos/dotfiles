@@ -102,6 +102,9 @@
     (setq vc-handled-backends '(Git))
 
     (setq vc-dir-save-some-buffers-on-revert t) ; Emacs 31
+    (setq vc-use-incoming-outgoing-prefixes t) ; Emacs 31
+    (setq vc-async-checkin t) ; Emacs 31
+    (setq vc-display-failed-async-commands t) ; Emacs 31
     (setq vc-dir-show-key-binding-hints nil) ; Emacs 32
 
     ;; This one is for editing commit messages.
@@ -118,7 +121,6 @@
       nil
       log-edit)
 
-    (setq vc-display-failed-async-commands t) ; Emacs 31
     (setq vc-find-revision-no-save t)
     (setq vc-annotate-display-mode 'scale) ; scale to oldest
     ;; I use a different account for git commits
