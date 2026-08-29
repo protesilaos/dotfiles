@@ -4,7 +4,7 @@
 (prot-emacs-configure
   (require 'prot-icons)
 
-  (setq prot-icons-style 'symbolic) ; `alphabetic', `symbolic', or `emoji'
+  (setq prot-icons-style 'emoji) ; `alphabetic', `symbolic', or `emoji'
 
   (prot-icons-dired-mode 1)
   (prot-icons-xref-mode 1)
