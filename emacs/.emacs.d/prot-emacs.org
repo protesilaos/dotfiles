@@ -9161,28 +9161,35 @@ will not mess up with my work.
 :END:
 
 Emacs describes as "electric" any behaviour that tries to be smart
-about how to handle a given action. The ~electric-pair-mode~, for
-example, automatically inserts a closing parenthesis when the user
-inputs an opening parenthesis. Same idea with quotes, performed by the
-~electric-quote-mode~. While the ~electric-indent-mode~ tries to be
-smart about how to indent a line, which is fine for programming
-purposes, it makes a mess of things in Org and related because you
-have to delete back to the beginning of a line if you want to "escape"
-from the indentation of a list or something.
+about how it handles a given event.
+
+The ~electric-pair-mode~, for example, automatically inserts a closing
+parenthesis when the user inputs an opening parenthesis. Same idea
+with quotes, performed by the ~electric-quote-mode~. The
+~electric-indent-mode~ tries to be smart about how to indent a line.
+
+I like this functionality in general, except for ~electric-indennt-mode~
+in Org files. The reason is that it keeps the indentation in line with
+a typographic list item when what I really want is to escape from the
+list.
 
 If I need to manually wrap the symbol at point or a region in a pair
 of characters, I use my ~prot-pair-insert~ command ([[#h:48d2bab5-241f-49dd-9554-8a4dcedce75e][The =prot-emacs-essentials.el= section about =prot-pair.el= (insert character pairs)]]).
+But maybe that is not needed at all, though I need to test again every
+use-case I have for it..
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
-;;;; Disable "electric" behaviour
+;;;; The "electric" behaviour
 (prot-emacs-configure
-  (add-hook 'prog-mode-hook #'electric-indent-local-mode)
-  (with-eval-after-load 'electric
-    ;; I don't like auto indents in Org and related.  They are okay for
-    ;; programming.
-    (electric-pair-mode -1)
-    (electric-quote-mode -1)
-    (electric-indent-mode -1)))
+  (electric-pair-mode 1)
+  (electric-quote-mode 1)
+  (electric-indent-mode 1)
+
+  (defun prot/electric-indent-mode-disable ()
+    "Disable `electric-indent-local-mode'."
+    (electric-indent-local-mode -1))
+
+  (add-hook 'org-mode-hook #'prot/electric-indent-mode-disable))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings ~show-paren-mode~
