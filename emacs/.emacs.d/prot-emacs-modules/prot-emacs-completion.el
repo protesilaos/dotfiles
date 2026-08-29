@@ -119,6 +119,10 @@
   (unless prot-emacs-completion-ui
     (prot-minibuffer-completions-mode 1)
 
+    (prot-emacs-keybind completion-in-region-mode-map
+      "M-n" #'minibuffer-next-completion
+      "M-p" #'minibuffer-previous-completion)
+
     (prot-emacs-keybind minibuffer-local-completion-map
       "<down>" #'minibuffer-next-line-completion
       "<up>" #'minibuffer-previous-line-completion
@@ -361,19 +365,17 @@ INDIVIDUAL-CAPFS to the list."
 (when (eq prot-emacs-completion-in-buffer 'completion-preview)
   (prot-emacs-configure
     (setq completion-preview-exact-match-only nil)
-    (setq completion-preview-commands '(self-insert-command
-                                        insert-char
-                                        analyze-text-conversion
-                                        completion-preview-insert-word))
-    (setq completion-preview-minimum-symbol-length 4)
-    (setq completion-preview-idle-delay 0.3)
+    (setq completion-preview-minimum-symbol-length 2)
+    (setq completion-preview-idle-delay nil)
     (setq completion-preview-ignore-case t)
-    (setq completion-preview-sort-function #'identity)
 
-    (add-hook 'prog-mode-hook #'completion-preview-mode)
+    (prot-emacs-hook
+      (prog-mode-hook log-edit-mode-hook git-commit-mode-hook comint-mode-hook)
+      completion-preview-mode)
 
     (with-eval-after-load 'completion-preview
       (prot-emacs-keybind completion-preview-active-mode-map
+        "M-i" #'completion-preview-insert-word
         "M-n" #'completion-preview-next-candidate
         "M-p" #'completion-preview-prev-candidate
         "M-<return>" #'completion-preview-insert

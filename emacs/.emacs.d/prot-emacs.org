@@ -4478,6 +4478,10 @@ completion are collectively enabled through the minor mode ~prot-minibuffer-comp
   (unless prot-emacs-completion-ui
     (prot-minibuffer-completions-mode 1)
 
+    (prot-emacs-keybind completion-in-region-mode-map
+      "M-n" #'minibuffer-next-completion
+      "M-p" #'minibuffer-previous-completion)
+
     (prot-emacs-keybind minibuffer-local-completion-map
       "<down>" #'minibuffer-next-line-completion
       "<up>" #'minibuffer-previous-line-completion
@@ -4949,7 +4953,9 @@ some Language Server Protocol).
 :END:
 
 [ Also watch my video for everything related to in-buffer completion
-  from 2026-07-19: <https://protesilaos.com/codelog/2026-07-19-emacs-completion-at-point-functions/>. ]
+  from 2026-07-19: <https://protesilaos.com/codelog/2026-07-19-emacs-completion-at-point-functions/>.
+  I did another video on 2026-08-29 about ~completion-preview-mode~ in
+  particular: https://protesilaos.com/codelog/2026-08-29-emacs-completion-preview-mode/ ]
 
 The built-in ~completion-preview~ by Eshel Yaron provides a minimalist
 interface for in-buffer completion. Instead of popping up a list with
@@ -4982,19 +4988,17 @@ overarching theme of my choices is to reduce noise. More specifically:
 (when (eq prot-emacs-completion-in-buffer 'completion-preview)
   (prot-emacs-configure
     (setq completion-preview-exact-match-only nil)
-    (setq completion-preview-commands '(self-insert-command
-                                        insert-char
-                                        analyze-text-conversion
-                                        completion-preview-insert-word))
-    (setq completion-preview-minimum-symbol-length 4)
-    (setq completion-preview-idle-delay 0.3)
+    (setq completion-preview-minimum-symbol-length 2)
+    (setq completion-preview-idle-delay nil)
     (setq completion-preview-ignore-case t)
-    (setq completion-preview-sort-function #'identity)
 
-    (add-hook 'prog-mode-hook #'completion-preview-mode)
+    (prot-emacs-hook
+      (prog-mode-hook log-edit-mode-hook git-commit-mode-hook comint-mode-hook)
+      completion-preview-mode)
 
     (with-eval-after-load 'completion-preview
       (prot-emacs-keybind completion-preview-active-mode-map
+        "M-i" #'completion-preview-insert-word
         "M-n" #'completion-preview-next-candidate
         "M-p" #'completion-preview-prev-candidate
         "M-<return>" #'completion-preview-insert
