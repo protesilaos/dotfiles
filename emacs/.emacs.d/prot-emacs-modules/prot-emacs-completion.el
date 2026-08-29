@@ -156,22 +156,37 @@
 
 ;;;; `abbrev' (Abbreviations, else Abbrevs)
 (prot-emacs-configure
-  ;; message-mode derives from text-mode, so we don't need a separate
-  ;; hook for it.
-  (prot-emacs-hook
-    (text-mode-hook prog-mode-hook git-commit-mode-hook)
-    abbrev-mode)
+  (require 'prot-abbrev)
 
   (setq only-global-abbrevs nil)
 
   (define-key global-map (kbd "C-x a u") #'unexpand-abbrev)
+
+  ;; Because the *scratch* buffer is produced before we load this, we
+  ;; have to explicitly activate the mode there.
+  (when-let* ((scratch (get-buffer "*scratch*")))
+    (with-current-buffer scratch
+      (abbrev-mode 1)))
+
+  ;; By default, abbrev asks for confirmation on whether to use
+  ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
+  ;; do I want it.
+  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save)
+
+  (prot-emacs-hook
+    ( text-mode-hook prog-mode-hook git-commit-mode-hook
+      vc-git-log-edit-mode-hook message-mode-hook)
+    abbrev-mode)
 
   (prot-emacs-abbrev global-abbrev-table
     ";web"   "https://protesilaos.com"
     ";git"   "https://github.com/protesilaos"
     ";hub"   "https://github.com/protesilaos"
     ";clone" "git@github.com/protesilaos/"
-    ";lab"   "https://gitlab.com/protesilaos")
+    ";lab"   "https://gitlab.com/protesilaos"
+    ";time"  #'prot-abbrev-current-time
+    ";date"  #'prot-abbrev-current-date
+    ";jitsi" #'prot-abbrev-jitsi-link)
 
   (prot-emacs-abbrev text-mode-abbrev-table
     "asciidoc"       "AsciiDoc"
@@ -198,21 +213,13 @@
     ";uni"           "🦄"
     ";laugh"         "🤣"
     ";smile"         "😀"
-    ";sun"           "☀️")
-
-  ;; Allow abbrevs with a prefix colon, semicolon, or underscore.  I demonstrated
-  ;; this here: <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
-  (abbrev-table-put global-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)")
-
-  (with-eval-after-load 'text-mode
-    (abbrev-table-put text-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)"))
+    ";update"        #'prot-abbrev-update-html)
 
   (with-eval-after-load 'org
     (prot-emacs-abbrev org-mode-abbrev-table
       ";dev" "{{{development-version}}}"
       ";key" #'prot-abbrev-org-macro-key
-      ";cmd" #'prot-abbrev-org-macro-key-command)
-    (abbrev-table-put org-mode-abbrev-table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)"))
+      ";cmd" #'prot-abbrev-org-macro-key-command))
 
   (with-eval-after-load 'message
     (prot-emacs-abbrev message-mode-abbrev-table
@@ -223,30 +230,29 @@
       "bregards"     "Best regards,\nProt"
       "nday"         "Have a nice day,\nProt"))
 
-  ;; The `prot-emacs-abbrev' macro, which simplifies how we use
-  ;; `define-abbrev', does not only expand a static text.  It can take
-  ;; a pair of string and function to trigger the latter when the
-  ;; former is inserted.  Think of it like the basis of a simplistic
-  ;; templating system.
-  (require 'prot-abbrev)
-  (prot-emacs-abbrev global-abbrev-table
-    ";time" #'prot-abbrev-current-time
-    ";date" #'prot-abbrev-current-date
-    ";jitsi" #'prot-abbrev-jitsi-link)
+  (with-eval-after-load 'markdown-mode
+    (prot-emacs-abbrev markdown-mode-abbrev-table
+      ";vlog" "---
+title: \"#\"
+excerpt: \"#\"
+layout: vlog
+mediaid: \"#\"
+---
+"
+      ";post" "---
+title: \"#\"
+excerpt: \"#\"
+---
+"
+      ";poem" "---
+title: \"#\"
+excerpt: \"Just read the poem. No further comment.\"
+---
+"))
 
-  (prot-emacs-abbrev text-mode-abbrev-table
-    ";update" #'prot-abbrev-update-html)
-
-  ;; Because the *scratch* buffer is produced before we load this, we
-  ;; have to explicitly activate the mode there.
-  (when-let* ((scratch (get-buffer "*scratch*")))
-    (with-current-buffer scratch
-      (abbrev-mode 1)))
-
-  ;; By default, abbrev asks for confirmation on whether to use
-  ;; `abbrev-file-name' to save abbrevations.  I do not need that, nor
-  ;; do I want it.
-  (remove-hook 'save-some-buffers-functions #'abbrev--possibly-save))
+  (with-eval-after-load 'vc-git
+    (prot-emacs-abbrev vc-git-log-edit-mode-abbrev-table
+    ";update" #'prot-abbrev-update-html)))
 
 ;;; Corfu (in-buffer completion popup)
 (when (eq prot-emacs-completion-in-buffer 'corfu)

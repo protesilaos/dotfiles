@@ -359,7 +359,10 @@ making an abbreviation to a function."
                 (if (stringp expansion)
                     `(define-abbrev ,table ,abbrev ,expansion)
                   `(define-abbrev ,table ,abbrev "" ,expansion))))
-            (seq-split definitions 2)))
+            (seq-split definitions 2))
+         ;; Allow abbrevs with a prefix colon, semicolon, or underscore.  I demonstrated
+         ;; this here: <https://protesilaos.com/codelog/2024-02-03-emacs-abbrev-mode/>.
+         (abbrev-table-put ,table :regexp "\\(?:^\\|[\t\s]+\\)\\(?1:[:;_].*\\|.*\\)"))
      (error "%s is not an abbrev table" ,table)))
 
 (defmacro prot-emacs-configure (&rest body)
