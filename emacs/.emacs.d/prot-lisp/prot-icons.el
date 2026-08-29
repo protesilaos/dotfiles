@@ -203,13 +203,14 @@ More specifically, return the value of `prot-icons-alphabetic' or
     (when (string-suffix-p "-mode" (symbol-name thing))
       (while-let ((parent (get thing 'derived-mode-parent)))
         (setq thing parent)))
-    (or (alist-get thing icons) (alist-get t icons))))
+    (or (alist-get thing icons)
+        (alist-get t icons))))
 
 (defun prot-icons-get-icon (thing &optional face)
   "Return propertized icon THING."
-  (pcase-let ((`(,icon ,inherent-face) (prot-icons--get thing)))
-    (let ((face (or face inherent-face)))
-      (format "%2s" (propertize icon 'font-lock-face face 'face face)))))
+  (pcase-let* ((`(,icon ,inherent-face) (prot-icons--get thing))
+               (face (or face inherent-face)))
+    (format "%2s" (propertize icon 'font-lock-face face 'face face))))
 
 (defun prot-icons-get-file-icon (file)
   "Return FILE icon and face."
