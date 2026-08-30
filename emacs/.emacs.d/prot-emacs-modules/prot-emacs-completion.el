@@ -369,6 +369,9 @@ INDIVIDUAL-CAPFS to the list."
     (setq completion-preview-idle-delay nil)
     (setq completion-preview-ignore-case t)
 
+    (with-eval-after-load 'org
+      (add-to-list 'completion-preview-commands #'org-self-insert-command))
+
     (prot-emacs-hook
       (prog-mode-hook log-edit-mode-hook git-commit-mode-hook comint-mode-hook)
       completion-preview-mode)
