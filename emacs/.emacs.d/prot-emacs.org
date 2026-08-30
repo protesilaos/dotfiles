@@ -4831,13 +4831,21 @@ specific to a given buffer will take precedence over the corresponding
 global value. Being mindful of these nuances does, nevertheless,
 empower us to do things exactly how we like them.
 
-Finally, Cape is not tied to ~corfu~ though I only use them in tandem
-([[#h:804b858f-7913-47ef-aaf4-8eef5b59ecb4][The =prot-emacs-completion.el= settings for in-buffer completion popup (~corfu~)]]).
-The reason is that ~company~ implements its own backends, which are
-just as good in my experience ([[#h:6d3e2d44-9b1e-4092-8287-5062e4f29da4][The =prot-emacs-completion.el= about the in-buffer completion popup (~company~)]]).
+Finally, Cape is not tied to ~corfu~: it can be used with the built-in
+=*Completions*= buffer or the ~completion-preview-mode~ just as well.
+
+- [[#h:804b858f-7913-47ef-aaf4-8eef5b59ecb4][The =prot-emacs-completion.el= settings for in-buffer completion popup (~corfu~)]].
+- [[#h:bb7959b3-d8e6-4163-8e32-bec2b96b7dde][The =prot-emacs-completion.el= for in-buffer completion hints (~completion-preview-mode~)]].
+- [[#h:de61a607-0bdf-462b-94cd-c0898319590e][The =prot-emacs-completion.el= generic minibuffer UI settings]].
+
+Though we normally do not need ~cape~ together with ~company~. The
+reason is that ~company~ implements its own backends, which are just
+as good in my experience ([[#h:6d3e2d44-9b1e-4092-8287-5062e4f29da4][The =prot-emacs-completion.el= about the in-buffer completion popup (~company~)]]).
+Technically, it is possible to use Company backends via Cape, though I
+have not found a comppelling reason to do this.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-(when (eq prot-emacs-completion-in-buffer 'corfu)
+(unless (eq prot-emacs-completion-in-buffer 'company)
   (prot-emacs-configure
     (prot-emacs-install cape)
 

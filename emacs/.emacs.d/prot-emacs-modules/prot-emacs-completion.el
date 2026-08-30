@@ -280,7 +280,7 @@ excerpt: \"Just read the poem. No further comment.\"
       (corfu-history-mode 1)
       (add-to-list 'savehist-additional-variables 'corfu-history))))
 
-(when (eq prot-emacs-completion-in-buffer 'corfu)
+(unless (eq prot-emacs-completion-in-buffer 'company)
   (prot-emacs-configure
     (prot-emacs-install cape)
 
