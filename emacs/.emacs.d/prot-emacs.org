@@ -4974,24 +4974,6 @@ All we need to get started is to enable ~completion-preview-mode~ via
 a relevant hook or ~global-completion-preview-mode~ to have it
 available wherever possible.
 
-The rest of the settings I have here are mostly stylistic, though I
-find them to be the best combination for my preferences. The
-overarching theme of my choices is to reduce noise. More specifically:
-
-- I set ~completion-preview-commands~ to a shorter list of triggers
-  than its default value because, for example, I do not want to see a
-  preview if I am deleting some text I provided: the completion is
-  irrelevant, anyway, so I do not wish to be made aware of it.
-
-- The ~completion-preview-idle-delay~ is fairly high for my typing
-  speed, which means that I will only see the preview if I am typing
-  more slowly. The assumption is that in such a scenario I am
-  uncertain what I should write next, at which point a hint may be
-  helpful. For this reason, the ~completion-preview-exact-match-only~
-  is ~nil~, as I want to see the hints at all times, and the
-  ~completion-preview-minimum-symbol-length~ is fairly high as I only
-  need a hint for longer words/symbols.
-
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 (when (eq prot-emacs-completion-in-buffer 'completion-preview)
   (prot-emacs-configure
