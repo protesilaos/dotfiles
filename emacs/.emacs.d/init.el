@@ -106,6 +106,8 @@ Use the generic completions buffer if any other value is set."
 
 ;;;; Packages
 
+(require 'package)
+
 (setq package-vc-register-as-project nil) ; Emacs 30
 
 (add-hook 'package-menu-mode-hook #'hl-line-mode)
@@ -237,13 +239,13 @@ effects."
   (declare (indent 0))
   (unless (symbolp package)
     (error "The package `%s' is not a symbol" package))
-  `(progn
-     (unless (package-installed-p ',package)
-       (unless package-archive-contents
-         (package-refresh-contents))
-       (condition-case-unless-debug nil
-           (package-install ',package)
-         (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package))))))
+  `(unless (package-installed-p ',package)
+     (condition-case-unless-debug nil
+         (progn
+           (unless package-archive-contents
+             (package-refresh-contents))
+           (package-install ',package))
+       (error (message "Cannot install `%s'; try `M-x package-refresh-contents' first" ',package)))))
 
 (defmacro prot-emacs-install-vc (package &rest vc-args)
   "Install PACKAGE with VC-ARGS, unless it is installed."
