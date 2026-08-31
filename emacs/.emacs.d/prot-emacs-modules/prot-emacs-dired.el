@@ -136,7 +136,7 @@
 (prot-emacs-configure
   (prot-emacs-install-vc
     mandoura
-    "https://github.com/protesilaos/mandoura")
+    "https://github.com/protesilaos/mandoura.git")
   (with-eval-after-load 'dired
     (require 'mandoura)
     (prot-emacs-keybind global-map

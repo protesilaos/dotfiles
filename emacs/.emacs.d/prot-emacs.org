@@ -1224,23 +1224,23 @@ Some examples of the forms together with the macroexpanded code:
 ;; =>         "Cannot install `%s'; try `M-x package-refresh-contents' first"
 ;; =>         'modus-themes)))))
 
-(prot-emacs-install-vc modus-themes "https://github.com/protesilaos/modus-themes")
+(prot-emacs-install-vc modus-themes "https://github.com/protesilaos/modus-themes.git")
 ;; => (progn
 ;; =>   (unless (package-installed-p 'modus-themes)
 ;; =>     (condition-case-unless-debug nil
 ;; =>         (funcall 'package-vc-install
-;; =>                  "https://github.com/protesilaos/modus-themes")
+;; =>                  "https://github.com/protesilaos/modus-themes.git")
 ;; =>       (error
 ;; =>        (message "Cannot install `%s' using VC-ARGS `%S'" 'modus-themes
 ;; =>                 '("https://github.com/protesilaos/modus-themes"))))))
 
-(prot-emacs-install-vc modus-themes :url "https://github.com/protesilaos/modus-themes")
+(prot-emacs-install-vc modus-themes :url "https://github.com/protesilaos/modus-themes.git")
 ;; => (progn
 ;; =>   (unless (package-installed-p 'modus-themes)
 ;; =>     (condition-case-unless-debug nil
 ;; =>         (apply 'package-vc-install
 ;; =>                (modus-themes :url
-;; =>                              "https://github.com/protesilaos/modus-themes"))
+;; =>                              "https://github.com/protesilaos/modus-themes.git"))
 ;; =>       (error
 ;; =>        (message "Cannot install `%s' using VC-ARGS `%S'" 'modus-themes
 ;; =>                 '(:url "https://github.com/protesilaos/modus-themes"))))))
@@ -6398,7 +6398,7 @@ a package for Emacs 29.
 (prot-emacs-configure
   (prot-emacs-install-vc
     mandoura
-    "https://github.com/protesilaos/mandoura")
+    "https://github.com/protesilaos/mandoura.git")
   (with-eval-after-load 'dired
     (require 'mandoura)
     (prot-emacs-keybind global-map
