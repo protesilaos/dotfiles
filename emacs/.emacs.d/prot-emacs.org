@@ -9159,9 +9159,10 @@ Emacs describes as "electric" any behaviour that tries to be smart
 about how it handles a given event.
 
 The ~electric-pair-mode~, for example, automatically inserts a closing
-parenthesis when the user inputs an opening parenthesis. Same idea
-with quotes, performed by the ~electric-quote-mode~. The
+parenthesis when the user inputs an opening parenthesis. The
 ~electric-indent-mode~ tries to be smart about how to indent a line.
+Same idea for ~electric-quote-mode~, which takes ordinary quotes and
+makes them look curly/prettier---though this one I do not want.
 
 I like this functionality in general, except for ~electric-indennt-mode~
 in Org files. The reason is that it keeps the indentation in line with
@@ -9177,8 +9178,8 @@ use-case I have for it..
 ;;;; The "electric" behaviour
 (prot-emacs-configure
   (electric-pair-mode 1)
-  (electric-quote-mode 1)
   (electric-indent-mode 1)
+  (electric-quote-mode -1)
 
   (defun prot/electric-indent-mode-disable ()
     "Disable `electric-indent-local-mode'."

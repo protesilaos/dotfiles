@@ -37,8 +37,8 @@
 ;;;; The "electric" behaviour
 (prot-emacs-configure
   (electric-pair-mode 1)
-  (electric-quote-mode 1)
   (electric-indent-mode 1)
+  (electric-quote-mode -1)
 
   (defun prot/electric-indent-mode-disable ()
     "Disable `electric-indent-local-mode'."
