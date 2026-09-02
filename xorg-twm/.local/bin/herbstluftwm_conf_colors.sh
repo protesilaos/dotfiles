@@ -32,7 +32,7 @@ then
            bg_dim="#1e1e1e"
            fg_main="#ffffff"
            fg_dim="#989898"
-           border_active="#365f7f"
+           border_active="#5f5f5f"
            border_urgent="#ff8059"
            window_divider="#323232"
            ;;
@@ -41,7 +41,7 @@ then
            bg_dim="#f0f0f0"
            fg_main="#000000"
            fg_dim="#595959"
-           border_active="#9fbacf"
+           border_active="#a0a0a0"
            border_urgent="#a60000"
            window_divider="#d7d7d7"
            ;;
