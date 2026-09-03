@@ -4976,6 +4976,12 @@ All we need to get started is to enable ~completion-preview-mode~ via
 a relevant hook or ~global-completion-preview-mode~ to have it
 available wherever possible.
 
+I configure the ~completion-preview-commands~ to not have the commands
+that delete text before the cursor. This is because I do not want to
+be distracted by the preview while I am fixing a typo. In such a case,
+I will normally type something else which will then give me a preview
+I might benefit from.
+
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 (when (eq prot-emacs-completion-in-buffer 'completion-preview)
   (prot-emacs-configure
@@ -4983,6 +4989,12 @@ available wherever possible.
     (setq completion-preview-minimum-symbol-length 2)
     (setq completion-preview-idle-delay nil)
     (setq completion-preview-ignore-case t)
+
+    (setq completion-preview-commands
+          (seq-remove
+           (lambda (command)
+             (memq command '(delete-backward-char backward-delete-char-untabify)))
+           completion-preview-commands))
 
     (with-eval-after-load 'org
       (add-to-list 'completion-preview-commands #'org-self-insert-command))

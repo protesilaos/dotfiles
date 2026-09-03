@@ -369,6 +369,12 @@ INDIVIDUAL-CAPFS to the list."
     (setq completion-preview-idle-delay nil)
     (setq completion-preview-ignore-case t)
 
+    (setq completion-preview-commands
+          (seq-remove
+           (lambda (command)
+             (memq command '(delete-backward-char backward-delete-char-untabify)))
+           completion-preview-commands))
+
     (with-eval-after-load 'org
       (add-to-list 'completion-preview-commands #'org-self-insert-command))
 
