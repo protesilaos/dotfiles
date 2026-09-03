@@ -5286,6 +5286,11 @@ function as close to ~mct~ as possible.
 
 [ This is subject to a user option: [[#h:db620e44-fc8f-45b8-a7fd-ae1d0b7ce86c][The =prot-emacs-completion.el= setting to load a minibuffer UI submodule]]. ]
 
+[ *UPDATE 2026-09-03:* Starting with Emacs 31, this package is no
+  longer needed. You can get almost the same experience by configuring
+  built-in features. I did a video on the matter:
+  <https://protesilaos.com/codelog/2026-07-29-emacs-default-minibuffer-completion-overview/>. ]
+
 The ~mct~ package is my set of tweaks on top of the default minibuffer
 and =*Completions*= interface to make them work as part of a
 contiguous space. It all starts by providing cycling motions from the
