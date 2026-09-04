@@ -49,28 +49,29 @@ command or use the commands `prot-vertico-private-next' and
 automatically.")
 
 (defvar prot-vertico-multiform-maximal
-  '((vertico-count . 10)
+  '(reverse
+    (vertico-count . 10)
     (vertico-preselect . directory)
     (vertico-resize . t))
   "List of configurations for maximal Vertico multiform.")
 
 (defun prot-vertico-private-next ()
-  "Like `vertico-next' but toggle vertical view if needed.
+  "Like `vertico-next' but toggle reverse vertical view if needed.
 This is done to accommodate `prot-vertico-multiform-minimal'."
   (interactive)
   (if vertico-unobtrusive-mode
       (progn
-        (vertico-multiform-vertical)
+        (vertico-multiform-reverse)
         (vertico-next 1))
     (vertico-next 1)))
 
 (defun prot-vertico-private-previous ()
-  "Like `vertico-previous' but toggle vertical view if needed.
+  "Like `vertico-previous' but toggle reverse vertical view if needed.
 This is done to accommodate `prot-vertico-multiform-minimal'."
   (interactive)
   (if vertico-unobtrusive-mode
       (progn
-        (vertico-multiform-vertical)
+        (vertico-multiform-reverse)
         (vertico-previous 1))
     (vertico-previous 1)))
 

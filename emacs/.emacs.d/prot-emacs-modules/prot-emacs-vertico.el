@@ -3,7 +3,7 @@
   (prot-emacs-install vertico)
 
   (setq vertico-scroll-margin 0)
-  (setq vertico-count 5)
+  (setq vertico-count 10)
   (setq vertico-resize t)
   (setq vertico-cycle t)
 
@@ -25,6 +25,7 @@
 ;;; Custom tweaks for vertico (prot-vertico.el)
 (prot-emacs-configure
   (require 'prot-vertico)
+  (setq vertico-reverse-candidates nil)
   (setq vertico-multiform-commands
         `(("consult-\\(.*\\)?\\(find\\|grep\\|ripgrep\\)" ,@prot-vertico-multiform-maximal)))
   (setq vertico-multiform-categories

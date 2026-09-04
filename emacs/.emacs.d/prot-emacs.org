@@ -5428,7 +5428,7 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
   (prot-emacs-install vertico)
 
   (setq vertico-scroll-margin 0)
-  (setq vertico-count 5)
+  (setq vertico-count 10)
   (setq vertico-resize t)
   (setq vertico-cycle t)
 
@@ -5450,6 +5450,7 @@ The extras I provide for ~vertico~ are in [[#h:3796a4c9-8659-4782-8aaa-3cf4e9509
 ;;; Custom tweaks for vertico (prot-vertico.el)
 (prot-emacs-configure
   (require 'prot-vertico)
+  (setq vertico-reverse-candidates nil)
   (setq vertico-multiform-commands
         `(("consult-\\(.*\\)?\\(find\\|grep\\|ripgrep\\)" ,@prot-vertico-multiform-maximal)))
   (setq vertico-multiform-categories
@@ -19419,28 +19420,29 @@ command or use the commands `prot-vertico-private-next' and
 automatically.")
 
 (defvar prot-vertico-multiform-maximal
-  '((vertico-count . 10)
+  '(reverse
+    (vertico-count . 10)
     (vertico-preselect . directory)
     (vertico-resize . t))
   "List of configurations for maximal Vertico multiform.")
 
 (defun prot-vertico-private-next ()
-  "Like `vertico-next' but toggle vertical view if needed.
+  "Like `vertico-next' but toggle reverse vertical view if needed.
 This is done to accommodate `prot-vertico-multiform-minimal'."
   (interactive)
   (if vertico-unobtrusive-mode
       (progn
-        (vertico-multiform-vertical)
+        (vertico-multiform-reverse)
         (vertico-next 1))
     (vertico-next 1)))
 
 (defun prot-vertico-private-previous ()
-  "Like `vertico-previous' but toggle vertical view if needed.
+  "Like `vertico-previous' but toggle reverse vertical view if needed.
 This is done to accommodate `prot-vertico-multiform-minimal'."
   (interactive)
   (if vertico-unobtrusive-mode
       (progn
-        (vertico-multiform-vertical)
+        (vertico-multiform-reverse)
         (vertico-previous 1))
     (vertico-previous 1)))
 
