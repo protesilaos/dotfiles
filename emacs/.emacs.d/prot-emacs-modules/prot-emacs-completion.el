@@ -369,20 +369,16 @@ INDIVIDUAL-CAPFS to the list."
     (setq completion-preview-idle-delay nil)
     (setq completion-preview-ignore-case t)
 
-    (setq completion-preview-commands
-          (seq-remove
-           (lambda (command)
-             (memq command '(delete-backward-char backward-delete-char-untabify)))
-           completion-preview-commands))
-
-    (with-eval-after-load 'org
-      (add-to-list 'completion-preview-commands #'org-self-insert-command))
-
     (prot-emacs-hook
       (prog-mode-hook log-edit-mode-hook git-commit-mode-hook comint-mode-hook)
       completion-preview-mode)
 
     (with-eval-after-load 'completion-preview
+      (setq completion-preview-commands
+            (seq-remove
+             (lambda (command)
+               (memq command '(delete-backward-char backward-delete-char-untabify)))
+             completion-preview-commands))
       (prot-emacs-keybind completion-preview-active-mode-map
         "M-i" #'completion-preview-insert-word
         "M-n" #'completion-preview-next-candidate
@@ -390,7 +386,10 @@ INDIVIDUAL-CAPFS to the list."
         "M-<return>" #'completion-preview-insert
         ;; With TAB we effectively defer to another frontend to show
         ;; more completion candidates at once.
-        "<tab>" #'completion-preview-complete))))
+        "<tab>" #'completion-preview-complete))
+
+    (with-eval-after-load 'org
+      (add-to-list 'completion-preview-commands #'org-self-insert-command))))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (when prot-emacs-completion-extras
