@@ -754,7 +754,8 @@ are covered in the affected sections of my configuration:
   "Front-end for text completion in the buffer.
 When the value is either `corfu' or `company', use the package of the
 given name.  When the value is `completion-preview' use the built-in
-`completion-preview-mode'.
+`completion-preview-mode'.  When the value is `corfu-completion-preview',
+then use the `corfu' package and `completion-preview-mode' in tandem.
 
 Use the generic completions buffer if any other value is set."
   :group 'prot-emacs
@@ -763,7 +764,8 @@ Use the generic completions buffer if any other value is set."
           (const :tag "Generic completions buffer" t)
           (const :tag "The `corfu' package" corfu)
           (const :tag "The `company' package" company)
-          (const :tag "The built-in `completion-preview-mode'" completion-preview)))
+          (const :tag "The built-in `completion-preview-mode'" completion-preview)
+          (const :tag "Corfu and `completion-preview-mode'" corfu-completion-preview)))
 #+end_src
 
 ** The =init.el= basic configurations to disable backups and lockfiles
@@ -4785,7 +4787,8 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 ;;; Corfu (in-buffer completion popup)
-(when (eq prot-emacs-completion-in-buffer 'corfu)
+(when (or (eq prot-emacs-completion-in-buffer 'corfu)
+          (eq prot-emacs-completion-in-buffer 'corfu-completion-preview))
   (prot-emacs-configure
     (prot-emacs-install corfu)
 
@@ -4990,7 +4993,8 @@ I will normally type something else which will then give me a preview
 I might benefit from.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
-(when (eq prot-emacs-completion-in-buffer 'completion-preview)
+(when (or (eq prot-emacs-completion-in-buffer 'completion-preview)
+          (eq prot-emacs-completion-in-buffer 'corfu-completion-preview))
   (prot-emacs-configure
     (setq completion-preview-exact-match-only nil)
     (setq completion-preview-minimum-symbol-length 2)

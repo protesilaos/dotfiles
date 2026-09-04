@@ -266,7 +266,8 @@ excerpt: \"Just read the poem. No further comment.\"
     ";update" #'prot-abbrev-update-html)))
 
 ;;; Corfu (in-buffer completion popup)
-(when (eq prot-emacs-completion-in-buffer 'corfu)
+(when (or (eq prot-emacs-completion-in-buffer 'corfu)
+          (eq prot-emacs-completion-in-buffer 'corfu-completion-preview))
   (prot-emacs-configure
     (prot-emacs-install corfu)
 
@@ -369,7 +370,8 @@ INDIVIDUAL-CAPFS to the list."
         "<down>" #'company-select-next-or-abort)
       (company-statistics-mode 1))))
 
-(when (eq prot-emacs-completion-in-buffer 'completion-preview)
+(when (or (eq prot-emacs-completion-in-buffer 'completion-preview)
+          (eq prot-emacs-completion-in-buffer 'corfu-completion-preview))
   (prot-emacs-configure
     (setq completion-preview-exact-match-only nil)
     (setq completion-preview-minimum-symbol-length 2)
