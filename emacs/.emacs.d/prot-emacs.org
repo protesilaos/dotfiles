@@ -4807,7 +4807,7 @@ Also see [[#h:567bb00f-1d82-4746-93e5-e0f60721728a][the =prot-emacs-completion.e
       (add-to-list 'savehist-additional-variables 'corfu-history))))
 #+end_src
 
-**** The =prot-emacs-completion.el= back-ends for in-buffer completion with ~corfu~ (~cape~)
+*** The =prot-emacs-completion.el= back-ends for in-buffer completion with or without ~corfu~ (~cape~)
 :PROPERTIES:
 :CUSTOM_ID: h:09d0dd65-90a5-41eb-a2b9-53d00eca77df
 :END:
