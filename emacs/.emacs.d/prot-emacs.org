@@ -4851,7 +4851,7 @@ Though we normally do not need ~cape~ together with ~company~. The
 reason is that ~company~ implements its own backends, which are just
 as good in my experience ([[#h:6d3e2d44-9b1e-4092-8287-5062e4f29da4][The =prot-emacs-completion.el= about the in-buffer completion popup (~company~)]]).
 Technically, it is possible to use Company backends via Cape, though I
-have not found a comppelling reason to do this.
+have not found a compelling reason to do this.
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-completion.el"
 (unless (eq prot-emacs-completion-in-buffer 'company)
