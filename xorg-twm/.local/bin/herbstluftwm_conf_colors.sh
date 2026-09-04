@@ -46,17 +46,20 @@ then
    _hc set frame_border_active_color "$bg_main"
    _hc set frame_bg_active_color "$fg_dim"
    _hc attr theme.active.color "$bg_main"
-   _hc attr theme.active.inner_color "$fg_dim"
+   _hc attr theme.active.inner_color "$bg_main"
+   _hc attr theme.active.outer_color "$fg_main"
    _hc attr theme.active.title_color "$fg_main"
 
    _hc set frame_border_normal_color "$bg_dim"
    _hc set frame_bg_normal_color "$bg_dim"
    _hc attr theme.normal.color "$bg_dim"
    _hc attr theme.normal.inner_color "$bg_dim"
+   _hc attr theme.normal.outer_color "$bg_dim"
    _hc attr theme.normal.title_color "$fg_dim"
 
    _hc attr theme.urgent.color "$border_urgent"
    _hc attr theme.urgent.inner_color "$border_urgent"
+   _hc attr theme.urgent.outer_color "$border_urgent"
    _hc attr theme.urgent.title_color "$bg_main"
 
    # The following are counter-intuitive names for inactive tabs of
@@ -79,10 +82,4 @@ then
    # This is used when resizing and the window contents do not stretch
    # immediately to fill in the space.
    _hc attr theme.background_color "$bg_dim"
-
-   for state in active urgent normal
-   do
-    _hc substitute C theme.${state}.inner_color \
-        attr theme.${state}.outer_color C
-   done
 fi
