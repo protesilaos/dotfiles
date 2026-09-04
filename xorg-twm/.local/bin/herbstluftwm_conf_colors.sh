@@ -32,38 +32,31 @@ then
            bg_dim="#1e1e1e"
            fg_main="#ffffff"
            fg_dim="#989898"
-           bg_active="#365f7f"
-           border_active="#5f5f5f"
            border_urgent="#ff8059"
-           window_divider="#323232"
            ;;
        *)
            bg_main="#ffffff"
            bg_dim="#f0f0f0"
            fg_main="#000000"
            fg_dim="#595959"
-           bg_active="#9fbacf"
-           border_active="#a0a0a0"
            border_urgent="#a60000"
-           window_divider="#d7d7d7"
            ;;
    esac
 
-   _hc set frame_border_active_color "$border_active"
-   _hc set frame_border_normal_color "$border_normal"
-   _hc set frame_bg_normal_color "$bg_main"
-   _hc set frame_bg_active_color "$bg_active"
-
-   _hc attr theme.active.color "$border_active"
-   _hc attr theme.normal.color "$bg_main"
-   _hc attr theme.urgent.color "$border_urgent"
-
-   _hc attr theme.active.inner_color "$border_active"
-   _hc attr theme.normal.inner_color "$window_divider"
-   _hc attr theme.urgent.inner_color "$border_urgent"
-
+   _hc set frame_border_active_color "$bg_main"
+   _hc set frame_bg_active_color "$bg_main"
+   _hc attr theme.active.color "$bg_main"
+   _hc attr theme.active.inner_color "$fg_dim"
    _hc attr theme.active.title_color "$fg_main"
+
+   _hc set frame_border_normal_color "$bg_dim"
+   _hc set frame_bg_normal_color "$bg_dim"
+   _hc attr theme.normal.color "$bg_dim"
+   _hc attr theme.normal.inner_color "$bg_dim"
    _hc attr theme.normal.title_color "$fg_dim"
+
+   _hc attr theme.urgent.color "$border_urgent"
+   _hc attr theme.urgent.inner_color "$border_urgent"
    _hc attr theme.urgent.title_color "$bg_main"
 
    # The following are counter-intuitive names for inactive tabs of
@@ -77,15 +70,15 @@ then
    # SELECTED TABS CAN BE STYLED USING THE TAB_... ATTRIBUTES. If
    # these attributes are empty, then the colors are taken from the
    # theme of the client to which the tab refers to.
-   _hc attr theme.active.tab_color "$bg_main"
-   _hc attr theme.normal.tab_color "$bg_main"
+   _hc attr theme.active.tab_color "$bg_dim"
+   _hc attr theme.normal.tab_color "$bg_dim"
    _hc attr theme.urgent.tab_color "$border_urgent"
 
-   _hc attr theme.floating.outer_color "$border_active"
+   _hc attr theme.floating.outer_color "$bg_main"
 
    # This is used when resizing and the window contents do not stretch
    # immediately to fill in the space.
-   _hc attr theme.background_color "$bg_main"
+   _hc attr theme.background_color "$bg_dim"
 
    for state in active urgent normal
    do
