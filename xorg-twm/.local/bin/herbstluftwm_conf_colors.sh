@@ -44,7 +44,7 @@ then
    esac
 
    _hc set frame_border_active_color "$bg_main"
-   _hc set frame_bg_active_color "$bg_main"
+   _hc set frame_bg_active_color "$fg_dim"
    _hc attr theme.active.color "$bg_main"
    _hc attr theme.active.inner_color "$fg_dim"
    _hc attr theme.active.title_color "$fg_main"
