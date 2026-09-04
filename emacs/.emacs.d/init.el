@@ -53,7 +53,8 @@ These include the packages `marginalia', `consult', `corfu',
   "Front-end for text completion in the buffer.
 When the value is either `corfu' or `company', use the package of the
 given name.  When the value is `completion-preview' use the built-in
-`completion-preview-mode'.
+`completion-preview-mode'.  When the value is `corfu-completion-preview',
+then use the `corfu' package and `completion-preview-mode' in tandem.
 
 Use the generic completions buffer if any other value is set."
   :group 'prot-emacs
@@ -62,7 +63,8 @@ Use the generic completions buffer if any other value is set."
           (const :tag "Generic completions buffer" t)
           (const :tag "The `corfu' package" corfu)
           (const :tag "The `company' package" company)
-          (const :tag "The built-in `completion-preview-mode'" completion-preview)))
+          (const :tag "The built-in `completion-preview-mode'" completion-preview)
+          (const :tag "Corfu and `completion-preview-mode'" corfu-completion-preview)))
 
 (setq make-backup-files nil)
 (setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
