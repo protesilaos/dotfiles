@@ -7484,7 +7484,7 @@ of the latter, it even works in the Magit status buffer:
   (setq smerge-refine-shadow-cursor nil)) ; Emacs 31
 #+end_src
 
-*** The =prot-emacs-git.el= section about =vc.el= and related
+*** The =prot-emacs-git.el= section about =vc.el= and related (including =prot-vc.el=)
 :PROPERTIES:
 :CUSTOM_ID: h:50add1d8-f0f4-49be-9e57-ab280a4aa300
 :END:
@@ -7560,6 +7560,9 @@ control. For more demanding operations, there is either the
 command-line or the wonderful ~magit~ Emacs package
 ([[#h:b08af527-9ebf-4425-ac3a-24b4f371a4fd][The =prot-emacs-git.el= section about ~magit~ (great Git client)]]).
 
+My =prot-vc.el= adds minor refinements and a few commands on top of
+this corpus of functionality ([[#h:4405e6d5-6bd9-4fbe-8d42-c788b3dd2ee7][The =prot-vc.el= library]]).
+
 Note that in the following code block I redefine lots of key bindings.
 They make more sense to me.
 
@@ -7630,51 +7633,16 @@ They make more sense to me.
     (setq vc-git-log-edit-summary-target-len 50)
     (setq vc-git-log-edit-summary-max-len 70)
 
-    (define-advice vc-push (:around (&rest args) prot)
-      (let ((current-window (selected-window)))
-        (apply args)
-        (select-window current-window)))
-
-    (define-advice vc-pull (:around (&rest args) prot)
-      (let ((current-window (selected-window)))
-        (apply args)
-        (select-window current-window)))
-
-    (defun prot/vc-diff-dwim ()
-      "Show diff of buffer against file or against VC history."
-      (interactive)
-      (if-let* ((buffer (current-buffer))
-                (_ (buffer-modified-p buffer)))
-          (diff-buffer-with-file buffer)
-        (call-interactively #'vc-diff)))
-
-    (defvar prot/vc-git-grep-history nil
-      "Minibuffer history for `prot/vc-git-grep'.")
-
-    (defun prot/vc-git-grep (directory regexp)
-      "Use `vc-git-grep' with REGEXP in the current root Git DIRECTORY."
-      (interactive
-       (let ((directory (or (vc-root-dir)
-                            (locate-dominating-file "." ".git")
-                            (user-error "No VC root available"))))
-         (list
-          directory
-          (read-regexp
-           (format "vc-git-grep for REGEXP in `%s': "
-                   (propertize directory 'face 'warning))
-           nil 'prot/vc-git-grep-history))))
-      (vc-git-grep regexp "*" directory))
-
     ;; NOTE: I override lots of the defaults
     (prot-emacs-keybind global-map
       "C-x v B" #'vc-annotate ; Blame mnemonic
-      "C-x v g" #'prot/vc-git-grep ; override original `vc-annotate' key
+      "C-x v c" #'prot-vc-clone
+      "C-x v g" #'prot-vc-git-grep ; override original `vc-annotate' key
       "C-x v e" #'vc-ediff
       "C-x v k" #'vc-delete-file ; 'k' for kill==>delete is more common
       "C-x v G" #'vc-log-search  ; git log --grep
       "C-x v t" #'vc-create-tag
-      "C-x v c" #'vc-clone ; Emacs 31
-      "C-x v d" #'prot/vc-diff-dwim
+      "C-x v d" #'prot-vc-diff-dwim
       "C-x v ." #'vc-dir-root ; `vc-dir-root' is from Emacs 28
       "C-x v <return>" #'vc-dir-root)
     (prot-emacs-keybind vc-dir-mode-map
@@ -19773,6 +19741,152 @@ Also see `prot-window-delete-popup-frame'." command)
 
 (provide 'prot-window)
 ;;; prot-window.el ends here
+#+end_src
+
+** The =prot-vc.el= library
+:PROPERTIES:
+:CUSTOM_ID: h:4405e6d5-6bd9-4fbe-8d42-c788b3dd2ee7
+:END:
+
+#+begin_src emacs-lisp :tangle "prot-lisp/prot-vc.el" :mkdirp yes
+;;; prot-vc.el --- Extensions for VC -*- lexical-binding: t -*-
+
+;; Copyright (C) 2026  Protesilaos
+
+;; Author: Protesilaos <info@protesilaos.com>
+;; URL: https://protesilaos.com/emacs/dotemacs
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "31.1"))
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; This covers my VC-related extensions, for use in my Emacs setup:
+;; https://protesilaos.com/emacs/dotemacs.
+
+;;; Code:
+
+;;;; Window and buffer behaviour
+
+(define-advice vc-push (:around (&rest args) prot-vc)
+  (let ((current-window (selected-window)))
+    (apply args)
+    (select-window current-window)))
+
+(define-advice vc-pull (:around (&rest args) prot-vc)
+  (let ((current-window (selected-window)))
+    (apply args)
+    (select-window current-window)))
+
+;;;; Diff
+
+;;;###autoload
+(defun prot-vc-diff-dwim ()
+  "Show diff of buffer against file or against VC history."
+  (interactive)
+  (if-let* ((buffer (current-buffer))
+            (_ (buffer-modified-p buffer)))
+      (diff-buffer-with-file buffer)
+    (call-interactively #'vc-diff)))
+
+;;;; Git grep
+
+(defvar prot-vc-git-grep-history nil
+  "Minibuffer history for `prot-vc-git-grep'.")
+
+(defun prot-vc--get-root ()
+  "Return VC root."
+  (or (vc-root-dir)
+      (locate-dominating-file "." ".git")))
+
+;;;###autoload
+(defun prot-vc-git-grep (directory regexp)
+  "Use `vc-git-grep' with REGEXP in the current root Git DIRECTORY."
+  (interactive
+   (if-let* ((directory (prot-vc--get-root)))
+     (list
+      directory
+      (read-regexp
+       (format "vc-git-grep for REGEXP in `%s': " (propertize directory 'face 'warning))
+       nil 'prot-vc-git-grep-history))
+     (user-error "No Git directory found")))
+  (vc-git-grep regexp "*" directory))
+
+;;;; VC Clone
+
+(defvar prot-vc-clone-types
+  '((personal . "~/Git/Projects/")
+    (emacs-community . "~/Git/emacs-community/")
+    (general . "~/Git/general/")
+    (build . "~/Builds/"))
+  "Alist of (SYMBOL . PATH) for cloning Git repositories.
+SYMBOL is an arbitrary symbol describing the type of Git repository,
+which PATH is its corresponding filesystem location.")
+
+(defvar prot-vc-clone-type-prompt-history nil
+  "Minibuffer history for `prot-vc-clone-type-prompt'.")
+
+(defun prot-vc-clone--get-path (type)
+  "Return path corresponding to TYPE."
+  (and-let* ((type (intern type))
+             (path (alist-get type prot-vc-clone-types)))))
+
+(defun prot-vc-clone--format-name (url)
+  "Format name of VC project based on URL."
+  (let* ((strings (split-string url "[/]" :omit-nulls))
+         (length (length strings))
+         (butlast (nth (- length 2) strings))
+         (last (nth (- length 1) strings))
+         (last-two (list butlast last)))
+    (string-join last-two "-")))
+
+(defun prot-vc-clone-type-annotate (type)
+  "Annotate TYPE among `prot-vc-clone-types' with its path."
+  (when-let* ((path (prot-vc-clone--get-path type)))
+    (format " -- %s" path)))
+
+(defvar prot-vc-clone-completion-metadata
+  '((annotation-function . prot-vc-clone-type-annotate))
+  "Completion metadata for `prot-vc-clone-type-prompt'.")
+
+(defun prot-vc-clone-type-prompt ()
+  "Prompt for type among `prot-vc-clone-types' and return its path."
+  (let ((symbols (mapcar #'car prot-vc-clone-types))
+        (default (car prot-vc-clone-type-prompt-history)))
+    (completing-read
+     (format-prompt "Select VC project type" default)
+     (completion-table-with-metadata symbols prot-vc-clone-completion-metadata)
+     nil t nil 'prot-vc-clone-type-prompt-history default)))
+
+;;;###autoload
+(defun prot-vc-clone (remote type)
+  "Prompt for REMOTE of TYPE and clone it outright."
+  (interactive
+   (list
+    (read-string "Remote: " nil 'vc--remotes-history)
+    (prot-vc-clone-type-prompt)))
+  (if-let* ((path (prot-vc-clone--get-path type))
+            (name (prot-vc-clone--format-name remote))
+            (directory (expand-file-name name path)))
+      (vc-clone remote 'Git directory nil t)
+    (error "The type `%s' does not have a path in `prot-vc-clone-types'" type)))
+
+(provide 'prot-vc)
+;;; prot-vc.el ends here
 #+end_src
 
 * Frequently Asked Questions (FAQ)

@@ -148,51 +148,16 @@
     (setq vc-git-log-edit-summary-target-len 50)
     (setq vc-git-log-edit-summary-max-len 70)
 
-    (define-advice vc-push (:around (&rest args) prot)
-      (let ((current-window (selected-window)))
-        (apply args)
-        (select-window current-window)))
-
-    (define-advice vc-pull (:around (&rest args) prot)
-      (let ((current-window (selected-window)))
-        (apply args)
-        (select-window current-window)))
-
-    (defun prot/vc-diff-dwim ()
-      "Show diff of buffer against file or against VC history."
-      (interactive)
-      (if-let* ((buffer (current-buffer))
-                (_ (buffer-modified-p buffer)))
-          (diff-buffer-with-file buffer)
-        (call-interactively #'vc-diff)))
-
-    (defvar prot/vc-git-grep-history nil
-      "Minibuffer history for `prot/vc-git-grep'.")
-
-    (defun prot/vc-git-grep (directory regexp)
-      "Use `vc-git-grep' with REGEXP in the current root Git DIRECTORY."
-      (interactive
-       (let ((directory (or (vc-root-dir)
-                            (locate-dominating-file "." ".git")
-                            (user-error "No VC root available"))))
-         (list
-          directory
-          (read-regexp
-           (format "vc-git-grep for REGEXP in `%s': "
-                   (propertize directory 'face 'warning))
-           nil 'prot/vc-git-grep-history))))
-      (vc-git-grep regexp "*" directory))
-
     ;; NOTE: I override lots of the defaults
     (prot-emacs-keybind global-map
       "C-x v B" #'vc-annotate ; Blame mnemonic
-      "C-x v g" #'prot/vc-git-grep ; override original `vc-annotate' key
+      "C-x v c" #'prot-vc-clone
+      "C-x v g" #'prot-vc-git-grep ; override original `vc-annotate' key
       "C-x v e" #'vc-ediff
       "C-x v k" #'vc-delete-file ; 'k' for kill==>delete is more common
       "C-x v G" #'vc-log-search  ; git log --grep
       "C-x v t" #'vc-create-tag
-      "C-x v c" #'vc-clone ; Emacs 31
-      "C-x v d" #'prot/vc-diff-dwim
+      "C-x v d" #'prot-vc-diff-dwim
       "C-x v ." #'vc-dir-root ; `vc-dir-root' is from Emacs 28
       "C-x v <return>" #'vc-dir-root)
     (prot-emacs-keybind vc-dir-mode-map
