@@ -8,6 +8,7 @@
 
   (prot-icons-dired-mode 1)
   (prot-icons-xref-mode 1)
+  (prot-icons-tab-bar-mode 1)
 
   (when (and prot-emacs-load-theme-family
              (eq prot-icons-style 'alphabetic))

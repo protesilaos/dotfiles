@@ -359,5 +359,25 @@ More specifically, return the value of `prot-icons-alphabetic' or
       (advice-add #'list-buffers--refresh :after #'prot-icons-buffer-menu--add-icons)
     (advice-remove #'list-buffers--refresh #'prot-icons-buffer-menu--add-icons)))
 
+;;;; Icons for `tab-bar-mode'
+
+(defvar prot-icons--tab-bar-name-function tab-bar-tab-name-function
+  "Last known value of `tab-bar-tab-name-function'.")
+
+(defun prot-icons-tab-bar-name ()
+  (let* ((name (tab-bar-tab-name-current))
+         (buffer (get-buffer name))
+         (mode (with-current-buffer buffer major-mode))
+         (icon (prot-icons-get-icon mode)))
+    (format "%s %s" icon name)))
+
+;;;###autoload
+(define-minor-mode prot-icons-tab-bar-mode
+  "Display icons for `tab-bar-mode' names."
+  :global t
+  (if prot-icons-tab-bar-mode
+      (setq tab-bar-tab-name-function #'prot-icons-tab-bar-name)
+    (setq tab-bar-tab-name-function prot-icons--tab-bar-name-function)))
+
 (provide 'prot-icons)
 ;;; prot-icons.el ends here
