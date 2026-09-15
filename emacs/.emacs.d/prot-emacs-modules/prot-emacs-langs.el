@@ -173,7 +173,7 @@
     (setq flymake-fringe-indicator-position 'left-fringe)
     (setq flymake-suppress-zero-counters t)
     (setq flymake-no-changes-timeout nil)
-    (setq flymake-start-on-flymake-mode t)
+    (setq flymake-start-on-flymake-mode nil)
     (setq flymake-start-on-save-buffer t)
     (setq flymake-proc-compilation-prevents-syntax-check t)
     (setq flymake-wrap-around nil)
