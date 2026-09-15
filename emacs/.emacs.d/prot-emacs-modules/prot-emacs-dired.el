@@ -143,8 +143,8 @@
       "M-<AudioPlay>" #'mandoura-return-track-title-and-time
       "M-<XF86AudioPlay>" #'mandoura-return-track-title-and-time)
     (prot-emacs-keybind dired-mode-map
-      "M-<return>" #'mandoura-play-playlist
-      "M-RET" #'mandoura-play-playlist)
+      "M-<return>" #'mandoura-play-files
+      "M-RET" #'mandoura-play-files)
     (setq mandoura-saved-playlist-directory "~/Music/playlists/")))
 
 (provide 'prot-emacs-dired)
