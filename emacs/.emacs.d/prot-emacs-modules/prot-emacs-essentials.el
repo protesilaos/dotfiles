@@ -457,7 +457,10 @@
 
   (setq ansi-color-for-comint-mode t) ; also see `ansi-color-for-compilation-mode'
   (setq comint-prompt-read-only t)
+
   (setq comint-buffer-maximum-size 9999)
+  (add-hook 'comint-output-filter-functions #'comint-truncate-buffer)
+
   (setq comint-completion-autolist t)
   (setq comint-input-ignoredups t)
   (setq-default comint-scroll-to-bottom-on-input t)
