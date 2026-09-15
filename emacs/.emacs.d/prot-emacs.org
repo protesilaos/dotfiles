@@ -11955,7 +11955,7 @@ want in this case.
     (add-hook 'elfeed-show-mode-hook #'visual-line-mode)
 
     (prot-emacs-keybind elfeed-search-mode-map
-      "w" #'elfeed-search-yank
+      "w" #'elfeed-search-copy-link
       "g" #'elfeed-update
       "G" #'revert-buffer)
 
@@ -11987,10 +11987,10 @@ want in this case.
     ;; This way I can quickly notice my own entries in the listing.
     (add-to-list 'elfeed-search-face-alist '(personal bold-italic))
 
-    ;; NOTE 2026-05-29: Make `elfeed-search-yank' mark the entry as
+    ;; NOTE 2026-05-29: Make `elfeed-search-copy-link' mark the entry as
     ;; read.  If I am copying the URL, then it means I already plan to
     ;; do something with this entry outside of Elfeed.
-    (define-advice elfeed-search-yank (:around (&rest args) prot)
+    (define-advice elfeed-search-copy-link (:around (&rest args) prot)
       (save-excursion
         (apply args))
       (call-interactively 'elfeed-search-untag-all-unread))))
