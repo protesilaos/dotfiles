@@ -16654,14 +16654,15 @@ the project in DIRECTORY using `project-dired'."
 
 ;;;; Produce a VC root log for the project
 
-(defun prot-project-rename-vc-root-log (&rest _)
+;; FIXME 2026-09-16: This breaks the `revert-buffer-function' as it
+;; creates a new log buffer each time instead of reverting the
+;; existing one.
+(define-advice vc-print-root-log (:after (&rest _) prot)
   "Rename the buffer of `vc-print-root-log' to mention the project."
   (when-let* ((root (vc-root-dir))
-              ((consp project--list))
-              ((member root (mapcar #'car project--list))))
+              (_ (consp project--list))
+              (_ (member root (mapcar #'car project--list))))
     (rename-buffer (format "*vc-root-log: %s*" root))))
-
-(advice-add #'vc-print-root-log :after #'prot-project-rename-vc-root-log)
 
 ;;;; One tab per project
 
