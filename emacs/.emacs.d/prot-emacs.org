@@ -9164,30 +9164,40 @@ The ~electric-pair-mode~, for example, automatically inserts a closing
 parenthesis when the user inputs an opening parenthesis. The
 ~electric-indent-mode~ tries to be smart about how to indent a line.
 Same idea for ~electric-quote-mode~, which takes ordinary quotes and
-makes them look curly/prettier---though this one I do not want.
+makes them look curly/prettier.
 
-I like this functionality in general, except for ~electric-indennt-mode~
-in Org files. The reason is that it keeps the indentation in line with
-a typographic list item when what I really want is to escape from the
-list.
+I tried to use all of them in earnest and have concluded that I only
+like the behaviour of ~electric-indent-mode~ in the context of
+programming. The ~electric-indent-mode~ is the global name, so in a
+programming mode I am opting for ~electric-indent-local-mode~. Note
+that this is only for programming, because I never want to do the same
+with prose.
+
+The other modes are not suitable to my workflow. The ~electric-quote-mode~
+will change the characters I am inputting, which I do not like. As for
+the ~electric-pair-mode~, I did not like two aspects of its behaviour:
+
+- For the paired characters, the highlighted region is not deleted but
+  is instead wrapped in the given characters. This breaks my flow
+  because now I need to think which are those cases. Whereas I like
+  ~delete-selection-mode~ to always have the same effect ([[#h:d551b90d-d730-4eb5-976a-24b010fd4db3][The =prot-emacs-essentials.el= section for ~delete-selection-mode~]]).
+- Balancing parentheses in Lisp as you insert them is very nice.
+  Though it becomes trickier when you need to modify existing code.
+  Then you need to rely on marking the code and inserting the
+  parentheses around it, as noted above. Whereas I find it easier to
+  just write on a previous line and then move to where I want the
+  expression to end and insert a closing delimiter there.
 
 If I need to manually wrap the symbol at point or a region in a pair
 of characters, I use my ~prot-pair-insert~ command ([[#h:48d2bab5-241f-49dd-9554-8a4dcedce75e][The =prot-emacs-essentials.el= section about =prot-pair.el= (insert character pairs)]]).
-But maybe that is not needed at all, though I need to test again every
-use-case I have for it..
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
 ;;;; The "electric" behaviour
 (prot-emacs-configure
-  (electric-pair-mode 1)
-  (electric-indent-mode 1)
+  (electric-pair-mode -1)
+  (electric-indent-mode -1)
   (electric-quote-mode -1)
-
-  (defun prot/electric-indent-mode-disable ()
-    "Disable `electric-indent-local-mode'."
-    (electric-indent-local-mode -1))
-
-  (add-hook 'org-mode-hook #'prot/electric-indent-mode-disable))
+  (add-hook 'prog-mode-hook #'electric-indent-local-mode))
 #+end_src
 
 *** The =prot-emacs-langs.el= settings ~show-paren-mode~
