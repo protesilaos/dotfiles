@@ -59,6 +59,7 @@
             (prot-minibuffer-emoji . ,eager-update-only)
             (theme . ,eager-update-only)
             (unicode-name . ,eager-update-only)
+            (multi-category . ,eager-update-only)
             (prot-minibuffer-pass . ,eager-update-only)
             (imenu . ,eager-update-only-no-sort)
             (consult-location . ,eager-update-only-no-sort)
