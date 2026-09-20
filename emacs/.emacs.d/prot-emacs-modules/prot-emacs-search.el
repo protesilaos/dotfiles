@@ -82,6 +82,9 @@
 (prot-emacs-configure
   (setq reb-re-syntax 'read)
 
+  (with-eval-after-load 'grep
+    (define-key grep-mode-map (kbd "C-x C-q") #'grep-change-to-grep-edit-mode))
+
   (setq xref-file-name-display 'project-relative)
 
   ;; All those have been changed for Emacs 28
