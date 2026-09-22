@@ -49,7 +49,7 @@ To actually delete email, refer to `prot-notmuch-delete-mail'."
   :type '(repeat string)
   :group 'prot-notmuch)
 
-(defcustom prot-notmuch-mark-flag-tags '("+flag" "-unread")
+(defcustom prot-notmuch-mark-flag-tags '("+flagged" "-unread")
   "List of tags to mark as important (flagged).
 This gets the `notmuch-tag-flagged' face, if that is specified in
 `notmuch-tag-formats'."

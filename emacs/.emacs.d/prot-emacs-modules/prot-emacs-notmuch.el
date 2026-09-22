@@ -47,7 +47,7 @@
           ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
-          ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
+          ;; ;; NOTE 2022-09-19: I disable this because I add a cosmetic
           ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
           ;; ;; an intense style which is very distracting when I filter
           ;; ;; my mail to include this tag.
@@ -95,7 +95,7 @@
   ;; All emoji are cosmetic.  The tags are just the text.
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-          ("flag" (propertize tag 'face 'notmuch-tag-flagged)
+          ("flagged" (propertize tag 'face 'notmuch-tag-flagged)
            (concat tag "🚩")))
         notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag 'notmuch-tag-deleted)
