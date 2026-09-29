@@ -18,9 +18,6 @@ set $term ptyxis
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-
-include /etc/sway/config.d/*
-include /etc/sway/config-vars.d/*
 set $menu wofi -G -I -i -l 0 --show drun | xargs swaymsg exec --
 
 # FIXME 2024-03-26: Screen sharing on sway is a pain to set up because
@@ -32,8 +29,10 @@ set $menu wofi -G -I -i -l 0 --show drun | xargs swaymsg exec --
 # start Sweay but I am not a fan of such workarounds: this should work
 # out-of-the-box. Back to Xorg or GNOME, I guess...
 
-# exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
-# exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
+exec export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 ### Output configuration
 #
@@ -202,3 +201,6 @@ bindsym $mod+Shift+space floating toggle
 bar {
     swaybar_command waybar
 }
+
+include /etc/sway/config.d/*
+include /etc/sway/config-vars.d/*
