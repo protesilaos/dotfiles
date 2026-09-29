@@ -18,10 +18,10 @@ set $term gnome-terminal
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu wofi -G -I -i -n --show drun | xargs swaymsg exec --
 
 include /etc/sway/config.d/*
 include /etc/sway/config-vars.d/*
+set $menu wofi -G -I -i -l 0 --show drun | xargs swaymsg exec --
 
 # FIXME 2024-03-26: Screen sharing on sway is a pain to set up because
 # apparently the XDG_CURRENT_DESKTOP is not set by default and so the
