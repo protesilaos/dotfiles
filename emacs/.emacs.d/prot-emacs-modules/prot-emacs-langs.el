@@ -271,24 +271,11 @@
     (setq denote-rename-confirmations nil) ; CAREFUL with this if you are not familiar with Denote!
     (setq denote-backlinks-show-context nil)
     (setq denote-buffer-name-prefix "[D] ")
-    (setq denote-rename-buffer-format "%D")
+    (setq denote-rename-buffer-format "%D%b")
 
     (denote-rename-buffer-mode 1)
 
-    ;; ;; EXPERIMENT 2025-04-25: This is not the default order, though
-    ;; ;; Denote supports any order for its file name components.
-    ;; (setq denote-file-name-components-order '(identifier signature keywords title))
-
-    (defun prot/denote-rename-all-to-reorder-components ()
-      "Call `denote-dired-rename-files' without any prompts.
-In other words, preserve the value of each Denote file name component.
-
-Use this command if you want to modify the user option
-`denote-file-name-components-order' and then want your files to
-retroactively follow that order."
-      (interactive)
-      (let ((denote-prompts nil))
-        (call-interactively 'denote-dired-rename-files)))))
+    (denote-data-mode 1)))
 
 ;;;; Integrate Consult with Denote
 
