@@ -2,7 +2,7 @@
 (prot-emacs-configure
 ;;;; Completion styles
   (setq completion-styles '(basic substring initials partial-completion flex)) ; also see `completion-category-overrides'
-  (setq completion-flex-nospace t)
+  (setq completion-flex-nospace nil)
   (setq completion-pcm-leading-wildcard nil) ; Emacs 31
   (with-eval-after-load 'orderless
     (setq completion-styles (append completion-styles '(orderless)))))
