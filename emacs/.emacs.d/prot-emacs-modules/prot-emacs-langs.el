@@ -160,10 +160,19 @@
   (define-key ctl-x-x-map (kbd "m") #'flymake-mode) ; C-x x m
 
   (with-eval-after-load 'flymake
+    (defun prot/flymake-show-buffer-diagnostics-anywhere ()
+      "Do `flymake-show-buffer-diagnostics' from anywhere in the file."
+      (interactive)
+      (save-excursion
+        (goto-char (point-min))
+        (flymake-goto-next-error)
+        (flymake-show-buffer-diagnostics)))
+
     (prot-emacs-keybind flymake-mode-map
       "C-c ! s" #'flymake-start
       "C-c ! d" #'flymake-show-buffer-diagnostics ; Emacs 28
       "C-c ! D" #'flymake-show-project-diagnostics ; Emacs 28
+      "C-c ! !" #'prot/flymake-show-buffer-diagnostics-anywhere
       "C-c ! n" #'flymake-goto-next-error
       "C-c ! p" #'flymake-goto-prev-error)
 
@@ -185,7 +194,7 @@
     (setq flymake-inline-diagnostics ; Emacs 32
           '((current . fancy)
             (current-line . short)
-            (t . nil))))
+            (t . eol))))
 
 ;;; Elisp packaging requirements
   (prot-emacs-install package-lint-flymake)
