@@ -22,6 +22,7 @@ my_full="(clients horizontal:0)"
 my_third="(split horizontal:0.25:0.75 (clients vertical:0) (clients max:0))"
 my_half="(split horizontal:0.5:0.5 (clients max:0) (clients max:0))"
 my_middle="(split horizontal:0.2:0.8 (clients vertical:0) (split horizontal:0.75:0.25 (clients max:0) (clients vertical:0)))"
+my_ama="(split horizontal:0.75:0.25 (split horizontal:0.7:0.3 (clients max:0) (clients max:0)) (clients vertical:0))" # Ask Me Anything live stream layout
 
 case $1 in
     full)
@@ -36,6 +37,8 @@ case $1 in
     middle)
         herbstclient load "$my_middle" && my_loaded_layout="middle"
         ;;
+    ama)
+        herbstclient load "$my_ama" && my_loaded_layout="ama"
 esac
 
 notify-send -i desktop "HerbstluftWM workspace layout" "Loaded the ${my_loaded_layout^^} layout"
