@@ -2761,6 +2761,9 @@ from 2026-07-08: <https://protesilaos.com/codelog/2026-07-08-emacs-global-keybin
   (setq tramp-connection-timeout (* 60 10)) ; seconds
   (setq trusted-content '("~/Git/Projects/" "~/Coach/")) ; Emacs 30
   (setq truncate-partial-width-windows nil)
+  (setq strike-through-line-scaling-flag t) ; Emacs 32
+  (setq underline-line-scaling-flag t) ; Emacs 32
+  (setq overline-line-scaling-flag t) ; Emacs 32
 
   ;; Keys I unbind here are either to avoid accidents or to bind them
 
