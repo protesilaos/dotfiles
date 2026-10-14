@@ -191,10 +191,11 @@
           '("" flymake-mode-line-error-counter
             flymake-mode-line-warning-counter
             flymake-mode-line-note-counter ""))
-    (setq flymake-inline-diagnostics ; Emacs 32
-          '((current . fancy)
-            (current-line . short)
-            (t . eol))))
+    ;; (setq flymake-inline-diagnostics ; Emacs 32
+    ;;       '((current . fancy)
+    ;;         (current-line . short)
+    ;;         (t . eol)))
+    (setq flymake-inline-diagnostics nil)) ; Emacs 32
 
 ;;; Elisp packaging requirements
   (prot-emacs-install package-lint-flymake)
