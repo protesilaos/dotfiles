@@ -102,7 +102,7 @@
       "g" #'elfeed-update
       "G" #'revert-buffer)
 
-    (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-yank)
+    (define-key elfeed-show-mode-map (kbd "w") #'elfeed-show-copy-link)
 
     (setq elfeed-last-update-relative 0) ; absolute time in the header-line
     (setq elfeed-search-separator-date-format nil) ; no date sections in the search buffer
