@@ -18,8 +18,8 @@ _checkexec ()
 
 ### General settings
 
-# Set PATH so it includes user's private executables.
-if [ -d "$HOME"/.local/bin ]; then
+if [ -d "$HOME"/.local/bin ]
+then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 

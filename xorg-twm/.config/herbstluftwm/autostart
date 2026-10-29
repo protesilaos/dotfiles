@@ -27,8 +27,8 @@
 # NOTE 2024-12-06: It seems my ~/.profile is not being read.  I need
 # these here.
 
-# Set PATH so it includes user's private executables.
-if [ -d "$HOME"/.local/bin ]; then
+if [ -d "$HOME"/.local/bin ]
+then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
