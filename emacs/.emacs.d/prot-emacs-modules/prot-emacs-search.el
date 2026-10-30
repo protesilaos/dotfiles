@@ -91,9 +91,9 @@
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
 
-  ;; The `outline-xref' is for Emacs 32
+  ;; The `outline-find-headings' is for Emacs 32
   (with-eval-after-load 'outline
-    (define-advice outline-xref (:around (&rest args) prot)
+    (define-advice outline-find-headings (:around (&rest args) prot)
       (let ((xref-show-xrefs-function #'xref-show-definitions-completing-read))
         (apply args))))
 
