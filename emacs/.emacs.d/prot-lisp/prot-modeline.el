@@ -461,7 +461,8 @@ than `split-width-threshold'."
 
 (defvar-local prot-modeline-vc-branch
     '(:eval
-      (when-let* (((mode-line-window-selected-p))
+      (when-let* ((_ (mode-line-window-selected-p))
+                  (_ (not (prot-common-window-small-p)))
                   (file (or buffer-file-name default-directory))
                   (backend (or (vc-backend file) 'Git))
                   ;; ((vc-git-registered file))
@@ -556,6 +557,7 @@ Specific to the current window's mode line.")
     (" "
      (:eval
       (when-let* ((_ (mode-line-window-selected-p))
+                  (_ (not (prot-common-window-small-p)))
                   (current-frame (selected-frame))
                   (_ (frame-live-p current-frame))
                   (parameters (frame-parameters))
