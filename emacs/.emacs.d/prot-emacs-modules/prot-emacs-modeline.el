@@ -97,7 +97,7 @@
   (prot-emacs-install keycast)
   (with-eval-after-load 'prot-modeline
     (setq keycast-mode-line-format "%2s%k%c%R")
-    (setq keycast-mode-line-insert-after 'prot-modeline-vc-branch)
+    (setq keycast-mode-line-insert-after 'prot-modeline-major-mode)
     (setq keycast-mode-line-window-predicate 'mode-line-window-selected-p)
     (setq keycast-mode-line-remove-tail-elements nil))
   (with-eval-after-load 'keycast
