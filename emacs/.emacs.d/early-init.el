@@ -25,6 +25,9 @@
   "When non-nil, this is a build --with-pgtk.
 PGTK is the Wayland-specific build of Emacs.")
 
+(when prot-pgtk-p
+  (setq pgtk-input-purpose 'free-form)) ; Emacs 32
+
 (setq initial-frame-alist `((horizontal-scroll-bars . nil)
                             (menu-bar-lines . 0)
                             (tool-bar-lines . 0)
