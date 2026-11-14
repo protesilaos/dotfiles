@@ -64,6 +64,8 @@
 
   (add-to-list 'safe-local-variable-values '(org-hide-leading-stars . t))
   (add-to-list 'safe-local-variable-values '(org-hide-macro-markers . t))
+  (add-to-list 'safe-local-variable-values '(org-indent-mode . nil))
+  (add-to-list 'safe-local-variable-values '(org-indent-mode . t))
 
   (prot-emacs-keybind global-map
     "C-c l" #'org-store-link
