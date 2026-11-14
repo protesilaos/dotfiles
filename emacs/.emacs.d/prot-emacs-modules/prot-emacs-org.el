@@ -59,7 +59,7 @@
 
 ;;; Org-mode (personal information manager)
 (prot-emacs-configure
-  (setq org-directory (expand-file-name "~/Documents/org/"))
+  (setq org-directory (expand-file-name "~/Documents/notes/agenda/"))
   (setq org-imenu-depth 7)
 
   (add-to-list 'safe-local-variable-values '(org-hide-leading-stars . t))
@@ -267,7 +267,8 @@
     (require 'prot-org)
 
     (setq org-capture-templates
-          (let* ((without-time (concat ":PROPERTIES:\n"
+          (let* ((file (expand-file-name "20261112T111159--agenda__emacs.org" org-directory))
+                 (without-time (concat ":PROPERTIES:\n"
                                        ":CAPTURED: %U\n"
                                        ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
                                        ":END:\n\n"
@@ -284,29 +285,29 @@
                ,(concat "* TODO %^{Title}%?\n" without-time)
                :empty-lines-after 1)
               ("t" "Task to do" entry
-               (file+headline "tasks.org" "All tasks")
+               (file+headline ,file "All tasks")
                ,(concat "* TODO %^{Title} %^g\n" without-time)
                :empty-lines-after 1)
               ("w" "Wishlist" entry
-               (file+olp "tasks.org" "All tasks" "Wishlist")
+               (file+olp file "All tasks" "Wishlist")
                ,(concat "* %^{Title} %^g\n" without-time)
                :empty-lines-after 1)
               ("·" "") ; HACK to get a divider
               ("a" "Appointment" entry
-               (file+headline "tasks.org" "Appointments")
+               (file+headline ,file "Appointments")
                ,(concat "* TODO %^{Title}\n" with-time)
                :empty-lines-after 1)
               ("c" "Coaching appointment" entry
-               (file "coach.org")
+               (file+olp ,file "Meetings" "Coaching")
                ,(concat "* TODO %^{Person and description}\n" with-time)
                :prepend t
                :empty-lines 1)
               ("p" "Prot Asks" entry
-               (file+headline "tasks.org" "Prot Asks")
+               (file+headline ,file "Prot Asks")
                ,(concat "* TODO %^{Title}\n" with-time)
                :empty-lines-after 1)
               ("v" "Video call" entry
-               (file+headline "tasks.org" "Video calls")
+               (file+headline ,file "Video calls")
                ,(concat "* TODO %^{Title}\n" with-time)
                :empty-lines-after 1))))))
 
