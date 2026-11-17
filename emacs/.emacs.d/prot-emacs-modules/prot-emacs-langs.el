@@ -65,7 +65,10 @@
     (setq sentence-end-without-period nil)
     (setq colon-double-space nil)
     (setq use-hard-newlines nil)
-    (setq adaptive-fill-mode t)))
+    (setq adaptive-fill-mode t)
+
+    ;; I bind C-; to `prot-comment' and do not use the default M-;
+    (define-key text-mode-map (kbd "M-;") #'prot-text-prefix-leader)))
 
 (prot-emacs-configure
   ;; Arch Linux and AUR package scripts (sh-mode)
