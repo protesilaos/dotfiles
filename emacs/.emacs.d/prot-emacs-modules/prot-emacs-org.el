@@ -268,8 +268,9 @@
 
     (require 'prot-org)
 
+    (setq org-default-notes-file (expand-file-name "20261112T111159--agenda__emacs.org" org-directory))
     (setq org-capture-templates
-          (let* ((file (expand-file-name "20261112T111159--agenda__emacs.org" org-directory))
+          (let* ((file org-default-notes-file)
                  (without-time (concat ":PROPERTIES:\n"
                                        ":CAPTURED: %U\n"
                                        ":CUSTOM_ID: h:%(format-time-string \"%Y%m%dT%H%M%S\")\n"
@@ -352,7 +353,6 @@
              ,prot-org-custom-prot-asks-agenda)))
 
 ;;;;; Basic agenda setup
-    (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
     (setq org-agenda-files (list org-directory))
     (setq org-agenda-span 'week)
     (setq org-agenda-start-on-weekday 1)  ; Monday
