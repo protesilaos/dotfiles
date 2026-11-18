@@ -9296,6 +9296,8 @@ The file names specified in that regular expression will be using
     (setq use-hard-newlines nil)
     (setq adaptive-fill-mode t)
 
+    (require 'prot-text)
+
     ;; I bind C-; to `prot-comment' and do not use the default M-;
     (define-key text-mode-map (kbd "M-;") #'prot-text-prefix-leader)))
 #+end_src

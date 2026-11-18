@@ -67,6 +67,8 @@
     (setq use-hard-newlines nil)
     (setq adaptive-fill-mode t)
 
+    (require 'prot-text)
+
     ;; I bind C-; to `prot-comment' and do not use the default M-;
     (define-key text-mode-map (kbd "M-;") #'prot-text-prefix-leader)))
 
