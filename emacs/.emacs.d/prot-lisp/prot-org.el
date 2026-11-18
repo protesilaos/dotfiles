@@ -665,7 +665,7 @@ The path is relative to the `diary-file'."
  :face 'prot-org-grep-link)
 
 ;;;###autoload
-(defun prot-org-grep-insert (query)
+(defun prot-org-insert-grep-link (query)
   "Insert prot-grep link for QUERY.
 When called interactively, prompt for QUERY.  Else QUERY is a string."
   (interactive (list (prot-org-grep-complete)))
@@ -783,7 +783,7 @@ QUERY matches `prot-org-meetings-link-regexp'."
      'prot-org-meetings-person-prompt-history default)))
 
 ;;;###autoload
-(defun prot-org-meetings-insert (person date)
+(defun prot-org-insert-meetings-link (person date)
   "Insert prot-meetings link for PERSON since DATE."
   (interactive
    (list
