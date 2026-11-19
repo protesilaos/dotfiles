@@ -9876,7 +9876,7 @@ connections between notes.
 I am still developing the package. It looks really promising. I also
 have some surprise in the works, which I think lots of users will like.
 
-+ Package name (GNU ELPA): `denote-data` (⚠️ Coming soon!)
++ Package name (GNU ELPA): ~denote-data~ (⚠️ Coming soon!)
 + Git repository: <https://github.com/protesilaos/denote-data>
 + Backronym: DENOTE ... Data Assiduously Transferred Asynchronously.
 
