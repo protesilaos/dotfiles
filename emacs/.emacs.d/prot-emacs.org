@@ -9859,9 +9859,33 @@ facilities to rename files, regardless of file type.
     (setq denote-buffer-name-prefix "[D] ")
     (setq denote-rename-buffer-format "%D%b")
 
-    (denote-rename-buffer-mode 1)
+    (denote-rename-buffer-mode 1)))
+#+end_src
 
-    (denote-data-mode 1)))
+**** The =prot-emacs-langs.el= optional, in-memory cache for Denote (~denote-data~)
+:PROPERTIES:
+:CUSTOM_ID: h:313c94ab-2bb9-4a60-b52b-d3c172356a09
+:END:
+
+This is another package I have developed. It extends ~denote~ with a
+cache ([[#h:e86a66dc-7ef9-4f09-ad7e-946de2034e8d][The =prot-emacs-langs.el= settings for ~denote~ (notes and file-naming)]]).
+This speeds up all sorts of operations and makes it possible to
+integrate Denote with other software, such as to display a graph of
+connections between notes.
+
+I am still developing the package. It looks really promising. I also
+have some surprise in the works, which I think lots of users will like.
+
++ Package name (GNU ELPA): `denote-data` (⚠️ Coming soon!)
++ Git repository: <https://github.com/protesilaos/denote-data>
++ Backronym: DENOTE ... Data Assiduously Transferred Asynchronously.
+
+#+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-langs.el"
+;;; Cache for Denote (`denote-data')
+(prot-emacs-configure
+  (prot-emacs-install-vc denote-data "https://github.com/protesilaos/denote-data.git")
+
+  (denote-data-mode 1))
 #+end_src
 
 **** The =prot-emacs-langs.el= integration between Consult and Denote (~consult-denote~)

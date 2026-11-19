@@ -279,9 +279,13 @@
     (setq denote-buffer-name-prefix "[D] ")
     (setq denote-rename-buffer-format "%D%b")
 
-    (denote-rename-buffer-mode 1)
+    (denote-rename-buffer-mode 1)))
 
-    (denote-data-mode 1)))
+;;; Cache for Denote (`denote-data')
+(prot-emacs-configure
+  (prot-emacs-install-vc denote-data "https://github.com/protesilaos/denote-data.git")
+
+  (denote-data-mode 1))
 
 ;;;; Integrate Consult with Denote
 
