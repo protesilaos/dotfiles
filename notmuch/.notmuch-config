@@ -52,7 +52,7 @@ other_email=public@protesilaos.com;info@protesilaos.com
 
 [new]
 tags=new
-ignore=.uidvalidity;.mbsyncstate;.mbsyncstate.new;.mbsyncstate.lock
+ignore=.uidvalidity;.mbsyncstate;.mbsyncstate.new;.mbsyncstate.lock;.gmailieer.json;.state.gmailieer.json;.credentials.gmailieer.json
 
 # Search configuration
 #

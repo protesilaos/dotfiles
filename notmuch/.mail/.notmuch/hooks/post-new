@@ -28,11 +28,15 @@
 # remove "unread" from "replied"
 notmuch tag -unread -new -- tag:replied
 
-# tag all "new" messages "inbox" and "unread"
+mail_root_path=$(notmuch config get database.path)
+
 while IFS= read -r -d $'\0' file
 do
-    if [[ "$file" != *R* ]]; then
-        notmuch tag +unread -- "path:${file}"
+    flags="${file##*:2,}"
+    if [[ "$flags" != *S* && "$flags" != *R* ]]
+    then
+        mail_relative_path="${file#"${mail_root_path}/"}"
+        notmuch tag +unread -- "path:\"${mail_relative_path}\""
     fi
 done < <(notmuch search --output=files --format=text0 tag:new)
 

@@ -1,0 +1,16 @@
+{
+  "account": "prot@protesilaos.com",
+  "timeout": 60,
+  "replace_slash_with_dot": true,
+  "drop_non_existing_label": true,
+  "ignore_empty_history": false,
+  "remove_local_messages": true,
+  "local_trash_tag": "trash",
+  "ignore_tags": [
+    "new",
+    "dellocal",
+    "spamlocal",
+    "archiveinbox",
+    "archivesent"
+  ]
+}

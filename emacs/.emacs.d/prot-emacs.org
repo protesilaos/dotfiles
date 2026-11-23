@@ -11441,20 +11441,23 @@ I keep this here in case I need to test the setup.
 :CUSTOM_ID: h:33151014-3621-4be6-9185-aacc34ee2d2c
 :END:
 
-I have a regular IMAP email setup. This is the protocol that allows
-the server to retain messages, which is of practical benefit for
-accessing mail on multiple machines.
+IMAP is the protocol that allows the server to retain messages and to
+copy them to all clients, such as the desktop and phone email apps.
+Standard IMAP relies on an authentication mechanism that involves the
+user's login credentials. Whereas the modern standard involves an
+additional mechanism known as OAuth2. This is used by email service
+providers such as GMail and Microsoft Outlook.
 
-A copy of my server's contents needs to be stored locally. This is
-valuable for backup purposes but also to remove old messages from the
-server where I no longer need them. Having all my mail locally also
+A copy of the server's contents can be stored locally. This is
+valuable for backup purposes but also to periodically remove old and
+unneeded messages from the server. Having all emails locally also
 provides the option to move to another email service provider by just
 syncing the local data to the new location while deleting the old one.
 More importantly though, local files can be indexed, granting us
 access to a powerful search mechanism (more below).
 
-The program that communicates with the server to store email locally
-is called ~mbsync~. For whatever reason, the system package is
+The standard program that communicates with the server to store email
+locally is called ~mbsync~. For whatever reason, the system package is
 ~isync~. This is true for Arch Linux and Debian. (I also heard it is
 the case with ~homebrew~, but please check.)
 
@@ -11533,6 +11536,8 @@ functionality, though from around the summer of 2024 I kept
 experiencing issues with my outgoing messages getting rejected as
 spam. I have since reverted to the more generic method that Emacs
 implements, which does not rely on ~msmtp~ ([[#h:c7c9815c-e259-4810-816a-9ebc1a146004][The =prot-emacs-email.el= settings for ~sendmail~ (SMTP)]]).
+
+[ Also see: [[#h:3b6f434c-a9c3-4bfa-8a40-157d7f00b99a][The GMail setup with ~lieer~ and ~notmuch~]]. ]
 
 This all sounds complex to anyone who expects email to be encapsulated
 in a single application. What we have here is the Unix paradigm in
@@ -11701,6 +11706,45 @@ passwordeval "gpg -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/gand
 # Set a default account (I copied from man msmtp)
 account default : gandi
 #+end_example
+
+**** The GMail setup with ~lieer~ and ~notmuch~
+:PROPERTIES:
+:CUSTOM_ID: h:3b6f434c-a9c3-4bfa-8a40-157d7f00b99a
+:END:
+
+[ This extends what I have explained in [[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~ or ~lieer~, ~msmtp~, mail indexer, and MUA)]]. ]
+
+Email is essential to my work. I use it to communicate with people and
+organise my life. Every message I send must be delivered reliably and
+I should have no issues with me being flagged as a spam account. That
+used to be the case with my old email setup which circa 2024 got be
+blocklisted by a service known as Spamhaus.
+
+In late 2026 I decided to switch to a Google Workspace account. This
+gives me the option to still use my custom domain name while relying
+on what effectively is your typical GMail setup.
+
+Syncing emails locally is done with the ~lieer~ program while indexing
+is handled by ~notmuch~. I was already using the latter though ~lieer~
+is the new tool that replaces ~mbsync~.
+
+With ~lieer~ we connect to GMail using an OAuth2 authentication
+mechanism as opposed to typical IMAP. This is supposed to be more
+secure and thus preferable. Though it also involves more work on the
+user's side to configure the appropriate credentials.
+
+~lieer~ provides its own application key for connecting to GMail
+though I prefer to maintain my own. That is done via the Google Cloud
+interface: you register a new project and then get the relevant keys.
+
+Beside synchronisation back and forth, ~lieer~ can convert ~notmuch~
+tags to GMail labels. Those will be synced across devices and be
+available on the web interface as well. I do not really need this
+feature, though knowing it is available is a nice plus: I might have a
+good use for it.
+
+Beside those technicalities, the email experience inside of Emacs
+should be the same as what I had before.
 
 ** The =prot-emacs-web.el= module
 :PROPERTIES:

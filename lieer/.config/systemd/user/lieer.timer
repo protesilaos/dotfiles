@@ -1,0 +1,10 @@
+[Unit]
+Description=Lieer mail synchronisation timer
+
+[Timer]
+OnBootSec=2m
+OnUnitActiveSec=2m
+Unit=lieer.service
+
+[Install]
+WantedBy=timers.target

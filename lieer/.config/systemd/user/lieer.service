@@ -1,0 +1,9 @@
+[Unit]
+Description=Lieer mail synchronisation
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/gmi sync -C %h/.mail/workspace -q
+ExecStartPost=/usr/bin/notmuch new
