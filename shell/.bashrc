@@ -287,9 +287,9 @@ alias 🤡='whoami'
 
 if _checkexec notmuch
 then
-    # Careful with 'tag:del'!!!  It is specific to my setup.
-    alias ✉️💀='notmuch search --output=files --format=text0 tag:del | xargs -r0 rm'
-    alias notmuchrmdel='notmuch search --output=files --format=text0 tag:del | xargs -r0 rm'
+    # Careful with 'tag:trash'!!!  It is specific to my setup.
+    alias ✉️💀='notmuch search --output=files --format=text0 tag:trash | xargs -r0 rm'
+    alias notmuchrmdel='notmuch search --output=files --format=text0 tag:trash | xargs -r0 rm'
 fi
 
 ### Functions
