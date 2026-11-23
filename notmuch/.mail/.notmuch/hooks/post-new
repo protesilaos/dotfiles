@@ -25,6 +25,16 @@
 
 ### Code:
 
+new_count=$(notmuch count tag:new)
+
+if command -v notify-send 2> /dev/null && [ "$new_count" -gt 0 ]
+then
+    # NOTE 2026-11-23: The "-i emacs" is technically inaccurate, as I
+    # could be using another email client. But since I am relying on
+    # notmuch.el this looks right to me.
+    notify-send -i emacs "New Email" "Received ${new_count} new messages."
+fi
+
 # remove "unread" from "replied"
 notmuch tag -unread -new -- tag:replied
 
