@@ -8,16 +8,11 @@
 
 ;;; Account settings
 (prot-emacs-configure
-  (with-eval-after-load 'prot-common
-    (let ((prv (prot-common-auth-get-field "prv-gandi" :user))
-          (pub (prot-common-auth-get-field "pub-gandi" :user))
-          (inf (prot-common-auth-get-field "inf-gandi" :user))
-          (box (prot-common-auth-get-field "prot-gandi" :user)))
-      (setq notmuch-identities
-            (mapcar (lambda (str)
-                      (format "%s <%s>" user-full-name str))
-                    (list prv pub inf box))
-            notmuch-fcc-dirs `((".*" . "gandi/Sent"))))))
+  (setq notmuch-identities '("Protesilaos <prot@protesilaos.com>"))
+  (setq notmuch-always-prompt-for-sender (length> notmuch-identities 1))
+  (setq notmuch-fcc-dirs (if (executable-find "gmi") ; the lieer executable
+                             nil
+                           '((".*" . "gandi/Sent")))))
 
 ;;;; General UI
 (prot-emacs-configure
@@ -114,7 +109,6 @@
   (setq notmuch-mua-hidden-headers nil)
   (setq notmuch-address-command 'internal)
   (setq notmuch-address-use-company nil)
-  (setq notmuch-always-prompt-for-sender t)
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
   (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
   (setq notmuch-mua-user-agent-function nil)

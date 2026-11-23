@@ -10421,10 +10421,16 @@ functions.
 ;;;; `sendmail' (mail transfer agent)
 (prot-emacs-configure
   (with-eval-after-load 'message
-    (setq send-mail-function #'smtpmail-send-it)
-    (setq smtpmail-smtp-server "mail.gandi.net")
-    (setq smtpmail-smtp-service 587)
-    (setq smtpmail-stream-type 'starttls)))
+    (if (executable-find "gmi")
+        (setq send-mail-function #'message-send-mail-with-sendmail
+              sendmail-program (executable-find "gmi")
+              message-send-mail-function #'message-send-mail-with-sendmail
+              message-sendmail-extra-arguments '("send" "-q" "-t" "-C" "/home/prot/.mail/workspace")
+              message-sendmail-f-is-evil t)
+      (setq send-mail-function #'smtpmail-send-it
+            smtpmail-smtp-server "mail.gandi.net"
+            smtpmail-smtp-service 587
+            smtpmail-stream-type 'starttls))))
 #+end_src
 
 *** The =prot-emacs-email.el= loading of the email client and call to ~provide~
@@ -10499,20 +10505,13 @@ we need to specify (i) who we are and (ii) where should sent mail be
 directed to. This is what the user options ~notmuch-identities~ and
 ~notmuch-fcc-dirs~ are about.
 
-Notice that I use the ~prot-common-auth-get-field~ function, which
-reads data from my encrypted =~/.authinfo.gpg= file ([[#h:24f17614-ee3d-4cd1-bbe3-f53e4f39c281][The =prot-emacs-email.el= basic settings (including =authinfo=)]]).
-In =prot-common.el=, I define a few helper functions that are general
-in nature and may be used by other Elisp snippets of mine ([[#h:3fccfadf-22e9-457f-b9fd-ed1b48600d23][The =prot-common.el= library]]).
-Doing things this way ensures that I do not share the details about
-the accounts I set.
-
-At any rate, the format of ~notmuch-identities~ is like this:
+The format of ~notmuch-identities~ is like this:
 
 #+begin_example emacs-lisp
 (setq notmuch-identities '("Protesilaos <someone@somewhere.com>" "Prot <just-my-nickname@somewhere.com>"))
 #+end_example
 
-While the corresponding ~notmuch-fcc-dirs~ map those accounts to the
+While the corresponding ~notmuch-fcc-dirs~ maps those accounts to the
 relative path of their local sent mail folder (it is relative to the
 root of the directory that ~notmuch~ indexes, so something like
 =~/.mail/pub/Sent= needs to be written as =pub/Sent=). The data
@@ -10524,21 +10523,21 @@ structure looks like this:
         ("nickname@somewhere.com" . "nickname/Sent")))
 #+end_example
 
+That, however, depends on the actual directory structure. The above is
+true for ~mbsyns~ ([[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]]).
+Whereas ~lieer~ handles everything in a single directory, relying
+exclusively on tags to filter emails ([[#h:3b6f434c-a9c3-4bfa-8a40-157d7f00b99a][The GMail setup with ~lieer~ and ~notmuch~]]).
+
 Now the actual code I use:
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-notmuch.el" :mkdirp yes
 ;;; Account settings
 (prot-emacs-configure
-  (with-eval-after-load 'prot-common
-    (let ((prv (prot-common-auth-get-field "prv-gandi" :user))
-          (pub (prot-common-auth-get-field "pub-gandi" :user))
-          (inf (prot-common-auth-get-field "inf-gandi" :user))
-          (box (prot-common-auth-get-field "prot-gandi" :user)))
-      (setq notmuch-identities
-            (mapcar (lambda (str)
-                      (format "%s <%s>" user-full-name str))
-                    (list prv pub inf box))
-            notmuch-fcc-dirs `((".*" . "gandi/Sent"))))))
+  (setq notmuch-identities '("Protesilaos <prot@protesilaos.com>"))
+  (setq notmuch-always-prompt-for-sender (length> notmuch-identities 1))
+  (setq notmuch-fcc-dirs (if (executable-find "gmi") ; the lieer executable
+                             nil
+                           '((".*" . "gandi/Sent")))))
 #+end_src
 
 ***** The =prot-emacs-notmuch.el= section about the general user interface
@@ -10724,7 +10723,6 @@ confirmation where needed.
   (setq notmuch-mua-hidden-headers nil)
   (setq notmuch-address-command 'internal)
   (setq notmuch-address-use-company nil)
-  (setq notmuch-always-prompt-for-sender t)
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
   (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
   (setq notmuch-mua-user-agent-function nil)

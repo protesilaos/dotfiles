@@ -60,10 +60,16 @@
 ;;;; `sendmail' (mail transfer agent)
 (prot-emacs-configure
   (with-eval-after-load 'message
-    (setq send-mail-function #'smtpmail-send-it)
-    (setq smtpmail-smtp-server "mail.gandi.net")
-    (setq smtpmail-smtp-service 587)
-    (setq smtpmail-stream-type 'starttls)))
+    (if (executable-find "gmi")
+        (setq send-mail-function #'message-send-mail-with-sendmail
+              sendmail-program (executable-find "gmi")
+              message-send-mail-function #'message-send-mail-with-sendmail
+              message-sendmail-extra-arguments '("send" "-q" "-t" "-C" "/home/prot/.mail/workspace")
+              message-sendmail-f-is-evil t)
+      (setq send-mail-function #'smtpmail-send-it
+            smtpmail-smtp-server "mail.gandi.net"
+            smtpmail-smtp-service 587
+            smtpmail-stream-type 'starttls))))
 
 (when (executable-find "notmuch")
   (require 'prot-emacs-notmuch))
