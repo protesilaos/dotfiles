@@ -36,7 +36,7 @@
   "Extensions for notmuch.el."
   :group 'notmuch)
 
-(defcustom prot-notmuch-delete-tag "del"
+(defcustom prot-notmuch-delete-tag "trash"
   "Single tag that applies to mail marked for deletion.
 This is used by `prot-notmuch-delete-mail'."
   :type 'string

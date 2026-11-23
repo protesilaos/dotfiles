@@ -98,7 +98,7 @@
           (".*" (notmuch-apply-face tag 'notmuch-tag-deleted)
            (concat "🚫" tag)))
         notmuch-tag-added-formats
-        '(("del" (notmuch-apply-face tag 'notmuch-tag-added)
+        '(("trash" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "💥" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "🏷️" tag)))))

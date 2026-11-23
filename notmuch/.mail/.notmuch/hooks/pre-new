@@ -29,7 +29,7 @@
 if [ "$HOSTNAME" = "kronos" ]
 then
     mail_root_path=$(notmuch config get database.path)
-    for tag in del spam
+    for tag in trash spam
     do
         target_directory="${mail_root_path}/${tag}local/"
 

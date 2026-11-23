@@ -10690,7 +10690,7 @@ incorporation in the subsequent section about setting up
           (".*" (notmuch-apply-face tag 'notmuch-tag-deleted)
            (concat "🚫" tag)))
         notmuch-tag-added-formats
-        '(("del" (notmuch-apply-face tag 'notmuch-tag-added)
+        '(("trash" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "💥" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "🏷️" tag)))))
@@ -15187,7 +15187,7 @@ Specific to the current window's mode line.")
   "Extensions for notmuch.el."
   :group 'notmuch)
 
-(defcustom prot-notmuch-delete-tag "del"
+(defcustom prot-notmuch-delete-tag "trash"
   "Single tag that applies to mail marked for deletion.
 This is used by `prot-notmuch-delete-mail'."
   :type 'string
