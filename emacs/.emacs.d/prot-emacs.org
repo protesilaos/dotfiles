@@ -10386,12 +10386,13 @@ numerous accoutrements.
 :END:
 
 As I explain in the [[#h:33151014-3621-4be6-9185-aacc34ee2d2c][Overview of my email setup (~mbsync~, ~msmtp~, mail indexer, and MUA)]],
-I have used the external ~msmtp~ program to handle email sending, else to
-set up the Mail Transfer Agent (MTA). With ~msmtp~ and a compatibility
-package installed (~msmtp-mta~ on Arch Linux and Debian), the standard ~sendmail~
-executable becomes a symlink to the ~msmtp~ program. My ~msmtp~ setup
-worked fine for a long time until my outgoing messages started getting
-rejected as spam. Here is the Emacs part I used to have:
+I have in previous years used the external ~msmtp~ program to handle
+email sending, else to set up the Mail Transfer Agent (MTA). With
+~msmtp~ and a compatibility package installed (~msmtp-mta~ on Arch
+Linux and Debian), the standard ~sendmail~ executable becomes a
+symlink to the ~msmtp~ program. My ~msmtp~ setup worked fine for a
+long time until my outgoing messages started getting rejected as spam.
+Here is the Emacs part I used to have:
 
 #+begin_example emacs-lisp
 (use-package sendmail
@@ -10407,15 +10408,9 @@ rejected as spam. Here is the Emacs part I used to have:
         message-sendmail-envelope-from 'header))
 #+end_example
 
-I have not been able to determine the exact cause of my troubles with
-spam, but it seems that not relying on ~msmtp~ fixes the problem. So
-the following code block is how I do it now. What I liked about the
-~msmtp~ approach as opposed to what I have now is that I did not have
-to specify any login credentials in Emacs and could, in principle,
-define distinct authentication methods for different email accounts.
-Whereas the following is for single-account setups, even though we can
-technically make it work with more of them via hooks and custom
-functions.
+The problems with spam never went away, even after I switched away
+from ~msmtp~. What I have now, as of late 2026, involves the ~lieer~
+package and its ~gmi~ executable ([[#h:3b6f434c-a9c3-4bfa-8a40-157d7f00b99a][The GMail setup with ~lieer~ and ~notmuch~]]).
 
 #+begin_src emacs-lisp :tangle "prot-emacs-modules/prot-emacs-email.el"
 ;;;; `sendmail' (mail transfer agent)
