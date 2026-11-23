@@ -26,29 +26,32 @@
 
 ### Code:
 
-if [ "$HOSTNAME" = "kronos" ]
-then
-    mail_root_path=$(notmuch config get database.path)
-    for tag in trash spam
-    do
-        target_directory="${mail_root_path}/${tag}local/"
+# NOTE 2026-11-23: I am not using the following anymore because lieer
+# only uses a single directory.
 
-        if [ ! -d "$target_directory" ]
-        then
-            mkdir -p "$target_directory"
-        fi
-
-        while IFS= read -r -d $'\0' file
-        do
-            if [ -f "$file" ]
-            then
-                mv "$file" "$target_directory$(basename -- "${file//,U=[0-9]*:/:}")"
-            fi
-        done < <(notmuch search --output=files --format=text0 tag:"$tag")
-
-        notmuch tag -inbox -"${tag}" +"${tag}"local -- tag:"$tag"
-    done
-fi
+# if [ "$HOSTNAME" = "kronos" ]
+# then
+#     mail_root_path=$(notmuch config get database.path)
+#     for tag in trash spam
+#     do
+#         target_directory="${mail_root_path}/${tag}local/"
+#
+#         if [ ! -d "$target_directory" ]
+#         then
+#             mkdir -p "$target_directory"
+#         fi
+#
+#         while IFS= read -r -d $'\0' file
+#         do
+#             if [ -f "$file" ]
+#             then
+#                 mv "$file" "$target_directory$(basename -- "${file//,U=[0-9]*:/:}")"
+#             fi
+#         done < <(notmuch search --output=files --format=text0 tag:"$tag")
+#
+#         notmuch tag -inbox -"${tag}" +"${tag}"local -- tag:"$tag"
+#     done
+# fi
 
 ### PROT 2025-03-01: To archive mail manually, I did the following.
 ### This is useful once every few years, so there is no need to
