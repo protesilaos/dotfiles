@@ -368,7 +368,7 @@ More specifically, return the value of `prot-icons-alphabetic' or
   (let* ((name (tab-bar-tab-name-current))
          (buffer (get-buffer name))
          (mode (with-current-buffer buffer major-mode))
-         (icon (prot-icons-get-icon mode 'tab-bar-current)))
+         (icon (prot-icons-get-icon mode 'success)))
     (format "%s %s" icon name)))
 
 ;;;###autoload
