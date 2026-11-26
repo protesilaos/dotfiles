@@ -229,19 +229,22 @@ that and instead tries to complete against dictionary entries."
   (prot-emacs-install notmuch-indicator)
   (with-eval-after-load 'notmuch
     (setq notmuch-indicator-args
-          '(( :terms "tag:unread and (tag:inbox or tag:archiveinbox)"
+          `(( :terms "tag:unread and (tag:inbox or tag:archiveinbox)"
               ;; :label "[U] "
-              :label "💬 "
+              ;; :label "💬 "
+              :label ,(prot-icons-get-icon 'text-mode)
               :label-face prot-modeline-indicator-cyan
               :counter-face bold)
             ( :terms "tag:unread and tag:package"
               ;; :label "[P] "
-              :label "🛠️ "
+              ;; :label "🛠️ "
+              :label ,(prot-icons-get-icon 'prog-mode)
               :label-face prot-modeline-indicator-magenta
               :counter-face bold)
             ( :terms "tag:unread and tag:coach"
               ;; :label "[C] "
-              :label "🏆 "
+              ;; :label "🏆 "
+              :label ,(prot-icons-get-icon 'conf-mode)
               :label-face prot-modeline-indicator-red
               :counter-face bold))
 
