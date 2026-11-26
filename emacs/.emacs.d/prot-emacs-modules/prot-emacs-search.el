@@ -104,8 +104,13 @@
       (progn
         (setq grep-program ripgrep)
         (setq xref-search-program 'ripgrep)
-        (setq grep-template (format "%s -nH --null -e <R> <F>" ripgrep)))
-    (error "You need to install RIPGREP"))
+        (setq grep-template (format
+                             "%s %s -nH --null -e <R> <F>"
+                             ripgrep
+                             (if grep-use-headings
+                                 "--heading"
+                               "--no-heading"))))
+    (message "You may want to install RIPGREP"))
 
   (add-hook 'grep-mode #'prot-common-truncate-lines-silently))
 
